@@ -1,0 +1,18 @@
+.StdStat {
+    display: inline-flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.StdStat-ValueAndUnit {
+    color: var(--std-primary-shade1);
+}
+
+.StdStat-Unit.std-text-subtitle2 {
+    margin-left: var(--std-gutter);
+    font-weight: var(--std-weight-regular);
+}
+
+.StdStat-Label {
+    margin-top: var(--std-gutter-mini);
+}

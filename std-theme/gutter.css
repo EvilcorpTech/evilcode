@@ -1,0 +1,23 @@
+:root {
+    --std-gutter: 4px;
+    --std-gutter-mini: calc(var(--std-gutter) * 1.5);
+    --std-gutter-xxs: calc(var(--std-gutter) * 2);
+    --std-gutter-xs: calc(var(--std-gutter) * 3);
+    --std-gutter-s: calc(var(--std-gutter) * 4);
+    --std-gutter-m: calc(var(--std-gutter) * 6);
+    --std-gutter-l: calc(var(--std-gutter) * 8);
+    --std-gutter-xl: calc(var(--std-gutter) * 12);
+    --std-gutter-xxl: calc(var(--std-gutter) * 16);
+    --std-gutter-maxi: calc(var(--std-gutter) * 24);
+}
+
+.std-spacer { flex-grow: 1 }
+.std-space-mini { width: var(--std-gutter-mini); height: var(--std-gutter-mini); }
+.std-space-xxs { width: var(--std-gutter-xxs); height: var(--std-gutter-xxs); }
+.std-space-xs { width: var(--std-gutter-xs); height: var(--std-gutter-xs); }
+.std-space-s { width: var(--std-gutter-s); height: var(--std-gutter-s); }
+.std-space-m { width: var(--std-gutter-m); height: var(--std-gutter-m); }
+.std-space-l { width: var(--std-gutter-l); height: var(--std-gutter-l); }
+.std-space-xl { width: var(--std-gutter-xl); height: var(--std-gutter-xl); }
+.std-space-xxl { width: var(--std-gutter-xxl); height: var(--std-gutter-xxl); }
+.std-space-maxi { width: var(--std-gutter-maxi); height: var(--std-gutter-maxi); }

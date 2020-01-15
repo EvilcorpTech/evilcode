@@ -1,0 +1,43 @@
+{
+    "name": "@eviljs/std-react",
+    "version": "0.1.4",
+    "dependencies": {
+        "@eviljs/std-lib": ">= 0.1.0 < 0.2",
+        "@eviljs/std-theme": ">= 0.1.0 < 0.2",
+        "@eviljs/std-web": ">= 0.1.0 < 0.2",
+        "@types/prop-types": "15.7.3",
+        "@types/react": "16.9.17",
+        "@types/react-dom": "16.9.4",
+        "prop-types": ">= 15.7.2 < 16",
+        "tslib": ">= 1.10.0 < 2"
+    },
+    "peerDependencies": {
+        "react": ">= 16.12.0 < 17",
+        "react-dom": ">= 16.12.0 < 17"
+    },
+    "devDependencies": {
+        "csstype": "2.6.8",
+        "typescript": "3.7.4"
+    },
+    "scripts": {
+        "preversion": "../tools/build .",
+        "prepack": "../tools/build ."
+    },
+    "author": "Daniele Orlando",
+    "license": "BSD-2-Clause",
+    "description": "Awesome React",
+    "keywords": [
+        "React",
+        "Hooks",
+        "TypeScript",
+        "CSS"
+    ],
+    "homepage": "https://github.com/EvilRepo/eviljs",
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/EvilRepo/eviljs.git"
+    },
+    "bugs": {
+        "url": "https://github.com/EvilRepo/eviljs/issues"
+    }
+}

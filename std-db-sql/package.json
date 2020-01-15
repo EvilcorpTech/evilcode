@@ -1,0 +1,36 @@
+{
+    "name": "@eviljs/std-db-sql",
+    "version": "0.1.1",
+    "dependencies": {
+        "@eviljs/std-lib": "0.1.0",
+        "@eviljs/std-node": "0.1.1",
+        "@types/node": "13.1.7",
+        "mariadb": "2.1.5",
+        "tslib": "1.10.0"
+    },
+    "peerDependencies": {},
+    "devDependencies": {
+        "typescript": "3.7.4"
+    },
+    "scripts": {
+        "preversion": "../tools/build .",
+        "prepack": "../tools/build ."
+    },
+    "author": "Daniele Orlando",
+    "license": "BSD-2-Clause",
+    "description": "Awesome SQL for Node",
+    "keywords": [
+        "Node",
+        "SQL",
+        "MariaDB",
+        "TypeScript"
+    ],
+    "homepage": "https://github.com/EvilRepo/eviljs",
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/EvilRepo/eviljs.git"
+    },
+    "bugs": {
+        "url": "https://github.com/EvilRepo/eviljs/issues"
+    }
+}

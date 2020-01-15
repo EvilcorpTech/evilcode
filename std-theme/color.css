@@ -1,0 +1,102 @@
+:root {
+    /* 50% gray. */
+    --std-primary-h: 0;
+    --std-primary-s: 0%;
+    --std-primary-l: 50%;
+    --std-primary-accent: hsl(var(--std-primary-h), var(--std-primary-s), var(--std-primary-l));
+    /* --std-amber-6. */
+    --std-secondary-h: 45;
+    --std-secondary-s: 100%;
+    --std-secondary-l: 51%;
+    --std-secondary-accent:  hsl(var(--std-secondary-h), var(--std-secondary-s), var(--std-secondary-l));
+
+    --std-primary-tint1: hsl(var(--std-primary-h), calc(var(--std-primary-s) * .8), calc(var(--std-primary-l) + (100% - var(--std-primary-l)) * .2));
+    --std-primary-tint2: hsl(var(--std-primary-h), calc(var(--std-primary-s) * .8), calc(var(--std-primary-l) + (100% - var(--std-primary-l)) * .4));
+    --std-primary-tint3: hsl(var(--std-primary-h), calc(var(--std-primary-s) * .8), calc(var(--std-primary-l) + (100% - var(--std-primary-l)) * .6));
+    --std-primary-tint4: hsl(var(--std-primary-h), calc(var(--std-primary-s) * .8), calc(var(--std-primary-l) + (100% - var(--std-primary-l)) * .7));
+    --std-primary-tint5: hsl(var(--std-primary-h), calc(var(--std-primary-s) * .8), calc(var(--std-primary-l) + (100% - var(--std-primary-l)) * .8));
+    --std-primary-tint6: hsl(var(--std-primary-h), calc(var(--std-primary-s) * .8), calc(var(--std-primary-l) + (100% - var(--std-primary-l)) * .95));
+    --std-primary-shade1: hsl(var(--std-primary-h), calc(var(--std-primary-s) * .6), calc(var(--std-primary-l) * .9));
+    --std-primary-shade2: hsl(var(--std-primary-h), calc(var(--std-primary-s) * .6), calc(var(--std-primary-l) * .8));
+    --std-primary-shade3: hsl(var(--std-primary-h), calc(var(--std-primary-s) * .6), calc(var(--std-primary-l) * .7));
+    --std-primary-shade4: hsl(var(--std-primary-h), calc(var(--std-primary-s) * .6), calc(var(--std-primary-l) * .6));
+    --std-primary-shade5: hsl(var(--std-primary-h), calc(var(--std-primary-s) * .6), calc(var(--std-primary-l) * .5));
+    --std-primary-shade6: hsl(var(--std-primary-h), calc(var(--std-primary-s) * .6), calc(var(--std-primary-l) * .4));
+    --std-primary-tone1: hsl(var(--std-primary-h), calc(var(--std-primary-s) * .8), calc(var(--std-primary-l) * 1.0));
+    --std-primary-tone2: hsl(var(--std-primary-h), calc(var(--std-primary-s) * .6), calc(var(--std-primary-l) * 1.0));
+    --std-primary-tone3: hsl(var(--std-primary-h), calc(var(--std-primary-s) * .4), calc(var(--std-primary-l) * 1.0));
+    --std-primary-tone4: hsl(var(--std-primary-h), calc(var(--std-primary-s) * .3), calc(var(--std-primary-l) * 1.0));
+    --std-primary-tone5: hsl(var(--std-primary-h), calc(var(--std-primary-s) * .2), calc(var(--std-primary-l) * 1.0));
+    --std-primary-tone6: hsl(var(--std-primary-h), calc(var(--std-primary-s) * .1), calc(var(--std-primary-l) * 1.0));
+
+    --std-secondary-tint1: hsl(var(--std-secondary-h), calc(var(--std-secondary-s) * .8), calc(var(--std-secondary-l) + (100% - var(--std-secondary-l)) * .2));
+    --std-secondary-tint2: hsl(var(--std-secondary-h), calc(var(--std-secondary-s) * .8), calc(var(--std-secondary-l) + (100% - var(--std-secondary-l)) * .4));
+    --std-secondary-tint3: hsl(var(--std-secondary-h), calc(var(--std-secondary-s) * .8), calc(var(--std-secondary-l) + (100% - var(--std-secondary-l)) * .6));
+    --std-secondary-tint4: hsl(var(--std-secondary-h), calc(var(--std-secondary-s) * .8), calc(var(--std-secondary-l) + (100% - var(--std-secondary-l)) * .7));
+    --std-secondary-tint5: hsl(var(--std-secondary-h), calc(var(--std-secondary-s) * .8), calc(var(--std-secondary-l) + (100% - var(--std-secondary-l)) * .8));
+    --std-secondary-tint6: hsl(var(--std-secondary-h), calc(var(--std-secondary-s) * .8), calc(var(--std-secondary-l) + (100% - var(--std-secondary-l)) * .95));
+    --std-secondary-shade1: hsl(var(--std-secondary-h), calc(var(--std-secondary-s) * .6), calc(var(--std-secondary-l) * .9));
+    --std-secondary-shade2: hsl(var(--std-secondary-h), calc(var(--std-secondary-s) * .6), calc(var(--std-secondary-l) * .8));
+    --std-secondary-shade3: hsl(var(--std-secondary-h), calc(var(--std-secondary-s) * .6), calc(var(--std-secondary-l) * .7));
+    --std-secondary-shade4: hsl(var(--std-secondary-h), calc(var(--std-secondary-s) * .6), calc(var(--std-secondary-l) * .6));
+    --std-secondary-shade5: hsl(var(--std-secondary-h), calc(var(--std-secondary-s) * .6), calc(var(--std-secondary-l) * .5));
+    --std-secondary-shade6: hsl(var(--std-secondary-h), calc(var(--std-secondary-s) * .6), calc(var(--std-secondary-l) * .4));
+    --std-secondary-tone1: hsl(var(--std-secondary-h), calc(var(--std-secondary-s) * .8), calc(var(--std-secondary-l) * 1.0));
+    --std-secondary-tone2: hsl(var(--std-secondary-h), calc(var(--std-secondary-s) * .6), calc(var(--std-secondary-l) * 1.0));
+    --std-secondary-tone3: hsl(var(--std-secondary-h), calc(var(--std-secondary-s) * .4), calc(var(--std-secondary-l) * 1.0));
+    --std-secondary-tone4: hsl(var(--std-secondary-h), calc(var(--std-secondary-s) * .3), calc(var(--std-secondary-l) * 1.0));
+    --std-secondary-tone5: hsl(var(--std-secondary-h), calc(var(--std-secondary-s) * .2), calc(var(--std-secondary-l) * 1.0));
+    --std-secondary-tone6: hsl(var(--std-secondary-h), calc(var(--std-secondary-s) * .1), calc(var(--std-secondary-l) * 1.0));
+
+    --std-text1: hsl(0, 0%, 13%);
+    --std-text2: hsl(0, 0%, 36%);
+    --std-text3: hsl(0, 0%, 69%);
+    --std-text1-inverse: hsl(0, 0%, 100%);
+    --std-text2-inverse: hsl(0, 0%, 87%);
+    --std-text3-inverse: hsl(0, 0%, 64%);
+
+    --std-background1: hsl(0, 0%, 100%);
+    --std-background2: hsl(0, 0%, 97%);
+    --std-background3: hsl(0, 0%, 94%);
+    --std-background1-inverse: hsl(0, 0%, 13%);
+    --std-background2-inverse: hsl(0, 0%, 32%);
+    --std-background3-inverse: hsl(0, 0%, 41%);
+
+    --std-primary-action: var(--std-primary-accent);
+    --std-primary-success: #388e3c; /* --std-green8 */
+    --std-primary-warning: #ffc107; /* --std-amber6 */
+    --std-primary-error: #ff5722; /* --std-deeporange6 */
+}
+
+.std-primary-accent { color: var(--std-primary-accent); }
+.std-secondary-accent { color: var(--std-secondary-accent); }
+.std-primary-tint1 { color: var(--std-primary-tint1); }
+.std-primary-tint2 { color: var(--std-primary-tint2); }
+.std-primary-tint3 { color: var(--std-primary-tint3); }
+.std-primary-tint4 { color: var(--std-primary-tint4); }
+.std-primary-tint5 { color: var(--std-primary-tint5); }
+.std-primary-tint6 { color: var(--std-primary-tint6); }
+.std-primary-shade1 { color: var(--std-primary-shade1); }
+.std-primary-shade2 { color: var(--std-primary-shade2); }
+.std-primary-shade3 { color: var(--std-primary-shade3); }
+.std-primary-shade4 { color: var(--std-primary-shade4); }
+.std-primary-shade5 { color: var(--std-primary-shade5); }
+.std-primary-shade6 { color: var(--std-primary-shade6); }
+.std-primary-tone1 { color: var(--std-primary-tone1); }
+.std-primary-tone2 { color: var(--std-primary-tone2); }
+.std-primary-tone3 { color: var(--std-primary-tone3); }
+.std-primary-tone4 { color: var(--std-primary-tone4); }
+.std-primary-tone5 { color: var(--std-primary-tone5); }
+.std-primary-tone6 { color: var(--std-primary-tone6); }
+.std-text1 { color: var(--std-text1); }
+.std-text1-inverse { color: var(--std-text1-inverse); }
+.std-text2 { color: var(--std-text2); }
+.std-text2-inverse { color: var(--std-text2-inverse); }
+.std-text3 { color: var(--std-text3); }
+.std-text3-inverse { color: var(--std-text3-inverse); }
+.std-back1 { background-color: var(--std-background1); }
+.std-back1-inverse { background-color: var(--std-background1-inverse); }
+.std-back2 { background-color: var(--std-background2); }
+.std-back2-inverse { background-color: var(--std-background2-inverse); }
+.std-back3 { background-color: var(--std-background3); }
+.std-back3-inverse { background-color: var(--std-background3-inverse); }

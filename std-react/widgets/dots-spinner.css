@@ -1,0 +1,42 @@
+.StdDotsSpinner {
+    display: inline-flex;
+}
+
+.StdDotsSpinner-Dot {
+    opacity: 0;
+    width: 8px;
+    height: 8px;
+    margin: 5px;
+    border-radius: 50%;
+}
+
+.StdDotsSpinner[data-active] .StdDotsSpinner-Dot {
+    opacity: 1;
+    animation-name: dots-spinner;
+    animation-duration: 1s;
+    animation-direction: alternate-reverse;
+    animation-iteration-count: infinite;
+}
+
+.StdDotsSpinner-Dot1 {
+    animation-delay: 0s;
+}
+
+.StdDotsSpinner-Dot2 {
+    animation-delay: .2s;
+}
+
+.StdDotsSpinner-Dot3 {
+    animation-delay: .4s;
+}
+
+@keyframes dots-spinner {
+    0% {
+        background-color: white;
+        transform: scale(.6);
+    }
+
+    100% {
+        background-color: currentColor;
+    }
+}

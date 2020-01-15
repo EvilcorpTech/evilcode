@@ -1,0 +1,37 @@
+#!/usr/bin/env sh
+
+# Builds a package. Supports absolute and relative paths and custom build options
+# provided as env variables and arguments.
+# For building presets, see `build`.
+#
+# EXAMPLE
+# ./build-pkg ../std-lib --module commonjs --outDir cjs
+
+if test $# -eq 0; then
+        echo " Usage: $(basename "$0") <pkg_dir> [ <options> ]"
+        exit 1
+fi
+if test ! -e "$1"; then
+        echo "Package '$1' not found."
+        exit 1
+fi
+
+ProjectDir="$(cd "$(dirname "$0")/.." && pwd)"
+
+: ${ENV:=pro}
+
+. "$ProjectDir/tools/env.sh"
+
+: ${TypeScriptCompiler:=tsc}
+: ${TypeScriptCompilerArgs:=--listEmittedFiles} # --watch
+
+case "$1" in
+        /*) cd "$1";;
+        *) cd "$PWD/$1";;
+esac
+shift
+
+path_add "$PWD/node_modules/.bin"
+
+set -- $TypeScriptCompilerArgs "$@"
+exec $TypeScriptCompiler "$@"

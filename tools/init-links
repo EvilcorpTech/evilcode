@@ -1,0 +1,61 @@
+#!/usr/bin/env sh
+
+# Links all packages, without installing external dependencies. Used for linking
+# packages inside a third part project that needs deduplication (web projects).
+#
+# EXAMPLE
+# ./init-links
+
+ProjectDir="$(cd "$(dirname "$0")/.." && pwd)"
+
+. "$ProjectDir/tools/env.sh"
+. "$ProjectDir/tools/env-styles.sh"
+
+: ${Npm:=npm}
+: ${NpmInstallCmd:=install}
+: ${NpmInstallArgs:=--color false --no-progress}
+
+link() {(
+        local pkg="$1"
+        shift
+        echo "Linking ${GreenStyle}$(basename "$pkg")${ResetStyle}..."
+        mkdir -p "$pkg/node_modules/@eviljs"
+        for dep; do
+                echo "| --> ${BlueStyle}$dep${ResetStyle}"
+                if test -L "$pkg/node_modules/@eviljs/$dep"; then
+                        rm "$pkg/node_modules/@eviljs/$dep"
+                fi
+                if test -e "$pkg/node_modules/@eviljs/$dep"; then
+                        echo "Can't unlink $pkg/node_modules/@eviljs/$dep"
+                        exit 1
+                fi
+                ln -s ../../../$dep "$pkg/node_modules/@eviljs/"
+        done
+        # (
+        # set -- $NpmInstallCmd $NpmInstallArgs --no-save --no-package-lock "$@"
+        # if ! $Npm "$@"; then
+        #         printf -- "${ResetStyle}"
+        #         exit 1
+        # fi
+        # )
+        # (
+        # set -- $NpmInstallCmd $NpmInstallArgs
+        # if ! $Npm "$@"; then
+        #         printf -- "${ResetStyle}"
+        #         exit 1
+        # fi
+        # )
+)}
+
+link "$ProjectDir/std-db-sql" std-lib std-node
+link "$ProjectDir/std-node" std-lib
+link "$ProjectDir/std-react" std-lib std-theme std-web
+link "$ProjectDir/std-rest" std-lib std-node
+link "$ProjectDir/std-web" std-lib
+# link "$ProjectDir/std-lib"
+# link "$ProjectDir/std-theme"
+# link "$ProjectDir/std-db-mongo" std-lib std-node
+# link "$ProjectDir/std-graphql-server" std-lib std-node
+# link "$ProjectDir/std-rabbitmq" std-lib std-node
+
+echo "${GreenStyle}done${ResetStyle}"

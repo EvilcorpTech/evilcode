@@ -1,0 +1,144 @@
+.StdThemeView {
+    width: 100%;
+    min-height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: var(--std-gutter-m);
+    background-color: var(--std-background1);
+}
+
+.StdThemeView label {
+    display: inline-block;
+    cursor: default;
+}
+
+.StdThemeView .std-button,
+.StdThemeView-Color,
+.StdThemeView-Contrast,
+.StdThemeView-Duration,
+.StdThemeView-Gutter,
+.StdThemeView-Gutter label,
+.StdThemeView-Icon,
+.StdThemeView-Icon label,
+.StdThemeView-Picker,
+.StdThemeView-Radius,
+.StdThemeView-Shadow,
+.StdThemeView-Text {
+    transition: all var(--std-duration-normal);
+}
+.StdThemeView .std-button:hover,
+.StdThemeView-Color:hover,
+.StdThemeView-Duration:hover,
+.StdThemeView-Gutter:hover label,
+.StdThemeView-Icon:hover,
+.StdThemeView-Picker:hover,
+.StdThemeView-Radius:hover,
+.StdThemeView-Shadow:hover,
+.StdThemeView-Text:hover {
+    z-index: 1;
+    transform: scale(1.2);
+}
+
+.StdThemeView-Duration,
+.StdThemeView-Radius,
+.StdThemeView-Shadow {
+    background-color: var(--std-background1);
+}
+
+.StdThemeView-Picker {
+    width: 40px;
+    height: 40px;
+    border-radius: 40px;
+    overflow: hidden;
+    clip-path: circle(15px);
+    cursor: pointer;
+}
+
+.StdThemeView-Color {
+    width: 2em;
+    height: 2em;
+    margin: var(--std-gutter-xs);
+    border: var(--std-gutter-mini) solid white;
+    border-radius: 50%;
+    box-shadow: var(--std-shadow-soft);
+    transition: all var(--std-duration-normal);
+}
+.StdThemeView-Color:hover {
+    box-shadow: var(--std-shadow4);
+}
+
+.StdThemeView-Contrast {
+    width: 200px;
+    min-height: 100px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: var(--std-gutter-mini) solid transparent;
+    padding: var(--std-gutter-xs);
+    border-radius: var(--std-radius-l);
+    overflow: hidden;
+    box-shadow: var(--std-shadow24);
+}
+.StdThemeView-Contrast:hover {
+    border-color: currentColor;
+}
+
+.StdThemeView .std-button {
+    margin: var(--std-gutter-xxs) var(--std-gutter-xs);
+}
+
+div.StdThemeView-Gutter {
+    display: block;
+    height: 50px;
+    line-height: 50px;
+    background-color: var(--std-grey2, hsl(0,0%,95%));
+}
+.StdThemeView-Gutter > label {
+    transform-origin: left;
+}
+.StdThemeView-Gutter:hover {
+    background-color: var(--std-primary-tint5);
+}
+
+.StdThemeView-Radius {
+    margin: 0 var(--std-gutter-xs);
+    padding: var(--std-gutter-s);
+    border: 4px solid var(--std-grey3, hsl(0,0%,90%));
+    background-color: var(--std-grey3, hsl(0,0%,90%));
+}
+.StdThemeView-Radius:hover {
+    color: var(--std-primary-accent);
+    background-color: var(--std-background1);
+    border-color: currentColor;
+}
+
+.StdThemeView-Icon {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: var(--std-gutter-s);
+}
+.StdThemeView-Icon:hover label {
+    color: var(--std-primary-accent);
+}
+
+.StdThemeView-Duration {
+    width: 80px;
+    line-height: 80px;
+    text-align: center;
+    margin: var(--std-gutter-xs) var(--std-gutter-s);
+    box-shadow: var(--std-shadow4);
+}
+.StdThemeView-Duration:hover {
+    border-radius: 50%;
+}
+
+.StdThemeView-Shadow {
+    width: 60px;
+    line-height: 60px;
+    margin: var(--std-gutter-xs) var(--std-gutter-s);
+    border-radius: 50%;
+    text-align: center;
+}

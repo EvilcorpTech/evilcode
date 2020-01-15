@@ -1,0 +1,20 @@
+{
+    "name": "@eviljs/std-theme",
+    "version": "0.1.2",
+    "main": "index.css",
+    "author": "Daniele Orlando",
+    "license": "BSD-2-Clause",
+    "description": "Awesome CSS theme",
+    "keywords": [
+        "CSS",
+        "Theme"
+    ],
+    "homepage": "https://github.com/EvilRepo/eviljs",
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/EvilRepo/eviljs.git"
+    },
+    "bugs": {
+        "url": "https://github.com/EvilRepo/eviljs/issues"
+    }
+}

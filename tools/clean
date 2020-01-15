@@ -1,0 +1,28 @@
+#!/usr/bin/env sh
+
+ProjectDir="$(cd "$(dirname "$0")/.." && pwd)"
+
+. "$ProjectDir/tools/env.sh"
+. "$ProjectDir/tools/env-styles.sh"
+
+if test $# -eq 0; then
+        set -- "$ProjectDir/std-"*
+fi
+
+for pkg; do
+        if test ! -e "$pkg"; then
+                continue
+        fi
+        echo "Cleaning ${YellowStyle}$(basename "$pkg")${ResetStyle}..."
+        printf -- "${GrayStyle}"
+        rm -fv "$pkg/.tsbuildinfo" || true
+        rm -fv "$pkg/cjs/.tsbuildinfo" || true
+        find "$pkg" \
+                -not -ipath "*/node_modules/*" \
+                \( -iname "*.js" -or -iname "*.d.ts" \) \
+                -exec rm -v "{}" + \
+                2> /dev/null || true
+        printf -- "${ResetStyle}"
+done
+
+echo "${GreenStyle}done${ResetStyle}"

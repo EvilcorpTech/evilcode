@@ -1,0 +1,54 @@
+#!/usr/bin/env sh
+
+# Inits all packages in the right order and with their production and development
+# dependencies. Used to bootstrap the development environment of the packages.
+# For only linking the monorepo packages without installing external dependencies,
+# see `init-links`.
+#
+# EXAMPLE
+# ./init
+
+ProjectDir="$(cd "$(dirname "$0")/.." && pwd)"
+
+. "$ProjectDir/tools/env.sh"
+. "$ProjectDir/tools/env-styles.sh"
+
+: ${Npm:=npm}
+: ${NpmInstallCmd:=install}
+: ${NpmInstallArgs:=--color false --no-progress}
+
+init() {(
+        local pkg="$1"
+        shift
+        cd "$pkg"
+        echo "Initing ${GreenStyle}$(basename "$pkg")${ResetStyle}..."
+        printf -- "${GrayStyle}"
+        (
+        set -- $NpmInstallCmd $NpmInstallArgs --no-save --no-package-lock "$@"
+        if ! $Npm "$@"; then
+                printf -- "${ResetStyle}"
+                exit 1
+        fi
+        )
+        (
+        set -- $NpmInstallCmd $NpmInstallArgs
+        if ! $Npm "$@"; then
+                printf -- "${ResetStyle}"
+                exit 1
+        fi
+        )
+        printf -- "${ResetStyle}"
+)}
+
+init "$ProjectDir/std-lib"
+init "$ProjectDir/std-node" ../std-lib
+init "$ProjectDir/std-rest" ../std-lib ../std-node
+init "$ProjectDir/std-db-sql" ../std-lib ../std-node
+init "$ProjectDir/std-theme"
+init "$ProjectDir/std-web" ../std-lib
+init "$ProjectDir/std-react" ../std-lib ../std-theme ../std-web
+# init "$ProjectDir/std-db-mongo" ../std-lib ../std-node
+# init "$ProjectDir/std-graphql-server" ../std-lib ../std-node
+# init "$ProjectDir/std-rabbitmq" ../std-lib ../std-node
+
+echo "${GreenStyle}done${ResetStyle}"

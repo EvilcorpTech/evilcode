@@ -1,1 +1,9 @@
+*.code-workspace
+*.d.ts
+*.js
+.tsbuildinfo
+.vscode
 node_modules
+package-lock.json
+private
+/TODO-*

@@ -1,0 +1,151 @@
+/* Common ////////////////////////////////////////////////////////////////////*/
+.std-button {
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    user-select: none;
+    transition: all;
+    transition-duration: var(--std-duration-normal);
+}
+.std-button[disabled],
+.std-button[disabled]:hover {
+    opacity: .3;
+    pointer-events: none;
+}
+
+/* Plain /////////////////////////////////////////////////////////////////////*/
+
+.std-button-plain {
+    opacity: .7;
+}
+.std-button-plain:hover,
+.std-button-plain:active {
+    opacity: unset;
+}
+.std-button-plain:hover {
+    color: var(--std-primary-accent);
+}
+.std-button-plain:active {
+    color: var(--std-primary-shade1);
+}
+
+/* Special ///////////////////////////////////////////////////////////////////*/
+
+.std-button-special {
+    padding: var(--std-gutter-xxs) var(--std-gutter-s);
+    border: 2px solid transparent;
+    border-radius: var(--std-radius-xl);
+    color: var(--std-text1-inverse);
+    background-color: var(--std-primary-accent);
+}
+.std-button-special:hover,
+.std-button-special:active {
+    color: var(--std-primary-shade1);
+    border-color: var(--std-primary-tint1);
+}
+.std-button-special:hover {
+    background-color: var(--std-background1);
+}
+.std-button-special:active {
+    background-color: var(--std-background2);
+}
+
+/* Primary ///////////////////////////////////////////////////////////////////*/
+
+.std-button-primary {
+    padding: var(--std-gutter-xxs) var(--std-gutter-s);
+    border-radius: var(--std-radius-xl);
+    color: var(--std-text1-inverse);
+    background-color: var(--std-primary-accent);
+}
+.std-button-primary:hover,
+.std-button-primary:active {
+    color: var(--std-text1-inverse);
+}
+.std-button-primary:hover {
+    background-color: var(--std-primary-shade1);
+}
+.std-button-primary:active {
+    background-color: var(--std-primary-shade3);
+}
+
+/* Secondary /////////////////////////////////////////////////////////////////*/
+
+.std-button-secondary {
+    padding: var(--std-gutter-xxs) var(--std-gutter-s);
+    border-radius: var(--std-radius-xl);
+    color: var(--std-text2);
+    background-color: var(--std-grey4, hsl(0,0%,90%));
+}
+.std-button-secondary:hover,
+.std-button-secondary:active {
+    color: var(--std-text1);
+}
+.std-button-secondary:hover {
+    background-color: var(--std-grey5, hsl(0,0%,80%));
+}
+.std-button-secondary:active {
+    background-color: var(--std-grey6, hsl(0,0%,70%));
+}
+
+/* Tertiary //////////////////////////////////////////////////////////////////*/
+
+.std-button-tertiary {
+    padding: var(--std-gutter-xxs) var(--std-gutter-s);
+    border-radius: var(--std-radius-xl);
+    color: var(--std-text1);
+    background-color: transparent;
+    z-index: 1;
+}
+.std-button-tertiary::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: block;
+    border-radius: var(--std-radius-xl);
+    z-index: -1;
+    background-color: var(--std-primary-tint6);
+    opacity: 0;
+    transform: scale(0);
+    transition: all;
+    transition-duration: var(--std-duration-normal);
+}
+.std-button-tertiary:hover,
+.std-button-tertiary:active {
+    color: var(--std-primary-shade2);
+}
+.std-button-tertiary:hover::after {
+    opacity: 1;
+    transform: scale(1);
+}
+.std-button-tertiary:active::after {
+    background-color: var(--std-primary-tint5);
+}
+
+/* Flat //////////////////////////////////////////////////////////////////////*/
+
+.std-button-flat {
+    padding: var(--std-gutter-mini) var(--std-gutter-m);
+    border: 2px solid var(--std-primary-shade1);
+    border-radius: var(--std-radius-xl);
+    color: var(--std-primary-shade1);
+    background-color: transparent;
+}
+.std-button-flat[disabled] {
+    opacity: .4;
+    pointer-events: none;
+}
+.std-button-flat:hover,
+.std-button-flat:active {
+    color: var(--std-text1-inverse);
+}
+.std-button-flat:hover {
+    background-color: var(--std-primary-shade1);
+}
+.std-button-flat:active {
+    background-color: var(--std-primary-shade3);
+}

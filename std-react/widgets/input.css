@@ -1,0 +1,40 @@
+.StdInput {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    padding: var(--std-gutter-xxs) var(--std-gutter-xs);
+    border: 1px solid var(--std-primary-border-color);
+    border-bottom: 3px solid var(--std-primary-border-color);
+    border-radius: var(--std-radius-s);
+    background-color: var(--std-background1);
+    transition: all var(--std-duration-fast);
+}
+
+.StdInput-Label {
+    color: var(--std-text3);
+    margin-bottom: var(--std-gutter-xxs);
+    transition: all var(--std-duration-normal);
+    transform-origin: top left;
+    pointer-events: none;
+}
+
+.StdInput.StdInput_placeholder {
+    background-color: var(--std-background3);
+}
+.StdInput_focus {
+    border-bottom-color: var(--std-primary-tone1);
+}
+
+.StdInput_placeholder .StdInput-Label {
+    font-weight: var(--std-weight-regular);
+}
+
+.StdInput-Input {
+    border-bottom: 1px solid transparent;
+    background-color: transparent;
+}
+
+.StdInput:hover .StdInput-Label,
+.StdInput-Input {
+    color: var(--std-primary-shade1);
+}

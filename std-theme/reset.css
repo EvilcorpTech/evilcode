@@ -1,0 +1,145 @@
+* {
+    box-sizing: border-box;
+    outline: 0;
+    border: 0;
+    margin: 0;
+    padding: 0;
+    /*
+    font-family: inherit
+    font-size: 100%
+    font-weight: inherit
+    font-style: inherit
+    color: inherit
+    line-height: 1
+    vertical-align: baseline
+    */
+}
+
+/*
+*,
+*:before,
+*:after {
+    margin: inherit
+    padding: inherit
+    box-sizing: inherit
+}
+*/
+
+html,
+body {
+    width: 100%;
+    max-width: 100%;
+    min-height: 100%;
+    height: 100%;
+    max-height: 100%;
+
+    color: var(--std-text1);
+    background-color: var(--std-background1);
+
+    -webkit-font-smoothing: antialiased;
+    -webkit-font-smoothing: subpixel-antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    -webkit-overflow-scrolling: touch;
+}
+
+html {
+    font-size: 100%;
+}
+
+body {
+    /* Don't use with the 'html' tag otherwise the page will not be scrollable. */
+    overflow-x: hidden;
+}
+
+article,
+aside,
+details,
+figcaption,
+figure,
+footer,
+header,
+hgroup,
+menu,
+nav,
+section {
+    display: block;
+}
+
+span,
+ul,
+li {
+    display: inline-block;
+}
+
+ol,
+ul {
+    list-style: none;
+}
+
+a {
+    display: inline-block;
+    color: inherit;
+    text-decoration: none;
+}
+
+a:visited {
+    color: inherit;
+}
+
+a:hover {
+    text-decoration: none;
+}
+
+button {
+    position: relative; /* Supports ripple animations. */
+    background: none;
+    user-select: none;
+    /*
+    border: 0;
+    outline: 0;
+    text-transform: uppercase;
+    */
+}
+
+a:hover,
+button:hover {
+    cursor: pointer;
+}
+
+i,
+em {
+    font-style: italic;
+}
+
+b,
+strong {
+    font-weight: var(--std-weight-bold);
+}
+
+textarea {
+    width: 100%;
+    height: 100%;
+}
+
+blockquote,
+q {
+    quotes: none;
+}
+
+blockquote:before,
+blockquote:after,
+q:before,
+q:after {
+    content: '';
+    content: none;
+}
+
+[hidden] {
+    display: none !important;
+}
+
+[invisible] {
+    opacity: 0 !important;
+    pointer-events: none;
+    user-select: none;
+}

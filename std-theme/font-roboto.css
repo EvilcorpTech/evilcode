@@ -1,0 +1,48 @@
+@font-face {
+    font-family: 'std-primary-font';
+    font-style: normal;
+    font-weight: 200;
+    src: url('./font-roboto/1_thin.woff') format('woff');
+}
+
+@font-face {
+    font-family: 'std-primary-font';
+    font-style: normal;
+    font-weight: 300;
+    src: url('./font-roboto/2_light.woff') format('woff');
+}
+
+@font-face {
+    font-family: 'std-primary-font';
+    font-style: normal;
+    font-weight: 400;
+    src: url('./font-roboto/3_regular.woff') format('woff');
+}
+
+@font-face {
+    font-family: 'std-primary-font';
+    font-style: normal;
+    font-weight: 500;
+    src: url('./font-roboto/4_medium.woff') format('woff');
+}
+
+@font-face {
+    font-family: 'std-primary-font';
+    font-style: normal;
+    font-weight: 600;
+    src: url('./font-roboto/5_bold.woff') format('woff');
+}
+
+@font-face {
+    font-family: 'std-primary-font';
+    font-style: normal;
+    font-weight: 700;
+    src: url('./font-roboto/6_black.woff') format('woff');
+}
+
+@font-face {
+    font-family: 'std-primary-font';
+    font-style: normal;
+    font-weight: 800;
+    src: url('./font-roboto/6_black.woff') format('woff');
+}
