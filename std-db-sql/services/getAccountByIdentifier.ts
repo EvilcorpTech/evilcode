@@ -22,7 +22,7 @@ export async function getAccountByIdentifier(
             FROM \`${$Account.Table}\`
             WHERE identifier = ?
             LIMIT 1
-        `, [identifier]
+        `, [identifier.toLowerCase()]
     ] as const
     const result = await db.query(...query) as ReadResult
     if (result.length !== 1) {

@@ -14,7 +14,7 @@ async function getSessionsByAccountIdentifier(db: Db<GetSessionByAccountIdentifi
                 INNER JOIN \`${$Account.Table}\` AS A
                 ON S.account = A.id
             WHERE A.identifier = ?
-        `, [accountIdentifier]
+        `, [accountIdentifier.toLowerCase()]
     ] as const
     const result = await db.query(...query) as ReadResult
     const model = result.map($Session.fromData)
