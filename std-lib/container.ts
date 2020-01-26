@@ -130,8 +130,8 @@ export interface ContainerSpec<F extends ContainerFactories> {
 export type Container<F extends ContainerFactories = any> = {
     [ContainerFactories]: F
     [ContainerInstances]: ContainerServicesOf<F>
-    require: (id: ServiceId) => unknown
-    register: (id: ServiceId, service: ServiceFactory) => void
+    require: (id: ServiceId) => Container<F>
+    register: (id: ServiceId, service: ServiceFactory) => Container<F>
     Container: Container<F>
 } & ContainerServicesOf<F>
 
