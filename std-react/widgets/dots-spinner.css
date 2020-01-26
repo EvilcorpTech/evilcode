@@ -4,13 +4,13 @@
 
 .StdDotsSpinner-Dot {
     opacity: 0;
-    width: 8px;
-    height: 8px;
-    margin: 5px;
+    width: .5em;
+    height: .5em;
+    margin: .25em;
     border-radius: 50%;
 }
 
-.StdDotsSpinner[data-active] .StdDotsSpinner-Dot {
+.StdDotsSpinner.active .StdDotsSpinner-Dot {
     opacity: 1;
     animation-name: dots-spinner;
     animation-duration: 1s;

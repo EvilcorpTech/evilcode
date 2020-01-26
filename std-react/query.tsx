@@ -1,4 +1,4 @@
-import { createContext, createElement, useContext, useState } from 'react'
+import { createContext, createElement, useContext, useEffect, useRef, useState } from 'react'
 import { Query, QueryRequestOptions } from '@eviljs/std-web/query'
 
 export const QueryContext = createContext<Query>(void undefined as any)
@@ -28,18 +28,30 @@ export function withQuery(Child: React.ComponentType, query: Query) {
 export function useQuery<T>(queryRunner: QueryRunner<T>) {
     const [ response, setResponse ] = useState<T>()
     const [ pending, setPending ] = useState(false)
+    const destroyed = useRef(false)
     const query = useContext(QueryContext)
+
+    useEffect(() => {
+        function teardown() {
+            destroyed.current = true
+        }
+        return teardown
+    }, [])
 
     async function run(options?: QueryRequestOptions) {
         setPending(true)
 
         try {
             const response = await queryRunner(query, options)
-            setResponse(response)
+            if (! destroyed.current) {
+                setResponse(response)
+            }
             return response
         }
         finally {
-            setPending(false)
+            if (! destroyed.current) {
+                setPending(false)
+            }
         }
     }
 

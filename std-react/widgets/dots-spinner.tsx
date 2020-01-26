@@ -7,10 +7,7 @@ export function DotsSpinner(props: DotsSpinnerProps) {
     const { active = true } = props
 
     return (
-        <div
-            {...className('StdDotsSpinner', props.className)}
-            data-active={active}
-        >
+        <div {...className('StdDotsSpinner', props.className, {active})}>
             <span className="StdDotsSpinner-Dot StdDotsSpinner-Dot1"/>
             <span className="StdDotsSpinner-Dot StdDotsSpinner-Dot2"/>
             <span className="StdDotsSpinner-Dot StdDotsSpinner-Dot3"/>

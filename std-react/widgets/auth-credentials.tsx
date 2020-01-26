@@ -94,10 +94,9 @@ export function AuthCredentials(props: AuthCredentialsProps) {
             </div>
 
             <Button
-                {...className('StdAuthCredentials-Submit', {
-                    'std-shadow8': validCredentials,
-                    'StdAuthCredentials-Submit_busy': pending,
-                })}
+                {...className('StdAuthCredentials-Submit',
+                    {busy: pending, 'std-shadow8': validCredentials},
+                )}
                 type="primary"
                 action="submit"
                 disabled={pending || ! validCredentials}
@@ -107,10 +106,7 @@ export function AuthCredentials(props: AuthCredentialsProps) {
                     {messages?.signin ?? 'Signin'}
                 </span>
 
-                {pending && <Spinner
-                    className="StdAuthCredentials-Spinner"
-                    active={pending}
-                />}
+                <Spinner className="StdAuthCredentials-Spinner" active={pending}/>
             </Button>
         </form>
     )
