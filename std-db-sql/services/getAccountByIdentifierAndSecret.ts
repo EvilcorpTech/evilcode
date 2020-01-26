@@ -30,7 +30,7 @@ export async function getAccountByIdentifierAndSecret(
     }
 
     const secretHash = accountModel.secretHash as string
-    const secretDoesMatch = compareWithSaltedHash(secret, secretHash)
+    const secretDoesMatch = await compareWithSaltedHash(secret, secretHash)
 
     if (! secretDoesMatch) {
         return {error: 'secret_not_matching'}
