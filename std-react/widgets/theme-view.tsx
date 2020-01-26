@@ -64,7 +64,7 @@ export function ThemeView(props: ThemeViewProps) {
 
             <div className="std-stack-h">
                 <div className="std-stack-v">
-                    <div className="std-stack-h">
+                    <div className="std-stack-h" style={{alignItems: 'flex-end'}}>
                         <div className="std-stack-v" style={{alignItems: 'flex-start'}}>
                             <label className="StdThemeView-Text std-text-display1">Display 1</label>
                             <label className="StdThemeView-Text std-text-h1">Headline 1</label>
@@ -80,7 +80,6 @@ export function ThemeView(props: ThemeViewProps) {
                             <label className="StdThemeView-Text std-text-caption">Caption</label>
                             <label className="StdThemeView-Text std-text-overline">Overline</label>
                             <label className="StdThemeView-Text std-text-button">Button</label>
-                            <div className="std-space-m"></div>
                         </div>
 
                         <div className="std-stack-v" style={{alignItems: 'flex-end'}}>
@@ -93,7 +92,6 @@ export function ThemeView(props: ThemeViewProps) {
                             <div className="StdThemeView-Gutter std-space-xl"><label>XL</label></div>
                             <div className="StdThemeView-Gutter std-space-xxl"><label>XXL</label></div>
                             <div className="StdThemeView-Gutter std-space-maxi"><label>Maxi</label></div>
-                            <div className="std-space-m"></div>
                         </div>
                     </div>
 
@@ -133,6 +131,7 @@ export function ThemeView(props: ThemeViewProps) {
                         </label>
                     </div>
                     <div className="std-space-m"></div>
+                    <div className="std-space-m"></div>
                 </div>
 
                 <div className="std-space-m"></div>
@@ -149,6 +148,7 @@ export function ThemeView(props: ThemeViewProps) {
                                     style={{backgroundColor: 'var(--std-primary-accent)'}}
                                 />
                             </div>
+                            <div className="std-space-s"></div>
                             <div className="std-stack-h">
                                 <label>Tints</label>
                                 <div className="std-spacer"></div>
@@ -161,6 +161,7 @@ export function ThemeView(props: ThemeViewProps) {
                                     />
                                 ))}
                             </div>
+                            <div className="std-space-s"></div>
                             <div className="std-stack-h">
                                 <label>Shades</label>
                                 <div className="std-spacer"></div>
@@ -173,6 +174,7 @@ export function ThemeView(props: ThemeViewProps) {
                                     />
                                 ))}
                             </div>
+                            <div className="std-space-s"></div>
                             <div className="std-stack-h">
                                 <label>Tones</label>
                                 <div className="std-spacer"></div>
@@ -197,6 +199,7 @@ export function ThemeView(props: ThemeViewProps) {
                                     style={{backgroundColor: 'var(--std-secondary-accent)'}}
                                 />
                             </div>
+                            <div className="std-space-s"></div>
                             <div className="std-stack-h">
                                 <label>Tints</label>
                                 <div className="std-spacer"></div>
@@ -209,6 +212,7 @@ export function ThemeView(props: ThemeViewProps) {
                                     />
                                 ))}
                             </div>
+                            <div className="std-space-s"></div>
                             <div className="std-stack-h">
                                 <label>Shades</label>
                                 <div className="std-spacer"></div>
@@ -221,6 +225,7 @@ export function ThemeView(props: ThemeViewProps) {
                                     />
                                 ))}
                             </div>
+                            <div className="std-space-s"></div>
                             <div className="std-stack-h">
                                 <label>Tones</label>
                                 <div className="std-spacer"></div>
@@ -234,8 +239,10 @@ export function ThemeView(props: ThemeViewProps) {
                                 ))}
                             </div>
                             <div className="std-space-m"></div>
+                            <div className="std-space-m"></div>
                         </div>
 
+                        <div className="std-space-m"></div>
                         <div className="std-space-m"></div>
 
                         <div className="std-stack-v">
@@ -247,6 +254,7 @@ export function ThemeView(props: ThemeViewProps) {
                                 <button className="std-button std-text-button std-button-flat">Flat</button>
                                 <button className="std-button std-text-button std-button-plain">Plain</button>
                             </div>
+                            <div className="std-space-xs"></div>
                             <div>
                                 <button className="std-button std-text-button std-button-special" disabled>Special</button>
                                 <button className="std-button std-text-button std-button-primary" disabled>Primary</button>
@@ -269,15 +277,13 @@ export function ThemeView(props: ThemeViewProps) {
                             <div className="std-space-m"></div>
 
                             <div>
-                                <label className="StdThemeView-Radius std-radius-maxi">Maxi</label>
-                                <label className="StdThemeView-Radius std-radius-xl">XL</label>
-                                <label className="StdThemeView-Radius std-radius-l">L</label>
-                                <label className="StdThemeView-Radius std-radius-m">M</label>
-                                <label className="StdThemeView-Radius std-radius-s">S</label>
-                                <label className="StdThemeView-Radius std-radius-xs">XS</label>
-                                <label className="StdThemeView-Radius std-radius-mini">Mini</label>
+                                <label className="StdThemeView-Duration" style={{transitionDuration: 'var(--std-duration-slow)'}}>Slow</label>
+                                <label className="StdThemeView-Duration" style={{transitionDuration: 'var(--std-duration-normal)'}}>Normal</label>
+                                <label className="StdThemeView-Duration" style={{transitionDuration: 'var(--std-duration-fast)'}}>Fast</label>
+                                <label className="StdThemeView-Duration" style={{transitionDuration: 'var(--std-duration-flash)'}}>Flash</label>
                             </div>
 
+                            <div className="std-space-m"></div>
                             <div className="std-space-m"></div>
 
                             <div className="std-stack-h" style={{alignItems: 'flex-end'}}>
@@ -293,12 +299,16 @@ export function ThemeView(props: ThemeViewProps) {
                             </div>
 
                             <div className="std-space-m"></div>
+                            <div className="std-space-m"></div>
 
                             <div>
-                                <label className="StdThemeView-Duration" style={{transitionDuration: 'var(--std-duration-slow)'}}>Slow</label>
-                                <label className="StdThemeView-Duration" style={{transitionDuration: 'var(--std-duration-normal)'}}>Normal</label>
-                                <label className="StdThemeView-Duration" style={{transitionDuration: 'var(--std-duration-fast)'}}>Fast</label>
-                                <label className="StdThemeView-Duration" style={{transitionDuration: 'var(--std-duration-flash)'}}>Flash</label>
+                                <label className="StdThemeView-Radius std-radius-maxi">Maxi</label>
+                                <label className="StdThemeView-Radius std-radius-xl">XL</label>
+                                <label className="StdThemeView-Radius std-radius-l">L</label>
+                                <label className="StdThemeView-Radius std-radius-m">M</label>
+                                <label className="StdThemeView-Radius std-radius-s">S</label>
+                                <label className="StdThemeView-Radius std-radius-xs">XS</label>
+                                <label className="StdThemeView-Radius std-radius-mini">Mini</label>
                             </div>
 
                             <div className="std-space-m"></div>
@@ -317,6 +327,7 @@ export function ThemeView(props: ThemeViewProps) {
                         ))}
                     </div>
 
+                    <div className="std-space-m"></div>
                     <div className="std-space-m"></div>
                 </div>
             </div>

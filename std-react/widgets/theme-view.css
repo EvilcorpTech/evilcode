@@ -59,7 +59,7 @@
 .StdThemeView-Color {
     width: 2em;
     height: 2em;
-    margin: var(--std-gutter-xs);
+    margin: 0 var(--std-gutter-xs);
     border: var(--std-gutter-mini) solid white;
     border-radius: 50%;
     box-shadow: var(--std-shadow-soft);
@@ -86,7 +86,7 @@
 }
 
 .StdThemeView .std-button {
-    margin: var(--std-gutter-xxs) var(--std-gutter-xs);
+    margin: 0 var(--std-gutter-xs);
 }
 
 div.StdThemeView-Gutter {
@@ -118,7 +118,7 @@ div.StdThemeView-Gutter {
     display: flex;
     flex-direction: column;
     align-items: center;
-    margin: var(--std-gutter-s);
+    margin: 0 var(--std-gutter-s);
 }
 .StdThemeView-Icon:hover label {
     color: var(--std-primary-accent);
@@ -128,7 +128,7 @@ div.StdThemeView-Gutter {
     width: 80px;
     line-height: 80px;
     text-align: center;
-    margin: var(--std-gutter-xs) var(--std-gutter-s);
+    margin: 0 var(--std-gutter-s);
     box-shadow: var(--std-shadow4);
 }
 .StdThemeView-Duration:hover {
