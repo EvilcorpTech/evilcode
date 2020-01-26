@@ -1,9 +1,9 @@
 {
     "name": "@eviljs/std-db-sql",
-    "version": "0.1.1",
+    "version": "0.1.3",
     "dependencies": {
-        "@eviljs/std-lib": "0.1.0",
-        "@eviljs/std-node": "0.1.1",
+        "@eviljs/std-lib": "0.1.3",
+        "@eviljs/std-node": "0.1.2",
         "@types/node": "13.1.7",
         "mariadb": "2.1.5",
         "tslib": "1.10.0"
