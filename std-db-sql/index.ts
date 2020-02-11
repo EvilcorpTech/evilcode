@@ -210,7 +210,7 @@ export interface DbServices {
 }
 
 export type DbQueryParams = Array<any> | readonly any[]
-export type DbBatchParams = Array<Array<any>> | readonly any[][]
+export type DbBatchParams = Array<Array<any>> | Array<readonly any[]>
 export type DbQueryResult = ReadResult | WriteResult
 
 export type ReadResult<R = Record<string, any>> = Array<R>
