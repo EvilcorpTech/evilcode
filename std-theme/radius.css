@@ -1,4 +1,5 @@
-:root {
+:root,
+.std-theme {
     --std-radius-mini: 4px;
     --std-radius-xs: 6px;
     --std-radius-s: 8px;

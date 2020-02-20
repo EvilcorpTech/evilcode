@@ -10,6 +10,7 @@ export function ThemeView(props: ThemeViewProps) {
     const [ accent1RgbHex, setAccent1RgbHex ] = useState('')
     const [ accent2RgbHex, setAccent2RgbHex ] = useState('')
     const [ input, setInput ] = useState('')
+    const [ themeLight, setThemeLight ] = useState(true)
 
     useEffect(() => {
         const accent1RgbHex = computeAccent()
@@ -31,7 +32,10 @@ export function ThemeView(props: ThemeViewProps) {
     }, [accent1RgbHex, accent2RgbHex])
 
     return (
-        <div {...className('StdThemeView', props.className)}>
+        <div {...className('StdThemeView', props.className, {
+            'std-theme-light': themeLight,
+            'std-theme-dark': ! themeLight,
+        })}>
             <h1 className="std-stack-h std-text-overline std-primary-accent">
                 <input
                     className="StdThemeView-Picker"
@@ -39,18 +43,26 @@ export function ThemeView(props: ThemeViewProps) {
                     value={accent1RgbHex}
                     onChange={(event) => setAccent1RgbHex(event.target.value)}
                 />
-                <div className="std-space-m"></div>
+                <i className="std-space-m"/>
                 <label>Theme</label>
-                <div className="std-space-m"></div>
+                <i className="std-space-m"/>
                 <input
                     className="StdThemeView-Picker"
                     type="color"
                     value={accent2RgbHex}
                     onChange={(event) => setAccent2RgbHex(event.target.value)}
                 />
+
+                <i className="std-space-m"/>
+
+                <i
+                    {...className(['std-toggle', {active: themeLight}])}
+                    onClick={() => setThemeLight(state => ! state)}
+                />
             </h1>
             <style>{accentsHsl && `
-                :root {
+                :root,
+                .std-theme {
                     --std-primary-h: ${accentsHsl[0][0] * 360};
                     --std-primary-s: ${accentsHsl[0][1] * 100}%;
                     --std-primary-l: ${accentsHsl[0][2] * 100}%;
@@ -60,7 +72,7 @@ export function ThemeView(props: ThemeViewProps) {
                 }
             `}</style>
 
-            <div className="std-space-m"></div>
+            <i className="std-space-m"/>
 
             <div className="std-stack-h">
                 <div className="std-stack-v">
@@ -95,46 +107,55 @@ export function ThemeView(props: ThemeViewProps) {
                         </div>
                     </div>
 
-                    <div className="std-space-m"></div>
-                    <div className="std-space-m"></div>
+                    <i className="std-space-m"/>
+                    <i className="std-space-m"/>
 
                     <div className="std-stack-h">
                         <label className="StdThemeView-Contrast std-text1 std-back1">
-                            Primary&nbsp;Text<br/>
-                            Primary&nbsp;Back
+                            Text&nbsp;1<br/>
+                            Back&nbsp;1
                         </label>
                         <label className="StdThemeView-Contrast std-text2 std-back2" style={{transform: 'translateX(-15px)'}}>
-                            Secondary&nbsp;Text<br/>
-                            Secondary&nbsp;Back
+                            Text&nbsp;2<br/>
+                            Back&nbsp;2
                         </label>
                         <label className="StdThemeView-Contrast std-text3 std-back3" style={{transform: 'translateX(-30px)'}}>
-                            Tertiary&nbsp;Text<br/>
-                            Tertiary&nbsp;Back
+                            Text&nbsp;3<br/>
+                            Back&nbsp;3
+                        </label>
+                        <label className="StdThemeView-Contrast std-text3 std-back4" style={{transform: 'translateX(-45px)'}}>
+                            Text&nbsp;3<br/>
+                            Back&nbsp;4
                         </label>
                     </div>
-                    <div className="std-space-m"></div>
+                    <i className="std-space-m"/>
                     <div className="std-stack-h">
-                        <label className="StdThemeView-Contrast std-text3-inverse std-back3-inverse">
-                            Tertiary&nbsp;Text<br/>
-                            Tertiary&nbsp;Back<br/>
-                            (inverse)
+                        <label className="StdThemeView-Contrast std-text3-inverse std-back4-inverse">
+                            Text&nbsp;3<br/>
+                            Back&nbsp;4<br/>
+                            inverse
                         </label>
-                        <label className="StdThemeView-Contrast std-text2-inverse std-back2-inverse" style={{transform: 'translateX(-15px)'}}>
-                            Secondary&nbsp;Text<br/>
-                            Secondary&nbsp;Back<br/>
-                            (inverse)
+                        <label className="StdThemeView-Contrast std-text3-inverse std-back3-inverse" style={{transform: 'translateX(-15px)'}}>
+                            Text&nbsp;3<br/>
+                            Back&nbsp;3<br/>
+                            inverse
                         </label>
-                        <label className="StdThemeView-Contrast std-text1-inverse std-back1-inverse" style={{transform: 'translateX(-30px)'}}>
-                            Primary&nbsp;Text<br/>
-                            Primary&nbsp;Back<br/>
-                            (inverse)
+                        <label className="StdThemeView-Contrast std-text2-inverse std-back2-inverse" style={{transform: 'translateX(-30px)'}}>
+                            Text&nbsp;2<br/>
+                            Back&nbsp;2<br/>
+                            inverse
+                        </label>
+                        <label className="StdThemeView-Contrast std-text1-inverse std-back1-inverse" style={{transform: 'translateX(-45px)'}}>
+                            Text&nbsp;1<br/>
+                            Back&nbsp;1<br/>
+                            inverse
                         </label>
                     </div>
-                    <div className="std-space-m"></div>
-                    <div className="std-space-m"></div>
+                    <i className="std-space-m"/>
+                    <i className="std-space-m"/>
                 </div>
 
-                <div className="std-space-m"></div>
+                <i className="std-space-m"/>
 
                 <div className="std-stack-v">
                     <div className="std-stack-h" style={{alignItems: 'flex-start'}}>
@@ -188,7 +209,7 @@ export function ThemeView(props: ThemeViewProps) {
                                 ))}
                             </div>
 
-                            <div className="std-space-m"></div>
+                            <i className="std-space-m"/>
 
                             <div className="std-stack-h">
                                 <label>Secondary Accent</label>
@@ -238,12 +259,12 @@ export function ThemeView(props: ThemeViewProps) {
                                     />
                                 ))}
                             </div>
-                            <div className="std-space-m"></div>
-                            <div className="std-space-m"></div>
+                            <i className="std-space-m"/>
+                            <i className="std-space-m"/>
                         </div>
 
-                        <div className="std-space-m"></div>
-                        <div className="std-space-m"></div>
+                        <i className="std-space-m"/>
+                        <i className="std-space-m"/>
 
                         <div className="std-stack-v">
                             <div>
@@ -264,17 +285,17 @@ export function ThemeView(props: ThemeViewProps) {
                                 <button className="std-button std-text-button std-button-plain" disabled>Plain</button>
                             </div>
 
-                            <div className="std-space-m"></div>
-                            <div className="std-space-m"></div>
+                            <i className="std-space-m"/>
+                            <i className="std-space-m"/>
 
                             <div className="std-stack-h">
                                 <Input label="Email" value={input} onChange={setInput}/>
-                                <div className="std-space-m"></div>
+                                <i className="std-space-m"/>
                                 <Input label="Password" type="password" value="123456789"/>
                             </div>
 
-                            <div className="std-space-m"></div>
-                            <div className="std-space-m"></div>
+                            <i className="std-space-m"/>
+                            <i className="std-space-m"/>
 
                             <div>
                                 <label className="StdThemeView-Duration" style={{transitionDuration: 'var(--std-duration-slow)'}}>Slow</label>
@@ -283,23 +304,59 @@ export function ThemeView(props: ThemeViewProps) {
                                 <label className="StdThemeView-Duration" style={{transitionDuration: 'var(--std-duration-flash)'}}>Flash</label>
                             </div>
 
-                            <div className="std-space-m"></div>
-                            <div className="std-space-m"></div>
+                            <i className="std-space-m"/>
+                            <i className="std-space-m"/>
 
                             <div className="std-stack-h" style={{alignItems: 'flex-end'}}>
-                                <div className="StdThemeView-Icon"><Icon className="std-icon std-icon-maxi" /><label>Maxi</label></div>
-                                <div className="StdThemeView-Icon"><Icon className="std-icon std-icon-xxl" /><label>XXL</label></div>
-                                <div className="StdThemeView-Icon"><Icon className="std-icon std-icon-xl" /><label>XL</label></div>
-                                <div className="StdThemeView-Icon"><Icon className="std-icon std-icon-l" /><label>L</label></div>
-                                <div className="StdThemeView-Icon"><Icon className="std-icon std-icon-m" /><label>M</label></div>
-                                <div className="StdThemeView-Icon"><Icon className="std-icon std-icon-s" /><label>S</label></div>
-                                <div className="StdThemeView-Icon"><Icon className="std-icon std-icon-xs" /><label>XS</label></div>
-                                <div className="StdThemeView-Icon"><Icon className="std-icon std-icon-xxs" /><label>XXS</label></div>
-                                <div className="StdThemeView-Icon"><Icon className="std-icon std-icon-mini" /><label>Mini</label></div>
+                                <div className="StdThemeView-Icon">
+                                    <Icon className="std-icon std-icon-maxi"/>
+                                    <div className="std-space-s"></div>
+                                    <label>Maxi</label>
+                                </div>
+                                <div className="StdThemeView-Icon">
+                                    <Icon className="std-icon std-icon-xxl"/>
+                                    <div className="std-space-xs"></div>
+                                    <label>XXL</label>
+                                </div>
+                                <div className="StdThemeView-Icon">
+                                    <Icon className="std-icon std-icon-xl"/>
+                                    <div className="std-space-xs"></div>
+                                    <label>XL</label>
+                                </div>
+                                <div className="StdThemeView-Icon">
+                                    <Icon className="std-icon std-icon-l"/>
+                                    <div className="std-space-xs"></div>
+                                    <label>L</label>
+                                </div>
+                                <div className="StdThemeView-Icon">
+                                    <Icon className="std-icon std-icon-m"/>
+                                    <div className="std-space-xs"></div>
+                                    <label>M</label>
+                                </div>
+                                <div className="StdThemeView-Icon">
+                                    <Icon className="std-icon std-icon-s"/>
+                                    <div className="std-space-xs"></div>
+                                    <label>S</label>
+                                </div>
+                                <div className="StdThemeView-Icon">
+                                    <Icon className="std-icon std-icon-xs"/>
+                                    <div className="std-space-xs"></div>
+                                    <label>XS</label>
+                                </div>
+                                <div className="StdThemeView-Icon">
+                                    <Icon className="std-icon std-icon-xxs"/>
+                                    <div className="std-space-xs"></div>
+                                    <label>XXS</label>
+                                </div>
+                                <div className="StdThemeView-Icon">
+                                    <Icon className="std-icon std-icon-mini"/>
+                                    <div className="std-space-xs"></div>
+                                    <label>Mini</label>
+                                </div>
                             </div>
 
-                            <div className="std-space-m"></div>
-                            <div className="std-space-m"></div>
+                            <i className="std-space-m"/>
+                            <i className="std-space-m"/>
 
                             <div>
                                 <label className="StdThemeView-Radius std-radius-maxi">Maxi</label>
@@ -311,11 +368,11 @@ export function ThemeView(props: ThemeViewProps) {
                                 <label className="StdThemeView-Radius std-radius-mini">Mini</label>
                             </div>
 
-                            <div className="std-space-m"></div>
+                            <i className="std-space-m"/>
                         </div>
                     </div>
 
-                    <div className="std-space-m"></div>
+                    <i className="std-space-m"/>
 
                     <div className="std-stack-h" style={{maxWidth: 'var(--std-viewport-m)'}}>
                         <label className="StdThemeView-Shadow std-shadow-soft">Soft</label>
@@ -327,8 +384,8 @@ export function ThemeView(props: ThemeViewProps) {
                         ))}
                     </div>
 
-                    <div className="std-space-m"></div>
-                    <div className="std-space-m"></div>
+                    <i className="std-space-m"/>
+                    <i className="std-space-m"/>
                 </div>
             </div>
         </div>

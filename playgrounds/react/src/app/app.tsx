@@ -5,6 +5,8 @@ import 'lib/theme.css'
 
 export function App(props: any) {
     return (
-        <ThemeView/>
+        <ThemeView
+            className="std-theme"
+        />
     )
 }

@@ -1,0 +1,38 @@
+.std-toggle,
+.std-toggle::after {
+    border-radius: 48px;
+}
+.std-toggle {
+    --std-toggle-width: 48px;
+    --std-toggle-height: 16px;
+    --std-toggle-space: 2px;
+    --std-toggle-border: 2px;
+    position: relative;
+    width: var(--std-toggle-width);
+    height: calc(
+        var(--std-toggle-height)
+        + (var(--std-toggle-border) * 2)
+        + (var(--std-toggle-space) * 2)
+    );
+    background-color: var(--std-back1);
+    border: var(--std-toggle-border) solid var(--std-primary-accent);
+    cursor: pointer;
+}
+.std-toggle::after {
+    position: absolute;
+    content: '';
+    top: var(--std-toggle-space);
+    left: var(--std-toggle-space);
+    bottom: var(--std-toggle-space);
+    width: var(--std-toggle-height);
+    background-color: var(--std-primary-accent);
+    transition: all var(--std-duration-fast);
+}
+.std-toggle.active::after {
+    transform: translateX(calc(
+        var(--std-toggle-width)
+        - (var(--std-toggle-border) * 2)
+        - (var(--std-toggle-space) * 2)
+        - var(--std-toggle-height)
+    ));
+}

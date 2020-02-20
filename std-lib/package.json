@@ -2,7 +2,7 @@
     "name": "@eviljs/std-lib",
     "version": "0.1.3",
     "dependencies": {
-        "@types/node": "13.1.7",
+        "@types/node": ">= 13 < 14",
         "tslib": ">= 1.10.0 < 2"
     },
     "peerDependencies": {},

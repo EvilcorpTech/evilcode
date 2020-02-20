@@ -6,7 +6,7 @@
     justify-content: center;
     align-items: center;
     padding: var(--std-gutter-m);
-    background-color: var(--std-background1);
+    background-color: var(--std-back1);
 }
 
 .StdThemeView label {
@@ -44,7 +44,7 @@
 .StdThemeView-Duration,
 .StdThemeView-Radius,
 .StdThemeView-Shadow {
-    background-color: var(--std-background1);
+    background-color: var(--std-back1);
 }
 
 .StdThemeView-Picker {
@@ -70,7 +70,7 @@
 }
 
 .StdThemeView-Contrast {
-    width: 200px;
+    width: 160px;
     min-height: 100px;
     display: flex;
     justify-content: center;
@@ -79,7 +79,7 @@
     padding: var(--std-gutter-xs);
     border-radius: var(--std-radius-l);
     overflow: hidden;
-    box-shadow: var(--std-shadow24);
+    box-shadow: var(--std-shadow1);
 }
 .StdThemeView-Contrast:hover {
     border-color: currentColor;
@@ -93,24 +93,26 @@ div.StdThemeView-Gutter {
     display: block;
     height: 50px;
     line-height: 50px;
-    background-color: var(--std-grey2, hsl(0,0%,95%));
+    background-color: var(--std-back4);
 }
 .StdThemeView-Gutter > label {
     transform-origin: left;
 }
 .StdThemeView-Gutter:hover {
+    font-weight: var(--std-weight-bold);
+    color: var(--std-primary-shade4);
     background-color: var(--std-primary-tint5);
 }
 
 .StdThemeView-Radius {
     margin: 0 var(--std-gutter-xs);
     padding: var(--std-gutter-s);
-    border: 4px solid var(--std-grey3, hsl(0,0%,90%));
-    background-color: var(--std-grey3, hsl(0,0%,90%));
+    border: 4px solid transparent;
+    background-color: var(--std-back4);
 }
 .StdThemeView-Radius:hover {
     color: var(--std-primary-accent);
-    background-color: var(--std-background1);
+    background-color: var(--std-back1);
     border-color: currentColor;
 }
 

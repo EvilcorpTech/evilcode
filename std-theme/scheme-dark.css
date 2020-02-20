@@ -1,0 +1,34 @@
+@import './animation.css';
+@import './button.css';
+@import './color.css';
+@import './color-material.css';
+@import './gutter.css';
+@import './icon.css';
+@import './layout.css';
+@import './radius.css';
+@import './reset.css';
+@import './shadow.css';
+@import './text.css';
+@import './toggle.css';
+@import './viewport.css';
+
+.std-theme-dark {
+    color: var(--std-text1);
+    background-color: var(--std-back1);
+
+    --std-text1: var(--std-text-light1);
+    --std-text2: var(--std-text-light2);
+    --std-text3: var(--std-text-light3);
+    --std-text1-inverse: var(--std-text-dark1);
+    --std-text2-inverse: var(--std-text-dark2);
+    --std-text3-inverse: var(--std-text-dark3);
+
+    --std-back1: var(--std-back-dark1);
+    --std-back2: var(--std-back-dark2);
+    --std-back3: var(--std-back-dark3);
+    --std-back4: var(--std-back-dark4);
+    --std-back1-inverse: var(--std-back-light1);
+    --std-back2-inverse: var(--std-back-light2);
+    --std-back3-inverse: var(--std-back-light3);
+    --std-back4-inverse: var(--std-back-light4);
+}

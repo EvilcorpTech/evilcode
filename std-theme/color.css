@@ -1,4 +1,5 @@
-:root {
+:root,
+.std-theme {
     /* 50% gray. */
     --std-primary-h: 0;
     --std-primary-s: 0%;
@@ -48,24 +49,29 @@
     --std-secondary-tone5: hsl(var(--std-secondary-h), calc(var(--std-secondary-s) * .2), calc(var(--std-secondary-l) * 1.0));
     --std-secondary-tone6: hsl(var(--std-secondary-h), calc(var(--std-secondary-s) * .1), calc(var(--std-secondary-l) * 1.0));
 
-    --std-text1: hsl(0, 0%, 13%);
-    --std-text2: hsl(0, 0%, 36%);
-    --std-text3: hsl(0, 0%, 69%);
-    --std-text1-inverse: hsl(0, 0%, 100%);
-    --std-text2-inverse: hsl(0, 0%, 87%);
-    --std-text3-inverse: hsl(0, 0%, 64%);
+    --std-text-dark1: hsl(0, 0%, 13%);
+    --std-text-dark2: hsl(0, 0%, 36%);
+    --std-text-dark3: hsl(0, 0%, 69%);
+    --std-text-light1: hsl(0, 0%, 100%);
+    --std-text-light2: hsl(0, 0%, 87%);
+    --std-text-light3: hsl(0, 0%, 64%);
 
-    --std-background1: hsl(0, 0%, 100%);
-    --std-background2: hsl(0, 0%, 97%);
-    --std-background3: hsl(0, 0%, 94%);
-    --std-background1-inverse: hsl(0, 0%, 13%);
-    --std-background2-inverse: hsl(0, 0%, 32%);
-    --std-background3-inverse: hsl(0, 0%, 41%);
+    --std-back-light1: hsl(0, 0%, 100%);
+    --std-back-light2: hsl(0, 0%, 99%);
+    --std-back-light3: hsl(0, 0%, 96%);
+    --std-back-light4: hsl(0, 0%, 93%);
+    --std-back-dark1: hsl(235, 7%, 22%);
+    --std-back-dark2: hsl(235, 7%, 24%);
+    --std-back-dark3: hsl(235, 7%, 28%);
+    --std-back-dark4: hsl(235, 7%, 32%);
 
     --std-primary-action: var(--std-primary-accent);
     --std-primary-success: #388e3c; /* --std-green8 */
     --std-primary-warning: #ffc107; /* --std-amber6 */
     --std-primary-error: #ff5722; /* --std-deeporange6 */
+
+    --std-primary-border-color: var(--std-back4);
+    --std-primary-border: 1px solid var(--std-primary-border-color);
 }
 
 .std-primary-accent { color: var(--std-primary-accent); }
@@ -94,9 +100,11 @@
 .std-text2-inverse { color: var(--std-text2-inverse); }
 .std-text3 { color: var(--std-text3); }
 .std-text3-inverse { color: var(--std-text3-inverse); }
-.std-back1 { background-color: var(--std-background1); }
-.std-back1-inverse { background-color: var(--std-background1-inverse); }
-.std-back2 { background-color: var(--std-background2); }
-.std-back2-inverse { background-color: var(--std-background2-inverse); }
-.std-back3 { background-color: var(--std-background3); }
-.std-back3-inverse { background-color: var(--std-background3-inverse); }
+.std-back1 { background-color: var(--std-back1); }
+.std-back1-inverse { background-color: var(--std-back1-inverse); }
+.std-back2 { background-color: var(--std-back2); }
+.std-back2-inverse { background-color: var(--std-back2-inverse); }
+.std-back3 { background-color: var(--std-back3); }
+.std-back3-inverse { background-color: var(--std-back3-inverse); }
+.std-back4 { background-color: var(--std-back4); }
+.std-back4-inverse { background-color: var(--std-back4-inverse); }

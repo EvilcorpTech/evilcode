@@ -4,7 +4,7 @@ import { createElement } from 'react'
 import './stat.css'
 
 export function Stat(props: StatProps) {
-    const { label, value, unit, ...dynProps } = props
+    const { value, unit, label, ...dynProps } = props
 
     return (
         <span
@@ -21,9 +21,11 @@ export function Stat(props: StatProps) {
                     </span>
                 ) : null}
             </div>
-            <label className="StdStat-Label std-text-caption std-text2">
-                {label}
-            </label>
+            {label ? (
+                <label className="StdStat-Label std-text-caption std-text2">
+                    {label}
+                </label>
+            ) : null}
         </span>
     )
 }
@@ -32,8 +34,8 @@ export function Stat(props: StatProps) {
 
 export interface StatProps {
     className?: string
-    label: string
     value: string | number
     unit?: string
+    label?: string
     [key: string]: unknown
 }

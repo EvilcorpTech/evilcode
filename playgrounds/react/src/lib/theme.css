@@ -1,4 +1,5 @@
-@import '~std-theme/index.css';
+@import '~std-theme/scheme-light.css';
+@import '~std-theme/scheme-dark.css';
 @import '~std-theme/font-roboto.css';
 
 /*

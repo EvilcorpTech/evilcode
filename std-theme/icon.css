@@ -1,4 +1,5 @@
-:root {
+:root,
+.std-theme {
     --std-icon-mini: var(--std-text-body2-size);
     --std-icon-xxs: var(--std-text-body1-size);
     --std-icon-xs: var(--std-text-subtitle2-size);
@@ -9,8 +10,8 @@
     --std-icon-xxl: var(--std-text-h2-size);
     --std-icon-maxi: var(--std-text-h1-size);
 
-    --std-icon-color1: var(--std-primary-tint2);
-    --std-icon-color2: var(--std-secondary-tint2);
+    --std-icon-color1: var(--std-primary-accent);
+    --std-icon-color2: var(--std-secondary-accent);
 }
 
 .std-icon {

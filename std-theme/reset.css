@@ -33,9 +33,6 @@ body {
     height: 100%;
     max-height: 100%;
 
-    color: var(--std-text1);
-    background-color: var(--std-background1);
-
     -webkit-font-smoothing: antialiased;
     -webkit-font-smoothing: subpixel-antialiased;
     -moz-osx-font-smoothing: grayscale;
@@ -92,6 +89,7 @@ a:hover {
 
 button {
     position: relative; /* Supports ripple animations. */
+    color: inherit;
     background: none;
     user-select: none;
     /*

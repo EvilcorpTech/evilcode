@@ -1,4 +1,5 @@
 /* Common ////////////////////////////////////////////////////////////////////*/
+
 .std-button {
     display: inline-flex;
     justify-content: center;
@@ -42,13 +43,14 @@
 .std-button-special:hover,
 .std-button-special:active {
     color: var(--std-primary-shade1);
-    border-color: var(--std-primary-tint1);
+    border-color: var(--std-primary-accent);
 }
 .std-button-special:hover {
-    background-color: var(--std-background1);
+    background-color: var(--std-back1);
 }
 .std-button-special:active {
-    background-color: var(--std-background2);
+    color: var(--std-text1-inverse);
+    background-color: var(--std-primary-accent);
 }
 
 /* Primary ///////////////////////////////////////////////////////////////////*/
@@ -75,18 +77,15 @@
 .std-button-secondary {
     padding: var(--std-gutter-xxs) var(--std-gutter-s);
     border-radius: var(--std-radius-xl);
-    color: var(--std-text2);
-    background-color: var(--std-grey4, hsl(0,0%,90%));
-}
-.std-button-secondary:hover,
-.std-button-secondary:active {
-    color: var(--std-text1);
+    color: var(--std-grey7);
+    background-color: var(--std-grey3);
 }
 .std-button-secondary:hover {
-    background-color: var(--std-grey5, hsl(0,0%,80%));
+    color: var(--std-grey9);
+    background-color: var(--std-grey4);
 }
 .std-button-secondary:active {
-    background-color: var(--std-grey6, hsl(0,0%,70%));
+    background-color: var(--std-grey5);
 }
 
 /* Tertiary //////////////////////////////////////////////////////////////////*/
@@ -94,7 +93,6 @@
 .std-button-tertiary {
     padding: var(--std-gutter-xxs) var(--std-gutter-s);
     border-radius: var(--std-radius-xl);
-    color: var(--std-text1);
     background-color: transparent;
     z-index: 1;
 }

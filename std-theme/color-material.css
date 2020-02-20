@@ -1,4 +1,5 @@
-:root {
+:root,
+.std-theme {
     --std-red1: #ffebee;
     --std-red2: #ffcdd2;
     --std-red3: #ef9a9a;

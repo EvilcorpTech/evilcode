@@ -6,7 +6,7 @@
     border: 1px solid var(--std-primary-border-color);
     border-bottom: 3px solid var(--std-primary-border-color);
     border-radius: var(--std-radius-s);
-    background-color: var(--std-background1);
+    background-color: var(--std-back1);
     transition: all var(--std-duration-fast);
 }
 
@@ -19,7 +19,7 @@
 }
 
 .StdInput.StdInput_placeholder {
-    background-color: var(--std-background3);
+    background-color: var(--std-back3);
 }
 .StdInput_focus {
     border-bottom-color: var(--std-primary-tone1);

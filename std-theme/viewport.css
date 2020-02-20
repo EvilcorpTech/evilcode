@@ -1,4 +1,5 @@
-:root {
+:root,
+.std-theme {
     --std-viewport-s: 800px;
     --std-viewport-m: calc(var(--std-viewport-s) + (var(--std-viewport-s) / 2));
     --std-viewport-l: calc(var(--std-viewport-m) + (var(--std-viewport-m) / 2));

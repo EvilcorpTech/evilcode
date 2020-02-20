@@ -1,4 +1,5 @@
-:root {
+:root,
+.std-theme {
     --std-font-stack: 'std-primary-font', Futura, Roboto, sans-serif;
 
     --std-text-display1-size: 6rem;
