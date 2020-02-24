@@ -1,6 +1,6 @@
 {
     "name": "@eviljs/std-web",
-    "version": "0.1.1",
+    "version": "0.1.2",
     "dependencies": {
         "@eviljs/std-lib": ">= 0.1.0 < 0.2",
         "tslib": ">= 1.10.0 < 2"
