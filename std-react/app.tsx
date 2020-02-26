@@ -1,5 +1,5 @@
 import { AuthProvider } from './auth'
-import { Container, ContainerFactories } from '@eviljs/std-lib/container'
+import { Container } from '@eviljs/std-lib/container'
 import { ContainerProvider } from './container'
 import { Cookie } from '@eviljs/std-web/cookie'
 import { createElement } from 'react'
@@ -15,7 +15,7 @@ import { render } from 'react-dom'
 import { RouterProvider } from './router'
 import { StoreProvider, StoreSpec } from './store'
 
-export function createApp<F extends ContainerFactories>(spec: AppSpec<F>) {
+export function createApp<C extends Container>(spec: AppSpec<C>) {
     const container = spec.createContainer?.()
 
     const deps = {
@@ -151,15 +151,15 @@ export function warnForMissingPlugDep(plug: string, context: string, missingDep:
 
 // Types ///////////////////////////////////////////////////////////////////////
 
-export interface AppSpec<F extends ContainerFactories> {
+export interface AppSpec<C extends Container> {
     app: Component
-    createContainer?: () => Container<F>
-    createCookie?: (container?: Container<F>) => Cookie
-    createFetch?: (container?: Container<F>) => Fetch
-    createI18n?: (container?: Container<F>) => I18n
-    createLogger?: (container?: Container<F>) => Logger
-    createQuery?: (container?: Container<F>) => Query
-    createStoreSpec?: (container?: Container<F>) => StoreSpec
+    createContainer?: () => C
+    createCookie?: (container?: C) => Cookie
+    createFetch?: (container?: C) => Fetch
+    createI18n?: (container?: C) => I18n
+    createLogger?: (container?: C) => Logger
+    createQuery?: (container?: C) => Query
+    createStoreSpec?: (container?: C) => StoreSpec
     mountPoint?: HTMLElement | null
     useAuth?: boolean
     useContainer?: boolean

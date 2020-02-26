@@ -1,7 +1,7 @@
 import { className } from '../react'
 import { createElement, useEffect, useMemo, useState } from 'react'
-import { ExampleIcon as Icon } from '../icons'
-import { Input } from '../widgets'
+import { ExampleIcon as Icon } from '../icons/example'
+import { Input } from '../widgets/input'
 import { rgbFromHexString, rgbToHexString, hslFromRgb, rgbFromHsl } from '@eviljs/std-lib/color'
 
 import './theme-view.css'

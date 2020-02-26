@@ -1,8 +1,10 @@
-import { Button, Input, DotsSpinner as Spinner } from '.'
+import { Button } from './button'
 import { className } from '../react'
 import { createElement } from 'react'
+import { DotsSpinner as Spinner } from './dots-spinner'
+import { Input } from './input'
 import { useAuth } from '../auth'
-import { useCallback, useEffect, useMemo, useState } from 'react'
+import { useCallback, useMemo, useState } from 'react'
 
 export function useAuthCredentials() {
     const [ credentials, setCredentials ] = useState({identifier: '', secret: ''})
