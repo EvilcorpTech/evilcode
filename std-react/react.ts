@@ -41,5 +41,5 @@ export type ClassName =
     | undefined
     | null
     | string
-    | Record<string, boolean>
+    | Record<string, boolean | null | undefined>
     | Array<ClassName>
