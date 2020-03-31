@@ -55,10 +55,10 @@ export function insert<O extends {}>(table: string, data: O, cols: Array<keyof O
 *     [start || end, start, start && end, end],
 * )
 */
-export function joinStatement(parts: Array<string>, conditions: Array<unknown>) {
+export function joinStatement(parts: Array<string>, conditions: Array<unknown>, separator = ' ') {
     const statement = parts
         .filter((it, idx) => Boolean(conditions[idx]))
-        .join(' ')
+        .join(separator)
 
     return statement
 }

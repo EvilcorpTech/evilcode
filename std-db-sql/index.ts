@@ -77,7 +77,9 @@ export function ready(db: Db) {
 }
 
 export async function connect(db: Db) {
-    console.info('(Db) Connecting to', db.url.replace(/:[^:]*@/, ':*********@'))
+    console.info(
+        `@eviljs/std-db-sql/index.connect(): connecting to ${db.url.replace(/:[^:]*@/, ':*********@')}.`
+    )
 
     while (true) {
         try {
@@ -94,9 +96,11 @@ export async function connect(db: Db) {
             })
 
             connection.on('error', function onError(error) {
+                console.warn(
+                    `@eviljs/std-db-sql/index.connect(): connection has had an error and has been reset [${error}].`
+                )
                 db.connection = void undefined
                 db.connectionPromise = void undefined
-                console.warn('(Db) error:', error)
             })
 
             db.connection = connection
@@ -108,9 +112,15 @@ export async function connect(db: Db) {
             // booting, the connection will reject.
             // Until that, we have to re-try on our own.
             // We don't give up, retrying until the Db instance is ready.
-            console.info('(Db) server is not ready yet')
+            console.warn(
+                '@eviljs/std-db-sql/index.connect(): server is not ready yet.'
+            )
+
             await waitFor(db.retryDelay)
-            console.info('(Db) retrying...')
+
+            console.debug(
+                '@eviljs/std-db-sql/index.connect(): retrying.'
+            )
         }
     }
 }
@@ -148,7 +158,9 @@ export function onExit(db: Db) {
             return
         }
 
-        console.debug('(Db) closing...')
+        console.debug(
+            '@eviljs/std-db-sql/index.onExit(): closing.'
+        )
         db.connection.end()
     })
 }
