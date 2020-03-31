@@ -12,6 +12,7 @@ export const Tests = {
     null: isNull,
     number: isNumber,
     object: isObject,
+    regexp: isRegExp,
     string: isString,
     undefined: isUndefined,
 }
@@ -34,7 +35,10 @@ export function kindOf<T extends keyof typeof Tests>(value: unknown, ...tests: A
 }
 
 export function isArray<T>(value: unknown): value is Array<T> {
-    return value && Array.isArray(value)
+    if (! value || ! Array.isArray(value)) {
+        return false
+    }
+    return true
 }
 
 export function isBoolean(value: unknown): value is boolean {
@@ -42,11 +46,17 @@ export function isBoolean(value: unknown): value is boolean {
 }
 
 export function isDate(value: unknown): value is Date {
-    return value && Object.getPrototypeOf(value).constructor === Date
+    if (! value || ! (value instanceof Date)) {
+        return false
+    }
+    return true
 }
 
 export function isDateString(value: any): value is string {
-    return value && Boolean(Date.parse(value))
+    if (! value || ! Boolean(Date.parse(value))) {
+        return false
+    }
+    return true
 }
 
 export function isDateIsoUtcString(value: unknown): value is string {
@@ -65,7 +75,10 @@ export function isDateIsoUtcString(value: unknown): value is string {
 }
 
 export function isFunction(value: unknown): value is Function {
-    return value && typeof value === 'function'
+    if (! value || typeof value !== 'function') {
+        return false
+    }
+    return true
 }
 
 export function isInteger(value: unknown): value is number {
@@ -87,7 +100,17 @@ export function isNumber(value: unknown): value is number {
 }
 
 export function isObject(value: unknown): value is Record<string | number | symbol, unknown> {
-    return value && Object.getPrototypeOf(value).constructor === Object
+    if (! value || Object.getPrototypeOf(value).constructor !== Object) {
+        return false
+    }
+    return true
+}
+
+export function isRegExp(value: unknown): value is RegExp {
+    if (! value || ! (value instanceof RegExp)) {
+        return false
+    }
+    return true
 }
 
 export function isString(value: unknown): value is string {

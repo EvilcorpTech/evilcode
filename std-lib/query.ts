@@ -44,7 +44,7 @@ export function flattenQueryRules(parent: string | number | null | undefined, ru
     }
 
     return throwInvalidArgument(
-        '@eviljs/std-lib-query.flattenQueryRules(parent, ~~rules~~):\n'
+        '@eviljs/std-lib/query.flattenQueryRules(parent, ~~rules~~):\n'
         + `rules must be a String | Number | Object | Array, given "${rules}".`
     )
 }

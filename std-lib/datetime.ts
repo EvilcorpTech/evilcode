@@ -37,7 +37,7 @@ export function intervalCustom(startStr: string, endStr: string) {
         return
     }
 
-    // We can't use "new Date(string)" because it changes its behaviour
+    // We can't use "new Date(string)" because it changes its behavior
     // (uses or not the timezone) depending on the format of the string:
     // - 2020-01 is handled as UTC time
     // - 2020-1 is handled as Local time

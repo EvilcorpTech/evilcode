@@ -63,7 +63,9 @@ export function registerService
     <C extends Container>
     (container: C, serviceId: ServiceId, serviceFactory: ServiceFactory)
 {
-    console.debug(`(Container) Registering service: ${String(serviceId)}`)
+    console.debug(
+        `@eviljs/std-lib/container.registerService(): registering service ${String(serviceId)}.`
+    )
 
     container[ContainerFactories][serviceId as string] = serviceFactory
 
@@ -93,7 +95,9 @@ function requireService(container: Container, serviceId: ServiceId, options?: Re
     }
 
     if (! container[ContainerInstances][serviceId as string]) {
-        console.debug(`(Container) Creating service: ${String(serviceId)}`)
+        console.info(
+            `@eviljs/std-lib/container.requireService(): creating service ${String(serviceId)}.`
+        )
         // By default we use a singleton strategy.
         container[ContainerInstances][serviceId as string] = makeService(container, serviceId)
     }
