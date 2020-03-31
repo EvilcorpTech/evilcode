@@ -5,6 +5,8 @@ import Http from 'http'
 import Koa from 'koa'
 import KoaBodyParser from 'koa-bodyparser'
 import KoaCompress from 'koa-compress'
+import KoaConditionalGet from 'koa-conditional-get'
+import KoaEtag from 'koa-etag'
 import KoaLogger from 'koa-logger'
 import KoaMount from 'koa-mount'
 import KoaRouter from '@koa/router'
@@ -12,7 +14,7 @@ import KoaStatic from 'koa-static'
 
 export const ApiPath = '/api'
 export const StaticDir = './public'
-export const StaticMaxAge = 1000 * 60 * 60 * 24 * 7 // 1 week.
+export const StaticMaxAge = 1000 * 60 * 60 * 24 // 1 day. Don't Cache-Control for too long, otherwise the ETag is frustrated.
 export const HttpAddr = 'localhost'
 export const HttpPort = 8080
 
@@ -66,10 +68,19 @@ export function createRestApp<T>(spec?: RestSpec<T>) {
     const routes = spec?.middleware?.map(endpoint => endpoint(spec))
     const router = setupRouter(new KoaRouter(), routes)
 
+    console.info(
+        `@eviljs/std-rest/index.createRestApp(): serving APIs on ${apiPath}.`
+    )
+    console.info(
+        `@eviljs/std-rest/index.createRestApp(): serving static contents from ${staticDir} with max-age ${staticOpts.maxage}.`
+    )
+
     Object.assign(app.context, context)
     app.on('error', createKoaAppErrorHandler(spec))
     app.use(createKoaAppErrorMiddleware(spec)) // It must be the first middleware.
     app.use(KoaLogger())
+    app.use(KoaConditionalGet())
+    app.use(KoaEtag())
     app.use(KoaStatic(staticDir, staticOpts))
     app.use(KoaBodyParser())
     app.use(KoaMount(apiPath, router.routes()))
@@ -84,8 +95,18 @@ export function createRestServer(app: Koa<any, any>, spec?: RestSpec) {
     const port = spec?.httpPort ?? HttpPort
     const server = Http.createServer(app.callback())
 
-    server.listen(port, Number(addr))
-    process.on('exit', code => server.close())
+    console.info(
+        `@eviljs/std-rest/index.createRestServer(): listening on ${addr}:${port}.`
+    )
+
+    server.listen(Number(port), addr)
+
+    process.on('exit', code => {
+        console.debug(
+            '@eviljs/std-rest/index.createRestServer(): closing.'
+        )
+        server.close()
+    })
 
     return server
 }

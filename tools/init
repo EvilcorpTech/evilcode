@@ -20,35 +20,45 @@ ProjectDir="$(cd "$(dirname "$0")/.." && pwd)"
 init() {(
         local pkg="$1"
         shift
+
         cd "$pkg"
+
         echo "Initing ${GreenStyle}$(basename "$pkg")${ResetStyle}..."
         printf -- "${GrayStyle}"
+
+        echo "Cleaning node_modules"
+        rm -rf node_modules
+
         (
-        set -- $NpmInstallCmd $NpmInstallArgs --no-save --no-package-lock "$@"
-        if ! $Npm "$@"; then
-                printf -- "${ResetStyle}"
-                exit 1
-        fi
-        )
-        (
+        echo "Installing deps"
         set -- $NpmInstallCmd $NpmInstallArgs
         if ! $Npm "$@"; then
                 printf -- "${ResetStyle}"
                 exit 1
         fi
         )
+
+        (
+        for dep in ./node_modules/@eviljs/std-*; do
+                if test ! -e "$dep"; then
+                        continue
+                fi
+                dep_name="$(basename "$dep")"
+                echo "Linking $dep_name"
+                rm -rf "node_modules/@eviljs/$dep_name"
+                ln -s ../../../$dep_name node_modules/@eviljs/
+        done
+        )
+
         printf -- "${ResetStyle}"
 )}
 
-init "$ProjectDir/std-lib"
-init "$ProjectDir/std-node" ../std-lib
-init "$ProjectDir/std-rest" ../std-lib ../std-node
-init "$ProjectDir/std-db-sql" ../std-lib ../std-node
-init "$ProjectDir/std-theme"
-init "$ProjectDir/std-web" ../std-lib
-init "$ProjectDir/std-react" ../std-lib ../std-theme ../std-web
-# init "$ProjectDir/std-db-mongo" ../std-lib ../std-node
-# init "$ProjectDir/std-graphql-server" ../std-lib ../std-node
-# init "$ProjectDir/std-rabbitmq" ../std-lib ../std-node
+if test $# -eq 0; then
+        set -- "$ProjectDir/std-"*
+fi
+
+for pkg; do
+        init "$pkg"
+done
 
 echo "${GreenStyle}done${ResetStyle}"
