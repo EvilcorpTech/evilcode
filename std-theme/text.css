@@ -1,6 +1,6 @@
 :root,
 .std-theme {
-    --std-font-stack: 'std-primary-font', Futura, Roboto, sans-serif;
+    --std-font-stack: 'std-font-primary', Futura, Roboto, sans-serif;
 
     --std-text-display1-size: 6rem;
     --std-text-h1-size: 4rem;
@@ -24,6 +24,8 @@
     --std-weight-bold: 600;
     --std-weight-heavy: 700;
     --std-weight-black: 800;
+
+    font-family: var(--std-font-stack);
 }
 
 .std-weight-thin { font-weight: var(--std-weight-thin); }
@@ -35,7 +37,7 @@
 .std-weight-black { font-weight: var(--std-weight-black); }
 
 .std-text-display1 {
-    font-family: var(--std-font-stack);
+    /* font-family: var(--std-font-stack); */
     font-size: var(--std-text-display1-size);
     font-weight: var(--std-weight-bold);
     /* font-style: normal; */
@@ -45,7 +47,7 @@
     /* opacity: 1; */
 }
 .std-text-h1, h1 {
-    font-family: var(--std-font-stack);
+    /* font-family: var(--std-font-stack); */
     font-size: var(--std-text-h1-size);
     font-weight: var(--std-weight-bold);
     /* font-style: normal; */
@@ -55,7 +57,7 @@
     /* opacity: 1; */
 }
 .std-text-h2, h2 {
-    font-family: var(--std-font-stack);
+    /* font-family: var(--std-font-stack); */
     font-size: var(--std-text-h2-size);
     font-weight: var(--std-weight-bold);
     /* font-style: normal; */
@@ -65,7 +67,7 @@
     /* opacity: 1; */
 }
 .std-text-h3, h3 {
-    font-family: var(--std-font-stack);
+    /* font-family: var(--std-font-stack); */
     font-size: var(--std-text-h3-size);
     font-weight: var(--std-weight-medium);
     /* font-style: normal; */
@@ -75,7 +77,7 @@
     /* opacity: 1; */
 }
 .std-text-h4, h4 {
-    font-family: var(--std-font-stack);
+    /* font-family: var(--std-font-stack); */
     font-size: var(--std-text-h4-size);
     /* font-weight: var(--std-weight-regular); */
     /* font-style: normal; */
@@ -85,7 +87,7 @@
     /* opacity: 1; */
 }
 .std-text-h5, h5 {
-    font-family: var(--std-font-stack);
+    /* font-family: var(--std-font-stack); */
     font-size: var(--std-text-h5-size);
     /* font-weight: var(--std-weight-regular); */
     /* font-style: normal; */
@@ -95,7 +97,7 @@
     /* opacity: 1; */
 }
 .std-text-h6, h6 {
-    font-family: var(--std-font-stack);
+    /* font-family: var(--std-font-stack); */
     font-size: var(--std-text-h6-size);
     font-weight: var(--std-weight-bold);
     /* font-style: normal; */
@@ -105,7 +107,7 @@
     /* opacity: 1; */
 }
 .std-text-subtitle1 {
-    font-family: var(--std-font-stack);
+    /* font-family: var(--std-font-stack); */
     font-size: var(--std-text-subtitle1-size);
     /* font-weight: var(--std-weight-regular); */
     /* font-style: normal; */
@@ -115,7 +117,7 @@
     /* opacity: 1; */
 }
 .std-text-subtitle2 {
-    font-family: var(--std-font-stack);
+    /* font-family: var(--std-font-stack); */
     font-size: var(--std-text-subtitle2-size);
     font-weight: var(--std-weight-bold);
     /* font-style: normal; */
@@ -125,7 +127,7 @@
     /* opacity: 1; */
 }
 .std-text-body1, body {
-    font-family: var(--std-font-stack);
+    /* font-family: var(--std-font-stack); */
     font-size: var(--std-text-body1-size);
     /* font-weight: var(--std-weight-regular); */
     /* font-style: normal; */
@@ -135,7 +137,7 @@
     /* opacity: 1; */
 }
 .std-text-body2 {
-    font-family: var(--std-font-stack);
+    /* font-family: var(--std-font-stack); */
     font-size: var(--std-text-body2-size);
     /* font-weight: var(--std-weight-regular); */
     /* font-style: normal; */
@@ -145,7 +147,7 @@
     /* opacity: 1; */
 }
 .std-text-caption {
-    font-family: var(--std-font-stack);
+    /* font-family: var(--std-font-stack); */
     font-size: var(--std-text-caption-size);
     font-weight: var(--std-weight-medium);
     /* font-style: normal; */
@@ -155,7 +157,7 @@
     /* opacity: 1; */
 }
 .std-text-overline {
-    font-family: var(--std-font-stack);
+    /* font-family: var(--std-font-stack); */
     font-size: var(--std-text-overline-size);
     font-weight: var(--std-weight-bold);
     /* font-style: normal; */
@@ -165,7 +167,7 @@
     /* opacity: 1; */
 }
 .std-text-button {
-    font-family: var(--std-font-stack);
+    /* font-family: var(--std-font-stack); */
     font-size: var(--std-text-overline-size);
     font-weight: var(--std-weight-medium);
     /* font-style: normal; */

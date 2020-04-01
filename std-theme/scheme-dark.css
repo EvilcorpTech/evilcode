@@ -12,7 +12,7 @@
 @import './toggle.css';
 @import './viewport.css';
 
-.std-theme-dark {
+.std-theme.dark {
     color: var(--std-text1);
     background-color: var(--std-back1);
 

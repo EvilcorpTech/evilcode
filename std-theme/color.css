@@ -70,8 +70,8 @@
     --std-primary-warning: #ffc107; /* --std-amber6 */
     --std-primary-error: #ff5722; /* --std-deeporange6 */
 
-    --std-primary-border-color: var(--std-back4);
-    --std-primary-border: 1px solid var(--std-primary-border-color);
+    --std-border1-color: var(--std-back4);
+    --std-border1: 1px solid var(--std-border1-color);
 }
 
 .std-primary-accent { color: var(--std-primary-accent); }
