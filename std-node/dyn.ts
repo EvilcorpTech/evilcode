@@ -12,20 +12,22 @@ export function requireAll(dir: string) {
         throw 'Directory path must be absolute. Given: ' + dir
     }
 
-    const files = (function () {
+    function tryReadingDir(dir: string) {
         try {
             return Fs.readdirSync(dir)
         }
         catch (error) {
             return
         }
-    })()
+    }
+
+    const files = tryReadingDir(dir)
 
     if (! files) {
         return
     }
 
-    const reqs = []
+    const reqs: Array<RequireAllEntry> = []
 
     for (const file of files) {
         const fileExt = Path.extname(file)
@@ -123,4 +125,13 @@ export function buildApi(baseApis?: Record<string, unknown>, buildOptions?: Buil
 
 export interface BuildApiOptions {
     path?: string
+}
+
+export interface RequireAllEntry {
+    path: string
+    dir: string
+    file: string
+    name: string
+    ext: string
+    exports: unknown
 }

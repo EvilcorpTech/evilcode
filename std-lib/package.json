@@ -1,13 +1,13 @@
 {
     "name": "@eviljs/std-lib",
-    "version": "0.1.5",
+    "version": "0.1.6",
     "dependencies": {
-        "@types/node": "^13",
+        "@types/node": "^12 || ^13",
         "tslib": "^1"
     },
     "peerDependencies": {},
     "devDependencies": {
-        "typescript": "3.8.3"
+        "typescript": "^3.7"
     },
     "scripts": {
         "preversion": "../tools/build .",

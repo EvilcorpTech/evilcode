@@ -1,23 +1,22 @@
 {
     "name": "@eviljs/std-react",
-    "version": "0.1.8",
+    "version": "0.1.9",
     "dependencies": {
-        "@eviljs/std-lib": ">= 0.1.0 < 0.2",
-        "@eviljs/std-theme": ">= 0.1.0 < 0.2",
-        "@eviljs/std-web": ">= 0.1.0 < 0.2",
-        "@types/prop-types": ">= 15 < 16",
-        "@types/react": ">= 16 < 17",
-        "@types/react-dom": ">= 16 < 17",
-        "prop-types": ">= 15 < 16",
-        "tslib": ">= 1.10.0 < 2"
+        "@eviljs/std-lib": "^0.1",
+        "@eviljs/std-theme": "^0.1",
+        "@eviljs/std-web": "^0.1",
+        "@types/prop-types": "^15",
+        "@types/react": "^16",
+        "@types/react-dom": "^16",
+        "prop-types": "^15",
+        "tslib": "^1"
     },
     "peerDependencies": {
-        "react": ">= 16.12.0 < 17",
-        "react-dom": ">= 16.12.0 < 17"
+        "react": "^16.9"
     },
     "devDependencies": {
-        "csstype": "2.6.9",
-        "typescript": "3.7.5"
+        "csstype": "^2",
+        "typescript": "^3.7"
     },
     "scripts": {
         "preversion": "../tools/build .",
