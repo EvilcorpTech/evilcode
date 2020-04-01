@@ -5,9 +5,9 @@
     --std-penumbra-opacity: .08;
     --std-ambient-opacity: .06;
 
-    --std-umbra: hsl(0, 0%, 0%, var(--std-umbra-opacity));
-    --std-penumbra: hsl(0, 0%, 0%, var(--std-penumbra-opacity));
-    --std-ambient: hsl(0, 0%, 0%, var(--std-ambient-opacity));
+    --std-umbra: hsla(0, 0%, 0%, var(--std-umbra-opacity));
+    --std-penumbra: hsla(0, 0%, 0%, var(--std-penumbra-opacity));
+    --std-ambient: hsla(0, 0%, 0%, var(--std-ambient-opacity));
 
     --std-shadow-soft: var(--std-umbra) 0 1px 3px 0, var(--std-penumbra) 0 0 0, var(--std-ambient) 0 0 0;
     --std-shadow0: var(--std-umbra) 0 0 0, var(--std-penumbra) 0 0 0, var(--std-ambient) 0 0 0;
@@ -38,9 +38,9 @@
 }
 
 .std-shadow {
-    --std-umbra: hsl(var(--std-primary-h), var(--std-primary-s), calc(var(--std-primary-l) * .8), var(--std-umbra-opacity));
-    --std-penumbra: hsl(var(--std-primary-h), var(--std-primary-s), calc(var(--std-primary-l) * .8), var(--std-penumbra-opacity));
-    --std-ambient: hsl(var(--std-primary-h), var(--std-primary-s), calc(var(--std-primary-l) * .8), var(--std-ambient-opacity));
+    --std-umbra: hsla(var(--std-primary-h), var(--std-primary-s), calc(var(--std-primary-l) * .8), var(--std-umbra-opacity));
+    --std-penumbra: hsla(var(--std-primary-h), var(--std-primary-s), calc(var(--std-primary-l) * .8), var(--std-penumbra-opacity));
+    --std-ambient: hsla(var(--std-primary-h), var(--std-primary-s), calc(var(--std-primary-l) * .8), var(--std-ambient-opacity));
 }
 
 .std-shadow-soft { box-shadow: var(--std-shadow-soft); }
