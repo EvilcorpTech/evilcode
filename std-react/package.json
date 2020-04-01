@@ -1,10 +1,10 @@
 {
     "name": "@eviljs/std-react",
-    "version": "0.1.9",
+    "version": "0.1.11",
     "dependencies": {
-        "@eviljs/std-lib": "^0.1",
-        "@eviljs/std-theme": "^0.1",
-        "@eviljs/std-web": "^0.1",
+        "@eviljs/std-lib": "^0.1.6",
+        "@eviljs/std-theme": "^0.1.5",
+        "@eviljs/std-web": "^0.1.4",
         "@types/prop-types": "^15",
         "@types/react": "^16",
         "@types/react-dom": "^16",

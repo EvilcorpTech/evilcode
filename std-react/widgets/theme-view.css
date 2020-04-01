@@ -1,4 +1,4 @@
-.StdThemeView {
+.t2eb5bd0-theme {
     width: 100%;
     min-height: 100%;
     display: flex;
@@ -9,45 +9,45 @@
     background-color: var(--std-back1);
 }
 
-.StdThemeView label {
+.t2eb5bd0-theme label {
     display: inline-block;
     cursor: default;
 }
 
-.StdThemeView .std-button,
-.StdThemeView-Color,
-.StdThemeView-Contrast,
-.StdThemeView-Duration,
-.StdThemeView-Gutter,
-.StdThemeView-Gutter label,
-.StdThemeView-Icon,
-.StdThemeView-Icon label,
-.StdThemeView-Picker,
-.StdThemeView-Radius,
-.StdThemeView-Shadow,
-.StdThemeView-Text {
+.t2eb5bd0-theme .std-button,
+.t75a7bb0-color,
+.td0891c0-contrast,
+.t3479607-duration,
+.t1d3c1f3-gutter,
+.t1d3c1f3-gutter label,
+.e43c305e-icon,
+.e43c305e-icon label,
+.t8c25d08-picker,
+.tabc5e40-radius,
+.t9a25786-shadow,
+.bead0766-text {
     transition: all var(--std-duration-normal);
 }
-.StdThemeView .std-button:hover,
-.StdThemeView-Color:hover,
-.StdThemeView-Duration:hover,
-.StdThemeView-Gutter:hover label,
-.StdThemeView-Icon:hover,
-.StdThemeView-Picker:hover,
-.StdThemeView-Radius:hover,
-.StdThemeView-Shadow:hover,
-.StdThemeView-Text:hover {
+.t2eb5bd0-theme .std-button:hover,
+.t75a7bb0-color:hover,
+.t3479607-duration:hover,
+.t1d3c1f3-gutter:hover label,
+.e43c305e-icon:hover,
+.t8c25d08-picker:hover,
+.tabc5e40-radius:hover,
+.t9a25786-shadow:hover,
+.bead0766-text:hover {
     z-index: 1;
     transform: scale(1.2);
 }
 
-.StdThemeView-Duration,
-.StdThemeView-Radius,
-.StdThemeView-Shadow {
+.t3479607-duration,
+.tabc5e40-radius,
+.t9a25786-shadow {
     background-color: var(--std-back1);
 }
 
-.StdThemeView-Picker {
+.t8c25d08-picker {
     width: 40px;
     height: 40px;
     border-radius: 40px;
@@ -56,7 +56,7 @@
     cursor: pointer;
 }
 
-.StdThemeView-Color {
+.t75a7bb0-color {
     width: 2em;
     height: 2em;
     margin: 0 var(--std-gutter-xs);
@@ -65,11 +65,11 @@
     box-shadow: var(--std-shadow-soft);
     transition: all var(--std-duration-normal);
 }
-.StdThemeView-Color:hover {
+.t75a7bb0-color:hover {
     box-shadow: var(--std-shadow4);
 }
 
-.StdThemeView-Contrast {
+.td0891c0-contrast {
     width: 160px;
     min-height: 100px;
     display: flex;
@@ -81,63 +81,65 @@
     overflow: hidden;
     box-shadow: var(--std-shadow1);
 }
-.StdThemeView-Contrast:hover {
+.td0891c0-contrast:hover {
     border-color: currentColor;
 }
 
-.StdThemeView .std-button {
+.t2eb5bd0-theme .std-button {
     margin: 0 var(--std-gutter-xs);
 }
 
-div.StdThemeView-Gutter {
+.t1d3c1f3-gutter {
+    background-color: var(--std-back4);
+}
+.t1d3c1f3-gutter.important {
     display: block;
     height: 50px;
     line-height: 50px;
-    background-color: var(--std-back4);
 }
-.StdThemeView-Gutter > label {
+.t1d3c1f3-gutter > label {
     transform-origin: left;
 }
-.StdThemeView-Gutter:hover {
+.t1d3c1f3-gutter:hover {
     font-weight: var(--std-weight-bold);
     color: var(--std-primary-shade4);
     background-color: var(--std-primary-tint5);
 }
 
-.StdThemeView-Radius {
+.tabc5e40-radius {
     margin: 0 var(--std-gutter-xs);
     padding: var(--std-gutter-s);
     border: 4px solid transparent;
     background-color: var(--std-back4);
 }
-.StdThemeView-Radius:hover {
+.tabc5e40-radius:hover {
     color: var(--std-primary-accent);
     background-color: var(--std-back1);
     border-color: currentColor;
 }
 
-.StdThemeView-Icon {
+.e43c305e-icon {
     display: flex;
     flex-direction: column;
     align-items: center;
     margin: 0 var(--std-gutter-s);
 }
-.StdThemeView-Icon:hover label {
+.e43c305e-icon:hover label {
     color: var(--std-primary-accent);
 }
 
-.StdThemeView-Duration {
+.t3479607-duration {
     width: 80px;
     line-height: 80px;
     text-align: center;
     margin: 0 var(--std-gutter-s);
     box-shadow: var(--std-shadow4);
 }
-.StdThemeView-Duration:hover {
+.t3479607-duration:hover {
     border-radius: 50%;
 }
 
-.StdThemeView-Shadow {
+.t9a25786-shadow {
     width: 60px;
     line-height: 60px;
     margin: var(--std-gutter-xs) var(--std-gutter-s);

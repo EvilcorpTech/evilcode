@@ -20,9 +20,19 @@ export function useI18nMsg<T>(compute: I18nMsgsComputer<T>) {
     return i18nMsg
 }
 
-export function I18nProvider(props: I18nProviderProps) {
-    const { i18n, children } = props
+export function WithI18n(Child: React.ElementType, i18n: I18n) {
+    function I18nProviderProxy(props: any) {
+        return providingI18n(<Child {...props}/>, i18n)
+    }
 
+    return I18nProviderProxy
+}
+
+export function I18nProvider(props: I18nProviderProps) {
+    return providingI18n(props.children, props.i18n)
+}
+
+export function providingI18n(children: JSX.Element, i18n: I18n) {
     return (
         <I18nContext.Provider value={i18n}>
             {children}
@@ -30,22 +40,10 @@ export function I18nProvider(props: I18nProviderProps) {
     )
 }
 
-export function withI18n(Child: React.ComponentType, i18n: I18n) {
-    function I18nWrapper(props: any) {
-        return (
-            <I18nProvider i18n={i18n}>
-                <Child {...props}/>
-            </I18nProvider>
-        )
-    }
-
-    return I18nWrapper
-}
-
 // Types ///////////////////////////////////////////////////////////////////////
 
 export interface I18nProviderProps {
-    children?: React.ReactNode
+    children: JSX.Element
     i18n: I18n
 }
 

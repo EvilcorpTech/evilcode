@@ -1,3 +1,6 @@
+import { isArray, isString, isObject } from '@eviljs/std-lib/type'
+import { throwInvalidArgument } from '@eviljs/std-lib/error'
+
 export function classes(...names: Array<ClassName>) {
     const list: Array<string> = []
 
@@ -6,17 +9,17 @@ export function classes(...names: Array<ClassName>) {
             continue
         }
 
-        if (typeof item === 'string') {
+        if (isString(item)) {
             list.push(item)
             continue
         }
 
-        if (Array.isArray(item)) {
+        if (isArray(item)) {
             list.push(classes(...item))
             continue
         }
 
-        if (item.constructor === Object) {
+        if (isObject(item)) {
             for (const name in item) {
                 if (item[name]) {
                     list.push(name)
@@ -25,7 +28,10 @@ export function classes(...names: Array<ClassName>) {
             continue
         }
 
-        throw new Error('Unrecognized type')
+        return throwInvalidArgument(
+            '@eviljs/std-react/react.classes(~~names~~):\n'
+            + `names must be a String | Object | Array, given "${item}".`
+        )
     }
 
     return list.join(' ')

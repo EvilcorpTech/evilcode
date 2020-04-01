@@ -1,8 +1,6 @@
 import { className } from '../react'
 import { createElement } from 'react'
 
-import './button.css'
-
 export const ButtonType = {
     Special: 'special',
     Primary: 'primary',
@@ -18,9 +16,8 @@ export function Button(props: ButtonProps) {
     return (
         <button
             {...props}
-            {...className('StdButton',
-                props.className,
-                `std-button std-text-button std-button-${type ?? 'primary'}`,
+            {...className('bfce14ea-button std-button std-text-button', props.className,
+                `std-button-${type ?? 'primary'}`,
             )}
             type={action ?? 'button'}
             disabled={disabled}

@@ -1,18 +1,20 @@
-.StdStat {
+.s0fdeae5-stat {
     display: inline-flex;
     flex-direction: column;
     align-items: center;
 }
 
-.StdStat-ValueAndUnit {
+.s5a96fae-valueunit {
     color: var(--std-primary-shade1);
 }
 
-.StdStat-Unit.std-text-subtitle2 {
+.d85e425b-unit {
     margin-left: var(--std-gutter);
+}
+.d85e425b-unit.important {
     font-weight: var(--std-weight-regular);
 }
 
-.StdStat-Label {
+.c204b3fa-label {
     margin-top: var(--std-gutter-mini);
 }

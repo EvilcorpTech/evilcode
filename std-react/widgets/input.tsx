@@ -42,18 +42,16 @@ export function Input(props: InputProps) {
     return (
         <div
             ref={fieldRef}
-            {...className('StdInput',
-                props.className,
-                {'StdInput_focus': focus},
-                {'StdInput_placeholder': labelPlaceholder},
-            )}
+            {...className('i7eea495-input', props.className, {
+                focus, placeholder: labelPlaceholder,
+            })}
             onClick={_event =>
                 inputRef.current?.focus()
             }
         >
             <label
                 ref={labelRef}
-                className="StdInput-Label std-text-body2"
+                className="id45daa0-label std-text-body2"
                 style={labelPlaceholder ? labelStyle : undefined}
             >
                 {label}
@@ -61,7 +59,7 @@ export function Input(props: InputProps) {
 
             <input
                 ref={inputRef}
-                className="StdInput-Input std-text-subtitle2"
+                className="cebab456-field std-text-subtitle2"
                 type={type || InputType.Text}
                 value={value}
                 autoComplete={autoComplete}

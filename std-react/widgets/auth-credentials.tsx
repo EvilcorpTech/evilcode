@@ -68,11 +68,11 @@ export function AuthCredentials(props: AuthCredentialsProps) {
 
     return (
         <form
-            {...className('StdAuthCredentials', props.className)}
+            {...className('a6715629-form', props.className)}
             onSubmit={onFormSubmitPrevented}
         >
             <Input
-                className="StdAuthCredentials-Field"
+                className="f8495888-input"
                 type="text"
                 label={messages?.identifier ?? 'Identifier'}
                 value={credentials.identifier}
@@ -82,7 +82,7 @@ export function AuthCredentials(props: AuthCredentialsProps) {
                 onChange={onIdentifierChange}
             />
             <Input
-                className="StdAuthCredentials-Field"
+                className="f8495888-input"
                 type="password"
                 label={messages?.secret ?? 'Password'}
                 autoComplete="password"
@@ -91,12 +91,12 @@ export function AuthCredentials(props: AuthCredentialsProps) {
                 onChange={onSecretChange}
             />
 
-            <div className="StdAuthCredentials-Error">
+            <div className="a131712d-error">
                 {error && (formatError?.(error) ?? error)}
             </div>
 
             <Button
-                {...className('StdAuthCredentials-Submit',
+                {...className('fcb2658f-button',
                     {busy: pending, 'std-shadow8': validCredentials},
                 )}
                 type="primary"
@@ -104,11 +104,11 @@ export function AuthCredentials(props: AuthCredentialsProps) {
                 disabled={pending || ! validCredentials}
                 onClick={onFormSubmit}
             >
-                <span className="StdAuthCredentials-SubmitMessage">
+                <span className="d9466378-message">
                     {messages?.signin ?? 'Signin'}
                 </span>
 
-                <Spinner className="StdAuthCredentials-Spinner" active={pending}/>
+                <Spinner className="a1165c98-spinner" active={pending}/>
             </Button>
         </form>
     )

@@ -3,9 +3,21 @@ import { Query, QueryRequestOptions } from '@eviljs/std-web/query'
 
 export const QueryContext = createContext<Query>(void undefined as any)
 
+export function WithQuery(Child: React.ElementType, query: Query) {
+    function QueryProviderProxy(props: any) {
+        return providingQuery(<Child {...props}/>, query)
+    }
+
+    return QueryProviderProxy
+}
+
 export function QueryProvider(props: QueryProviderProps) {
     const { query, children } = props
 
+    return providingQuery(props.children, props.query)
+}
+
+export function providingQuery(children: JSX.Element, query: Query) {
     return (
         <QueryContext.Provider value={query}>
             {children}
@@ -13,29 +25,18 @@ export function QueryProvider(props: QueryProviderProps) {
     )
 }
 
-export function withQuery(Child: React.ComponentType, query: Query) {
-    function QueryWrapper(props: any) {
-        return (
-            <QueryProvider query={query}>
-                <Child {...props}/>
-            </QueryProvider>
-        )
-    }
-
-    return QueryWrapper
-}
-
 export function useQuery<T>(queryRunner: QueryRunner<T>) {
     const [ response, setResponse ] = useState<T>()
     const [ pending, setPending ] = useState(false)
-    const destroyed = useRef(false)
+    const mountedRef = useRef(true)
     const query = useContext(QueryContext)
 
     useEffect(() => {
-        function teardown() {
-            destroyed.current = true
+        function unmount() {
+            mountedRef.current = false
         }
-        return teardown
+
+        return unmount
     }, [])
 
     async function run(options?: QueryRequestOptions) {
@@ -43,13 +44,13 @@ export function useQuery<T>(queryRunner: QueryRunner<T>) {
 
         try {
             const response = await queryRunner(query, options)
-            if (! destroyed.current) {
+            if (mountedRef.current) {
                 setResponse(response)
             }
             return response
         }
         finally {
-            if (! destroyed.current) {
+            if (mountedRef.current) {
                 setPending(false)
             }
         }
@@ -65,7 +66,7 @@ export function useQuery<T>(queryRunner: QueryRunner<T>) {
 // Types ///////////////////////////////////////////////////////////////////////
 
 export interface QueryProviderProps {
-    children?: React.ReactNode
+    children: JSX.Element
     query: Query
 }
 

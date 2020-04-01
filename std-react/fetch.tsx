@@ -7,9 +7,19 @@ export function useFetch() {
     return useContext(FetchContext)
 }
 
-export function FetchProvider(props: FetchProviderProps) {
-    const { fetch, children } = props
+export function WithFetch(Child: React.ElementType, fetch: Fetch) {
+    function FetchProviderProxy(props: any) {
+        return providingFetch(<Child {...props}/>, fetch)
+    }
 
+    return FetchProviderProxy
+}
+
+export function FetchProvider(props: FetchProviderProps) {
+    return providingFetch(props.children, props.fetch)
+}
+
+export function providingFetch(children: JSX.Element, fetch: Fetch) {
     return (
         <FetchContext.Provider value={fetch}>
             {children}
@@ -17,21 +27,9 @@ export function FetchProvider(props: FetchProviderProps) {
     )
 }
 
-export function withFetch(Child: React.ComponentType, fetch: Fetch) {
-    function FetchWrapper(props: any) {
-        return (
-            <FetchProvider fetch={fetch}>
-                <Child {...props}/>
-            </FetchProvider>
-        )
-    }
-
-    return FetchWrapper
-}
-
 // Types ///////////////////////////////////////////////////////////////////////
 
 export interface FetchProviderProps {
-    children?: React.ReactNode
+    children: JSX.Element
     fetch: Fetch
 }

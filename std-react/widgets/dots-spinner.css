@@ -1,8 +1,8 @@
-.StdDotsSpinner {
+.sa7b7eb6-spinner {
     display: inline-flex;
 }
 
-.StdDotsSpinner-Dot {
+.sdd55de7-dot {
     opacity: 0;
     width: .5em;
     height: .5em;
@@ -10,7 +10,7 @@
     border-radius: 50%;
 }
 
-.StdDotsSpinner.active .StdDotsSpinner-Dot {
+.sa7b7eb6-spinner.active .sdd55de7-dot {
     opacity: 1;
     animation-name: dots-spinner;
     animation-duration: 1s;
@@ -18,15 +18,15 @@
     animation-iteration-count: infinite;
 }
 
-.StdDotsSpinner-Dot1 {
+.sdd55de7-n1 {
     animation-delay: 0s;
 }
 
-.StdDotsSpinner-Dot2 {
+.sdd55de7-n2 {
     animation-delay: .2s;
 }
 
-.StdDotsSpinner-Dot3 {
+.sdd55de7-n3 {
     animation-delay: .4s;
 }
 

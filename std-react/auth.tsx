@@ -10,8 +10,7 @@ export function useAuth() {
     return useContext(AuthContext)
 }
 
-export function useRootAuth(container: AuthContainer, options?: AuthOptions) {
-    const { Cookie: cookie, Fetch: fetch } = container
+export function useRootAuth(fetch: Fetch, cookie: Cookie, options?: AuthOptions) {
     const { authenticateOpts, invalidateOpts, validateOpts } = options ?? {}
     const [ cookieToken ] = useState(() => cookie.get())
     const [ token, setToken ] = useState('')
@@ -91,27 +90,26 @@ export function useRootAuth(container: AuthContainer, options?: AuthOptions) {
     return auth
 }
 
+export function WithAuth(Child: React.ElementType, fetch: Fetch, cookie: Cookie, options?: AuthOptions) {
+    function AuthProviderProxy(props: any) {
+        return providingAuth(<Child {...props}/>, fetch, cookie, options)
+    }
+
+    return AuthProviderProxy
+}
+
 export function AuthProvider(props: AuthProviderProps) {
-    const { container, children, ...opts} = props
-    const auth = useRootAuth(container, opts)
+    return providingAuth(props.children, props.fetch, props.cookie, props)
+
+}
+export function providingAuth(children: JSX.Element, fetch: Fetch, cookie: Cookie, options?: AuthOptions) {
+    const auth = useRootAuth(fetch, cookie, options)
 
     return (
         <AuthContext.Provider value={auth}>
             {children}
         </AuthContext.Provider>
     )
-}
-
-export function withAuth(Child: React.ComponentType, container: AuthContainer, options?: AuthOptions) {
-    function AuthWrapper(props: any) {
-        return (
-            <AuthProvider container={container} {...options}>
-                <Child {...props}/>
-            </AuthProvider>
-        )
-    }
-
-    return AuthWrapper
 }
 
 // Types ///////////////////////////////////////////////////////////////////////
@@ -125,13 +123,9 @@ export interface Auth {
 }
 
 export interface AuthProviderProps extends AuthOptions {
-    children?: React.ReactNode
-    container: AuthContainer
-}
-
-export interface AuthContainer {
-    Cookie: Cookie
-    Fetch: Fetch
+    children: JSX.Element
+    cookie: Cookie
+    fetch: Fetch
 }
 
 export interface AuthOptions {

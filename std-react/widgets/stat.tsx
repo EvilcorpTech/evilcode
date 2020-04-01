@@ -4,25 +4,25 @@ import { createElement } from 'react'
 import './stat.css'
 
 export function Stat(props: StatProps) {
-    const { value, unit, label, ...dynProps } = props
+    const { value, unit, label, ...otherProps } = props
 
     return (
         <span
-            {...dynProps}
-            {...className('StdStat', props.className)}
+            {...otherProps}
+            {...className('s0fdeae5-stat', props.className)}
         >
-            <div className="StdStat-ValueAndUnit">
-                <span className="StdStat-Value std-text-h3">
+            <div className="s5a96fae-valueunit">
+                <span className="s83eb5774-value std-text-h3">
                     {value}
                 </span>
                 {unit ? (
-                    <span className="StdStat-Unit std-text-subtitle2">
+                    <span className="d85e425b-unit important std-text-subtitle2">
                         {unit}
                     </span>
                 ) : null}
             </div>
             {label ? (
-                <label className="StdStat-Label std-text-caption std-text2">
+                <label className="c204b3fa-label std-text-caption std-text2">
                     {label}
                 </label>
             ) : null}

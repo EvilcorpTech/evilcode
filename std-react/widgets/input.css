@@ -1,4 +1,4 @@
-.StdInput {
+.i7eea495-input {
     position: relative;
     display: flex;
     flex-direction: column;
@@ -9,32 +9,30 @@
     background-color: var(--std-back1);
     transition: all var(--std-duration-fast);
 }
+.i7eea495-input.placeholder {
+    background-color: var(--std-back3);
+}
+.i7eea495-input.focus {
+    border-bottom-color: var(--std-primary-tone1);
+}
 
-.StdInput-Label {
+.i7eea495-input:hover .id45daa0-label,
+.cebab456-field {
+    color: var(--std-primary-shade1);
+}
+
+.id45daa0-label {
     color: var(--std-text3);
     margin-bottom: var(--std-gutter-xxs);
     transition: all var(--std-duration-normal);
     transform-origin: top left;
     pointer-events: none;
 }
-
-.StdInput.StdInput_placeholder {
-    background-color: var(--std-back3);
-}
-.StdInput_focus {
-    border-bottom-color: var(--std-primary-tone1);
-}
-
-.StdInput_placeholder .StdInput-Label {
+.i7eea495-input.placeholder .id45daa0-label {
     font-weight: var(--std-weight-regular);
 }
 
-.StdInput-Input {
+.cebab456-field {
     border-bottom: 1px solid transparent;
     background-color: transparent;
-}
-
-.StdInput:hover .StdInput-Label,
-.StdInput-Input {
-    color: var(--std-primary-shade1);
 }
