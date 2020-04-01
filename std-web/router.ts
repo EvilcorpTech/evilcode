@@ -1,12 +1,15 @@
+import { isRegExp } from '@eviljs/std-lib/type'
+
 export const RegexpCache: Record<string, RegExp> = {}
 
 export const EXACT = '$'
 export const WHOLE = '(.*)'
+export const SUB = '(/.*)?'
 
 // An opening round bracket,
-// followed by anything not being a closing round bracket,
+// not followed by an opening or closing round bracket,
 // followed by a closing round bracket.
-export const CapturingGroupRegexp = /\([^)]+\)/
+export const CapturingGroupRegexp = /\([^()]+\)/
 export const RepeatingSlashRegexp = /\/\/+/g
 export const TrailingSlashRegexp = /\/$/
 
@@ -41,14 +44,17 @@ export function link(path: string) {
     return '#' + path
 }
 
-export function isPathRouted(path: string, route: string) {
-    if (! RegexpCache[path]) {
-        RegexpCache[path] = new RegExp(`^${path}(/|$)`, 'i')
+export function patternFromPath(path: string | RegExp) {
+    if (isRegExp(path)) {
+        return path
     }
 
-    const re = RegexpCache[path]
+    if (! RegexpCache[path]) {
+        const normalizedPattern = normalizePath(path)
+        RegexpCache[path] = new RegExp(`^${normalizedPattern}(?:/|$)`, 'i')
+    }
 
-    return re.test(route)
+    return RegexpCache[path]
 }
 
 /*
@@ -70,11 +76,13 @@ export function isPathRouted(path: string, route: string) {
 * bookRoute(123) # '/book/123'
 * bookRoute.pattern # '/book/(\\w+)'
 */
-export function defineRoute(pattern: string) {
-    const normalizedPattern = normalizePattern(pattern)
-
-    function routeResolver(...args: Array<any>) {
-            let path = normalizedPattern
+export function defineRoute
+    <T extends Array<unknown>>
+    (pattern: string, resolver?: (...args: T) => string)
+    : RouteProtocol<T>
+{
+    function defaultResolver(...args: Array<any>) {
+            let path = pattern
 
             for (const arg of args) {
                     path = path.replace(CapturingGroupRegexp, arg)
@@ -83,12 +91,19 @@ export function defineRoute(pattern: string) {
             return path
     }
 
-    routeResolver.pattern = normalizedPattern
+    function routeResolver(...args: T) {
+        const route = resolver
+            ? resolver(...args)
+            : defaultResolver(...args)
+
+        return route
+    }
+    routeResolver.pattern = pattern
 
     return routeResolver
 }
 
-export function normalizePattern(pattern: string) {
+export function normalizePath(pattern: string) {
     return pattern
             .replace(RepeatingSlashRegexp, '/')
             .replace(TrailingSlashRegexp, '')
@@ -103,4 +118,9 @@ export interface Router {
 
 export interface RouteHandler {
     (route: string): void
+}
+
+export interface RouteProtocol<T extends Array<unknown>> {
+    (...args: T): string
+    pattern: string
 }

@@ -1,4 +1,5 @@
-import { ValueOf } from '@eviljs/std-lib/type'
+import { isObject, ValueOf } from '@eviljs/std-lib/type'
+import { throwInvalidArgument } from '@eviljs/std-lib/error'
 
 export const FetchRequestMethod = {
     Get: 'get',
@@ -59,8 +60,11 @@ export function mergeOptions(...options: Array<FetchRequestOptions>) {
         }
 
         if (opts.headers) {
-            if (opts.headers.constructor !== Object) {
-                throw new Error('Not supported headers format')
+            if (! isObject(opts.headers)) {
+                return throwInvalidArgument(
+                    '@eviljs/std-web/fetch.mergeOptions(~~options~~):\n'
+                    + `options[].headers must be an Object, given "${opts.headers}".`
+                )
             }
 
             mergedOptions.headers = {
