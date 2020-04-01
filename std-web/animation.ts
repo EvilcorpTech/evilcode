@@ -101,6 +101,7 @@ export function createSpringAnimation(options: SpringAnimationOpts) {
             done()
             return
         }
+
         const precision = options.precision ?? SpringPrecision
         const time = (Date.now() - initialTime) / precision
         const snapping = options.snapping ?? SpringSnapping

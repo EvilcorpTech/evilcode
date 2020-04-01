@@ -27,24 +27,14 @@ export function intervalOfPreviousYear() {
 }
 
 export function intervalCustom(startStr: string, endStr: string) {
-    if (! startStr && ! endStr) {
-        return
-    }
-    if (startStr && isNaN(Date.parse(startStr))) {
-        return
-    }
-    if (endStr && isNaN(Date.parse(endStr))) {
-        return
-    }
-
     // We can't use "new Date(string)" because it changes its behavior
     // (uses or not the timezone) depending on the format of the string:
     // - 2020-01 is handled as UTC time
     // - 2020-1 is handled as Local time
-    const start = dateFromString(startStr, (year, month, day) =>
+    const start = dateFromIsoString(startStr, (year, month, day) =>
         new Date(year, (month || 1) - 1, day || 1)
     )
-    const end = dateFromString(endStr, (year, month, day) => day
+    const end = dateFromIsoString(endStr, (year, month, day) => day
         ? new Date(year, (month || 12) - 1, day)
         : new Date(year, (month || 12), 0) // Last day of the month.
     )
@@ -60,28 +50,29 @@ export function intervalOf(start?: Date, end?: Date) {
 }
 
 export function datetimeToDateString(date: Date) {
-    if (! date) {
-        return
-    }
     return `${year(date)}-${month(date)}-${day(date)}`
 }
 
-export function dateFromString(dateStr: string, createDate: (...parts: Array<number>) => Date) {
-    if (! dateStr) {
+export function dateFromIsoString(dateStr: string, fallbackDate?: (year: number, month?: number, day?: number) => Date) {
+    if (isNaN(Date.parse(dateStr))) {
         return
     }
 
     const dateParts = dateStr
-        // 2020-01-01 12:00 => 2020-01-01 12:00
         // 2020-01-01T12:00 => 2020-01-01 12:00
         .replace('T', ' ')
+        .replace('t', ' ')
         // 2020-01-01 12:00 => 2020-01-01
-        .split('T')[0]
+        .split(' ')[0]
         .split('-')
         // 2020-01- => 2020-01
         .filter(Boolean)
         .map(Number)
-    const date = createDate(...dateParts)
+    const [ dateYear, dateMonth, dateDay ] = dateParts
+
+    const date = dateParts.length === 3
+        ? new Date(dateYear, dateMonth - 1, dateDay)
+        : fallbackDate?.(dateYear, dateMonth, dateDay)
 
     return date
 }
