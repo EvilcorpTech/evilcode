@@ -1,6 +1,6 @@
 {
     "name": "@eviljs/std-rest",
-    "version": "0.1.5",
+    "version": "0.1.6",
     "dependencies": {
         "@eviljs/std-lib": "^0.1",
         "@eviljs/std-node": "^0.1",

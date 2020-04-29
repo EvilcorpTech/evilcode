@@ -14,7 +14,7 @@ import KoaStatic from 'koa-static'
 
 export const ApiPath = '/api'
 export const StaticDir = './public'
-export const StaticMaxAge = 1000 * 60 * 60 * 24 // 1 day. Don't Cache-Control for too long, otherwise the ETag is frustrated.
+export const StaticMaxAge = 60 * 60 * 24 // 1 day. Don't Cache-Control for too long, otherwise the ETag is frustrated.
 export const HttpAddr = 'localhost'
 export const HttpPort = 8080
 
@@ -59,7 +59,7 @@ export function createRestApp<T>(spec?: RestSpec<T>) {
     const apiPath = spec?.apiPath ?? ApiPath
     const staticDir = spec?.staticDir ?? StaticDir
     const staticOpts = {
-        maxage: spec?.maxAge ?? StaticMaxAge,
+        maxage: (spec?.maxAge ?? StaticMaxAge) * 1000,
     }
     const context = spec?.context
     type KoaState = Koa.DefaultState
@@ -72,7 +72,7 @@ export function createRestApp<T>(spec?: RestSpec<T>) {
         `@eviljs/std-rest/index.createRestApp(): serving APIs on ${apiPath}.`
     )
     console.info(
-        `@eviljs/std-rest/index.createRestApp(): serving static contents from ${staticDir} with max-age ${staticOpts.maxage}.`
+        `@eviljs/std-rest/index.createRestApp(): serving static contents from ${staticDir} with max-age ${staticOpts.maxage/1000}.`
     )
 
     Object.assign(app.context, context)
