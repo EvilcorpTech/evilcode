@@ -29,7 +29,7 @@ export function mockFetch(fetch: Fetch, mocks: FetchMocks) {
                 const response = mockResponse(mocks, ...args)
 
                 if (! response) {
-                    throw `(mockFetch) Missing mock for "${args[0]}:${args[1]}"`
+                    throw `@eviljs/std-web/fetch-mock.mockFetch(): missing mock for '${args[0]}:${args[1]}'`
                 }
 
                 return Promise.resolve(response)

@@ -1,7 +1,5 @@
 import { isRegExp } from '@eviljs/std-lib/type'
 
-export const RegexpCache: Record<string, RegExp> = {}
-
 export const EXACT = '$'
 export const WHOLE = '(.*)'
 export const SUB = '(/.*)?'
@@ -10,8 +8,11 @@ export const SUB = '(/.*)?'
 // not followed by an opening or closing round bracket,
 // followed by a closing round bracket.
 export const CapturingGroupRegexp = /\([^()]+\)/
+export const EmptiesRegexp = /[\n ]/g
 export const RepeatingSlashRegexp = /\/\/+/g
 export const TrailingSlashRegexp = /\/$/
+
+export const RegExpCache: RegExpCache = {}
 
 export function createRouter(routeHandler: RouteHandler) {
     const self: Router = {
@@ -44,19 +45,6 @@ export function link(path: string) {
     return '#' + path
 }
 
-export function patternFromPath(path: string | RegExp) {
-    if (isRegExp(path)) {
-        return path
-    }
-
-    if (! RegexpCache[path]) {
-        const normalizedPattern = normalizePath(path)
-        RegexpCache[path] = new RegExp(`^${normalizedPattern}(?:/|$)`, 'i')
-    }
-
-    return RegexpCache[path]
-}
-
 /*
 * Creates a function implementing the Route Protocol.
 * Route Protocol is defined as:
@@ -76,37 +64,97 @@ export function patternFromPath(path: string | RegExp) {
 * bookRoute(123) # '/book/123'
 * bookRoute.pattern # '/book/(\\w+)'
 */
-export function defineRoute
-    <T extends Array<unknown>>
-    (pattern: string, resolver?: (...args: T) => string)
-    : RouteProtocol<T>
-{
-    function defaultResolver(...args: Array<any>) {
-            let path = pattern
+type DefaultE = Array<string>
+type DefaultD = RegExpMatchArray | null | undefined
+export function defineRoute<E extends Args, D>(path: string, options?: {encode?: never, decode?: never, normalize?: boolean}): RouteProtocol<DefaultE, DefaultD>;
+export function defineRoute<E extends Args, D>(path: string, options?: {encode: RouteProtocolEncoder<E>, decode?: never, normalize?: boolean}): RouteProtocol<E, DefaultD>;
+export function defineRoute<E extends Args, D>(path: string, options?: {encode?: never, decode?: RouteProtocolDecoder<D>, normalize?: boolean}): RouteProtocol<DefaultE, D>;
+export function defineRoute<E extends Args, D>(path: string, options?: {encode?: RouteProtocolEncoder<E>, decode?: RouteProtocolDecoder<D>, normalize?: boolean}): RouteProtocol<E, D>;
+export function defineRoute<E extends Args, D>(path: string, options?: RouteOptions<E, D>) {
+    const pattern = options?.normalize ?? true
+        ? normalizePattern(path)
+        : path
+    const patternRe = regexpFromPattern(pattern)
 
-            for (const arg of args) {
-                    path = path.replace(CapturingGroupRegexp, arg)
-            }
+    const decode = options?.decode
+    const encode = options?.encode
 
-            return path
-    }
+    const parser = decode
+        ? (path: string) =>
+            decode(path)
+        : (path: string) =>
+            defaultDecoder(patternRe, path)
 
-    function routeResolver(...args: T) {
-        const route = resolver
-            ? resolver(...args)
-            : defaultResolver(...args)
+    const encoder = encode
+        ? ((...args: E) =>
+            encode(...args)
+        ) as (
+            | Partial<RouteProtocol<E, DefaultD>>
+            | Partial<RouteProtocol<E, D>>
+        )
+        : ((...args: DefaultE) =>
+            defaultEncoder(pattern, ...args)
+        ) as (
+            | Partial<RouteProtocol<DefaultE, DefaultD>>
+            | Partial<RouteProtocol<DefaultE, D>>
+        )
 
-        return route
-    }
-    routeResolver.pattern = pattern
+    encoder.pattern = pattern
+    encoder.patternRe = patternRe
+    encoder.parse = parser
 
-    return routeResolver
+    return encoder
 }
 
-export function normalizePath(pattern: string) {
+/*
+* Encodes the route parameters inside the pattern.
+*
+* EXAMPLE
+* defaultEncoder('/book/(\\w+)/(\\w+)', 'abc', 123) === '/book/abc/123'
+*/
+export function defaultEncoder(pattern: string, ...args: Array<string>) {
+    let path = pattern
+
+    for (const arg of args) {
+        path = path.replace(CapturingGroupRegexp, arg)
+    }
+
+    return path
+}
+
+/*
+* Decodes the route parameters from a path.
+*
+* EXAMPLE
+* defaultDecoder('/book/(\\w+)/(\\w+)', '/book/abc/123') === ['abc', '123']
+*/
+function defaultDecoder(patternRe: RegExp, path: string) {
+    const matches = path.match(patternRe)?.slice(1) // Without the whole matching group (first element).
+
+    return matches
+}
+
+export function compilePattern(pattern: string) {
+    return regexpFromPattern(normalizePattern(pattern))
+}
+
+export function normalizePattern(pattern: string) {
     return pattern
-            .replace(RepeatingSlashRegexp, '/')
-            .replace(TrailingSlashRegexp, '')
+        .replace(EmptiesRegexp, '')
+        .replace(RepeatingSlashRegexp, '/')
+        .replace(TrailingSlashRegexp, '')
+}
+
+export function regexpFromPattern(pattern: string | RegExp) {
+    if (isRegExp(pattern)) {
+        return pattern
+    }
+
+    if (! RegExpCache[pattern]) {
+        RegExpCache[pattern] = new RegExp(`^${pattern}(?:/|$)`, 'i')
+    }
+
+    return RegExpCache[pattern]
 }
 
 // Types ///////////////////////////////////////////////////////////////////////
@@ -120,7 +168,29 @@ export interface RouteHandler {
     (route: string): void
 }
 
-export interface RouteProtocol<T extends Array<unknown>> {
-    (...args: T): string
-    pattern: string
+export interface RouteOptions<E extends Args, D> {
+    encode?: RouteProtocolEncoder<E>
+    decode?: RouteProtocolDecoder<D>
+    normalize?: boolean
 }
+
+export interface RouteProtocol<A extends Args, D> {
+    (...args: A): string
+    pattern: string
+    patternRe: RegExp
+    parse: RouteProtocolDecoder<D>
+}
+
+export interface RouteProtocolEncoder<E extends Args> {
+    (...args: E): string
+}
+
+export interface RouteProtocolDecoder<D> {
+    (path: string): D
+}
+
+export interface RegExpCache {
+    [key: string]: RegExp
+}
+
+type Args = Array<unknown>

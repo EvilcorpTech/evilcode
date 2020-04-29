@@ -142,7 +142,7 @@ export function createSpringScaleAnimation(finalScale: number, initialScale = 1,
     const scaleDistance = computeDistance(initialScale, finalScale)
     const scaleDirection = computeDirection(initialScale, finalScale)
     const overshootScale = finalScale + scaleDirection * scaleDistance
-    const mapPositionToScale = createValuesMapper([animationDistance, -animationDistance], [initialScale, overshootScale])
+    const mapPositionToScale = createLinearScale([animationDistance, -animationDistance], [initialScale, overshootScale])
     const inverseDistance = computeDistance(finalScale, -initialScale)
     //  5 |\
     //    | \     —
@@ -185,7 +185,7 @@ export function createSpringScaleAnimation(finalScale: number, initialScale = 1,
     return play
 }
 
-export function createValuesMapper(inputInterval: readonly [number, number], outputInterval: readonly [number, number]) {
+export function createLinearScale(inputInterval: readonly [number, number], outputInterval: readonly [number, number]) {
     const [ inputStart, inputEnd ] = inputInterval
     const [ outputStart, outputEnd ] = outputInterval
 
