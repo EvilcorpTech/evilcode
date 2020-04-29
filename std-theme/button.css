@@ -94,7 +94,7 @@
     padding: var(--std-gutter-xxs) var(--std-gutter-s);
     border-radius: var(--std-radius-xl);
     background-color: transparent;
-    z-index: 1;
+    z-index: 0;
 }
 .std-button-tertiary::after {
     content: '';
