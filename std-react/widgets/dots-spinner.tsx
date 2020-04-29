@@ -9,11 +9,11 @@ export function DotsSpinner(props: DotsSpinnerProps) {
     return (
         <div
             {...otherProps}
-            {...className('sa7b7eb6-spinner', props.className, {active})
+            {...className('spinner-sa7b7e', props.className, {active})
         }>
-            <span className="sdd55de7-dot sdd55de7-n1"/>
-            <span className="sdd55de7-dot sdd55de7-n2"/>
-            <span className="sdd55de7-dot sdd55de7-n3"/>
+            <span className="dot-sdd55d n1-sdd55d"/>
+            <span className="dot-sdd55d n2-sdd55d"/>
+            <span className="dot-sdd55d n3-sdd55d"/>
         </div>
     )
 }

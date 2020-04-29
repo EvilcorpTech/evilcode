@@ -1,20 +1,20 @@
-.s0fdeae5-stat {
+.stat-s0fdea {
     display: inline-flex;
     flex-direction: column;
     align-items: center;
 }
 
-.s5a96fae-valueunit {
+.valueunit-s5a96f {
     color: var(--std-primary-shade1);
 }
 
-.d85e425b-unit {
+.unit-d85e42 {
     margin-left: var(--std-gutter);
 }
-.d85e425b-unit.important {
+.unit-d85e42.important {
     font-weight: var(--std-weight-regular);
 }
 
-.c204b3fa-label {
+.label-c204b3 {
     margin-top: var(--std-gutter-mini);
 }

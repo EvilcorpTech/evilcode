@@ -9,20 +9,20 @@ export function Stat(props: StatProps) {
     return (
         <span
             {...otherProps}
-            {...className('s0fdeae5-stat', props.className)}
+            {...className('stat-s0fdea', props.className)}
         >
-            <div className="s5a96fae-valueunit">
+            <div className="valueunit-s5a96f">
                 <span className="s83eb5774-value std-text-h3">
                     {value}
                 </span>
                 {unit ? (
-                    <span className="d85e425b-unit important std-text-subtitle2">
+                    <span className="unit-d85e42 important std-text-subtitle2">
                         {unit}
                     </span>
                 ) : null}
             </div>
             {label ? (
-                <label className="c204b3fa-label std-text-caption std-text2">
+                <label className="label-c204b3 std-text-caption std-text2">
                     {label}
                 </label>
             ) : null}

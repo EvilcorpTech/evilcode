@@ -16,7 +16,7 @@ export function Button(props: ButtonProps) {
     return (
         <button
             {...otherProps}
-            {...className('bfce14ea-button std-button std-text-button', props.className,
+            {...className('button-bfce14 std-button std-text-button', props.className,
                 `std-button-${type ?? 'primary'}`,
             )}
             type={action ?? 'button'}

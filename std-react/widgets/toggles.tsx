@@ -32,17 +32,17 @@ export function Toggles(props: TogglesProps) {
     return (
         <div
             {...otherProps}
-            {...className('s4178aec-toggles select', props.className)}
+            {...className('toggles-s4178a select', props.className)}
         >
             <label className="select-label">
                 {message}
             </label>
 
-            <div className="s8ad55b6-list">
+            <div className="list-s8ad55">
                 {items.map(it => (
                     <div
                         key={it.id}
-                        {...className('c9313ecb-toggle', {
+                        {...className('toggle-c9313e', {
                             selected: selectedItems.includes(it.id),
                         })}
                         data-id={it.id}

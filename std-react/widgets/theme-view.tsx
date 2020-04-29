@@ -34,13 +34,13 @@ export function ThemeView(props: ThemeViewProps) {
     return (
         <div
             {...props}
-            {...className('t2eb5bd0-theme std-theme', props.className, {
+            {...className('theme-t2eb5b std-theme', props.className, {
                 'light': themeLight, 'dark': ! themeLight,
             })}
         >
             <h1 className="std-stack-h std-text-overline std-primary-accent">
                 <input
-                    className="t8c25d08-picker"
+                    className="picker-t8c25d"
                     type="color"
                     value={accent1RgbHex}
                     onChange={(event) => setAccent1RgbHex(event.target.value)}
@@ -49,7 +49,7 @@ export function ThemeView(props: ThemeViewProps) {
                 <label>Theme</label>
                 <i className="std-space-m"/>
                 <input
-                    className="t8c25d08-picker"
+                    className="picker-t8c25d"
                     type="color"
                     value={accent2RgbHex}
                     onChange={(event) => setAccent2RgbHex(event.target.value)}
@@ -80,32 +80,32 @@ export function ThemeView(props: ThemeViewProps) {
                 <div className="std-stack-v">
                     <div className="std-stack-h" style={{alignItems: 'flex-end'}}>
                         <div className="std-stack-v" style={{alignItems: 'flex-start'}}>
-                            <label className="bead0766-text std-text-display1">Display 1</label>
-                            <label className="bead0766-text std-text-h1">Headline 1</label>
-                            <label className="bead0766-text std-text-h2">Headline 2</label>
-                            <label className="bead0766-text std-text-h3">Headline 3</label>
-                            <label className="bead0766-text std-text-h4">Headline 4</label>
-                            <label className="bead0766-text std-text-h5">Headline 5</label>
-                            <label className="bead0766-text std-text-h6">Headline 6</label>
-                            <label className="bead0766-text std-text-subtitle1">Subtitle 1</label>
-                            <label className="bead0766-text std-text-subtitle2">Subtitle 2</label>
-                            <label className="bead0766-text std-text-body1">Body 1</label>
-                            <label className="bead0766-text std-text-body2">Body 2</label>
-                            <label className="bead0766-text std-text-caption">Caption</label>
-                            <label className="bead0766-text std-text-overline">Overline</label>
-                            <label className="bead0766-text std-text-button">Button</label>
+                            <label className="text-bead07 std-text-display1">Display 1</label>
+                            <label className="text-bead07 std-text-h1">Headline 1</label>
+                            <label className="text-bead07 std-text-h2">Headline 2</label>
+                            <label className="text-bead07 std-text-h3">Headline 3</label>
+                            <label className="text-bead07 std-text-h4">Headline 4</label>
+                            <label className="text-bead07 std-text-h5">Headline 5</label>
+                            <label className="text-bead07 std-text-h6">Headline 6</label>
+                            <label className="text-bead07 std-text-subtitle1">Subtitle 1</label>
+                            <label className="text-bead07 std-text-subtitle2">Subtitle 2</label>
+                            <label className="text-bead07 std-text-body1">Body 1</label>
+                            <label className="text-bead07 std-text-body2">Body 2</label>
+                            <label className="text-bead07 std-text-caption">Caption</label>
+                            <label className="text-bead07 std-text-overline">Overline</label>
+                            <label className="text-bead07 std-text-button">Button</label>
                         </div>
 
                         <div className="std-stack-v" style={{alignItems: 'flex-end'}}>
-                            <div className="t1d3c1f3-gutter important std-space-mini"><label>Mini</label></div>
-                            <div className="t1d3c1f3-gutter important std-space-xxs"><label>XXS</label></div>
-                            <div className="t1d3c1f3-gutter important std-space-xs"><label>XS</label></div>
-                            <div className="t1d3c1f3-gutter important std-space-s"><label>S</label></div>
-                            <div className="t1d3c1f3-gutter important std-space-m"><label>M</label></div>
-                            <div className="t1d3c1f3-gutter important std-space-l"><label>L</label></div>
-                            <div className="t1d3c1f3-gutter important std-space-xl"><label>XL</label></div>
-                            <div className="t1d3c1f3-gutter important std-space-xxl"><label>XXL</label></div>
-                            <div className="t1d3c1f3-gutter important std-space-maxi"><label>Maxi</label></div>
+                            <div className="gutter-t1d3c1 important std-space-mini"><label>Mini</label></div>
+                            <div className="gutter-t1d3c1 important std-space-xxs"><label>XXS</label></div>
+                            <div className="gutter-t1d3c1 important std-space-xs"><label>XS</label></div>
+                            <div className="gutter-t1d3c1 important std-space-s"><label>S</label></div>
+                            <div className="gutter-t1d3c1 important std-space-m"><label>M</label></div>
+                            <div className="gutter-t1d3c1 important std-space-l"><label>L</label></div>
+                            <div className="gutter-t1d3c1 important std-space-xl"><label>XL</label></div>
+                            <div className="gutter-t1d3c1 important std-space-xxl"><label>XXL</label></div>
+                            <div className="gutter-t1d3c1 important std-space-maxi"><label>Maxi</label></div>
                         </div>
                     </div>
 
@@ -113,41 +113,41 @@ export function ThemeView(props: ThemeViewProps) {
                     <i className="std-space-m"/>
 
                     <div className="std-stack-h">
-                        <label className="td0891c0-contrast std-text1 std-back1">
+                        <label className="contrast-td0891 std-text1 std-back1">
                             Text&nbsp;1<br/>
                             Back&nbsp;1
                         </label>
-                        <label className="td0891c0-contrast std-text2 std-back2" style={{transform: 'translateX(-15px)'}}>
+                        <label className="contrast-td0891 std-text2 std-back2" style={{transform: 'translateX(-15px)'}}>
                             Text&nbsp;2<br/>
                             Back&nbsp;2
                         </label>
-                        <label className="td0891c0-contrast std-text3 std-back3" style={{transform: 'translateX(-30px)'}}>
+                        <label className="contrast-td0891 std-text3 std-back3" style={{transform: 'translateX(-30px)'}}>
                             Text&nbsp;3<br/>
                             Back&nbsp;3
                         </label>
-                        <label className="td0891c0-contrast std-text3 std-back4" style={{transform: 'translateX(-45px)'}}>
+                        <label className="contrast-td0891 std-text3 std-back4" style={{transform: 'translateX(-45px)'}}>
                             Text&nbsp;3<br/>
                             Back&nbsp;4
                         </label>
                     </div>
                     <i className="std-space-m"/>
                     <div className="std-stack-h">
-                        <label className="td0891c0-contrast std-text3-inverse std-back4-inverse">
+                        <label className="contrast-td0891 std-text3-inverse std-back4-inverse">
                             Text&nbsp;3<br/>
                             Back&nbsp;4<br/>
                             inverse
                         </label>
-                        <label className="td0891c0-contrast std-text3-inverse std-back3-inverse" style={{transform: 'translateX(-15px)'}}>
+                        <label className="contrast-td0891 std-text3-inverse std-back3-inverse" style={{transform: 'translateX(-15px)'}}>
                             Text&nbsp;3<br/>
                             Back&nbsp;3<br/>
                             inverse
                         </label>
-                        <label className="td0891c0-contrast std-text2-inverse std-back2-inverse" style={{transform: 'translateX(-30px)'}}>
+                        <label className="contrast-td0891 std-text2-inverse std-back2-inverse" style={{transform: 'translateX(-30px)'}}>
                             Text&nbsp;2<br/>
                             Back&nbsp;2<br/>
                             inverse
                         </label>
-                        <label className="td0891c0-contrast std-text1-inverse std-back1-inverse" style={{transform: 'translateX(-45px)'}}>
+                        <label className="contrast-td0891 std-text1-inverse std-back1-inverse" style={{transform: 'translateX(-45px)'}}>
                             Text&nbsp;1<br/>
                             Back&nbsp;1<br/>
                             inverse
@@ -166,7 +166,7 @@ export function ThemeView(props: ThemeViewProps) {
                                 <label>Primary Accent</label>
                                 <div className="std-spacer"></div>
                                 <span
-                                    className="t75a7bb0-color"
+                                    className="color-t75a7b"
                                     title="Primary accent"
                                     style={{backgroundColor: 'var(--std-primary-accent)'}}
                                 />
@@ -178,7 +178,7 @@ export function ThemeView(props: ThemeViewProps) {
                                 {Array(6).fill(null).map((_, idx) => (
                                     <span
                                         key={idx}
-                                        className="t75a7bb0-color"
+                                        className="color-t75a7b"
                                         title={`Primary tint ${6-idx}`}
                                         style={{backgroundColor: `var(--std-primary-tint${6-idx})`}}
                                     />
@@ -191,7 +191,7 @@ export function ThemeView(props: ThemeViewProps) {
                                 {Array(6).fill(null).map((_, idx) => (
                                     <span
                                         key={idx}
-                                        className="t75a7bb0-color"
+                                        className="color-t75a7b"
                                         title={`Primary shade ${6-idx}`}
                                         style={{backgroundColor: `var(--std-primary-shade${6-idx})`}}
                                     />
@@ -204,7 +204,7 @@ export function ThemeView(props: ThemeViewProps) {
                                 {Array(6).fill(null).map((_, idx) => (
                                     <span
                                         key={idx}
-                                        className="t75a7bb0-color"
+                                        className="color-t75a7b"
                                         title={`Primary tone ${6-idx}`}
                                         style={{backgroundColor: `var(--std-primary-tone${6-idx})`}}
                                     />
@@ -217,7 +217,7 @@ export function ThemeView(props: ThemeViewProps) {
                                 <label>Secondary Accent</label>
                                 <div className="std-spacer"></div>
                                 <span
-                                    className="t75a7bb0-color"
+                                    className="color-t75a7b"
                                     title="Primary accent"
                                     style={{backgroundColor: 'var(--std-secondary-accent)'}}
                                 />
@@ -229,7 +229,7 @@ export function ThemeView(props: ThemeViewProps) {
                                 {Array(6).fill(null).map((_, idx) => (
                                     <span
                                         key={idx}
-                                        className="t75a7bb0-color"
+                                        className="color-t75a7b"
                                         title={`Primary tint ${6-idx}`}
                                         style={{backgroundColor: `var(--std-secondary-tint${6-idx})`}}
                                     />
@@ -242,7 +242,7 @@ export function ThemeView(props: ThemeViewProps) {
                                 {Array(6).fill(null).map((_, idx) => (
                                     <span
                                         key={idx}
-                                        className="t75a7bb0-color"
+                                        className="color-t75a7b"
                                         title={`Primary shade ${6-idx}`}
                                         style={{backgroundColor: `var(--std-secondary-shade${6-idx})`}}
                                     />
@@ -255,7 +255,7 @@ export function ThemeView(props: ThemeViewProps) {
                                 {Array(6).fill(null).map((_, idx) => (
                                     <span
                                         key={idx}
-                                        className="t75a7bb0-color"
+                                        className="color-t75a7b"
                                         title={`Primary tone ${6-idx}`}
                                         style={{backgroundColor: `var(--std-secondary-tone${6-idx})`}}
                                     />
@@ -300,57 +300,57 @@ export function ThemeView(props: ThemeViewProps) {
                             <i className="std-space-m"/>
 
                             <div>
-                                <label className="t3479607-duration" style={{transitionDuration: 'var(--std-duration-slow)'}}>Slow</label>
-                                <label className="t3479607-duration" style={{transitionDuration: 'var(--std-duration-normal)'}}>Normal</label>
-                                <label className="t3479607-duration" style={{transitionDuration: 'var(--std-duration-fast)'}}>Fast</label>
-                                <label className="t3479607-duration" style={{transitionDuration: 'var(--std-duration-flash)'}}>Flash</label>
+                                <label className="duration-t34796" style={{transitionDuration: 'var(--std-duration-slow)'}}>Slow</label>
+                                <label className="duration-t34796" style={{transitionDuration: 'var(--std-duration-normal)'}}>Normal</label>
+                                <label className="duration-t34796" style={{transitionDuration: 'var(--std-duration-fast)'}}>Fast</label>
+                                <label className="duration-t34796" style={{transitionDuration: 'var(--std-duration-flash)'}}>Flash</label>
                             </div>
 
                             <i className="std-space-m"/>
                             <i className="std-space-m"/>
 
                             <div className="std-stack-h" style={{alignItems: 'flex-end'}}>
-                                <div className="e43c305e-icon">
+                                <div className="icon-e43c30">
                                     <Icon className="std-icon std-icon-maxi"/>
                                     <div className="std-space-s"></div>
                                     <label>Maxi</label>
                                 </div>
-                                <div className="e43c305e-icon">
+                                <div className="icon-e43c30">
                                     <Icon className="std-icon std-icon-xxl"/>
                                     <div className="std-space-xs"></div>
                                     <label>XXL</label>
                                 </div>
-                                <div className="e43c305e-icon">
+                                <div className="icon-e43c30">
                                     <Icon className="std-icon std-icon-xl"/>
                                     <div className="std-space-xs"></div>
                                     <label>XL</label>
                                 </div>
-                                <div className="e43c305e-icon">
+                                <div className="icon-e43c30">
                                     <Icon className="std-icon std-icon-l"/>
                                     <div className="std-space-xs"></div>
                                     <label>L</label>
                                 </div>
-                                <div className="e43c305e-icon">
+                                <div className="icon-e43c30">
                                     <Icon className="std-icon std-icon-m"/>
                                     <div className="std-space-xs"></div>
                                     <label>M</label>
                                 </div>
-                                <div className="e43c305e-icon">
+                                <div className="icon-e43c30">
                                     <Icon className="std-icon std-icon-s"/>
                                     <div className="std-space-xs"></div>
                                     <label>S</label>
                                 </div>
-                                <div className="e43c305e-icon">
+                                <div className="icon-e43c30">
                                     <Icon className="std-icon std-icon-xs"/>
                                     <div className="std-space-xs"></div>
                                     <label>XS</label>
                                 </div>
-                                <div className="e43c305e-icon">
+                                <div className="icon-e43c30">
                                     <Icon className="std-icon std-icon-xxs"/>
                                     <div className="std-space-xs"></div>
                                     <label>XXS</label>
                                 </div>
-                                <div className="e43c305e-icon">
+                                <div className="icon-e43c30">
                                     <Icon className="std-icon std-icon-mini"/>
                                     <div className="std-space-xs"></div>
                                     <label>Mini</label>
@@ -361,13 +361,13 @@ export function ThemeView(props: ThemeViewProps) {
                             <i className="std-space-m"/>
 
                             <div>
-                                <label className="tabc5e40-radius std-radius-maxi">Maxi</label>
-                                <label className="tabc5e40-radius std-radius-xl">XL</label>
-                                <label className="tabc5e40-radius std-radius-l">L</label>
-                                <label className="tabc5e40-radius std-radius-m">M</label>
-                                <label className="tabc5e40-radius std-radius-s">S</label>
-                                <label className="tabc5e40-radius std-radius-xs">XS</label>
-                                <label className="tabc5e40-radius std-radius-mini">Mini</label>
+                                <label className="radius-tabc5e std-radius-maxi">Maxi</label>
+                                <label className="radius-tabc5e std-radius-xl">XL</label>
+                                <label className="radius-tabc5e std-radius-l">L</label>
+                                <label className="radius-tabc5e std-radius-m">M</label>
+                                <label className="radius-tabc5e std-radius-s">S</label>
+                                <label className="radius-tabc5e std-radius-xs">XS</label>
+                                <label className="radius-tabc5e std-radius-mini">Mini</label>
                             </div>
 
                             <i className="std-space-m"/>
@@ -377,12 +377,12 @@ export function ThemeView(props: ThemeViewProps) {
                     <i className="std-space-m"/>
 
                     <div className="std-stack-h" style={{maxWidth: 'var(--std-viewport-m)'}}>
-                        <label className="t9a25786-shadow std-shadow-soft">Soft</label>
+                        <label className="shadow-t9a257 std-shadow-soft">Soft</label>
                         {Array(12).fill(null).map((_, idx) => (
-                            <label key={idx} className={`t9a25786-shadow std-shadow${idx}`}>{idx}</label>
+                            <label key={idx} className={`shadow-t9a257 std-shadow${idx}`}>{idx}</label>
                         ))}
                         {Array(25).fill(null).map((nil, idx) => idx).slice(12).map(idx => (
-                            <label key={idx} className={`t9a25786-shadow std-shadow std-shadow${idx}`}>{idx}</label>
+                            <label key={idx} className={`shadow-t9a257 std-shadow std-shadow${idx}`}>{idx}</label>
                         ))}
                     </div>
 

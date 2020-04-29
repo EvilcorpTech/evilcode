@@ -1,16 +1,16 @@
-.s4178aec-toggles {
+.toggles-s4178a {
     flex-grow: 1;
 }
-.s4178aec-toggles.select {
+.toggles-s4178a.select {
     padding: unset;
 }
 
-.s8ad55b6-list {
+.list-s8ad55 {
     display: flex;
     flex-wrap: wrap;
 }
 
-.c9313ecb-toggle {
+.toggle-c9313e {
     display: inline-flex;
     justify-content: center;
     align-items: center;
@@ -26,10 +26,10 @@
     user-select: none;
     transition: all var(--std-duration-normal);
 }
-.c9313ecb-toggle.selected {
+.toggle-c9313e.selected {
     color: var(--std-text1-inverse);
     background: var(--std-primary-accent);
 }
-.c9313ecb-toggle:hover {
+.toggle-c9313e:hover {
     border-color: var(--std-primary-accent);
 }

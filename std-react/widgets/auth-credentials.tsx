@@ -68,11 +68,11 @@ export function AuthCredentials(props: AuthCredentialsProps) {
 
     return (
         <form
-            {...className('a6715629-form', props.className)}
+            {...className('form-a67156', props.className)}
             onSubmit={onFormSubmitPrevented}
         >
             <Input
-                className="f8495888-input"
+                className="input-f84958"
                 type="text"
                 label={messages?.identifier ?? 'Identifier'}
                 value={credentials.identifier}
@@ -82,7 +82,7 @@ export function AuthCredentials(props: AuthCredentialsProps) {
                 onChange={onIdentifierChange}
             />
             <Input
-                className="f8495888-input"
+                className="input-f84958"
                 type="password"
                 label={messages?.secret ?? 'Password'}
                 autoComplete="password"
@@ -91,12 +91,12 @@ export function AuthCredentials(props: AuthCredentialsProps) {
                 onChange={onSecretChange}
             />
 
-            <div className="a131712d-error">
+            <div className="error-a13171">
                 {error && (formatError?.(error) ?? error)}
             </div>
 
             <Button
-                {...className('fcb2658f-button',
+                {...className('button-fcb265',
                     {busy: pending, 'std-shadow8': validCredentials},
                 )}
                 type="primary"
@@ -104,11 +104,11 @@ export function AuthCredentials(props: AuthCredentialsProps) {
                 disabled={pending || ! validCredentials}
                 onClick={onFormSubmit}
             >
-                <span className="d9466378-message">
+                <span className="message-d94663">
                     {messages?.signin ?? 'Signin'}
                 </span>
 
-                <Spinner className="a1165c98-spinner" active={pending}/>
+                <Spinner className="spinner-a1165c" active={pending}/>
             </Button>
         </form>
     )

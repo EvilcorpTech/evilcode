@@ -1,8 +1,8 @@
-.sa7b7eb6-spinner {
+.spinner-sa7b7e {
     display: inline-flex;
 }
 
-.sdd55de7-dot {
+.dot-sdd55d {
     opacity: 0;
     width: .5em;
     height: .5em;
@@ -10,7 +10,7 @@
     border-radius: 50%;
 }
 
-.sa7b7eb6-spinner.active .sdd55de7-dot {
+.spinner-sa7b7e.active .dot-sdd55d {
     opacity: 1;
     animation-name: dots-spinner;
     animation-duration: 1s;
@@ -18,15 +18,15 @@
     animation-iteration-count: infinite;
 }
 
-.sdd55de7-n1 {
+.n1-sdd55d {
     animation-delay: 0s;
 }
 
-.sdd55de7-n2 {
+.n2-sdd55d {
     animation-delay: .2s;
 }
 
-.sdd55de7-n3 {
+.n3-sdd55d {
     animation-delay: .4s;
 }
 
