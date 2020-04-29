@@ -90,19 +90,7 @@ export function useRootAuth(fetch: Fetch, cookie: Cookie, options?: AuthOptions)
     return auth
 }
 
-export function WithAuth(Child: React.ElementType, fetch: Fetch, cookie: Cookie, options?: AuthOptions) {
-    function AuthProviderProxy(props: any) {
-        return providingAuth(<Child {...props}/>, fetch, cookie, options)
-    }
-
-    return AuthProviderProxy
-}
-
-export function AuthProvider(props: AuthProviderProps) {
-    return providingAuth(props.children, props.fetch, props.cookie, props)
-
-}
-export function providingAuth(children: JSX.Element, fetch: Fetch, cookie: Cookie, options?: AuthOptions) {
+export function withAuth(children: React.ReactNode, fetch: Fetch, cookie: Cookie, options?: AuthOptions) {
     const auth = useRootAuth(fetch, cookie, options)
 
     return (
@@ -110,6 +98,19 @@ export function providingAuth(children: JSX.Element, fetch: Fetch, cookie: Cooki
             {children}
         </AuthContext.Provider>
     )
+}
+
+export function AuthProvider(props: AuthProviderProps) {
+    return withAuth(props.children, props.fetch, props.cookie, props)
+
+}
+
+export function WithAuth(Child: React.ElementType, fetch: Fetch, cookie: Cookie, options?: AuthOptions) {
+    function AuthProviderProxy(props: any) {
+        return withAuth(<Child {...props}/>, fetch, cookie, options)
+    }
+
+    return AuthProviderProxy
 }
 
 // Types ///////////////////////////////////////////////////////////////////////
@@ -123,7 +124,7 @@ export interface Auth {
 }
 
 export interface AuthProviderProps extends AuthOptions {
-    children: JSX.Element
+    children: React.ReactNode
     cookie: Cookie
     fetch: Fetch
 }

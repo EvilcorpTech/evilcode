@@ -7,19 +7,7 @@ export function useLogger() {
     return useContext(LoggerContext)
 }
 
-export function WithLogger(Child: React.ElementType, logger: Logger) {
-    function LoggerProviderProxy(props: any) {
-        return providingLogger(<Child {...props}/>, logger)
-    }
-
-    return LoggerProviderProxy
-}
-
-export function LoggerProvider(props: LoggerProviderProps) {
-    return providingLogger(props.children, props.logger)
-}
-
-export function providingLogger(children: JSX.Element, logger: Logger) {
+export function withLogger(children: React.ReactNode, logger: Logger) {
     return (
         <LoggerContext.Provider value={logger}>
             {children}
@@ -27,9 +15,21 @@ export function providingLogger(children: JSX.Element, logger: Logger) {
     )
 }
 
+export function LoggerProvider(props: LoggerProviderProps) {
+    return withLogger(props.children, props.logger)
+}
+
+export function WithLogger(Child: React.ElementType, logger: Logger) {
+    function LoggerProviderProxy(props: any) {
+        return withLogger(<Child {...props}/>, logger)
+    }
+
+    return LoggerProviderProxy
+}
+
 // Types ///////////////////////////////////////////////////////////////////////
 
 export interface LoggerProviderProps {
-    children: JSX.Element
+    children: React.ReactNode
     logger: Logger
 }

@@ -1,5 +1,5 @@
 import { createContext, createElement, useCallback, useContext, useEffect, useMemo, useState } from 'react'
-import { createRouter, link, patternFromPath, readHashRoute, routeTo } from '@eviljs/std-web/router'
+import { createRouter, link, readHashRoute, routeTo } from '@eviljs/std-web/router'
 
 export const RouterContext = createContext<Router>(void undefined as any)
 
@@ -11,14 +11,16 @@ export function useRootRouter() {
     const defaultRoute = readHashRoute()
     const [ route, setRoute ] = useState(defaultRoute)
 
-    const routeDoesMatch = useCallback((path: string) => {
-        const pattern = patternFromPath(path)
-        return pattern.test(route)
+    const routeDoesMatch = useCallback((patternRe: RegExp) => {
+        const doesMatch = patternRe.test(route)
+
+        return doesMatch
     }, [route])
 
-    const routeMatch = useCallback((path: string) => {
-        const pattern = patternFromPath(path)
-        return route.match(pattern)
+    const routeMatch = useCallback((patternRe: RegExp) => {
+        const matches = route.match(patternRe)
+
+        return matches
     }, [route])
 
     function routeHandler(nextRoute: string) {
@@ -44,19 +46,7 @@ export function useRootRouter() {
     return router
 }
 
-export function WithRouter(Child: React.ElementType) {
-    function RouterProviderProxy(props: any) {
-        return providingRouter(<Child {...props}/>)
-    }
-
-    return RouterProviderProxy
-}
-
-export function RouterProvider(props: RouterProviderProps) {
-    return providingRouter(props.children)
-}
-
-export function providingRouter(children: JSX.Element) {
+export function withRouter(children: React.ReactNode) {
     const router = useRootRouter()
 
     return (
@@ -66,16 +56,28 @@ export function providingRouter(children: JSX.Element) {
     )
 }
 
+export function RouterProvider(props: RouterProviderProps) {
+    return withRouter(props.children)
+}
+
+export function WithRouter(Child: React.ElementType) {
+    function RouterProviderProxy(props: any) {
+        return withRouter(<Child {...props}/>)
+    }
+
+    return RouterProviderProxy
+}
+
 // Types ///////////////////////////////////////////////////////////////////////
 
 export interface RouterProviderProps {
-    children: JSX.Element
+    children: React.ReactNode
 }
 
 export interface Router {
     link(path: string): string
     route: string
-    routeDoesMatch(path: string): boolean
-    routeMatch(path: string): RegExpMatchArray | null
+    routeDoesMatch(patternRe: RegExp): boolean
+    routeMatch(patternRe: RegExp): RegExpMatchArray | null
     routeTo(path: string): void
 }

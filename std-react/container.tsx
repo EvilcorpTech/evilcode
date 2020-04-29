@@ -7,19 +7,7 @@ export function useContainer() {
     return useContext(ContainerContext)
 }
 
-export function WithContainer(Child: React.ElementType, container: Container) {
-    function ContainerProviderProxy(props: any) {
-        return providingContainer(<Child {...props}/>, container)
-    }
-
-    return ContainerProviderProxy
-}
-
-export function ContainerProvider(props: ContainerProviderProps) {
-    return providingContainer(props.children, props.container)
-}
-
-export function providingContainer(children: JSX.Element, container: Container) {
+export function withContainer(children: React.ReactNode, container: Container) {
     return (
         <ContainerContext.Provider value={container}>
             {children}
@@ -27,9 +15,21 @@ export function providingContainer(children: JSX.Element, container: Container) 
     )
 }
 
+export function ContainerProvider(props: ContainerProviderProps) {
+    return withContainer(props.children, props.container)
+}
+
+export function WithContainer(Child: React.ElementType, container: Container) {
+    function ContainerProviderProxy(props: any) {
+        return withContainer(<Child {...props}/>, container)
+    }
+
+    return ContainerProviderProxy
+}
+
 // Types ///////////////////////////////////////////////////////////////////////
 
 export interface ContainerProviderProps {
-    children: JSX.Element
+    children: React.ReactNode
     container: Container
 }

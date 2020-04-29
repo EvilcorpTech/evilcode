@@ -11,11 +11,11 @@ export const ButtonType = {
 } as const
 
 export function Button(props: ButtonProps) {
-    const { action, type, disabled, children, onClick } = props
+    const { action, type, disabled, children, onClick, ...otherProps } = props
 
     return (
         <button
-            {...props}
+            {...otherProps}
             {...className('bfce14ea-button std-button std-text-button', props.className,
                 `std-button-${type ?? 'primary'}`,
             )}
@@ -37,4 +37,5 @@ export interface ButtonProps {
     disabled?: boolean
     children?: React.ReactNode
     onClick?: React.MouseEventHandler<HTMLButtonElement>
+    [key: string]: unknown
 }

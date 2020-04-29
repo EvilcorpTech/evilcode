@@ -10,7 +10,7 @@ export const InputType = {
 } as const
 
 export function Input(props: InputProps) {
-    const { type, label, value, autoComplete, autoFocus, tabIndex, onChange } = props
+    const { type, label, value, autoComplete, autoFocus, tabIndex, onChange, ...otherProps } = props
     const [ focus, setFocus ] = useState(false)
     const [ translateY, setTranslateY ] = useState(0)
     const fieldRef = useRef<HTMLDivElement>(null)
@@ -41,11 +41,12 @@ export function Input(props: InputProps) {
 
     return (
         <div
+            {...otherProps}
             ref={fieldRef}
             {...className('i7eea495-input', props.className, {
                 focus, placeholder: labelPlaceholder,
             })}
-            onClick={_event =>
+            onClick={() =>
                 inputRef.current?.focus()
             }
         >
@@ -84,4 +85,5 @@ export interface InputProps {
     autoFocus?: boolean
     tabIndex?: number
     onChange?: (event: string) => void
+    [key: string]: unknown
 }

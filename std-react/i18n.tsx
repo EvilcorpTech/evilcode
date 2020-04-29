@@ -20,19 +20,7 @@ export function useI18nMsg<T>(compute: I18nMsgsComputer<T>) {
     return i18nMsg
 }
 
-export function WithI18n(Child: React.ElementType, i18n: I18n) {
-    function I18nProviderProxy(props: any) {
-        return providingI18n(<Child {...props}/>, i18n)
-    }
-
-    return I18nProviderProxy
-}
-
-export function I18nProvider(props: I18nProviderProps) {
-    return providingI18n(props.children, props.i18n)
-}
-
-export function providingI18n(children: JSX.Element, i18n: I18n) {
+export function withI18n(children: React.ReactNode, i18n: I18n) {
     return (
         <I18nContext.Provider value={i18n}>
             {children}
@@ -40,10 +28,22 @@ export function providingI18n(children: JSX.Element, i18n: I18n) {
     )
 }
 
+export function I18nProvider(props: I18nProviderProps) {
+    return withI18n(props.children, props.i18n)
+}
+
+export function WithI18n(Child: React.ElementType, i18n: I18n) {
+    function I18nProviderProxy(props: any) {
+        return withI18n(<Child {...props}/>, i18n)
+    }
+
+    return I18nProviderProxy
+}
+
 // Types ///////////////////////////////////////////////////////////////////////
 
 export interface I18nProviderProps {
-    children: JSX.Element
+    children: React.ReactNode
     i18n: I18n
 }
 

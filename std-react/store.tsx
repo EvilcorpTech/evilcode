@@ -28,19 +28,7 @@ export function useRootStore(spec: StoreSpec) {
     return store
 }
 
-export function WithStore(Child: React.ElementType, spec: StoreSpec) {
-    function StoreProviderProxy(props: any) {
-        return providingStore(<Child {...props}/>, spec)
-    }
-
-    return StoreProviderProxy
-}
-
-export function StoreProvider(props: StoreProviderProps) {
-    return providingStore(props.children, props.spec)
-}
-
-export function providingStore(children: JSX.Element, spec: StoreSpec) {
+export function withStore(children: React.ReactNode, spec: StoreSpec) {
     const store = useRootStore(spec)
 
     return (
@@ -50,10 +38,22 @@ export function providingStore(children: JSX.Element, spec: StoreSpec) {
     )
 }
 
+export function StoreProvider(props: StoreProviderProps) {
+    return withStore(props.children, props.spec)
+}
+
+export function WithStore(Child: React.ElementType, spec: StoreSpec) {
+    function StoreProviderProxy(props: any) {
+        return withStore(<Child {...props}/>, spec)
+    }
+
+    return StoreProviderProxy
+}
+
 // Types ///////////////////////////////////////////////////////////////////////
 
 export interface StoreProviderProps {
-    children: JSX.Element
+    children: React.ReactNode
     spec: StoreSpec
 }
 

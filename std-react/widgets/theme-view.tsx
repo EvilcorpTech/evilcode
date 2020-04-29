@@ -32,10 +32,12 @@ export function ThemeView(props: ThemeViewProps) {
     }, [accent1RgbHex, accent2RgbHex])
 
     return (
-        <div {...className('t2eb5bd0-theme std-theme', props.className, {
-            'light': themeLight,
-            'dark': ! themeLight,
-        })}>
+        <div
+            {...props}
+            {...className('t2eb5bd0-theme std-theme', props.className, {
+                'light': themeLight, 'dark': ! themeLight,
+            })}
+        >
             <h1 className="std-stack-h std-text-overline std-primary-accent">
                 <input
                     className="t8c25d08-picker"
@@ -409,4 +411,5 @@ export function computeAccent(type = 'primary') {
 
 export interface ThemeViewProps {
     className?: string
+    [key: string]: unknown
 }

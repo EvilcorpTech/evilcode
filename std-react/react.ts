@@ -1,6 +1,8 @@
 import { isArray, isString, isObject } from '@eviljs/std-lib/type'
 import { throwInvalidArgument } from '@eviljs/std-lib/error'
 
+export { times } from '@eviljs/std-lib/random'
+
 export function classes(...names: Array<ClassName>) {
     const list: Array<string> = []
 
