@@ -1,12 +1,12 @@
 {
     "name": "@eviljs/std-db-sql",
-    "version": "0.1.7",
+    "version": "0.1.8",
     "dependencies": {
         "@eviljs/std-lib": "^0.1",
         "@eviljs/std-node": "^0.1",
-        "@types/node": "^12 || ^13",
+        "@types/node": "^12 || ^13 || ^14",
         "mariadb": "^2",
-        "tslib": "^1"
+        "tslib": "^1 || ^2"
     },
     "peerDependencies": {},
     "devDependencies": {
