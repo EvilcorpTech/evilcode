@@ -14,7 +14,7 @@
         + (var(--std-toggle-border) * 2)
         + (var(--std-toggle-space) * 2)
     );
-    background-color: var(--std-back1);
+    background: var(--std-back1);
     border: var(--std-toggle-border) solid var(--std-primary-accent);
     cursor: pointer;
 }
@@ -25,7 +25,7 @@
     left: var(--std-toggle-space);
     bottom: var(--std-toggle-space);
     width: var(--std-toggle-height);
-    background-color: var(--std-primary-accent);
+    background: var(--std-primary-accent);
     transition: all var(--std-duration-fast);
 }
 .std-toggle.active::after {
