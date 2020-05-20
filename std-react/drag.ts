@@ -53,14 +53,18 @@ export function useDrag
     }, [dragOptions])
 
     const onMouseUp = useCallback((event: MouseEvent) => {
-        const change = dragStateRef.current?.change
+        if (! dragStateRef.current) {
+            return
+        }
+
+        const { change } = dragStateRef.current
 
         if (change) {
             dragOptions?.onChanged?.(change)
         }
 
         dragOptions?.onEnd?.()
-        dragStateRef.current!.unmount()
+        dragStateRef.current.unmount()
         dragStateRef.current = null
         setDragging(false)
     }, [dragOptions])
