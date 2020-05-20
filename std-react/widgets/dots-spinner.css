@@ -32,11 +32,11 @@
 
 @keyframes dots-spinner {
     0% {
-        background-color: white;
+        background: white;
         transform: scale(.6);
     }
 
     100% {
-        background-color: currentColor;
+        background: currentColor;
     }
 }

@@ -1,14 +1,14 @@
 import { createContext, createElement, useContext, useEffect, useRef, useState } from 'react'
-import { Query, QueryRequestOptions } from '@eviljs/std-web/query'
+import { Query } from '@eviljs/std-web/query'
 
 export const QueryContext = createContext<Query>(void undefined as any)
 export const QueryCancelled = Symbol('QueryCancelled')
 
-export function useQuery<O extends QueryRequestOptions, T>(queryRunner: QueryRunner<O, T>) {
-    const [ response, setResponse ] = useState<T | null>(null)
+export function useQuery<A extends Array<unknown>, R>(queryRunner: QueryRunner<A, R>) {
+    const [ response, setResponse ] = useState<R | null>(null)
     const [ pending, setPending ] = useState(false)
     const mountedRef = useRef(true)
-    const taskRef = useRef<QueryTask<T> | null>(null)
+    const taskRef = useRef<QueryTask<R> | null>(null)
     const query = useContext(QueryContext)
 
     useEffect(() => {
@@ -19,10 +19,10 @@ export function useQuery<O extends QueryRequestOptions, T>(queryRunner: QueryRun
         return unmount
     }, [])
 
-    async function fetch(options?: O) {
+    async function fetch(...args: A) {
         setPending(true)
 
-        const promise = queryRunner(query, options)
+        const promise = queryRunner(query, ...args)
         const task = {promise, cancelled: false}
         taskRef.current = task
 
@@ -86,9 +86,9 @@ export interface QueryProviderProps {
     query: Query
 }
 
-export type QueryRunner<O extends QueryRequestOptions, T> =
-    (query: Query, options?: O)
-        => Promise<T>
+export interface QueryRunner<A extends Array<unknown>, R> {
+    (query: Query, ...args: A): Promise<R>
+}
 
 export interface QueryTask<T> {
     promise: Promise<T>

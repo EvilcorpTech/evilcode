@@ -32,9 +32,9 @@ export function Toggles(props: TogglesProps) {
     return (
         <div
             {...otherProps}
-            {...className('toggles-s4178a select', props.className)}
+            {...className('toggles-s4178a', props.className)}
         >
-            <label className="select-label">
+            <label className="label-8fdc23">
                 {message}
             </label>
 

@@ -3,18 +3,3 @@
     flex-direction: column;
     align-items: center;
 }
-
-.valueunit-s5a96f {
-    color: var(--std-primary-shade1);
-}
-
-.unit-d85e42 {
-    margin-left: var(--std-gutter);
-}
-.unit-d85e42.important {
-    font-weight: var(--std-weight-regular);
-}
-
-.label-c204b3 {
-    margin-top: var(--std-gutter-mini);
-}

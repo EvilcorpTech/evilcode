@@ -1,15 +1,15 @@
 {
     "name": "@eviljs/std-react",
-    "version": "0.1.13",
+    "version": "0.1.14",
     "dependencies": {
-        "@eviljs/std-lib": "^0.1.6",
-        "@eviljs/std-theme": "^0.1.5",
-        "@eviljs/std-web": "^0.1.4",
+        "@eviljs/std-lib": "^0.1",
+        "@eviljs/std-theme": "^0.1",
+        "@eviljs/std-web": "^0.1",
         "@types/prop-types": "^15",
         "@types/react": "^16",
         "@types/react-dom": "^16",
         "prop-types": "^15",
-        "tslib": "^1"
+        "tslib": "^1 || ^2"
     },
     "peerDependencies": {
         "react": "^16.9"

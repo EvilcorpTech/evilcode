@@ -1,0 +1,33 @@
+.range-3f0392 {
+    /* position: relative; */
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: space-between;
+}
+
+.slider-fb2803 {
+    height: 100%;
+    flex-grow: 1;
+}
+
+.tail-2c7180 {
+    display: flex;
+    align-items: center;
+}
+.range-3f0392.moving .tail-2c7180 {
+    opacity: 0;
+}
+.tail-2c7180.start {
+    justify-content: flex-end;
+}
+.tail-2c7180.end {
+    justify-content: flex-start;
+}
+
+.handle-bd2ce4 {
+    height: 100%;
+    display: flex;
+    align-items: center;
+    user-select: none;
+}

@@ -6,11 +6,11 @@
     border: 1px solid var(--std-primary-border-color);
     border-bottom: 3px solid var(--std-primary-border-color);
     border-radius: var(--std-radius-s);
-    background-color: var(--std-back1);
+    background: var(--std-back1);
     transition: all var(--std-duration-fast);
 }
 .input-i7eea4.placeholder {
-    background-color: var(--std-back3);
+    background: var(--std-back3);
 }
 .input-i7eea4.focus {
     border-bottom-color: var(--std-primary-tone1);
@@ -34,5 +34,5 @@
 
 .field-cebab4 {
     border-bottom: 1px solid transparent;
-    background-color: transparent;
+    background: transparent;
 }

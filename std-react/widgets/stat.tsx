@@ -12,17 +12,17 @@ export function Stat(props: StatProps) {
             {...className('stat-s0fdea', props.className)}
         >
             <div className="valueunit-s5a96f">
-                <span className="s83eb5774-value std-text-h3">
+                <span className="value-s83eb57">
                     {value}
                 </span>
                 {unit ? (
-                    <span className="unit-d85e42 important std-text-subtitle2">
+                    <span className="unit-d85e42">
                         {unit}
                     </span>
                 ) : null}
             </div>
             {label ? (
-                <label className="label-c204b3 std-text-caption std-text2">
+                <label className="label-c204b3">
                     {label}
                 </label>
             ) : null}
