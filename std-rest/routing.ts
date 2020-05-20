@@ -43,7 +43,7 @@ export function setupRouterRoutes(router: Router, routes?: Routes) {
     }
 
     if (isObject(routes)) {
-        const methods: Array<RouteMethod> = [routes.method ?? 'all'].flat()
+        const methods: Array<RouteMethodExt> = [routes.method ?? 'all'].flat()
         const path = routes.path
         const middlewares: Array<Middleware> = [routes.middleware].flat()
 

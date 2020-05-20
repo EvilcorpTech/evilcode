@@ -1,6 +1,6 @@
 {
     "name": "@eviljs/std-rest",
-    "version": "0.1.6",
+    "version": "0.1.7",
     "dependencies": {
         "@eviljs/std-lib": "^0.1",
         "@eviljs/std-node": "^0.1",
@@ -9,7 +9,7 @@
         "@types/bcryptjs": "^2",
         "@types/koa": "^2",
         "@types/koa-bodyparser": "^4",
-        "@types/koa-compress": "^2",
+        "@types/koa-compress": "^4",
         "@types/koa-conditional-get": "^2",
         "@types/koa-etag": "^3",
         "@types/koa-logger": "^3",
@@ -17,17 +17,17 @@
         "@types/koa-static": "^4",
         "@types/koa__multer": "^2",
         "@types/koa__router": "^8",
-        "@types/node": "^12 || ^13",
+        "@types/node": "^12 || ^13 || ^14",
         "koa": "^2",
         "koa-bodyparser": "^4",
-        "koa-compress": "^3",
+        "koa-compress": "^4",
         "koa-conditional-get": "^2",
         "koa-etag": "^3",
         "koa-logger": "^3",
         "koa-mount": "^4",
         "koa-static": "^5",
         "multer": "^1",
-        "tslib": "^1"
+        "tslib": "^1 || ^2"
     },
     "peerDependencies": {},
     "devDependencies": {
