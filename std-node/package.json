@@ -1,12 +1,12 @@
 {
     "name": "@eviljs/std-node",
-    "version": "0.1.4",
+    "version": "0.1.5",
     "dependencies": {
         "@eviljs/std-lib": "^0.1",
         "@types/bcryptjs": "^2",
-        "@types/node": "^12 || ^13",
+        "@types/node": "^12 || ^13 || ^14",
         "bcryptjs": "^2",
-        "tslib": "^1"
+        "tslib": "^1 || ^2"
     },
     "peerDependencies": {},
     "devDependencies": {
