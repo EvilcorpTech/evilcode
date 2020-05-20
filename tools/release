@@ -26,6 +26,14 @@ ProjectDir="$(cd "$(dirname "$0")/.." && pwd)"
 : ${NpmPublishCmd:=publish}
 : ${NpmPublishArgs:=--access public}
 
+
+printf -- "${GrayStyle}"
+if ! "$ProjectDir/tools/init" "$1"; then
+        printf -- "${ResetStyle}"
+        exit 1
+fi | cat
+printf -- "${ResetStyle}"
+
 case "$1" in
         /*) cd "$1";;
         *) cd "$PWD/$1";;

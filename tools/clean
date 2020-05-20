@@ -24,5 +24,3 @@ for pkg; do
                 2> /dev/null || true
         printf -- "${ResetStyle}"
 done
-
-echo "${GreenStyle}done${ResetStyle}"

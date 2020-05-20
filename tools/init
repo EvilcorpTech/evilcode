@@ -21,13 +21,16 @@ init() {(
         local pkg="$1"
         shift
 
-        cd "$pkg"
-
         echo "Initing ${GreenStyle}$(basename "$pkg")${ResetStyle}..."
         printf -- "${GrayStyle}"
 
-        echo "Cleaning node_modules"
-        rm -rf node_modules
+        "$ProjectDir/tools/clean" "$pkg" | cat
+        "$ProjectDir/tools/clean-node_modules" "$pkg" | cat
+
+        case "$pkg" in
+                /*) cd "$pkg";;
+                *) cd "$PWD/$pkg";;
+        esac
 
         (
         echo "Installing deps"
