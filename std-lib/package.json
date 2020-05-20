@@ -1,9 +1,9 @@
 {
     "name": "@eviljs/std-lib",
-    "version": "0.1.8",
+    "version": "0.1.11",
     "dependencies": {
-        "@types/node": "^12 || ^13",
-        "tslib": "^1"
+        "@types/node": "^12 || ^13 || ^14",
+        "tslib": "^1 || ^2"
     },
     "peerDependencies": {},
     "devDependencies": {

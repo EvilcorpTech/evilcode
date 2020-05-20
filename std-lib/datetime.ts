@@ -1,78 +1,68 @@
 export function intervalOfCurrentMonth() {
     const now = new Date()
-    const start = new Date(year(now), month(now) - 1, 1)
-    const end = new Date(year(now), month(now), 0) // Last day of the month.
-    return intervalOf(start, end)
+    const start = datetime(new Date(year(now), month(now) - 1, 1, 0, 0, 0, 0))
+    const end = datetime(new Date(year(now), month(now), 0, 23, 59, 59, 999))
+    return {start, end}
 }
 
 export function intervalOfPreviousMonth() {
     const now = new Date()
-    const start = new Date(year(now), month(now) - 2, 1)
-    const end = new Date(year(now), month(now) - 1, 0) // Last day of the month.
-    return intervalOf(start, end)
+    const start = datetime(new Date(year(now), month(now) - 2, 1, 0, 0, 0, 0))
+    const end = datetime(new Date(year(now), month(now) - 1, 0, 23, 59, 59, 999))
+    return {start, end}
 }
 
 export function intervalOfCurrentYear() {
     const now = new Date()
-    const start = new Date(year(now), 0, 1)
-    const end = new Date(year(now), 11, 31)
-    return intervalOf(start, end)
+    const start = datetime(new Date(year(now), 0, 1, 0, 0, 0, 0))
+    const end = datetime(new Date(year(now), 11, 31, 23, 59, 59, 999))
+    return {start, end}
 }
 
 export function intervalOfPreviousYear() {
     const now = new Date()
-    const start = new Date(year(now) - 1, 0, 1)
-    const end = new Date(year(now) - 1, 11, 31)
-    return intervalOf(start, end)
+    const start = datetime(new Date(year(now) - 1, 0, 1, 0, 0, 0, 0))
+    const end = datetime(new Date(year(now) - 1, 11, 31, 23, 59, 59, 999))
+    return {start, end}
 }
 
-export function intervalCustom(startStr: string, endStr: string) {
-    // We can't use "new Date(string)" because it changes its behavior
-    // (uses or not the timezone) depending on the format of the string:
-    // - 2020-01 is handled as UTC time
-    // - 2020-1 is handled as Local time
-    const start = dateFromIsoString(startStr, (year, month, day) =>
-        new Date(year, (month || 1) - 1, day || 1)
+export function datetime(date: Date) {
+    const self: Datetime = Object.defineProperties(
+        [
+            year(date),
+            month(date),
+            day(date),
+            hour(date),
+            minute(date),
+            second(date),
+            ms(date),
+        ] as const,
+        {
+            year: {get() { return self[0] }},
+            month: {get() { return self[1] }},
+            day: {get() { return self[2] }},
+            hour: {get() { return self[3] }},
+            minute: {get() { return self[4] }},
+            second: {get() { return self[5] }},
+            ms: {get() { return self[6] }},
+        },
     )
-    const end = dateFromIsoString(endStr, (year, month, day) => day
-        ? new Date(year, (month || 12) - 1, day)
-        : new Date(year, (month || 12), 0) // Last day of the month.
+
+    Object.freeze(self)
+
+    return self
+}
+
+export function dateFrom(datetime: Datetime) {
+    const date = new Date(
+        datetime[0], // Year.
+        datetime[1], // Month.
+        datetime[2], // Day.
+        datetime[3] - 1, // Hour (Date month starts from 0).
+        datetime[4], // Minute.
+        datetime[5], // Second.
+        datetime[6], // Ms.
     )
-
-    return intervalOf(start, end)
-}
-
-export function intervalOf(start?: Date, end?: Date) {
-    return {
-        start: start ? datetimeToDateString(start) : undefined,
-        end: end ? datetimeToDateString(end) : undefined,
-    }
-}
-
-export function datetimeToDateString(date: Date) {
-    return `${year(date)}-${month(date)}-${day(date)}`
-}
-
-export function dateFromIsoString(dateStr: string, fallbackDate?: (year: number, month?: number, day?: number) => Date) {
-    if (isNaN(Date.parse(dateStr))) {
-        return
-    }
-
-    const dateParts = dateStr
-        // 2020-01-01T12:00 => 2020-01-01 12:00
-        .replace('T', ' ')
-        .replace('t', ' ')
-        // 2020-01-01 12:00 => 2020-01-01
-        .split(' ')[0]
-        .split('-')
-        // 2020-01- => 2020-01
-        .filter(Boolean)
-        .map(Number)
-    const [ dateYear, dateMonth, dateDay ] = dateParts
-
-    const date = dateParts.length === 3
-        ? new Date(dateYear, dateMonth - 1, dateDay)
-        : fallbackDate?.(dateYear, dateMonth, dateDay)
 
     return date
 }
@@ -87,4 +77,45 @@ export function month(date: Date) {
 
 export function day(date: Date) {
     return date.getDate()
+}
+
+export function hour(date: Date) {
+    return date.getHours()
+}
+
+export function minute(date: Date) {
+    return date.getMinutes()
+}
+
+export function second(date: Date) {
+    return date.getSeconds()
+}
+
+export function ms(date: Date) {
+    return date.getMilliseconds()
+}
+
+// Types ///////////////////////////////////////////////////////////////////////
+
+export interface Datetime extends ReadonlyArray<number>, DatetimeTuple, DatetimeDict {
+}
+
+export interface DatetimeTuple {
+    readonly [0]: number // Year.
+    readonly [1]: number // Month.
+    readonly [2]: number // Day.
+    readonly [3]: number // Hour.
+    readonly [4]: number // Minute.
+    readonly [5]: number // Second.
+    readonly [6]: number // Ms.
+}
+
+export interface DatetimeDict {
+    readonly year: number
+    readonly month: number
+    readonly day: number
+    readonly hour: number
+    readonly minute: number
+    readonly second: number
+    readonly ms: number
 }
