@@ -1,15 +1,11 @@
-import { times } from '@eviljs/std-lib/random'
+import { isNil } from '@eviljs/std-lib/type'
+import { minMax } from '@eviljs/std-lib/math'
+import { times } from '@eviljs/std-lib/fn'
 
 export function createNumberAxis(data: Array<number>, ticks: number) {
-    let min: number | null = null
-    let max: number | null = null
+    const [ min, max ] = minMax(data)
 
-    for (const it of data) {
-        min = Math.min(min ?? it, it)
-        max = Math.max(max ?? it, it)
-    }
-
-    if (min === null || max === null) {
+    if (isNil(min) || isNil(max)) {
         return []
     }
     if (min === max) {
