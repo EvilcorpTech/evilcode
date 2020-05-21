@@ -1,5 +1,18 @@
 import { isArray, isNil, isObject, objectWithoutUndefined } from './type'
 
+export function times(count: number) {
+    return Array(count).fill(undefined).map((nil, idx) => idx)
+}
+
+// export function* iterate(count: number) {
+//     let idx = 0
+//
+//     while (idx < count) {
+//         yield idx
+//         ++idx
+//     }
+// }
+
 /*
 * Creates a function which does not invoke the wrapped one when receives a nil
 * (null or undefined) value.
