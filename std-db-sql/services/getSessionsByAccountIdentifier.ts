@@ -1,7 +1,7 @@
-import { Account } from './Account'
-import { assertStringNotEmpty } from '@eviljs/std-lib/assert'
-import { Db, ReadResult } from '..'
-import { Session } from './Session'
+import {Account} from './Account'
+import {assertStringNotEmpty} from '@eviljs/std-lib/assert'
+import {Db, ReadResult} from '..'
+import {Session} from './Session'
 
 async function getSessionsByAccountIdentifier(db: Db<GetSessionByAccountIdentifierServices>, accountIdentifier: string) {
     assertStringNotEmpty(accountIdentifier, 'accountIdentifier')

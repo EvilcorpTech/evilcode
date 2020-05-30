@@ -1,5 +1,5 @@
-import { isArray, isNumber, isObject, isString } from './type'
-import { throwInvalidArgument } from './error'
+import {isArray, isNumber, isObject, isString} from './type'
+import {throwInvalidArgument} from './error'
 
 export const QueryRulesHeader = 'X-Query'
 

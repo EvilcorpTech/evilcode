@@ -1,10 +1,10 @@
-import { className } from '../react'
-import { createElement } from 'react'
+import {className} from '../react'
+import {createElement} from 'react'
 
 import './stat.css'
 
 export function Stat(props: StatProps) {
-    const { value, unit, label, ...otherProps } = props
+    const {value, unit, label, ...otherProps} = props
 
     return (
         <span

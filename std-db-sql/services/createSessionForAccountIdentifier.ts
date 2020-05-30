@@ -1,8 +1,8 @@
-import { Account } from './Account'
-import { createSession, CreateSessionServices } from './createSession'
-import { Db } from '..'
-import { getAccountByIdentifier } from './getAccountByIdentifier'
-import { throwInvalidRequest } from '@eviljs/std-node/error'
+import {Account} from './Account'
+import {createSession, CreateSessionServices} from './createSession'
+import {Db} from '..'
+import {getAccountByIdentifier} from './getAccountByIdentifier'
+import {throwInvalidRequest} from '@eviljs/std-node/error'
 
 export async function createSessionForAccountIdentifier(
     db: Db<CreateSessionForAccountIdentifierServices>,

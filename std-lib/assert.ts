@@ -1,7 +1,7 @@
-import { throwInvalidArgument } from './error'
-import { isArray, isBoolean, isFunction, isInteger, isNumber, isObject, isString } from './type'
-import { isDate, isDateString, isDateIsoUtcString } from './type'
-import { isUndefined } from './type'
+import {throwInvalidArgument} from './error'
+import {isArray, isBoolean, isFunction, isInteger, isNumber, isObject, isString} from './type'
+import {isDate, isDateString, isDateIsoUtcString} from './type'
+import {isUndefined} from './type'
 
 export function assertOptionalWith<T>(assertion: Assertion<T>, value: unknown, ...args: Array<unknown>) {
     if (isUndefined(value)) {

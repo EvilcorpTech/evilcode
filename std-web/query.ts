@@ -1,8 +1,8 @@
-import { Fetch, FetchRequestMethod, FetchRequestOptions, JsonType } from './fetch'
-import { kindOf } from '@eviljs/std-lib/type'
-import { QueryRulesHeader, QueryArgs, QueryRules } from '@eviljs/std-lib/query'
-import { throwInvalidArgument } from '@eviljs/std-lib/error'
-import { throwInvalidResponse } from './error'
+import {Fetch, FetchRequestMethod, FetchRequestOptions, JsonType} from './fetch'
+import {kindOf} from '@eviljs/std-lib/type'
+import {QueryRulesHeader, QueryArgs, QueryRules} from '@eviljs/std-lib/query'
+import {throwInvalidArgument} from '@eviljs/std-lib/error'
+import {throwInvalidResponse} from './error'
 
 export function createQuery(fetch: Fetch) {
     const self: Query = {

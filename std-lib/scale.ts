@@ -1,6 +1,6 @@
 export function createLinearScale(inputInterval: readonly [number, number], outputInterval: readonly [number, number]) {
-    const [ inputStart, inputEnd ] = inputInterval
-    const [ outputStart, outputEnd ] = outputInterval
+    const [inputStart, inputEnd] = inputInterval
+    const [outputStart, outputEnd] = outputInterval
 
     function map(inputValue: number) {
         // InputInterval:   2     8

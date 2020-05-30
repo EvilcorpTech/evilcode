@@ -1,8 +1,8 @@
-import { Account, AccountFromDataOptions } from './Account'
-import { assertStringNotEmpty } from '@eviljs/std-lib/assert'
-import { compareWithSaltedHash } from '@eviljs/std-node/crypto'
-import { Db } from '..'
-import { getAccountByIdentifier } from './getAccountByIdentifier'
+import {Account, AccountFromDataOptions} from './Account'
+import {assertStringNotEmpty} from '@eviljs/std-lib/assert'
+import {compareWithSaltedHash} from '@eviljs/std-node/crypto'
+import {Db} from '..'
+import {getAccountByIdentifier} from './getAccountByIdentifier'
 
 /*
 * EXAMPLE

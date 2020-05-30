@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import {useCallback, useEffect, useMemo, useRef, useState} from 'react'
 import {
     attachDragListeners,
     createDragElement,
@@ -20,7 +20,7 @@ import {
     DragTags,
  } from '@eviljs/std-web/drag'
 
-export { DragMoveChange, DragOptions } from '@eviljs/std-web/drag'
+export {DragMoveChange, DragOptions} from '@eviljs/std-web/drag'
 
 // React events handlers are slow, and React.onMouseMove leads to high cpu usage
 // even when the event listener is detached, due to the Synthetic Event global
@@ -34,8 +34,8 @@ export function useDrag
         initOptions?: ReactStateInit<O>,
     )
 {
-    const [ dragOptions, setDragOptions ] = useState(initOptions)
-    const [ dragging, setDragging ] = useState<boolean>(false)
+    const [dragOptions, setDragOptions] = useState(initOptions)
+    const [dragging, setDragging] = useState<boolean>(false)
     const dragStateRef = useRef<S | null>(null)
 
     const onMouseMove = useCallback((event: MouseEvent) => {
@@ -57,7 +57,7 @@ export function useDrag
             return
         }
 
-        const { change } = dragStateRef.current
+        const {change} = dragStateRef.current
 
         if (change) {
             dragOptions?.onChanged?.(change)
@@ -123,7 +123,7 @@ export function useMove(targetRef: DragElementRef<DragMoveElement>, initOptions?
     }
 
     const dragHooks = {onStart, onProgress}
-    const { dragging, setDragOptions, withDrag } = useDrag(targetRef, dragHooks, initOptions)
+    const {dragging, setDragOptions, withDrag} = useDrag(targetRef, dragHooks, initOptions)
     const moving = dragging
     const setMoveOptions = setDragOptions
     const withMove = withDrag
@@ -141,7 +141,7 @@ export function useResize(targetRef: DragElementRef<DragResizeElement>, initOpti
     }
 
     const dragHooks = {onStart, onProgress}
-    const { dragging, setDragOptions, withDrag } = useDrag(targetRef, dragHooks, initOptions)
+    const {dragging, setDragOptions, withDrag} = useDrag(targetRef, dragHooks, initOptions)
     const resizing = dragging
     const setResizeOptions = setDragOptions
     const withResize = withDrag

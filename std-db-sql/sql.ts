@@ -1,4 +1,4 @@
-import { isUndefined, ValueOf } from '@eviljs/std-lib/type'
+import {isUndefined, ValueOf} from '@eviljs/std-lib/type'
 
 /*
 * Generates a series of tuples that can be used for persisting an object
@@ -7,7 +7,7 @@ import { isUndefined, ValueOf } from '@eviljs/std-lib/type'
 * EXAMPLE
 * const model = {id: ..., name: ..., phone: ..., email: ...}
 * const cols = ['name', 'phone', 'email']
-* const { columns, placeholders, values } = asTuple(model, cols)
+* const {columns, placeholders, values} = asTuple(model, cols)
 * const query = `INSERT INTO ${table} (${columns}) VALUES (${placeholders})`
 */
 export function asTuple<O extends {}>(data: O, cols: Array<keyof O>) {
@@ -37,11 +37,11 @@ export function asTuple<O extends {}>(data: O, cols: Array<keyof O>) {
 * const table = 'Accounts'
 * const model = {id: ..., name: ..., phone: ..., email: ...}
 * const cols = ['name', 'phone', 'email']
-* const [ query, values ] = insert(table, model, cols)
+* const [query, values] = insert(table, model, cols)
 */
 export function insert<O extends {}>(table: string, data: O, cols: Array<keyof O>, options?: InsertOptions) {
     const quote = options?.quote ?? '`'
-    const { columns, placeholders, values } = asTuple(data, cols)
+    const {columns, placeholders, values} = asTuple(data, cols)
 
     return [`INSERT INTO ${quote}${table}${quote} (${columns}) VALUES (${placeholders})`, values]
 }

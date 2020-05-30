@@ -1,5 +1,5 @@
-import { isObject, ValueOf } from '@eviljs/std-lib/type'
-import { throwInvalidArgument } from '@eviljs/std-lib/error'
+import {isObject, ValueOf} from '@eviljs/std-lib/type'
+import {throwInvalidArgument} from '@eviljs/std-lib/error'
 
 export const FetchRequestMethod = {
     Get: 'get',

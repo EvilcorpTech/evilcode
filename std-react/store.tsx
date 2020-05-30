@@ -1,4 +1,4 @@
-import { createContext, createElement, useContext, useMemo, useReducer } from 'react'
+import {createContext, createElement, useContext, useMemo, useReducer} from 'react'
 
 export const StoreContext = createContext<Store>(void undefined as any)
 
@@ -7,7 +7,7 @@ export function useStore() {
 }
 
 export function useRootStore(spec: StoreSpec) {
-    const { createState, actions } = spec
+    const {createState, actions} = spec
 
     function reduce(state: any, action: Action) {
         const handler = actions[action.type]
@@ -19,7 +19,7 @@ export function useRootStore(spec: StoreSpec) {
         return handler(state, action.value)
     }
 
-    const [ state, commit ] = useReducer(reduce, null, createState)
+    const [state, commit] = useReducer(reduce, null, createState)
 
     const store = useMemo(() => {
         return {state, commit}

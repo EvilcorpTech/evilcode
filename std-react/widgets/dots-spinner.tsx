@@ -1,10 +1,10 @@
-import { className } from '../react'
-import { createElement } from 'react'
+import {className} from '../react'
+import {createElement} from 'react'
 
 import './dots-spinner.css'
 
 export function DotsSpinner(props: DotsSpinnerProps) {
-    const { active = true, ...otherProps } = props
+    const {active = true, ...otherProps} = props
 
     return (
         <div

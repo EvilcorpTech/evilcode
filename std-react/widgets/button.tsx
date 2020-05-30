@@ -1,5 +1,5 @@
-import { className } from '../react'
-import { createElement } from 'react'
+import {className} from '../react'
+import {createElement} from 'react'
 
 export const ButtonType = {
     Special: 'special',
@@ -11,7 +11,7 @@ export const ButtonType = {
 } as const
 
 export function Button(props: ButtonProps) {
-    const { action, type, disabled, children, onClick, ...otherProps } = props
+    const {action, type, disabled, children, onClick, ...otherProps} = props
 
     return (
         <button

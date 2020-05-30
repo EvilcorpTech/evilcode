@@ -1,4 +1,4 @@
-import { Logger } from '@eviljs/std-lib/logger'
+import {Logger} from '@eviljs/std-lib/logger'
 import MariaDB from 'mariadb'
 
 export const DbHost = 'localhost'
@@ -9,8 +9,8 @@ export const DbRetryDelay = 3 * 1000 // 3 seconds
 export const DbUser = 'root'
 
 export function DbService<S extends DbServices>(container: DbContainer<S>) {
-    const { DbSpec: dbSpec } = container
-    const { Context: context, Logger: logger } = container
+    const {DbSpec: dbSpec} = container
+    const {Context: context, Logger: logger} = container
 
     const spec = {
         host: context?.DB_HOST ?? process.env.DB_HOST ?? dbSpec?.host,

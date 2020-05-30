@@ -7,7 +7,7 @@ export const ContainerInstances = Symbol('ContainerInstances')
 * EXAMPLE
 * const services = {
 *     MyService(container) {
-*         const { MyDep: myDep } = container
+*         const {MyDep: myDep} = container
 *         return MyService(myDep)
 *     },
 * }

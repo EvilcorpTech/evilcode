@@ -1,8 +1,8 @@
-import { bindValue } from '@eviljs/std-lib/type'
+import {bindValue} from '@eviljs/std-lib/type'
 import Repl from 'repl'
 
 export function ShellService(container: ShellContainer) {
-    const { ShellSpec: shellSpec } = container
+    const {ShellSpec: shellSpec} = container
 
     const spec = {
         ...shellSpec,

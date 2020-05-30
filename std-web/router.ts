@@ -1,4 +1,4 @@
-import { isRegExp } from '@eviljs/std-lib/type'
+import {isRegExp} from '@eviljs/std-lib/type'
 
 export const EXACT = '$'
 export const WHOLE = '(.*)'

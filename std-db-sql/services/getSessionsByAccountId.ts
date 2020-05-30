@@ -1,6 +1,6 @@
-import { assertInteger } from '@eviljs/std-lib/assert'
-import { Db, ReadResult } from '..'
-import { Session } from './Session'
+import {assertInteger} from '@eviljs/std-lib/assert'
+import {Db, ReadResult} from '..'
+import {Session} from './Session'
 
 export async function getSessionByAccountId(db: Db<GetSessionByAccountIdServices>, accountId: number) {
     assertInteger(accountId, 'accountId')

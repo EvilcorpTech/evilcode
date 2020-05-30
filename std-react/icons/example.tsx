@@ -1,5 +1,5 @@
-import { className } from '../react'
-import { createElement } from 'react'
+import {className} from '../react'
+import {createElement} from 'react'
 
 export function ExampleIcon(props: ExampleIconProps) {
     return (

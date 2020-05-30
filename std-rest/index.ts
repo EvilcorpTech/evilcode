@@ -1,6 +1,6 @@
-import { Context, Next } from 'koa'
-import { Logger } from '@eviljs/std-lib/logger'
-import { setupRouter, Routes } from './routing'
+import {Context, Next} from 'koa'
+import {Logger} from '@eviljs/std-lib/logger'
+import {setupRouter, Routes} from './routing'
 import Http from 'http'
 import Koa from 'koa'
 import KoaBodyParser from 'koa-bodyparser'
@@ -19,8 +19,8 @@ export const HttpAddr = 'localhost'
 export const HttpPort = 8080
 
 export function RestService<C, M>(container: RestContainer<C, M>) {
-    const { RestSpec: restSpec } = container
-    const { Context: context, Logger: logger } = container
+    const {RestSpec: restSpec} = container
+    const {Context: context, Logger: logger} = container
 
     const spec = {
         apiPath: restSpec?.apiPath,

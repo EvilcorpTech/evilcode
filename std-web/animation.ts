@@ -1,6 +1,6 @@
-import { isArray, isFunction, isObject } from '@eviljs/std-lib/type'
-import { throwInvalidArgument } from '@eviljs/std-lib/error'
-import { computeDirection, computeDistance, createLinearScale } from '@eviljs/std-lib/scale'
+import {isArray, isFunction, isObject} from '@eviljs/std-lib/type'
+import {throwInvalidArgument} from '@eviljs/std-lib/error'
+import {computeDirection, computeDistance, createLinearScale} from '@eviljs/std-lib/scale'
 
 export const SpringPrecision = 200
 export const SpringSnapping = 1 / SpringPrecision

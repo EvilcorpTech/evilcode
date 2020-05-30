@@ -1,8 +1,8 @@
-import { assertFunction, assertObject } from '@eviljs/std-lib/assert'
-import { Context, Next, Request } from 'koa'
+import {assertFunction, assertObject} from '@eviljs/std-lib/assert'
+import {Context, Next, Request} from 'koa'
 
 export async function authorizationMiddleware(context: Context, next: Next, options?: AuthorizationOptions) {
-    const { request, response, container } = context
+    const {request, response, container} = context
 
     // const origin = request.get('Origin') // TODO
     // const referer = request.get('Referer') // TODO
@@ -16,7 +16,7 @@ export async function authorizationMiddleware(context: Context, next: Next, opti
         return // We block the middleware unwinding.
     }
 
-    const { token, account, session } = authorizationInfo
+    const {token, account, session} = authorizationInfo
 
     context.state.token = token
     context.state.account = account
@@ -59,8 +59,8 @@ export async function validateAuthorizationToken(token: string | undefined, cont
     assertFunction(container.Db.getAccountByToken, 'container.Db.getAccountByToken')
     assertFunction(container.Db.getSessionByToken, 'container.Db.getSessionByToken')
 
-    const { Db: db } = container
-    const { getAccountByToken, getSessionByToken } = db
+    const {Db: db} = container
+    const {getAccountByToken, getSessionByToken} = db
 
     const session = await getSessionByToken(db, token)
     if (! session) {
@@ -91,7 +91,7 @@ export function tokenFromAuthorizationHeader(request: Request, options?: Authori
     }
 
     // Authorization: Token 123
-    const [ protocol, token ] = headerValue
+    const [protocol, token] = headerValue
         .trim()
         .split(' ')
         .filter(chunk => chunk)

@@ -1,5 +1,5 @@
-import { createContext, createElement, useContext } from 'react'
-import { Container } from '@eviljs/std-lib/container'
+import {createContext, createElement, useContext} from 'react'
+import {Container} from '@eviljs/std-lib/container'
 
 export const ContainerContext = createContext<Container>(void undefined as any)
 

@@ -1,4 +1,4 @@
-import { createFetch, Fetch, FetchRequestMethod, FetchRequestOptions, JsonType } from './fetch'
+import {createFetch, Fetch, FetchRequestMethod, FetchRequestOptions, JsonType} from './fetch'
 
 /*
 * Mocks must be an object with the structure
@@ -65,7 +65,7 @@ export function mockResponse(mocks: FetchMocks, type: FetchRequestMethod, path: 
     }
 
     for (const mock of typeMocks) {
-        const [ re, response ] = mock
+        const [re, response] = mock
         const regexp = new RegExp(re, 'i')
 
         if (regexp.test(path)) {

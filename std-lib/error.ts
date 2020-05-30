@@ -12,7 +12,7 @@ export function throwInvalidArgument(message?: string) {
 }
 
 export function error<T extends StdErrorConstructor>(spec: ErrorSpec<T>): never {
-    const { type = StdError, message } = spec
+    const {type = StdError, message} = spec
 
     throw new type(message)
 }

@@ -1,4 +1,4 @@
-import { isArray, isNil, isObject, objectWithoutUndefined } from './type'
+import {isArray, isNil, isObject, objectWithoutUndefined} from './type'
 
 export function times(count: number) {
     return Array(count).fill(undefined).map((nil, idx) => idx)

@@ -1,10 +1,10 @@
-import { isArray, isFunction, isObject } from './type'
-import { throwInvalidArgument } from './error'
+import {isArray, isFunction, isObject} from './type'
+import {throwInvalidArgument} from './error'
 
 export const SpacesRegexp = /\s+/g
 
 export function createI18n(spec: I18nSpec) {
-    const { locale, fallbackLocale, messages } = spec
+    const {locale, fallbackLocale, messages} = spec
 
     const self: I18n = {
         locale,
@@ -48,7 +48,7 @@ export function createI18n(spec: I18nSpec) {
 * translate(i18n, '@{ count } items of @{ total }', {count: 4, total: 8})
 */
 export function translate(i18n: I18n, id: string, values?: MsgValues, options?: unknown) {
-    const { locale, fallbackLocale, messages } = i18n
+    const {locale, fallbackLocale, messages} = i18n
 
     let msg = messages[locale]?.[id]
 

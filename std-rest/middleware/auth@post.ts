@@ -1,6 +1,6 @@
-import { assertFunction, assertObject } from '@eviljs/std-lib/assert'
-import { isObject } from '@eviljs/std-lib/type'
-import { Context, Next } from 'koa'
+import {assertFunction, assertObject} from '@eviljs/std-lib/assert'
+import {isObject} from '@eviljs/std-lib/type'
+import {Context, Next} from 'koa'
 
 export const PostAuthPath = '/auth'
 
@@ -18,10 +18,10 @@ export async function postAuthMiddleware(ctx: Context, next: Next) {
     assertFunction(ctx.container.Db.getAccountByIdentifierAndSecret, 'ctx.container.Db.getAccountByIdentifierAndSecret')
     assertFunction(ctx.container.Db.createSession, 'ctx.container.Db.createSession')
 
-    const { request, response, container } = ctx
-    const { Db: db } = container
-    const { getAccountByIdentifierAndSecret, createSession } = db
-    const { body }  = request
+    const {request, response, container} = ctx
+    const {Db: db} = container
+    const {getAccountByIdentifierAndSecret, createSession} = db
+    const {body}  = request
 
     if (! body || ! isObject(body)) {
         response.status = 400 // Bad Request.
@@ -29,7 +29,7 @@ export async function postAuthMiddleware(ctx: Context, next: Next) {
         return next()
     }
 
-    const { identifier, secret } = body
+    const {identifier, secret} = body
 
     if (! identifier || ! secret) {
         response.status = 400 // Bad Request.

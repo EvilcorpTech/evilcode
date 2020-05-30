@@ -1,6 +1,6 @@
-import { assertStringNotEmpty } from '@eviljs/std-lib/assert'
-import { Db, ReadResult } from '..'
-import { Session } from './Session'
+import {assertStringNotEmpty} from '@eviljs/std-lib/assert'
+import {Db, ReadResult} from '..'
+import {Session} from './Session'
 
 export async function getSessionByToken(db: Db<GetSessionByTokenServices>, token: string) {
     assertStringNotEmpty(token, 'token')

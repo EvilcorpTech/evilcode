@@ -1,31 +1,3 @@
-export function intervalOfCurrentMonth() {
-    const now = new Date()
-    const start = datetime(new Date(year(now), month(now) - 1, 1, 0, 0, 0, 0))
-    const end = datetime(new Date(year(now), month(now), 0, 23, 59, 59, 999))
-    return {start, end}
-}
-
-export function intervalOfPreviousMonth() {
-    const now = new Date()
-    const start = datetime(new Date(year(now), month(now) - 2, 1, 0, 0, 0, 0))
-    const end = datetime(new Date(year(now), month(now) - 1, 0, 23, 59, 59, 999))
-    return {start, end}
-}
-
-export function intervalOfCurrentYear() {
-    const now = new Date()
-    const start = datetime(new Date(year(now), 0, 1, 0, 0, 0, 0))
-    const end = datetime(new Date(year(now), 11, 31, 23, 59, 59, 999))
-    return {start, end}
-}
-
-export function intervalOfPreviousYear() {
-    const now = new Date()
-    const start = datetime(new Date(year(now) - 1, 0, 1, 0, 0, 0, 0))
-    const end = datetime(new Date(year(now) - 1, 11, 31, 23, 59, 59, 999))
-    return {start, end}
-}
-
 export function datetime(date: Date) {
     const self: Datetime = Object.defineProperties(
         [

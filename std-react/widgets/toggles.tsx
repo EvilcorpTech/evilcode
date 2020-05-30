@@ -1,11 +1,11 @@
-import { className } from '../react'
-import { createElement, useCallback, useEffect, useState } from 'react'
+import {className} from '../react'
+import {createElement, useCallback, useEffect, useState} from 'react'
 
 import './toggles.css'
 
 export function Toggles(props: TogglesProps) {
-    const { message, items, selected, max, onChange, ...otherProps } = props
-    const [ selectedItems, setSelectedItems ] = useState<Array<string>>([])
+    const {message, items, selected, max, onChange, ...otherProps} = props
+    const [selectedItems, setSelectedItems] = useState<Array<string>>([])
 
     useEffect(() => {
         setSelectedItems(selected ?? [])

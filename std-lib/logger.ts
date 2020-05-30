@@ -1,5 +1,5 @@
-import { throwInvalidArgument } from './error'
-import { ValueOf } from './type'
+import {throwInvalidArgument} from './error'
+import {ValueOf} from './type'
 
 export const Level = {
     Debug: 1,
@@ -11,8 +11,8 @@ export const Level = {
 export const DefaultLevel = Level.Debug
 
 export function LoggerService(container: LoggerContainer) {
-    const { LoggerSpec: loggerSpec } = container
-    const { Context: context } = container
+    const {LoggerSpec: loggerSpec} = container
+    const {Context: context} = container
 
     const spec = {
         adapter: loggerSpec?.adapter,

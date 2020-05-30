@@ -1,16 +1,16 @@
-import { className } from '../react'
-import { createElement, useEffect, useMemo, useState } from 'react'
-import { ExampleIcon as Icon } from '../icons/example'
-import { Input } from '../widgets/input'
-import { rgbFromHexString, rgbToHexString, hslFromRgb, rgbFromHsl } from '@eviljs/std-lib/color'
+import {className} from '../react'
+import {createElement, useEffect, useMemo, useState} from 'react'
+import {ExampleIcon as Icon} from '../icons/example'
+import {Input} from '../widgets/input'
+import {rgbFromHexString, rgbToHexString, hslFromRgb, rgbFromHsl} from '@eviljs/std-lib/color'
 
 import './theme-view.css'
 
 export function ThemeView(props: ThemeViewProps) {
-    const [ accent1RgbHex, setAccent1RgbHex ] = useState('')
-    const [ accent2RgbHex, setAccent2RgbHex ] = useState('')
-    const [ input, setInput ] = useState('')
-    const [ themeLight, setThemeLight ] = useState(true)
+    const [accent1RgbHex, setAccent1RgbHex] = useState('')
+    const [accent2RgbHex, setAccent2RgbHex] = useState('')
+    const [input, setInput] = useState('')
+    const [themeLight, setThemeLight] = useState(true)
 
     useEffect(() => {
         const accent1RgbHex = computeAccent()

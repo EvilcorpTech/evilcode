@@ -1,7 +1,7 @@
-import { Account, AccountFromDataOptions } from './Account'
-import { assertStringNotEmpty } from '@eviljs/std-lib/assert'
-import { Db, ReadResult } from '..'
-import { Session } from './Session'
+import {Account, AccountFromDataOptions} from './Account'
+import {assertStringNotEmpty} from '@eviljs/std-lib/assert'
+import {Db, ReadResult} from '..'
+import {Session} from './Session'
 /*
 * EXAMPLE
 * // Secret Hash is omitted from the results by default...

@@ -1,15 +1,15 @@
-import { Button } from './button'
-import { className } from '../react'
-import { createElement } from 'react'
-import { DotsSpinner as Spinner } from './dots-spinner'
-import { Input } from './input'
-import { useAuth } from '../auth'
-import { useCallback, useMemo, useState } from 'react'
+import {Button} from './button'
+import {className} from '../react'
+import {createElement} from 'react'
+import {DotsSpinner as Spinner} from './dots-spinner'
+import {Input} from './input'
+import {useAuth} from '../auth'
+import {useCallback, useMemo, useState} from 'react'
 
 export function useAuthCredentials() {
-    const [ credentials, setCredentials ] = useState({identifier: '', secret: ''})
-    const { authenticate, pending } = useAuth()
-    const [ error, setError ] = useState('')
+    const [credentials, setCredentials] = useState({identifier: '', secret: ''})
+    const {authenticate, pending} = useAuth()
+    const [error, setError] = useState('')
 
     const onIdentifierChange = useCallback((identifier: string) => {
         setError('')
@@ -54,7 +54,7 @@ export function useAuthCredentials() {
 }
 
 export function AuthCredentials(props: AuthCredentialsProps) {
-    const { messages, formatError } = props
+    const {messages, formatError} = props
     const {
         credentials,
         error,

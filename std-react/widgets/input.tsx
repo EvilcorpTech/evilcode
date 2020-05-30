@@ -1,6 +1,6 @@
-import { className } from '../react'
-import { createElement } from 'react'
-import { useState, useRef, useLayoutEffect, useMemo } from 'react'
+import {className} from '../react'
+import {createElement} from 'react'
+import {useState, useRef, useLayoutEffect, useMemo} from 'react'
 
 import './input.css'
 
@@ -10,9 +10,9 @@ export const InputType = {
 } as const
 
 export function Input(props: InputProps) {
-    const { type, label, value, autoComplete, autoFocus, tabIndex, onChange, ...otherProps } = props
-    const [ focus, setFocus ] = useState(false)
-    const [ translateY, setTranslateY ] = useState(0)
+    const {type, label, value, autoComplete, autoFocus, tabIndex, onChange, ...otherProps} = props
+    const [focus, setFocus] = useState(false)
+    const [translateY, setTranslateY] = useState(0)
     const fieldRef = useRef<HTMLDivElement>(null)
     const labelRef = useRef<HTMLLabelElement>(null)
     const inputRef = useRef<HTMLInputElement>(null)

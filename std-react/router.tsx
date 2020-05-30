@@ -1,5 +1,5 @@
-import { createContext, createElement, useCallback, useContext, useEffect, useMemo, useState } from 'react'
-import { createRouter, link, readHashRoute, routeTo } from '@eviljs/std-web/router'
+import {createContext, createElement, useCallback, useContext, useEffect, useMemo, useState} from 'react'
+import {createRouter, link, readHashRoute, routeTo} from '@eviljs/std-web/router'
 
 export const RouterContext = createContext<Router>(void undefined as any)
 
@@ -9,7 +9,7 @@ export function useRouter() {
 
 export function useRootRouter() {
     const defaultRoute = readHashRoute()
-    const [ route, setRoute ] = useState(defaultRoute)
+    const [route, setRoute] = useState(defaultRoute)
 
     const routeDoesMatch = useCallback((patternRe: RegExp) => {
         const doesMatch = patternRe.test(route)

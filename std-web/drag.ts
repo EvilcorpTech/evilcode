@@ -1,4 +1,4 @@
-import { isNil } from '@eviljs/std-lib/type'
+import {isNil} from '@eviljs/std-lib/type'
 
 export function createDragElement(tag?: DragTags, style?: DragStyler) {
     const el = document.createElement(tag ?? 'div')
@@ -90,7 +90,7 @@ export function initMoveAbsoluteState(el: HTMLElement, event: DragMouseEvent, op
 }
 
 export function initMoveTransformState(el: HTMLElement, event: DragMouseEvent, options?: DragMoveOptions<HTMLElement>) {
-    const [ translateX, translateY ] = getComputedTransform(el).slice(-2)
+    const [translateX, translateY] = getComputedTransform(el).slice(-2)
     const initialLeft = translateX ?? 0
     const initialTop = translateY ?? 0
     const boundRect = options?.bound?.getBoundingClientRect()
@@ -122,7 +122,7 @@ export function initMoveSvgState(el: SVGGraphicsElement, event: DragMouseEvent, 
         (svg.viewBox.baseVal.width || svg.clientWidth)
         /
         svg.clientWidth
-    const { e: translateX, f: translateY } = el.transform.baseVal.consolidate()?.matrix ?? {}
+    const {e: translateX, f: translateY} = el.transform.baseVal.consolidate()?.matrix ?? {}
     const initialLeft = translateX ?? 0
     const initialTop = translateY ?? 0
     const boundRect = options?.bound?.getBoundingClientRect()
@@ -181,7 +181,7 @@ export function moveTransform(state: DragMoveState<HTMLElement, HTMLElement>, ev
         return
     }
 
-    const [ a, b, c, d, x, y ] = getComputedTransform(state.element)
+    const [a, b, c, d, x, y] = getComputedTransform(state.element)
     const matrix = [
         a ?? 1,
         b ?? 0,
@@ -243,7 +243,7 @@ export function computeMove(state: DragMoveState<DragMoveElement, DragMoveElemen
 }
 
 export function computeMoveHorizontal(state: DragMoveState<DragMoveElement, DragMoveElement>, event: DragMouseEvent) {
-    const { initialLeft, initialX, minLeft, maxLeft, moveRatio } = state
+    const {initialLeft, initialX, minLeft, maxLeft, moveRatio} = state
     const deltaX = (event.clientX - initialX) * moveRatio
     const nextLeft = initialLeft + deltaX
 
@@ -257,7 +257,7 @@ export function computeMoveHorizontal(state: DragMoveState<DragMoveElement, Drag
 }
 
 export function computeMoveVertical(state: DragMoveState<DragMoveElement, DragMoveElement>, event: DragMouseEvent) {
-    const { initialTop, initialY, minTop, maxTop, moveRatio } = state
+    const {initialTop, initialY, minTop, maxTop, moveRatio} = state
     const deltaY = (event.clientY - initialY) * moveRatio
     const nextTop = initialTop + deltaY
 
@@ -271,7 +271,7 @@ export function computeMoveVertical(state: DragMoveState<DragMoveElement, DragMo
 }
 
 export function getComputedTransform(el: HTMLElement) {
-    const { transform } = getComputedStyle(el)
+    const {transform} = getComputedStyle(el)
 
     if (! transform || transform === 'none') {
         return []
@@ -361,7 +361,7 @@ export function computeResize(state: DragResizeState, event: DragMouseEvent) {
 }
 
 export function computeResizeHorizontal(state: DragResizeState, event: DragMouseEvent) {
-    const { horizontalDirection, initialWidth, initialX, minWidth, maxWidth } = state
+    const {horizontalDirection, initialWidth, initialX, minWidth, maxWidth} = state
     const deltaX = (event.clientX - initialX) * horizontalDirection
     const nextWidth = initialWidth + deltaX
 
@@ -375,7 +375,7 @@ export function computeResizeHorizontal(state: DragResizeState, event: DragMouse
 }
 
 export function computeResizeVertical(state: DragResizeState, event: DragMouseEvent) {
-    const { verticalDirection, initialHeight, initialY, minHeight, maxHeight } = state
+    const {verticalDirection, initialHeight, initialY, minHeight, maxHeight} = state
     const deltaY = (event.clientY - initialY) * verticalDirection
     const nextHeight = initialHeight + deltaY
 

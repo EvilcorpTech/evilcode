@@ -1,4 +1,4 @@
-import { assertObject } from './assert'
+import {assertObject} from './assert'
 
 export const Tests = {
     array: isArray,

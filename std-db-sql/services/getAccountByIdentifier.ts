@@ -1,6 +1,6 @@
-import { Account, AccountFromDataOptions } from './Account'
-import { assertStringNotEmpty } from '@eviljs/std-lib/assert'
-import { Db, ReadResult } from '..'
+import {Account, AccountFromDataOptions} from './Account'
+import {assertStringNotEmpty} from '@eviljs/std-lib/assert'
+import {Db, ReadResult} from '..'
 
 /*
 * EXAMPLE

@@ -1,13 +1,13 @@
-import { className } from '../react'
-import { createElement, useCallback, useEffect, useRef, useState } from 'react'
-import { useMove } from '../drag'
-import { useResize } from '../drag'
+import {className} from '../react'
+import {createElement, useCallback, useEffect, useRef, useState} from 'react'
+import {useMove} from '../drag'
+import {useResize} from '../drag'
 
 import './range.css'
 
 export function Range(props: RangeProps) {
-    const { boundRef, start, end, onChange, onChanged, ...otherProps } = props
-    const [ range, setRange ] = useState<RangeChange>({start: 0, end: 1})
+    const {boundRef, start, end, onChange, onChanged, ...otherProps} = props
+    const [range, setRange] = useState<RangeChange>({start: 0, end: 1})
     const centerRef = useRef<HTMLDivElement>(null)
     const rangeStartRef = useRef<HTMLDivElement>(null)
     const rangeEndRef = useRef<HTMLDivElement>(null)

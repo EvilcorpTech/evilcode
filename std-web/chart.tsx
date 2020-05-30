@@ -1,9 +1,9 @@
-import { isNil } from '@eviljs/std-lib/type'
-import { minMax } from '@eviljs/std-lib/math'
-import { times } from '@eviljs/std-lib/fn'
+import {isNil} from '@eviljs/std-lib/type'
+import {minMax} from '@eviljs/std-lib/math'
+import {times} from '@eviljs/std-lib/fn'
 
 export function createNumberAxis(data: Array<number>, ticks: number) {
-    const [ min, max ] = minMax(data)
+    const [min, max] = minMax(data)
 
     if (isNil(min) || isNil(max)) {
         return []

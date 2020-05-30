@@ -1,4 +1,4 @@
-import { assertFunction, assertObject } from '@eviljs/std-lib/assert'
+import {assertFunction, assertObject} from '@eviljs/std-lib/assert'
 
 export async function createAccountAndSession(
     shell: CreateAccountAndSessionShell,
@@ -15,8 +15,8 @@ export async function createAccountAndSession(
         ...options,
     }
 
-    const { Db: db } = shell.container
-    const { createAccount, createSession } = db
+    const {Db: db} = shell.container
+    const {createAccount, createSession} = db
     const accountId = await createAccount(db, accountModel)
     const token = await createSession(db, accountId)
 

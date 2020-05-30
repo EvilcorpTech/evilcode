@@ -1,5 +1,5 @@
-import { createContext, createElement, useContext } from 'react'
-import { Fetch } from '@eviljs/std-web/fetch'
+import {createContext, createElement, useContext} from 'react'
+import {Fetch} from '@eviljs/std-web/fetch'
 
 export const FetchContext = createContext<Fetch>(void undefined as any)
 

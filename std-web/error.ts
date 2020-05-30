@@ -1,4 +1,4 @@
-import { error, StdError } from '@eviljs/std-lib/error'
+import {error, StdError} from '@eviljs/std-lib/error'
 
 export class InvalidResponse extends StdError {}
 

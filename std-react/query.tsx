@@ -1,12 +1,12 @@
-import { createContext, createElement, useContext, useEffect, useRef, useState } from 'react'
-import { Query } from '@eviljs/std-web/query'
+import {createContext, createElement, useContext, useEffect, useRef, useState} from 'react'
+import {Query} from '@eviljs/std-web/query'
 
 export const QueryContext = createContext<Query>(void undefined as any)
 export const QueryCancelled = Symbol('QueryCancelled')
 
 export function useQuery<A extends Array<unknown>, R>(queryRunner: QueryRunner<A, R>) {
-    const [ response, setResponse ] = useState<R | null>(null)
-    const [ pending, setPending ] = useState(false)
+    const [response, setResponse] = useState<R | null>(null)
+    const [pending, setPending] = useState(false)
     const mountedRef = useRef(true)
     const taskRef = useRef<QueryTask<R> | null>(null)
     const query = useContext(QueryContext)

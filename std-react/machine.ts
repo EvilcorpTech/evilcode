@@ -1,7 +1,7 @@
-import { useMemo, useRef, useState } from 'react'
+import {useMemo, useRef, useState} from 'react'
 
 export function useMachine<S extends {}, E>(run: Machine<S, E>, init: MachineInitState<S>) {
-    const [ state, setState ] = useState<S>(init)
+    const [state, setState] = useState<S>(init)
 
     function commit(event: E) {
         setState(prevState =>
