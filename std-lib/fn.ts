@@ -90,6 +90,30 @@ export function wrap
     return wrapped as Fn<A, R>
 }
 
+/*
+* Stores an item inside an object, returning the object. Useful when used inside
+* an Array.reduce() function.
+*
+* EXAMPLE
+* [{id: 123, value: 'A'}, {id: 234, value: 'B'}].reduce(indexBy.bind(null, 'id'))
+*/
+export function indexBy(by: string, index: Dict, item: Dict) {
+    index[item[by]] = item
+
+    return index
+}
+
+/*
+* Stores an item inside an object, indexed by its id, returning the object.
+* Useful when used inside an Array.reduce() function.
+*
+* EXAMPLE
+* [{id: 123, value: 'A'}, {id: 234, value: 'B'}].reduce(indexById)
+*/
+export function indexById(index: Dict, item: Dict) {
+    return indexBy('id', index, item)
+}
+
 // Types ///////////////////////////////////////////////////////////////////////
 
 export type Decorator = (fn: Fn) => Fn
@@ -97,3 +121,5 @@ export type Decorator = (fn: Fn) => Fn
 export type Fn
     <A extends Array<any> = Array<any>, R = any>
     = (...args: A) => R
+
+export type Dict = Record<string, any>
