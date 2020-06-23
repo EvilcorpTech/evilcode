@@ -1,6 +1,9 @@
 import {createContext, createElement, useContext, useMemo, useReducer} from 'react'
+import {error, StdError} from '@eviljs/std-lib/error'
 
 export const StoreContext = createContext<Store>(void undefined as any)
+
+export class InvalidAction extends StdError {}
 
 export function useStore() {
     return useContext(StoreContext)
@@ -9,11 +12,11 @@ export function useStore() {
 export function useRootStore(spec: StoreSpec) {
     const {createState, actions} = spec
 
-    function reduce(state: any, action: Action) {
+    function reduce(state: unknown, action: Action<unknown>) {
         const handler = actions[action.type]
 
         if (! handler) {
-            throw `missing_action: ${action.type}`
+            return throwInvalidAction(action.type)
         }
 
         return handler(state, action.value)
@@ -50,29 +53,43 @@ export function WithStore(Child: React.ElementType, spec: StoreSpec) {
     return StoreProviderProxy
 }
 
+export function throwInvalidAction(action: string) {
+    const message =
+        '@eviljs/std-react/store:\n'
+        + `missing action '${action}'.`
+    return error({type: InvalidAction, message})
+}
+
 // Types ///////////////////////////////////////////////////////////////////////
 
-export interface StoreProviderProps {
+export interface StoreProviderProps<S = any, A extends Actions<S> = Actions<S>> {
     children: React.ReactNode
-    spec: StoreSpec
+    spec: StoreSpec<S, A>
 }
 
-export interface StoreSpec {
-    actions: Actions
-    createState: CreateState
-    // TODO: getters, effects, plugs.s
+export interface Store<S = any, A extends Action<any> = Action<any>> {
+    state: S
+    commit: React.Dispatch<A>
 }
 
-export type CreateState = () => any
-export type Actions = Record<string, Reducer>
-export type Reducer = (state: any, value?: any) => any
-
-interface Store<T = unknown> {
-    state: T
-    commit: React.Dispatch<any>
+export interface StoreSpec<S = any, A extends Actions<S> = Actions<S>> {
+    actions: A
+    createState(): S
+    // TODO: getters, effects, plugs.
 }
 
-export type Action = {
+export type Actions<S> = Record<string, React.Reducer<S, any>>
+
+export type Action<V> = {
     type: string
-    value?: any
+    value?: V
 }
+
+export type StoreActions<A extends Actions<any>> = ObjectValues<{
+    [key in keyof A]: {
+        type: key
+        value: Parameters<A[key]>[1]
+    }
+}>
+
+export type ObjectValues<T> = T[keyof T]
