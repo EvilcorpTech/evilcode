@@ -1,6 +1,6 @@
 import {useMemo, useRef, useState} from 'react'
 
-export function useMachine<S extends {}, E>(run: Machine<S, E>, init: MachineInitState<S>) {
+export function useMachine<S, E>(run: Machine<S, E>, init: MachineInitState<S>) {
     const [state, setState] = useState<S>(init)
 
     function commit(event: E) {
@@ -12,7 +12,7 @@ export function useMachine<S extends {}, E>(run: Machine<S, E>, init: MachineIni
     return [state, commit] as const
 }
 
-export function useMachineRef<S extends {}, E>(run: Machine<S, E>, init: MachineInitState<S>) {
+export function useMachineRef<S, E>(run: Machine<S, E>, init: MachineInitState<S>) {
     const initState = useMemo(init, [init])
     const stateRef = useRef<S>(initState)
 
@@ -25,5 +25,5 @@ export function useMachineRef<S extends {}, E>(run: Machine<S, E>, init: Machine
 
 // Types ///////////////////////////////////////////////////////////////////////
 
-export type Machine<S extends {}, E> = (state: S, event: E) => S
-export type MachineInitState<S extends {}> = (() => S)
+export type Machine<S, E> = (state: S, event: E) => S
+export type MachineInitState<S> = (() => S)
