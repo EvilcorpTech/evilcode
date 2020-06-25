@@ -10,13 +10,3 @@
     --std-break-l: 1400px;
     --std-break-xl: 1900px;
 }
-
-.std-viewport {
-    width: 100%;
-    margin-left: auto;
-    margin-right: auto;
-}
-
-.std-viewport-s { max-width: var(--std-viewport-s); }
-.std-viewport-m { max-width: var(--std-viewport-m); }
-.std-viewport-l { max-width: var(--std-viewport-l); }

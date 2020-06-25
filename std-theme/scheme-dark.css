@@ -1,16 +1,23 @@
 @import './animation.css';
 @import './button.css';
 @import './color.css';
+@import './color-classes.css';
 @import './color-material.css';
 @import './gutter.css';
+@import './gutter-classes.css';
 @import './icon.css';
+@import './icon-classes.css';
 @import './layout.css';
 @import './radius.css';
+@import './radius-classes.css';
 @import './reset.css';
 @import './shadow.css';
+@import './shadow-classes.css';
 @import './text.css';
+@import './text-classes.css';
 @import './toggle.css';
 @import './viewport.css';
+@import './viewport-classes.css';
 
 .std-theme.dark {
     color: var(--std-text1);

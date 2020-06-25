@@ -65,46 +65,11 @@
     --std-back-dark3: hsl(235, 7%, 28%);
     --std-back-dark4: hsl(235, 7%, 32%);
 
-    --std-primary-action: var(--std-primary-accent);
-    --std-primary-success: #388e3c; /* --std-green8 */
-    --std-primary-warning: #ffc107; /* --std-amber6 */
-    --std-primary-error: #ff5722; /* --std-deeporange6 */
+    --std-action-color: var(--std-primary-accent);
+    --std-success-color: #388e3c; /* --std-green8 */
+    --std-warning-color: #ffc107; /* --std-amber6 */
+    --std-error-color: #ff5722; /* --std-deeporange6 */
 
     --std-border1-color: var(--std-back4);
     --std-border1: 1px solid var(--std-border1-color);
 }
-
-.std-primary-accent { color: var(--std-primary-accent); }
-.std-secondary-accent { color: var(--std-secondary-accent); }
-.std-primary-tint1 { color: var(--std-primary-tint1); }
-.std-primary-tint2 { color: var(--std-primary-tint2); }
-.std-primary-tint3 { color: var(--std-primary-tint3); }
-.std-primary-tint4 { color: var(--std-primary-tint4); }
-.std-primary-tint5 { color: var(--std-primary-tint5); }
-.std-primary-tint6 { color: var(--std-primary-tint6); }
-.std-primary-shade1 { color: var(--std-primary-shade1); }
-.std-primary-shade2 { color: var(--std-primary-shade2); }
-.std-primary-shade3 { color: var(--std-primary-shade3); }
-.std-primary-shade4 { color: var(--std-primary-shade4); }
-.std-primary-shade5 { color: var(--std-primary-shade5); }
-.std-primary-shade6 { color: var(--std-primary-shade6); }
-.std-primary-tone1 { color: var(--std-primary-tone1); }
-.std-primary-tone2 { color: var(--std-primary-tone2); }
-.std-primary-tone3 { color: var(--std-primary-tone3); }
-.std-primary-tone4 { color: var(--std-primary-tone4); }
-.std-primary-tone5 { color: var(--std-primary-tone5); }
-.std-primary-tone6 { color: var(--std-primary-tone6); }
-.std-text1 { color: var(--std-text1); }
-.std-text1-inverse { color: var(--std-text1-inverse); }
-.std-text2 { color: var(--std-text2); }
-.std-text2-inverse { color: var(--std-text2-inverse); }
-.std-text3 { color: var(--std-text3); }
-.std-text3-inverse { color: var(--std-text3-inverse); }
-.std-back1 { background: var(--std-back1); }
-.std-back1-inverse { background: var(--std-back1-inverse); }
-.std-back2 { background: var(--std-back2); }
-.std-back2-inverse { background: var(--std-back2-inverse); }
-.std-back3 { background: var(--std-back3); }
-.std-back3-inverse { background: var(--std-back3-inverse); }
-.std-back4 { background: var(--std-back4); }
-.std-back4-inverse { background: var(--std-back4-inverse); }
