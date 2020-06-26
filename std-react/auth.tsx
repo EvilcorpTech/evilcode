@@ -2,9 +2,19 @@ import {authenticate, invalidate, validate, AuthCredentials, FetchOptions} from 
 import {Cookie} from '@eviljs/std-web/cookie'
 import {createContext, createElement, useCallback, useContext, useEffect, useState, useMemo} from 'react'
 import {Fetch} from '@eviljs/std-web/fetch'
+import {throwInvalidResponse} from '@eviljs/std-web/error'
 import {useBusy} from './busy'
+import {ValueOf} from '@eviljs/std-lib/type'
 
 export const AuthContext = createContext<Auth>(void undefined as any)
+
+export const AuthTokenState = {
+    Init: null,
+    Missing: 0,
+    Validating: 1,
+    Valid: 2,
+    Invalid: -1,
+} as const
 
 export function useAuth() {
     return useContext(AuthContext)
@@ -12,30 +22,31 @@ export function useAuth() {
 
 export function useRootAuth(fetch: Fetch, cookie: Cookie, options?: AuthOptions) {
     const {authenticateOpts, invalidateOpts, validateOpts} = options ?? {}
-    const [cookieToken] = useState(() => cookie.get())
-    const [token, setToken] = useState('')
-    const [busy, busyLock, busyRelease] = useBusy()
+    const [tokenState, setTokenState] = useState<AuthTokenState>(AuthTokenState.Init)
+    const {busy, busyLock, busyRelease} = useBusy()
+    const token = cookie.get()
 
     useEffect(() => {
-        if (! cookieToken) {
-            // Optimization.
-            setToken('')
+        if (! token) {
+            setTokenState(AuthTokenState.Missing)
             return
         }
 
+        setTokenState(AuthTokenState.Validating)
+
         busyLock()
 
-        validate(fetch, cookieToken, validateOpts)
-        .then(tokenIsValid => {
-            setToken(tokenIsValid
-                ? cookieToken
-                : ''
+        validate(fetch, token, validateOpts)
+        .then(isTokenValid => {
+            setTokenState(isTokenValid
+                ? AuthTokenState.Valid
+                : AuthTokenState.Invalid
             )
         })
         .finally(() => {
             busyRelease()
         })
-    }, [cookieToken, validateOpts?.method, validateOpts?.url])
+    }, [token, validateOpts?.method, validateOpts?.url])
 
     const authenticateCredentials = useCallback(async (credentials: AuthCredentials) => {
         busyLock()
@@ -43,18 +54,21 @@ export function useRootAuth(fetch: Fetch, cookie: Cookie, options?: AuthOptions)
             const token = await authenticate(fetch, credentials, authenticateOpts)
 
             cookie.set(token)
-            setToken(token)
+            setTokenState(AuthTokenState.Valid)
 
             return token
         }
         finally {
             busyRelease()
         }
-    }, [fetch, authenticateOpts?.method, authenticateOpts?.url])
+    }, [authenticateOpts?.method, authenticateOpts?.url])
 
     const destroySession = useCallback(async () => {
+        cookie.delete()
+        setTokenState(AuthTokenState.Missing)
+
         if (! token) {
-            return false
+            return true
         }
 
         busyLock()
@@ -62,30 +76,32 @@ export function useRootAuth(fetch: Fetch, cookie: Cookie, options?: AuthOptions)
             const ok = await invalidate(fetch, token, invalidateOpts)
 
             if (! ok) {
-                throw 'ko'
+                return throwInvalidResponse(
+                    `@eviljs/std-react/auth.useRootAuth().destroySession()`
+                )
             }
         }
         catch (error) {
+            console.error(error)
+
             return false
         }
         finally {
             busyRelease()
-            cookie.delete()
-            setToken('')
         }
 
         return true
-    }, [fetch, token, cookie, validateOpts?.method, validateOpts?.url])
+    }, [token, validateOpts?.method, validateOpts?.url])
 
     const auth = useMemo(() => {
         return {
+            token,
+            tokenState,
+            pending: busy > 0,
             authenticate: authenticateCredentials,
             destroySession,
-            pending: busy > 0,
-            token,
-            validToken: Boolean(token),
         }
-    }, [authenticateCredentials, busy, destroySession, token])
+    }, [token, tokenState, busy, authenticateCredentials, destroySession])
 
     return auth
 }
@@ -115,14 +131,6 @@ export function WithAuth(Child: React.ElementType, fetch: Fetch, cookie: Cookie,
 
 // Types ///////////////////////////////////////////////////////////////////////
 
-export interface Auth {
-    authenticate: (credentials: AuthCredentials) => Promise<string>
-    pending: boolean
-    destroySession: () => Promise<boolean>
-    token: string
-    validToken: boolean
-}
-
 export interface AuthProviderProps extends AuthOptions {
     children: React.ReactNode
     cookie: Cookie
@@ -134,3 +142,13 @@ export interface AuthOptions {
     invalidateOpts?: FetchOptions
     validateOpts?: FetchOptions
 }
+
+export interface Auth {
+    token: string | null | undefined
+    tokenState: AuthTokenState
+    pending: boolean
+    authenticate(credentials: AuthCredentials): Promise<string>
+    destroySession(): Promise<boolean>
+}
+
+export type AuthTokenState = ValueOf<typeof AuthTokenState>

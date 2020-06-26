@@ -91,10 +91,6 @@ export function AuthCredentials(props: AuthCredentialsProps) {
                 onChange={onSecretChange}
             />
 
-            <div className="error-a13171">
-                {error && (formatError?.(error) ?? error)}
-            </div>
-
             <Button
                 {...className('button-fcb265',
                     {busy: pending, 'std-shadow8': validCredentials},
@@ -110,6 +106,10 @@ export function AuthCredentials(props: AuthCredentialsProps) {
 
                 <Spinner className="spinner-a1165c" active={pending}/>
             </Button>
+
+            <div className="error-a13171">
+                {error && (formatError?.(error) ?? error)}
+            </div>
         </form>
     )
 }

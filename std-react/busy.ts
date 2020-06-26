@@ -1,7 +1,7 @@
 import {useState} from 'react'
 
-export function useBusy() {
-    const [busy, setBusy] = useState(0)
+export function useBusy(init = 0) {
+    const [busy, setBusy] = useState(init)
 
     function busyLock() {
         setBusy(state => state + 1)
@@ -10,5 +10,5 @@ export function useBusy() {
         setBusy(state => state - 1)
     }
 
-    return [busy, busyLock, busyRelease, setBusy] as const
+    return {busy, busyLock, busyRelease, setBusy}
 }
