@@ -1,5 +1,5 @@
 import {createContext, createElement, useCallback, useContext, useEffect, useMemo, useState} from 'react'
-import {createRouter, link, readHashRoute, routeTo} from '@eviljs/std-web/router'
+import {createRouter} from '@eviljs/std-web/router'
 
 export const RouterContext = createContext<Router>(void undefined as any)
 
@@ -8,40 +8,38 @@ export function useRouter() {
 }
 
 export function useRootRouter() {
-    const defaultRoute = readHashRoute()
-    const [route, setRoute] = useState(defaultRoute)
+    const globalRouter = useMemo(() => {
+        return createRouter(routeHandler)
+    }, [])
+    const [route, setRoute] = useState(() => globalRouter.route())
 
-    const routeDoesMatch = useCallback((patternRe: RegExp) => {
-        const doesMatch = patternRe.test(route)
-
-        return doesMatch
+    const testRoute = useCallback((pattern: RegExp) => {
+        return pattern.test(route)
     }, [route])
 
-    const routeMatch = useCallback((patternRe: RegExp) => {
-        const matches = route.match(patternRe)
-
-        return matches
+    const matchRoute = useCallback((pattern: RegExp) => {
+        return route.match(pattern)
     }, [route])
+
+    useEffect(() => {
+        globalRouter.start()
+
+        function unmount() {
+            globalRouter.stop()
+        }
+
+        return unmount
+    }, [globalRouter])
+
+    const router = useMemo(() => {
+        const {link, routeTo} = globalRouter
+
+        return {link, route, testRoute, matchRoute, routeTo}
+    }, [globalRouter, route, testRoute])
 
     function routeHandler(nextRoute: string) {
         setRoute(nextRoute)
     }
-
-    useEffect(() => {
-        const router = createRouter(routeHandler)
-
-        router.start()
-
-        function unmount() {
-            router.stop()
-        }
-
-        return unmount
-    }, [])
-
-    const router = useMemo(() => {
-        return {link, route, routeDoesMatch, routeMatch, routeTo}
-    }, [link, route, routeDoesMatch, routeTo])
 
     return router
 }
@@ -75,9 +73,9 @@ export interface RouterProviderProps {
 }
 
 export interface Router {
-    link(path: string): string
     route: string
-    routeDoesMatch(patternRe: RegExp): boolean
-    routeMatch(patternRe: RegExp): RegExpMatchArray | null
     routeTo(path: string): void
+    testRoute(pattern: RegExp): boolean
+    matchRoute(pattern: RegExp): RegExpMatchArray | null
+    link(path: string): string
 }
