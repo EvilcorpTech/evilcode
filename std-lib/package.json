@@ -3,11 +3,11 @@
     "version": "0.1.15",
     "dependencies": {
         "@types/node": "^12 || ^13 || ^14",
-        "tslib": "^1 || ^2"
+        "tslib": "^2"
     },
     "peerDependencies": {},
     "devDependencies": {
-        "typescript": "^3.7"
+        "typescript": "^3.9"
     },
     "scripts": {
         "preversion": "../tools/build .",

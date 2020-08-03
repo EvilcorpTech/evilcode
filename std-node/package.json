@@ -6,11 +6,11 @@
         "@types/bcryptjs": "^2",
         "@types/node": "^12 || ^13 || ^14",
         "bcryptjs": "^2",
-        "tslib": "^1 || ^2"
+        "tslib": "^2"
     },
     "peerDependencies": {},
     "devDependencies": {
-        "typescript": "^3.7"
+        "typescript": "^3.9"
     },
     "scripts": {
         "preversion": "../tools/build .",

@@ -4,8 +4,8 @@
     "dependencies": {
         "@eviljs/std-lib": "^0.1",
         "@eviljs/std-node": "^0.1",
-        "@koa/multer": "^2",
-        "@koa/router": "^8",
+        "@koa/multer": "^3",
+        "@koa/router": "^9",
         "@types/bcryptjs": "^2",
         "@types/koa": "^2",
         "@types/koa-bodyparser": "^4",
@@ -20,18 +20,18 @@
         "@types/node": "^12 || ^13 || ^14",
         "koa": "^2",
         "koa-bodyparser": "^4",
-        "koa-compress": "^4",
+        "koa-compress": "^5",
         "koa-conditional-get": "^2",
         "koa-etag": "^3",
         "koa-logger": "^3",
         "koa-mount": "^4",
         "koa-static": "^5",
         "multer": "^1",
-        "tslib": "^1 || ^2"
+        "tslib": "^2"
     },
     "peerDependencies": {},
     "devDependencies": {
-        "typescript": "^3.7"
+        "typescript": "^3.9"
     },
     "scripts": {
         "preversion": "../tools/build .",
