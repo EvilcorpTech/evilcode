@@ -1,4 +1,5 @@
-import {isRegExp} from '@eviljs/std-lib/type'
+import {isArray, isObject, isRegExp, isString} from '@eviljs/std-lib/type'
+import {throwInvalidArgument} from '@eviljs/std-lib/error'
 
 export const Start = '^'
 export const End = '(?:/)?$'
@@ -36,8 +37,6 @@ export function createRouter(observer: RouterObserver, options?: RouterOptions):
 }
 
 export function createHashRouter(observer: RouterObserver, options?: RouterOptions) {
-    const basePath = cleanBasePath(options?.basePath)
-
     const self = {
         start() {
             window.addEventListener('hashchange', onRouteChange)
@@ -47,25 +46,29 @@ export function createHashRouter(observer: RouterObserver, options?: RouterOptio
         },
         getRoute() {
             const {hash} = window.location
-            const path = hash
+            const [dirtyPath, dirtyParams] = hash
                 .substring(1) // Without the initial '#'.
-                .replace(basePath, '')
+                .split('?')
+            const path = dirtyPath || '/' // The empty string is casted to the root path.
+            const params = deserializeRouteParamsFromString(dirtyParams)
 
-                return path || '/'
+            return {path, params}
         },
-        setRoute(path: string) {
-            window.location.hash = '#' + basePath + path
-            // history.pushState(history.state, '', '#' + basePath + path)
+        setRoute(path: string, params?: RouterParams) {
+            const serializedRoute = '#' + serializeRouteToString(path, params)
+
+            window.location.hash = serializedRoute
+            // history.pushState(history.state, '', serializedRoute)
         },
-        link(path: string) {
-            return '#' + path
+        link(path: string, params?: RouterParams) {
+            return '#' + serializeRouteToString(path, params)
         },
     }
 
     function onRouteChange() {
-        const route = self.getRoute()
+        const {path, params} = self.getRoute()
 
-        observer(route)
+        observer(path, params)
     }
 
     return self
@@ -82,31 +85,36 @@ export function createHistoryRouter(observer: RouterObserver, options?: RouterOp
             window.removeEventListener('popstate', onRouteChange)
         },
         getRoute() {
-            const {pathname} = window.location
+            const {pathname, search} = window.location
             const path = pathname.replace(basePath, '')
+            const params = deserializeRouteParamsFromString(
+                search.substring(1) // Without the initial '?'.
+            )
 
-            return path
+            return {path, params}
         },
-        setRoute(path: string) {
-            history.pushState(history.state, '', basePath + path)
+        setRoute(path: string, params?: RouterParams) {
+            const serializedRoute = serializeRouteToString(basePath + path, params)
+
+            history.pushState(history.state, '', serializedRoute)
         },
-        link(path: string) {
-            return basePath + path + window.location.search + window.location.hash
+        link(path: string, params?: RouterParams) {
+            return serializeRouteToString(basePath + path, params)
         },
     }
 
     function onRouteChange() {
-        const route = self.getRoute()
+        const {path, params} = self.getRoute()
 
-        observer(route)
+        observer(path, params)
     }
 
     return self
 }
 
 export function createMemoryRouter(observer: RouterObserver, options?: RouterOptions) {
-    const basePath = cleanBasePath(options?.basePath)
     let routePath = options?.initMemory ?? '/'
+    let routeSearch = ''
 
     const self = {
         start() {
@@ -114,17 +122,76 @@ export function createMemoryRouter(observer: RouterObserver, options?: RouterOpt
         stop() {
         },
         getRoute() {
-            return routePath
+            const path = routePath
+            const params = deserializeRouteParamsFromString(routeSearch)
+
+            return {path, params}
         },
-        setRoute(path: string) {
+        setRoute(path: string, params?: RouterParams) {
             routePath = path
+            routeSearch = serializeRouteParamsToString(params)
         },
-        link(path: string) {
-            return basePath
+        link(path: string, params?: RouterParams) {
+            return serializeRouteToString(path, params)
         },
     }
 
     return self
+}
+
+export function serializeRouteToString(path: string, params?: RouterParams) {
+    const serializedParams = params
+        ? '?' + serializeRouteParamsToString(params)
+        : ''
+    const serializedRoute = path + serializedParams
+
+    return serializedRoute
+}
+
+export function serializeRouteParamsToString(params?: RouterParams): string {
+    if (! params) {
+        return ''
+    }
+    if (isString(params)) {
+        return params
+    }
+    if (isObject(params)) {
+        const parts = Object
+            .keys(params)
+            .map(it => `${it}=${params[it]}`)
+
+        return serializeRouteParamsToString(parts)
+    }
+    if (isArray(params)) {
+        return params.map(serializeRouteParamsToString).join('&')
+    }
+
+    const types = 'string | Object<string, string | number> | Array<string | Object<string, string | number>>'
+
+    return throwInvalidArgument(
+        '@eviljs/std-web/router.serializeRouteParamsToString(~~params~~):\n'
+        + `params must be a ${types}, given "${params}".`
+    )
+}
+
+export function deserializeRouteParamsFromString(paramsString: string) {
+    const params: Record<string, string | null> = {}
+
+    if (! paramsString) {
+        return params
+    }
+
+    const parts = paramsString.split('&')
+
+    for (const part of parts) {
+        const [key, value] = part.split('=')
+
+        params[key] = value ?? null
+        // An undefined value is casted to null, to indicate its presence
+        // but without a value.
+    }
+
+    return params
 }
 
 export function cleanBasePath(path?: string) {
@@ -245,19 +312,27 @@ export function exact(pattern: string) {
 export interface Router {
     start(): void
     stop(): void
-    getRoute(): string
-    setRoute(path: string): void
-    link(path: string): string
+    getRoute(): {path: string, params: RouterRouteParams}
+    setRoute(path: string, params?: RouterParams): void
+    link(path: string, params?: RouterParams): string
 }
 
 export interface RouterObserver {
-    (route: string): void
+    (route: string, params: RouterRouteParams): void
 }
 
 export interface RouterOptions {
     type?: 'hash' | 'history' | 'memory'
     basePath?: string
     initMemory?: string
+}
+
+export type RouterParams =
+    | string
+    | Record<string, string | number>
+    | Array<string | Record<string, string | number>>
+
+export interface RouterRouteParams extends Record<string, string | null> {
 }
 
 export interface Route<E extends Args, D> {
