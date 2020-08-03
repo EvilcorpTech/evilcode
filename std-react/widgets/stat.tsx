@@ -1,4 +1,4 @@
-import {className} from '../react'
+import {classes} from '../react'
 import {createElement} from 'react'
 
 import './stat.css'
@@ -9,7 +9,7 @@ export function Stat(props: StatProps) {
     return (
         <span
             {...otherProps}
-            {...className('stat-s0fdea', props.className)}
+            className={classes('stat-s0fdea', props.className)}
         >
             <div className="valueunit-s5a96f">
                 <span className="value-s83eb57">

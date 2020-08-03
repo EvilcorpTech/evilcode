@@ -1,4 +1,4 @@
-import {className} from '../react'
+import {classes} from '../react'
 import {createElement, useEffect, useMemo, useState} from 'react'
 import {ExampleIcon as Icon} from '../icons/example'
 import {Input} from '../widgets/input'
@@ -34,7 +34,7 @@ export function ThemeView(props: ThemeViewProps) {
     return (
         <div
             {...props}
-            {...className('theme-t2eb5b std-theme', props.className, {
+            className={classes('theme-t2eb5b std-theme', props.className, {
                 'light': themeLight, 'dark': ! themeLight,
             })}
         >
@@ -58,7 +58,7 @@ export function ThemeView(props: ThemeViewProps) {
                 <i className="std-space-m"/>
 
                 <i
-                    {...className(['std-toggle', {active: themeLight}])}
+                    className={classes(['std-toggle', {active: themeLight}])}
                     onClick={() => setThemeLight(state => ! state)}
                 />
             </h1>
@@ -300,6 +300,7 @@ export function ThemeView(props: ThemeViewProps) {
                             <i className="std-space-m"/>
 
                             <div>
+                                <label className="duration-t34796" style={{transitionDuration: 'var(--std-duration-slower)'}}>Slower</label>
                                 <label className="duration-t34796" style={{transitionDuration: 'var(--std-duration-slow)'}}>Slow</label>
                                 <label className="duration-t34796" style={{transitionDuration: 'var(--std-duration-normal)'}}>Normal</label>
                                 <label className="duration-t34796" style={{transitionDuration: 'var(--std-duration-fast)'}}>Fast</label>

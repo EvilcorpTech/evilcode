@@ -5,8 +5,57 @@ export const StoreContext = createContext<Store>(void undefined as any)
 
 export class InvalidAction extends StdError {}
 
-export function useStore() {
-    return useContext(StoreContext)
+/*
+* EXAMPLE
+*
+* const spec = {createState, actions}
+* const main = WithStore(MyMain, spec)
+*
+* render(<main/>, document.body)
+*/
+export function WithStore(Child: React.ElementType, spec: StoreSpec) {
+    function StoreProviderProxy(props: any) {
+        return withStore(<Child {...props}/>, spec)
+    }
+
+    return StoreProviderProxy
+}
+
+/*
+* EXAMPLE
+*
+* export function MyMain(props) {
+*     const spec = {createState, actions}
+*     const main = withStore(<MyMain/>, spec)
+*
+*     return <main/>
+* }
+*/
+export function withStore(children: React.ReactNode, spec: StoreSpec) {
+    const store = useRootStore(spec)
+
+    return (
+        <StoreContext.Provider value={store}>
+            {children}
+        </StoreContext.Provider>
+    )
+}
+
+/*
+* EXAMPLE
+*
+* export function MyMain(props) {
+*     const spec = {createState, actions}
+*
+*     return (
+*         <StoreProvider spec={spec}>
+*             <MyApp/>
+*         </StoreProvider>
+*     )
+* }
+*/
+export function StoreProvider(props: StoreProviderProps) {
+    return withStore(props.children, props.spec)
 }
 
 export function useRootStore(spec: StoreSpec) {
@@ -31,26 +80,8 @@ export function useRootStore(spec: StoreSpec) {
     return store
 }
 
-export function withStore(children: React.ReactNode, spec: StoreSpec) {
-    const store = useRootStore(spec)
-
-    return (
-        <StoreContext.Provider value={store}>
-            {children}
-        </StoreContext.Provider>
-    )
-}
-
-export function StoreProvider(props: StoreProviderProps) {
-    return withStore(props.children, props.spec)
-}
-
-export function WithStore(Child: React.ElementType, spec: StoreSpec) {
-    function StoreProviderProxy(props: any) {
-        return withStore(<Child {...props}/>, spec)
-    }
-
-    return StoreProviderProxy
+export function useStore() {
+    return useContext(StoreContext)
 }
 
 export function throwInvalidAction(action: string) {

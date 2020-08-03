@@ -1,5 +1,6 @@
 import {isArray, isString, isObject} from '@eviljs/std-lib/type'
 import {throwInvalidArgument} from '@eviljs/std-lib/error'
+import {useEffect, useRef} from 'react'
 
 export {times} from '@eviljs/std-lib/fn'
 
@@ -39,8 +40,18 @@ export function classes(...names: Array<ClassName>) {
     return list.join(' ')
 }
 
-export function className(...names: Array<ClassName>) {
-    return {className: classes(...names)}
+export function useMountedRef() {
+    const mountedRef = useRef(true)
+
+    useEffect(() => {
+        function unmount() {
+            mountedRef.current = false
+        }
+
+        return unmount
+    }, [])
+
+    return mountedRef
 }
 
 // Types ///////////////////////////////////////////////////////////////////////

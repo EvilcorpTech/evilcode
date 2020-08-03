@@ -3,10 +3,34 @@ import {Container} from '@eviljs/std-lib/container'
 
 export const ContainerContext = createContext<Container>(void undefined as any)
 
-export function useContainer() {
-    return useContext(ContainerContext)
+/*
+* EXAMPLE
+*
+* const spec = {services}
+* const container = createContainer(spec)
+* const main = WithContainer(MyMain, container)
+*
+* render(<main/>, document.body)
+*/
+export function WithContainer(Child: React.ElementType, container: Container) {
+    function ContainerProviderProxy(props: any) {
+        return withContainer(<Child {...props}/>, container)
+    }
+
+    return ContainerProviderProxy
 }
 
+/*
+* EXAMPLE
+*
+* export function MyMain(props) {
+*     const spec = {services}
+*     const container = createContainer(spec)
+*     const main = withContainer(<MyMain/>, container)
+*
+*     return <main/>
+* }
+*/
 export function withContainer(children: React.ReactNode, container: Container) {
     return (
         <ContainerContext.Provider value={container}>
@@ -15,16 +39,26 @@ export function withContainer(children: React.ReactNode, container: Container) {
     )
 }
 
+/*
+* EXAMPLE
+*
+* export function MyMain(props) {
+*     const spec = {services}
+*     const container = createContainer(spec)
+*
+*     return (
+*         <ContainerProvider container={container}>
+*             <MyApp/>
+*         </ContainerProvider>
+*     )
+* }
+*/
 export function ContainerProvider(props: ContainerProviderProps) {
     return withContainer(props.children, props.container)
 }
 
-export function WithContainer(Child: React.ElementType, container: Container) {
-    function ContainerProviderProxy(props: any) {
-        return withContainer(<Child {...props}/>, container)
-    }
-
-    return ContainerProviderProxy
+export function useContainer() {
+    return useContext(ContainerContext)
 }
 
 // Types ///////////////////////////////////////////////////////////////////////

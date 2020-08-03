@@ -1,23 +1,70 @@
 import {createContext, createElement, useContext, useEffect, useRef, useState} from 'react'
 import {Query} from '@eviljs/std-web/query'
+import {useMountedRef} from './react'
 
 export const QueryContext = createContext<Query>(void undefined as any)
 export const QueryCancelled = Symbol('QueryCancelled')
 
+/*
+* EXAMPLE
+*
+* const fetch = createFetch({baseUrl: '/api'})
+* const query = createQuery(fetch)
+* const main = WithQuery(MyMain, query)
+*
+* render(<main/>, document.body)
+*/
+export function WithQuery(Child: React.ElementType, query: Query) {
+    function QueryProviderProxy(props: any) {
+        return withQuery(<Child {...props}/>, query)
+    }
+
+    return QueryProviderProxy
+}
+
+/*
+* EXAMPLE
+*
+* export function MyMain(props) {
+*     const fetch = createFetch({baseUrl: '/api'})
+*     const query = createQuery(fetch)
+*     const main = withQuery(<MyMain/>, fetch)
+*
+*     return <main/>
+* }
+*/
+export function withQuery(children: React.ReactNode, query: Query) {
+    return (
+        <QueryContext.Provider value={query}>
+            {children}
+        </QueryContext.Provider>
+    )
+}
+
+/*
+* EXAMPLE
+*
+* export function MyMain(props) {
+*     const fetch = createFetch({baseUrl: '/api'})
+*     const query = createQuery(fetch)
+*
+*     return (
+*         <QueryProvider query={query}>
+*             <MyApp/>
+*         </QueryProvider>
+*     )
+* }
+*/
+export function QueryProvider(props: QueryProviderProps) {
+    return withQuery(props.children, props.query)
+}
+
 export function useQuery<A extends Array<unknown>, R>(queryRunner: QueryRunner<A, R>) {
     const [response, setResponse] = useState<R | null>(null)
     const [pending, setPending] = useState(false)
-    const mountedRef = useRef(true)
+    const mountedRef = useMountedRef()
     const taskRef = useRef<QueryTask<R> | null>(null)
     const query = useContext(QueryContext)
-
-    useEffect(() => {
-        function unmount() {
-            mountedRef.current = false
-        }
-
-        return unmount
-    }, [])
 
     async function fetch(...args: A) {
         setPending(true)
@@ -57,26 +104,6 @@ export function useQuery<A extends Array<unknown>, R>(queryRunner: QueryRunner<A
     }
 
     return {fetch, response, pending, reset, cancel}
-}
-
-export function withQuery(children: React.ReactNode, query: Query) {
-    return (
-        <QueryContext.Provider value={query}>
-            {children}
-        </QueryContext.Provider>
-    )
-}
-
-export function QueryProvider(props: QueryProviderProps) {
-    return withQuery(props.children, props.query)
-}
-
-export function WithQuery(Child: React.ElementType, query: Query) {
-    function QueryProviderProxy(props: any) {
-        return withQuery(<Child {...props}/>, query)
-    }
-
-    return QueryProviderProxy
 }
 
 // Types ///////////////////////////////////////////////////////////////////////

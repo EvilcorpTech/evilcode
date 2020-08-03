@@ -1,5 +1,5 @@
 import {Button} from './button'
-import {className} from '../react'
+import {classes} from '../react'
 import {createElement} from 'react'
 import {DotsSpinner as Spinner} from './dots-spinner'
 import {Input} from './input'
@@ -68,7 +68,7 @@ export function AuthCredentials(props: AuthCredentialsProps) {
 
     return (
         <form
-            {...className('form-a67156', props.className)}
+            className={classes('form-a67156', props.className)}
             onSubmit={onFormSubmitPrevented}
         >
             <Input
@@ -92,7 +92,7 @@ export function AuthCredentials(props: AuthCredentialsProps) {
             />
 
             <Button
-                {...className('button-fcb265',
+                className={classes('button-fcb265',
                     {busy: pending, 'std-shadow8': validCredentials},
                 )}
                 type="primary"

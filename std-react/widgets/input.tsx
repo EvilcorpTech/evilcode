@@ -1,4 +1,4 @@
-import {className} from '../react'
+import {classes} from '../react'
 import {createElement} from 'react'
 import {useState, useRef, useLayoutEffect, useMemo} from 'react'
 
@@ -43,7 +43,7 @@ export function Input(props: InputProps) {
         <div
             {...otherProps}
             ref={fieldRef}
-            {...className('input-i7eea4', props.className, {
+            className={classes('input-i7eea4', props.className, {
                 focus, placeholder: labelPlaceholder,
             })}
             onClick={() =>

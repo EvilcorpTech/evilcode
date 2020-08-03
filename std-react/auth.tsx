@@ -16,12 +16,78 @@ export const AuthTokenState = {
     Invalid: -1,
 } as const
 
-export function useAuth() {
-    return useContext(AuthContext)
+/*
+* EXAMPLE
+*
+* const fetch = createFetch({baseUrl: '/api'})
+* const cookie = createCookie()
+* const authenticate = {method, url} // Optional.
+* const validate = {method, url} // Optional.
+* const invalidate = {method, url} // Optional.
+* const options = {authenticate, validate, invalidate}
+* const main = WithAuth(MyMain, fetch, cookie, options)
+*
+* render(<main/>, document.body)
+*/
+export function WithAuth(Child: React.ElementType, fetch: Fetch, cookie: Cookie, options?: AuthOptions) {
+    function AuthProviderProxy(props: any) {
+        return withAuth(<Child {...props}/>, fetch, cookie, options)
+    }
+
+    return AuthProviderProxy
+}
+
+/*
+* EXAMPLE
+*
+* export function MyMain(props) {
+*     const fetch = createFetch({baseUrl: '/api'})
+*     const cookie = createCookie()
+*     const authenticate = {method, url}
+*     const validate = {method, url}
+*     const invalidate = {method, url}
+*     const options = {authenticate, validate, invalidate}
+*     const main = withAuth(<MyMain/>, fetch, cookie, options)
+*
+*     return <main/>
+* }
+*/
+export function withAuth(children: React.ReactNode, fetch: Fetch, cookie: Cookie, options?: AuthOptions) {
+    const auth = useRootAuth(fetch, cookie, options)
+
+    return (
+        <AuthContext.Provider value={auth}>
+            {children}
+        </AuthContext.Provider>
+    )
+}
+
+/*
+* EXAMPLE
+*
+* export function MyMain(props) {
+*     const fetch = createFetch({baseUrl: '/api'})
+*     const cookie = createCookie()
+*     const authenticate = {method, url}
+*     const validate = {method, url}
+*     const invalidate = {method, url}
+*     const options = {authenticate, validate, invalidate}
+*
+*     return (
+*         <AuthProvider fetch={fetch} cookie={cookie} {...options}>
+*             <MyApp/>
+*         </AuthProvider>
+*     )
+* }
+*/
+export function AuthProvider(props: AuthProviderProps) {
+    return withAuth(props.children, props.fetch, props.cookie, props)
 }
 
 export function useRootAuth(fetch: Fetch, cookie: Cookie, options?: AuthOptions) {
-    const {authenticateOpts, invalidateOpts, validateOpts} = options ?? {}
+    const authenticateOptions = options?.authenticate
+    const invalidateOptions = options?.invalidate
+    const validateOptions = options?.validate
     const [tokenState, setTokenState] = useState<AuthTokenState>(AuthTokenState.Init)
     const {busy, busyLock, busyRelease} = useBusy()
     const token = cookie.get()
@@ -36,7 +102,7 @@ export function useRootAuth(fetch: Fetch, cookie: Cookie, options?: AuthOptions)
 
         busyLock()
 
-        validate(fetch, token, validateOpts)
+        validate(fetch, token, validateOptions)
         .then(isTokenValid => {
             setTokenState(isTokenValid
                 ? AuthTokenState.Valid
@@ -46,12 +112,12 @@ export function useRootAuth(fetch: Fetch, cookie: Cookie, options?: AuthOptions)
         .finally(() => {
             busyRelease()
         })
-    }, [token, validateOpts?.method, validateOpts?.url])
+    }, [token, validateOptions?.method, validateOptions?.url])
 
     const authenticateCredentials = useCallback(async (credentials: AuthCredentials) => {
         busyLock()
         try {
-            const token = await authenticate(fetch, credentials, authenticateOpts)
+            const token = await authenticate(fetch, credentials, authenticateOptions)
 
             cookie.set(token)
             setTokenState(AuthTokenState.Valid)
@@ -61,7 +127,7 @@ export function useRootAuth(fetch: Fetch, cookie: Cookie, options?: AuthOptions)
         finally {
             busyRelease()
         }
-    }, [authenticateOpts?.method, authenticateOpts?.url])
+    }, [authenticateOptions?.method, authenticateOptions?.url])
 
     const destroySession = useCallback(async () => {
         cookie.delete()
@@ -73,7 +139,7 @@ export function useRootAuth(fetch: Fetch, cookie: Cookie, options?: AuthOptions)
 
         busyLock()
         try {
-            const ok = await invalidate(fetch, token, invalidateOpts)
+            const ok = await invalidate(fetch, token, invalidateOptions)
 
             if (! ok) {
                 return throwInvalidResponse(
@@ -91,7 +157,7 @@ export function useRootAuth(fetch: Fetch, cookie: Cookie, options?: AuthOptions)
         }
 
         return true
-    }, [token, validateOpts?.method, validateOpts?.url])
+    }, [token, validateOptions?.method, validateOptions?.url])
 
     const auth = useMemo(() => {
         return {
@@ -106,27 +172,8 @@ export function useRootAuth(fetch: Fetch, cookie: Cookie, options?: AuthOptions)
     return auth
 }
 
-export function withAuth(children: React.ReactNode, fetch: Fetch, cookie: Cookie, options?: AuthOptions) {
-    const auth = useRootAuth(fetch, cookie, options)
-
-    return (
-        <AuthContext.Provider value={auth}>
-            {children}
-        </AuthContext.Provider>
-    )
-}
-
-export function AuthProvider(props: AuthProviderProps) {
-    return withAuth(props.children, props.fetch, props.cookie, props)
-
-}
-
-export function WithAuth(Child: React.ElementType, fetch: Fetch, cookie: Cookie, options?: AuthOptions) {
-    function AuthProviderProxy(props: any) {
-        return withAuth(<Child {...props}/>, fetch, cookie, options)
-    }
-
-    return AuthProviderProxy
+export function useAuth() {
+    return useContext(AuthContext)
 }
 
 // Types ///////////////////////////////////////////////////////////////////////
@@ -138,9 +185,9 @@ export interface AuthProviderProps extends AuthOptions {
 }
 
 export interface AuthOptions {
-    authenticateOpts?: FetchOptions
-    invalidateOpts?: FetchOptions
-    validateOpts?: FetchOptions
+    authenticate?: FetchOptions
+    invalidate?: FetchOptions
+    validate?: FetchOptions
 }
 
 export interface Auth {

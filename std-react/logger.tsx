@@ -3,10 +3,32 @@ import {Logger} from '@eviljs/std-lib/logger'
 
 export const LoggerContext = createContext<Logger>(void undefined as any)
 
-export function useLogger() {
-    return useContext(LoggerContext)
+/*
+* EXAMPLE
+*
+* const logger = createLogger()
+* const main = WithLogger(MyMain, logger)
+*
+* render(<main/>, document.body)
+*/
+export function WithLogger(Child: React.ElementType, logger: Logger) {
+    function LoggerProviderProxy(props: any) {
+        return withLogger(<Child {...props}/>, logger)
+    }
+
+    return LoggerProviderProxy
 }
 
+/*
+* EXAMPLE
+*
+* export function MyMain(props) {
+*     const logger = createLogger()
+*     const main = withLogger(<MyMain/>, logger)
+*
+*     return <main/>
+* }
+*/
 export function withLogger(children: React.ReactNode, logger: Logger) {
     return (
         <LoggerContext.Provider value={logger}>
@@ -15,16 +37,25 @@ export function withLogger(children: React.ReactNode, logger: Logger) {
     )
 }
 
+/*
+* EXAMPLE
+*
+* export function MyMain(props) {
+*     const logger = createLogger()
+*
+*     return (
+*         <LoggerProvider logger={logger}>
+*             <MyApp/>
+*         </LoggerProvider>
+*     )
+* }
+*/
 export function LoggerProvider(props: LoggerProviderProps) {
     return withLogger(props.children, props.logger)
 }
 
-export function WithLogger(Child: React.ElementType, logger: Logger) {
-    function LoggerProviderProxy(props: any) {
-        return withLogger(<Child {...props}/>, logger)
-    }
-
-    return LoggerProviderProxy
+export function useLogger() {
+    return useContext(LoggerContext)
 }
 
 // Types ///////////////////////////////////////////////////////////////////////

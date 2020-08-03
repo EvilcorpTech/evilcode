@@ -1,4 +1,4 @@
-import {className} from '../react'
+import {classes} from '../react'
 import {createElement} from 'react'
 
 export const ButtonType = {
@@ -16,7 +16,7 @@ export function Button(props: ButtonProps) {
     return (
         <button
             {...otherProps}
-            {...className('button-bfce14 std-button std-text-button', props.className,
+            className={classes('button-bfce14 std-button std-text-button', props.className,
                 `std-button-${type ?? 'primary'}`,
             )}
             type={action ?? 'button'}

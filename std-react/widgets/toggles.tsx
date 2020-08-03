@@ -1,4 +1,4 @@
-import {className} from '../react'
+import {classes} from '../react'
 import {createElement, useCallback, useEffect, useState} from 'react'
 
 import './toggles.css'
@@ -32,7 +32,7 @@ export function Toggles(props: TogglesProps) {
     return (
         <div
             {...otherProps}
-            {...className('toggles-s4178a', props.className)}
+            className={classes('toggles-s4178a', props.className)}
         >
             <label className="label-8fdc23">
                 {message}
@@ -42,7 +42,7 @@ export function Toggles(props: TogglesProps) {
                 {items.map(it => (
                     <div
                         key={it.id}
-                        {...className('toggle-c9313e', {
+                        className={classes('toggle-c9313e', {
                             selected: selectedItems.includes(it.id),
                         })}
                         data-id={it.id}

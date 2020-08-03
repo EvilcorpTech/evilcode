@@ -1,4 +1,4 @@
-import {className} from '../react'
+import {classes} from '../react'
 import {createElement, useCallback, useEffect, useRef, useState} from 'react'
 import {useMove} from '../drag'
 import {useResize} from '../drag'
@@ -126,7 +126,7 @@ export function Range(props: RangeProps) {
     return (
         <div
             {...otherProps}
-            {...className('range-3f0392', props.className, {
+            className={classes('range-3f0392', props.className, {
                 moving: centerMove.moving,
                 resizing: startResize.resizing || endResize.resizing,
             })}

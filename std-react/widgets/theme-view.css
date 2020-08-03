@@ -1,9 +1,8 @@
 .theme-t2eb5b {
     width: 100%;
-    min-height: 100%;
     display: flex;
     flex-direction: column;
-    justify-content: center;
+    justify-content: flex-start;
     align-items: center;
     padding: var(--std-gutter-m);
     background: var(--std-back1);
