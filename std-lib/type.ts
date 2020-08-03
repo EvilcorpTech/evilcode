@@ -12,6 +12,7 @@ export const Tests = {
     null: isNull,
     number: isNumber,
     object: isObject,
+    promise: isPromise,
     regexp: isRegExp,
     string: isString,
     undefined: isUndefined,
@@ -105,6 +106,14 @@ export function isObject(value: unknown): value is Record<string | number | symb
     }
     return true
 }
+
+export function isPromise(value: unknown): value is Promise<unknown> {
+    if (! value || ! (value instanceof Promise)) {
+        return false
+    }
+    return true
+}
+
 
 export function isRegExp(value: unknown): value is RegExp {
     if (! value || ! (value instanceof RegExp)) {
