@@ -1,6 +1,7 @@
 import {createFetch, Fetch, FetchRequestMethod, FetchRequestOptions, JsonType} from './fetch'
 import {error, StdError} from '@eviljs/std-lib/error'
 import {randomInt} from '@eviljs/std-lib/random'
+import {wait} from '@eviljs/std-lib/async'
 
 export class MissingMock extends StdError {}
 
@@ -112,10 +113,6 @@ export function jsonResponse(data: unknown, options?: FetchRequestOptions) {
     const response = new Response(body, opts)
 
     return response
-}
-
-export function wait(delay: number) {
-    return new Promise((resolve) => setTimeout(resolve, delay))
 }
 
 export function throwMissingMock(method: string, path: string) {

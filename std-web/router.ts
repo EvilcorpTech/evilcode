@@ -1,12 +1,13 @@
 import {isRegExp} from '@eviljs/std-lib/type'
 
-export const START = '^'
-export const END = '(?:/)?$'
-export const VALUE = '(\\w+)'
-export const PART = '(?:/(\\w+))'
-export const PART_OPT = PART + '?'
-export const ALL = '(.*)'
-export const SUB = '(/.*)?'
+export const Start = '^'
+export const End = '(?:/)?$'
+export const All = '(.*)'
+export const Arg = '([^/]+)'
+export const Value = '([0-9a-zA-Z]+)'
+export const Path = `/${Arg}`
+export const PathOpt = `(?:${Path})?`
+export const PathGlob = '(/.*)?' + End
 
 // An opening round bracket,
 // not followed by an opening or closing round bracket,
@@ -15,6 +16,8 @@ export const CapturingGroupRegexp = /\([^()]+\)/
 export const EmptiesRegexp = /[\n ]/g
 export const RepeatingSlashRegexp = /\/\/+/g
 export const TrailingSlashRegexp = /\/$/
+export const BasePathRegexp = /^\/$/
+export const EmptyRegexp = /^$/
 
 export const RegExpCache: RegExpCache = {}
 
@@ -23,35 +26,44 @@ export function createRouter(observer: RouterObserver, options?: RouterOptions):
 
     switch (type) {
         case 'hash':
-            return createHashRouter(observer)
+            return createHashRouter(observer, options)
         case 'history':
+            return createHistoryRouter(observer, options)
         case 'memory':
-            throw new Error('NotImplementedYet')
+            return createMemoryRouter(observer, options)
         break
     }
 }
 
-export function createHashRouter(observer: RouterObserver) {
+export function createHashRouter(observer: RouterObserver, options?: RouterOptions) {
+    const basePath = cleanBasePath(options?.basePath)
+
     const self = {
         start() {
-            window.addEventListener('hashchange', onHashChange)
+            window.addEventListener('hashchange', onRouteChange)
         },
         stop() {
-            window.removeEventListener('hashchange', onHashChange)
+            window.removeEventListener('hashchange', onRouteChange)
         },
-        route() {
-            return window.location.hash.substring(1)
+        getRoute() {
+            const {hash} = window.location
+            const path = hash
+                .substring(1) // Without the initial '#'.
+                .replace(basePath, '')
+
+                return path || '/'
         },
-        routeTo(path: string) {
-            window.location.hash = path
+        setRoute(path: string) {
+            window.location.hash = '#' + basePath + path
+            // history.pushState(history.state, '', '#' + basePath + path)
         },
         link(path: string) {
             return '#' + path
         },
     }
 
-    function onHashChange() {
-        const route = self.route()
+    function onRouteChange() {
+        const route = self.getRoute()
 
         observer(route)
     }
@@ -59,11 +71,85 @@ export function createHashRouter(observer: RouterObserver) {
     return self
 }
 
+export function createHistoryRouter(observer: RouterObserver, options?: RouterOptions) {
+    const basePath = cleanBasePath(options?.basePath)
+
+    const self = {
+        start() {
+            window.addEventListener('popstate', onRouteChange)
+        },
+        stop() {
+            window.removeEventListener('popstate', onRouteChange)
+        },
+        getRoute() {
+            const {pathname} = window.location
+            const path = pathname.replace(basePath, '')
+
+            return path
+        },
+        setRoute(path: string) {
+            history.pushState(history.state, '', basePath + path)
+        },
+        link(path: string) {
+            return basePath + path + window.location.search + window.location.hash
+        },
+    }
+
+    function onRouteChange() {
+        const route = self.getRoute()
+
+        observer(route)
+    }
+
+    return self
+}
+
+export function createMemoryRouter(observer: RouterObserver, options?: RouterOptions) {
+    const basePath = cleanBasePath(options?.basePath)
+    let routePath = options?.initMemory ?? '/'
+
+    const self = {
+        start() {
+        },
+        stop() {
+        },
+        getRoute() {
+            return routePath
+        },
+        setRoute(path: string) {
+            routePath = path
+        },
+        link(path: string) {
+            return basePath
+        },
+    }
+
+    return self
+}
+
+export function cleanBasePath(path?: string) {
+    return path
+        ? path.replace(BasePathRegexp, '')
+        : ''
+}
+
 /*
-* Creates a Route. Used for type checking.
+* Creates a Route. Used mostly for type checking.
+*
+* EXAMPLE
+* const route = createRoute(
+*     /^\/book/\/i,
+*     (id: string) => `/book/${id}`,
+*     (path: string) => path.split('/').slice(2),
+* )
 */
-export function createRoute<E extends Args, D>(spec: RouteSpec<E, D>): Route<E, D> {
-    const {pattern, path, params} = spec
+export function createRoute<E extends Args, D>(
+    patternStr: string | RegExp,
+    path: (...args: E) => string,
+    params: (path: string) => D,
+): Route<E, D>
+{
+    const pattern = compilePattern(patternStr)
 
     return {pattern, path, params}
 }
@@ -122,7 +208,11 @@ function computeRouteParams(patternRe: RegExp, path: string) {
     return matches ?? []
 }
 
-export function compilePattern(pattern: string) {
+export function compilePattern(pattern: string | RegExp) {
+    if (isRegExp(pattern)) {
+        return pattern
+    }
+
     return regexpFromPattern(cleanPattern(pattern))
 }
 
@@ -131,6 +221,7 @@ export function cleanPattern(pattern: string) {
         .replace(EmptiesRegexp, '')
         .replace(RepeatingSlashRegexp, '/')
         .replace(TrailingSlashRegexp, '')
+        .replace(EmptyRegexp, '/')
 }
 
 export function regexpFromPattern(pattern: string | RegExp) {
@@ -146,7 +237,7 @@ export function regexpFromPattern(pattern: string | RegExp) {
 }
 
 export function exact(pattern: string) {
-    return `${START}${pattern}${END}`
+    return `${Start}${pattern}${End}`
 }
 
 // Types ///////////////////////////////////////////////////////////////////////
@@ -154,8 +245,8 @@ export function exact(pattern: string) {
 export interface Router {
     start(): void
     stop(): void
-    route(): string
-    routeTo(path: string): void
+    getRoute(): string
+    setRoute(path: string): void
     link(path: string): string
 }
 
@@ -165,12 +256,8 @@ export interface RouterObserver {
 
 export interface RouterOptions {
     type?: 'hash' | 'history' | 'memory'
-}
-
-export interface RouteSpec<E extends Args, D> {
-    pattern: RegExp
-    path(...args: E): string
-    params(path: string): D
+    basePath?: string
+    initMemory?: string
 }
 
 export interface Route<E extends Args, D> {
