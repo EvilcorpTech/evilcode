@@ -1,5 +1,4 @@
 .std-stack-h {
-    width: 100%;
     display: flex;
     flex-direction: row;
     justify-content: center;
@@ -7,7 +6,6 @@
     flex-wrap: wrap;
 }
 .std-stack-v {
-    height: 100%;
     display: flex;
     flex-direction: column;
     justify-content: center;

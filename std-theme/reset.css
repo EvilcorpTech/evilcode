@@ -137,7 +137,8 @@ q:after {
 }
 
 [invisible] {
+    visibility: hidden !important;
     opacity: 0 !important;
-    pointer-events: none;
-    user-select: none;
+    pointer-events: none !important;
+    user-select: none !important;
 }
