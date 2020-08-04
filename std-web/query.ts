@@ -35,14 +35,11 @@ export function createQuery(fetch: Fetch) {
 }
 
 export async function query(fetch: Fetch, method: QueryRequestMethod, path: string, options?: QueryRequestOptions) {
-    const args = [
-        setupQueryArgs,
-        setupQueryRules,
-    ].reduce((args, setup) =>
-        setup(...args)
-    , [path, options] as const)
+    let requestArgs = [path, options] as const
+    requestArgs = setupQueryArgs(...requestArgs)
+    requestArgs = setupQueryRules(...requestArgs)
 
-    const response = await fetch.request(method, ...args)
+    const response = await fetch.request(method, ...requestArgs)
     const type = response.headers.get('Content-Type')?.toLowerCase()
 
     if (! response.ok) {
@@ -106,6 +103,10 @@ export function setupQueryArgs(path: string, options?: QueryRequestOptions) {
         }
     }
 
+    if (parts.length === 0) {
+        return [path, options] as const
+    }
+
     const newPath = path + sep + parts.join('&')
 
     return [newPath, options] as const
@@ -118,24 +119,13 @@ export function setupQueryRules(path: string, options?: QueryRequestOptions) {
         return [path, options] as const
     }
 
-    // We use Object.assign() as workaround to a TypeScript compiler bug:
-    // The inferred type of 'setupQueryRules' cannot be named without a reference
-    // to '../std-react/node_modules/csstype'. This is likely not portable.
-    // A type annotation is necessary.
-    const newOptions = Object.assign({}, options, {
+    const newOptions = {
+        ...options,
         headers: {
             ...options?.headers,
             [QueryRulesHeader]: JSON.stringify(rules),
         },
-    })
-    // // Original code.
-    // const newOptions = {
-    //     ...options,
-    //     headers: {
-    //         ...options?.headers,
-    //         [QueryRulesHeader]: JSON.stringify(rules),
-    //     },
-    // }
+    }
 
     // const sep = path.includes('?')
     //     ? '&'
