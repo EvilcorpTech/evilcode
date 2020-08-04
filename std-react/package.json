@@ -1,6 +1,6 @@
 {
     "name": "@eviljs/std-react",
-    "version": "0.1.23",
+    "version": "0.1.24",
     "dependencies": {
         "@eviljs/std-lib": "^0.1",
         "@eviljs/std-theme": "^0.1",
@@ -8,6 +8,7 @@
         "@types/prop-types": "^15",
         "@types/react": "^16",
         "@types/react-dom": "^16",
+        "csstype": "^3",
         "prop-types": "^15",
         "tslib": "^2"
     },
@@ -15,7 +16,6 @@
         "react": "^16.9"
     },
     "devDependencies": {
-        "csstype": "^3",
         "typescript": "^3.9"
     },
     "scripts": {

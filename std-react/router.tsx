@@ -1,6 +1,6 @@
 import {classes} from './react'
-import {createContext, createElement, useCallback, useContext, useEffect, useRef, useMemo, useState, Fragment} from 'react'
-import {createRouter, compilePattern, exact, regexpFromPattern, RouterOptions} from '@eviljs/std-web/router'
+import {createContext, createElement, useCallback, useContext, useEffect, useMemo, useRef, useState, Fragment} from 'react'
+import {createRouter, compilePattern, exact, regexpFromPattern, RouterOptions, RouterParams, RouterRouteParams} from '@eviljs/std-web/router'
 import {isFunction, isPromise} from '@eviljs/std-lib/type'
 
 export {exact, All, Arg, End, Value, Path, PathOpt, PathGlob, Start} from '@eviljs/std-web/router'
@@ -68,16 +68,16 @@ export function useRootRouter(options?: RouterOptions) {
     const [route, setRoute] = useState(() => globalRouter.getRoute())
 
     const testRoute = useCallback((pattern: RegExp) => {
-        return pattern.test(route)
-    }, [route])
+        return pattern.test(route.path)
+    }, [route.path])
 
     const matchRoute = useCallback((pattern: RegExp) => {
-        return route.match(pattern)
-    }, [route])
+        return route.path.match(pattern)
+    }, [route.path])
 
-    const routeTo = useCallback((path: string) => {
-        setRoute(path)
-        globalRouter.setRoute(path)
+    const routeTo = useCallback((path: string, params?: RouterParams) => {
+        globalRouter.setRoute(path, params)
+        setRoute(globalRouter.getRoute())
     }, [globalRouter])
 
     useEffect(() => {
@@ -92,12 +92,14 @@ export function useRootRouter(options?: RouterOptions) {
 
     const router = useMemo(() => {
         const {link} = globalRouter
+        const routePath = route.path
+        const routeParams = route.params
 
-        return {link, route, testRoute, matchRoute, routeTo}
-    }, [globalRouter, route, testRoute, matchRoute])
+        return {routePath, routeParams, routeTo, testRoute, matchRoute, link}
+    }, [globalRouter, route.path, route.params, testRoute, matchRoute])
 
-    function onRouteChange(nextRoute: string) {
-        setRoute(nextRoute)
+    function onRouteChange(path: string, params: RouterRouteParams) {
+        setRoute({path, params})
     }
 
     return router
@@ -108,7 +110,7 @@ export function useRouter() {
 }
 
 export function useRouterTransition() {
-    const {route: toRoute} = useRouter()
+    const {routePath: toRoute} = useRouter()
     const prevRouteRef = useRef(toRoute)
 
     const transition = useMemo(() => {
@@ -211,7 +213,7 @@ export function WhenRoute(props: WhenRouteProps) {
 * </Route>
 */
 export function Route(props: RouteProps) {
-    const {children, elRef, to, if: guard, activeWhenExact, activeClass, ...otherProps} = props
+    const {children, elRef, to, params, if: guard, activeWhenExact, activeClass, ...otherProps} = props
     const {link, routeTo, testRoute} = useRouter()
 
     const onChange = useCallback((event: React.MouseEvent) => {
@@ -223,7 +225,7 @@ export function Route(props: RouteProps) {
                 return
             }
 
-            routeTo(to)
+            routeTo(to, params)
         }
 
         const guardResponse = isFunction(guard)
@@ -254,7 +256,7 @@ export function Route(props: RouteProps) {
             className={classes(props.className, {
                 [activeClass ?? DefaultRouteActiveClass]: isActive,
             })}
-            href={link(to)}
+            href={link(to, params)}
             onClick={onChange}
         >
             {children}
@@ -263,10 +265,12 @@ export function Route(props: RouteProps) {
 }
 
 export function Redirect(props: RedirectProps) {
-    const {to} = props
+    const {to, params} = props
     const {routeTo} = useRouter()
 
-    routeTo(to)
+    useEffect(() =>
+        routeTo(to, params)
+    )
 
     return null
 }
@@ -297,11 +301,12 @@ export interface RouterProviderProps {
 }
 
 export interface Router {
-    route: string
-    link(path: string): string
-    routeTo(path: string): void
+    routePath: string
+    routeParams: RouterRouteParams
+    routeTo(path: string, params?: RouterParams): void
     testRoute(pattern: RegExp): boolean
     matchRoute(pattern: RegExp): RegExpMatchArray | null
+    link(path: string, params?: RouterParams): string
 }
 
 export interface SwitchRouteProps {
@@ -322,6 +327,7 @@ export interface RouteProps {
     children: React.ReactNode
     elRef?: React.Ref<HTMLAnchorElement>
     to: string
+    params?: RouterParams
     if?(): boolean | Promise<boolean>
     activeWhenExact?: boolean
     activeClass?: string
@@ -330,6 +336,7 @@ export interface RouteProps {
 
 export interface RedirectProps {
     to: string
+    params?: RouterParams
 }
 
 export type RouteMatchChildren =
