@@ -51,7 +51,8 @@ export function flattenQueryRules(parent: string | number | null | undefined, ru
 
 // Types ///////////////////////////////////////////////////////////////////////
 
-export type QueryArgs = Record<string | number, QueryRules>
+export interface QueryArgs extends Record<string | number, QueryRules> {
+}
 
 export type QueryRules =
     | undefined
@@ -59,8 +60,5 @@ export type QueryRules =
     | boolean
     | number
     | string
-    | {
-        [key: string]: QueryRules
-        [key: number]: QueryRules
-    }
+    | QueryArgs
     | Array<QueryRules>
