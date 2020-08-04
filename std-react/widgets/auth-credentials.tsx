@@ -1,7 +1,7 @@
 import {Button} from './button'
 import {classes} from '../react'
 import {createElement} from 'react'
-import {DotsSpinner as Spinner} from './dots-spinner'
+import {DotsSpinner as Spinner} from './spinner'
 import {Input} from './input'
 import {useAuth} from '../auth'
 import {useCallback, useMemo, useState} from 'react'

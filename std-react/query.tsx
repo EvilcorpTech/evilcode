@@ -1,4 +1,4 @@
-import {createContext, createElement, useContext, useEffect, useRef, useState} from 'react'
+import {createContext, createElement, useContext, useRef, useState} from 'react'
 import {Query} from '@eviljs/std-web/query'
 import {useMountedRef} from './react'
 
