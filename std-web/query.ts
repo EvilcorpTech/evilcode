@@ -1,7 +1,5 @@
+import {encodeParams, QueryRulesHeader, QueryParams, QueryRules} from '@eviljs/std-lib/query'
 import {Fetch, FetchRequestMethod, FetchRequestOptions, JsonType} from './fetch'
-import {kindOf} from '@eviljs/std-lib/type'
-import {QueryRulesHeader, QueryArgs, QueryRules} from '@eviljs/std-lib/query'
-import {throwInvalidArgument} from '@eviljs/std-lib/error'
 import {throwInvalidResponse} from './error'
 
 export function createQuery(fetch: Fetch) {
@@ -36,7 +34,7 @@ export function createQuery(fetch: Fetch) {
 
 export async function query(fetch: Fetch, method: QueryRequestMethod, path: string, options?: QueryRequestOptions) {
     let requestArgs = [path, options] as const
-    requestArgs = setupQueryArgs(...requestArgs)
+    requestArgs = setupQueryParams(...requestArgs)
     requestArgs = setupQueryRules(...requestArgs)
 
     const response = await fetch.request(method, ...requestArgs)
@@ -59,57 +57,19 @@ export async function query(fetch: Fetch, method: QueryRequestMethod, path: stri
     )
 }
 
-export function setupQueryArgs(path: string, options?: QueryRequestOptions) {
-    const args = options?.args
+export function setupQueryParams(path: string, options?: QueryRequestOptions) {
+    const paramsString = encodeParams(options?.params)
 
-    if (! args) {
+    if (! paramsString) {
         return [path, options] as const
     }
 
     const sep = path.includes('?')
         ? '&'
         : '?'
-    const parts = []
+    const pathWithParams = path + sep + paramsString
 
-    for (const key in args) {
-        const value = args[key]
-        const valueType = kindOf(value,
-            'undefined', 'null', 'boolean', 'number', 'string', 'array', 'object',
-        )
-        const keyPart = encodeURIComponent(key)
-
-        switch (valueType) {
-            case 'undefined':
-                parts.push(keyPart)
-                break
-            case 'null':
-            case 'boolean':
-            case 'number':
-                parts.push(`${keyPart}=${value}`)
-                break
-            case 'string':
-                parts.push(`${keyPart}=${encodeURIComponent(value as string)}`)
-                break
-            case 'array':
-            case 'object':
-                parts.push(`${keyPart}=${encodeURIComponent(JSON.stringify(value))}`)
-                break
-            case void undefined:
-            default:
-                return throwInvalidArgument(
-                    '@eviljs/std-web/query.setupQueryArgs(path, ~~options~~):\n'
-                    + `options.args[${key}] is of an invalid type: "${value}".`
-                )
-        }
-    }
-
-    if (parts.length === 0) {
-        return [path, options] as const
-    }
-
-    const newPath = path + sep + parts.join('&')
-
-    return [newPath, options] as const
+    return [pathWithParams, options] as const
 }
 
 export function setupQueryRules(path: string, options?: QueryRequestOptions) {
@@ -149,7 +109,7 @@ export interface Query {
 }
 
 export interface QueryRequestOptions extends FetchRequestOptions {
-    args?: QueryArgs
+    params?: QueryParams
     rules?: QueryRules
 }
 

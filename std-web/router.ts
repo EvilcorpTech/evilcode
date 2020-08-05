@@ -1,5 +1,5 @@
-import {isArray, isObject, isRegExp, isString} from '@eviljs/std-lib/type'
-import {throwInvalidArgument} from '@eviljs/std-lib/error'
+import {encodeParams, defaultEncodeParamValue} from '@eviljs/std-lib/query'
+import {isRegExp, isString} from '@eviljs/std-lib/type'
 
 export const Start = '^'
 export const End = '(?:/)?$'
@@ -129,7 +129,7 @@ export function createMemoryRouter(observer: RouterObserver, options?: RouterOpt
         },
         setRoute(path: string, params?: RouterParams) {
             routePath = path
-            routeSearch = serializeRouteParamsToString(params)
+            routeSearch = encodeParams(params)
         },
         link(path: string, params?: RouterParams) {
             return serializeRouteToString(path, params)
@@ -141,37 +141,11 @@ export function createMemoryRouter(observer: RouterObserver, options?: RouterOpt
 
 export function serializeRouteToString(path: string, params?: RouterParams) {
     const serializedParams = params
-        ? '?' + serializeRouteParamsToString(params)
+        ? '?' + encodeParams(params, {encodeValue: defaultRouteEncodeParamValue})
         : ''
     const serializedRoute = path + serializedParams
 
     return serializedRoute
-}
-
-export function serializeRouteParamsToString(params?: RouterParams): string {
-    if (! params) {
-        return ''
-    }
-    if (isString(params)) {
-        return params
-    }
-    if (isObject(params)) {
-        const parts = Object
-            .keys(params)
-            .map(it => `${it}=${params[it]}`)
-
-        return serializeRouteParamsToString(parts)
-    }
-    if (isArray(params)) {
-        return params.map(serializeRouteParamsToString).join('&')
-    }
-
-    const types = 'string | Object<string, string | number> | Array<string | Object<string, string | number>>'
-
-    return throwInvalidArgument(
-        '@eviljs/std-web/router.serializeRouteParamsToString(~~params~~):\n'
-        + `params must be a ${types}, given "${params}".`
-    )
 }
 
 export function deserializeRouteParamsFromString(paramsString: string) {
@@ -184,14 +158,33 @@ export function deserializeRouteParamsFromString(paramsString: string) {
     const parts = paramsString.split('&')
 
     for (const part of parts) {
-        const [key, value] = part.split('=')
+        const [encodedKey, encodedValue] = part.split('=')
+        // We need to decode because the
+        // The key can be any string and the value can be an Array or an Object
+        // serialized as JSON and encoded as URI component.
+        // We need to decode them, and the developer will take care of parsing
+        // the JSON of the value in that case.
+        const key = decodeURIComponent(encodedKey)
+        const value = encodedValue
+            ? decodeURIComponent(encodedValue)
+            // An undefined value is casted to null to indicate its presence but without a value.
+            : null
 
-        params[key] = value ?? null
-        // An undefined value is casted to null, to indicate its presence
-        // but without a value.
+        params[key] = value
     }
 
     return params
+}
+
+export function defaultRouteEncodeParamValue(value: unknown) {
+    if (isString(value)) {
+        // We don't encode params values of type string, so the Browser url bar shows
+        // `#?redirect=/some/path`
+        // instead of
+        // `#?redirect=%2Fsome%2Fpath`.
+        return value
+    }
+    return defaultEncodeParamValue(value)
 }
 
 export function cleanBasePath(path?: string) {

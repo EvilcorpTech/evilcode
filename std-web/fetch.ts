@@ -1,5 +1,5 @@
-import {isObject, ValueOf} from '@eviljs/std-lib/type'
-import {throwInvalidArgument} from '@eviljs/std-lib/error'
+import {assertObjectOptional} from '@eviljs/std-lib/assert'
+import {ValueOf} from '@eviljs/std-lib/type'
 
 export const FetchRequestMethod = {
     Get: 'get',
@@ -22,7 +22,7 @@ export function createFetch(options?: FetchOptions) {
             const url = path[0] === '/'
                 ? `${self.baseUrl}${path}`
                 : path
-            const opts = mergeOptions(options || {}, {method})
+            const opts = mergeOptions(options ?? {}, {method})
 
             return fetch(url, opts)
         },
@@ -43,38 +43,29 @@ export function createFetch(options?: FetchOptions) {
     return self
 }
 
-export function mergeOptions(...options: Array<FetchRequestOptions>) {
-    const mergedOptions = {} as Record<string, any>
+export function mergeOptions(...optionsList: Array<FetchRequestOptions>) {
+    const options = {} as Record<string, any>
 
-    const simpleProps = [
-        'body', 'cache', 'credentials', 'integrity', 'keepalive', 'method',
-        'mode', 'redirect', 'referrer', 'referrerPolicy', 'signal', 'window',
-    ] as const
+    for (const optionsSource of optionsList) {
+        assertObjectOptional(optionsSource.headers, 'options.headers')
 
-    for (const opts of options) {
-        for (const simpleProp of simpleProps) {
-            if (simpleProp in opts) {
-                const simpleValue = opts[simpleProp]
-                mergedOptions[simpleProp] = simpleValue
-            }
-        }
+        for (const prop in optionsSource) {
+            switch (prop) {
+                case 'headers':
+                    options.headers = {
+                        ...options.headers,
+                        ...optionsSource.headers,
+                    }
+                break
 
-        if (opts.headers) {
-            if (! isObject(opts.headers)) {
-                return throwInvalidArgument(
-                    '@eviljs/std-web/fetch.mergeOptions(~~options~~):\n'
-                    + `options[].headers must be an Object, given "${opts.headers}".`
-                )
-            }
-
-            mergedOptions.headers = {
-                ...mergedOptions.headers,
-                ...opts.headers,
+                default:
+                    options[prop] = optionsSource[prop as keyof typeof optionsSource]
+                break
             }
         }
     }
 
-    return mergedOptions as FetchRequestOptions
+    return options as FetchRequestOptions
 }
 
 export function asJson(body: unknown) {
