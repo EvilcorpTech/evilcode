@@ -46,6 +46,9 @@ init() {(
                 if test ! -e "$dep"; then
                         continue
                 fi
+                if test "${SKIP_LINKING:-no}" != no ; then
+                        continue
+                fi
                 dep_name="$(basename "$dep")"
                 echo "Linking $dep_name"
                 rm -rf "node_modules/@eviljs/$dep_name"

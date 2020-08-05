@@ -1,18 +1,24 @@
-import { Fetch, FetchRequestOptions } from 'std-web/fetch'
-import { mockFetch as mockStdFetch, jsonResponse } from 'std-web/fetch-mock'
-import { times, randomInt } from 'std-lib/random'
+import {Fetch, FetchRequestOptions} from '@eviljs/std-web/fetch'
+import {mockFetchDelayed, jsonResponse} from '@eviljs/std-web/fetch-mock'
+import {randomInt, randomItem} from '@eviljs/std-lib/random'
+// import {indexBy, indexById, times} from '@eviljs/std-lib/fn'
 
 export function mockFetch(fetch: Fetch) {
-    return mockStdFetch(fetch, FetchMocks)
+    return mockFetchDelayed(fetch, FetchMocks, {minDelay: 500, maxDelay: 1000})
 }
 
 export const FetchMocks = {
     'get': [
         ['^/auth$', (options?: FetchRequestOptions) =>
-            new Response(null, {status: 204})
+            new Response(null, {status: 204}) // 204 | 401
         ] as const,
-        ['^/data$', (options?: FetchRequestOptions) =>
-            jsonResponse(createData())
+        ['^/account/\\w+$', (options?: FetchRequestOptions) =>
+            jsonResponse({
+                id: '123',
+                firstName: 'Peter',
+                lastName: 'Pan',
+                avatar: 'https://www.tekoway.com/wp-content/uploads/2018/12/John-Doe.jpg',
+            })
         ] as const,
     ],
     'post': [
@@ -26,27 +32,12 @@ export const FetchMocks = {
     ],
 }
 
-export function createData() {
-    return {
-        items: times(10).map(idx => ({
-            id: `id-${idx+1}`,
-            name: `${idx+1}`,
-            stat: randomInt(100, 1000),
-        })).reduce(indexById, {}),
-    }
-}
-
-export function indexBy(by: string, index: Dict, item: Dict) {
-    // From Array to Object, indexed by a field.
-    index[item[by]] = item
-
-    return index
-}
-
-export function indexById(index: Dict, item: Dict) {
-    return indexBy('id', index, item)
-}
-
-// Types ///////////////////////////////////////////////////////////////////////
-
-type Dict = Record<string, any>
+// export function createExampleData(): ExampleDataResponse {
+//     return {
+//         data: times(200).map(idx => ({
+//             id: `id-${idx+1}`,
+//             name: `${idx+1}`,
+//             value: randomInt(100, 1000),
+//         })),
+//     }
+// }

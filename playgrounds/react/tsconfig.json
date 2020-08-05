@@ -1,7 +1,8 @@
 {
-    "compileOnSave": true,
-    "files": ["./src/index.d.ts"],
+    // "files": ["./src/lib/types/assets.d.ts"],
     "include": ["./src/**/*.ts", "./src/**/*.tsx"],
+    // "exclude": ["./src/**/*.d.ts"],
+    "compileOnSave": true,
     "compilerOptions": {
         "allowJs": true,
         "allowSyntheticDefaultImports": true,
@@ -13,7 +14,6 @@
         "esModuleInterop": true,
         "forceConsistentCasingInFileNames": true,
         "importHelpers": true,
-        "incremental": true,
         "isolatedModules": true,
         "jsx": "react",
         "jsxFactory": "createElement",
@@ -31,9 +31,6 @@
         "noUnusedLocals": false,
         "noUnusedParameters": false,
         "outDir": "./build",
-        "paths": {
-            "std*": ["../node_modules/@eviljs/std*"],
-        },
         "resolveJsonModule": true,
         "rootDir": ".",
         "rootDirs": ["./src"],
@@ -43,10 +40,8 @@
         "strictNullChecks": true,
         "strictPropertyInitialization": true,
         "target": "es2018",
-        "tsBuildInfoFile": ".tsbuildinfo",
         "types": [
             "@types/prop-types",
-            "@types/react-transition-group",
             "@types/react",
             "csstype",
         ],

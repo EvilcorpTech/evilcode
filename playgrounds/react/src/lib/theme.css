@@ -1,14 +1,17 @@
-@import '~std-theme/scheme-light.css';
-@import '~std-theme/scheme-dark.css';
-@import '~std-theme/font-roboto.css';
+@import '~@eviljs/std-theme/scheme-dark.css';
+@import '~@eviljs/std-theme/scheme-light.css';
+@import '~@eviljs/std-theme/font-roboto.css';
+/* @import './theme/custom.css'; */
 
-/*
-:root {
-    --std-primary-h: 231;
-    --std-primary-s: 95%;
-    --std-primary-l: 55%;
+:root,
+.std-theme {
+    --std-primary-h: 250;
+    --std-primary-s: 55%;
+    --std-primary-l: 50%;
+    --std-secondary-h: 0;
+    --std-secondary-s: 55%;
+    --std-secondary-l: 50%;
 }
-*/
 
 #App {
     width: 100%;

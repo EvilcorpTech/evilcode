@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html class="no-js">
+    <!-- no-js will be removed by JavaScript, if enabled by the browser. -->
+    <head>
+        <!-- We use the UTF-8 encoding for Unicode characters. -->
+        <meta http-equiv="Content-Encoding" content="utf-8"/>
+        <meta http-equiv="Content-Type" charset="utf-8" content="text/html; charset=utf-8"/>
+
+        <!-- On mobile devices, it does not initially auto scale the viewport. -->
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+
+        <title>{title}</title>
+        <meta name="description" content="{description}"/>
+        <meta name="keywords" content="{words}"/>
+        <meta name="author" content="Me <https://me.com>"/>
+
+        <link rel="icon" type="image/png" href="<%= webpackConfig.output.publicPath %>./favicon.png"/>
+        <link rel="shortcut icon" type="image/png" sizes="16x16" href="<%= webpackConfig.output.publicPath %>./favicon-16x16.png"/>
+        <link rel="shortcut icon" type="image/png" sizes="32x32" href="<%= webpackConfig.output.publicPath %>./favicon-32x32.png"/>
+        <link rel="shortcut icon" type="image/png" sizes="512x512" href="<%= webpackConfig.output.publicPath %>./favicon-512x512.png"/>
+        <link rel="shortcut icon" type="image/svg+xml" sizes="any" href="<%= webpackConfig.output.publicPath %>./favicon.svg"/>
+    </head>
+    <body>
+        <div id="App"></div>
+    </body>
+</html>

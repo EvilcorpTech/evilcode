@@ -1,13 +1,37 @@
-import * as actions from './store-actions'
+import {isFunction} from '@eviljs/std-lib/type'
+import {useStore as useStdStore, Store, StoreActions} from '@eviljs/std-react/store'
 
-export const Actions = actions
-export const StoreSpec = {actions, createState}
+export const Actions = {set}
+export const StoreSpec = {actions: Actions, createState}
 
-export function createState() {
+export function useStore() {
+    return useStdStore() as Store<State, StoreActions<typeof Actions>>
+}
+
+export function createState(): State {
     return {
+        account: null,
     }
 }
 
+export function set(state: State, value: Partial<State> | React.SetStateAction<State>) {
+    return {
+        ...state, // Old state.
+        ...isFunction(value)
+            ? value(state) // New computed state.
+            : value // New provided state.
+        ,
+    }
+}
+
+
 // Types ///////////////////////////////////////////////////////////////////////
 
-export type State = ReturnType<typeof createState>
+export interface State {
+    account: null | {
+        id: string
+        firstName: string
+        lastName: string
+        avatar: string
+    }
+}

@@ -1,1 +1,1 @@
-export * from './queries/data'
+export * from './queries/account'
