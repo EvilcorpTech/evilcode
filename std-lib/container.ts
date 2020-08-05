@@ -26,9 +26,6 @@ export function createContainer<F extends ContainerFactories>(spec?: ContainerSp
         register(...args) {
             return registerService(self, ...args)
         },
-        get Container() {
-            return self
-        },
     }
 
     if (spec?.services) {
@@ -143,7 +140,6 @@ export type Container<F extends ContainerFactories = ContainerFactories> = {
     [ContainerInstances]: ContainerServicesOf<F>
     require: <T = unknown>(id: ServiceId) => T
     register: (id: ServiceId, service: ServiceFactory) => Container<F>
-    Container: Container<F>
 } & ContainerServicesOf<F>
 
 export type ContainerFactories = Record<ServiceId, ServiceFactory>
