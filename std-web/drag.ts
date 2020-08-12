@@ -216,7 +216,7 @@ export function moveSvg(state: DragMoveState<SVGGraphicsElement, SVGGraphicsElem
     return size
 }
 
-export function computeMove(state: DragMoveState<DragMoveElement, DragMoveElement>, event: DragMouseEvent) {
+export function computeMove(state: DragMoveState<DragMoveElement, DragMoveElement>, event: DragMouseEvent): DragMoveChange {
     const size = {
         left: state.horizontal
             ? computeMoveHorizontal(state, event)
@@ -235,11 +235,14 @@ export function computeMove(state: DragMoveState<DragMoveElement, DragMoveElemen
     if (change.top === state.initialTop || change.top === undefined) {
         delete change.top
     }
-    if (! ('left' in change) && ! ('top' in change)) {
-        return
+
+    const sizeChanged = ('left' in change) || ('top' in change)
+
+    if (sizeChanged) {
+        return change
     }
 
-    return change as DragMoveChange
+    return // Makes TypeScript happy.
 }
 
 export function computeMoveHorizontal(state: DragMoveState<DragMoveElement, DragMoveElement>, event: DragMouseEvent) {
@@ -334,7 +337,7 @@ export function resize(state: DragResizeState, event: DragMouseEvent) {
     return size
 }
 
-export function computeResize(state: DragResizeState, event: DragMouseEvent) {
+export function computeResize(state: DragResizeState, event: DragMouseEvent): DragResizeChange {
     const size = {
         width: state.horizontalDirection
             ? computeResizeHorizontal(state, event)
@@ -353,11 +356,14 @@ export function computeResize(state: DragResizeState, event: DragMouseEvent) {
     if (change.height === state.initialHeight || change.height === undefined) {
         delete change.height
     }
-    if (! ('width' in change) && ! ('height' in change)) {
-        return
+
+    const sizeChanged = ('width' in change) || ('height' in change)
+
+    if (sizeChanged) {
+        return change
     }
 
-    return change as DragResizeChange
+    return // Makes TypeScript happy.
 }
 
 export function computeResizeHorizontal(state: DragResizeState, event: DragMouseEvent) {
@@ -397,7 +403,7 @@ export interface DragMoveOptions<B extends DragMoveElement> extends DragOptions 
     readonly strategy?: Exclude<DragMoveStrategy, 'svg'>
     readonly horizontal?: boolean
     readonly vertical?: boolean
-    readonly bound?: B
+    readonly bound?: B | null
     readonly minLeft?: number
     readonly maxLeft?: number
     readonly minTop?: number
@@ -456,12 +462,12 @@ export interface DragResizeState extends DragState<DragResizeElement, DragResize
     readonly maxHeight?: number
 }
 
-export interface DragMoveChange {
+export type DragMoveChange = undefined | {
     left?: number
     top?: number
 }
 
-export interface DragResizeChange {
+export type DragResizeChange = undefined | {
     width?: number
     height?: number
 }
