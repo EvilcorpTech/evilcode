@@ -1,6 +1,6 @@
 {
     "name": "@eviljs/std-react",
-    "version": "0.1.25",
+    "version": "0.1.26",
     "dependencies": {
         "@eviljs/std-lib": "^0.1",
         "@eviljs/std-theme": "^0.1",

@@ -1,23 +1,106 @@
 import {classes} from '../react'
-import {createElement, useCallback, useEffect, useRef, useState} from 'react'
+import {createElement, useEffect, useMemo, useRef, useState} from 'react'
+import {DragMoveElement} from '@eviljs/std-web/drag'
 import {useMove} from '../drag'
 import {useResize} from '../drag'
 
 import './range.css'
 
+export function ResizeStartOptions(onProgressRef: React.RefObject<Function>, onEndRef: React.RefObject<Function>) {
+    return {
+        horizontal: 'forward',
+        style(el: HTMLElement) {
+            el.classList.add('range-resize-2f8cbe', 'start')
+        },
+        onProgress() {
+            onProgressRef.current?.()
+        },
+        onEnd() {
+            onEndRef.current?.()
+        },
+    } as const
+}
+
+export function ResizeEndOptions(onProgressRef: React.RefObject<Function>, onEndRef: React.RefObject<Function>) {
+    return {
+        horizontal: 'backward',
+        style(el: HTMLElement) {
+            el.classList.add('range-resize-2f8cbe', 'end')
+        },
+        onProgress() {
+            onProgressRef.current?.()
+        },
+        onEnd() {
+            onEndRef.current?.()
+        },
+    } as const
+}
+
+export function MoveOptions(
+    boundRef: React.RefObject<DragMoveElement>,
+    onProgressRef: React.RefObject<Function>,
+    onEndRef: React.RefObject<Function>,
+) {
+    return {
+        //// MOVE ABSOLUTE STRATEGY
+        // strategy: 'absolute',
+        //// END
+        vertical: false,
+        boundRef,
+        style(el: HTMLElement) {
+            el.classList.add('range-move-550b18')
+        },
+        onStart(startState: {element: DragMoveElement}) {
+            const el = startState.element
+
+            //// MOVE ABSOLUTE STRATEGY
+            // const left = el.offsetLeft
+            // const width = el.getBoundingClientRect().width
+            //
+            // el.style.position = 'absolute'
+            // el.style.left = left + 'px'
+            // el.style.width = width + 'px'
+            //// END
+        },
+        onProgress() {
+            onProgressRef.current?.()
+        },
+        onEnd(progressState: {}, startState: {element: DragMoveElement}) {
+            const el = startState.element
+
+            //// MOVE TRANSFORM STRATEGY
+            el.style.transform = ''
+            //// END
+
+            //// MOVE ABSOLUTE STRATEGY
+            // el.style.position = ''
+            // el.style.width = ''
+            //// END
+
+            onEndRef.current?.()
+        },
+    } as const
+}
+
 export function Range(props: RangeProps) {
-    const {boundRef, start, end, onChange, onChanged, ...otherProps} = props
+    const {start, end, onChange, onChanged, ...otherProps} = props
     const [range, setRange] = useState<RangeChange>({start: 0, end: 1})
+    const boundRef = useRef<HTMLDivElement>(null)
     const centerRef = useRef<HTMLDivElement>(null)
     const rangeStartRef = useRef<HTMLDivElement>(null)
     const rangeEndRef = useRef<HTMLDivElement>(null)
-    const centerMove = useMove(centerRef)
-    const startResize = useResize(rangeStartRef)
-    const endResize = useResize(rangeEndRef)
+    const onDragProgressRef = useRef<Function | null>(null)
+    const onDragEndRef = useRef<Function | null>(null)
+    const moveOptions = useMemo(() => MoveOptions(boundRef, onDragProgressRef, onDragEndRef), [])
+    const resizeStartOptions = useMemo(() => ResizeStartOptions(onDragProgressRef, onDragEndRef), [])
+    const resizeEndOptions = useMemo(() => ResizeEndOptions(onDragProgressRef, onDragEndRef), [])
+    const centerMove = useMove(centerRef, moveOptions)
+    const startResize = useResize(rangeStartRef, resizeStartOptions)
+    const endResize = useResize(rangeEndRef, resizeEndOptions)
 
     useEffect(() => {
         // centerMove.moving must not be a dependency otherwise the default
-        // start and end overwrites the actual range at the end of the resize.
+        // start and end overwrite the actual range at the end of the resize.
         if (centerMove.moving) {
             return
         }
@@ -32,100 +115,41 @@ export function Range(props: RangeProps) {
         setRange({start: nextStart, end: nextEnd})
     }, [start, end])
 
-    const onRangeChange = useCallback(() => {
-        if (! onChange) {
-            return
+    useEffect(() => {
+        function getRange() {
+            return computeRange(
+                boundRef.current!,
+                centerRef.current!,
+                rangeStartRef.current!,
+                rangeEndRef.current!,
+            )
         }
 
-        const range = computeRange(
-            boundRef.current!,
-            centerRef.current!,
-            rangeStartRef.current!,
-            rangeEndRef.current!,
-        )
+        function onDragProgress() {
+            if (! onChange) {
+                return
+            }
 
-        onChange(range)
-    }, [onChange])
+            const range = getRange()
 
-    const onRangeChanged = useCallback(() => {
-        const range = computeRange(
-            boundRef.current!,
-            centerRef.current!,
-            rangeStartRef.current!,
-            rangeEndRef.current!,
-        )
+            onChange(range)
+        }
 
-        setRange(range)
-        onChanged?.(range)
-    }, [onChanged])
+        function onDragEnd() {
+            const range = getRange()
 
-    useEffect(() => {
-        startResize.setResizeOptions(options => ({
-            ...options,
-            horizontal: 'forward',
-            style(el: HTMLElement) {
-                el.classList.add('range-resize-2f8cbe', 'start')
-            },
-            onChange: onRangeChange,
-            onChanged: onRangeChanged,
-        }))
-        endResize.setResizeOptions(options => ({
-            ...options,
-            horizontal: 'backward',
-            style(el: HTMLElement) {
-                el.classList.add('range-resize-2f8cbe', 'end')
-            },
-            onChange: onRangeChange,
-            onChanged: onRangeChanged,
-        }))
-    }, [onRangeChange, onRangeChanged])
+            setRange(range)
+            onChanged?.(range)
+        }
 
-    useEffect(() => {
-        centerMove.setMoveOptions(options => ({
-            ...options,
-            // strategy: 'absolute', // MOVE ABSOLUTE STRATEGY
-            vertical: false,
-            bound: boundRef.current!,
-            style(el: HTMLElement) {
-                el.classList.add('range-move-550b18')
-            },
-            onStart() {
-                const el = centerRef.current
-
-                if (! el) {
-                    return
-                }
-
-                //// MOVE ABSOLUTE STRATEGY
-                // const left = el.offsetLeft
-                // const width = el.getBoundingClientRect().width
-                //
-                // el.style.position = 'absolute'
-                // el.style.left = left + 'px'
-                // el.style.width = width + 'px'
-            },
-            onEnd() {
-                const el = centerRef.current
-
-                if (! el) {
-                    return
-                }
-
-                //// MOVE TRANSFORM STRATEGY
-                el.style.transform = ''
-
-                //// MOVE ABSOLUTE STRATEGY
-                // el.style.position = ''
-                // el.style.width = ''
-            },
-            onChange: onRangeChange,
-            onChanged: onRangeChanged,
-        }))
-    }, [onRangeChange, onRangeChanged])
+        onDragProgressRef.current = onDragProgress
+        onDragEndRef.current = onDragEnd
+    }, [onChange, onChanged])
 
     return (
         <div
             {...otherProps}
+            ref={boundRef}
             className={classes('range-3f0392', props.className, {
                 moving: centerMove.moving,
                 resizing: startResize.resizing || endResize.resizing,
@@ -189,6 +213,7 @@ export function computeRange(
     const total = boundRect.width
     const startOffset = centerRect.left - boundRect.left
     const endOffset = boundRect.right - centerRect.right
+    //// END
 
     //// MOVE ABSOLUTE STRATEGY
     // const total = bound.clientWidth
@@ -196,6 +221,7 @@ export function computeRange(
     // const endOffset = total - center.offsetWidth - center.offsetLeft
     // // const startOffset = rangeStart.clientWidth // Works with resize but not with move.
     // // const endOffset = rangeEnd.clientWidth // Works with resize but not with move.
+    //// END
 
     const start = (1 / total) * startOffset
     const end = 1 - (1 / total) * endOffset
@@ -207,7 +233,6 @@ export function computeRange(
 
 export interface RangeProps {
     className?: string
-    boundRef: React.RefObject<HTMLElement>
     start?: number | null
     end?: number | null
     onChange?(range: RangeChange): void

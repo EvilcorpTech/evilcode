@@ -20,54 +20,33 @@ import {
     DragTags,
  } from '@eviljs/std-web/drag'
 
-export {DragMoveChange, DragOptions} from '@eviljs/std-web/drag'
+export type {DragMoveChange, DragOptions} from '@eviljs/std-web/drag'
 
 // React events handlers are slow, and React.onMouseMove leads to high cpu usage
 // even when the event listener is detached, due to the Synthetic Event global
 // listener always monitoring the mouse movement.
 
 export function useDrag
-    <E extends Element, C, O extends UseDragOptions<C>, S extends DragState<C>>
-    (
-        targetRef: DragElementRef<E>,
-        hooks: UseDragHooks<C, O, S>,
-        initOptions?: ReactStateInit<O>,
-    )
+    <E extends Element, S, P, O extends UseDragOptions<S, P>>
+    (targetRef: DragElementRef<E>, options?: O)
 {
-    const [dragOptions, setDragOptions] = useState(initOptions)
     const [dragging, setDragging] = useState<boolean>(false)
-    const dragStateRef = useRef<S | null>(null)
+    const dragInfoRef = useRef<UseDragInfo<S, P>>({})
 
     const onMouseMove = useCallback((event: MouseEvent) => {
-        if (! dragStateRef.current) {
-            return
-        }
+        const dragInfo = dragInfoRef.current
 
-        const dragState = dragStateRef.current
-        const change = hooks.onProgress(dragState, event)
-
-        if (change) {
-            dragState.change = change
-            dragOptions?.onChange?.(change)
-        }
-    }, [dragOptions])
+        dragInfo.progressState = options?.onProgress?.(event, dragInfo.startState!)
+    }, [])
 
     const onMouseUp = useCallback((event: MouseEvent) => {
-        if (! dragStateRef.current) {
-            return
-        }
+        const dragInfo = dragInfoRef.current
 
-        const {change} = dragStateRef.current
-
-        if (change) {
-            dragOptions?.onChanged?.(change)
-        }
-
-        dragOptions?.onEnd?.()
-        dragStateRef.current.unmount()
-        dragStateRef.current = null
+        options?.onEnd?.(dragInfo.progressState!, dragInfo.startState!)
+        dragInfo.unmount?.()
+        dragInfo.unmount = null
         setDragging(false)
-    }, [dragOptions])
+    }, [])
 
     const onMouseLeave = useCallback((event: MouseEvent) => {
         return onMouseUp(event)
@@ -78,12 +57,10 @@ export function useDrag
             return
         }
 
-        dragOptions?.onStart?.()
-
-        const dragElement = createDragElement(dragOptions?.tag, dragOptions?.style)
+        const dragElement = createDragElement(options?.tag, options?.style)
         const dragListeners = {onMouseMove, onMouseUp, onMouseLeave}
         const unmountListeners = attachDragListeners(dragElement, dragListeners)
-        const unmountElement = mountDragElement(dragElement, dragOptions?.region)
+        const unmountElement = mountDragElement(dragElement, options?.region)
 
         function unmount() {
             // unmountListeners() // We don't need to remove the listeners.
@@ -91,104 +68,114 @@ export function useDrag
         }
 
         const draggedElement = targetRef.current
-        const dragState = hooks.onStart(event.nativeEvent, draggedElement, dragOptions)
+        const startState = options?.onStart?.(event.nativeEvent, draggedElement)
 
-        dragStateRef.current = {...dragState, unmount} as S
+        dragInfoRef.current.startState = startState
+        dragInfoRef.current.unmount = unmount
 
         setDragging(true)
-    }, [onMouseMove, onMouseUp, onMouseLeave, dragOptions])
+    }, [onMouseMove, onMouseUp, onMouseLeave, options])
 
     const withDrag = useMemo(() => {
         return {onMouseDown}
     }, [onMouseDown])
 
     useEffect(() => {
+        const dragInfo = dragInfoRef.current // Conforms to the new React 17 behavior.
+
         function unmount() {
-            dragStateRef.current?.unmount()
+            dragInfo.unmount?.()
         }
 
         return unmount
     }, [])
 
-    return {dragging, withDrag, setDragOptions}
+    return {dragging, withDrag}
 }
 
-export function useMove(targetRef: DragElementRef<DragMoveElement>, initOptions?: ReactStateInit<UseMoveOptions>) {
-    function onStart(event: MouseEvent, movedElement: DragMoveElement, options?: UseMoveOptions) {
-        return initMoveState(movedElement, event, options)
+export function useMove(targetRef: DragElementRef<DragMoveElement>, options?: UseMoveOptions) {
+    function onStart(event: MouseEvent, movedElement: DragMoveElement) {
+        const bound = options?.boundRef?.current
+        const moveOptions = {bound, ...options}
+        const startState = initMoveState(movedElement, event, moveOptions)
+
+        options?.onStart?.(startState)
+
+        return startState
     }
 
-    function onProgress(state: UseMoveState, event: MouseEvent) {
-        return move(state, event)
+    function onProgress(event: MouseEvent, startState: DragMoveState<DragMoveElement, DragMoveElement>) {
+        const progressState = move(startState, event)
+
+        options?.onProgress?.(progressState, startState)
+
+        return progressState
     }
 
-    const dragHooks = {onStart, onProgress}
-    const {dragging, setDragOptions, withDrag} = useDrag(targetRef, dragHooks, initOptions)
+    const dragOptions = {...options, onStart, onProgress}
+    const {dragging, withDrag} = useDrag(targetRef, dragOptions)
     const moving = dragging
-    const setMoveOptions = setDragOptions
     const withMove = withDrag
 
-    return {moving, withMove, setMoveOptions}
+    return {moving, withMove}
 }
 
-export function useResize(targetRef: DragElementRef<DragResizeElement>, initOptions?: ReactStateInit<UseResizeOptions>) {
-    function onStart(event: MouseEvent, resizedElement: DragResizeElement, options?: UseResizeOptions) {
-        return initResizeState(resizedElement, event, options)
+export function useResize(targetRef: DragElementRef<DragResizeElement>, options?: UseResizeOptions) {
+    function onStart(event: MouseEvent, resizedElement: DragResizeElement) {
+        const startState = initResizeState(resizedElement, event, options)
+
+        options?.onStart?.(startState)
+
+        return startState
     }
 
-    function onProgress(state: UseResizeState, event: MouseEvent) {
-        return resize(state, event)
+    function onProgress(event: MouseEvent, startState: DragResizeState) {
+        const progressState = resize(startState, event)
+
+        options?.onProgress?.(progressState, startState)
+
+        return progressState
     }
 
-    const dragHooks = {onStart, onProgress}
-    const {dragging, setDragOptions, withDrag} = useDrag(targetRef, dragHooks, initOptions)
+    const dragOptions = {...options, onStart, onProgress}
+    const {dragging, withDrag} = useDrag(targetRef, dragOptions)
     const resizing = dragging
-    const setResizeOptions = setDragOptions
     const withResize = withDrag
 
-    return {resizing, withResize, setResizeOptions}
+    return {resizing, withResize}
 }
 
 // Types ///////////////////////////////////////////////////////////////////////
 
-// Types > Drag ////////////////////////////////////////////////////////////////
-
-export type ReactStateInit<T> = T | (() => T)
 export type DragElementRef<T extends Element> = React.RefObject<T>
 
-export interface DragState<C> {
-    change?: C
-    unmount(): void
+export interface UseDragInfo<S, P> {
+    startState?: S | null
+    progressState?: P
+    unmount?: (() => void) | null
 }
 
-export interface UseDragOptions<C> extends DragOptions {
+export interface UseDragConf {
     region?: Element
     tag?: DragTags
     style?: DragStyler
-    onStart?(): void
-    onChange?(change: C): void
-    onChanged?(change: C): void
-    onEnd?(): void
 }
 
-export interface UseDragHooks<C, O extends UseDragOptions<C>, S extends DragState<C>> {
-    onStart(event: MouseEvent, el: Element, options?: O): Omit<S, keyof DragState<C>>
-    onProgress(state: S, event: MouseEvent): C
+export interface UseDragOptions<S, P> extends UseDragConf, DragOptions {
+    onStart?(event: MouseEvent, el: Element): S
+    onProgress?(event: MouseEvent, state: S): P
+    onEnd?(progressState: P, startState: S): void
 }
 
-// Types > Move ////////////////////////////////////////////////////////////////
-
-export interface UseMoveState extends DragState<DragMoveChange>, DragMoveState<DragMoveElement, DragMoveElement>
-{
+export interface UseMoveOptions extends UseDragConf, DragMoveOptions<DragMoveElement> {
+    boundRef?: React.RefObject<DragMoveElement>
+    onStart?(startState: DragMoveState<DragMoveElement, DragMoveElement>): void
+    onProgress?(progressState: DragMoveChange, startState: DragMoveState<DragMoveElement, DragMoveElement>): void
+    onEnd?(progressState: DragMoveChange, startState: DragMoveState<DragMoveElement, DragMoveElement>): void
 }
 
-export interface UseMoveOptions extends UseDragOptions<DragMoveChange>, DragMoveOptions<DragMoveElement> {
-}
-
-// Types > Resize //////////////////////////////////////////////////////////////
-
-export interface UseResizeState extends DragState<DragResizeChange>, DragResizeState {
-}
-
-export interface UseResizeOptions extends UseDragOptions<DragResizeChange>, DragResizeOptions {
+export interface UseResizeOptions extends UseDragConf, DragResizeOptions {
+    onStart?(startState: DragResizeState): void
+    onProgress?(progressState: DragResizeChange, startState: DragResizeState): void
+    onEnd?(progressState: DragResizeChange, startState: DragResizeState): void
 }

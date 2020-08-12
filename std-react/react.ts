@@ -1,6 +1,6 @@
 import {isArray, isString, isObject} from '@eviljs/std-lib/type'
 import {throwInvalidArgument} from '@eviljs/std-lib/error'
-import {useEffect, useRef} from 'react'
+import {useLayoutEffect, useRef} from 'react'
 
 export {times} from '@eviljs/std-lib/fn'
 
@@ -43,7 +43,14 @@ export function classes(...names: Array<ClassName>) {
 export function useMountedRef() {
     const mountedRef = useRef(true)
 
-    useEffect(() => {
+    // We use useLayoutEffect() instead of useEffect() because in React 17
+    // useEffect() became asynchronous (it was synchronous); which means that
+    // the useEffect() destructor is called by the React 17 scheduler in a next
+    // future (with low priority), but not right after the component has been
+    // unmounted. useLayoutEffect() destructor instead remains synchronous, and
+    // that's what we need to reflect as soon as possible the state
+    // (mounted/unmounted) inside the reference.
+    useLayoutEffect(() => {
         function unmount() {
             mountedRef.current = false
         }
