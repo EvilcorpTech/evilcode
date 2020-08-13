@@ -158,7 +158,7 @@ export function SwitchRoute(props: SwitchRouteProps) {
         }
 
         return []
-    }, [matchRoute])
+    }, [children, matchRoute])
 
     return renderRouteChildren(then, matches)
 }

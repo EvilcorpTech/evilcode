@@ -61,7 +61,7 @@ export function useI18n() {
     return useContext(I18nContext)
 }
 
-export function useI18nMsg<T>(compute: I18nMsgsComputer<T>) {
+export function useI18nMsg<T>(compute: I18nMsgsComputer<T>, deps: Array<unknown> = []) {
     const i18n = useI18n()
 
     const i18nMsg = useMemo(() => {
@@ -69,7 +69,7 @@ export function useI18nMsg<T>(compute: I18nMsgsComputer<T>) {
             ...compute(i18n),
             $i18n: i18n,
         }
-    }, [i18n, i18n.locale, i18n.fallbackLocale])
+    }, [i18n, i18n.locale, i18n.fallbackLocale, ...deps])
 
     return i18nMsg
 }
