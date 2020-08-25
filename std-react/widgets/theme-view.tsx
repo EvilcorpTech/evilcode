@@ -270,21 +270,21 @@ export function ThemeView(props: ThemeViewProps) {
 
                         <div className="std-stack-v">
                             <div>
-                                <button className="std-button std-text-button std-button-special">Special</button>
-                                <button className="std-button std-text-button std-button-primary">Primary</button>
-                                <button className="std-button std-text-button std-button-secondary">Secondary</button>
-                                <button className="std-button std-text-button std-button-tertiary">Tertiary</button>
-                                <button className="std-button std-text-button std-button-flat">Flat</button>
-                                <button className="std-button std-text-button std-button-plain">Plain</button>
+                                <button className="std-text-button std-button special">Special</button>
+                                <button className="std-text-button std-button primary">Primary</button>
+                                <button className="std-text-button std-button secondary">Secondary</button>
+                                <button className="std-text-button std-button tertiary">Tertiary</button>
+                                <button className="std-text-button std-button flat">Flat</button>
+                                <button className="std-text-button std-button plain">Plain</button>
                             </div>
                             <div className="std-space-xs"></div>
                             <div>
-                                <button className="std-button std-text-button std-button-special" disabled>Special</button>
-                                <button className="std-button std-text-button std-button-primary" disabled>Primary</button>
-                                <button className="std-button std-text-button std-button-secondary" disabled>Secondary</button>
-                                <button className="std-button std-text-button std-button-tertiary" disabled>Tertiary</button>
-                                <button className="std-button std-text-button std-button-flat" disabled>Flat</button>
-                                <button className="std-button std-text-button std-button-plain" disabled>Plain</button>
+                                <button className="std-text-button std-button special" disabled>Special</button>
+                                <button className="std-text-button std-button primary" disabled>Primary</button>
+                                <button className="std-text-button std-button secondary" disabled>Secondary</button>
+                                <button className="std-text-button std-button tertiary" disabled>Tertiary</button>
+                                <button className="std-text-button std-button flat" disabled>Flat</button>
+                                <button className="std-text-button std-button plain" disabled>Plain</button>
                             </div>
 
                             <i className="std-space-m"/>

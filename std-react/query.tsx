@@ -3,7 +3,6 @@ import {Query} from '@eviljs/std-web/query'
 import {useMountedRef} from './react'
 
 export const QueryContext = createContext<Query>(void undefined as any)
-export const QueryCancelled = Symbol('QueryCancelled')
 
 /*
 * EXAMPLE
@@ -62,32 +61,58 @@ export function QueryProvider(props: QueryProviderProps) {
 export function useQuery<A extends Array<unknown>, R>(queryRunner: QueryRunner<A, R>) {
     const [response, setResponse] = useState<R | null>(null)
     const [pending, setPending] = useState(false)
+    const [error, setError] = useState<unknown>(null)
     const mountedRef = useMountedRef()
     const taskRef = useRef<QueryTask<R> | null>(null)
     const query = useContext(QueryContext)
 
     async function fetch(...args: A) {
-        setPending(true)
+        if (taskRef.current) {
+            // We automatically cancel previous task.
+            taskRef.current.cancelled = true
+        }
 
-        const promise = queryRunner(query, ...args)
-        const task = {promise, cancelled: false}
-        taskRef.current = task
+        setPending(true)
+        // We must retain current response and error states.
+        // Whether the developer wants to clear them, he uses the reset() API
+        // before issuing a fetch() request.
+
+        taskRef.current = {
+            promise: queryRunner(query, ...args),
+            cancelled: false,
+        }
+
+        const task = taskRef.current
 
         try {
             const response = await task.promise
 
-            if (! mountedRef.current || task.cancelled) {
-                return QueryCancelled
+            if (! mountedRef.current) {
+                return
+            }
+            if (task.cancelled) {
+                return
             }
 
-            setResponse(response)
+            setPending(false) // We settle
+            setResponse(response) // ...with a response
+            setError(null) // ...without any error.
 
             return response
         }
-        finally {
-            if (mountedRef.current && ! task.cancelled) {
-                setPending(false)
+        catch (error) {
+            if (! mountedRef.current) {
+                return
             }
+            if (task.cancelled) {
+                return
+            }
+
+            setPending(false) // We settle
+            setResponse(null) // ...without a response
+            setError(error) // ...with an error.
+
+            return // Makes TypeScript happy.
         }
     }
 
@@ -101,9 +126,10 @@ export function useQuery<A extends Array<unknown>, R>(queryRunner: QueryRunner<A
 
     function reset() {
         setResponse(null)
+        setError(null)
     }
 
-    return {fetch, response, pending, reset, cancel}
+    return {fetch, response, error, pending, reset, cancel}
 }
 
 // Types ///////////////////////////////////////////////////////////////////////

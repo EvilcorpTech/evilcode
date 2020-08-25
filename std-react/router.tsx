@@ -238,7 +238,7 @@ export function Route(props: RouteProps) {
         else {
             tryRouting(guardResponse)
         }
-    }, [routeTo])
+    }, [routeTo, to, params, guard])
 
     const isActive = useMemo(() => {
         const path = activeWhenExact

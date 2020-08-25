@@ -1,26 +1,26 @@
 import {useRef, useState} from 'react'
 
-export function useMachine<S, E>(run: Machine<S, E>, init: MachineInitState<S>) {
+export function useMachine<S, E>(reduce: Machine<S, E>, init: MachineInitState<S>) {
     const [state, setState] = useState<S>(init)
 
-    function commit(event: E) {
+    function dispatch(event: E) {
         setState(prevState =>
-            run(prevState, event)
+            reduce(prevState, event)
         )
     }
 
-    return [state, commit] as const
+    return [state, dispatch] as const
 }
 
-export function useMachineRef<S, E>(run: Machine<S, E>, init: MachineInitState<S>) {
+export function useMachineRef<S, E>(reduce: Machine<S, E>, init: MachineInitState<S>) {
     const [initState] = useState(init)
     const stateRef = useRef<S>(initState)
 
-    function commit(event: E) {
-        stateRef.current = run(stateRef.current, event)
+    function dispatch(event: E) {
+        stateRef.current = reduce(stateRef.current, event)
     }
 
-    return [stateRef, commit] as const
+    return [stateRef, dispatch] as const
 }
 
 // Types ///////////////////////////////////////////////////////////////////////

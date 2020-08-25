@@ -17,7 +17,7 @@ export function Button(props: ButtonProps) {
         <button
             {...otherProps}
             className={classes('button-bfce14 std-button std-text-button', props.className,
-                `std-button-${type ?? 'primary'}`,
+                type ?? 'primary',
             )}
             type={action ?? 'button'}
             disabled={disabled}
