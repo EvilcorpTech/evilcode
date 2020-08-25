@@ -31,7 +31,7 @@
     },
     "peerDependencies": {},
     "devDependencies": {
-        "typescript": "^3.9"
+        "typescript": "^4.0"
     },
     "scripts": {
         "preversion": "../tools/build .",
