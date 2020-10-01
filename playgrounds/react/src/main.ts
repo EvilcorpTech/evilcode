@@ -1,6 +1,6 @@
 import {App} from './app/app'
 import {ContainerSpec} from './lib/container'
-import {createContainer} from '@eviljs/std-lib/container'
+import {createContainer} from '@eviljs/std-lib/container.js'
 import {createElement} from 'react'
 import {render} from 'react-dom'
 import * as Context from './lib/context'

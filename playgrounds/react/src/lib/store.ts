@@ -1,5 +1,5 @@
-import {isFunction} from '@eviljs/std-lib/type'
-import {useStore as useStdStore, Store, StoreActions} from '@eviljs/std-react/store'
+import {isFunction} from '@eviljs/std-lib/type.js'
+import {useStore as useStdStore, Store, StoreActions} from '@eviljs/std-react/store.js'
 
 export const Actions = {set}
 export const StoreSpec = {actions: Actions, createState}

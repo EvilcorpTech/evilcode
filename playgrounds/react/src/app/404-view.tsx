@@ -1,9 +1,9 @@
-import {classes} from '@eviljs/std-react/react'
+import {classes} from '@eviljs/std-react/react.js'
 import {createElement} from 'react'
 
 export function NotFoundView(props: NotFoundViewProps) {
     return (
-        <h1 className={classes('notfound-view-b62248 std-theme light', props.className)}>
+        <h1 className={classes('view-b62248 std-theme light', props.className)}>
             404
         </h1>
     )

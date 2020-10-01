@@ -1,25 +1,26 @@
-import {ALL} from '@eviljs/std-web/router'
+import {ALL} from '@eviljs/std-web/router.js'
 import {AuthBarrier} from '../lib/widgets/auth-barrier'
 import {AuthView} from './auth-view'
 import {BASE_URL, ROUTER_TYPE} from '../lib/context'
 import {BrowserRouter, HashRouter, Route, Switch} from 'react-router-dom'
 import {Container} from '../lib/container'
 import {createElement, useCallback, useMemo} from 'react'
-import {ElementOf} from '@eviljs/std-lib/type'
+import {ElementOf} from '@eviljs/std-lib/type.js'
 import {HomeRoute, ExampleRoute, ThemeRoute} from '../lib/routes'
 import {HomeView} from './home-view'
 import {NotFoundView} from './404-view'
-import {ThemeView} from '@eviljs/std-react/widgets/theme-view'
-import {useAuth} from '@eviljs/std-react/auth'
-import {useRouter, SwitchRoute} from '@eviljs/std-react/router'
-import {withAuth} from '@eviljs/std-react/auth'
-import {withContainer} from '@eviljs/std-react/container'
-import {withFetch} from '@eviljs/std-react/fetch'
-import {withI18n} from '@eviljs/std-react/i18n'
-import {withLogger} from '@eviljs/std-react/logger'
-import {withQuery} from '@eviljs/std-react/query'
-import {withRouter} from '@eviljs/std-react/router'
-import {withStore} from '@eviljs/std-react/store'
+import {PortalProvider} from '@eviljs/std-react/portal.js'
+import {ThemeView} from '@eviljs/std-react/widgets/theme-view.js'
+import {useAuth} from '@eviljs/std-react/auth.js'
+import {useRouter, SwitchRoute} from '@eviljs/std-react/router.js'
+import {withAuth} from '@eviljs/std-react/auth.js'
+import {withContainer} from '@eviljs/std-react/container.js'
+import {withFetch} from '@eviljs/std-react/fetch.js'
+import {withI18n} from '@eviljs/std-react/i18n.js'
+import {withLogger} from '@eviljs/std-react/logger.js'
+import {withQuery} from '@eviljs/std-react/query.js'
+import {withRouter} from '@eviljs/std-react/router.js'
+import {withStore} from '@eviljs/std-react/store.js'
 
 const Router = ROUTER_TYPE === 'history'
     ? BrowserRouter
@@ -76,13 +77,23 @@ export function AppMain1(props: AppMainProps) {
     }, [])
 
     return (
-        <SwitchRoute default={<NotFoundView/>}>
-        {[
-            {is: HomeRoute.pattern, then: <HomeView/>},
-            {is: ExampleRoute.pattern, then: <h1>Example</h1>},
-            {is: ThemeRoute.pattern, then: <ThemeView/>},
-        ]}
-        </SwitchRoute>
+        <PortalProvider children={Portal =>
+            <Fragment>
+                <SwitchRoute default={<NotFoundView />}>
+                    {[
+                        {is: HomeRoute.pattern, then:
+                            <AuthBarrier>
+                                <HomeView/>
+                            </AuthBarrier>
+                        },
+                        {is: ExampleRoute.pattern, then: <h1>Example</h1>},
+                        {is: ThemeRoute.pattern, then: <ThemeView />},
+                    ]}
+                </SwitchRoute>
+
+                <Portal/>
+            </Fragment>
+        }/>
     )
 }
 

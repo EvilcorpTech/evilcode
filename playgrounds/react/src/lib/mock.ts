@@ -1,7 +1,7 @@
-import {Fetch, FetchRequestOptions} from '@eviljs/std-web/fetch'
-import {mockFetchDelayed, jsonResponse} from '@eviljs/std-web/fetch-mock'
-import {randomInt, randomItem} from '@eviljs/std-lib/random'
-// import {indexBy, indexById, times} from '@eviljs/std-lib/fn'
+import {Fetch, FetchRequestOptions} from '@eviljs/std-web/fetch.js'
+import {mockFetchDelayed, jsonResponse} from '@eviljs/std-web/fetch-mock.js'
+import {randomInt, randomItem} from '@eviljs/std-lib/random.js'
+// import {indexBy, indexById, times} from '@eviljs/std-lib/fn.js'
 
 export function mockFetch(fetch: Fetch) {
     return mockFetchDelayed(fetch, FetchMocks, {minDelay: 500, maxDelay: 1000})

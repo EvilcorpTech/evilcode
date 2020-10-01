@@ -1,9 +1,9 @@
-import {AuthCredentials} from '@eviljs/std-react/widgets/auth-credentials'
-import {classes} from '@eviljs/std-react/react'
+import {AuthCredentials} from '@eviljs/std-react/widgets/auth-credentials.js'
+import {classes} from '@eviljs/std-react/react.js'
 import {createElement, useCallback} from 'react'
-import {useAuth, AuthTokenState} from '@eviljs/std-react/auth'
-import {useI18nMsg} from '@eviljs/std-react/i18n'
-import {useRouter, Redirect} from '@eviljs/std-react/router'
+import {useAuth, AuthTokenState} from '@eviljs/std-react/auth.js'
+import {useI18nMsg} from '@eviljs/std-react/i18n.js'
+import {useRouter, Redirect} from '@eviljs/std-react/router.js'
 
 export function AuthView(props: AuthViewProps) {
     const msg = useI18nMsg(({ t }) => ({
@@ -25,7 +25,7 @@ export function AuthView(props: AuthViewProps) {
     }
 
     return (
-        <div className={classes('auth-view-b62248 std-theme light', props.className)}>
+        <div className={classes('view-b62248 std-theme light', props.className)}>
             <AuthCredentials
                 className="credentials-b2bec8"
                 messages={msg}

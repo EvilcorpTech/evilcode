@@ -1,7 +1,7 @@
-import {Button} from '@eviljs/std-react/widgets/button'
-import {classes} from '@eviljs/std-react/react'
+import {Button} from '@eviljs/std-react/widgets/button.js'
+import {classes} from '@eviljs/std-react/react.js'
 import {createElement} from 'react'
-import {useI18nMsg} from '@eviljs/std-react/i18n'
+import {useI18nMsg} from '@eviljs/std-react/i18n.js'
 
 import './home-view.css'
 
@@ -15,7 +15,7 @@ export function HomeView(props: HomeViewProps) {
     return (
         <div
             {...props}
-            className={classes('home-view-0d5180 std-theme light', props.className)}
+            className={classes('view-0d5180 std-theme light', props.className)}
         >
             <h1>
                 {msg.example}

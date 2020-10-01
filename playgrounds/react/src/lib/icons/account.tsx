@@ -1,4 +1,4 @@
-import {classes} from '@eviljs/std-react/react'
+import {classes} from '@eviljs/std-react/react.js'
 import {createElement} from 'react'
 
 export function AccountIcon(props: AccountIconProps) {

@@ -1,3 +1,5 @@
+@import '~@eviljs/std-theme/all.css';
+@import '~@eviljs/std-theme/all-classes.css';
 @import '~@eviljs/std-theme/scheme-dark.css';
 @import '~@eviljs/std-theme/scheme-light.css';
 @import '~@eviljs/std-theme/font-roboto.css';

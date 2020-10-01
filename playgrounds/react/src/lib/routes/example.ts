@@ -1,6 +1,6 @@
-// import {assertObject} from '@eviljs/std-lib/assert'
-// import {isNil, ElementOf, ValueOf} from '@eviljs/std-lib/type'
-import {createRoute, Start, End, PathOpt} from '@eviljs/std-web/router'
+// import {assertObject} from '@eviljs/std-lib/assert.js'
+// import {isNil, ElementOf, ValueOf} from '@eviljs/std-lib/type.js'
+import {createRoute, Start, End, PathOpt} from '@eviljs/std-web/router.js'
 
 export function createExampleRoute(root?: string) {
     const parent = root ?? ''

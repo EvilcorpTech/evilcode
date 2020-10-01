@@ -1,13 +1,13 @@
-import {Container as StdContainer} from '@eviljs/std-lib/container'
-import {createCookie} from '@eviljs/std-web/cookie'
-import {createFetch, Fetch} from '@eviljs/std-web/fetch'
-import {createI18n} from '@eviljs/std-lib/i18n'
-import {createLogger} from '@eviljs/std-lib/logger'
-import {createQuery} from '@eviljs/std-web/query'
+import {Container as StdContainer} from '@eviljs/std-lib/container.js'
+import {createCookie} from '@eviljs/std-web/cookie.js'
+import {createFetch, Fetch} from '@eviljs/std-web/fetch.js'
+import {createI18n} from '@eviljs/std-lib/i18n.js'
+import {createLogger} from '@eviljs/std-lib/logger.js'
+import {createQuery} from '@eviljs/std-web/query.js'
 import {I18nSpec} from './i18n'
 import {mockFetch} from './mock'
 import {StoreSpec} from './store'
-import {useContainer as useStdContainer} from '@eviljs/std-react/container'
+import {useContainer as useStdContainer} from '@eviljs/std-react/container.js'
 
 export const ContainerSpec = {
     services: {

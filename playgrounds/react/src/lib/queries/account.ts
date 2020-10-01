@@ -1,5 +1,5 @@
-import {PromiseOf} from '@eviljs/std-lib/type'
-import {Query, QueryRequestOptions} from '@eviljs/std-web/query'
+import {PromiseOf} from '@eviljs/std-lib/type.js'
+import {Query, QueryRequestOptions} from '@eviljs/std-web/query.js'
 
 export async function queryAccount(query: Query, token: string, options?: QueryRequestOptions) {
     return await query.get<AccountResponse>(`/account/${token}`, options)
