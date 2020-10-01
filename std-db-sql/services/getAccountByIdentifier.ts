@@ -1,6 +1,6 @@
-import {Account, AccountFromDataOptions} from './Account'
-import {assertStringNotEmpty} from '@eviljs/std-lib/assert'
-import {Db, ReadResult} from '..'
+import {Account, AccountFromDataOptions} from './Account.js'
+import {assertStringNotEmpty} from '@eviljs/std-lib/assert.js'
+import {Db, ReadResult} from '../index.js'
 
 /*
 * EXAMPLE

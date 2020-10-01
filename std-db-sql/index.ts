@@ -1,4 +1,4 @@
-import {Logger} from '@eviljs/std-lib/logger'
+import {Logger} from '@eviljs/std-lib/logger.js'
 import MariaDB from 'mariadb'
 
 export const DbHost = 'localhost'

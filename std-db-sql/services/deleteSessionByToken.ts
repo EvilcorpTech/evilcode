@@ -1,6 +1,6 @@
-import {assertStringNotEmpty} from '@eviljs/std-lib/assert'
-import {Db, WriteResult} from '..'
-import {Session} from './Session'
+import {assertStringNotEmpty} from '@eviljs/std-lib/assert.js'
+import {Db, WriteResult} from '../index.js'
+import {Session} from './Session.js'
 
 export async function deleteSessionByToken(db: Db<DeleteSessionByTokenServices>, token: string) {
     assertStringNotEmpty(token, 'token')

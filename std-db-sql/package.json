@@ -1,6 +1,14 @@
 {
     "name": "@eviljs/std-db-sql",
-    "version": "0.1.8",
+    "version": "0.1.9",
+    "type": "module",
+    "files": [
+        "/LICENSE.txt",
+        "/*.js",
+        "/*.d.ts",
+        "/services/*.js",
+        "/services/*.d.ts"
+    ],
     "dependencies": {
         "@eviljs/std-lib": "^0.1",
         "@eviljs/std-node": "^0.1",
@@ -13,8 +21,9 @@
         "typescript": "^4.0"
     },
     "scripts": {
-        "preversion": "../tools/build .",
-        "prepack": "../tools/build ."
+        "build": "../tools/build .",
+        "preversion": "npm run build",
+        "prepack": "npm run build"
     },
     "author": "Daniele Orlando",
     "license": "BSD-2-Clause",

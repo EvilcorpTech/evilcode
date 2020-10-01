@@ -1,8 +1,8 @@
-import {Account} from './Account'
-import {createSession, CreateSessionServices} from './createSession'
-import {Db} from '..'
-import {getAccountByIdentifier} from './getAccountByIdentifier'
-import {throwInvalidRequest} from '@eviljs/std-node/error'
+import {Account} from './Account.js'
+import {createSession, CreateSessionServices} from './createSession.js'
+import {Db} from '../index.js'
+import {getAccountByIdentifier} from './getAccountByIdentifier.js'
+import {throwInvalidRequest} from '@eviljs/std-node/error.js'
 
 export async function createSessionForAccountIdentifier(
     db: Db<CreateSessionForAccountIdentifierServices>,

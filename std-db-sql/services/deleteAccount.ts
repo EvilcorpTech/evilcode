@@ -1,6 +1,6 @@
-import {Account} from './Account'
-import {assertInteger} from '@eviljs/std-lib/assert'
-import {Db, WriteResult} from '..'
+import {Account} from './Account.js'
+import {assertInteger} from '@eviljs/std-lib/assert.js'
+import {Db, WriteResult} from '../index.js'
 
 export async function deleteAccount(db: Db<DeleteAccountServices>, accountId: number) {
     assertInteger(accountId, 'accountId')

@@ -1,7 +1,7 @@
-import {Account, AccountFromDataOptions} from './Account'
-import {assertStringNotEmpty} from '@eviljs/std-lib/assert'
-import {Db, ReadResult} from '..'
-import {Session} from './Session'
+import {Account, AccountFromDataOptions} from './Account.js'
+import {assertStringNotEmpty} from '@eviljs/std-lib/assert.js'
+import {Db, ReadResult} from '../index.js'
+import {Session} from './Session.js'
 /*
 * EXAMPLE
 * // Secret Hash is omitted from the results by default...

@@ -1,8 +1,8 @@
-import {Account} from './Account'
-import {assertObject, assertStringNotEmpty} from '@eviljs/std-lib/assert'
-import {Db, ReadResult, WriteResult} from '..'
-import {hashWithSalt} from '@eviljs/std-node/crypto'
-import {throwInvalidRequest} from '@eviljs/std-node/error'
+import {Account} from './Account.js'
+import {assertObject, assertStringNotEmpty} from '@eviljs/std-lib/assert.js'
+import {Db, ReadResult, WriteResult} from '../index.js'
+import {hashWithSalt} from '@eviljs/std-node/crypto.js'
+import {throwInvalidRequest} from '@eviljs/std-node/error.js'
 
 /*
 * Creates an user account.

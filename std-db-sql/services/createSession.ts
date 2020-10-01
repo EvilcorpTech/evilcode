@@ -1,7 +1,7 @@
-import {assertInteger, assertObjectOptional} from '@eviljs/std-lib/assert'
-import {createToken} from '@eviljs/std-node/crypto'
-import {Db, WriteResult} from '..'
-import {Session} from './Session'
+import {assertInteger, assertObjectOptional} from '@eviljs/std-lib/assert.js'
+import {createToken} from '@eviljs/std-node/crypto.js'
+import {Db, WriteResult} from '../index.js'
+import {Session} from './Session.js'
 
 /*
 * Creates a session for an user account.
