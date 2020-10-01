@@ -3,26 +3,26 @@
     display: flex;
     flex-direction: column;
     padding: var(--std-gutter-xxs) var(--std-gutter-xs);
-    border: 1px solid var(--std-primary-border-color);
-    border-bottom: 3px solid var(--std-primary-border-color);
+    border: 1px solid var(--std-input-border);
+    border-bottom: 3px solid var(--std-input-border);
     border-radius: var(--std-radius-s);
-    background: var(--std-back1);
+    background: transparent;
     transition: all var(--std-duration-fast);
 }
 .input-i7eea4.placeholder {
-    background: var(--std-back3);
+    background: var(--std-input-back);
 }
 .input-i7eea4.focus {
-    border-bottom-color: var(--std-primary-tone1);
+    border-bottom-color: var(--std-text-primary1);
 }
 
 .input-i7eea4:hover .label-id45da,
 .field-cebab4 {
-    color: var(--std-primary-shade1);
+    color: var(--std-text-primary1);
 }
 
 .label-id45da {
-    color: var(--std-text3);
+    color: var(--std-input-text);
     margin-bottom: var(--std-gutter-xxs);
     transition: all var(--std-duration-normal);
     transform-origin: top left;

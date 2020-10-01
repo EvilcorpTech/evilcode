@@ -20,7 +20,7 @@ import {
     DragTags,
  } from '@eviljs/std-web/drag'
 
-export type {DragMoveChange, DragOptions} from '@eviljs/std-web/drag'
+export type {DragMoveChange, DragOptions} from '@eviljs/std-web/drag.js'
 
 // React events handlers are slow, and React.onMouseMove leads to high cpu usage
 // even when the event listener is detached, due to the Synthetic Event global

@@ -1,8 +1,8 @@
-import {isArray, isString, isObject} from '@eviljs/std-lib/type'
-import {throwInvalidArgument} from '@eviljs/std-lib/error'
+import {isArray, isString, isObject} from '@eviljs/std-lib/type.js'
+import {throwInvalidArgument} from '@eviljs/std-lib/error.js'
 import {useLayoutEffect, useRef} from 'react'
 
-export {times} from '@eviljs/std-lib/fn'
+export {times} from '@eviljs/std-lib/fn.js'
 
 export function classes(...names: Array<ClassName>) {
     const list: Array<string> = []

@@ -1,6 +1,6 @@
 import {createContext, createElement, useContext, useRef, useState} from 'react'
-import {Query} from '@eviljs/std-web/query'
-import {useMountedRef} from './react'
+import {Query} from '@eviljs/std-web/query.js'
+import {useMountedRef} from './react.js'
 
 export const QueryContext = createContext<Query>(void undefined as any)
 

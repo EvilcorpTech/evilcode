@@ -1,5 +1,5 @@
 import {createContext, createElement, useContext, useMemo} from 'react'
-import {I18n} from '@eviljs/std-lib/i18n'
+import {I18n} from '@eviljs/std-lib/i18n.js'
 
 export const I18nContext = createContext<I18n>(void undefined as any)
 

@@ -1,10 +1,11 @@
-import {classes, useMountedRef} from './react'
+import {classes, useMountedRef} from './react.js'
 import {cloneElement, useEffect, useLayoutEffect, useMemo, useRef, Children} from 'react'
-import {useMachine} from './machine'
+import {isBoolean} from '@eviljs/std-lib/type'
+import {useMachine} from './machine.js'
 
 export function Transition(props: TransitionProps) {
-    const {children, enter, exit, ...otherProps} = props
-    const childrenRef = useRef<JSX.Element | null | undefined>(children)
+    const {children, enter, exit} = props
+    const childrenRef = useRef<TransitionChildren>(children)
     const animationsRef = useRef(0)
     const mountedRef = useMountedRef()
     const [lifecycle, dispatch] = useMachine(runTransitionMachine, 'init')
@@ -25,11 +26,13 @@ export function Transition(props: TransitionProps) {
     }, [lifecycle, noEnterAnimations, noExitAnimations])
 
     useLayoutEffect(() => {
-        if (children) {
+        const isValidChildren = children && children !== true
+
+        if (isValidChildren) {
             childrenRef.current = children
         }
 
-        dispatch(children
+        dispatch(isValidChildren
             ? 'can-enter'
             : 'can-exit'
         )
@@ -79,12 +82,21 @@ export function Transition(props: TransitionProps) {
     }, [lifecycle])
 
     if (lifecycle === 'entered') {
-        return children ?? null
+        // Component entered, we must behave as a transparent proxy.
+        return isBoolean(children)
+            ? null
+            : (children ?? null)
     }
     if (lifecycle === 'exited') {
+        // Component exited, nothing must be rendered.
         return null
     }
     if (! childrenRef.current) {
+        // There is nothing to animate.
+        return null
+    }
+    if (isBoolean(childrenRef.current)) {
+        // There is nothing to animate.
         return null
     }
 
@@ -154,11 +166,12 @@ export function runTransitionMachine(state: TransitionLifecycle, event: Transiti
 // Types ///////////////////////////////////////////////////////////////////////
 
 export interface TransitionProps {
-    children?: JSX.Element | null | undefined
+    children?: TransitionChildren
     enter?: number
     exit?: number
-    [key: string]: unknown
 }
+
+export type TransitionChildren = JSX.Element | boolean | null | undefined
 
 export type TransitionLifecycle =
     | 'init'

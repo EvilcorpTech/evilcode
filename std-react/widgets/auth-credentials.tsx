@@ -1,9 +1,9 @@
-import {Button} from './button'
-import {classes} from '../react'
+import {Button} from './button.js'
+import {classes} from '../react.js'
 import {createElement} from 'react'
-import {DotsSpinner as Spinner} from './spinner'
-import {Input} from './input'
-import {useAuth} from '../auth'
+import {DotsSpinner as Spinner} from './spinner.js'
+import {Input} from './input.js'
+import {useAuth} from '../auth.js'
 import {useCallback, useMemo, useState} from 'react'
 
 export function useAuthCredentials() {
@@ -93,7 +93,7 @@ export function AuthCredentials(props: AuthCredentialsProps) {
 
             <Button
                 className={classes('button-fcb265',
-                    {busy: pending, 'std-shadow8': validCredentials},
+                    {busy: pending, 'std-shadow z8': validCredentials},
                 )}
                 type="primary"
                 action="submit"

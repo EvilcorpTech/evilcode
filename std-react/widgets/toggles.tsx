@@ -1,4 +1,4 @@
-import {classes} from '../react'
+import {classes} from '../react.js'
 import {createElement, useCallback, useEffect, useState} from 'react'
 
 import './toggles.css'
@@ -58,14 +58,12 @@ export function Toggles(props: TogglesProps) {
 
 // Types ///////////////////////////////////////////////////////////////////////
 
-export interface TogglesProps {
-    className?: string
+export interface TogglesProps extends Omit<React.HTMLAttributes<HTMLDivElement>, 'onChange'> {
     message?: string
     items: Array<{id: string, name: string}>
     selected?: Array<string>
     max?: number
     onChange?(selected: Array<string>): void
-    [key: string]: any
 }
 
 type ClickEvent<E = HTMLDivElement> = React.MouseEvent<E, MouseEvent>

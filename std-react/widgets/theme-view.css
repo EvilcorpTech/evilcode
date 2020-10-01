@@ -68,6 +68,11 @@
     box-shadow: var(--std-shadow4);
 }
 
+.text-bead07 {
+    border-bottom: var(--std-border1);
+    margin-bottom: var(--std-gutter-mini);
+}
+
 .contrast-td0891 {
     width: 160px;
     min-height: 100px;

@@ -1,5 +1,5 @@
 import {createElement} from 'react'
-import {useAuth, AuthTokenState} from '../auth'
+import {useAuth, AuthTokenState} from '../auth.js'
 
 export function AuthBarrier(props: AuthBarrierProps) {
     const {children, progress, fallback} = props

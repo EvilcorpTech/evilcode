@@ -1,4 +1,4 @@
-import {classes} from '../react'
+import {classes} from '../react.js'
 import {createElement} from 'react'
 import {useState, useRef, useLayoutEffect, useMemo} from 'react'
 
@@ -76,8 +76,7 @@ export function Input(props: InputProps) {
 
 // Types ///////////////////////////////////////////////////////////////////////
 
-export interface InputProps {
-    className?: string
+export interface InputProps extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'onChange'> {
     type?: (typeof InputType)[keyof typeof InputType]
     label?: string
     value?: string
@@ -85,5 +84,4 @@ export interface InputProps {
     autoFocus?: boolean
     tabIndex?: number
     onChange?: (event: string) => void
-    [key: string]: unknown
 }

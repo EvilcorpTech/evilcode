@@ -1,4 +1,4 @@
-import {classes} from '../react'
+import {classes} from '../react.js'
 import {createElement} from 'react'
 
 import './stat.css'

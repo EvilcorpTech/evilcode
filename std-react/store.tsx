@@ -1,5 +1,5 @@
 import {createContext, createElement, useContext, useMemo, useReducer} from 'react'
-import {error, StdError} from '@eviljs/std-lib/error'
+import {error, StdError} from '@eviljs/std-lib/error.js'
 
 export const StoreContext = createContext<Store>(void undefined as any)
 

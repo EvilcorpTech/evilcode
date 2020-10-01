@@ -1,4 +1,4 @@
-import {classes} from '../react'
+import {classes} from '../react.js'
 import {createElement} from 'react'
 
 export function ExampleIcon(props: ExampleIconProps) {
@@ -11,14 +11,17 @@ export function ExampleIcon(props: ExampleIconProps) {
             viewBox="0 0 24 24"
         >
             <path
-                className="std-icon-color1"
-                strokeWidth="0"
-                d="M12 3.19L5 6.3V12h7v8.93c3.72-1.15 6.47-4.82 7-8.94h-7v-8.8z"
+                fill="none"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M9.16667 15.8333C12.8486 15.8333 15.8333 12.8486 15.8333 9.16667C15.8333 5.48477 12.8486 2.5 9.16667 2.5C5.48477 2.5 2.5 5.48477 2.5 9.16667C2.5 12.8486 5.48477 15.8333 9.16667 15.8333Z"
             />
             <path
-                className="std-icon-color2"
-                strokeWidth="0"
-                d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm0 19.93V12H5V6.3l7-3.11v8.8h7c-.53 4.12-3.28 7.79-7 8.94z"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M17.5 17.5L13.875 13.875"
             />
         </svg>
     )
@@ -26,6 +29,5 @@ export function ExampleIcon(props: ExampleIconProps) {
 
 // Types ///////////////////////////////////////////////////////////////////////
 
-export interface ExampleIconProps {
-    className?: string
+export interface ExampleIconProps extends React.SVGAttributes<SVGSVGElement> {
 }

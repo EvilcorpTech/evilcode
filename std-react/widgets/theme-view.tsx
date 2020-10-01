@@ -1,8 +1,8 @@
-import {classes} from '../react'
+import {classes} from '../react.js'
 import {createElement, useEffect, useMemo, useState} from 'react'
-import {ExampleIcon as Icon} from '../icons/example'
-import {Input} from '../widgets/input'
-import {rgbFromHexString, rgbToHexString, hslFromRgb, rgbFromHsl} from '@eviljs/std-lib/color'
+import {ExampleIcon as Icon} from '../icons/example.js'
+import {Input} from '../widgets/input.js'
+import {rgbFromHexString, rgbToHexString, hslFromRgb, rgbFromHsl} from '@eviljs/std-lib/color.js'
 
 import './theme-view.css'
 
@@ -81,6 +81,7 @@ export function ThemeView(props: ThemeViewProps) {
                     <div className="std-stack-h" style={{alignItems: 'flex-end'}}>
                         <div className="std-stack-v" style={{alignItems: 'flex-start'}}>
                             <label className="text-bead07 std-text-display1">Display 1</label>
+                            <label className="text-bead07 std-text-display2">Display 2</label>
                             <label className="text-bead07 std-text-h1">Headline 1</label>
                             <label className="text-bead07 std-text-h2">Headline 2</label>
                             <label className="text-bead07 std-text-h3">Headline 3</label>
@@ -312,47 +313,47 @@ export function ThemeView(props: ThemeViewProps) {
 
                             <div className="std-stack-h" style={{alignItems: 'flex-end'}}>
                                 <div className="icon-e43c30">
-                                    <Icon className="std-icon std-icon-maxi"/>
+                                    <Icon className="std-icon maxi"/>
                                     <div className="std-space-s"></div>
                                     <label>Maxi</label>
                                 </div>
                                 <div className="icon-e43c30">
-                                    <Icon className="std-icon std-icon-xxl"/>
+                                    <Icon className="std-icon xxl"/>
                                     <div className="std-space-xs"></div>
                                     <label>XXL</label>
                                 </div>
                                 <div className="icon-e43c30">
-                                    <Icon className="std-icon std-icon-xl"/>
+                                    <Icon className="std-icon xl"/>
                                     <div className="std-space-xs"></div>
                                     <label>XL</label>
                                 </div>
                                 <div className="icon-e43c30">
-                                    <Icon className="std-icon std-icon-l"/>
+                                    <Icon className="std-icon l"/>
                                     <div className="std-space-xs"></div>
                                     <label>L</label>
                                 </div>
                                 <div className="icon-e43c30">
-                                    <Icon className="std-icon std-icon-m"/>
+                                    <Icon className="std-icon m"/>
                                     <div className="std-space-xs"></div>
                                     <label>M</label>
                                 </div>
                                 <div className="icon-e43c30">
-                                    <Icon className="std-icon std-icon-s"/>
+                                    <Icon className="std-icon s"/>
                                     <div className="std-space-xs"></div>
                                     <label>S</label>
                                 </div>
                                 <div className="icon-e43c30">
-                                    <Icon className="std-icon std-icon-xs"/>
+                                    <Icon className="std-icon xs"/>
                                     <div className="std-space-xs"></div>
                                     <label>XS</label>
                                 </div>
                                 <div className="icon-e43c30">
-                                    <Icon className="std-icon std-icon-xxs"/>
+                                    <Icon className="std-icon xxs"/>
                                     <div className="std-space-xs"></div>
                                     <label>XXS</label>
                                 </div>
                                 <div className="icon-e43c30">
-                                    <Icon className="std-icon std-icon-mini"/>
+                                    <Icon className="std-icon mini"/>
                                     <div className="std-space-xs"></div>
                                     <label>Mini</label>
                                 </div>
@@ -378,12 +379,12 @@ export function ThemeView(props: ThemeViewProps) {
                     <i className="std-space-m"/>
 
                     <div className="std-stack-h" style={{maxWidth: 'var(--std-viewport-m)'}}>
-                        <label className="shadow-t9a257 std-shadow-soft">Soft</label>
+                        <label className="shadow-t9a257 std-shadow soft">Soft</label>
                         {Array(12).fill(null).map((_, idx) => (
-                            <label key={idx} className={`shadow-t9a257 std-shadow${idx}`}>{idx}</label>
+                            <label key={idx} className={`shadow-t9a257 std-shadow z${idx}`}>{idx}</label>
                         ))}
                         {Array(25).fill(null).map((nil, idx) => idx).slice(12).map(idx => (
-                            <label key={idx} className={`shadow-t9a257 std-shadow std-shadow${idx}`}>{idx}</label>
+                            <label key={idx} className={`shadow-t9a257 std-shadow primary z${idx}`}>{idx}</label>
                         ))}
                     </div>
 

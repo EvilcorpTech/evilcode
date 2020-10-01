@@ -1,4 +1,4 @@
-import {classes} from '../react'
+import {classes} from '../react.js'
 import {createElement} from 'react'
 
 import './spinner.css'
@@ -31,8 +31,6 @@ export function PulseSpinner(props: SpinnerProps) {
 
 // Types ///////////////////////////////////////////////////////////////////////
 
-export interface SpinnerProps {
-    className?: string
+export interface SpinnerProps extends React.HTMLAttributes<HTMLDivElement> {
     active?: boolean
-    [key: string]: unknown
 }

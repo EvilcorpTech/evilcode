@@ -1,4 +1,4 @@
-import {classes} from '../react'
+import {classes} from '../react.js'
 import {createElement} from 'react'
 
 export const ButtonType = {
@@ -30,12 +30,10 @@ export function Button(props: ButtonProps) {
 
 // Types ///////////////////////////////////////////////////////////////////////
 
-export interface ButtonProps {
-    className?: string
+export interface ButtonProps extends Omit<React.ButtonHTMLAttributes<HTMLButtonElement>, 'type'> {
     action?: 'button' | 'submit' | 'reset'
     type?: (typeof ButtonType)[keyof typeof ButtonType]
     disabled?: boolean
     children?: React.ReactNode
     onClick?: React.MouseEventHandler<HTMLButtonElement>
-    [key: string]: unknown
 }

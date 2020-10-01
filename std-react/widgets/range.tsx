@@ -1,8 +1,8 @@
-import {classes} from '../react'
+import {classes} from '../react.js'
 import {createElement, useEffect, useMemo, useRef, useState} from 'react'
-import {DragMoveElement} from '@eviljs/std-web/drag'
-import {useMove} from '../drag'
-import {useResize} from '../drag'
+import {DragMoveElement} from '@eviljs/std-web/drag.js'
+import {useMove} from '../drag.js'
+import {useResize} from '../drag.js'
 
 import './range.css'
 

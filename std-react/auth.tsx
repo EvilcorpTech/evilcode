@@ -1,10 +1,10 @@
-import {authenticate, invalidate, validate, AuthCredentials, FetchOptions} from '@eviljs/std-web/auth'
-import {Cookie} from '@eviljs/std-web/cookie'
+import {authenticate, invalidate, validate, AuthCredentials, FetchOptions} from '@eviljs/std-web/auth.js'
+import {Cookie} from '@eviljs/std-web/cookie.js'
 import {createContext, createElement, useCallback, useContext, useEffect, useState, useMemo} from 'react'
-import {Fetch} from '@eviljs/std-web/fetch'
-import {throwInvalidResponse} from '@eviljs/std-web/error'
-import {useBusy} from './busy'
-import {ValueOf} from '@eviljs/std-lib/type'
+import {Fetch} from '@eviljs/std-web/fetch.js'
+import {throwInvalidResponse} from '@eviljs/std-web/error.js'
+import {useBusy} from './busy.js'
+import {ValueOf} from '@eviljs/std-lib/type.js'
 
 export const AuthContext = createContext<Auth>(void undefined as any)
 
