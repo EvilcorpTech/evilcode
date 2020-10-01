@@ -1,4 +1,4 @@
-import {assertFunction, assertObject} from '@eviljs/std-lib/assert'
+import {assertFunction, assertObject} from '@eviljs/std-lib/assert.js'
 import {Context, Next, Request} from 'koa'
 
 export async function authorizationMiddleware(context: Context, next: Next, options?: AuthorizationOptions) {

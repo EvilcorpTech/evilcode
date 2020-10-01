@@ -1,4 +1,4 @@
-import {assertFunction, assertObject} from '@eviljs/std-lib/assert'
+import {assertFunction, assertObject} from '@eviljs/std-lib/assert.js'
 
 export async function createAccountAndSession(
     shell: CreateAccountAndSessionShell,

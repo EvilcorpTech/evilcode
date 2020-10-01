@@ -1,6 +1,6 @@
 import {Context, Next} from 'koa'
-import {Logger} from '@eviljs/std-lib/logger'
-import {setupRouter, Routes} from './routing'
+import {Logger} from '@eviljs/std-lib/logger.js'
+import {setupRouter, Routes} from './routing.js'
 import Http from 'http'
 import Koa from 'koa'
 import KoaBodyParser from 'koa-bodyparser'

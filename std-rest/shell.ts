@@ -1,2 +1,2 @@
-export * from './shell/createAccountAndSession'
-export * from './shell/db'
+export * from './shell/createAccountAndSession.js'
+export * from './shell/db.js'

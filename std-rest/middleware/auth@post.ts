@@ -1,5 +1,5 @@
-import {assertFunction, assertObject} from '@eviljs/std-lib/assert'
-import {isObject} from '@eviljs/std-lib/type'
+import {assertFunction, assertObject} from '@eviljs/std-lib/assert.js'
+import {isObject} from '@eviljs/std-lib/type.js'
 import {Context, Next} from 'koa'
 
 export const PostAuthPath = '/auth'

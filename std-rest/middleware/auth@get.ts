@@ -1,5 +1,5 @@
-import {authorizationMiddleware} from './authorization'
-import {assertFunction, assertObject, assertStringNotEmpty} from '@eviljs/std-lib/assert'
+import {authorizationMiddleware} from './authorization.js'
+import {assertFunction, assertObject, assertStringNotEmpty} from '@eviljs/std-lib/assert.js'
 import {Context, Next} from 'koa'
 
 export const GetAuthPath = '/auth'

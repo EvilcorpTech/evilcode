@@ -1,4 +1,4 @@
-import {assertObject} from '@eviljs/std-lib/assert'
+import {assertObject} from '@eviljs/std-lib/assert.js'
 
 export function db(shell: DbShell) {
     assertObject(shell.container, 'shell.container')

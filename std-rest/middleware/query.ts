@@ -1,5 +1,5 @@
 import {Context, Next} from 'koa'
-import {QueryRulesHeader} from '@eviljs/std-lib/query'
+import {QueryRulesHeader} from '@eviljs/std-lib/query.js'
 
 export function queryMiddleware(context: Context, next: Next) {
     const {request} = context
