@@ -1,6 +1,6 @@
 {
     "name": "@eviljs/std-react",
-    "version": "0.1.29",
+    "version": "0.1.30",
     "type": "module",
     "files": [
         "/LICENSE.txt",
@@ -9,7 +9,8 @@
         "/icons/*.js",
         "/icons/*.d.ts",
         "/widgets/*.js",
-        "/widgets/*.d.ts"
+        "/widgets/*.d.ts",
+        "/widgets/*.css"
     ],
     "dependencies": {
         "@eviljs/std-lib": "^0.1",
