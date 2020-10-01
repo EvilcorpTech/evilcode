@@ -1,4 +1,4 @@
-import {bindValue} from '@eviljs/std-lib/type'
+import {bindValue} from '@eviljs/std-lib/type.js'
 import Repl from 'repl'
 
 export function ShellService(container: ShellContainer) {
