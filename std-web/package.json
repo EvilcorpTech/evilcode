@@ -1,6 +1,12 @@
 {
     "name": "@eviljs/std-web",
-    "version": "0.1.14",
+    "version": "0.1.15",
+    "type": "module",
+    "files": [
+        "/LICENSE.txt",
+        "/*.js",
+        "/*.d.ts"
+    ],
     "dependencies": {
         "@eviljs/std-lib": "^0.1",
         "tslib": "^2"
@@ -10,8 +16,9 @@
         "typescript": "^4.0"
     },
     "scripts": {
-        "preversion": "../tools/build .",
-        "prepack": "../tools/build ."
+        "build": "../tools/build .",
+        "preversion": "npm run build",
+        "prepack": "npm run build"
     },
     "author": "Daniele Orlando",
     "license": "BSD-2-Clause",

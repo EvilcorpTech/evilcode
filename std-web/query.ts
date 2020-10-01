@@ -1,6 +1,6 @@
-import {encodeParams, QueryRulesHeader, QueryParams, QueryRules} from '@eviljs/std-lib/query'
-import {Fetch, FetchRequestMethod, FetchRequestOptions, JsonType} from './fetch'
-import {throwInvalidResponse} from './error'
+import {encodeParams, QueryRulesHeader, QueryParams, QueryRules} from '@eviljs/std-lib/query.js'
+import {Fetch, FetchRequestMethod, FetchRequestOptions, JsonType} from './fetch.js'
+import {throwInvalidResponse} from './error.js'
 
 export function createQuery(fetch: Fetch) {
     const self: Query = {

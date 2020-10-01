@@ -1,7 +1,7 @@
-import {createFetch, Fetch, FetchRequestMethod, FetchRequestOptions, JsonType} from './fetch'
-import {error, StdError} from '@eviljs/std-lib/error'
-import {randomInt} from '@eviljs/std-lib/random'
-import {wait} from '@eviljs/std-lib/async'
+import {createFetch, Fetch, FetchRequestMethod, FetchRequestOptions, JsonType} from './fetch.js'
+import {error, StdError} from '@eviljs/std-lib/error.js'
+import {randomInt} from '@eviljs/std-lib/random.js'
+import {wait} from '@eviljs/std-lib/async.js'
 
 export class MissingMock extends StdError {}
 
@@ -93,12 +93,14 @@ export function mockResponse(mocks: FetchMocks, type: FetchRequestMethod, path: 
         const [re, response] = mock
         const regexp = new RegExp(re, 'i')
 
-        if (regexp.test(path)) {
-            return response(options)
+        if (! regexp.test(path)) {
+            continue
         }
+
+        return response(type, path, options)
     }
 
-    return
+    return // Makes TypeScript happy.
 }
 
 export function jsonResponse(data: unknown, options?: FetchRequestOptions) {
@@ -129,7 +131,7 @@ export type FetchMocks = {
 }
 
 export type FetchMethodMocks = Array<
-    readonly [string, (options?: FetchRequestOptions) => Response]
+    readonly [string, (type: FetchRequestMethod, path: string, options?: FetchRequestOptions) => Response]
 >
 
 export interface MockFetchDelayedOptions {

@@ -1,6 +1,6 @@
-import {asJson, Fetch, FetchRequestMethod} from './fetch'
-import {isObject} from '@eviljs/std-lib/type'
-import {throwInvalidResponse} from './error'
+import {asJson, Fetch, FetchRequestMethod} from './fetch.js'
+import {isObject} from '@eviljs/std-lib/type.js'
+import {throwInvalidResponse} from './error.js'
 
 export const DefaultUrl = '/auth'
 

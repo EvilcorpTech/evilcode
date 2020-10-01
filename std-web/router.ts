@@ -1,5 +1,5 @@
-import {encodeParams, defaultEncodeParamValue} from '@eviljs/std-lib/query'
-import {isRegExp, isString} from '@eviljs/std-lib/type'
+import {encodeParams, defaultEncodeParamValue} from '@eviljs/std-lib/query.js'
+import {isRegExp, isString} from '@eviljs/std-lib/type.js'
 
 export const Start = '^'
 export const End = '(?:/)?$'

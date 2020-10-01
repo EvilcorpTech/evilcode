@@ -1,5 +1,5 @@
-import {assertObjectOptional} from '@eviljs/std-lib/assert'
-import {ValueOf} from '@eviljs/std-lib/type'
+import {assertObjectOptional} from '@eviljs/std-lib/assert.js'
+import {ValueOf} from '@eviljs/std-lib/type.js'
 
 export const FetchRequestMethod = {
     Get: 'get',

@@ -1,4 +1,4 @@
-import {isNil} from '@eviljs/std-lib/type'
+import {isNil} from '@eviljs/std-lib/type.js'
 
 export function createDragElement(tag?: DragTags, style?: DragStyler) {
     const el = document.createElement(tag ?? 'div')
