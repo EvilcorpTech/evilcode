@@ -1,8 +1,9 @@
 :root,
 .std-theme {
-    --std-font-stack: 'std-font-primary', Futura, Roboto, sans-serif;
+    --std-font-primary: 'std-font-primary', Futura, Roboto, sans-serif;
 
-    --std-text-display1-size: 6rem;
+    --std-text-display1-size: 7rem;
+    --std-text-display2-size: 5.8rem;
     --std-text-h1-size: 4rem;
     --std-text-h2-size: 3rem;
     --std-text-h3-size: 2.4rem;
@@ -25,5 +26,5 @@
     --std-weight-heavy: 700;
     --std-weight-black: 800;
 
-    font-family: var(--std-font-stack);
+    font-family: var(--std-font-primary);
 }

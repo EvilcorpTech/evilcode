@@ -4,8 +4,8 @@
     border: 0;
     margin: 0;
     padding: 0;
-    /*
     font-family: inherit
+    /*
     font-size: 100%
     font-weight: inherit
     font-style: inherit
@@ -92,6 +92,7 @@ button {
     color: inherit;
     background: none;
     user-select: none;
+    font-family: inherit;
     /*
     border: 0;
     outline: 0;
@@ -102,6 +103,15 @@ button {
 a:hover,
 button:hover {
     cursor: pointer;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    font-weight: inherit;
 }
 
 i,

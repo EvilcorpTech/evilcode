@@ -1,6 +1,11 @@
 {
     "name": "@eviljs/std-theme",
-    "version": "0.1.12",
+    "version": "0.1.13",
+    "files": [
+        "/LICENSE.txt",
+        "/*.css",
+        "/font-roboto/*.woff"
+    ],
     "main": "index.css",
     "author": "Daniele Orlando",
     "license": "BSD-2-Clause",

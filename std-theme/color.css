@@ -8,7 +8,7 @@
     /* --std-amber-6. */
     --std-secondary-h: 45;
     --std-secondary-s: 100%;
-    --std-secondary-l: 51%;
+    --std-secondary-l: 50%;
     --std-secondary-accent:  hsl(var(--std-secondary-h), var(--std-secondary-s), var(--std-secondary-l));
 
     --std-primary-tint1: hsl(var(--std-primary-h), calc(var(--std-primary-s) * .8), calc(var(--std-primary-l) + (100% - var(--std-primary-l)) * .2));
@@ -60,10 +60,14 @@
     --std-back-light2: hsl(0, 0%, 99%);
     --std-back-light3: hsl(0, 0%, 96%);
     --std-back-light4: hsl(0, 0%, 93%);
-    --std-back-dark1: hsl(235, 7%, 22%);
-    --std-back-dark2: hsl(235, 7%, 24%);
-    --std-back-dark3: hsl(235, 7%, 28%);
-    --std-back-dark4: hsl(235, 7%, 32%);
+    --std-back-dark1: hsl(235, 12%, 26%);
+    --std-back-dark2: hsl(235, 12%, 28%);
+    --std-back-dark3: hsl(235, 12%, 32%);
+    --std-back-dark4: hsl(235, 12%, 36%);
+
+    --std-input-text: var(--std-text3);
+    --std-input-back: var(--std-back3);
+    --std-input-border: var(--std-border1-color);
 
     --std-action-color: var(--std-primary-accent);
     --std-success-color: #388e3c; /* --std-green8 */

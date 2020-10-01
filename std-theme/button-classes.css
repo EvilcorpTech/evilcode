@@ -128,9 +128,9 @@
 
 .std-button.flat {
     padding: var(--std-gutter-mini) var(--std-gutter-m);
-    border: 2px solid var(--std-primary-shade1);
+    border: 2px solid var(--std-text-primary1);
     border-radius: var(--std-radius-xl);
-    color: var(--std-primary-shade1);
+    color: var(--std-text-primary1);
     background: transparent;
 }
 .std-button.flat[disabled] {
@@ -142,8 +142,8 @@
     color: var(--std-text1-inverse);
 }
 .std-button.flat:hover {
-    background: var(--std-primary-shade1);
+    background: var(--std-text-primary1);
 }
 .std-button.flat:active {
-    background: var(--std-primary-shade3);
+    border: 2px solid var(--std-text-primary3);
 }

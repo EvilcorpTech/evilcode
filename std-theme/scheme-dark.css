@@ -1,25 +1,3 @@
-@import './animation.css';
-@import './animation-classes.css';
-@import './button.css';
-@import './color.css';
-@import './color-classes.css';
-@import './color-material.css';
-@import './gutter.css';
-@import './gutter-classes.css';
-@import './icon.css';
-@import './icon-classes.css';
-@import './layout.css';
-@import './radius.css';
-@import './radius-classes.css';
-@import './reset.css';
-@import './shadow.css';
-@import './shadow-classes.css';
-@import './text.css';
-@import './text-classes.css';
-@import './toggle.css';
-@import './viewport.css';
-@import './viewport-classes.css';
-
 .std-theme.dark {
     color: var(--std-text1);
     background: var(--std-back1);
@@ -30,7 +8,6 @@
     --std-text1-inverse: var(--std-text-dark1);
     --std-text2-inverse: var(--std-text-dark2);
     --std-text3-inverse: var(--std-text-dark3);
-
     --std-back1: var(--std-back-dark1);
     --std-back2: var(--std-back-dark2);
     --std-back3: var(--std-back-dark3);
@@ -39,4 +16,17 @@
     --std-back2-inverse: var(--std-back-light2);
     --std-back3-inverse: var(--std-back-light3);
     --std-back4-inverse: var(--std-back-light4);
+
+    --std-text-primary1: var(--std-primary-tint1);
+    --std-text-primary2: var(--std-primary-tint2);
+    --std-text-primary3: var(--std-primary-tint3);
+    --std-text-primary4: var(--std-primary-tint4);
+    --std-text-primary5: var(--std-primary-tint5);
+    --std-text-primary6: var(--std-primary-tint6);
+    --std-back-primary1: var(--std-primary-shade1);
+    --std-back-primary2: var(--std-primary-shade2);
+    --std-back-primary3: var(--std-primary-shade3);
+    --std-back-primary4: var(--std-primary-shade4);
+    --std-back-primary5: var(--std-primary-shade5);
+    --std-back-primary6: var(--std-primary-shade6);
 }

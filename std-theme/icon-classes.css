@@ -5,60 +5,47 @@
     stroke: currentColor;
 }
 
-.std-icon-color1 { color: var(--std-icon-color1); fill: currentColor; }
-.std-icon-color2 { color: var(--std-icon-color2); fill: currentColor; }
-
-.std-icon-mini {
+.std-icon.expand {
+    width: 100%;
+    height: 100%;
+}
+.std-icon.text {
+    width: 1em;
+    height: 1em;
+}
+.std-icon.mini {
     width: var(--std-icon-mini);
     height: var(--std-icon-mini);
-    min-width: var(--std-icon-mini);
-    min-height: var(--std-icon-mini);
 }
-.std-icon-xxs {
+.std-icon.xxs {
     width: var(--std-icon-xxs);
     height: var(--std-icon-xxs);
-    min-width: var(--std-icon-xxs);
-    min-height: var(--std-icon-xxs);
 }
-.std-icon-xs {
+.std-icon.xs {
     width: var(--std-icon-xs);
     height: var(--std-icon-xs);
-    min-width: var(--std-icon-xs);
-    min-height: var(--std-icon-xs);
 }
-.std-icon-s {
+.std-icon.s {
     width: var(--std-icon-s);
     height: var(--std-icon-s);
-    min-width: var(--std-icon-s);
-    min-height: var(--std-icon-s);
 }
-.std-icon-m {
+.std-icon.m {
     width: var(--std-icon-m);
     height: var(--std-icon-m);
-    min-width: var(--std-icon-m);
-    min-height: var(--std-icon-m);
 }
-.std-icon-l {
+.std-icon.l {
     width: var(--std-icon-l);
     height: var(--std-icon-l);
-    min-width: var(--std-icon-l);
-    min-height: var(--std-icon-l);
 }
-.std-icon-xl {
+.std-icon.xl {
     width: var(--std-icon-xl);
     height: var(--std-icon-xl);
-    min-width: var(--std-icon-xl);
-    min-height: var(--std-icon-xl);
 }
-.std-icon-xxl {
+.std-icon.xxl {
     width: var(--std-icon-xxl);
     height: var(--std-icon-xxl);
-    min-width: var(--std-icon-xxl);
-    min-height: var(--std-icon-xxl);
 }
-.std-icon-maxi {
+.std-icon.maxi {
     width: var(--std-icon-maxi);
     height: var(--std-icon-maxi);
-    min-width: var(--std-icon-maxi);
-    min-height: var(--std-icon-maxi);
 }
