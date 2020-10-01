@@ -1,5 +1,5 @@
-import {throwInvalidArgument} from './error'
-import {ValueOf} from './type'
+import {throwInvalidArgument} from './error.js'
+import {ValueOf} from './type.js'
 
 export const Level = {
     Debug: 1,

@@ -1,5 +1,5 @@
-import {isArray, isFunction, isObject} from './type'
-import {throwInvalidArgument} from './error'
+import {isArray, isFunction, isObject} from './type.js'
+import {throwInvalidArgument} from './error.js'
 
 export const SpacesRegexp = /\s+/g
 

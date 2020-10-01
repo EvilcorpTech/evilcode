@@ -8,7 +8,7 @@ export function randomTimes(min: number, max: number) {
     return times(randomInt(min, max))
 }
 
-export function randomItem<T>(list: Array<T>) {
+export function randomItem<T>(list: Array<T> | readonly [...Array<T>]) {
     const idx = randomInt(0, list.length - 1)
     const item = list[idx]
     return item

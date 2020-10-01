@@ -1,4 +1,4 @@
-import {assertObject} from './assert'
+import {assertObject} from './assert.js'
 
 export const Tests = {
     array: isArray,
@@ -170,3 +170,5 @@ export type PromiseOf<T extends Promise<unknown>> =
     T extends Promise<infer R>
         ? R
         : never
+
+export type UnionFrom<T extends Array<unknown>> = T[number]
