@@ -1,3 +1,7 @@
+export function clamp(min: number, value: number, max: number) {
+    return Math.min(max, Math.max(min, value))
+}
+
 export function sum(items: Array<number>, getter?: never): number;
 export function sum<I>(items: Array<I>, getter: ItemAccessor<I, number>): number;
 export function sum<I>(items: Array<number | I>, getter?: ItemAccessor<number | I, number>): number {
