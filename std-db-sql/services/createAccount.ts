@@ -30,7 +30,7 @@ export async function createAccount(db: Db<CreateAccountServices>, model: Create
     // If it exists, we throw an error.
     if (! userDoesNotExist) {
         return throwInvalidRequest(
-            'std-db-sql/createAccount.createAccount(db, ~~model~~):\n'
+            '@eviljs/std-db-sql/createAccount.createAccount(db, ~~model~~):\n'
             + 'model.identifier must not be used yet.'
         )
     }

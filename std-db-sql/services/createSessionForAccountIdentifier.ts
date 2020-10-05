@@ -17,7 +17,7 @@ export async function createSessionForAccountIdentifier(
     // If it does not exist, we throw an error.
     if (! accountModel) {
         return throwInvalidRequest(
-            'std-db-sql/createSessionForAccountIdentifier.createSessionForAccountIdentifier(db, ~~accountIdentifier~~, model):\n'
+            '@eviljs/std-db-sql/createSessionForAccountIdentifier.createSessionForAccountIdentifier(db, ~~accountIdentifier~~, model):\n'
             + `accountIdentifier does not exist, given "${accountIdentifier}".`
         )
     }
