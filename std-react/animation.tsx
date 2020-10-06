@@ -1,6 +1,7 @@
 import {classes, useMountedRef} from './react.js'
 import {createElement, useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState, cloneElement, Fragment} from 'react'
 import {isArray} from '@eviljs/std-lib/type.js'
+import {stylesApplied} from '@eviljs/std-web/animation.js'
 import {useMachine} from './machine.js'
 
 export function Transition(props: TransitionProps) {
@@ -155,7 +156,6 @@ export function Transition(props: TransitionProps) {
         const [nextTask] = queue
 
         if (! nextTask) {
-            // We have to leave at least one task set.
             return
         }
 
@@ -203,7 +203,12 @@ export function Transition(props: TransitionProps) {
         }
 
         // Task can be removed from the queue.
-        setQueue((state) => state.slice(1))
+        setQueue((state) =>
+            state.length > 0
+                // We mutate the queue only if actually needed.
+                ? state.slice(1)
+                : state
+        )
     }, [macroTask, onEntered, onExited, onEnd])
 
     function onTaskCompleted(srcMicroTask: TransitionTask) {
@@ -296,18 +301,21 @@ export function AnimatedTransition(props: AnimatedTransitionProps) {
     }, [lifecycle])
 
     useLayoutEffect(() => {
-        requestAnimationFrame(() =>
-            requestAnimationFrame(() => {
-                if (mountedRef.current) {
-                    dispatch('flushed')
-                }
+        if (lifecycle !== 'init')  {
+            return
+        }
+
+        stylesApplied().then(() => {
+            if (! mountedRef.current) {
+                return
             }
-        ))
-    }, [children])
+            dispatch({type: 'flushed'})
+        })
+    }, [children, lifecycle])
 
     const listeners = useMemo(() => {
         function onAnimated(/* event: AnimationEvent | TransitionEvent */) {
-            dispatch('event')
+            dispatch({type: 'event'})
         }
 
         const onAnimationEnd = onAnimated
@@ -325,7 +333,8 @@ export function AnimatedTransition(props: AnimatedTransitionProps) {
             break
             case 'exit':
                 if (lifecycle === 'done') {
-                    return {visibility: 'hidden'}
+                    // Using 'visibility: hidden' glitches on Firefox and Safari.
+                    return {display: 'none'}
                 }
             break
         }
@@ -346,9 +355,7 @@ export function AnimatedTransition(props: AnimatedTransitionProps) {
         },
     }
 
-    const child = cloneElement(children, childProps)
-
-    return child
+    return cloneElement(children, childProps)
 }
 
 export function useId() {
@@ -377,7 +384,7 @@ export function createTransitionMachineState(expectedEvents?: number): Transitio
 export function transitionMachine(state: TransitionMachineState, event: TransitionMachineEvent): TransitionMachineState {
     switch (state.lifecycle) {
         case 'init':
-            switch (event) {
+            switch (event.type) {
                 case 'flushed': return {
                     ...state,
                     lifecycle: 'ready',
@@ -385,7 +392,7 @@ export function transitionMachine(state: TransitionMachineState, event: Transiti
             }
         break
         case 'ready':
-            switch (event) {
+            switch (event.type) {
                 case 'event': return (() => {
                     const actualEvents = state.actualEvents + 1
 
@@ -505,5 +512,8 @@ export interface TransitionMachineState {
 }
 
 export type TransitionMachineEvent =
+    | {type: TransitionMachineEventType}
+
+export type TransitionMachineEventType =
     | 'event' // Fired when a transition/animation event is received.
     | 'flushed' // Fired when children and styles have been applied to the DOM.
