@@ -24,6 +24,18 @@ export function applyStyles(...elements: Array<HTMLElement>) {
     }
 }
 
+export function stylesApplied() {
+    const promise = new Promise((resolve, reject) => {
+        requestAnimationFrame(() =>
+            requestAnimationFrame(() => {
+                resolve()
+            }
+        ))
+    })
+
+    return promise
+}
+
 export async function play(timeline: AnimationTimeline) {
     if (isFunction(timeline)) {
         await timeline()

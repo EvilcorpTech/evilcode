@@ -36,7 +36,7 @@ export function createRouter(observer: RouterObserver, options?: RouterOptions):
     }
 }
 
-export function createHashRouter(observer: RouterObserver, options?: RouterOptions) {
+export function createHashRouter(observer: RouterObserver, options?: RouterOptions): Router {
     const self = {
         start() {
             window.addEventListener('hashchange', onRouteChange)
@@ -74,7 +74,7 @@ export function createHashRouter(observer: RouterObserver, options?: RouterOptio
     return self
 }
 
-export function createHistoryRouter(observer: RouterObserver, options?: RouterOptions) {
+export function createHistoryRouter(observer: RouterObserver, options?: RouterOptions): Router {
     const basePath = cleanBasePath(options?.basePath)
 
     const self = {
@@ -112,7 +112,7 @@ export function createHistoryRouter(observer: RouterObserver, options?: RouterOp
     return self
 }
 
-export function createMemoryRouter(observer: RouterObserver, options?: RouterOptions) {
+export function createMemoryRouter(observer: RouterObserver, options?: RouterOptions): Router {
     let routePath = options?.initMemory ?? '/'
     let routeSearch = ''
 
