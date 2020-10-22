@@ -1,10 +1,11 @@
 import {isArray, isFunction, isObject} from './type.js'
 import {throwInvalidArgument} from './error.js'
 
+export const DefaultSymbol = '@'
 export const SpacesRegexp = /\s+/g
 
 export function createI18n(spec: I18nSpec) {
-    const {locale, fallbackLocale, messages} = spec
+    const {locale, fallbackLocale, messages, symbol} = spec
 
     const self: I18n = {
         locale,
@@ -22,14 +23,13 @@ export function createI18n(spec: I18nSpec) {
         //     it: {...},
         //     ...
         // }
+        symbol: symbol ?? DefaultSymbol,
         __regexpCache__: {},
         translate(...args) {
             return translate(self, ...args)
         },
-        t(id: TemplateStringsArray, ...substitutions: Array<any>) {
-            const template = String.raw(id, ...substitutions)
-
-            return self.translate(template)
+        t(...args) {
+            return t(self, ...args)
         },
         format(...args) {
             return format(self, ...args)
@@ -71,6 +71,12 @@ export function translate(i18n: I18n, id: string, values?: MsgValues, options?: 
     return tidyText
 }
 
+export function t(i18n: I18n, id: TemplateStringsArray, ...substitutions: Array<any>) {
+    const template = String.raw(id, ...substitutions)
+
+    return i18n.translate(template)
+}
+
 /*
 * Interpolates values inside a string.
 *
@@ -104,16 +110,16 @@ export function format(i18n: I18n, template: string, values?: MsgValues) {
 
     for (const token in dict) {
         const value = dict[token]
-        const tokenRe = tokenAsRegexp(token, i18n.__regexpCache__)
+        const tokenRe = tokenAsRegexp(token, i18n.symbol, i18n.__regexpCache__)
         string = string.replace(tokenRe, String(value))
     }
 
     return string
 }
 
-export function tokenAsRegexp(token: string, cache: Record<string, RegExp>) {
+export function tokenAsRegexp(token: string, symbol: string, cache: Record<string, RegExp>) {
     if (! cache[token]) {
-        cache[token] = new RegExp('@{\\s*' + token + '\\s*}', 'g')
+        cache[token] = new RegExp(`[${symbol}]{\\s*${token}\\s*}`, 'g')
     }
 
     return cache[token]
@@ -125,6 +131,7 @@ export interface I18n {
     locale: string
     fallbackLocale: string
     messages: I18nMessages
+    symbol: string
     __regexpCache__: Record<string, RegExp>
     translate(id: string, values?: MsgValues, options?: unknown): string
     t(id: TemplateStringsArray, ...substitutions: Array<any>): string
@@ -135,6 +142,7 @@ export interface I18nSpec {
     locale: string
     fallbackLocale: string
     messages: I18nMessages
+    symbol?: string
 }
 
 export interface I18nMessages {

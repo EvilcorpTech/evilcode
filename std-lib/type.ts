@@ -157,6 +157,12 @@ export function objectWithoutUndefined<O>(object: O) {
     return obj
 }
 
+export function asArray<T>(item: T | Array<T> | [T] | readonly [T]) {
+    return isArray(item)
+        ? item
+        : [item]
+}
+
 // Types ///////////////////////////////////////////////////////////////////////
 
 export type ValueOf<T> = T[keyof T]
