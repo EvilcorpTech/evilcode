@@ -1,7 +1,11 @@
-import {createElement, createContext, memo, useContext, useEffect, useMemo, useRef, useState} from 'react'
-import {createPortal} from 'react-dom'
+import React from 'react'
+import ReactDOM from 'react-dom'
+const {createElement, createContext, memo, useContext, useEffect, useMemo, useRef, useState} = React
+const {createPortal} = ReactDOM
 
 export const PortalContext = createContext<PortalElement | null>(null)
+
+PortalContext.displayName = 'StdPortalContext'
 
 /*
 * EXAMPLE

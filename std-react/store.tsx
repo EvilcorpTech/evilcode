@@ -1,9 +1,13 @@
-import {createContext, createElement, useContext, useMemo, useReducer} from 'react'
 import {error, StdError} from '@eviljs/std-lib/error.js'
+import {ValueOf} from '@eviljs/std-lib/type.js'
+import React from 'react'
+const {createContext, useContext, useMemo, useReducer} = React
 
-export const StoreContext = createContext<Store>(void undefined as any)
+export const StoreContext = createContext<Store<unknown, StoreActions<unknown>>>(void undefined as any)
 
 export class InvalidAction extends StdError {}
+
+StoreContext.displayName = 'StdStoreContext'
 
 /*
 * EXAMPLE
@@ -13,7 +17,7 @@ export class InvalidAction extends StdError {}
 *
 * render(<main/>, document.body)
 */
-export function WithStore(Child: React.ElementType, spec: StoreSpec) {
+export function WithStore<S, A extends StoreActions<S>>(Child: React.ElementType, spec: StoreSpec<S, A>) {
     function StoreProviderProxy(props: any) {
         return withStore(<Child {...props}/>, spec)
     }
@@ -31,7 +35,7 @@ export function WithStore(Child: React.ElementType, spec: StoreSpec) {
 *     return <main/>
 * }
 */
-export function withStore(children: React.ReactNode, spec: StoreSpec) {
+export function withStore<S, A extends StoreActions<S>>(children: React.ReactNode, spec: StoreSpec<S, A>) {
     const store = useRootStore(spec)
 
     return (
@@ -54,14 +58,14 @@ export function withStore(children: React.ReactNode, spec: StoreSpec) {
 *     )
 * }
 */
-export function StoreProvider(props: StoreProviderProps) {
+export function StoreProvider<S, A extends StoreActions<S>>(props: StoreProviderProps<S, A>) {
     return withStore(props.children, props.spec)
 }
 
-export function useRootStore(spec: StoreSpec) {
+export function useRootStore<S, A extends StoreActions<S>>(spec: StoreSpec<S, A>) {
     const {createState, actions} = spec
 
-    function reduce(state: unknown, action: Action<unknown>) {
+    function reduce(state: S, action: StoreAction<unknown>) {
         const handler = actions[action.type]
 
         if (! handler) {
@@ -80,8 +84,8 @@ export function useRootStore(spec: StoreSpec) {
     return store
 }
 
-export function useStore() {
-    return useContext(StoreContext)
+export function useStore<S, A extends StoreActions<S>>() {
+    return useContext(StoreContext) as Store<S, A>
 }
 
 export function throwInvalidAction(action: string) {
@@ -93,34 +97,33 @@ export function throwInvalidAction(action: string) {
 
 // Types ///////////////////////////////////////////////////////////////////////
 
-export interface StoreProviderProps<S = any, A extends Actions<S> = Actions<S>> {
+export interface StoreProviderProps<S, A extends StoreActions<S>> {
     children: React.ReactNode
     spec: StoreSpec<S, A>
 }
 
-export interface Store<S = any, A extends Action<any> = Action<any>> {
-    state: S
-    commit: React.Dispatch<A>
-}
-
-export interface StoreSpec<S = any, A extends Actions<S> = Actions<S>> {
+export interface StoreSpec<S, A extends StoreActions<S>> {
     actions: A
     createState(): S
     // TODO: getters, effects, plugs.
 }
 
-export type Actions<S> = Record<string, React.Reducer<S, any>>
-
-export type Action<V> = {
-    type: string
-    value?: V
+export interface Store<S, A extends StoreActions<S>> {
+    state: S
+    commit: React.Dispatch<StoreActionsOf<S, A>>
 }
 
-export type StoreActions<A extends Actions<any>> = ObjectValues<{
+export interface StoreActions<S> extends Record<string, React.Reducer<S, any>> {
+}
+
+export interface StoreAction<V> {
+    type: string
+    value: V
+}
+
+export type StoreActionsOf<S, A extends StoreActions<S>> = ValueOf<{
     [key in keyof A]: {
         type: key
         value: Parameters<A[key]>[1]
     }
 }>
-
-export type ObjectValues<T> = T[keyof T]

@@ -1,7 +1,10 @@
-import {createContext, createElement, useContext} from 'react'
 import {Logger} from '@eviljs/std-lib/logger.js'
+import React from 'react'
+const {createContext, useContext} = React
 
 export const LoggerContext = createContext<Logger>(void undefined as any)
+
+LoggerContext.displayName = 'StdLoggerContext'
 
 /*
 * EXAMPLE

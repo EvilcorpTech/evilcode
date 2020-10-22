@@ -1,8 +1,9 @@
 import {classes} from '../react.js'
-import {createElement, useEffect, useMemo, useState} from 'react'
 import {ExampleIcon as Icon} from '../icons/example.js'
 import {Input} from '../widgets/input.js'
 import {rgbFromHexString, rgbToHexString, hslFromRgb, rgbFromHsl} from '@eviljs/std-lib/color.js'
+import React from 'react'
+const {useEffect, useMemo, useState} = React
 
 import './theme-view.css'
 

@@ -1,7 +1,10 @@
-import {createContext, createElement, useContext} from 'react'
 import {Fetch} from '@eviljs/std-web/fetch.js'
+import React from 'react'
+const {createContext, useContext} = React
 
 export const FetchContext = createContext<Fetch>(void undefined as any)
+
+FetchContext.displayName = 'StdFetchContext'
 
 /*
 * EXAMPLE

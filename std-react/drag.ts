@@ -1,4 +1,3 @@
-import {useCallback, useEffect, useMemo, useRef, useState} from 'react'
 import {
     attachDragListeners,
     createDragElement,
@@ -18,7 +17,9 @@ import {
     DragResizeState,
     DragStyler,
     DragTags,
- } from '@eviljs/std-web/drag'
+} from '@eviljs/std-web/drag'
+import React from 'react'
+const {useCallback, useEffect, useMemo, useRef, useState} = React
 
 export type {DragMoveChange, DragOptions} from '@eviljs/std-web/drag.js'
 
@@ -81,7 +82,9 @@ export function useDrag
     }, [onMouseDown])
 
     useEffect(() => {
-        const dragInfo = dragInfoRef.current // Conforms to the new React 17 behavior.
+        // Conforms to the new React 17 behavior:
+        // unmount effects must have all values in scope.
+        const dragInfo = dragInfoRef.current
 
         function unmount() {
             dragInfo.unmount?.()

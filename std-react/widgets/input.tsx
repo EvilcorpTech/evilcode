@@ -1,6 +1,6 @@
 import {classes} from '../react.js'
-import {createElement} from 'react'
-import {useState, useRef, useLayoutEffect, useMemo} from 'react'
+import React from 'react'
+const {useState, useRef, useLayoutEffect, useMemo} = React
 
 import './input.css'
 

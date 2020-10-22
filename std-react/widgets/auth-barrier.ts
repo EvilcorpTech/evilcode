@@ -1,4 +1,3 @@
-import {createElement} from 'react'
 import {useAuth, AuthTokenState} from '../auth.js'
 
 export function AuthBarrier(props: AuthBarrierProps) {

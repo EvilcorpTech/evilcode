@@ -1,6 +1,6 @@
 {
     "name": "@eviljs/std-react",
-    "version": "0.1.32",
+    "version": "0.1.33",
     "type": "module",
     "files": [
         "/LICENSE.txt",
@@ -16,18 +16,18 @@
         "@eviljs/std-lib": "^0.1",
         "@eviljs/std-web": "^0.1",
         "@types/prop-types": "^15",
-        "@types/react": "^16",
-        "@types/react-dom": "^16",
+        "@types/react": "^16 || ^17",
+        "@types/react-dom": "^16 || ^17",
         "csstype": "^3",
         "prop-types": "^15",
         "tslib": "^2"
     },
     "peerDependencies": {
         "@eviljs/std-theme": "^0.1",
-        "react": "^16.9"
+        "react": "^16.9 || ^17"
     },
     "devDependencies": {
-        "typescript": "^4.0"
+        "typescript": "^4"
     },
     "scripts": {
         "build": "../tools/build .",

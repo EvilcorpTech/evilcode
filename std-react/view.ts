@@ -1,7 +1,8 @@
 import {createCssTransition, play} from '@eviljs/std-web/animation.js'
-import {useEffect, useMemo, useState} from 'react'
-import {useMountedRef} from './react.js'
+import {useMounted} from './react.js'
 import {useRouterTransition} from './router.js'
+import React from 'react'
+const {useEffect, useMemo, useState} = React
 
 export function useRoutedViewLifecycle(routeRe: RegExp) {
     const [viewLifecycle, setViewLifecycle] = useState<ViewLifecycle>('exited')
@@ -44,7 +45,7 @@ export function useRoutedViewLifecycle(routeRe: RegExp) {
 * return <div style={style}>...</div>
 */
 export function useRoutedViewAnimation(routeRe: RegExp, enterOptional?: Animator, exitOptional?: Animator) {
-    const mountedRef = useMountedRef()
+    const ifMounted = useMounted()
     const [viewLifecycle, setViewLifecycle] = useRoutedViewLifecycle(routeRe)
     const enter = enterOptional ?? (() => Promise.resolve())
     const exit = exitOptional ?? (() => Promise.resolve())
@@ -62,28 +63,22 @@ export function useRoutedViewAnimation(routeRe: RegExp, enterOptional?: Animator
     useEffect(() => {
         switch (viewLifecycle) {
             case 'entering':
-                enter().then(() => {
-                    if (! mountedRef.current) {
-                        return
-                    }
+                enter().then(() => ifMounted(() => {
                     setViewLifecycle(state =>
                         state === 'entering'
                             ? 'entered'
                             : state
                     )
-                })
+                }))
             break
             case 'exiting':
-                exit().then(() => {
-                    if (! mountedRef.current) {
-                        return
-                    }
+                exit().then(() => ifMounted(() => {
                     setViewLifecycle(state =>
                         state === 'exiting'
                             ? 'exited'
                             : state
                     )
-                })
+                }))
             break
         }
     }, [viewLifecycle])

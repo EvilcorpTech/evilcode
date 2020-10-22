@@ -1,8 +1,9 @@
 import {clamp} from '@eviljs/std-lib/math.js'
 import {classes} from '../react.js'
-import {createElement, useCallback, useEffect, useRef, useState} from 'react'
 import {isNil, ValueOf} from '@eviljs/std-lib/type.js'
 import {Transition} from '../animation.js'
+import React from 'react'
+const {useCallback, useEffect, useState} = React
 
 import './slider.css'
 
@@ -18,31 +19,28 @@ export const SliderDirection = {
 export function Slider(props: SliderProps) {
     const {children, selected, direction=SliderDirection.horizontal, ...otherProps} = props
     const selectedIndex = clamp(0, selected ?? InitialIndex, children.length - 1)
-    const [queue, setQueue] = useState<Array<number>>([])
-    const previousIndexRef = useRef(InitialIndex)
-    const currentIndexRef = useRef(InitialIndex)
-    const currentIndex = queue[0] ?? previousIndexRef.current
+    const [queue, setQueue] = useState<Array<number>>([selectedIndex])
 
     useEffect(() => {
-        currentIndexRef.current = currentIndex
-    }, [currentIndex])
-
-    useEffect(() => {
-        setQueue((state) => [...state, selectedIndex])
+        setQueue((state) =>
+            [...state, selectedIndex]
+        )
     }, [selectedIndex])
 
     const onEnd = useCallback(() => {
-        previousIndexRef.current = currentIndexRef.current
-
-        setQueue((state) => state.slice(1))
+        setQueue((state) =>
+            state.length > 0
+                ? state.slice(1)
+                : state
+        )
     }, [])
 
-    const towards = computeSlideDirection(currentIndex, previousIndexRef.current)
+    const towards = computeSlideDirection(selectedIndex, queue[0] ?? InitialIndex)
     const towardsClasses = {
         'backwards': towards === -1,
         'forwards': towards === 1,
     }
-    const child = children[currentIndex]
+    const child = children[selectedIndex]
 
     return (
         <div
@@ -50,7 +48,7 @@ export function Slider(props: SliderProps) {
             className={classes('slider-73e431', props.className, direction, towardsClasses)}
         >
             <Transition enter={1} exit={1} onEntered={onEnd}>
-                <Slide key={currentIndex}>
+                <Slide key={selectedIndex}>
                     {child}
                 </Slide>
             </Transition>

@@ -1,12 +1,15 @@
 import {classes} from './react.js'
-import {createContext, createElement, useCallback, useContext, useEffect, useMemo, useRef, useState, Fragment} from 'react'
 import {createRouter, compilePattern, exact, regexpFromPattern, RouterOptions, RouterParams, RouterRouteParams} from '@eviljs/std-web/router.js'
 import {isFunction, isPromise} from '@eviljs/std-lib/type.js'
+import React from 'react'
+const {createContext, useCallback, useContext, useEffect, useMemo, useRef, useState, Fragment} = React
 
 export {exact, All, Arg, End, Value, Path, PathOpt, PathGlob, Start} from '@eviljs/std-web/router.js'
 
 export const RouterContext = createContext<Router>(void undefined as any)
 export const DefaultRouteActiveClass = 'route-active'
+
+RouterContext.displayName = 'StdRouterContext'
 
 /*
 * EXAMPLE

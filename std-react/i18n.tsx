@@ -1,7 +1,10 @@
-import {createContext, createElement, useContext, useMemo} from 'react'
-import {I18n} from '@eviljs/std-lib/i18n.js'
+import {createI18n, I18n as StdI18n, I18nMessages} from '@eviljs/std-lib/i18n.js'
+import React from 'react'
+const {createContext, useContext, useMemo, useState} = React
 
 export const I18nContext = createContext<I18n>(void undefined as any)
+
+I18nContext.displayName = 'StdI18nContext'
 
 /*
 * EXAMPLE
@@ -31,7 +34,44 @@ export function WithI18n(Child: React.ElementType, i18n: I18n) {
 *     return <main/>
 * }
 */
-export function withI18n(children: React.ReactNode, i18n: I18n) {
+export function withI18n(children: React.ReactNode, baseI18n: I18n) {
+    const [locale, setLocale] = useState(baseI18n.locale)
+    const [fallbackLocale, setFallbackLocale] = useState(baseI18n.fallbackLocale)
+    const [messages, setMessages] = useState(baseI18n.messages)
+
+    const i18n = useMemo(() => {
+        const self: I18n = {
+            ...createI18n({
+                locale: locale,
+                fallbackLocale: fallbackLocale,
+                messages: messages,
+            }),
+            get locale() {
+                return locale
+            },
+            set locale(value) {
+                setLocale(value)
+            },
+            setLocale,
+            get fallbackLocale() {
+                return fallbackLocale
+            },
+            set fallbackLocale(value) {
+                setFallbackLocale(value)
+            },
+            setFallbackLocale,
+            get messages() {
+                return messages
+            },
+            set messages(value) {
+                setMessages(value)
+            },
+            setMessages,
+        }
+
+        return self
+    }, [locale, fallbackLocale, messages])
+
     return (
         <I18nContext.Provider value={i18n}>
             {children}
@@ -63,13 +103,14 @@ export function useI18n() {
 
 export function useI18nMsg<T>(compute: I18nMsgsComputer<T>, deps: Array<unknown> = []) {
     const i18n = useI18n()
+    const {locale, fallbackLocale, messages} = i18n
 
     const i18nMsg = useMemo(() => {
         return {
             ...compute(i18n),
             $i18n: i18n,
         }
-    }, [i18n, i18n.locale, i18n.fallbackLocale, ...deps])
+    }, [i18n, locale, fallbackLocale, messages, ...deps])
 
     return i18nMsg
 }
@@ -83,4 +124,13 @@ export interface I18nProviderProps {
 
 export interface I18nMsgsComputer<T> {
     (i18n: I18n): T
+}
+
+export interface I18n extends StdI18n, I18nSetters {
+}
+
+export interface I18nSetters {
+    setLocale(value: string): void
+    setFallbackLocale(value: string): void
+    setMessages(value: I18nMessages): void
 }

@@ -1,8 +1,11 @@
-import {createContext, createElement, useContext, useRef, useState} from 'react'
 import {Query} from '@eviljs/std-web/query.js'
 import {useMountedRef} from './react.js'
+import React from 'react'
+const {createContext, useContext, useRef, useState} = React
 
 export const QueryContext = createContext<Query>(void undefined as any)
+
+QueryContext.displayName = 'StdQueryContext'
 
 /*
 * EXAMPLE

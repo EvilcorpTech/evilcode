@@ -1,5 +1,6 @@
 import {classes} from '../react.js'
-import {createElement, useCallback, useEffect, useState} from 'react'
+import React from 'react'
+const {useCallback, useEffect, useState} = React
 
 import './toggles.css'
 

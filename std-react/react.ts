@@ -1,6 +1,7 @@
 import {isArray, isString, isObject} from '@eviljs/std-lib/type.js'
 import {throwInvalidArgument} from '@eviljs/std-lib/error.js'
-import {useLayoutEffect, useRef} from 'react'
+import React from 'react'
+const {useEffect, useLayoutEffect, useRef} = React
 
 export {times} from '@eviljs/std-lib/fn.js'
 
@@ -40,6 +41,71 @@ export function classes(...names: Array<ClassName>) {
     return list.join(' ')
 }
 
+/*
+* Used to access the previous value of a prop.
+*
+* EXAMPLE
+* function MyComponent(props) {
+*     const {selected} = props
+*     const prevSelected = usePrevious(props.selected)
+* }
+*/
+export function usePrevious<T>(value: T) {
+    const ref = useRef<T>()
+
+    useEffect(() => {
+        ref.current = value
+    })
+
+    return ref.current
+}
+
+/*
+* Used to perform an asynchronous task only on a mounted component.
+*
+* EXAMPLE
+* function MyComponent(props) {
+*     const [state, setState] = useState()
+*     const ifMounted = useMounted()
+*
+*     useEffect(() => {
+*         promise.then((value) =>
+*             ifMounted(() =>
+*                 setState(value)
+*             )
+*         )
+*     }, [])
+* }
+*/
+export function useMounted() {
+    const mountedRef = useMountedRef()
+
+    function ifMounted(task: () => void) {
+        if (mountedRef.current) {
+            task()
+        }
+    }
+
+    return ifMounted
+}
+
+/*
+* Used to track the mounted state of a component. Useful inside async tasks.
+*
+* EXAMPLE
+* function MyComponent(props) {
+*     const [state, setState] = useState()
+*     const mountedRef = useMountedRef()
+*
+*     useEffect(() => {
+*         promise.then((value) =>
+*             if (mountedRef.current) {
+*                 setState(value)
+*             }
+*         )
+*     }, [])
+* }
+*/
 export function useMountedRef() {
     const mountedRef = useRef(true)
 
@@ -69,3 +135,8 @@ export type ClassName =
     | string
     | Record<string, boolean | null | undefined>
     | Array<ClassName>
+
+export type PropsOf<T extends ((props: any) => any)> =
+    T extends ((props: infer P) => any)
+        ? P
+        : never
