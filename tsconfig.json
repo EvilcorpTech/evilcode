@@ -13,7 +13,7 @@
         "incremental": true,
         "isolatedModules": false,
         "jsx": "react",
-        "jsxFactory": "createElement",
+        "jsxFactory": "React.createElement",
         "lib": ["esnext", "dom"],
         "module": "esnext",
         "moduleResolution": "node",

@@ -1,7 +1,7 @@
 import {AuthBarrier as StdAuthBarrier} from '@eviljs/std-react/widgets/auth-barrier.js'
-import {createElement} from 'react'
 import {Redirect} from '@eviljs/std-react/router.js'
 import {useI18nMsg} from '@eviljs/std-react/i18n.js'
+import React from 'react'
 
 export const AuthRedirect = '/signin'
 

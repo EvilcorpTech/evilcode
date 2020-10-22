@@ -1,13 +1,15 @@
-import {version as Version} from '../../package.json'
+import Package from '../../package.json'
+import StdLibPackage from '@eviljs/std-lib/package.json'
+import StdReactPackage from '@eviljs/std-react/package.json'
+import StdThemePackage from '@eviljs/std-theme/package.json'
+import StdWebPackage from '@eviljs/std-web/package.json'
 
-export {version as Version} from '../../package.json'
-export {version as StdLibVersion}  from '@eviljs/std-lib/package.json'
-export {version as StdReactVersion} from '@eviljs/std-react/package.json'
-export {version as StdThemeVersion} from '@eviljs/std-theme/package.json'
-export {version as StdWebVersion} from '@eviljs/std-web/package.json'
-
+export const {version: Version} = Package
+export const {version: StdLibVersion} = StdLibPackage
+export const {version: StdReactVersion} = StdReactPackage
+export const {version: StdThemeVersion} = StdThemePackage
+export const {version: StdWebVersion} = StdWebPackage
 export const [VersionMajor, VersionMinor, VersionPatch] = Version.split('.')
-
 export const ENV = process.env.ENV ?? 'dev'
 export const NODE_ENV = process.env.NODE_ENV ?? 'development'
 export const BASE_URL = process.env.BASE_URL ?? '/'

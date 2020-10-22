@@ -1,6 +1,6 @@
 import {Button} from '@eviljs/std-react/widgets/button.js'
 import {classes} from '@eviljs/std-react/react.js'
-import {createElement} from 'react'
+import React from 'react'
 import {useI18nMsg} from '@eviljs/std-react/i18n.js'
 
 import './home-view.css'

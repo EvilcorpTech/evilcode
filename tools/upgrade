@@ -12,7 +12,7 @@ ProjectDir="$(cd "$(dirname "$0")/.." && pwd)"
 . "$ProjectDir/tools/env-styles.sh"
 
 : ${NpmUpgrade:=npx npm-upgrade}
-: ${NpmUpgradeArgs:=@eviljs/*}
+: ${NpmUpgradeArgs:=}
 
 if test $# -eq 0; then
         set -- "$ProjectDir/std-"*

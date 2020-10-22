@@ -1,9 +1,11 @@
 import {App} from './app/app'
 import {ContainerSpec} from './lib/container'
 import {createContainer} from '@eviljs/std-lib/container.js'
-import {createElement} from 'react'
-import {render} from 'react-dom'
 import * as Context from './lib/context'
+import React from 'react'
+import ReactDOM from 'react-dom'
+const {createElement} = React
+const {render} = ReactDOM
 
 import './lib/theme.css'
 

@@ -4,7 +4,6 @@ import {AuthView} from './auth-view'
 import {BASE_URL, ROUTER_TYPE} from '../lib/context'
 import {BrowserRouter, HashRouter, Route, Switch} from 'react-router-dom'
 import {Container} from '../lib/container'
-import {createElement, useCallback, useMemo} from 'react'
 import {ElementOf} from '@eviljs/std-lib/type.js'
 import {HomeRoute, ExampleRoute, ThemeRoute} from '../lib/routes'
 import {HomeView} from './home-view'
@@ -21,6 +20,8 @@ import {withLogger} from '@eviljs/std-react/logger.js'
 import {withQuery} from '@eviljs/std-react/query.js'
 import {withRouter} from '@eviljs/std-react/router.js'
 import {withStore} from '@eviljs/std-react/store.js'
+import React from 'react'
+const {useCallback, useMemo} = React
 
 const Router = ROUTER_TYPE === 'history'
     ? BrowserRouter

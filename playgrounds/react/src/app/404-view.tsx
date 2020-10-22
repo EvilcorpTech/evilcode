@@ -1,5 +1,5 @@
 import {classes} from '@eviljs/std-react/react.js'
-import {createElement} from 'react'
+import React from 'react'
 
 export function NotFoundView(props: NotFoundViewProps) {
     return (

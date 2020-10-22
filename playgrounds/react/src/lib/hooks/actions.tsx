@@ -1,8 +1,9 @@
-import {queryAccount} from '../../lib/queries'
+import {queryAccount} from '../queries'
 import {useAuth, AuthTokenState} from '@eviljs/std-react/auth.js'
-import {useEffect} from 'react'
 import {useQuery} from '@eviljs/std-react/query.js'
 import {useStore} from '../store'
+import React from 'react'
+const {useEffect} = React
 
 export function useAccount() {
     const {token, tokenState, pending: pendingAuth} = useAuth()
