@@ -1,6 +1,6 @@
 {
     "name": "@eviljs/std-web",
-    "version": "0.1.16",
+    "version": "0.1.17",
     "type": "module",
     "files": [
         "/LICENSE.txt",
@@ -13,7 +13,7 @@
     },
     "peerDependencies": {},
     "devDependencies": {
-        "typescript": "^4.0"
+        "typescript": "^4"
     },
     "scripts": {
         "build": "../tools/build .",
