@@ -15,9 +15,9 @@ I18nContext.displayName = 'StdI18nContext'
 *
 * render(<main/>, document.body)
 */
-export function WithI18n(Child: React.ElementType, i18n: I18n) {
+export function WithI18n(Child: React.ElementType, spec: I18n) {
     function I18nProviderProxy(props: any) {
-        return withI18n(<Child {...props}/>, i18n)
+        return withI18n(<Child {...props}/>, spec)
     }
 
     return I18nProviderProxy
@@ -34,10 +34,10 @@ export function WithI18n(Child: React.ElementType, i18n: I18n) {
 *     return <main/>
 * }
 */
-export function withI18n(children: React.ReactNode, baseI18n: I18n) {
-    const [locale, setLocale] = useState(baseI18n.locale)
-    const [fallbackLocale, setFallbackLocale] = useState(baseI18n.fallbackLocale)
-    const [messages, setMessages] = useState(baseI18n.messages)
+export function withI18n(children: React.ReactNode, spec: StdI18n) {
+    const [locale, setLocale] = useState(spec.locale)
+    const [fallbackLocale, setFallbackLocale] = useState(spec.fallbackLocale)
+    const [messages, setMessages] = useState(spec.messages)
 
     const i18n = useMemo(() => {
         const self: I18n = {

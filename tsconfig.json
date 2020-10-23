@@ -33,6 +33,6 @@
         "strictFunctionTypes": true,
         "strictNullChecks": true,
         "strictPropertyInitialization": true,
-        "target": "es2018",
+        "target": "esnext",
     },
 }
