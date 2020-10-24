@@ -1,6 +1,5 @@
 .std-theme.light {
     color: var(--std-text1);
-    background: var(--theme-back, var(--std-back1));
 
     --std-text1: var(--std-text-dark1);
     --std-text2: var(--std-text-dark2);
@@ -29,4 +28,7 @@
     --std-back-primary4: var(--std-primary-tint4);
     --std-back-primary5: var(--std-primary-tint5);
     --std-back-primary6: var(--std-primary-tint6);
+}
+.std-theme.light.back {
+    background-color: var(--theme-back, var(--std-back1));
 }
