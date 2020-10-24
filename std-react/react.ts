@@ -135,6 +135,8 @@ export type ClassName =
     | string
     | Record<string, boolean | null | undefined>
     | Array<ClassName>
+    | readonly ClassName[]
+    // | readonly [...Array<ClassName>]
 
 export type PropsOf<T extends ((props: any) => any)> =
     T extends ((props: infer P) => any)
