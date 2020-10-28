@@ -447,13 +447,13 @@ export interface Router {
 export interface SwitchRouteProps extends RouteRenderProps, Omit<React.AllHTMLAttributes<Element>, 'default'> {
     children: SwitchRouteChildren | Array<SwitchRouteChildren>
     default?: React.ReactNode
-    [key: string]: unknown
+    [key: string]: any
 }
 
 export interface WhenRouteProps extends RouteRenderProps, Omit<React.AllHTMLAttributes<Element>, 'is'> {
     children: RouteMatchChildren
     is: string | RegExp
-    [key: string]: unknown
+    [key: string]: any
 }
 
 export interface RouteProps extends React.AnchorHTMLAttributes<HTMLAnchorElement> {

@@ -19,5 +19,7 @@ export function Animator(props: AnimatorProps) {
 
 export interface AnimatorProps extends React.HTMLAttributes<HTMLDivElement> {
     children?: React.ReactNode
-    transition?: 'fade' | 'zoom'
+    transition?: AnimatorTransition
 }
+
+export type AnimatorTransition = 'fade' | 'zoom'
