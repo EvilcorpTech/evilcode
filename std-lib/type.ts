@@ -159,8 +159,8 @@ export function objectWithoutUndefined<O>(object: O) {
 
 export function asArray<T>(item: T | Array<T> | [T] | readonly [T]) {
     return isArray(item)
-        ? item
-        : [item]
+        ? item as Array<T>
+        : [item] as Array<T>
 }
 
 // Types ///////////////////////////////////////////////////////////////////////
