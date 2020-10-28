@@ -1,6 +1,6 @@
 {
     "name": "@eviljs/std-react",
-    "version": "0.1.37",
+    "version": "0.1.38",
     "type": "module",
     "files": [
         "/LICENSE.txt",
@@ -10,6 +10,7 @@
         "/icons/*.d.ts",
         "/site/*.js",
         "/site/*.d.ts",
+        "/site/*.css",
         "/widgets/*.js",
         "/widgets/*.d.ts",
         "/widgets/*.css"
