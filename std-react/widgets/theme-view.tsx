@@ -35,7 +35,7 @@ export function ThemeView(props: ThemeViewProps) {
     return (
         <div
             {...props}
-            className={classes('theme-t2eb5b std-theme', props.className, {
+            className={classes('theme-t2eb5b std-theme back', props.className, {
                 'light': themeLight, 'dark': ! themeLight,
             })}
         >

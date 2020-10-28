@@ -1,0 +1,39 @@
+.animator-c385f2.fade.exit-from {
+    opacity: 1;
+}
+.animator-c385f2.fade.exit-to {
+    opacity: 0;
+    transition: opacity var(--std-duration-fast);
+}
+.animator-c385f2.fade.enter-from {
+    opacity: 0;
+}
+.animator-c385f2.fade.enter-to {
+    opacity: 1;
+    transition: opacity var(--std-duration-slow);
+}
+
+.animator-c385f2.zoom.exit-from {
+    opacity: 1;
+    transform: scale(1);
+}
+.animator-c385f2.zoom.exit-to {
+    opacity: 0;
+    transform: scale(.9);
+    transition:
+        opacity var(--std-duration-fast),
+        transform var(--std-duration-fast)
+    ;
+}
+.animator-c385f2.zoom.enter-from {
+    opacity: 0;
+    transform: scale(.9);
+}
+.animator-c385f2.zoom.enter-to {
+    opacity: 1;
+    transform: scale(1);
+    transition:
+        opacity var(--std-duration-slow),
+        transform var(--std-duration-slow)
+    ;
+}

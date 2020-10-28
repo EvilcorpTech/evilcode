@@ -5,7 +5,6 @@
     justify-content: flex-start;
     align-items: center;
     padding: var(--std-gutter-m);
-    background: var(--std-back1);
 }
 
 .theme-t2eb5b label {
