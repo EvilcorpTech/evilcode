@@ -1,6 +1,7 @@
 .std-theme.light {
     color: var(--std-text1);
 
+    --std-back-l: 100%;
     --std-text1: var(--std-text-dark1);
     --std-text2: var(--std-text-dark2);
     --std-text3: var(--std-text-dark3);
