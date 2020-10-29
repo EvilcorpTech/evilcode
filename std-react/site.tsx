@@ -1,4 +1,4 @@
-import {Animator, AnimatorTransition} from './site/animation.js'
+import {TransitionAnimator, TransitionAnimatorTransition} from './widgets/animator.js'
 import {createRouteMatches, exact, SwitchRoute, Arg as __arg__} from './router.js'
 import {createI18n, I18n} from '@eviljs/std-lib/i18n.js'
 import {ElementOf, ValueOf} from '@eviljs/std-lib/type.js'
@@ -9,7 +9,7 @@ import {useI18n} from './i18n.js'
 import React from 'react'
 const {useMemo} = React
 
-export {Animator, AnimatorProps} from './site/animation.js'
+export {TransitionAnimator} from './widgets/animator.js'
 export {createRouteMatches, exact, SwitchRoute, withRouteMatches} from './router.js'
 export {Router, RouterProps} from './site/router.js'
 
@@ -257,9 +257,9 @@ export function createDefaultAnimator
 
     return (
         <Transition initial={initial} enter={1} exit={1} source="animator-d352d9">
-            <Animator key={key} className="animator-d352d9" transition={transition}>
+            <TransitionAnimator key={key} className="animator-d352d9 layer" transition={transition}>
                 {widget}
-            </Animator>
+            </TransitionAnimator>
         </Transition>
     )
 }
@@ -463,7 +463,7 @@ export type SiteRouteModel<RK extends string> = {
 export type SiteAnimatorModel<AK extends string> = {
     [key in AK]?: {
         initial?: boolean
-        transition?: AnimatorTransition
+        transition?: TransitionAnimatorTransition
     }
 }
 

@@ -10,7 +10,7 @@ export const InputType = {
 } as const
 
 export function Input(props: InputProps) {
-    const {type, label, value, autoComplete, autoFocus, tabIndex, onChange, ...otherProps} = props
+    const {type, label, placeholder, value, autoComplete, autoFocus, tabIndex, onChange, ...otherProps} = props
     const [focus, setFocus] = useState(false)
     const [translateY, setTranslateY] = useState(0)
     const fieldRef = useRef<HTMLDivElement>(null)
@@ -50,13 +50,15 @@ export function Input(props: InputProps) {
                 inputRef.current?.focus()
             }
         >
-            <label
-                ref={labelRef}
-                className="label-id45da std-text-body2"
-                style={labelPlaceholder ? labelStyle : undefined}
-            >
-                {label}
-            </label>
+            {label &&
+                <label
+                    ref={labelRef}
+                    className="label-id45da std-text-body2"
+                    style={labelPlaceholder ? labelStyle : undefined}
+                >
+                    {label}
+                </label>
+            }
 
             <input
                 ref={inputRef}
@@ -66,6 +68,7 @@ export function Input(props: InputProps) {
                 autoComplete={autoComplete}
                 autoFocus={autoFocus}
                 tabIndex={tabIndex}
+                placeholder={placeholder}
                 onFocus={() => setFocus(true)}
                 onBlur={() => setFocus(false)}
                 onChange={event => onChange?.(event.target.value)}
