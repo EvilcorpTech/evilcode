@@ -160,6 +160,8 @@
 .std-weight-heavy, strong { --weight: var(--std-weight-heavy); font-weight: var(--weight); }
 .std-weight-black { --weight: var(--std-weight-black); font-weight: var(--weight); }
 
+.std-capitalize { text-transform: capitalize; }
+.std-lowercase { text-transform: lowercase; }
 .std-uppercase { text-transform: uppercase; }
 
 .std-ellipsis {
