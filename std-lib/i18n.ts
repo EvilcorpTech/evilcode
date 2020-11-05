@@ -50,6 +50,10 @@ export function createI18n(spec: I18nSpec) {
 export function translate(i18n: I18n, id: string, values?: MsgValues, options?: unknown) {
     const {locale, fallbackLocale, messages} = i18n
 
+    if (! id) {
+        return id
+    }
+
     let msg = messages[locale]?.[id]
 
     if (! msg && fallbackLocale) {
