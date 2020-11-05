@@ -3,13 +3,16 @@ import React from 'react'
 
 import './animator.css'
 
-export const DefaultTransition = 'fade'
+export const DefaultTransitionEffect = 'fade'
 
 export function TransitionAnimator(props: TransitionAnimatorProps) {
-    const {children, transition, ...otherProps} = props
+    const {children, effect, ...otherProps} = props
 
     return (
-        <div className={classes('animator-c385f2', props.className, transition ?? DefaultTransition)}>
+        <div
+            {...otherProps}
+            className={classes('animator-c385f2', props.className, effect ?? DefaultTransitionEffect)}
+        >
             {children}
         </div>
     )
@@ -19,7 +22,7 @@ export function TransitionAnimator(props: TransitionAnimatorProps) {
 
 export interface TransitionAnimatorProps extends React.HTMLAttributes<HTMLDivElement> {
     children?: React.ReactNode
-    transition?: TransitionAnimatorTransition
+    effect?: TransitionAnimatorEffect
 }
 
-export type TransitionAnimatorTransition = 'fade' | 'zoom'
+export type TransitionAnimatorEffect = 'fade' | 'zoom' | 'leak' | 'leak-inline'

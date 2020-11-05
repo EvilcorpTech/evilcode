@@ -32,10 +32,12 @@ export function WithRouter(Child: React.ElementType) {
 /*
 * EXAMPLE
 *
-* const options = {type, basePath}
-* const Main = withRouter(<MyMain/>, options)
+* export function MyMain(props) {
+*     const options = {type, basePath}
+*     const main = withRouter(<Main/>, options)
 *
-* <Main/>
+*     return main
+* }
 */
 export function withRouter(children: React.ReactNode, options?: RouterOptions) {
     const router = useRootRouter(options)

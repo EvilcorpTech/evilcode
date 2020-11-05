@@ -27,9 +27,9 @@ export function WithLogger(Child: React.ElementType, logger: Logger) {
 *
 * export function MyMain(props) {
 *     const logger = createLogger()
-*     const main = withLogger(<MyMain/>, logger)
+*     const main = withLogger(<Main/>, logger)
 *
-*     return <main/>
+*     return main
 * }
 */
 export function withLogger(children: React.ReactNode, logger: Logger) {

@@ -50,9 +50,9 @@ export function WithAuth(Child: React.ElementType, fetch: Fetch, cookie: Cookie,
 *     const validate = {method, url}
 *     const invalidate = {method, url}
 *     const options = {authenticate, validate, invalidate}
-*     const main = withAuth(<MyMain/>, fetch, cookie, options)
+*     const main = withAuth(<Main/>, fetch, cookie, options)
 *
-*     return <main/>
+*     return main
 * }
 */
 export function withAuth(children: React.ReactNode, fetch: Fetch, cookie: Cookie, options?: AuthOptions) {

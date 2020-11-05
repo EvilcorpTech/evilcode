@@ -30,9 +30,9 @@ export function WithQuery(Child: React.ElementType, query: Query) {
 * export function MyMain(props) {
 *     const fetch = createFetch({baseUrl: '/api'})
 *     const query = createQuery(fetch)
-*     const main = withQuery(<MyMain/>, fetch)
+*     const main = withQuery(<Main/>, fetch)
 *
-*     return <main/>
+*     return main
 * }
 */
 export function withQuery(children: React.ReactNode, query: Query) {

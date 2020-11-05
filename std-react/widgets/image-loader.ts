@@ -5,7 +5,7 @@ export function ImageLoader(props: ImageLoaderProps) {
     const {items} = props
     const loadingRef = useRef<Array<string>>([])
     const loadedRef = useRef<Array<string>>([])
-    const identifiers = items.map(it => it.src)
+    const identifiers = items.map(it => it.src).join('|')
 
     function onImageLoaded(image: Image, img: HTMLImageElement) {
         const id = imageId(image)
@@ -42,7 +42,7 @@ export function ImageLoader(props: ImageLoaderProps) {
             // 3) We attach the loader to the document.
             mountImageLoader(img)
         }
-    }, identifiers)
+    }, [identifiers])
 
     return null
 }

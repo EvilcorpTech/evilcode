@@ -47,8 +47,8 @@ export function Slider(props: SliderProps) {
             {...otherProps}
             className={classes('slider-73e431', props.className, direction, towardsClasses)}
         >
-            <Transition enter={1} exit={1} onEntered={onEnd}>
-                <Slide key={selectedIndex}>
+            <Transition enter={1} exit={1} source="slide-1c541b" onEntered={onEnd}>
+                <Slide key={selectedIndex} className="slide-1c541b">
                     {child}
                 </Slide>
             </Transition>

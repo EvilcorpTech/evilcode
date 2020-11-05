@@ -19,6 +19,19 @@ PortalContext.displayName = 'StdPortalContext'
 * )
 */
 export function PortalProvider(props: PortalProviderProps) {
+    return withPortal(props.children)
+}
+
+/*
+* EXAMPLE
+*
+* export function MyMain(props) {
+*     const main = withQuery(<MyMain/>, fetch)
+*
+*     return <main/>
+* }
+*/
+export function withPortal(children?: PortalProviderChild) {
     const [portal, setPortal] = useState<PortalElement | null>(null)
 
     function Portal(props: PortalProps) {
@@ -44,7 +57,7 @@ export function PortalProvider(props: PortalProviderProps) {
 
     return (
         <PortalContext.Provider value={portal}>
-            {props.children?.(MemoPortal)}
+            {children?.(MemoPortal)}
         </PortalContext.Provider>
     )
 }
@@ -81,7 +94,11 @@ export function Teleport(props: TeleportProps) {
 export type PortalElement = HTMLElement | SVGElement
 
 export interface PortalProviderProps {
-    children?(portal: React.ElementType<PortalProps>): React.ReactNode
+    children?: PortalProviderChild
+}
+
+export interface PortalProviderChild {
+    (portal: React.ElementType<PortalProps>): React.ReactNode
 }
 
 export interface PortalProps {

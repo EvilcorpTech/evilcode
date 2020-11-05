@@ -30,9 +30,9 @@ export function WithStore<S, A extends StoreActions<S>>(Child: React.ElementType
 *
 * export function MyMain(props) {
 *     const spec = {createState, actions}
-*     const main = withStore(<MyMain/>, spec)
+*     const main = withStore(<Main/>, spec)
 *
-*     return <main/>
+*     return main
 * }
 */
 export function withStore<S, A extends StoreActions<S>>(children: React.ReactNode, spec: StoreSpec<S, A>) {

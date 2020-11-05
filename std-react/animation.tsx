@@ -649,8 +649,9 @@ export function transitionPresenceStyles(type: TransitionTaskAction, lifecycle: 
     switch (type) {
         case 'unmount':
             if (lifecycle === 'end') {
+                // return {display: 'none'} // Causes a layout shift.
                 // return {visibility: 'hidden'} // Glitches on Firefox and Safari.
-                return {display: 'none'}
+                return {opacity: 0}
             }
         break
         case 'mount':

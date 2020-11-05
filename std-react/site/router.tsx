@@ -8,8 +8,8 @@ export function Router(props: RouterProps) {
     const routedProps: Record<string, string | undefined> = {}
 
     for (const it of map) {
-        const {set, withMatch} = it
-        routedProps[set] = matches?.[withMatch]
+        const {prop, match} = it
+        routedProps[prop] = matches?.[match]
     }
 
     const mappedChildren = Children.map(children, (it) => {
@@ -31,8 +31,8 @@ export function Router(props: RouterProps) {
 
 export interface RouterProps {
     map: Array<{
-        set: string
-        withMatch: number
+        prop: string
+        match: number
     }>
     children: React.ReactElement | Array<React.ReactElement>
 }

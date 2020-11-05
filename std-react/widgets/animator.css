@@ -7,6 +7,9 @@
     width: 100%;
     height: 100%;
 }
+
+/* fade ***********************************************************************/
+
 .animator-c385f2.fade.exit-from {
     opacity: 1;
 }
@@ -21,6 +24,8 @@
     opacity: 1;
     transition: opacity var(--enter-duration, var(--std-duration-slow));
 }
+
+/* zoom ***********************************************************************/
 
 .animator-c385f2.zoom.exit-from {
     opacity: 1;
@@ -41,6 +46,60 @@
 .animator-c385f2.zoom.enter-to {
     opacity: 1;
     transform: scale(1);
+    transition:
+        opacity var(--exit-duration, var(--std-duration-slow)),
+        transform var(--exit-duration, var(--std-duration-slow))
+    ;
+}
+
+/* leak ***********************************************************************/
+
+.animator-c385f2.leak.exit-from {
+    opacity: 1;
+    transform: translateY(0px);
+}
+.animator-c385f2.leak.exit-to {
+    opacity: 0;
+    transform: translateY(100%);
+    transition:
+        opacity var(--exit-duration, var(--std-duration-fast)),
+        transform var(--exit-duration, var(--std-duration-fast))
+    ;
+}
+.animator-c385f2.leak.enter-from {
+    opacity: 0;
+    transform: translateY(-100%);
+}
+.animator-c385f2.leak.enter-to {
+    opacity: 1;
+    transform: translateY(0%);
+    transition:
+        opacity var(--exit-duration, var(--std-duration-slow)),
+        transform var(--exit-duration, var(--std-duration-slow))
+    ;
+}
+
+/* leak-inline ****************************************************************/
+
+.animator-c385f2.leak-inline.exit-from {
+    opacity: 1;
+    transform: translateX(0px);
+}
+.animator-c385f2.leak-inline.exit-to {
+    opacity: 0;
+    transform: translateX(-100%);
+    transition:
+        opacity var(--exit-duration, var(--std-duration-fast)),
+        transform var(--exit-duration, var(--std-duration-fast))
+    ;
+}
+.animator-c385f2.leak-inline.enter-from {
+    opacity: 0;
+    transform: translateX(100%);
+}
+.animator-c385f2.leak-inline.enter-to {
+    opacity: 1;
+    transform: translateX(0%);
     transition:
         opacity var(--exit-duration, var(--std-duration-slow)),
         transform var(--exit-duration, var(--std-duration-slow))

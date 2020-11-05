@@ -27,9 +27,9 @@ export function WithFetch(Child: React.ElementType, fetch: Fetch) {
 *
 * export function MyMain(props) {
 *     const fetch = createFetch({baseUrl: '/api'})
-*     const main = withFetch(<MyMain/>, fetch)
+*     const main = withFetch(<Main/>, fetch)
 *
-*     return <main/>
+*     return main
 * }
 */
 export function withFetch(children: React.ReactNode, fetch: Fetch) {

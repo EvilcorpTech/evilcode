@@ -29,9 +29,9 @@ export function WithContainer(Child: React.ElementType, container: Container) {
 * export function MyMain(props) {
 *     const spec = {services}
 *     const container = createContainer(spec)
-*     const main = withContainer(<MyMain/>, container)
+*     const main = withContainer(<Main/>, container)
 *
-*     return <main/>
+*     return main
 * }
 */
 export function withContainer(children: React.ReactNode, container: Container) {

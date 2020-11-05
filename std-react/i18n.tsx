@@ -29,9 +29,9 @@ export function WithI18n(Child: React.ElementType, spec: I18n) {
 * export function MyMain(props) {
 *     const spec = {locale, fallbackLocale, messages}
 *     const i18n = createI18n(spec)
-*     const main = withI18n(<MyMain/>, i18n)
+*     const main = withI18n(<Main/>, i18n)
 *
-*     return <main/>
+*     return main
 * }
 */
 export function withI18n(children: React.ReactNode, spec: StdI18n) {

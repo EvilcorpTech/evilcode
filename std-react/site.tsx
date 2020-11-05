@@ -1,21 +1,21 @@
-import {TransitionAnimator, TransitionAnimatorTransition} from './widgets/animator.js'
-import {createRouteMatches, exact, SwitchRoute, Arg as __arg__} from './router.js'
 import {createI18n, I18n} from '@eviljs/std-lib/i18n.js'
-import {ElementOf, ValueOf} from '@eviljs/std-lib/type.js'
+import {createRouteMatches, exact, SwitchRoute, Arg as __arg__} from './router.js'
+import {ElementOf, isArray, isObject, ValueOf} from '@eviljs/std-lib/type.js'
 import {PropsOf} from './react.js'
 import {Router} from './site/router.js'
 import {Transition} from './animation.js'
+import {TransitionAnimator, TransitionAnimatorEffect} from './widgets/animator.js'
 import {useI18n} from './i18n.js'
 import React from 'react'
 const {useMemo} = React
 
-export {TransitionAnimator} from './widgets/animator.js'
 export {createRouteMatches, exact, SwitchRoute, withRouteMatches} from './router.js'
 export {Router, RouterProps} from './site/router.js'
+export {TransitionAnimator} from './widgets/animator.js'
 
 export const SiteRouteKey = 'path'
 export const SiteAnimationKey = 'animation'
-export const SiteWidgetKey = 'type'
+export const SiteWidgetKey = 'is'
 export const SiteNestingKey = 'with'
 export const SiteRouterType = 'Router'
 export const SiteRoutePlaceholders = {id: __arg__}
@@ -46,7 +46,7 @@ export function useSite
                 NonNullable<AK> | SiteAnimationKey,
                 NonNullable<WK> | SiteWidgetKey,
                 NonNullable<NK> | SiteNestingKey,
-                W
+                W & SiteDefaultWidgets<RT>
             > | null
         ,
     )
@@ -112,9 +112,7 @@ export function createSite
     const routePlaceholders = spec.routePlaceholders ?? SiteRoutePlaceholders
     const defaultWidgets = {
         [routerType]: Router,
-    } as unknown as SiteDefaultWidgets<
-        NonNullable<RT> | SiteRouterType
-    >
+    } as SiteDefaultWidgets<NonNullable<RT> | SiteRouterType>
     const widgets = {...defaultWidgets, ...spec.widgets}
     const createRouter = spec.createRouter ?? createDefaultRouter
     const createAnimator = spec.createAnimator ?? createDefaultAnimator
@@ -127,7 +125,7 @@ export function createSite
         NonNullable<WK> | SiteWidgetKey,
         NonNullable<NK> | SiteNestingKey,
         NonNullable<RT> | SiteRouterType,
-        W
+        W & SiteDefaultWidgets<RT>
     > = {
         routeKey, // model.path is the route path to match.
         animationKey, // model.animation is the animator configuration.
@@ -155,7 +153,7 @@ export function createSite
                     NonNullable<WK> | SiteWidgetKey,
                     NonNullable<NK> | SiteNestingKey,
                     W & SiteDefaultWidgets<RT>,
-                    SiteAnimatorModel<AK>
+                    SiteAnimatorKeyModel<AK>
                 >
             ,
             key?: React.Key,
@@ -211,7 +209,7 @@ export function createDefaultRouter
 
         if (! routePath) {
             console.warn(
-                '@eviljs/std-react/site.createRoutes(ctx, ~~routesModel~~):\n'
+                '@eviljs/std-react/site.createDefaultRouter(ctx, ~~routesModel~~):\n'
                 + `routesModel does not have the route key '${routeKey}'.`
             )
             return null
@@ -223,9 +221,7 @@ export function createDefaultRouter
 
         return {is, then}
     })
-    const validRoutes = routes.filter(Boolean) as Array<
-        NonNullable<ElementOf<typeof routes>>
-    >
+    const validRoutes = routes.filter(Boolean) as Array<NonNullable<ElementOf<typeof routes>>>
 
     return (
         <SwitchRoute default={routerDefault}>
@@ -245,19 +241,19 @@ export function createDefaultAnimator
     >
     (
         ctx: Site<RK, AK, WK, NK, RT, W>,
-        widgetModel: SiteWidgetModel<WK, NK, W, SiteAnimatorModel<AK>>,
+        widgetModel: SiteWidgetModel<WK, NK, W, SiteAnimatorKeyModel<AK>>,
         key?: React.Key,
     )
 {
     const {animationKey} = ctx
-    const animatorModel = widgetModel[animationKey] as SiteAnimatorModel<AK>[AK]
+    const animatorModel = widgetModel[animationKey] as undefined | SiteAnimatorKeyModel<AK>[AK]
     const widget = ctx.createWidget(widgetModel)
     const initial = animatorModel?.initial ?? true
     const transition = animatorModel?.transition
 
     return (
         <Transition initial={initial} enter={1} exit={1} source="animator-d352d9">
-            <TransitionAnimator key={key} className="animator-d352d9 layer" transition={transition}>
+            <TransitionAnimator key={key} className="animator-d352d9 layer" effect={transition}>
                 {widget}
             </TransitionAnimator>
         </Transition>
@@ -320,13 +316,24 @@ export function createDefaultComponent
     )
 {
     const {nestingKey} = ctx
-    const items = widgetModel[nestingKey] as undefined | Array<SiteWidgetModel<WK, NK, W>>
-    const children = items?.map((it, idx) =>
-        ctx.createWidget(it, idx)
-    )
+    const items = widgetModel[nestingKey] as undefined | SiteNestingKeyModel<WK, NK, W>
+    const children =
+        isObject(items)
+            ? ctx.createWidget(items)
+        : isArray(items)
+            ? items.map((it, idx) =>
+                ctx.createWidget(it, idx)
+            )
+        : items
     const props = widgetProps(ctx, widgetModel)
 
-    return <Component {...props} key={key} children={children}/>
+    return (
+        <Component
+            children={children} // We allow to overwrite children.
+            {...props}
+            key={key} // But we can't allow to overwrite the key.
+        />
+    )
 }
 
 export function createDefaultTranslate() {
@@ -348,7 +355,7 @@ export function widgetProps
         widgetModel: SiteWidgetModel<WK, NK, W>,
     )
 {
-    const props = {...widgetModel} as SiteWidgetModel<WK, NK, W, SiteRouteModel<RK>>
+    const props = {...widgetModel} as SiteWidgetModel<WK, NK, W, SiteRouteKeyModel<RK>>
     delete props[ctx.routeKey]
     delete props[ctx.animationKey]
     delete props[ctx.widgetKey]
@@ -380,12 +387,12 @@ export interface Site
     nestingKey: NK
     routerType: RT
     routePlaceholders: {[key: string]: string}
-    routerDefault?: SiteComponent
+    routerDefault?: JSX.Element
     createRouter(
         routesModel: SiteRoutesModel<RK, AK, WK, NK, W>,
     ): SiteElement
     createAnimator(
-        widgetModel: SiteWidgetModel<WK, NK, W, SiteAnimatorModel<AK>>,
+        widgetModel: SiteWidgetModel<WK, NK, W, SiteAnimatorKeyModel<AK>>,
         key?: React.Key,
     ): SiteElement
     createWidget(
@@ -398,7 +405,7 @@ export interface Site
         key?: React.Key
     ): SiteElement
     translate: I18n['translate']
-    widgets: W & SiteDefaultWidgets<RT>
+    widgets: W
 }
 
 export interface SiteSpec
@@ -410,32 +417,31 @@ export interface SiteSpec
         RT extends string,
         W extends SiteWidgets,
     >
-    extends Omit<
-        Partial<Site<RK, AK, WK, NK, RT, W>>,
-        'widgets' | 'createRouter' | 'createAnimator' | 'createWidget' | 'createComponent'
+    extends Omit<Partial<Site<RK, AK, WK, NK, RT, W>>,
+        'createRouter' | 'createAnimator' | 'createWidget' | 'createComponent' | 'widgets'
     >
 {
-    widgets?: W
     createRouter?(
-        ctx: Site<RK, AK, WK, NK, RT, W>,
-        routesModel: SiteRoutesModel<RK, AK, WK, NK, W>,
+        ctx: Site<RK, AK, WK, NK, RT, W & SiteDefaultWidgets<RT>>,
+        routesModel: SiteRoutesModel<RK, AK, WK, NK, W & SiteDefaultWidgets<RT>>,
     ): SiteElement
     createAnimator?(
-        ctx: Site<RK, AK, WK, NK, RT, W>,
-        widgetModel: SiteWidgetModel<WK, NK, W, SiteAnimatorModel<AK>>,
+        ctx: Site<RK, AK, WK, NK, RT, W & SiteDefaultWidgets<RT>>,
+        widgetModel: SiteWidgetModel<WK, NK, W & SiteDefaultWidgets<RT>, SiteAnimatorKeyModel<AK>>,
         key?: React.Key,
     ): SiteElement
     createWidget?(
-        ctx: Site<RK, AK, WK, NK, RT, W>,
-        widgetModel: SiteWidgetModel<WK, NK, W>,
+        ctx: Site<RK, AK, WK, NK, RT, W & SiteDefaultWidgets<RT>>,
+        widgetModel: SiteWidgetModel<WK, NK, W & SiteDefaultWidgets<RT>>,
         key?: React.Key,
     ): SiteElement
     createComponent?(
-        ctx: Site<RK, AK, WK, NK, RT, W>,
+        ctx: Site<RK, AK, WK, NK, RT, W & SiteDefaultWidgets<RT>>,
         Component: SiteComponent,
-        widgetModel: SiteWidgetModel<WK, NK, W>,
+        widgetModel: SiteWidgetModel<WK, NK, W & SiteDefaultWidgets<RT>>,
         key?: React.Key
     ): SiteElement
+    widgets?: W
 }
 
 export type SiteWidgets = Record<string, SiteComponent>
@@ -455,17 +461,18 @@ export type SiteRoutesModel
         W extends SiteWidgets,
         P extends {} = {},
     >
-    = Array<SiteWidgetModel<WK, NK, W, P & SiteRouteModel<RK> & SiteAnimatorModel<AK>>>
+    = Array<SiteRouteModel<RK, AK, WK, NK, W, P>>
 
-export type SiteRouteModel<RK extends string> = {
-    [key in RK]: string
-}
-export type SiteAnimatorModel<AK extends string> = {
-    [key in AK]?: {
-        initial?: boolean
-        transition?: TransitionAnimatorTransition
-    }
-}
+export type SiteRouteModel
+    <
+        RK extends string,
+        AK extends string,
+        WK extends string,
+        NK extends string,
+        W extends SiteWidgets,
+        P extends {} = {},
+    >
+    = SiteWidgetModel<WK, NK, W, P & SiteRouteKeyModel<RK> & SiteAnimatorKeyModel<AK>>
 
 export type SiteWidgetModel
     <
@@ -473,20 +480,48 @@ export type SiteWidgetModel
         NK extends string,
         W extends SiteWidgets,
         P = {},
-    > =
-    SiteWidgetModelOf<
-        WK,
-        W,
-        P & SiteKeyModel & {[key in NK]?: Array<SiteWidgetModel<WK, NK, W>>} & {[key: string]: any}
     >
-    // // Alternative implementation, without widgets' props typing.
-    // & P
-    // & SiteKeyModel
-    // & {[key in WK]: keyof W} // widgetKey (model.type).
-    // & {[key in NK]?: Array<SiteWidgetModel<WK, NK, W>>} // nestingKey (model.with).
-    // & {[key: string]: any}
+    =
+    // Implementation without widgets' props typing.
+    & P
+    & SiteKeyKeyModel
+    & {[key in WK]: keyof W} // widgetKey (model.type).
+    & {[key in NK]?: SiteNestingKeyModel<WK, NK, W>} // nestingKey (model.with).
+    & {[key: string]: any}
+    // =
+    // // Implementation with widgets' props typing.
+    // SiteWidgetModelOf<
+    //     WK,
+    //     W,
+    //     & P
+    //     & SiteKeyKeyModel
+    //     & {[key in NK]?: SiteNestingKeyModel<WK, NK, W>}
+    //     & {[key: string]: any}
+    // >
 
-export interface SiteKeyModel {key?: React.Key}
+export type SiteRouteKeyModel<RK extends string> = {
+    [key in RK]: string
+}
+
+export type SiteAnimatorKeyModel<AK extends string> = {
+    [key in AK]?: {
+        initial?: boolean
+        transition?: TransitionAnimatorEffect
+    }
+}
+
+export type SiteNestingKeyModel
+    <
+        WK extends string,
+        NK extends string,
+        W extends SiteWidgets,
+    >
+    =
+    | string
+    | SiteWidgetModel<WK, NK, W>
+    | Array<SiteWidgetModel<WK, NK, W>>
+
+export interface SiteKeyKeyModel {key?: React.Key}
 export interface SiteWidgetChildrenProps {children?: any}
 
 export type SiteWidgetModelOf
@@ -498,7 +533,7 @@ export type SiteWidgetModelOf
     = ValueOf<{[w in keyof W]:
         & P
         & {[wk in WK]: w}
-        & Omit<Partial<PropsOf<W[w]>>, 'children'>
+        & Partial<PropsOf<W[w]>>
     }>
 
 export type SiteWidgetPropsOf<W extends SiteWidgets> =
