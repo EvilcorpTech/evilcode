@@ -1,6 +1,7 @@
 .std-theme.light {
     color: var(--std-text1);
 
+    --std-text-l: 0%;
     --std-back-l: 100%;
     --std-text1: var(--std-text-dark1);
     --std-text2: var(--std-text-dark2);
@@ -29,6 +30,18 @@
     --std-back-primary4: var(--std-primary-tint4);
     --std-back-primary5: var(--std-primary-tint5);
     --std-back-primary6: var(--std-primary-tint6);
+    --std-text-secondary1: var(--std-secondary-shade1);
+    --std-text-secondary2: var(--std-secondary-shade2);
+    --std-text-secondary3: var(--std-secondary-shade3);
+    --std-text-secondary4: var(--std-secondary-shade4);
+    --std-text-secondary5: var(--std-secondary-shade5);
+    --std-text-secondary6: var(--std-secondary-shade6);
+    --std-back-secondary1: var(--std-secondary-tint1);
+    --std-back-secondary2: var(--std-secondary-tint2);
+    --std-back-secondary3: var(--std-secondary-tint3);
+    --std-back-secondary4: var(--std-secondary-tint4);
+    --std-back-secondary5: var(--std-secondary-tint5);
+    --std-back-secondary6: var(--std-secondary-tint6);
 }
 .std-theme.light.back {
     background-color: var(--theme-back, var(--std-back1));

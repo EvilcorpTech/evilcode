@@ -11,7 +11,7 @@
 }
 .std-button[disabled],
 .std-button[disabled]:hover {
-    opacity: .3;
+    opacity: .3 !important;
     pointer-events: none;
 }
 
