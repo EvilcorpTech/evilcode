@@ -104,6 +104,8 @@ export function useQuery<A extends Array<unknown>, R>(queryRunner: QueryRunner<A
             return response
         }
         catch (error) {
+            console.error(error)
+
             if (! mountedRef.current) {
                 return
             }
