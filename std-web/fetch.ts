@@ -16,7 +16,7 @@ export const ContentType = {
 
 export function createFetch(options?: FetchOptions) {
     const self: Fetch = {
-        baseUrl: options?.baseUrl ?? '',
+        baseUrl: asBaseUrl(options?.baseUrl),
 
         request(method: FetchRequestMethod, path: string, options?: FetchRequestOptions) {
             const url = path[0] === '/'
@@ -41,6 +41,22 @@ export function createFetch(options?: FetchOptions) {
     }
 
     return self
+}
+
+export function asBaseUrl(url?: string) {
+    if (! url) {
+        return ''
+    }
+    if (! url.trim()) {
+        return ''
+    }
+    if (url.slice(-1) === '/') {
+        // Url, without the trailing slash.
+        // It is fine to have a trailing slash but multiple trailing slashes
+        // are ignored because are an error and should not be amended.
+        return url.slice(0, -1)
+    }
+    return url
 }
 
 export function mergeOptions(...optionsList: Array<FetchRequestOptions>) {

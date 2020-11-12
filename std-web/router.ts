@@ -17,7 +17,6 @@ export const CapturingGroupRegexp = /\([^()]+\)/
 export const EmptiesRegexp = /[\n ]/g
 export const RepeatingSlashRegexp = /\/\/+/g
 export const TrailingSlashRegexp = /\/$/
-export const BasePathRegexp = /^\/$/
 export const EmptyRegexp = /^$/
 
 export const RegExpCache: RegExpCache = {}
@@ -75,7 +74,7 @@ export function createHashRouter(observer: RouterObserver, options?: RouterOptio
 }
 
 export function createHistoryRouter(observer: RouterObserver, options?: RouterOptions): Router {
-    const basePath = cleanBasePath(options?.basePath)
+    const basePath = asBasePath(options?.basePath)
 
     const self = {
         start() {
@@ -187,10 +186,20 @@ export function defaultRouteEncodeParamValue(value: unknown) {
     return defaultEncodeParamValue(value)
 }
 
-export function cleanBasePath(path?: string) {
+export function asBasePath(path?: string) {
+    if (! path) {
+        return ''
+    }
+    if (! path.trim()) {
+        return ''
+    }
+    if (path.slice(-1) === '/') {
+        // Path, without the trailing slash.
+        // It is fine to have a trailing slash but multiple trailing slashes
+        // are ignored because are an error and should not be amended.
+        return path.slice(0, -1)
+    }
     return path
-        ? path.replace(BasePathRegexp, '')
-        : ''
 }
 
 /*
