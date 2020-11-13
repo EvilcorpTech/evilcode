@@ -1,11 +1,18 @@
 import {error, StdError} from '@eviljs/std-lib/error.js'
+import {isFunction} from '@eviljs/std-lib/type.js'
 import {ValueOf} from '@eviljs/std-lib/type.js'
 import React from 'react'
-const {createContext, useContext, useMemo, useReducer} = React
+const {createContext, useContext, useEffect, useRef, useMemo, useReducer} = React
 
 export const StoreContext = createContext<Store<unknown, StoreActions<unknown>>>(void undefined as any)
-
 export class InvalidAction extends StdError {}
+export const StoreSetAction = 'set'
+export const StoreResetAction = 'reset'
+
+export const StoreDefaultActions = {
+    [StoreSetAction]: setAction,
+    [StoreResetAction]: resetAction,
+}
 
 StoreContext.displayName = 'StdStoreContext'
 
@@ -63,7 +70,11 @@ export function StoreProvider<S, A extends StoreActions<S>>(props: StoreProvider
 }
 
 export function useRootStore<S, A extends StoreActions<S>>(spec: StoreSpec<S, A>) {
-    const {createState, actions} = spec
+    const {createState} = spec
+    const actions = {
+        ...StoreDefaultActions,
+        ...spec?.actions,
+    }
 
     function reduce(state: S, action: StoreAction<unknown>) {
         const handler = actions[action.type]
@@ -81,11 +92,113 @@ export function useRootStore<S, A extends StoreActions<S>>(spec: StoreSpec<S, A>
         return {state, commit}
     }, [state, commit])
 
-    return store
+    return store as Store<S, A>
 }
 
 export function useStore<S, A extends StoreActions<S>>() {
     return useContext(StoreContext) as Store<S, A>
+}
+
+export function useStoreStorage<S>(options?: StoreStorageOptions<S>) {
+    const {state, commit} = useStore<S, any>()
+    const isLoadedRef = useRef(false)
+    const version = options?.version ?? 1
+    const onLoad = options?.onLoad ?? defaultOnLoad
+    const onLoadMerge = options?.onLoadMerge ?? defaultOnLoadMerge
+    const onMissing = options?.onMissing
+    const onSave = options?.onSave ?? defaultOnSave
+    const localStorageKey = 'std-store-state-v' + version
+
+    function defaultOnLoad(state: S, savedState: S) {
+        const mergedState = onLoadMerge(state, savedState)
+
+        commit({type: 'reset', value: mergedState})
+    }
+
+    function defaultOnLoadMerge(state: S, savedState: S) {
+        // Shallow merge.
+        // State from LocalStorage overwrites current state.
+        return {...state, ...savedState}
+    }
+
+    function defaultOnSave(state: S) {
+        return state
+    }
+
+    useEffect(() => {
+        // We try deriving the state from LocalStorage.
+        // We need to derive the state inside an effect instead of inside
+        // the render function because we are mutating a different component.
+        isLoadedRef.current = true
+        // we use a ref avoiding triggering a re-render if not needed.
+
+        const savedState = loadStateFromLocalStorage<S>(localStorageKey)
+
+        if (! savedState) {
+            // We don't have a saved state. We have nothing to do.
+            onMissing?.()
+            return
+        }
+
+        onLoad(state, savedState)
+    }, [])
+
+    useEffect(() => {
+        if (! isLoadedRef.current) {
+            // We can't save the state yet.
+            return
+        }
+
+        const stateToSave = onSave(state)
+        // TODO: add debounce?
+        saveStateToLocalStorage(localStorageKey, stateToSave)
+    }, [state])
+}
+
+export function setAction<S extends {}>(state: S, value: Partial<S> | ((state: S) => Partial<S>)): S {
+    return {
+        ...state, // Old state.
+        ...isFunction(value)
+            ? value(state) // New computed state.
+            : value // New provided state.
+        ,
+    }
+}
+
+export function resetAction<S>(state: S, value: S | ((state: S) => S)): S {
+    return (
+        isFunction(value)
+            ? value(state) // New computed state.
+            : value // New provided state.
+    )
+}
+
+export function saveStateToLocalStorage(key: string, state: any) {
+    if (! ('localStorage' in window)) {
+        return
+    }
+
+    if (! state) {
+        return
+    }
+
+    const serializedState = JSON.stringify(state)
+
+    localStorage.setItem(key, serializedState)
+}
+
+export function loadStateFromLocalStorage<T = unknown>(key: string) {
+    if (! ('localStorage' in window)) {
+        return
+    }
+
+    const serializedState = localStorage.getItem(key)
+
+    if (! serializedState) {
+        return
+    }
+
+    return JSON.parse(serializedState) as T
 }
 
 export function throwInvalidAction(action: string) {
@@ -110,15 +223,24 @@ export interface StoreSpec<S, A extends StoreActions<S>> {
 
 export interface Store<S, A extends StoreActions<S>> {
     state: S
-    commit: React.Dispatch<StoreActionsOf<S, A>>
+    commit: React.Dispatch<
+        | StoreActionsOf<S, StoreDefaultActions<S>>
+        | StoreActionsOf<S, A>
+    >
 }
 
-export interface StoreActions<S> extends Record<string, React.Reducer<S, any>> {
+export interface StoreActions<S> {
+    [key: string]: React.Reducer<S, any>
 }
 
 export interface StoreAction<V> {
     type: string
     value: V
+}
+
+export type StoreDefaultActions<S> = {
+    [StoreSetAction](state: S, value: Partial<S> | ((state: S) => Partial<S>)): S
+    [StoreResetAction](state: S, value: S | ((state: S) => S)): S
 }
 
 export type StoreActionsOf<S, A extends StoreActions<S>> = ValueOf<{
@@ -127,3 +249,23 @@ export type StoreActionsOf<S, A extends StoreActions<S>> = ValueOf<{
         value: Parameters<A[key]>[1]
     }
 }>
+
+export interface StoreStorageOptions<S> {
+    version?: string | number
+    onLoad?: StoreStorageSetter<S>,
+    onLoadMerge?: StoreStorageMerger<S>
+    onMissing?(): void
+    onSave?: StoreStorageFilter<S>
+}
+
+export interface StoreStorageSetter<S> {
+    (state: S, savedState: S): void
+}
+
+export interface StoreStorageMerger<S> {
+    (state: S, savedState: S): S
+}
+
+export interface StoreStorageFilter<S> {
+    (state: S): S
+}

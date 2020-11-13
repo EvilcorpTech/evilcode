@@ -444,7 +444,9 @@ export interface SiteSpec
     widgets?: W
 }
 
-export type SiteWidgets = Record<string, SiteComponent>
+export interface SiteWidgets {
+    [key: string]: SiteComponent
+}
 
 export type SiteDefaultWidgets
     <

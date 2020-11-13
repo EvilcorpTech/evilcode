@@ -45,10 +45,10 @@
 /* Pulse Spinner **************************************************************/
 
 .spinner-5b07bc {
-    position: absolute;
-    left: 0;
+    position: relative;
     width: var(--pulse-spinner-size, 1em);
     height: var(--pulse-spinner-size, 1em);
+    margin: calc(var(--pulse-spinner-size, 1em) / 4);
 }
 
 .spinner-5b07bc::before,
