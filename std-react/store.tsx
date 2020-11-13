@@ -103,11 +103,13 @@ export function useStoreStorage<S>(options?: StoreStorageOptions<S>) {
     const {state, commit} = useStore<S, any>()
     const isLoadedRef = useRef(false)
     const version = options?.version ?? 1
+    const storageType = options?.storage ?? 'localStorage'
     const onLoad = options?.onLoad ?? defaultOnLoad
     const onLoadMerge = options?.onLoadMerge ?? defaultOnLoadMerge
     const onMissing = options?.onMissing
     const onSave = options?.onSave ?? defaultOnSave
-    const localStorageKey = 'std-store-state-v' + version
+    const storageKey = 'std-store-state-v' + version
+    const storage = window[storageType] as undefined | Storage
 
     function defaultOnLoad(state: S, savedState: S) {
         const mergedState = onLoadMerge(state, savedState)
@@ -126,13 +128,17 @@ export function useStoreStorage<S>(options?: StoreStorageOptions<S>) {
     }
 
     useEffect(() => {
+        if (! storage) {
+            return
+        }
+
         // We try deriving the state from LocalStorage.
         // We need to derive the state inside an effect instead of inside
         // the render function because we are mutating a different component.
         isLoadedRef.current = true
         // we use a ref avoiding triggering a re-render if not needed.
 
-        const savedState = loadStateFromLocalStorage<S>(localStorageKey)
+        const savedState = loadStateFromStorage<S>(storage, storageKey)
 
         if (! savedState) {
             // We don't have a saved state. We have nothing to do.
@@ -144,6 +150,10 @@ export function useStoreStorage<S>(options?: StoreStorageOptions<S>) {
     }, [])
 
     useEffect(() => {
+        if (! storage) {
+            return
+        }
+
         if (! isLoadedRef.current) {
             // We can't save the state yet.
             return
@@ -151,7 +161,7 @@ export function useStoreStorage<S>(options?: StoreStorageOptions<S>) {
 
         const stateToSave = onSave(state)
         // TODO: add debounce?
-        saveStateToLocalStorage(localStorageKey, stateToSave)
+        saveStateToStorage(storage, storageKey, stateToSave)
     }, [state])
 }
 
@@ -173,26 +183,18 @@ export function resetAction<S>(state: S, value: S | ((state: S) => S)): S {
     )
 }
 
-export function saveStateToLocalStorage(key: string, state: any) {
-    if (! ('localStorage' in window)) {
-        return
-    }
-
+export function saveStateToStorage(storage: Storage, key: string, state: any) {
     if (! state) {
         return
     }
 
     const serializedState = JSON.stringify(state)
 
-    localStorage.setItem(key, serializedState)
+    storage.setItem(key, serializedState)
 }
 
-export function loadStateFromLocalStorage<T = unknown>(key: string) {
-    if (! ('localStorage' in window)) {
-        return
-    }
-
-    const serializedState = localStorage.getItem(key)
+export function loadStateFromStorage<T = unknown>(storage: Storage, key: string) {
+    const serializedState = storage.getItem(key)
 
     if (! serializedState) {
         return
@@ -252,6 +254,7 @@ export type StoreActionsOf<S, A extends StoreActions<S>> = ValueOf<{
 
 export interface StoreStorageOptions<S> {
     version?: string | number
+    storage?: 'localStorage' | 'sessionStorage'
     onLoad?: StoreStorageSetter<S>,
     onLoadMerge?: StoreStorageMerger<S>
     onMissing?(): void
