@@ -88,7 +88,7 @@ export function withRouteMatches(matches: RouteMatches, children?: React.ReactNo
 * </SwitchRoute>
 */
 export function createRouteMatches(children?: React.ReactNode) {
-    function routeMatchesProxy(matches: RouteMatches) {
+    function routeMatchesProxy(...matches: RouteMatches) {
         return withRouteMatches(matches, children)
     }
 
