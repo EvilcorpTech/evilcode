@@ -5,6 +5,8 @@ import {wait} from '@eviljs/std-lib/async.js'
 
 export class MissingMock extends StdError {}
 
+export const NoMock = Symbol('NoMock')
+
 /*
 * Mocks must be an object with the structure
 *
@@ -30,21 +32,19 @@ export function mockFetch(fetch: Fetch, mocks: FetchMocks) {
         ...createFetch({baseUrl: fetch.baseUrl}),
 
         request(...args) {
-            try {
-                const response = mockResponse(mocks, ...args)
+            const response = mockResponse(mocks, ...args)
 
-                if (! response) {
-                    const [method, path] = args
-                    return throwMissingMock(method, path)
-                }
-
+            if (response !== NoMock) {
                 return Promise.resolve(response)
             }
-            catch (error) {
-                console.debug(error)
 
-                return fetch.request(...args)
-            }
+            const [method, path] = args
+            console.debug(
+                `@eviljs/std-web/fetch-mock.request():\n`
+                + `missing mock for '${method.toUpperCase()} ${path}'.`
+            )
+
+            return fetch.request(...args)
         },
         get(...args) {
             return self.request('get', ...args)
@@ -86,7 +86,7 @@ export function mockResponse(mocks: FetchMocks, type: FetchRequestMethod, path: 
     const typeMocks = mocks[type]
 
     if (! typeMocks) {
-        return
+        return NoMock
     }
 
     for (const mock of typeMocks) {
@@ -100,7 +100,7 @@ export function mockResponse(mocks: FetchMocks, type: FetchRequestMethod, path: 
         return response(type, path, options)
     }
 
-    return // Makes TypeScript happy.
+    return NoMock
 }
 
 export function jsonResponse(data: unknown, options?: FetchRequestOptions) {
@@ -115,13 +115,6 @@ export function jsonResponse(data: unknown, options?: FetchRequestOptions) {
     const response = new Response(body, opts)
 
     return response
-}
-
-export function throwMissingMock(method: string, path: string) {
-    const message =
-        `@eviljs/std-web/fetch-mock.mockFetch():\n`
-        + `missing mock for '${method}:${path}'.`
-    return error({type: MissingMock, message})
 }
 
 // Types ///////////////////////////////////////////////////////////////////////
