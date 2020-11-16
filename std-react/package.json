@@ -1,6 +1,6 @@
 {
     "name": "@eviljs/std-react",
-    "version": "0.1.46",
+    "version": "0.1.47",
     "type": "module",
     "files": [
         "/LICENSE.txt",

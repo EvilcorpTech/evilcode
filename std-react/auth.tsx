@@ -1,4 +1,12 @@
-import {authenticate, invalidate, validate, AuthCredentials, FetchOptions} from '@eviljs/std-web/auth.js'
+import {
+    authenticate,
+    invalidate,
+    validate,
+    AuthCredentials,
+    AuthenticateOptions,
+    InvalidateOptions,
+    ValidateOptions,
+} from '@eviljs/std-web/auth.js'
 import {Cookie} from '@eviljs/std-web/cookie.js'
 import {Fetch} from '@eviljs/std-web/fetch.js'
 import {throwInvalidResponse} from '@eviljs/std-web/error.js'
@@ -188,9 +196,9 @@ export interface AuthProviderProps extends AuthOptions {
 }
 
 export interface AuthOptions {
-    authenticate?: FetchOptions
-    invalidate?: FetchOptions
-    validate?: FetchOptions
+    authenticate?: AuthenticateOptions
+    invalidate?: InvalidateOptions
+    validate?: ValidateOptions
 }
 
 export interface Auth {
