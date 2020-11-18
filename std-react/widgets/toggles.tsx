@@ -47,6 +47,7 @@ export function Toggles(props: TogglesProps) {
                             selected: selectedItems.includes(it.id),
                         })}
                         data-id={it.id}
+                        role="checkbox"
                         onClick={onClick}
                     >
                         {it.name}
