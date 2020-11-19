@@ -1,9 +1,10 @@
 {
     "name": "@eviljs/std-theme",
-    "version": "0.1.20",
+    "version": "0.1.21",
     "files": [
         "/LICENSE.txt",
         "/*.css",
+        "/widgets/*.css",
         "/font-roboto/*.woff"
     ],
     "main": "index.css",
