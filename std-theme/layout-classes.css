@@ -3,51 +3,6 @@
     height: 100%;
 }
 
-.std-stack-h {
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    align-items: center;
-    flex-wrap: wrap;
-}
-.std-stack-v {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-}
-
-.std-stack-h.start,
-.std-stack-v.start {
-    justify-content: flex-start;
-}
-.std-stack-h.end,
-.std-stack-v.end {
-    justify-content: flex-end;
-}
-.std-stack-h.between,
-.std-stack-v.between {
-    justify-content: space-between;
-}
-
-.std-stack-h.block-start,
-.std-stack-v.block-start {
-    align-items: flex-start;
-}
-.std-stack-h.block-end,
-.std-stack-v.block-end {
-    align-items: flex-end;
-}
-.std-stack-h.block-stretch,
-.std-stack-v.block-stretch {
-    align-items: stretch;
-}
-
-.std-stack-h.nowrap,
-.std-stack-v.nowrap {
-    flex-wrap: nowrap;
-}
-
 .std-layer {
     position: absolute;
     top: 0;
@@ -55,6 +10,38 @@
     right: 0;
     bottom: 0;
 }
+
+/* Flex ***********************************************************************/
+.std-flex { display: flex; }
+/* Flex > Flow ****************************************************************/
+.std-flex.wrap { flex-wrap: wrap; }
+.std-flex.nowrap { flex-wrap: nowrap; }
+.std-flex.row { flex-direction: row; }
+.std-flex.row-reverse { flex-direction: row-reverse; }
+.std-flex.column { flex-direction: column; }
+.std-flex.column-reverse { flex-direction: column-reverse; }
+/* Flex > Justification *******************************************************/
+.std-flex.start { justify-content: flex-start; }
+.std-flex.center { justify-content: center; }
+.std-flex.end { justify-content: flex-end; }
+.std-flex.between { justify-content: space-between; }
+.std-flex.around { justify-content: space-around; }
+.std-flex.evenly { justify-content: space-evenly; }
+/* Flex > Alignment ***********************************************************/
+.std-flex.align-start { align-items: flex-start; }
+.std-flex.align-center { align-items: center; }
+.std-flex.align-end { align-items: flex-end; }
+.std-flex.align-stretch { align-items: stretch; }
+/* Flex > Presets *************************************************************/
+.std-stack {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+}
+.std-stack.h { flex-direction: row; }
+.std-stack.v { flex-direction: column; }
+/* END ************************************************************************/
 
 .std-no-scrollbar {
     overflow: -moz-scrollbars-none; /* Firefox. */
