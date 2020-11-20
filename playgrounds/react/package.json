@@ -46,7 +46,7 @@
         "rxjs": "^6",
         "style-loader": "^1",
         "terser-webpack-plugin": "^4",
-        "typescript": "^4",
+        "typescript": "^4.1",
         "webpack": "^4",
         "webpack-bundle-analyzer": "^3",
         "webpack-cli": "^3",

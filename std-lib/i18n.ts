@@ -126,7 +126,7 @@ export function tokenAsRegexp(token: string, symbol: string, cache: Record<strin
         cache[token] = new RegExp(`[${symbol}]{\\s*${token}\\s*}`, 'g')
     }
 
-    return cache[token]
+    return cache[token]!
 }
 
 // Types ///////////////////////////////////////////////////////////////////////

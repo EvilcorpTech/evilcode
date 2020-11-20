@@ -33,7 +33,7 @@ export function createContainer<F extends ContainerFactories>(spec?: ContainerSp
         const services = [
             ...Object.entries(factories),
             ...Object.getOwnPropertySymbols(factories).reduce((list, id) => {
-                const factory = factories[id as unknown as string]
+                const factory = factories[id as unknown as string]!
 
                 list.push([id as unknown as string, factory])
 

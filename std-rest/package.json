@@ -15,7 +15,7 @@
         "@eviljs/std-lib": "^0.1",
         "@eviljs/std-node": "^0.1",
         "@koa/multer": "^3",
-        "@koa/router": "^9",
+        "@koa/router": "^10",
         "@types/bcryptjs": "^2",
         "@types/koa": "^2",
         "@types/koa__multer": "^2",
@@ -41,7 +41,7 @@
     },
     "peerDependencies": {},
     "devDependencies": {
-        "typescript": "^4"
+        "typescript": "^4.1"
     },
     "scripts": {
         "build": "../tools/build .",

@@ -30,7 +30,7 @@
         "react": "^16.9 || ^17"
     },
     "devDependencies": {
-        "typescript": "^4"
+        "typescript": "^4.1"
     },
     "scripts": {
         "build": "../tools/build .",

@@ -286,7 +286,7 @@ export function createDefaultWidget
         return null
     }
 
-    const Widget = ctx.widgets[widgetType]
+    const Widget = ctx.widgets[widgetType] as undefined | SiteComponent
 
     if (! Widget) {
         console.warn(

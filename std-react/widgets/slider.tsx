@@ -40,7 +40,7 @@ export function Slider(props: SliderProps) {
         'backwards': towards === -1,
         'forwards': towards === 1,
     }
-    const child = children[selectedIndex]
+    const child = children[selectedIndex]!
 
     return (
         <div

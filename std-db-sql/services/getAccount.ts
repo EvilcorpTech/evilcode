@@ -24,7 +24,7 @@ export async function getAccount(db: Db<GetAccountServices>, id: number, options
     if (result.length !== 1) {
         return
     }
-    const model = $Account.fromData(result[0], options)
+    const model = $Account.fromData(result[0]!, options)
 
     return model
 }

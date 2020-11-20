@@ -28,7 +28,7 @@ export async function getAccountByIdentifier(
     if (result.length !== 1) {
         return
     }
-    const model = $Account.fromData(result[0], options)
+    const model = $Account.fromData(result[0]!, options)
 
     return model
 }

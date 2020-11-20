@@ -100,7 +100,7 @@ export function Transition(props: TransitionProps) {
     return (
         <Fragment>
             {state.task.map((it, idx) =>
-                createPresence(it, state.keys[idx], onMountEnd, onUnmountEnd))
+                createPresence(it, state.keys[idx]!, onMountEnd, onUnmountEnd))
             }
         </Fragment>
     )
@@ -474,7 +474,7 @@ export function createCrossTasks(spec: {
             createTask('mount', newChild, observers, {events: enter, source, target: true, key}),
         ],
         [
-            createTask('render', newChild, observers, {target: true, flags: ['enter'], key: (keys) => keys[1]}),
+            createTask('render', newChild, observers, {target: true, flags: ['enter'], key: (keys) => keys[1]!}),
         ],
     )
 }
@@ -529,7 +529,7 @@ export function createInOutTasks(spec: {
             createTask('render', newChild, observers, {target: true}),
         ],
         [
-            createTask('render', newChild, observers, {target: true, flags: ['enter'], key: (keys) => keys[1]}),
+            createTask('render', newChild, observers, {target: true, flags: ['enter'], key: (keys) => keys[1]!}),
         ],
     )
 }
@@ -595,7 +595,7 @@ export function consumeQueue(state: TransitionState) {
     const keys = task.map((it, idx) =>
         it.key?.(state.keys) // First, we use the task computed key, if any.
         ?? state.keys[idx] // Otherwise we re-use the previous key, if any.
-        ?? idx // As last resort, we fallback to the index.
+        ?? String(idx) // As last resort, we fallback to the index.
     )
 
     return {...state, queue, task, keys}

@@ -95,7 +95,7 @@ export function cleanCookie(path: string) {
     for (const keyVal of list) {
         const [key] = keyVal.trim().split('=')
 
-        deleteCookie(path, key)
+        deleteCookie(path, key!)
     }
 }
 

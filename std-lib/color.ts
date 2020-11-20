@@ -3,9 +3,9 @@
 
 export function rgbFromHexString(rgbHex: string) {
     const [hash, r1, r2, g1, g2, b1, b2] = rgbHex
-    const r = parseInt(r1 + r2, 16)
-    const g = parseInt(g1 + g2, 16)
-    const b = parseInt(b1 + b2, 16)
+    const r = parseInt(r1! + r2!, 16)
+    const g = parseInt(g1! + g2!, 16)
+    const b = parseInt(b1! + b2!, 16)
     return [r, g, b] as const
 }
 

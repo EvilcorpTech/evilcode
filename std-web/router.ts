@@ -147,7 +147,7 @@ export function serializeRouteToString(path: string, params?: RouterParams) {
     return serializedRoute
 }
 
-export function deserializeRouteParamsFromString(paramsString: string) {
+export function deserializeRouteParamsFromString(paramsString: string | undefined) {
     const params: Record<string, string | null> = {}
 
     if (! paramsString) {
@@ -163,7 +163,7 @@ export function deserializeRouteParamsFromString(paramsString: string) {
         // serialized as JSON and encoded as URI component.
         // We need to decode them, and the developer will take care of parsing
         // the JSON of the value in that case.
-        const key = decodeURIComponent(encodedKey)
+        const key = decodeURIComponent(encodedKey!)
         const value = encodedValue
             ? decodeURIComponent(encodedValue)
             // An undefined value is casted to null to indicate its presence but without a value.
@@ -302,7 +302,7 @@ export function regexpFromPattern(pattern: string | RegExp) {
         RegExpCache[pattern] = new RegExp(pattern, 'i')
     }
 
-    return RegExpCache[pattern]
+    return RegExpCache[pattern]!
 }
 
 export function exact(pattern: string) {

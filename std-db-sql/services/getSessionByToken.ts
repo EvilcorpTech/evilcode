@@ -17,7 +17,7 @@ export async function getSessionByToken(db: Db<GetSessionByTokenServices>, token
     if (result.length !== 1) {
         return
     }
-    const model = $Session.fromData(result[0])
+    const model = $Session.fromData(result[0]!)
 
     return model
 }
