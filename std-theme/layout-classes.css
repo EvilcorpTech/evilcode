@@ -17,6 +17,37 @@
     align-items: center;
 }
 
+.std-stack-h.start,
+.std-stack-v.start {
+    justify-content: flex-start;
+}
+.std-stack-h.end,
+.std-stack-v.end {
+    justify-content: flex-end;
+}
+.std-stack-h.between,
+.std-stack-v.between {
+    justify-content: space-between;
+}
+
+.std-stack-h.block-start,
+.std-stack-v.block-start {
+    align-items: flex-start;
+}
+.std-stack-h.block-end,
+.std-stack-v.block-end {
+    align-items: flex-end;
+}
+.std-stack-h.block-stretch,
+.std-stack-v.block-stretch {
+    align-items: stretch;
+}
+
+.std-stack-h.nowrap,
+.std-stack-v.nowrap {
+    flex-wrap: nowrap;
+}
+
 .std-layer {
     position: absolute;
     top: 0;
