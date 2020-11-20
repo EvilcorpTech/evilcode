@@ -113,7 +113,7 @@ export function createSite
     const defaultWidgets = {
         [routerType]: Router,
     } as SiteDefaultWidgets<NonNullable<RT> | SiteRouterType>
-    const widgets = {...defaultWidgets, ...spec.widgets}
+    const widgets = {...defaultWidgets, ...spec.widgets} as W & SiteDefaultWidgets<NonNullable<RT> | SiteRouterType>
     const createRouter = spec.createRouter ?? createDefaultRouter
     const createAnimator = spec.createAnimator ?? createDefaultAnimator
     const createWidget = spec.createWidget ?? createDefaultWidget
@@ -125,7 +125,7 @@ export function createSite
         NonNullable<WK> | SiteWidgetKey,
         NonNullable<NK> | SiteNestingKey,
         NonNullable<RT> | SiteRouterType,
-        W & SiteDefaultWidgets<RT>
+        W & SiteDefaultWidgets<NonNullable<RT> | SiteRouterType>
     > = {
         routeKey, // model.path is the route path to match.
         animationKey, // model.animation is the animator configuration.
@@ -142,7 +142,7 @@ export function createSite
                     NonNullable<AK> | SiteAnimationKey,
                     NonNullable<WK> | SiteWidgetKey,
                     NonNullable<NK> | SiteNestingKey,
-                    W & SiteDefaultWidgets<RT>
+                    W & SiteDefaultWidgets<NonNullable<RT> | SiteRouterType>
             >,
         ) {
             return createRouter(self, routesModel)
@@ -152,7 +152,7 @@ export function createSite
                 SiteWidgetModel<
                     NonNullable<WK> | SiteWidgetKey,
                     NonNullable<NK> | SiteNestingKey,
-                    W & SiteDefaultWidgets<RT>,
+                    W & SiteDefaultWidgets<NonNullable<RT> | SiteRouterType>,
                     SiteAnimatorKeyModel<AK>
                 >
             ,
@@ -165,7 +165,7 @@ export function createSite
                 SiteWidgetModel<
                     NonNullable<WK> | SiteWidgetKey,
                     NonNullable<NK> | SiteNestingKey,
-                    W & SiteDefaultWidgets<RT>
+                    W & SiteDefaultWidgets<NonNullable<RT> | SiteRouterType>
                 >
             ,
             key?: React.Key,
@@ -178,7 +178,7 @@ export function createSite
                 SiteWidgetModel<
                     NonNullable<WK> | SiteWidgetKey,
                     NonNullable<NK> | SiteNestingKey,
-                    W & SiteDefaultWidgets<RT>
+                    W & SiteDefaultWidgets<NonNullable<RT> | SiteRouterType>
                 >
             ,
             key?: React.Key,
@@ -186,7 +186,7 @@ export function createSite
             return createComponent(self, component, widgetModel, key)
         },
         translate,
-    } as const
+    }
 
     return self
 }
