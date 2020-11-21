@@ -20,7 +20,8 @@ fix() {(
 
         find "$pkg" -type f -iname '*.js' -not -ipath '*/node_modules/*' -print0 \
         | while read -r -d '' file; do
-                sed -i '' -E 's|(import\s+.+\s+from\s+['\''"]\.?\./.+[^.][^j][^s])(['\''"])|\1.js\2|g' "$file"
+                # sed -i '' -E 's|(import\s+.+\s+from\s+['\''"]\.?\./.+[^.][^j][^s])(['\''"])|\1.js\2|g' "$file"
+                sed -i '' -E 's|(import *.+from *['\''"]react/jsx-runtime)(['\''"])|\1.js\2|g' "$file"
         done
 )}
 

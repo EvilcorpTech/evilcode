@@ -15,7 +15,7 @@ ProjectDir="$(cd "$(dirname "$0")/.." && pwd)"
 . "$ProjectDir/tools/env-styles.sh"
 
 : ${Build:=build-pkg}
-# : ${Fix:=fix-ts-imports}
+: ${Fix:=fix-ts-imports}
 
 if test $# -eq 0; then
         set -- "$ProjectDir/std-"*
@@ -41,13 +41,13 @@ for pkg; do
         fi
         printf -- "${ResetStyle}"
 
-        # echo "${TaskMarker} ${BlueStyle}fix-ts-imports${ResetStyle}..."
-        # printf -- "${GrayStyle}"
-        # if ! $Fix; then
-        #         echo "${ResetStyle}"
-        #         exit 2
-        # fi
-        # printf -- "${ResetStyle}"
+        echo "${TaskMarker} ${BlueStyle}fix-ts-imports${ResetStyle}..."
+        printf -- "${GrayStyle}"
+        if ! $Fix; then
+                echo "${ResetStyle}"
+                exit 2
+        fi
+        printf -- "${ResetStyle}"
 
         # echo "${TaskMarker} ${BlueStyle}cjs${ResetStyle}..."
         # printf -- "${GrayStyle}"
