@@ -5,7 +5,7 @@
     --std-primary-s: 0%;
     --std-primary-l: 50%;
     --std-primary-accent: hsl(var(--std-primary-h), var(--std-primary-s), var(--std-primary-l));
-    /* --std-amber-6. */
+    /* --std-amber6. */
     --std-secondary-h: 45;
     --std-secondary-s: 100%;
     --std-secondary-l: 50%;

@@ -1,0 +1,44 @@
+.std-flex { display: flex; }
+
+/* Flow ***********************************************************************/
+.std-flex.wrap, .std-stack.wrap { flex-wrap: wrap; }
+.std-flex.wrap-reverse, .std-stack.wrap-reverse { flex-wrap: wrap-reverse; }
+.std-flex.nowrap, .std-stack.nowrap { flex-wrap: nowrap; }
+.std-flex.row, .std-stack.row { flex-direction: row; }
+.std-flex.row-reverse, .std-stack.row-reverse { flex-direction: row-reverse; }
+.std-flex.column, .std-stack.column { flex-direction: column; }
+.std-flex.column-reverse, .std-stack.column-reverse { flex-direction: column-reverse; }
+
+/* Justification on Main Axis *************************************************/
+.std-flex.stretch, .std-stack.stretch { justify-content: stretch; }
+.std-flex.start, .std-stack.start { justify-content: flex-start; }
+.std-flex.center, .std-stack.center { justify-content: center; }
+.std-flex.end, .std-stack.end { justify-content: flex-end; }
+.std-flex.between, .std-stack.between { justify-content: space-between; }
+.std-flex.around, .std-stack.around { justify-content: space-around; }
+.std-flex.evenly, .std-stack.evenly { justify-content: space-evenly; }
+
+/* Justification on Cross Axis ************************************************/
+.std-flex.place-stretch, .std-stack.place-stretch { align-content: stretch; }
+.std-flex.place-start, .std-stack.place-start { align-content: flex-start; }
+.std-flex.place-center, .std-stack.place-center { align-content: center; }
+.std-flex.place-end, .std-stack.place-end { align-content: flex-end; }
+.std-flex.place-between, .std-stack.place-between { align-content: space-between; }
+.std-flex.place-around, .std-stack.place-around { align-content: space-around; }
+.std-flex.place-evenly, .std-stack.place-evenly { align-content: space-evenly; }
+
+/* Alignment on Cross Axis ****************************************************/
+.std-flex.align-start, .std-stack.align-start { align-items: flex-start; }
+.std-flex.align-center, .std-stack.align-center { align-items: center; }
+.std-flex.align-end, .std-stack.align-end { align-items: flex-end; }
+.std-flex.align-stretch, .std-stack.align-stretch { align-items: stretch; }
+
+/* Presets ********************************************************************/
+.std-stack {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+}
+.std-stack.h { flex-direction: row; }
+.std-stack.v { flex-direction: column; }

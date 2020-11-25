@@ -1,7 +1,9 @@
-* {
+*,
+*::after,
+*::before {
     box-sizing: border-box;
-    border: 0;
     margin: 0;
+    border: 0;
     padding: 0;
     font-family: inherit
     /*
@@ -16,8 +18,8 @@
 
 /*
 *,
-*:before,
-*:after {
+*::before,
+*::after {
     margin: inherit
     padding: inherit
     box-sizing: inherit
