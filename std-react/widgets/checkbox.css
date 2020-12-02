@@ -16,6 +16,7 @@
     border: var(--checkbox-border-size, 2px) var(--checkbox-border-style, solid) var(--checkbox-border-color, currentColor);
     color: var(--checkbox-color, currentColor);
     background: transparent;
+    transition: all var(--std-duration-normal);
 }
 .controls-67ba84::after {
     content: '';
@@ -28,7 +29,7 @@
 	height: 50%;
 	margin: auto;
 	opacity: 0;
-	background: var(--std-text1);
+	background: var(--checkbox-color, currentColor);
 	transform: scale(.5);
 	transition: all var(--std-duration-normal);
 }
