@@ -1,6 +1,6 @@
 import {classes} from '../react.js'
 import React from 'react'
-const {useMemo} = React
+const {useCallback, useMemo} = React
 
 import './radio.css'
 
@@ -13,35 +13,41 @@ export function RadioGroup(props: RadioGroupProps) {
         return ++GroupId
     }, [])
 
+    const onClick = useCallback((value: string, idx) => {
+        if (selected === value) {
+            return
+        }
+        onChange?.(value, idx)
+    }, [selected])
+
     return (
         <ul
             {...otherProps}
             className={classes('list-e37bad', props.className)}
         >
-            {(items ?? []).map((it, idx) =>
-                <li
-                    key={idx}
-                    className="item-bf74a1"
-                >
-                    <input
-                        className="radio-137014"
-                        type="radio"
-                        name={`radio-group-${id}`}
-                        value={it.value}
-                        checked={selected === it.value || selected === idx
-                            ? true
-                            : false
-                        }
-                        onChange={() => onChange?.(it.value, idx)}
-                    />
-                    <label
-                        className="label-b0ada3"
-                        onClick={() => onChange?.(it.value, idx)}
+            {(items ?? []).map((it, idx) => {
+                const isSelected = selected === it.value
+
+                return (
+                    <li
+                        key={idx}
+                        className={classes('item-bf74a1', {selected: isSelected})}
+                        onClick={() => onClick(it.value, idx)}
                     >
-                        {it.label}
-                    </label>
-                </li>
-            )}
+                        <input
+                            className="radio-137014"
+                            type="radio"
+                            name={`radio-group-${id}`}
+                            value={it.value}
+                            checked={isSelected}
+                            readOnly={true}
+                        />
+                        <label className="label-b0ada3">
+                            {it.label}
+                        </label>
+                    </li>
+                )
+            })}
         </ul>
     )
 }
@@ -50,7 +56,7 @@ export function RadioGroup(props: RadioGroupProps) {
 
 
 export interface RadioGroupProps extends Omit<React.HTMLAttributes<HTMLElement>, 'onChange'> {
-    selected?: string | number | null | undefined
+    selected?: null | string
     items?: null | Array<{
         label: React.ReactNode
         value: string

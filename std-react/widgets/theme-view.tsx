@@ -39,7 +39,7 @@ export function ThemeView(props: ThemeViewProps) {
                 'light': themeLight, 'dark': ! themeLight,
             })}
         >
-            <h1 className="std-stack-h std-text-overline std-primary-accent">
+            <h1 className="std-flex std-text-overline std-primary-accent">
                 <input
                     className="picker-t8c25d"
                     type="color"
@@ -77,10 +77,10 @@ export function ThemeView(props: ThemeViewProps) {
 
             <i className="std-space-m"/>
 
-            <div className="std-stack-h">
-                <div className="std-stack-v">
-                    <div className="std-stack-h" style={{alignItems: 'flex-end'}}>
-                        <div className="std-stack-v" style={{alignItems: 'flex-start'}}>
+            <div className="std-flex center wrap">
+                <div className="std-flex column">
+                    <div className="std-flex center">
+                        <div className="std-flex column align-start">
                             <label className="text-bead07 std-text-display1">Display 1</label>
                             <label className="text-bead07 std-text-display2">Display 2</label>
                             <label className="text-bead07 std-text-h1">Headline 1</label>
@@ -98,7 +98,7 @@ export function ThemeView(props: ThemeViewProps) {
                             <label className="text-bead07 std-text-button">Button</label>
                         </div>
 
-                        <div className="std-stack-v" style={{alignItems: 'flex-end'}}>
+                        <div className="std-flex column align-end">
                             <div className="gutter-t1d3c1 important std-space-mini"><label>Mini</label></div>
                             <div className="gutter-t1d3c1 important std-space-xxs"><label>XXS</label></div>
                             <div className="gutter-t1d3c1 important std-space-xs"><label>XS</label></div>
@@ -114,7 +114,7 @@ export function ThemeView(props: ThemeViewProps) {
                     <i className="std-space-m"/>
                     <i className="std-space-m"/>
 
-                    <div className="std-stack-h">
+                    <div className="std-flex">
                         <label className="contrast-td0891 std-text1 std-back1">
                             Text&nbsp;1<br/>
                             Back&nbsp;1
@@ -133,7 +133,7 @@ export function ThemeView(props: ThemeViewProps) {
                         </label>
                     </div>
                     <i className="std-space-m"/>
-                    <div className="std-stack-h">
+                    <div className="std-flex">
                         <label className="contrast-td0891 std-text3-inverse std-back4-inverse">
                             Text&nbsp;3<br/>
                             Back&nbsp;4<br/>
@@ -161,10 +161,10 @@ export function ThemeView(props: ThemeViewProps) {
 
                 <i className="std-space-m"/>
 
-                <div className="std-stack-v">
-                    <div className="std-stack-h" style={{alignItems: 'flex-start'}}>
-                        <div className="std-stack-v" style={{alignItems: 'flex-end'}}>
-                            <div className="std-stack-h">
+                <div className="std-flex column">
+                    <div className="std-flex center align-start wrap">
+                        <div className="std-flex align-end column">
+                            <div className="std-flex">
                                 <label>Primary Accent</label>
                                 <div className="std-spacer"></div>
                                 <span
@@ -174,7 +174,7 @@ export function ThemeView(props: ThemeViewProps) {
                                 />
                             </div>
                             <div className="std-space-s"></div>
-                            <div className="std-stack-h">
+                            <div className="std-flex">
                                 <label>Tints</label>
                                 <div className="std-spacer"></div>
                                 {Array(6).fill(null).map((_, idx) => (
@@ -187,7 +187,7 @@ export function ThemeView(props: ThemeViewProps) {
                                 ))}
                             </div>
                             <div className="std-space-s"></div>
-                            <div className="std-stack-h">
+                            <div className="std-flex">
                                 <label>Shades</label>
                                 <div className="std-spacer"></div>
                                 {Array(6).fill(null).map((_, idx) => (
@@ -200,7 +200,7 @@ export function ThemeView(props: ThemeViewProps) {
                                 ))}
                             </div>
                             <div className="std-space-s"></div>
-                            <div className="std-stack-h">
+                            <div className="std-flex">
                                 <label>Tones</label>
                                 <div className="std-spacer"></div>
                                 {Array(6).fill(null).map((_, idx) => (
@@ -215,7 +215,7 @@ export function ThemeView(props: ThemeViewProps) {
 
                             <i className="std-space-m"/>
 
-                            <div className="std-stack-h">
+                            <div className="std-flex">
                                 <label>Secondary Accent</label>
                                 <div className="std-spacer"></div>
                                 <span
@@ -225,7 +225,7 @@ export function ThemeView(props: ThemeViewProps) {
                                 />
                             </div>
                             <div className="std-space-s"></div>
-                            <div className="std-stack-h">
+                            <div className="std-flex">
                                 <label>Tints</label>
                                 <div className="std-spacer"></div>
                                 {Array(6).fill(null).map((_, idx) => (
@@ -238,7 +238,7 @@ export function ThemeView(props: ThemeViewProps) {
                                 ))}
                             </div>
                             <div className="std-space-s"></div>
-                            <div className="std-stack-h">
+                            <div className="std-flex">
                                 <label>Shades</label>
                                 <div className="std-spacer"></div>
                                 {Array(6).fill(null).map((_, idx) => (
@@ -251,7 +251,7 @@ export function ThemeView(props: ThemeViewProps) {
                                 ))}
                             </div>
                             <div className="std-space-s"></div>
-                            <div className="std-stack-h">
+                            <div className="std-flex">
                                 <label>Tones</label>
                                 <div className="std-spacer"></div>
                                 {Array(6).fill(null).map((_, idx) => (
@@ -270,7 +270,7 @@ export function ThemeView(props: ThemeViewProps) {
                         <i className="std-space-m"/>
                         <i className="std-space-m"/>
 
-                        <div className="std-stack-v">
+                        <div className="std-flex column">
                             <div>
                                 <button className="std-text-button std-button special">Special</button>
                                 <button className="std-text-button std-button primary">Primary</button>
@@ -292,7 +292,7 @@ export function ThemeView(props: ThemeViewProps) {
                             <i className="std-space-m"/>
                             <i className="std-space-m"/>
 
-                            <div className="std-stack-h">
+                            <div className="std-flex">
                                 <Input label="Email" value={input} onChange={setInput}/>
                                 <i className="std-space-m"/>
                                 <Input label="Password" type="password" value="123456789"/>
@@ -312,7 +312,7 @@ export function ThemeView(props: ThemeViewProps) {
                             <i className="std-space-m"/>
                             <i className="std-space-m"/>
 
-                            <div className="std-stack-h" style={{alignItems: 'flex-end'}}>
+                            <div className="std-flex align-end">
                                 <div className="icon-e43c30">
                                     <Icon className="std-icon maxi"/>
                                     <div className="std-space-s"></div>
@@ -379,7 +379,7 @@ export function ThemeView(props: ThemeViewProps) {
 
                     <i className="std-space-m"/>
 
-                    <div className="std-stack-h" style={{maxWidth: 'var(--std-viewport-m)'}}>
+                    <div className="std-flex wrap std-viewport m">
                         <label className="shadow-t9a257 std-shadow soft">Soft</label>
                         {Array(12).fill(null).map((_, idx) => (
                             <label key={idx} className={`shadow-t9a257 std-shadow z${idx}`}>{idx}</label>
