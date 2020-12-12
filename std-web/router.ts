@@ -334,10 +334,10 @@ export type RouterParams =
     | RouteParamsDict
     | Array<string | RouteParamsDict>
 
-export interface RouteParamsDict extends Record<string, undefined | null | string | number | boolean> {
+export interface RouteParamsDict extends Record<string | number, undefined | null | boolean | number | string> {
 }
 
-export interface RouterRouteParams extends Record<string, string | null> {
+export interface RouterRouteParams extends Record<string | number, null | string> {
 }
 
 export interface Route<E extends Args, D> {
