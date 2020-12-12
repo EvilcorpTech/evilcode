@@ -1,6 +1,6 @@
 import {asArray, isFunction, isPromise} from '@eviljs/std-lib/type.js'
 import {classes} from './react.js'
-import {createRouter, compilePattern, exact, regexpFromPattern, RouterOptions, RouterParams, RouterRouteParams} from '@eviljs/std-web/router.js'
+import {createRouter, compilePattern, exact, regexpFromPattern, serializeRouteToString, RouterOptions, RouterParams, RouterRouteParams} from '@eviljs/std-web/router.js'
 import React, {CSSProperties} from 'react'
 const {createContext, cloneElement, useCallback, useContext, useEffect, useMemo, useRef, useState, Fragment, Children} = React
 
@@ -344,8 +344,8 @@ export function Route(props: RouteProps) {
 }
 
 export function Link(props: LinkProps) {
-    const {children, to, ...otherProps} = props
-    const isRoute = to[0] === '/'
+    const {children, to, params, ...otherProps} = props
+    const isRoute = to?.[0] === '/'
 
     if (isRoute) {
         return (
@@ -353,6 +353,7 @@ export function Link(props: LinkProps) {
                 {...otherProps}
                 className={classes('link-181232 route', props.className)}
                 to={to}
+                params={params}
             >
                 {children}
             </Route>
@@ -364,7 +365,7 @@ export function Link(props: LinkProps) {
             target="_blank"
             {...otherProps}
             className={classes('link-181232 external', props.className)}
-            href={to}
+            href={serializeRouteToString(to, params)}
         >
             {children}
         </a>
@@ -471,6 +472,7 @@ export interface RouteProps extends React.AnchorHTMLAttributes<HTMLAnchorElement
 export interface LinkProps extends React.AnchorHTMLAttributes<HTMLAnchorElement> {
     children: React.ReactNode
     to: string
+    params?: RouterParams
 }
 
 export interface RedirectProps {
