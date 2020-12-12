@@ -331,8 +331,11 @@ export interface RouterOptions {
 
 export type RouterParams =
     | string
-    | Record<string, string | number>
-    | Array<string | Record<string, string | number>>
+    | RouteParamsDict
+    | Array<string | RouteParamsDict>
+
+export interface RouteParamsDict extends Record<string, undefined | null | string | number | boolean> {
+}
 
 export interface RouterRouteParams extends Record<string, string | null> {
 }
