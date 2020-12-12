@@ -75,6 +75,7 @@ export function encodeParams(params?: QueryParams, options?: EncodeParamsOptions
 export function encodeParamsObject(params: QueryParamsDict, options?: EncodeParamsOptions) {
     const encodeName = options?.encodeName ?? defaultEncodeParamName
     const encodeValue = options?.encodeValue ?? defaultEncodeParamValue
+    const joinParam = options?.joinParam ?? defaultJoinParam
     const joinParts = options?.joinParts ?? defaultJoinParamsParts
 
     const paramsParts = Object.keys(params).map(name => {
@@ -92,7 +93,7 @@ export function encodeParamsObject(params: QueryParamsDict, options?: EncodePara
             break
 
             default:
-                return `${encodedName}=${encodeValue(value)}`
+                return joinParam(encodedName, encodeValue(value))
             break
         }
     })
@@ -179,6 +180,10 @@ export function defaultEncodeParamValue(value: unknown) {
     }
 }
 
+export function defaultJoinParam(name: string, value: string) {
+    return `${name}=${value}`
+}
+
 export function defaultJoinParamsParts(parts: Array<string>) {
     // Without the empty strings.
     return parts.filter(Boolean).join('&')
@@ -186,15 +191,16 @@ export function defaultJoinParamsParts(parts: Array<string>) {
 
 // Types ///////////////////////////////////////////////////////////////////////
 
-export interface QueryParamsDict extends Record<string | number, QueryRules> {
-}
-export interface QueryParamsList extends Array<number | string | QueryParams> {
-}
-
 export type QueryParams =
     | string
     | QueryParamsDict
     | QueryParamsList
+
+export interface QueryParamsDict extends Record<string | number, QueryRules> {
+}
+
+export interface QueryParamsList extends Array<number | string | QueryParams> {
+}
 
 export type QueryRules =
     | undefined
@@ -207,5 +213,6 @@ export type QueryRules =
 export interface EncodeParamsOptions {
     encodeName?(name: unknown): string
     encodeValue?(value: unknown): string
+    joinParam?(name: string, value: string): string
     joinParts?(parts: Array<string>): string
 }
