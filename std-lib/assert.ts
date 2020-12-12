@@ -1,5 +1,5 @@
 import {throwInvalidArgument} from './error.js'
-import {isArray, isBoolean, isFunction, isInteger, isNumber, isObject, isString} from './type.js'
+import {isArray, isBoolean, isFunction, isInteger, isNil, isNumber, isObject, isString} from './type.js'
 import {isDate, isDateString, isDateIsoUtcString} from './type.js'
 import {isUndefined} from './type.js'
 
@@ -180,10 +180,13 @@ export function assertUndefined<T extends undefined>(value: T, ctx?: any) {
 }
 
 export function errorMessage(expected: string, actual: unknown, ctx?: any) {
-    const who = ctx
-        ? `"${ctx}"`
-        : 'value'
-    return `${who} must be ${expected}, given "${actual}".`
+    return (
+        isNil(ctx)
+            ? `value must be ${expected}, given "${actual}".`
+        : isString(ctx)
+            ? `${ctx} must be ${expected}, given "${actual}".`
+        : `value must be ${expected}, given "${actual}":\n${JSON.stringify(ctx)}`
+    )
 }
 
 export function throwError(type: string, value: unknown, ctx?: any) {
