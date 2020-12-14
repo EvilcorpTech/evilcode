@@ -1,6 +1,6 @@
 {
     "name": "@eviljs/std-web",
-    "version": "0.1.21",
+    "version": "0.1.22",
     "type": "module",
     "files": [
         "/LICENSE.txt",

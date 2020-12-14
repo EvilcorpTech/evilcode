@@ -139,8 +139,9 @@ export function createMemoryRouter(observer: RouterObserver, options?: RouterOpt
 }
 
 export function serializeRouteToString(path: string, params?: RouterParams) {
-    const serializedParams = params
-        ? '?' + encodeParams(params, {encodeValue: defaultRouteEncodeParamValue})
+    const encodedParams = encodeParams(params, {encodeValue: defaultRouteEncodeParamValue})
+    const serializedParams = encodedParams
+        ? '?' + encodedParams
         : ''
     const serializedRoute = path + serializedParams
 
