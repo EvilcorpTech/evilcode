@@ -35,7 +35,7 @@ export function kindOf<T extends keyof typeof Tests>(value: unknown, ...tests: A
     return
 }
 
-export function isArray<T>(value: unknown): value is Array<T> {
+export function isArray(value: unknown): value is Array<unknown> {
     if (! value || ! Array.isArray(value)) {
         return false
     }
