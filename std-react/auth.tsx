@@ -1,3 +1,4 @@
+import {ValueOf} from '@eviljs/std-lib/type.js'
 import {
     authenticate,
     invalidate,
@@ -8,11 +9,11 @@ import {
     ValidateOptions,
 } from '@eviljs/std-web/auth.js'
 import {Cookie} from '@eviljs/std-web/cookie.js'
-import {Fetch} from '@eviljs/std-web/fetch.js'
 import {throwInvalidResponse} from '@eviljs/std-web/error.js'
-import {useBusy} from './busy.js'
-import {ValueOf} from '@eviljs/std-lib/type.js'
+import {Fetch} from '@eviljs/std-web/fetch.js'
 import React from 'react'
+import {useBusy} from './busy.js'
+import {useIfMounted, useMountedGuard} from './react.js'
 const {createContext, useCallback, useContext, useEffect, useState, useMemo} = React
 
 export const AuthContext = createContext<Auth>(void undefined as any)
@@ -101,6 +102,8 @@ export function useRootAuth(fetch: Fetch, cookie: Cookie, options?: AuthOptions)
     const validateOptions = options?.validate
     const [tokenState, setTokenState] = useState<AuthTokenState>(AuthTokenState.Init)
     const {busy, busyLock, busyRelease} = useBusy()
+    const ifMounted = useIfMounted()
+    const guardMounted = useMountedGuard()
     const token = cookie.get()
 
     useEffect(() => {
@@ -113,16 +116,14 @@ export function useRootAuth(fetch: Fetch, cookie: Cookie, options?: AuthOptions)
 
         busyLock()
 
-        validate(fetch, token, validateOptions)
-        .then(isTokenValid => {
+        validate(fetch, token, validateOptions).then(guardMounted((isTokenValid) =>
             setTokenState(isTokenValid
                 ? AuthTokenState.Valid
                 : AuthTokenState.Invalid
             )
-        })
-        .finally(() => {
+        )).finally(guardMounted(() =>
             busyRelease()
-        })
+        ))
     }, [token, validateOptions?.method, validateOptions?.url])
 
     const authenticateCredentials = useCallback(async (credentials: AuthCredentials) => {
@@ -131,12 +132,17 @@ export function useRootAuth(fetch: Fetch, cookie: Cookie, options?: AuthOptions)
             const token = await authenticate(fetch, credentials, authenticateOptions)
 
             cookie.set(token)
-            setTokenState(AuthTokenState.Valid)
+
+            ifMounted(() =>
+                setTokenState(AuthTokenState.Valid)
+            )
 
             return token
         }
         finally {
-            busyRelease()
+            ifMounted(() =>
+                busyRelease()
+            )
         }
     }, [authenticateOptions?.method, authenticateOptions?.url])
 
@@ -164,7 +170,9 @@ export function useRootAuth(fetch: Fetch, cookie: Cookie, options?: AuthOptions)
             return false
         }
         finally {
-            busyRelease()
+            ifMounted(() =>
+                busyRelease()
+            )
         }
 
         return true

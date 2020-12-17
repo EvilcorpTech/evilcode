@@ -1,5 +1,5 @@
-import {isArray, isString, isObject} from '@eviljs/std-lib/type.js'
 import {throwInvalidArgument} from '@eviljs/std-lib/error.js'
+import {isArray, isString, isObject} from '@eviljs/std-lib/type.js'
 import React from 'react'
 const {useEffect, useLayoutEffect, useRef} = React
 
@@ -66,7 +66,7 @@ export function usePrevious<T>(value: T) {
 * EXAMPLE
 * function MyComponent(props) {
 *     const [state, setState] = useState()
-*     const ifMounted = useMounted()
+*     const ifMounted = useIfMounted()
 *
 *     useEffect(() => {
 *         promise.then((value) =>
@@ -77,16 +77,49 @@ export function usePrevious<T>(value: T) {
 *     }, [])
 * }
 */
-export function useMounted() {
+export function useIfMounted() {
     const mountedRef = useMountedRef()
 
-    function ifMounted(task: () => void) {
+    function guard<R>(task: () => R) {
         if (mountedRef.current) {
-            task()
+            return task()
         }
+        return // Makes TypeScript happy.
     }
 
-    return ifMounted
+    return guard
+}
+
+/*
+* Used to perform an asynchronous task only on a mounted component.
+*
+* EXAMPLE
+* function MyComponent(props) {
+*     const [state, setState] = useState()
+*     const guardMounted = useMountedGuard()
+*
+*     useEffect(() => {
+*         promise.then(guardMounted((value) =>
+*             setState(value)
+*         ))
+*     }, [])
+* }
+*/
+export function useMountedGuard() {
+    const mountedRef = useMountedRef()
+
+    function createMountedGuard<A extends Array<unknown>, R>(task: (...args: A) => R) {
+        function guard(...args: A) {
+            if (mountedRef.current) {
+                return task(...args)
+            }
+            return // Makes TypeScript happy.
+        }
+
+        return guard
+    }
+
+    return createMountedGuard
 }
 
 /*
