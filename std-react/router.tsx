@@ -77,15 +77,25 @@ export function withRouteMatches(matches: RouteMatches, children?: React.ReactNo
 /*
 * EXAMPLE
 *
-* <WhenRoute is={`^/book/${Arg}/${Arg}`}>
-*     {createRouteMatches(<MyComponent/>)}
-* </WhenRoute>
+* const MyComponentMatcher = createRouteMatches(<MyComponent/>)
 *
-* <SwitchRoute default={<NotFoundView/>}>
-* {[
-*     {is: `^/book/${Arg}/${Arg}`, then: createRouteMatches(<MyComponent/>)},
-* ]}
-* </SwitchRoute>
+* function App() {
+*     return (
+*         <WhenRoute is={`^/book/${Arg}/${Arg}`}>
+*             <MyComponentMatcher/>
+*         </WhenRoute>
+*     )
+* }
+*
+* function App() {
+*     return (
+*         <SwitchRoute default={<NotFoundView/>}>
+*         {[
+*             {is: `^/book/${Arg}/${Arg}`, then: <MyComponentMatcher/>},
+*         ]}
+*         </SwitchRoute>
+*     )
+* }
 */
 export function createRouteMatches(children?: React.ReactNode) {
     function routeMatchesProxy(...matches: RouteMatches) {
@@ -122,7 +132,7 @@ export function RouterProvider(props: RouterProviderProps) {
 * <SwitchRoute default={<NotFoundView/>}>
 * {[
 *     {is: `^/book/${Arg}/${Arg}`, then: (arg1, arg2) => (
-*         <RouteMatchProvider matches={[arg1, arg2]}>
+*         <RouteMatchProvider value={[arg1, arg2]}>
 *             <MyComponent/>
 *         </RouteMatchProvider>
 *     )},
@@ -130,7 +140,7 @@ export function RouterProvider(props: RouterProviderProps) {
 * </SwitchRoute>
 */
 export function RouteMatchProvider(props: RouteMatchProviderProps) {
-    return withRouteMatches(props.matches, props.children)
+    return withRouteMatches(props.value, props.children)
 }
 
 export function useRootRouter(options?: RouterOptions) {
@@ -394,6 +404,10 @@ export function renderRouteChildren(
         ? then(...matches)
         : then
 
+    if (! children) {
+        return null
+    }
+
     const clonedChildren = Children.map(children, (it) => {
         const child = it as React.ReactElement<RouteChildrenProps>
         const className = classes(child.props.className, props.className)
@@ -435,7 +449,7 @@ export interface RouterProviderProps {
 
 export interface RouteMatchProviderProps {
     children?: React.ReactNode
-    matches: Array<string>
+    value: Array<string>
 }
 
 export interface Router {

@@ -1,7 +1,7 @@
-import {applyStyles} from '@eviljs/std-web/animation.js'
 import {asArray, isArray, isString} from '@eviljs/std-lib/type.js'
-import {classes} from './react.js'
+import {applyStyles} from '@eviljs/std-web/animation.js'
 import React, {CSSProperties} from 'react'
+import {classes} from './react.js'
 const {useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState, cloneElement, Fragment, Children} = React
 
 export let Id = 0
@@ -200,10 +200,10 @@ export function TransitionPresence(props: TransitionPresenceProps) {
 
     return (
         <div
+            {...listeners}
             ref={elRef}
             className={classes('transition-cbb1ec')}
             style={presenceStyles}
-            {...listeners}
         >
             {cloneElement(child, childProps)}
         </div>

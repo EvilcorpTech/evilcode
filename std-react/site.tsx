@@ -1,24 +1,24 @@
 import {createI18n, I18n} from '@eviljs/std-lib/i18n.js'
-import {createRouteMatches, exact, SwitchRoute, Arg as __arg__} from './router.js'
 import {ElementOf, isArray, isObject, ValueOf} from '@eviljs/std-lib/type.js'
-import {PropsOf} from './react.js'
-import {Router} from './site/router.js'
-import {Transition} from './animation.js'
-import {TransitionAnimator, TransitionAnimatorEffect} from './widgets/animator.js'
-import {useI18n} from './i18n.js'
 import React from 'react'
+import {Transition, TransitionMode} from './animation.js'
+import {useI18n} from './i18n.js'
+import {PropsOf} from './react.js'
+import {createRouteMatches, exact, SwitchRoute, Arg} from './router.js'
+import {TransitionAnimator, TransitionAnimatorEffect} from './widgets/animator.js'
+import {RouteArgs} from './widgets/route-args.js'
 const {useMemo} = React
 
 export {createRouteMatches, exact, SwitchRoute, withRouteMatches} from './router.js'
-export {Router, RouterProps} from './site/router.js'
 export {TransitionAnimator} from './widgets/animator.js'
+export {RouteArgs, RouteArgsProps} from './widgets/route-args.js'
 
 export const SiteRouteKey = 'path'
 export const SiteAnimationKey = 'animation'
 export const SiteWidgetKey = 'is'
 export const SiteNestingKey = 'with'
 export const SiteRouterType = 'Router'
-export const SiteRoutePlaceholders = {id: __arg__}
+export const SiteRoutePlaceholders = {id: Arg}
 
 export function useSite
     <
@@ -111,7 +111,7 @@ export function createSite
     const routerDefault = spec.routerDefault
     const routePlaceholders = spec.routePlaceholders ?? SiteRoutePlaceholders
     const defaultWidgets = {
-        [routerType]: Router,
+        [routerType]: RouteArgs,
     } as SiteDefaultWidgets<NonNullable<RT> | SiteRouterType>
     const widgets = {...defaultWidgets, ...spec.widgets} as W & SiteDefaultWidgets<NonNullable<RT> | SiteRouterType>
     const createRouter = spec.createRouter ?? createDefaultRouter
@@ -248,11 +248,14 @@ export function createDefaultAnimator
     const {animationKey} = ctx
     const animatorModel = widgetModel[animationKey] as undefined | SiteAnimatorKeyModel<AK>[AK]
     const widget = ctx.createWidget(widgetModel)
+    const mode = animatorModel?.mode
     const initial = animatorModel?.initial ?? true
+    const enter = animatorModel?.enter ?? 1
+    const exit = animatorModel?.exit ?? 1
     const transition = animatorModel?.transition
 
     return (
-        <Transition initial={initial} enter={1} exit={1} source="animator-d352d9">
+        <Transition mode={mode} initial={initial} enter={enter} exit={exit} source="animator-d352d9">
             <TransitionAnimator key={key} className="animator-d352d9 layer" effect={transition}>
                 {widget}
             </TransitionAnimator>
@@ -452,7 +455,7 @@ export type SiteDefaultWidgets
     <
         RT extends string,
     >
-    = {[key in RT]: typeof Router}
+    = {[key in RT]: typeof RouteArgs}
 
 export type SiteRoutesModel
     <
@@ -507,7 +510,10 @@ export type SiteRouteKeyModel<RK extends string> = {
 
 export type SiteAnimatorKeyModel<AK extends string> = {
     [key in AK]?: {
+        mode?: TransitionMode
         initial?: boolean
+        enter?: number
+        exit?: number
         transition?: TransitionAnimatorEffect
     }
 }

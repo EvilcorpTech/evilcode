@@ -1,15 +1,19 @@
-import {useRouteMatches} from '../router.js'
 import React from 'react'
+import {useRouteMatches} from '../router.js'
 const {cloneElement, Children, Fragment} = React
 
-export function Router(props: RouterProps) {
+export function RouteArgs(props: RouteArgsProps) {
     const {map, children} = props
     const matches = useRouteMatches()
     const routedProps: Record<string, string | undefined> = {}
 
+    if (! children) {
+        return null
+    }
+
     for (const it of map) {
-        const {prop, match} = it
-        routedProps[prop] = matches?.[match]
+        const {arg, prop} = it
+        routedProps[prop] = matches?.[arg]
     }
 
     const mappedChildren = Children.map(children, (it) => {
@@ -29,10 +33,10 @@ export function Router(props: RouterProps) {
 
 // Types ///////////////////////////////////////////////////////////////////////
 
-export interface RouterProps {
+export interface RouteArgsProps {
     map: Array<{
+        arg: number
         prop: string
-        match: number
     }>
     children: React.ReactElement | Array<React.ReactElement>
 }

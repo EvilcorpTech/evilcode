@@ -1,5 +1,5 @@
-import {classes} from '../react.js'
 import React from 'react'
+import {classes} from '../react.js'
 
 import './animator.css'
 
@@ -25,4 +25,4 @@ export interface TransitionAnimatorProps extends React.HTMLAttributes<HTMLDivEle
     effect?: TransitionAnimatorEffect
 }
 
-export type TransitionAnimatorEffect = 'fade' | 'zoom' | 'leak' | 'leak-inline'
+export type TransitionAnimatorEffect = 'none' | 'fade' | 'zoom' | 'leak' | 'skid-left'
