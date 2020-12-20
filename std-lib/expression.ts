@@ -1,4 +1,4 @@
-import {isFunction, isNil, isNumber, isString} from './type.js'
+import {isArray, isFunction, isNil, isNumber, isString} from './type.js'
 
 export const ExpType = Symbol('Exp')
 
@@ -13,6 +13,13 @@ export function exp<A extends Array<unknown>, T>(operator: (...args: A) => T, ..
     return expEvaluator
 }
 
+export function express<T>(ex: Exp<T>) {
+    if (! isExp(ex)) {
+        return ex
+    }
+    return ex()
+}
+
 export function isExp(ex: unknown): ex is ExpFn<unknown> {
     if (isFunction(ex) && (ex as any).__expType__ === ExpType) {
         return true
@@ -20,12 +27,7 @@ export function isExp(ex: unknown): ex is ExpFn<unknown> {
     return false
 }
 
-export function express<T>(ex: Exp<T>) {
-    if (! isExp(ex)) {
-        return ex
-    }
-    return ex()
-}
+// Operators ///////////////////////////////////////////////////////////////////
 
 export function bool(oneExp: Exp<any>) {
     const one = express(oneExp)
@@ -72,11 +74,11 @@ export function not(oneExp: Exp<BoolAtom>) {
     return ! bool(oneExp)
 }
 
-export function is(oneExp: Exp<EqAtom>, twoExp: Exp<EqAtom>) {
+export function is(oneExp: Exp<Atom>, twoExp: Exp<Atom>) {
     return express(oneExp) === express(twoExp)
 }
 
-export function isnt(oneExp: Exp<EqAtom>, twoExp: Exp<EqAtom>) {
+export function isnt(oneExp: Exp<Atom>, twoExp: Exp<Atom>) {
     return not(is(oneExp, twoExp))
 }
 
@@ -96,6 +98,10 @@ export function more(oneExp: Exp<number>, twoExp: Exp<number>) {
     return not(less(oneExp, twoExp))
 }
 
+export function between(oneExp: Exp<number>, twoExp: Exp<number>, threeExp: Exp<number>) {
+    return and(more(twoExp, oneExp), less(twoExp, threeExp))
+}
+
 export function match(oneExp: Exp<string>, twoExp: Exp<string>) {
     const one = express(oneExp)
     const two = express(twoExp)
@@ -108,10 +114,73 @@ export function match(oneExp: Exp<string>, twoExp: Exp<string>) {
     return one.toLowerCase().includes(two.toLowerCase())
 }
 
+export function list(...args: Array<Exp<unknown>>) {
+    return args.map(express)
+}
+
+export function regex(textExp: Exp<string>, patternExp: Exp<string>, flagsExp?: Exp<string>) {
+    const text = express(textExp)
+    const pattern = express(patternExp)
+    const flags = express(flagsExp)
+    const regexp = (() => {
+        try {
+            return new RegExp(pattern, flags)
+        }
+        catch (error) {
+            return
+        }
+    })()
+    if (! regexp) {
+        return
+    }
+    if (! isString(text)) {
+        return
+    }
+    return regexp.test(text)
+}
+
+// Evaluation Tree /////////////////////////////////////////////////////////////
+
+/*
+* Evaluates an expression tree.
+*
+* EXAMPLE
+* const expressionTree = ['operator', ...args]
+* const result = evaluateExpression(operators, expressionTree)
+*/
+export function evaluateExpression<O extends Record<PropertyKey, Operator>>(operators: O, expression: Expression) {
+    return express(buildExpression(operators, expression))
+}
+
+/*
+* Builds an evaluable expression from an expression tree.
+*
+* EXAMPLE
+* const expressionTree = ['operator', ...args]
+* const expression = buildExpression(operators, expressionTree)
+* const result = express(expression)
+*/
+export function buildExpression<O extends Record<PropertyKey, Operator>>(operators: O, expression: unknown): unknown {
+    if (! isArray(expression)) {
+        return expression // An Atom.
+    }
+    const [operatorId, ...operatorArgs] = expression
+    if (! operatorId) {
+        return // An empty expression.
+    }
+    const operator = operators[operatorId as string]
+    if (! operator) {
+        return // An invalid operator.
+    }
+    const expressionArgs = operatorArgs.map(it => buildExpression(operators, it))
+    return exp(() => operator(...expressionArgs))
+}
+
 // Types ///////////////////////////////////////////////////////////////////////
 
-export type EqAtom = string | number | boolean | null | undefined
-export type BoolAtom = boolean | null | undefined
+export type Atom = string | number | BoolAtom
+export type BoolAtom = boolean | NilAtom
+export type NilAtom = null | undefined
 
 export type Exp<T> = T | ExpFn<T>
 
@@ -119,3 +188,17 @@ export interface ExpFn<T> {
     (): T
     __expType__: Symbol
 }
+
+export type Expression
+    <
+        O extends PropertyKey = PropertyKey,
+        A extends Array<unknown> = Array<any>,
+    >
+    = [O, ...A]
+
+export type Operator
+    <
+        A extends Array<unknown> = Array<any>,
+        R = unknown,
+    >
+    = (...args: A) => R
