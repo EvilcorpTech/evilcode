@@ -1,3 +1,4 @@
+import {escapeRegExp} from '@eviljs/std-lib/regexp.js'
 import {asArray, isFunction, isPromise} from '@eviljs/std-lib/type.js'
 import {classes} from './react.js'
 import {createRouter, compilePattern, exact, regexpFromPattern, serializeRouteToString, RouterOptions, RouterParams, RouterRouteParams} from '@eviljs/std-web/router.js'
@@ -330,9 +331,10 @@ export function Route(props: RouteProps) {
     }, [routeTo, to, params, guard])
 
     const isActive = useMemo(() => {
+        const escapedTo = escapeRegExp(to)
         const path = activeWhenExact
-            ? exact(to)
-            : to
+            ? exact(escapedTo)
+            : escapedTo
         const pathRe = regexpFromPattern(path)
 
         return testRoute(pathRe)
@@ -474,7 +476,7 @@ export interface WhenRouteProps extends RouteRenderProps, Omit<React.AllHTMLAttr
 }
 
 export interface RouteProps extends React.AnchorHTMLAttributes<HTMLAnchorElement> {
-    children: React.ReactNode
+    children?: React.ReactNode
     elRef?: React.Ref<HTMLAnchorElement>
     to: string
     params?: RouterParams
