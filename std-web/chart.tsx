@@ -1,6 +1,6 @@
 import {isNil} from '@eviljs/std-lib/type.js'
 import {minMax} from '@eviljs/std-lib/math.js'
-import {times} from '@eviljs/std-lib/fn.js'
+import {times} from '@eviljs/std-lib/iter.js'
 
 export function createNumberAxis(data: Array<number>, ticks: number) {
     const [min, max] = minMax(data)
