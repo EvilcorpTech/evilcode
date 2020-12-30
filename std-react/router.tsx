@@ -163,6 +163,12 @@ export function useRootRouter(options?: RouterOptions) {
         setRoute(globalRouter.getRoute())
     }, [globalRouter])
 
+    const replaceRoute = useCallback((path: string, params?: RouterParams) => {
+        const link = globalRouter.link(path, params)
+        history.replaceState(history.state, '', link)
+        setRoute(globalRouter.getRoute())
+    }, [globalRouter])
+
     useEffect(() => {
         globalRouter.start()
 
@@ -178,8 +184,8 @@ export function useRootRouter(options?: RouterOptions) {
         const routePath = route.path
         const routeParams = route.params
 
-        return {routePath, routeParams, routeTo, testRoute, matchRoute, link}
-    }, [globalRouter, route.path, route.params, testRoute, matchRoute])
+        return {routePath, routeParams, routeTo, replaceRoute, testRoute, matchRoute, link}
+    }, [globalRouter, route.path, route.params, routeTo, replaceRoute, testRoute, matchRoute])
 
     function onRouteChange(path: string, params: RouterRouteParams) {
         setRoute({path, params})
@@ -386,10 +392,10 @@ export function Link(props: LinkProps) {
 
 export function Redirect(props: RedirectProps) {
     const {to, params} = props
-    const {routeTo} = useRouter()
+    const {replaceRoute} = useRouter()
 
     useEffect(() =>
-        routeTo(to, params)
+        replaceRoute(to, params)
     )
 
     return null
@@ -458,6 +464,7 @@ export interface Router {
     routePath: string
     routeParams: RouterRouteParams
     routeTo(path: string, params?: RouterParams): void
+    replaceRoute(path: string, params?: RouterParams): void
     testRoute(pattern: RegExp): boolean
     matchRoute(pattern: RegExp): RegExpMatchArray | null
     link(path: string, params?: RouterParams): string

@@ -52,13 +52,14 @@ export function WithAuth(Child: React.ElementType, fetch: Fetch, cookie: Cookie,
 /*
 * EXAMPLE
 *
+* const fetch = createFetch({baseUrl: '/api'})
+* const cookie = createCookie()
+* const authenticate = {method, url}
+* const validate = {method, url}
+* const invalidate = {method, url}
+* const options = {authenticate, validate, invalidate}
+*
 * export function MyMain(props) {
-*     const fetch = createFetch({baseUrl: '/api'})
-*     const cookie = createCookie()
-*     const authenticate = {method, url}
-*     const validate = {method, url}
-*     const invalidate = {method, url}
-*     const options = {authenticate, validate, invalidate}
 *     const main = withAuth(<Main/>, fetch, cookie, options)
 *
 *     return main
@@ -77,14 +78,14 @@ export function withAuth(children: React.ReactNode, fetch: Fetch, cookie: Cookie
 /*
 * EXAMPLE
 *
-* export function MyMain(props) {
-*     const fetch = createFetch({baseUrl: '/api'})
-*     const cookie = createCookie()
-*     const authenticate = {method, url}
-*     const validate = {method, url}
-*     const invalidate = {method, url}
-*     const options = {authenticate, validate, invalidate}
+* const fetch = createFetch({baseUrl: '/api'})
+* const cookie = createCookie()
+* const authenticate = {method, url}
+* const validate = {method, url}
+* const invalidate = {method, url}
+* const options = {authenticate, validate, invalidate}
 *
+* export function MyMain(props) {
 *     return (
 *         <AuthProvider fetch={fetch} cookie={cookie} {...options}>
 *             <MyApp/>
@@ -98,8 +99,8 @@ export function AuthProvider(props: AuthProviderProps) {
 
 export function useRootAuth(fetch: Fetch, cookie: Cookie, options?: AuthOptions) {
     const authenticateOptions = options?.authenticate
-    const invalidateOptions = options?.invalidate
     const validateOptions = options?.validate
+    const invalidateOptions = options?.invalidate
     const [tokenState, setTokenState] = useState<AuthTokenState>(AuthTokenState.Init)
     const {busy, busyLock, busyRelease} = useBusy()
     const ifMounted = useIfMounted()
@@ -109,6 +110,12 @@ export function useRootAuth(fetch: Fetch, cookie: Cookie, options?: AuthOptions)
     useEffect(() => {
         if (! token) {
             setTokenState(AuthTokenState.Missing)
+            return
+        }
+
+        if (tokenState === AuthTokenState.Valid) {
+            // Token can be already valid as result of the authenticateCredentials().
+            // In this case we must not re-validate it.
             return
         }
 
@@ -124,7 +131,7 @@ export function useRootAuth(fetch: Fetch, cookie: Cookie, options?: AuthOptions)
         )).finally(guardMounted(() =>
             busyRelease()
         ))
-    }, [token, validateOptions?.method, validateOptions?.url])
+    }, [fetch, validateOptions, token])
 
     const authenticateCredentials = useCallback(async (credentials: AuthCredentials) => {
         busyLock()
@@ -144,7 +151,7 @@ export function useRootAuth(fetch: Fetch, cookie: Cookie, options?: AuthOptions)
                 busyRelease()
             )
         }
-    }, [authenticateOptions?.method, authenticateOptions?.url])
+    }, [fetch, cookie, authenticateOptions])
 
     const destroySession = useCallback(async () => {
         cookie.delete()
@@ -176,7 +183,7 @@ export function useRootAuth(fetch: Fetch, cookie: Cookie, options?: AuthOptions)
         }
 
         return true
-    }, [token, validateOptions?.method, validateOptions?.url])
+    }, [fetch, cookie, invalidateOptions, token])
 
     const auth = useMemo(() => {
         return {
