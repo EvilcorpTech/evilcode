@@ -4,8 +4,6 @@ export const Tests = {
     array: isArray,
     boolean: isBoolean,
     date: isDate,
-    dateIsoUtcString: isDateIsoUtcString,
-    dateString: isDateString,
     function: isFunction,
     integer: isInteger,
     nil: isNil,
@@ -16,14 +14,6 @@ export const Tests = {
     regexp: isRegExp,
     string: isString,
     undefined: isUndefined,
-}
-
-export function bindValue(value: unknown, ctx: any) {
-    if (isFunction(value)) {
-        return value.bind(ctx, ctx)
-    }
-
-    return value
 }
 
 export function kindOf<T extends keyof typeof Tests>(value: unknown, ...tests: Array<T>) {
@@ -51,28 +41,6 @@ export function isDate(value: unknown): value is Date {
         return false
     }
     return true
-}
-
-export function isDateString(value: any): value is string {
-    if (! value || ! Boolean(Date.parse(value))) {
-        return false
-    }
-    return true
-}
-
-export function isDateIsoUtcString(value: unknown): value is string {
-    if (! isString(value)) {
-        return false
-    }
-
-    const isoMarker = 't'
-    const utcZone = 'z'
-    const valueLowerCase = value.toLowerCase()
-    const includesIsoMarker = valueLowerCase.includes(isoMarker)
-    const includesUtcZone = includesIsoMarker && valueLowerCase.includes(utcZone)
-    const isIsoUtcString = includesUtcZone
-
-    return isIsoUtcString
 }
 
 export function isFunction(value: unknown): value is Function {
@@ -129,32 +97,6 @@ export function isString(value: unknown): value is string {
 
 export function isUndefined(value: unknown): value is undefined {
     return value === void undefined
-}
-
-export function objectWithout<O, P extends keyof O>(object: O, ...props: Array<P>) {
-    assertObject(object, 'object')
-
-    const obj = {...object}
-
-    for (const prop of props) {
-        delete obj[prop]
-    }
-
-    return obj as Omit<O, P>
-}
-
-export function objectWithoutUndefined<O>(object: O) {
-    assertObject(object, 'object')
-
-    const obj = {...object}
-
-    for (const prop in obj) {
-        if (isUndefined(obj[prop])) {
-            delete obj[prop]
-        }
-    }
-
-    return obj
 }
 
 export function asArray<T>(item: T | Array<T> | [T] | readonly [T]) {

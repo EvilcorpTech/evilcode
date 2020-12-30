@@ -1,4 +1,4 @@
-import {times} from './fn.js'
+import {times} from './iter.js'
 
 export function randomInt(min = 0, max = Number.MAX_SAFE_INTEGER) {
     return Math.floor(Math.random() * (max + 1 - min)) + min

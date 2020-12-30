@@ -1,3 +1,88 @@
+import {assertStringNotEmpty, ensureOptionalWith, throwError} from './assert.js'
+import {isString} from './type.js'
+
+// Assertions //////////////////////////////////////////////////////////////////
+
+export function assertDateString(value: unknown, ctx?: any): asserts value is string {
+    ensureDateString(value, ctx)
+}
+
+export function assertDateStringOptional(value: unknown, ctx?: any): asserts value is undefined | string {
+    ensureDateStringOptional(value, ctx)
+}
+
+export function assertDateAsIsoUtcString(value: unknown, ctx?: any): asserts value is string {
+    ensureDateAsIsoUtcString(value, ctx)
+}
+
+export function assertDateAsIsoUtcStringOptional(value: unknown, ctx?: any): asserts value is undefined | string {
+    ensureDateAsIsoUtcStringOptional(value, ctx)
+}
+
+// Assurances //////////////////////////////////////////////////////////////////
+
+export function ensureDateString<T extends string>(value: T, ctx?: any): T
+export function ensureDateString(value: unknown, ctx?: any): string
+export function ensureDateString(value: unknown, ctx?: any) {
+    assertStringNotEmpty(value, ctx)
+
+    if (! isDateString(value)) {
+        return throwError('a Date string', value, ctx)
+    }
+
+    return value
+}
+
+export function ensureDateStringOptional<T extends undefined | string>(value: T, ctx?: any): T
+export function ensureDateStringOptional(value: unknown, ctx?: any): undefined | string
+export function ensureDateStringOptional(value: unknown, ctx?: any) {
+    return ensureOptionalWith(ensureDateString, value, ctx)
+}
+
+export function ensureDateAsIsoUtcString<T extends string>(value: T, ctx?: any): T
+export function ensureDateAsIsoUtcString(value: unknown, ctx?: any): string
+export function ensureDateAsIsoUtcString(value: unknown, ctx?: any) {
+    assertDateString(value, ctx)
+
+    if (! isDateIsoUtcString(value)) {
+        return throwError('a Date as ISO string with UTC timezone', value, ctx)
+    }
+
+    return value
+}
+
+export function ensureDateAsIsoUtcStringOptional<T extends undefined | string>(value: T, ctx?: any): T
+export function ensureDateAsIsoUtcStringOptional(value: unknown, ctx?: any): undefined | string
+export function ensureDateAsIsoUtcStringOptional(value: unknown, ctx?: any) {
+    return ensureOptionalWith(ensureDateAsIsoUtcString, value, ctx)
+}
+
+// Guards //////////////////////////////////////////////////////////////////////
+
+export function isDateString(value: unknown): value is string {
+    if (! value || ! isString(value) || ! Boolean(Date.parse(value))) {
+        return false
+    }
+    return true
+}
+
+export function isDateIsoUtcString(value: unknown): value is string {
+    if (! isString(value)) {
+        return false
+    }
+
+    const isoMarker = 't'
+    const utcZone = 'z'
+    const valueLowerCase = value.toLowerCase()
+    const includesIsoMarker = valueLowerCase.includes(isoMarker)
+    const includesUtcZone = includesIsoMarker && valueLowerCase.includes(utcZone)
+    const isIsoUtcString = includesUtcZone
+
+    return isIsoUtcString
+}
+
+// Structures //////////////////////////////////////////////////////////////////
+
 export function datetime(date: Date) {
     const self: Datetime = Object.defineProperties(
         [

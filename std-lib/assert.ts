@@ -1,81 +1,145 @@
 import {throwInvalidArgument} from './error.js'
-import {isArray, isBoolean, isFunction, isInteger, isNil, isNumber, isObject, isString} from './type.js'
-import {isDate, isDateString, isDateIsoUtcString} from './type.js'
-import {isUndefined} from './type.js'
+import {isArray, isBoolean, isDate, isFunction, isInteger, isNil, isNumber, isObject, isString, isUndefined} from './type.js'
 
-export function assertOptionalWith<T>(assertion: Assertion<T>, value: undefined | T, ...args: Array<unknown>) {
-    if (isUndefined(value)) {
-        return
+// Assertions //////////////////////////////////////////////////////////////////
+
+export function assertArray(value: unknown, ctx?: any): asserts value is Array<unknown> {
+    ensureArray(value, ctx)
+}
+
+export function assertArrayOptional(value: unknown, ctx?: any): asserts value is undefined | Array<unknown> {
+    ensureArrayOptional(value, ctx)
+}
+
+export function assertBoolean(value: unknown, ctx?: any): asserts value is boolean {
+    ensureBoolean(value, ctx)
+}
+
+export function assertBooleanOptional(value: unknown, ctx?: any): asserts value is undefined | boolean {
+    ensureBooleanOptional(value, ctx)
+}
+
+export function assertDate(value: unknown, ctx?: any): asserts value is Date {
+    ensureDate(value, ctx)
+}
+
+export function assertDateOptional(value: unknown, ctx?: any): asserts value is undefined | Date {
+    ensureDateOptional(value, ctx)
+}
+
+export function assertEnum<E>(value: unknown, enumValues: Array<E>, ctx?: any): asserts value is E {
+    ensureEnum(value, enumValues, ctx)
+}
+
+export function assertEnumOptional<E>(value: unknown, enumValues: Array<E>, ctx?: any): asserts value is undefined | E {
+    ensureEnumOptional(value, enumValues, ctx)
+}
+
+export function assertFunction(value: unknown, ctx?: any): asserts value is Function {
+    ensureFunction(value, ctx)
+}
+
+export function assertFunctionOptional(value: unknown, ctx?: any): asserts value is undefined | Function {
+    ensureFunctionOptional(value, ctx)
+}
+
+export function assertInteger(value: unknown, ctx?: any): asserts value is number {
+    ensureInteger(value, ctx)
+}
+
+export function assertIntegerOptional(value: unknown, ctx?: any): asserts value is undefined | number {
+    ensureIntegerOptional(value, ctx)
+}
+
+export function assertNumber(value: unknown, ctx?: any): asserts value is number {
+    ensureNumber(value, ctx)
+}
+
+export function assertNumberOptional(value: unknown, ctx?: any): asserts value is undefined | number {
+    ensureNumberOptional(value, ctx)
+}
+
+export function assertObject(value: unknown, ctx?: any): asserts value is Record<PropertyKey, any> {
+    ensureObject(value, ctx)
+}
+
+export function assertObjectOptional(value: unknown, ctx?: any): asserts value is undefined | Record<PropertyKey, any> {
+    ensureObjectOptional(value, ctx)
+}
+
+export function assertString(value: unknown, ctx?: any): asserts value is string {
+    ensureString(value, ctx)
+}
+
+export function assertStringOptional(value: unknown, ctx?: any): asserts value is undefined | string {
+    ensureStringOptional(value, ctx)
+}
+
+export function assertStringNotEmpty(value: unknown, ctx?: any): asserts value is string {
+    ensureStringNotEmpty(value, ctx)
+}
+
+export function assertStringNotEmptyOptional(value: unknown, ctx?: any): asserts value is undefined | string {
+    ensureStringNotEmptyOptional(value, ctx)
+}
+
+export function assertUndefined(value: unknown, ctx?: any): asserts value is undefined {
+    ensureUndefined(value, ctx)
+}
+
+// Assurances //////////////////////////////////////////////////////////////////
+
+export function ensureArray<T extends Array<unknown>>(value: T, ctx?: any): T
+export function ensureArray(value: unknown, ctx?: any): Array<unknown>
+export function ensureArray(value: unknown, ctx?: any) {
+    if (! isArray(value)) {
+        return throwError('an Array', value, ctx)
     }
 
-    return assertion(value, ...args)
+    return value
 }
 
-export function assertArray<T extends Array<unknown>>(value: T, ctx?: any) {
-    if (isArray(value)) {
-        return value
+export function ensureArrayOptional<T extends undefined | Array<unknown>>(value: T, ctx?: any): T
+export function ensureArrayOptional(value: unknown, ctx?: any): undefined | Array<unknown>
+export function ensureArrayOptional(value: unknown, ctx?: any) {
+    return ensureOptionalWith(ensureArray, value, ctx)
+}
+
+export function ensureBoolean<T extends boolean>(value: T, ctx?: any): T
+export function ensureBoolean(value: unknown, ctx?: any): boolean
+export function ensureBoolean(value: unknown, ctx?: any) {
+    if (! isBoolean(value)) {
+        return throwError('a Boolean', value, ctx)
     }
 
-    return throwError('an Array', value, ctx)
+    return value
 }
 
-export function assertArrayOptional<T extends Array<unknown>>(value: undefined | T, ctx?: any) {
-    return assertOptionalWith(assertArray, value, ctx)
+export function ensureBooleanOptional<T extends undefined | boolean>(value: T, ctx?: any): T
+export function ensureBooleanOptional(value: unknown, ctx?: any): undefined | boolean
+export function ensureBooleanOptional(value: unknown, ctx?: any) {
+    return ensureOptionalWith(ensureBoolean, value, ctx)
 }
 
-export function assertBoolean<T extends boolean>(value: T, ctx?: any) {
-    if (isBoolean(value)) {
-        return value
+export function ensureDate<T extends Date>(value: T, ctx?: any): T
+export function ensureDate(value: unknown, ctx?: any): Date
+export function ensureDate(value: unknown, ctx?: any) {
+    if (! isDate(value)) {
+        return throwError('a Date', value, ctx)
     }
 
-    return throwError('a Boolean', value, ctx)
+    return value
 }
 
-export function assertBooleanOptional<T extends boolean>(value: undefined | T, ctx?: any) {
-    return assertOptionalWith(assertBoolean, value, ctx)
+export function ensureDateOptional<T extends undefined | Date>(value: T, ctx?: any): T
+export function ensureDateOptional(value: unknown, ctx?: any): undefined | Date
+export function ensureDateOptional(value: unknown, ctx?: any) {
+    return ensureOptionalWith(ensureDate, value, ctx)
 }
 
-export function assertDate<T extends Date>(value: T, ctx?: any) {
-    if (isDate(value)) {
-        return value
-    }
-
-    return throwError('a Date', value, ctx)
-}
-
-export function assertDateOptional<T extends Date>(value: undefined | T, ctx?: any) {
-    return assertOptionalWith(assertDate, value, ctx)
-}
-
-export function assertDateString<T extends string>(value: T, ctx?: any) {
-    assertStringNotEmpty(value, ctx)
-
-    if (isDateString(value)) {
-        return value
-    }
-
-    return throwError('a Date string', value, ctx)
-}
-
-export function assertDateStringOptional<T extends string>(value: undefined | T, ctx?: any) {
-    return assertOptionalWith(assertDateString, value, ctx)
-}
-
-export function assertDateAsIsoUtcString<T extends string>(value: T, ctx?: any) {
-    assertDateString(value, ctx)
-
-    if (isDateIsoUtcString(value)) {
-        return value
-    }
-
-    return throwError('a Date as ISO string with UTC timezone', value, ctx)
-}
-
-export function assertDateAsIsoUtcStringOptional<T extends string>(value: undefined | T, ctx?: any) {
-    return assertOptionalWith(assertDateAsIsoUtcString, value, ctx)
-}
-
-export function assertEnum<E, T extends E>(value: T, enumValues: Array<E>, ctx?: any) {
+export function ensureEnum<E, T extends E>(value: T, enumValues: Array<E>, ctx?: any): T
+export function ensureEnum<E>(value: unknown, enumValues: Array<E>, ctx?: any): E
+export function ensureEnum<E>(value: unknown, enumValues: Array<E>, ctx?: any) {
     assertArray(enumValues, `${ctx} enum`)
 
     for (const enumValue of enumValues) {
@@ -87,96 +151,126 @@ export function assertEnum<E, T extends E>(value: T, enumValues: Array<E>, ctx?:
     return throwError(`one of ${enumValues.join(' | ')}`, value, ctx)
 }
 
-export function assertEnumOptional<E, T extends E>(value: undefined | T, enumValues: Array<E>, ctx?: any) {
-    return assertOptionalWith(assertEnum, value, enumValues, ctx)
+export function ensureEnumOptional<E, T extends undefined | E>(value: T, enumValues: Array<E>, ctx?: any): T
+export function ensureEnumOptional<E>(value: unknown, enumValues: Array<E>, ctx?: any): undefined | E
+export function ensureEnumOptional<E>(value: unknown, enumValues: Array<E>, ctx?: any) {
+    return ensureOptionalWith(ensureEnum, value, enumValues, ctx)
 }
 
-export function assertFunction<T extends Function>(value: T, ctx?: any) {
-    if (isFunction(value)) {
-        return value
+export function ensureFunction<T extends Function>(value: T, ctx?: any): T
+export function ensureFunction(value: unknown, ctx?: any): Function
+export function ensureFunction(value: unknown, ctx?: any) {
+    if (! isFunction(value)) {
+        return throwError('a Function', value, ctx)
     }
 
-    return throwError('a Function', value, ctx)
+    return value
 }
 
-export function assertFunctionOptional<T extends Function>(value: undefined | T, ctx?: any) {
-    return assertOptionalWith(assertFunction, value, ctx)
+export function ensureFunctionOptional<T extends undefined | Function>(value: T, ctx?: any): T
+export function ensureFunctionOptional(value: unknown, ctx?: any): undefined | Function
+export function ensureFunctionOptional(value: unknown, ctx?: any) {
+    return ensureOptionalWith(ensureFunction, value, ctx)
 }
 
-export function assertInteger<T extends number>(value: T, ctx?: any) {
+export function ensureInteger<T extends number>(value: T, ctx?: any): T
+export function ensureInteger(value: unknown, ctx?: any): number
+export function ensureInteger(value: unknown, ctx?: any) {
     assertNumber(value, ctx)
 
-    if (isInteger(value)) {
-        return value
+    if (! isInteger(value)) {
+        return throwError('an Integer', value, ctx)
     }
 
-    return throwError('an Integer', value, ctx)
+    return value
 }
 
-export function assertIntegerOptional<T extends number>(value: undefined | T, ctx?: any) {
-    return assertOptionalWith(assertInteger, value, ctx)
+export function ensureIntegerOptional<T extends undefined | number>(value: T, ctx?: any): T
+export function ensureIntegerOptional(value: unknown, ctx?: any): undefined | number
+export function ensureIntegerOptional(value: unknown, ctx?: any) {
+    return ensureOptionalWith(ensureInteger, value, ctx)
 }
 
-export function assertNumber<T extends number>(value: T, ctx?: any) {
-    if (isNumber(value)) {
-        return value
+export function ensureNumber<T extends number>(value: T, ctx?: any): T
+export function ensureNumber(value: unknown, ctx?: any): number
+export function ensureNumber(value: unknown, ctx?: any) {
+    if (! isNumber(value)) {
+        return throwError('a Number', value, ctx)
     }
 
-    return throwError('a Number', value, ctx)
+    return value
 }
 
-export function assertNumberOptional<T extends number>(value: undefined | T, ctx?: any) {
-    return assertOptionalWith(assertNumber, value, ctx)
+export function ensureNumberOptional<T extends undefined | number>(value: T, ctx?: any): T
+export function ensureNumberOptional(value: unknown, ctx?: any): undefined | number
+export function ensureNumberOptional(value: unknown, ctx?: any) {
+    return ensureOptionalWith(ensureNumber, value, ctx)
 }
 
-export function assertObject<T extends {} | Record<PropertyKey, unknown>>(value: T, ctx?: any) {
-    if (isObject(value)) {
-        return value
+export function ensureObject<T extends {} | Record<PropertyKey, unknown>>(value: T, ctx?: any): T
+export function ensureObject(value: unknown, ctx?: any): Record<PropertyKey, unknown>
+export function ensureObject(value: unknown, ctx?: any) {
+    if (! isObject(value)) {
+        return throwError('an Object', value, ctx)
     }
 
-    return throwError('an Object', value, ctx)
+    return value
 }
 
-export function assertObjectOptional<T extends {} | Record<PropertyKey, unknown>>(value: undefined | T, ctx?: any) {
-    return assertOptionalWith(assertObject, value, ctx)
+export function ensureObjectOptional<T extends undefined | {} | Record<PropertyKey, unknown>>(value: T, ctx?: any): T
+export function ensureObjectOptional(value: unknown, ctx?: any): undefined | Record<PropertyKey, unknown>
+export function ensureObjectOptional(value: unknown, ctx?: any) {
+    return ensureOptionalWith(ensureObject, value, ctx)
 }
 
-export function assertString<T extends string>(value: T, ctx?: any) {
-    if (isString(value)) {
-        return value
+export function ensureString<T extends string>(value: T, ctx?: any): T
+export function ensureString(value: unknown, ctx?: any): string
+export function ensureString(value: unknown, ctx?: any) {
+    if (! isString(value)) {
+        return throwError('a String', value, ctx)
     }
 
-    return throwError('a String', value, ctx)
+    return value
 }
 
-export function assertStringOptional<T extends string>(value: undefined | T, ctx?: any) {
-    if (value === '') {
-        return value
+export function ensureStringOptional<T extends undefined | string>(value: T, ctx?: any): T
+export function ensureStringOptional(value: unknown, ctx?: any): undefined | string
+export function ensureStringOptional(value: unknown, ctx?: any) {
+    return ensureOptionalWith(ensureString, value, value, ctx)
+}
+
+export function ensureStringNotEmpty<T extends string>(value: T, ctx?: any): T
+export function ensureStringNotEmpty(value: unknown, ctx?: any): string
+export function ensureStringNotEmpty(value: unknown, ctx?: any) {
+    if (ensureString(value, ctx).trim() === '') {
+        return throwError('a not empty String', value, ctx)
     }
 
-    return assertOptionalWith(assertString, value, value, ctx)
+    return value
 }
 
-export function assertStringNotEmpty<T extends string>(value: T, ctx?: any) {
-    assertString(value, ctx)
+export function ensureStringNotEmptyOptional<T extends undefined | string>(value: T, ctx?: any): T
+export function ensureStringNotEmptyOptional(value: unknown, ctx?: any): undefined | string
+export function ensureStringNotEmptyOptional(value: unknown, ctx?: any) {
+    return ensureOptionalWith(ensureStringNotEmpty, value, ctx)
+}
 
-    if (isString(value) && value.trim() !== '') {
-        return value
+export function ensureUndefined<T extends undefined>(value: T, ctx?: any): T
+export function ensureUndefined(value: unknown, ctx?: any): undefined
+export function ensureUndefined(value: unknown, ctx?: any) {
+    if (value !== void undefined) {
+        return throwError('undefined', value, ctx)
     }
 
-    return throwError('a not empty String', value, ctx)
+    return
 }
 
-export function assertStringNotEmptyOptional<T extends string>(value: undefined | T, ctx?: any) {
-    return assertOptionalWith(assertStringNotEmpty, value, ctx)
-}
-
-export function assertUndefined<T extends undefined>(value: T, ctx?: any) {
-    if (value === void undefined) {
-        return
+export function ensureOptionalWith<T>(assertion: Assertion<T>, value: undefined | T, ...args: Array<unknown>) {
+    if (! isUndefined(value)) {
+        return assertion(value, ...args)
     }
 
-    return throwError('undefined', value, ctx)
+    return
 }
 
 export function errorMessage(expected: string, actual: unknown, ctx?: any) {
