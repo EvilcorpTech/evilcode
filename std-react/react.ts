@@ -3,7 +3,7 @@ import {isArray, isString, isObject} from '@eviljs/std-lib/type.js'
 import React from 'react'
 const {useEffect, useLayoutEffect, useRef} = React
 
-export {times} from '@eviljs/std-lib/fn.js'
+export {times} from '@eviljs/std-lib/iter.js'
 
 export function classes(...names: Array<ClassName>) {
     const list: Array<string> = []
