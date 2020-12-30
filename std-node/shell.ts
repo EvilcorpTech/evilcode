@@ -1,4 +1,4 @@
-import {bindValue} from '@eviljs/std-lib/type.js'
+import {isFunction} from '@eviljs/std-lib/type.js'
 import Repl from 'repl'
 
 export function ShellService(container: ShellContainer) {
@@ -21,7 +21,10 @@ export function createShell(spec?: ShellSpec) {
 
     for (const serviceId in services) {
         const serviceImpl = services[serviceId]
-        self[serviceId] = bindValue(serviceImpl, self)
+
+        self[serviceId] = isFunction(serviceImpl)
+            ? serviceImpl.bind(self, self)
+            : serviceImpl
     }
 
     const shell = Repl.start('node> ')
