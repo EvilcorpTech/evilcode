@@ -1,7 +1,7 @@
 import {Query} from '@eviljs/std-web/query.js'
 import {useMountedRef} from './react.js'
 import React from 'react'
-const {createContext, useContext, useRef, useState} = React
+const {createContext, useCallback, useContext, useRef, useState} = React
 
 export const QueryContext = createContext<Query>(void undefined as any)
 
@@ -69,7 +69,7 @@ export function useQuery<A extends Array<unknown>, R>(queryRunner: QueryRunner<A
     const taskRef = useRef<QueryTask<R> | null>(null)
     const query = useContext(QueryContext)
 
-    async function fetch(...args: A) {
+    const fetch = useCallback(async (...args: A) => {
         if (taskRef.current) {
             // We automatically cancel previous task.
             taskRef.current.cancelled = true
@@ -119,20 +119,20 @@ export function useQuery<A extends Array<unknown>, R>(queryRunner: QueryRunner<A
 
             return // Makes TypeScript happy.
         }
-    }
+    }, [])
 
-    function cancel() {
+    const cancel = useCallback(() => {
         if (taskRef.current) {
             taskRef.current.cancelled = true
         }
 
         setPending(false)
-    }
+    }, [])
 
-    function reset() {
+    const reset = useCallback(() => {
         setResponse(null)
         setError(null)
-    }
+    }, [])
 
     return {fetch, response, error, pending, reset, cancel}
 }
