@@ -21,21 +21,21 @@ export const EmptyRegexp = /^$/
 
 export const RegExpCache: RegExpCache = {}
 
-export function createRouter(observer: RouterObserver, options?: RouterOptions): Router {
+export function createRouter<S>(observer: RouterObserver, options?: RouterOptions): Router<S> {
     const type = options?.type ?? 'hash'
 
     switch (type) {
         case 'hash':
             return createHashRouter(observer, options)
-        case 'history':
-            return createHistoryRouter(observer, options)
+        case 'path':
+            return createPathRouter(observer, options)
         case 'memory':
             return createMemoryRouter(observer, options)
         break
     }
 }
 
-export function createHashRouter(observer: RouterObserver, options?: RouterOptions): Router {
+export function createHashRouter<S>(observer: RouterObserver, options?: RouterOptions): Router<S> {
     const self = {
         start() {
             window.addEventListener('hashchange', onRouteChange)
@@ -43,21 +43,31 @@ export function createHashRouter(observer: RouterObserver, options?: RouterOptio
         stop() {
             window.removeEventListener('hashchange', onRouteChange)
         },
-        getRoute() {
+        get route() {
             const {hash} = window.location
             const [dirtyPath, dirtyParams] = hash
                 .substring(1) // Without the initial '#'.
                 .split('?')
             const path = dirtyPath || '/' // The empty string is casted to the root path.
             const params = deserializeRouteParamsFromString(dirtyParams)
+            const {state} = history
 
-            return {path, params}
+            return {path, params, state}
         },
-        setRoute(path: string, params?: RouterParams) {
-            const serializedRoute = '#' + serializeRouteToString(path, params)
+        routeTo(path: string, params?: RouterParams, state?: S) {
+            const serializedRoute = self.link(path, params)
 
-            window.location.hash = serializedRoute
-            // history.pushState(history.state, '', serializedRoute)
+            // Algorithm 1:
+            history.pushState(state, '', serializedRoute)
+            // Algorithm 2 (legacy):
+            // self.stop()
+            // window.location.hash = serializedRoute
+            // self.start()
+        },
+        replaceRoute(path: string, params?: RouterParams, state?: S) {
+            const serializedRoute = self.link(path, params)
+
+            history.replaceState(state, '', serializedRoute)
         },
         link(path: string, params?: RouterParams) {
             return '#' + serializeRouteToString(path, params)
@@ -65,15 +75,15 @@ export function createHashRouter(observer: RouterObserver, options?: RouterOptio
     }
 
     function onRouteChange() {
-        const {path, params} = self.getRoute()
+        const {path, params, state} = self.route
 
-        observer(path, params)
+        observer(path, params, state)
     }
 
     return self
 }
 
-export function createHistoryRouter(observer: RouterObserver, options?: RouterOptions): Router {
+export function createPathRouter<S>(observer: RouterObserver, options?: RouterOptions): Router<S> {
     const basePath = asBasePath(options?.basePath)
 
     const self = {
@@ -83,19 +93,25 @@ export function createHistoryRouter(observer: RouterObserver, options?: RouterOp
         stop() {
             window.removeEventListener('popstate', onRouteChange)
         },
-        getRoute() {
+        get route() {
             const {pathname, search} = window.location
             const path = pathname.replace(basePath, '')
             const params = deserializeRouteParamsFromString(
                 search.substring(1) // Without the initial '?'.
             )
+            const {state} = history
 
-            return {path, params}
+            return {path, params, state}
         },
-        setRoute(path: string, params?: RouterParams) {
-            const serializedRoute = serializeRouteToString(basePath + path, params)
+        routeTo(path: string, params?: RouterParams, state?: S) {
+            const serializedRoute = self.link(path, params)
 
-            history.pushState(history.state, '', serializedRoute)
+            history.pushState(state, '', serializedRoute)
+        },
+        replaceRoute(path: string, params?: RouterParams, state?: S) {
+            const serializedRoute = self.link(path, params)
+
+            history.replaceState(state, '', serializedRoute)
         },
         link(path: string, params?: RouterParams) {
             return serializeRouteToString(basePath + path, params)
@@ -103,32 +119,38 @@ export function createHistoryRouter(observer: RouterObserver, options?: RouterOp
     }
 
     function onRouteChange() {
-        const {path, params} = self.getRoute()
+        const {path, params, state} = self.route
 
-        observer(path, params)
+        observer(path, params, state)
     }
 
     return self
 }
 
-export function createMemoryRouter(observer: RouterObserver, options?: RouterOptions): Router {
+export function createMemoryRouter<S>(observer: RouterObserver, options?: RouterOptions): Router<S> {
     let routePath = options?.initMemory ?? '/'
     let routeSearch = ''
+    let routeState: S | null | undefined = null
 
     const self = {
         start() {
         },
         stop() {
         },
-        getRoute() {
+        get route() {
             const path = routePath
             const params = deserializeRouteParamsFromString(routeSearch)
+            const state = routeState
 
-            return {path, params}
+            return {path, params, state}
         },
-        setRoute(path: string, params?: RouterParams) {
+        routeTo(path: string, params?: RouterParams, state?: S) {
             routePath = path
             routeSearch = encodeParams(params)
+            routeState = state
+        },
+        replaceRoute(path: string, params?: RouterParams, state?: S) {
+            self.routeTo(path, params, state)
         },
         link(path: string, params?: RouterParams) {
             return serializeRouteToString(path, params)
@@ -312,20 +334,21 @@ export function exact(pattern: string) {
 
 // Types ///////////////////////////////////////////////////////////////////////
 
-export interface Router {
+export interface Router<S = any> {
+    route: {path: string, params: RouterRouteParams, state: S | null | undefined}
     start(): void
     stop(): void
-    getRoute(): {path: string, params: RouterRouteParams}
-    setRoute(path: string, params?: RouterParams): void
+    routeTo(path: string, params?: RouterParams, state?: S): void
+    replaceRoute(path: string, params?: RouterParams, state?: S): void
     link(path: string, params?: RouterParams): string
 }
 
-export interface RouterObserver {
-    (route: string, params: RouterRouteParams): void
+export interface RouterObserver<S = any> {
+    (route: string, params: RouterRouteParams, state: S): void
 }
 
 export interface RouterOptions {
-    type?: 'hash' | 'history' | 'memory'
+    type?: 'hash' | 'path' | 'memory'
     basePath?: string
     initMemory?: string
 }
