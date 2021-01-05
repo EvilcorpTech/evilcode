@@ -1,15 +1,16 @@
 import {escapeRegExp} from '@eviljs/std-lib/regexp.js'
 import {asArray, isFunction, isPromise} from '@eviljs/std-lib/type.js'
 import {classes} from './react.js'
-import {createRouter, compilePattern, exact, regexpFromPattern, serializeRouteToString, RouterOptions, RouterParams, RouterRouteParams} from '@eviljs/std-web/router.js'
+import {compilePattern, exact, regexpFromPattern} from '@eviljs/std-web/route.js'
+import {createRouter, serializeRouteToString, RouterOptions, RouterParams, RouterRouteParams} from '@eviljs/std-web/router.js'
 import React, {CSSProperties} from 'react'
 const {createContext, cloneElement, useCallback, useContext, useEffect, useMemo, useRef, useState, Fragment, Children} = React
 
-export {exact, All, Arg, End, Value, Path, PathOpt, PathGlob, Start} from '@eviljs/std-web/router.js'
+export {exact, All, Arg, End, Value, Path, PathOpt, PathGlob, Start} from '@eviljs/std-web/route.js'
 
 export const RouterContext = createContext<Router>(void undefined as any)
 export const RouteMatchesContext = createContext<RouteMatches>(void undefined as any)
-export const DefaultRouteActiveClass = 'route-active'
+export const RouteDefaultActiveClass = 'route-active'
 
 RouterContext.displayName = 'StdRouterContext'
 RouteMatchesContext.displayName = 'StdRouteMatchContext'
@@ -148,7 +149,7 @@ export function useRootRouter(options?: RouterOptions) {
     const globalRouter = useMemo(() => {
         return createRouter(onRouteChange, options)
     }, [])
-    const [route, setRoute] = useState(() => globalRouter.getRoute())
+    const [route, setRoute] = useState(() => globalRouter.route)
 
     const testRoute = useCallback((pattern: RegExp) => {
         return pattern.test(route.path)
@@ -158,15 +159,14 @@ export function useRootRouter(options?: RouterOptions) {
         return route.path.match(pattern)
     }, [route.path])
 
-    const routeTo = useCallback((path: string, params?: RouterParams) => {
-        globalRouter.setRoute(path, params)
-        setRoute(globalRouter.getRoute())
+    const routeTo = useCallback((path: string, params?: RouterParams, state?: any) => {
+        globalRouter.routeTo(path, params, state)
+        setRoute(globalRouter.route)
     }, [globalRouter])
 
-    const replaceRoute = useCallback((path: string, params?: RouterParams) => {
-        const link = globalRouter.link(path, params)
-        history.replaceState(history.state, '', link)
-        setRoute(globalRouter.getRoute())
+    const replaceRoute = useCallback((path: string, params?: RouterParams, state?: any) => {
+        globalRouter.replaceRoute(path, params, state)
+        setRoute(globalRouter.route)
     }, [globalRouter])
 
     useEffect(() => {
@@ -180,15 +180,36 @@ export function useRootRouter(options?: RouterOptions) {
     }, [globalRouter])
 
     const router = useMemo(() => {
-        const {link} = globalRouter
         const routePath = route.path
         const routeParams = route.params
+        const routeState = route.state
+        const {link, start, stop} = globalRouter
 
-        return {routePath, routeParams, routeTo, replaceRoute, testRoute, matchRoute, link}
-    }, [globalRouter, route.path, route.params, routeTo, replaceRoute, testRoute, matchRoute])
+        return {
+            routePath,
+            routeParams,
+            routeState,
+            routeTo,
+            replaceRoute,
+            testRoute,
+            matchRoute,
+            link,
+            start,
+            stop,
+        }
+    }, [
+        globalRouter,
+        route.path,
+        route.params,
+        route.state,
+        routeTo,
+        replaceRoute,
+        testRoute,
+        matchRoute,
+    ])
 
-    function onRouteChange(path: string, params: RouterRouteParams) {
-        setRoute({path, params})
+    function onRouteChange(path: string, params: RouterRouteParams, state: any) {
+        setRoute({path, params, state})
     }
 
     return router
@@ -309,7 +330,7 @@ export function WhenRoute(props: WhenRouteProps) {
 * </Route>
 */
 export function Route(props: RouteProps) {
-    const {children, elRef, to, params, if: guard, activeWhenExact, activeClass, ...otherProps} = props
+    const {children, elRef, to, params, state, if: guard, activeWhenExact, activeClass, ...otherProps} = props
     const {link, routeTo, testRoute} = useRouter()
 
     const onChange = useCallback((event: React.MouseEvent) => {
@@ -321,7 +342,7 @@ export function Route(props: RouteProps) {
                 return
             }
 
-            routeTo(to, params)
+            routeTo(to, params, state)
         }
 
         const guardResponse = isFunction(guard)
@@ -334,7 +355,7 @@ export function Route(props: RouteProps) {
         else {
             tryRouting(guardResponse)
         }
-    }, [routeTo, to, params, guard])
+    }, [routeTo, to, params, state, guard])
 
     const isActive = useMemo(() => {
         const escapedTo = escapeRegExp(to)
@@ -351,7 +372,7 @@ export function Route(props: RouteProps) {
             {...otherProps}
             ref={elRef}
             className={classes(props.className, {
-                [activeClass ?? DefaultRouteActiveClass]: isActive,
+                [activeClass ?? RouteDefaultActiveClass]: isActive,
             })}
             href={link(to, params)}
             onClick={onChange}
@@ -362,7 +383,7 @@ export function Route(props: RouteProps) {
 }
 
 export function Link(props: LinkProps) {
-    const {children, to, params, ...otherProps} = props
+    const {children, to, params, state, ...otherProps} = props
     const isRoute = to?.[0] === '/'
 
     if (isRoute) {
@@ -372,6 +393,7 @@ export function Link(props: LinkProps) {
                 className={classes('link-181232 route', props.className)}
                 to={to}
                 params={params}
+                state={state}
             >
                 {children}
             </Route>
@@ -391,11 +413,11 @@ export function Link(props: LinkProps) {
 }
 
 export function Redirect(props: RedirectProps) {
-    const {to, params} = props
+    const {to, params, state} = props
     const {replaceRoute} = useRouter()
 
     useEffect(() =>
-        replaceRoute(to, params)
+        replaceRoute(to, params, state)
     )
 
     return null
@@ -460,14 +482,17 @@ export interface RouteMatchProviderProps {
     value: Array<string>
 }
 
-export interface Router {
+export interface Router<S = any> {
     routePath: string
     routeParams: RouterRouteParams
-    routeTo(path: string, params?: RouterParams): void
-    replaceRoute(path: string, params?: RouterParams): void
+    routeState: S | null | undefined
+    routeTo(path: string, params?: RouterParams, state?: S | null): void
+    replaceRoute(path: string, params?: RouterParams, state?: S | null): void
     testRoute(pattern: RegExp): boolean
     matchRoute(pattern: RegExp): RegExpMatchArray | null
     link(path: string, params?: RouterParams): string
+    start(): void
+    stop(): void
 }
 
 export interface SwitchRouteProps extends RouteRenderProps, Omit<React.AllHTMLAttributes<Element>, 'default'> {
@@ -487,6 +512,7 @@ export interface RouteProps extends React.AnchorHTMLAttributes<HTMLAnchorElement
     elRef?: React.Ref<HTMLAnchorElement>
     to: string
     params?: RouterParams
+    state?: any
     if?(): boolean | Promise<boolean>
     activeWhenExact?: boolean
     activeClass?: string
@@ -496,11 +522,13 @@ export interface LinkProps extends React.AnchorHTMLAttributes<HTMLAnchorElement>
     children: React.ReactNode
     to: string
     params?: RouterParams
+    state?: any
 }
 
 export interface RedirectProps {
     to: string
     params?: RouterParams
+    state?: any
 }
 
 export interface RouteRenderProps {
