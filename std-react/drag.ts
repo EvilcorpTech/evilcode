@@ -1,9 +1,7 @@
 import {
     attachDragListeners,
-    createDragElement,
     initMoveState,
     initResizeState,
-    mountDragElement,
     move,
     resize,
     DragMoveChange,
@@ -15,9 +13,7 @@ import {
     DragResizeElement,
     DragResizeOptions,
     DragResizeState,
-    DragStyler,
-    DragTags,
-} from '@eviljs/std-web/drag'
+} from '@eviljs/std-web/drag.js'
 import React from 'react'
 const {useCallback, useEffect, useMemo, useRef, useState} = React
 
@@ -28,58 +24,62 @@ export type {DragMoveChange, DragOptions} from '@eviljs/std-web/drag.js'
 // listener always monitoring the mouse movement.
 
 export function useDrag
-    <E extends Element, S, P, O extends UseDragOptions<S, P>>
-    (targetRef: DragElementRef<E>, options?: O)
+    <
+        E extends Element,
+        O extends UseDragOptions<S, P>,
+        S,
+        P,
+    >
+    (
+        targetRef: DragElementRef<E>,
+        options?: O,
+    )
 {
     const [dragging, setDragging] = useState<boolean>(false)
     const dragInfoRef = useRef<UseDragInfo<S, P>>({})
 
-    const onMouseMove = useCallback((event: MouseEvent) => {
+    const onPointerMove = useCallback((event: MouseEvent | TouchEvent) => {
         const dragInfo = dragInfoRef.current
 
         dragInfo.progressState = options?.onProgress?.(event, dragInfo.startState!)
-    }, [])
+    }, [options])
 
-    const onMouseUp = useCallback((event: MouseEvent) => {
+    const onPointerEnd = useCallback((event: MouseEvent | TouchEvent) => {
         const dragInfo = dragInfoRef.current
 
         options?.onEnd?.(dragInfo.progressState!, dragInfo.startState!)
         dragInfo.unmount?.()
         dragInfo.unmount = null
         setDragging(false)
-    }, [])
+    }, [options])
 
-    const onMouseLeave = useCallback((event: MouseEvent) => {
-        return onMouseUp(event)
-    }, [onMouseUp])
+    const onPointerCancel = useCallback((event: MouseEvent | TouchEvent) => {
+        return onPointerEnd(event)
+    }, [onPointerEnd])
 
-    const onMouseDown = useCallback((event: React.MouseEvent) => {
+    const onPointerStart = useCallback((event: React.MouseEvent | React.TouchEvent) => {
         if (! targetRef.current) {
             return
         }
 
-        const dragElement = createDragElement(options?.tag, options?.style)
-        const dragListeners = {onMouseMove, onMouseUp, onMouseLeave}
-        const unmountListeners = attachDragListeners(dragElement, dragListeners)
-        const unmountElement = mountDragElement(dragElement, options?.region)
-
-        function unmount() {
-            // unmountListeners() // We don't need to remove the listeners.
-            unmountElement()
-        }
-
+        const dragListeners = {onPointerMove, onPointerEnd, onPointerCancel}
+        const unmountListeners = attachDragListeners(document.body, dragListeners)
         const draggedElement = targetRef.current
         const startState = options?.onStart?.(event.nativeEvent, draggedElement)
+
+        function unmount() {
+            unmountListeners()
+        }
 
         dragInfoRef.current.startState = startState
         dragInfoRef.current.unmount = unmount
 
         setDragging(true)
-    }, [onMouseMove, onMouseUp, onMouseLeave, options])
+    }, [options, onPointerMove, onPointerEnd, onPointerCancel])
 
     const withDrag = useMemo(() => {
-        return {onMouseDown}
-    }, [onMouseDown])
+        return {onMouseDown: onPointerStart, onTouchStart: onPointerStart}
+    }, [onPointerStart])
 
     useEffect(() => {
         // Conforms to the new React 17 behavior:
@@ -97,9 +97,9 @@ export function useDrag
 }
 
 export function useMove(targetRef: DragElementRef<DragMoveElement>, options?: UseMoveOptions) {
-    function onStart(event: MouseEvent, movedElement: DragMoveElement) {
+    function onStart(event: MouseEvent | TouchEvent, movedElement: DragMoveElement) {
         const bound = options?.boundRef?.current
-        const moveOptions = {bound, ...options}
+        const moveOptions = {bound, ...options, ...options?.initOptions?.()}
         const startState = initMoveState(movedElement, event, moveOptions)
 
         options?.onStart?.(startState)
@@ -107,7 +107,7 @@ export function useMove(targetRef: DragElementRef<DragMoveElement>, options?: Us
         return startState
     }
 
-    function onProgress(event: MouseEvent, startState: DragMoveState<DragMoveElement, DragMoveElement>) {
+    function onProgress(event: MouseEvent | TouchEvent, startState: DragMoveState<DragMoveElement, DragMoveElement>) {
         const progressState = move(startState, event)
 
         options?.onProgress?.(progressState, startState)
@@ -115,7 +115,7 @@ export function useMove(targetRef: DragElementRef<DragMoveElement>, options?: Us
         return progressState
     }
 
-    const dragOptions = {...options, onStart, onProgress}
+    const dragOptions = useMemo(() => ({...options, onStart, onProgress}), [options])
     const {dragging, withDrag} = useDrag(targetRef, dragOptions)
     const moving = dragging
     const withMove = withDrag
@@ -124,15 +124,16 @@ export function useMove(targetRef: DragElementRef<DragMoveElement>, options?: Us
 }
 
 export function useResize(targetRef: DragElementRef<DragResizeElement>, options?: UseResizeOptions) {
-    function onStart(event: MouseEvent, resizedElement: DragResizeElement) {
-        const startState = initResizeState(resizedElement, event, options)
+    function onStart(event: MouseEvent | TouchEvent, resizedElement: DragResizeElement) {
+        const resizeOptions = {...options, ...options?.initOptions?.()}
+        const startState = initResizeState(resizedElement, event, resizeOptions)
 
         options?.onStart?.(startState)
 
         return startState
     }
 
-    function onProgress(event: MouseEvent, startState: DragResizeState) {
+    function onProgress(event: TouchEvent, startState: DragResizeState) {
         const progressState = resize(startState, event)
 
         options?.onProgress?.(progressState, startState)
@@ -140,7 +141,7 @@ export function useResize(targetRef: DragElementRef<DragResizeElement>, options?
         return progressState
     }
 
-    const dragOptions = {...options, onStart, onProgress}
+    const dragOptions = useMemo(() => ({...options, onStart, onProgress}), [options])
     const {dragging, withDrag} = useDrag(targetRef, dragOptions)
     const resizing = dragging
     const withResize = withDrag
@@ -160,24 +161,24 @@ export interface UseDragInfo<S, P> {
 
 export interface UseDragConf {
     region?: Element
-    tag?: DragTags
-    style?: DragStyler
 }
 
 export interface UseDragOptions<S, P> extends UseDragConf, DragOptions {
-    onStart?(event: MouseEvent, el: Element): S
-    onProgress?(event: MouseEvent, state: S): P
+    onStart?(event: MouseEvent | TouchEvent, el: Element): S
+    onProgress?(event: MouseEvent | TouchEvent, state: S): P
     onEnd?(progressState: P, startState: S): void
 }
 
 export interface UseMoveOptions extends UseDragConf, DragMoveOptions<DragMoveElement> {
     boundRef?: React.RefObject<DragMoveElement>
+    initOptions?(): undefined | DragMoveOptions<DragMoveElement>
     onStart?(startState: DragMoveState<DragMoveElement, DragMoveElement>): void
     onProgress?(progressState: DragMoveChange, startState: DragMoveState<DragMoveElement, DragMoveElement>): void
     onEnd?(progressState: DragMoveChange, startState: DragMoveState<DragMoveElement, DragMoveElement>): void
 }
 
 export interface UseResizeOptions extends UseDragConf, DragResizeOptions {
+    initOptions?(): undefined | DragResizeOptions
     onStart?(startState: DragResizeState): void
     onProgress?(progressState: DragResizeChange, startState: DragResizeState): void
     onEnd?(progressState: DragResizeChange, startState: DragResizeState): void

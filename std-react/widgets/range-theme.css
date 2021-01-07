@@ -1,6 +1,13 @@
-.slider-fb2803,
-.range-move-550b18 {
+.range-3f0392 {
+    min-width: 8rem;
+}
+
+.slider-fb2803 {
     cursor: move;
+}
+
+.handle-bd2ce4 {
+    cursor: col-resize;
 }
 
 .slider-fb2803 {
@@ -14,11 +21,6 @@
 .range-8651c2.moving .slider-fb2803 {
     border-color: var(--std-primary-accent);
     border-radius: var(--std-radius-s);
-}
-
-.handle-bd2ce4,
-.range-resize-2f8cbe {
-    cursor: col-resize;
 }
 
 .handle-bd2ce4 {
