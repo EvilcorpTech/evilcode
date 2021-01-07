@@ -1,38 +1,48 @@
-import {isNil} from '@eviljs/std-lib/type.js'
-
-export function createDragElement(tag?: DragTags, style?: DragStyler) {
-    const el = document.createElement(tag ?? 'div')
-    el.classList.add('drag-r710dd')
-    el.style.position = 'absolute'
-    el.style.top = '0'
-    el.style.left = '0'
-    el.style.right = '0'
-    el.style.bottom = '0'
-    style?.(el)
-    return el
-}
+import {isNumber} from '@eviljs/std-lib/type.js'
 
 export function attachDragListeners(el: DragElement, listeners: DragListeners) {
-    el.addEventListener('mousemove', listeners.onMouseMove, {capture: false, passive: true})
-    el.addEventListener('mouseleave', listeners.onMouseLeave, {capture: false, passive: true})
-    el.addEventListener('mouseup', listeners.onMouseUp, {capture: false, passive: true})
+    const eventOptions = {capture: false, passive: false}
 
-    function unmount() {
-        el.removeEventListener('mousemove', listeners.onMouseMove, false)
-        el.removeEventListener('mouseleave', listeners.onMouseLeave, false)
-        el.removeEventListener('mouseup', listeners.onMouseUp, false)
+    function onMouseMove(event: MouseEvent) {
+        listeners.onPointerMove(event)
+    }
+    function onTouchMove(event: TouchEvent) {
+        if (event.cancelable) {
+            event.preventDefault() // Prevents firing the mousemove event.
+        }
+        listeners.onPointerMove(event)
     }
 
-    return unmount
-}
+    function onMouseUp(event: MouseEvent) {
+        listeners.onPointerEnd(event)
+    }
+    function onTouchEnd(event: TouchEvent) {
+        event.preventDefault() // Prevents firing the mouseup event.
+        listeners.onPointerEnd(event)
+    }
 
-export function mountDragElement(el: Element, region?: Element) {
-    const root = region ?? document.body
+    function onMouseLeave(event: MouseEvent) {
+        listeners.onPointerCancel(event)
+    }
+    function onTouchCancel(event: TouchEvent) {
+        event.preventDefault() // Prevents firing the mouseleave event.
+        listeners.onPointerCancel(event)
+    }
 
-    root.appendChild(el)
+    el.addEventListener('mousemove', onMouseMove, eventOptions)
+    el.addEventListener('touchmove', onTouchMove, eventOptions)
+    el.addEventListener('mouseup', onMouseUp, eventOptions)
+    el.addEventListener('touchend', onTouchEnd, eventOptions)
+    el.addEventListener('mouseleave', onMouseLeave, eventOptions)
+    el.addEventListener('touchcancel', onTouchCancel, eventOptions)
 
     function unmount() {
-        root.removeChild(el)
+        el.removeEventListener('mousemove', onMouseMove, eventOptions.capture)
+        el.removeEventListener('touchmove', onTouchMove, eventOptions.capture)
+        el.removeEventListener('mouseup', onMouseUp, eventOptions.capture)
+        el.removeEventListener('touchend', onTouchEnd, eventOptions.capture)
+        el.removeEventListener('mouseleave', onMouseLeave, eventOptions.capture)
+        el.removeEventListener('touchcancel', onTouchCancel, eventOptions.capture)
     }
 
     return unmount
@@ -42,30 +52,31 @@ export function mountDragElement(el: Element, region?: Element) {
 
 export const MoveStrategy = 'transform'
 
-export function initMoveState(element: DragMoveElement, event: DragMouseEvent, options?: DragMoveOptions<DragMoveElement>): DragMoveState<DragMoveElement, DragMoveElement> {
+export function initMoveState(element: DragMoveElement, event: DragPointerEvent, options?: DragMoveOptions<DragMoveElement>): DragMoveState<DragMoveElement, DragMoveElement> {
     const strategy = (element instanceof SVGGraphicsElement)
         ? 'svg'
         : (options?.strategy ?? MoveStrategy)
     const horizontal = options?.horizontal ?? true
     const vertical = options?.vertical ?? true
-    const initialX = event.clientX
-    const initialY = event.clientY
+    const pointerEvent = asPointerEvent(event)
+    const initialX = pointerEvent.clientX
+    const initialY = pointerEvent.clientY
     const state = {element, options, strategy, horizontal, vertical, initialX, initialY} as const
 
     switch (strategy) {
         case 'absolute':
-            return {...state, ...initMoveAbsoluteState(element as HTMLElement, event, options as DragMoveOptions<HTMLElement>)} as const
+            return {...state, ...initMoveAbsoluteState(element as HTMLElement, event, options as DragMoveOptions<HTMLElement>)}
         break
         case 'transform':
-            return {...state, ...initMoveTransformState(element as HTMLElement, event, options as DragMoveOptions<HTMLElement>)} as const
+            return {...state, ...initMoveTransformState(element as HTMLElement, event, options as DragMoveOptions<HTMLElement>)}
         break
         case 'svg':
-            return {...state, ...initMoveSvgState(element as SVGAElement, event, options as DragMoveOptions<SVGGraphicsElement>)} as const
+            return {...state, ...initMoveSvgState(element as SVGAElement, event, options as DragMoveOptions<SVGGraphicsElement>)}
         break
     }
 }
 
-export function initMoveAbsoluteState(el: HTMLElement, event: DragMouseEvent, options?: DragMoveOptions<HTMLElement>) {
+export function initMoveAbsoluteState(el: HTMLElement, event: DragPointerEvent, options?: DragMoveOptions<HTMLElement>) {
     const initialLeft = el.offsetLeft
     const initialTop = el.offsetTop
     const minLeft = options?.minLeft ?? (options?.bound
@@ -86,10 +97,10 @@ export function initMoveAbsoluteState(el: HTMLElement, event: DragMouseEvent, op
     )
     const moveRatio = 1
 
-    return {initialLeft, initialTop, minLeft, maxLeft, minTop, maxTop, moveRatio} as const
+    return {initialLeft, initialTop, minLeft, maxLeft, minTop, maxTop, moveRatio}
 }
 
-export function initMoveTransformState(el: HTMLElement, event: DragMouseEvent, options?: DragMoveOptions<HTMLElement>) {
+export function initMoveTransformState(el: HTMLElement, event: DragPointerEvent, options?: DragMoveOptions<HTMLElement>) {
     const [translateX, translateY] = getComputedTransform(el).slice(-2)
     const initialLeft = translateX ?? 0
     const initialTop = translateY ?? 0
@@ -113,10 +124,10 @@ export function initMoveTransformState(el: HTMLElement, event: DragMouseEvent, o
     )
     const moveRatio = 1
 
-    return {initialLeft, initialTop, minLeft, maxLeft, minTop, maxTop, moveRatio} as const
+    return {initialLeft, initialTop, minLeft, maxLeft, minTop, maxTop, moveRatio}
 }
 
-export function initMoveSvgState(el: SVGGraphicsElement, event: DragMouseEvent, options?: DragMoveOptions<SVGGraphicsElement>) {
+export function initMoveSvgState(el: SVGGraphicsElement, event: DragPointerEvent, options?: DragMoveOptions<SVGGraphicsElement>) {
     const svg = el.ownerSVGElement!
     const moveRatio =
         (svg.viewBox.baseVal.width || svg.clientWidth)
@@ -144,10 +155,10 @@ export function initMoveSvgState(el: SVGGraphicsElement, event: DragMouseEvent, 
         : undefined
     )
 
-    return {initialLeft, initialTop, minLeft, maxLeft, minTop, maxTop, moveRatio} as const
+    return {initialLeft, initialTop, minLeft, maxLeft, minTop, maxTop, moveRatio}
 }
 
-export function move(state: DragMoveState<DragMoveElement, DragMoveElement>, event: DragMouseEvent) {
+export function move(state: DragMoveState<DragMoveElement, DragMoveElement>, event: DragPointerEvent) {
     switch (state.strategy) {
         case 'absolute':
             return moveAbsolute(state as DragMoveState<HTMLElement, HTMLElement>, event)
@@ -161,20 +172,24 @@ export function move(state: DragMoveState<DragMoveElement, DragMoveElement>, eve
     }
 }
 
-export function moveAbsolute(state: DragMoveState<HTMLElement, HTMLElement>, event: DragMouseEvent) {
+export function moveAbsolute(state: DragMoveState<HTMLElement, HTMLElement>, event: DragPointerEvent) {
     const size = computeMove(state, event)
 
-    if (size && 'left' in size) {
+    if (! size) {
+        return
+    }
+
+    if (isNumber(size.left)) {
         state.element.style.left = size.left + 'px'
     }
-    if (size && 'top' in size) {
+    if (isNumber(size.top)) {
         state.element.style.top = size.top + 'px'
     }
 
     return size
 }
 
-export function moveTransform(state: DragMoveState<HTMLElement, HTMLElement>, event: DragMouseEvent) {
+export function moveTransform(state: DragMoveState<HTMLElement, HTMLElement>, event: DragPointerEvent) {
     const size = computeMove(state, event)
 
     if (! size) {
@@ -196,7 +211,7 @@ export function moveTransform(state: DragMoveState<HTMLElement, HTMLElement>, ev
     return size
 }
 
-export function moveSvg(state: DragMoveState<SVGGraphicsElement, SVGGraphicsElement>, event: DragMouseEvent) {
+export function moveSvg(state: DragMoveState<SVGGraphicsElement, SVGGraphicsElement>, event: DragPointerEvent) {
     const size = computeMove(state, event)
 
     if (! size) {
@@ -216,7 +231,7 @@ export function moveSvg(state: DragMoveState<SVGGraphicsElement, SVGGraphicsElem
     return size
 }
 
-export function computeMove(state: DragMoveState<DragMoveElement, DragMoveElement>, event: DragMouseEvent): DragMoveChange {
+export function computeMove(state: DragMoveState<DragMoveElement, DragMoveElement>, event: DragPointerEvent): DragMoveChange {
     const size = {
         left: state.horizontal
             ? computeMoveHorizontal(state, event)
@@ -245,29 +260,31 @@ export function computeMove(state: DragMoveState<DragMoveElement, DragMoveElemen
     return // Makes TypeScript happy.
 }
 
-export function computeMoveHorizontal(state: DragMoveState<DragMoveElement, DragMoveElement>, event: DragMouseEvent) {
+export function computeMoveHorizontal(state: DragMoveState<DragMoveElement, DragMoveElement>, event: DragPointerEvent) {
     const {initialLeft, initialX, minLeft, maxLeft, moveRatio} = state
-    const deltaX = (event.clientX - initialX) * moveRatio
+    const pointerEvent = asPointerEvent(event)
+    const deltaX = (pointerEvent.clientX - initialX) * moveRatio
     const nextLeft = initialLeft + deltaX
 
-    if (! isNil(minLeft) && nextLeft < minLeft) {
+    if (isNumber(minLeft) && nextLeft < minLeft) {
         return minLeft
     }
-    if (! isNil(maxLeft) && nextLeft > maxLeft) {
+    if (isNumber(maxLeft) && nextLeft > maxLeft) {
         return maxLeft
     }
     return nextLeft
 }
 
-export function computeMoveVertical(state: DragMoveState<DragMoveElement, DragMoveElement>, event: DragMouseEvent) {
+export function computeMoveVertical(state: DragMoveState<DragMoveElement, DragMoveElement>, event: DragPointerEvent) {
     const {initialTop, initialY, minTop, maxTop, moveRatio} = state
-    const deltaY = (event.clientY - initialY) * moveRatio
+    const pointerEvent = asPointerEvent(event)
+    const deltaY = (pointerEvent.clientY - initialY) * moveRatio
     const nextTop = initialTop + deltaY
 
-    if (! isNil(minTop) && nextTop < minTop) {
+    if (isNumber(minTop) && nextTop < minTop) {
         return minTop
     }
-    if (! isNil(maxTop) && nextTop > maxTop) {
+    if (isNumber(maxTop) && nextTop > maxTop) {
         return maxTop
     }
     return nextTop
@@ -292,7 +309,7 @@ export function getComputedTransform(el: HTMLElement) {
 
 // Resize //////////////////////////////////////////////////////////////////////
 
-export function initResizeState(element: DragResizeElement, event: DragMouseEvent, options?: DragResizeOptions) {
+export function initResizeState(element: DragResizeElement, event: DragPointerEvent, options?: DragResizeOptions): DragResizeState {
     const horizontalDirection =
         (options?.horizontal === 'forward')
             ? 1
@@ -305,8 +322,9 @@ export function initResizeState(element: DragResizeElement, event: DragMouseEven
         : (options?.vertical === 'backward')
             ? -1
         : 0
-    const initialX = event.clientX
-    const initialY = event.clientY
+    const pointerEvent = asPointerEvent(event)
+    const initialX = pointerEvent.clientX
+    const initialY = pointerEvent.clientY
     const initialWidth = element.offsetWidth
     const initialHeight = element.offsetHeight
     const minWidth = options?.minWidth ?? 0
@@ -321,23 +339,27 @@ export function initResizeState(element: DragResizeElement, event: DragMouseEven
         initialWidth, initialHeight,
         minWidth, maxWidth,
         minHeight, maxHeight,
-    } as const
+    }
 }
 
-export function resize(state: DragResizeState, event: DragMouseEvent) {
+export function resize(state: DragResizeState, event: DragPointerEvent) {
     const size = computeResize(state, event)
 
-    if (size && 'width' in size) {
+    if (! size) {
+        return
+    }
+
+    if (isNumber(size.width)) {
         state.element.style.width = size.width + 'px'
     }
-    if (size && 'height' in size) {
+    if (isNumber(size.height)) {
         state.element.style.height = size.height + 'px'
     }
 
     return size
 }
 
-export function computeResize(state: DragResizeState, event: DragMouseEvent): DragResizeChange {
+export function computeResize(state: DragResizeState, event: DragPointerEvent): DragResizeChange {
     const size = {
         width: state.horizontalDirection
             ? computeResizeHorizontal(state, event)
@@ -366,32 +388,40 @@ export function computeResize(state: DragResizeState, event: DragMouseEvent): Dr
     return // Makes TypeScript happy.
 }
 
-export function computeResizeHorizontal(state: DragResizeState, event: DragMouseEvent) {
+export function computeResizeHorizontal(state: DragResizeState, event: DragPointerEvent) {
+    const pointerEvent = asPointerEvent(event)
     const {horizontalDirection, initialWidth, initialX, minWidth, maxWidth} = state
-    const deltaX = (event.clientX - initialX) * horizontalDirection
+    const deltaX = (pointerEvent.clientX - initialX) * horizontalDirection
     const nextWidth = initialWidth + deltaX
 
-    if (! isNil(minWidth) && nextWidth < minWidth) {
+    if (isNumber(minWidth) && nextWidth < minWidth) {
         return minWidth
     }
-    if (! isNil(maxWidth) && nextWidth > maxWidth) {
+    if (isNumber(maxWidth) && nextWidth > maxWidth) {
         return maxWidth
     }
     return nextWidth
 }
 
-export function computeResizeVertical(state: DragResizeState, event: DragMouseEvent) {
+export function computeResizeVertical(state: DragResizeState, event: DragPointerEvent) {
+    const pointerEvent = asPointerEvent(event)
     const {verticalDirection, initialHeight, initialY, minHeight, maxHeight} = state
-    const deltaY = (event.clientY - initialY) * verticalDirection
+    const deltaY = (pointerEvent.clientY - initialY) * verticalDirection
     const nextHeight = initialHeight + deltaY
 
-    if (! isNil(minHeight) && nextHeight < minHeight) {
+    if (isNumber(minHeight) && nextHeight < minHeight) {
         return minHeight
     }
-    if (! isNil(maxHeight) && nextHeight > maxHeight) {
+    if (isNumber(maxHeight) && nextHeight > maxHeight) {
         return maxHeight
     }
     return nextHeight
+}
+
+export function asPointerEvent(event: DragPointerEvent) {
+    return ('clientX' in event) && ('clientY' in event)
+        ? {clientX: event.clientX, clientY: event.clientY}
+        : {clientX: event.touches[0]!.clientX, clientY: event.touches[0]!.clientY}
 }
 
 // Types ///////////////////////////////////////////////////////////////////////
@@ -400,33 +430,29 @@ export interface DragOptions {
 }
 
 export interface DragMoveOptions<B extends DragMoveElement> extends DragOptions {
-    readonly strategy?: Exclude<DragMoveStrategy, 'svg'>
-    readonly horizontal?: boolean
-    readonly vertical?: boolean
-    readonly bound?: B | null
-    readonly minLeft?: number
-    readonly maxLeft?: number
-    readonly minTop?: number
-    readonly maxTop?: number
+    strategy?: Exclude<DragMoveStrategy, 'svg'>
+    horizontal?: boolean
+    vertical?: boolean
+    bound?: B | null
+    minLeft?: number
+    maxLeft?: number
+    minTop?: number
+    maxTop?: number
 }
 
 export interface DragResizeOptions extends DragOptions {
-    readonly horizontal?: 'forward' | 'backward'
-    readonly vertical?: 'forward' | 'backward'
-    readonly minWidth?: number
-    readonly maxWidth?: number
-    readonly minHeight?: number
-    readonly maxHeight?: number
-}
-
-export interface DragStyler {
-    (el: DragElement): void
+    horizontal?: 'forward' | 'backward'
+    vertical?: 'forward' | 'backward'
+    minWidth?: number
+    maxWidth?: number
+    minHeight?: number
+    maxHeight?: number
 }
 
 export interface DragListeners {
-    onMouseMove(event: MouseEvent): void
-    onMouseLeave(event: MouseEvent): void
-    onMouseUp(event: MouseEvent): void
+    onPointerMove(event: DragPointerEvent): void
+    onPointerCancel(event: DragPointerEvent): void
+    onPointerEnd(event: DragPointerEvent): void
 }
 
 export interface DragState<E, O extends DragOptions> {
@@ -472,14 +498,14 @@ export type DragResizeChange = undefined | {
     height?: number
 }
 
-export interface DragMouseEvent {
-    readonly clientX: number
-    readonly clientY: number
-}
+export type DragPointerEvent =
+    | {
+        readonly clientX: number
+        readonly clientY: number
+    }
+    | {touches: TouchList}
 
 export type DragMoveStrategy = 'absolute' | 'transform' | 'svg'
-
-export type DragTags = keyof HTMLElementTagNameMap
 export type DragElement = HTMLElement
 export type DragMoveElement = HTMLElement | SVGGraphicsElement
 export type DragResizeElement = HTMLElement
