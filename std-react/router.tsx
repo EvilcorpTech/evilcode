@@ -333,10 +333,14 @@ export function Route(props: RouteProps) {
     const {children, elRef, to, params, state, if: guard, activeWhenExact, activeClass, ...otherProps} = props
     const {link, routeTo, testRoute} = useRouter()
 
-    const onChange = useCallback((event: React.MouseEvent) => {
+    const onClick = useCallback((event: React.MouseEvent) => {
         event.preventDefault()
 
         function tryRouting(response: boolean | null | undefined) {
+            if (! to) {
+                return
+            }
+
             if (response === false) {
                 // Routing is blocked only in case of false return value.
                 return
@@ -358,6 +362,10 @@ export function Route(props: RouteProps) {
     }, [routeTo, to, params, state, guard])
 
     const isActive = useMemo(() => {
+        if (! to) {
+            return false
+        }
+
         const escapedTo = escapeRegExp(to)
         const path = activeWhenExact
             ? exact(escapedTo)
@@ -374,8 +382,11 @@ export function Route(props: RouteProps) {
             className={classes(props.className, {
                 [activeClass ?? RouteDefaultActiveClass]: isActive,
             })}
-            href={link(to, params)}
-            onClick={onChange}
+            href={to
+                ? link(to, params)
+                : undefined
+            }
+            onClick={onClick}
         >
             {children}
         </a>
@@ -405,7 +416,10 @@ export function Link(props: LinkProps) {
             target="_blank"
             {...otherProps}
             className={classes('link-181232 external', props.className)}
-            href={serializeRouteToString(to, params)}
+            href={to
+                ? serializeRouteToString(to, params)
+                : undefined
+            }
         >
             {children}
         </a>
@@ -510,7 +524,7 @@ export interface WhenRouteProps extends RouteRenderProps, Omit<React.AllHTMLAttr
 export interface RouteProps extends React.AnchorHTMLAttributes<HTMLAnchorElement> {
     children?: React.ReactNode
     elRef?: React.Ref<HTMLAnchorElement>
-    to: string
+    to?: string
     params?: RouterParams
     state?: any
     if?(): boolean | Promise<boolean>
@@ -520,7 +534,7 @@ export interface RouteProps extends React.AnchorHTMLAttributes<HTMLAnchorElement
 
 export interface LinkProps extends React.AnchorHTMLAttributes<HTMLAnchorElement> {
     children: React.ReactNode
-    to: string
+    to?: string
     params?: RouterParams
     state?: any
 }
