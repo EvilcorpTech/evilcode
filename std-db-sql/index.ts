@@ -1,3 +1,4 @@
+import {wait} from '@eviljs/std-lib/async.js'
 import {Logger} from '@eviljs/std-lib/logger.js'
 import MariaDB from 'mariadb'
 
@@ -116,7 +117,7 @@ export async function connect(db: Db) {
                 '@eviljs/std-db-sql/index.connect(): server is not ready yet.'
             )
 
-            await waitFor(db.retryDelay)
+            await wait(db.retryDelay)
 
             console.debug(
                 '@eviljs/std-db-sql/index.connect(): retrying.'
@@ -163,14 +164,6 @@ export function onExit(db: Db) {
         )
         db.connection.end()
     })
-}
-
-export function waitFor(time: number) {
-    const promise = new Promise((resolve, reject) => {
-        setTimeout(resolve, time)
-    })
-
-    return promise
 }
 
 // Types ///////////////////////////////////////////////////////////////////////
