@@ -1,4 +1,4 @@
-import {asJson, Fetch, FetchRequestMethod, mergeOptions, FetchRequestOptions} from './fetch.js'
+import {asJsonOptions, Fetch, FetchRequestMethod, mergeOptions, FetchRequestOptions} from './fetch.js'
 import {isFunction, isObject} from '@eviljs/std-lib/type.js'
 import {throwInvalidResponse} from './error.js'
 
@@ -13,7 +13,7 @@ export async function authenticate(fetch: Fetch, credentials: AuthCredentials, o
     const extractResponseToken = options?.responseToken ?? defaultExtractResponseToken
     const body = createRequestBody(credentials)
     const baseOpts = createOptions(options?.options, credentials)
-    const bodyOpts = asJson(body)
+    const bodyOpts = asJsonOptions(body)
     const opts = mergeOptions(baseOpts, bodyOpts)
 
     const response = await fetch.request(method, url, opts)

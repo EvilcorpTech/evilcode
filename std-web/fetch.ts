@@ -1,4 +1,4 @@
-import {assertObjectOptional} from '@eviljs/std-lib/assert.js'
+import {assertObject} from '@eviljs/std-lib/assert.js'
 import {ValueOf} from '@eviljs/std-lib/type.js'
 
 export const FetchRequestMethod = {
@@ -59,15 +59,17 @@ export function asBaseUrl(url?: string) {
     return url
 }
 
-export function mergeOptions(...optionsList: Array<FetchRequestOptions>) {
-    const options = {} as Record<string, any>
+export function mergeOptions(...optionsList: Array<FetchRequestOptions>): FetchRequestOptions {
+    const options: FetchRequestOptions = {}
 
     for (const optionsSource of optionsList) {
-        assertObjectOptional(optionsSource.headers, 'options.headers')
-
         for (const prop in optionsSource) {
-            switch (prop) {
+            const optionName = prop as keyof FetchRequestOptions
+
+            switch (optionName) {
                 case 'headers':
+                    assertObject(optionsSource.headers, 'options.headers')
+
                     options.headers = {
                         ...options.headers,
                         ...optionsSource.headers,
@@ -75,16 +77,16 @@ export function mergeOptions(...optionsList: Array<FetchRequestOptions>) {
                 break
 
                 default:
-                    options[prop] = optionsSource[prop as keyof typeof optionsSource]
+                    options[optionName] = optionsSource[optionName]
                 break
             }
         }
     }
 
-    return options as FetchRequestOptions
+    return options
 }
 
-export function asJson(body: unknown) {
+export function asJsonOptions(body: unknown): FetchRequestOptions {
     const options = {
         headers: {
             'Content-Type': JsonType,
