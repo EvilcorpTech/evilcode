@@ -18,7 +18,7 @@ export const SiteAnimationKey = 'animation'
 export const SiteWidgetKey = 'is'
 export const SiteNestingKey = 'with'
 export const SiteRouterType = 'Router'
-export const SiteRoutePlaceholders = {id: Arg}
+export const SiteRoutePlaceholders = {arg: Arg, id: Arg}
 
 export function useSite
     <
@@ -215,7 +215,10 @@ export function createDefaultRouter
             return null
         }
 
-        const translatedPath = translate(routePath, routePlaceholders) // /en/book/@{id} to /it/libro/([^/]+)
+        // /en/book/@{id}
+        // => /it/libro/@{id}
+        // => /it/libro/([^/]+)
+        const translatedPath = translate(routePath, routePlaceholders)
         const is = exact(translatedPath)
         const then = createRouteMatches(ctx.createAnimator(routeModel, idx))
 

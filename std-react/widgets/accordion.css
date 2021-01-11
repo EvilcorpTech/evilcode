@@ -1,0 +1,18 @@
+.section-c3bf3d {
+    display: block;
+}
+
+.head-ad0d97 {
+    z-index: 1;
+    width: 100%;
+}
+
+.content-38aa4e {
+    z-index: 0;
+    max-height: 0px;
+    transition: all var(--accordion-duration, var(--std-duration-slow));
+    overflow: hidden;
+}
+.section-c3bf3d.selected .content-38aa4e {
+    max-height: var(--accordion-height, 50vh);
+}

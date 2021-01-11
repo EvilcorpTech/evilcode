@@ -1,119 +1,173 @@
 import {clamp} from '@eviljs/std-lib/math.js'
-import {computeDistance} from '@eviljs/std-lib/scale.js'
+import {distanceBetween} from '@eviljs/std-lib/scale.js'
 import {isNil} from '@eviljs/std-lib/type.js'
-import {DragMoveElement, DragResizeElement} from '@eviljs/std-web/drag.js'
-import React, {Fragment, useCallback} from 'react'
-import {useMove, UseMoveOptions, useResize, UseResizeOptions} from '../drag.js'
+import React from 'react'
+import {useDrag, asDragPointerEvent, DragEvent, DragPointerEvent} from '../drag.js'
 import {classes} from '../react.js'
-const {useEffect, useMemo, useRef, useState} = React
+const {useCallback, useEffect, useMemo, useRef, useState, Fragment} = React
 
 import './range.css'
 
 export function Range(props: RangeProps) {
-    const {start, end, onChange, onChanged, handleStart, handleEnd, ...otherProps} = props
-    const [range, setRange] = useState<Range>({start: 0, end: 1})
-    const boundRef = useRef<HTMLDivElement>(null)
-    const centerRef = useRef<HTMLDivElement>(null)
-    const rangeStartRef = useRef<HTMLDivElement>(null)
-    const rangeEndRef = useRef<HTMLDivElement>(null)
-    const onDragProgressRef = useRef<Function | null>(null)
-    const onDragEndRef = useRef<Function | null>(null)
+    const {
+        start,
+        end,
+        startHandle,
+        startLine,
+        endHandle,
+        endLine,
+        onChange,
+        onChanged,
+        ...otherProps
+    } = props
     const refs = {
-        bound: boundRef,
-        center: centerRef,
-        start: rangeStartRef,
-        end: rangeEndRef,
-        onDragProgress: onDragProgressRef,
-        onDragEnd: onDragEndRef,
+        region: useRef<HTMLDivElement>(null),
+        start: useRef<HTMLDivElement>(null),
+        end: useRef<HTMLDivElement>(null),
+        center: useRef<HTMLButtonElement>(null),
+        onChange: useRef<null | RangeObserver>(null),
+        onChanged: useRef<null | RangeObserver>(null),
     }
-    const moveOptions = useMemo(() => createMoveOptions(refs), [])
-    const resizeStartOptions = useMemo(() => createResizeStartOptions(refs), [])
-    const resizeEndOptions = useMemo(() => createResizeEndOptions(refs), [])
-    const centerMove = useMove(centerRef, moveOptions)
-    const startResize = useResize(rangeStartRef, resizeStartOptions)
-    const endResize = useResize(rangeEndRef, resizeEndOptions)
+    const [dragRange, setDragRange] = useState<null | Range>(null)
+    const dragStartOptions = useMemo(() => createDragOptions(refs, 'start'), [])
+    const dragEndOptions = useMemo(() => createDragOptions(refs, 'end'), [])
+    const dragCenterOptions = useMemo(() => createDragOptions(refs, 'center'), [])
+    const startDrag = useDrag(dragStartOptions)
+    const endDrag = useDrag(dragEndOptions)
+    const centerDrag = useDrag(dragCenterOptions)
 
     useEffect(() => {
-        // centerMove.moving must not be a dependency otherwise the default
-        // start and end overwrite the actual range at the end of the resize.
-        if (centerMove.moving || startResize.resizing || endResize.resizing) {
-            return
+        function onProgress(range: Range) {
+            setDragRange(range)
+            onChange?.(range)
         }
-
-        const rangeStart = clamp(0, start ?? 0, 1)
-        const rangeEnd = clamp(0, end ?? 1, 1)
-
-        if (rangeStart === range.start && rangeEnd === range.end) {
-            return
-        }
-
-        setRange({start: rangeStart, end: rangeEnd})
-    }, [start, end])
-
-    useEffect(() => {
-        function getRange() {
-            return computeRange(refs)
-        }
-
-        function onDragProgress() {
-            if (! onChange) {
-                return
-            }
-
-            const range = getRange()
-
-            onChange(range)
-        }
-
-        function onDragEnd() {
-            const range = getRange()
-
-            setRange(range)
+        function onEnd(range: Range) {
+            setDragRange(null)
             onChanged?.(range)
         }
 
-        onDragProgressRef.current = onDragProgress
-        onDragEndRef.current = onDragEnd
+        refs.onChange.current = onProgress
+        refs.onChanged.current = onEnd
     }, [onChange, onChanged])
+
+    const startClamped = clamp(0, start ?? 0, 1)
+    const endClamped = clamp(0, end ?? 1, 1)
+    // We use the dragRange to immediately reflect the change in case there isn't
+    // the onChange callback.
+    const rangeStart = dragRange?.start ?? startClamped
+    const rangeEnd = dragRange?.end ?? endClamped
+    const isResizing = startDrag.dragging || endDrag.dragging
+    const isSliding = centerDrag.dragging
+    const isMoving = isResizing || isSliding
+    const keyboardStep = .05
 
     return (
         <div
             {...otherProps}
-            ref={boundRef}
-            className={classes('range-3f0392', props.className, {
-                moving: centerMove.moving,
-                resizing: startResize.resizing || endResize.resizing,
+            ref={refs.region}
+            className={classes('Range-3f0392', props.className, {
+                resizing: isResizing,
+                sliding: isSliding,
+                moving: isMoving,
             })}
         >
             <div
-                ref={rangeStartRef}
+                ref={refs.start}
                 className="tail-2c7180 start"
-                style={{width: `${range.start * 100}%`}}
+                style={{width: `${rangeStart * 100}%`}}
             >
-                <span
-                    {...startResize.withResize}
-                    className="handle-bd2ce4 start"
-                >
-                    {handleStart || <Fragment>&#124;&#124;</Fragment>}
+                <span className="track-7bf1df start">
+                    {startLine}
                 </span>
+                <button
+                    {...startDrag.withDrag}
+                    className="handle-bd2ce4 start"
+                    onKeyDown={(event) => {
+                        switch (event.key) {
+                            case 'ArrowLeft': {
+                                const start = Math.max(0, rangeStart - keyboardStep)
+                                const range = {start, end: rangeEnd}
+                                onChange?.(range)
+                                onChanged?.(range)
+                            }
+                            break
+                            case 'ArrowRight': {
+                                const start = Math.min(rangeStart + keyboardStep, rangeEnd)
+                                const range = {start, end: rangeEnd}
+                                onChange?.(range)
+                                onChanged?.(range)
+                            }
+                            break
+                        }
+                    }}
+                >
+                    {startHandle || <Fragment>&#124;&#124;</Fragment>}
+                </button>
             </div>
 
-            <div
-                {...centerMove.withMove}
-                ref={centerRef}
+            <button
+                {...centerDrag.withDrag}
+                ref={refs.center}
                 className="slider-fb2803"
+                tabIndex={distanceBetween(rangeStart, rangeEnd) > 0.1
+                    ? 0
+                    : -1
+                }
+                onKeyDown={(event) => {
+                    switch (event.key) {
+                        case 'ArrowLeft': {
+                            const distance = distanceBetween(rangeStart, rangeEnd)
+                            const start = Math.max(0, rangeStart - keyboardStep)
+                            const end = Math.max(start + distance, rangeEnd - keyboardStep)
+                            const range = {start, end}
+                            onChange?.(range)
+                            onChanged?.(range)
+                        }
+                        break
+                        case 'ArrowRight': {
+                            const distance = distanceBetween(rangeStart, rangeEnd)
+                            const end = Math.min(rangeEnd + keyboardStep, 1)
+                            const start = Math.min(rangeStart + keyboardStep, end - distance)
+                            const range = {start, end}
+                            onChange?.(range)
+                            onChanged?.(range)
+                        }
+                        break
+                    }
+                }}
             />
 
             <div
-                ref={rangeEndRef}
+                ref={refs.end}
                 className="tail-2c7180 end"
-                style={{width: `${(1 - range.end) * 100}%`}}
+                style={{width: `${(1 - rangeEnd) * 100}%`}}
             >
-                <span
-                    {...endResize.withResize}
+                <button
+                    {...endDrag.withDrag}
                     className="handle-bd2ce4 end"
+                    onKeyDown={(event) => {
+                        switch (event.key) {
+                            case 'ArrowLeft': {
+                                const end = Math.max(rangeStart, rangeEnd - keyboardStep)
+                                const range = {start: rangeStart, end}
+                                onChange?.(range)
+                                onChanged?.(range)
+                            }
+                            break
+                            case 'ArrowRight': {
+                                const end = Math.min(rangeEnd + keyboardStep, 1)
+                                const range = {start: rangeStart, end}
+                                onChange?.(range)
+                                onChanged?.(range)
+                            }
+                            break
+                        }
+                    }}
                 >
-                    {handleEnd || <Fragment>&#124;&#124;</Fragment>}
+                    {endHandle || <Fragment>&#124;&#124;</Fragment>}
+                </button>
+                <span className="track-7bf1df end">
+                    {endLine}
                 </span>
             </div>
         </div>
@@ -147,8 +201,10 @@ export function RangeNumeric(props: RangeNumericProps) {
         return null
     }
 
-    const rangeStart = computeDistance(min, start) / computeDistance(min, max)
-    const rangeEnd = computeDistance(min, end) / computeDistance(min, max)
+    const startClamped = Math.max(start, min)
+    const endClamped = Math.min(end, max)
+    const rangeStart = distanceBetween(min, startClamped) / distanceBetween(min, max)
+    const rangeEnd = distanceBetween(min, endClamped) / distanceBetween(min, max)
 
     return (
         <Range
@@ -193,8 +249,10 @@ export function RangeTime(props: RangeTimeProps) {
     const maxTime = max.getTime()
     const startTime = start.getTime()
     const endTime = end.getTime()
-    const rangeStart = computeDistance(minTime, startTime) / computeDistance(minTime, maxTime)
-    const rangeEnd = computeDistance(minTime, endTime) / computeDistance(minTime, maxTime)
+    const startTimeClamped = Math.max(startTime, minTime)
+    const endTimeClamped = Math.min(endTime, maxTime)
+    const rangeStart = distanceBetween(minTime, startTimeClamped) / distanceBetween(minTime, maxTime)
+    const rangeEnd = distanceBetween(minTime, endTimeClamped) / distanceBetween(minTime, maxTime)
 
     return (
         <Range
@@ -207,89 +265,103 @@ export function RangeTime(props: RangeTimeProps) {
     )
 }
 
-export function createResizeStartOptions(refs: RangeRefs<DragResizeElement>): UseResizeOptions {
-    return {
-        horizontal: 'forward',
-        onProgress() {
-            refs.onDragProgress.current?.()
-        },
-        onEnd() {
-            refs.onDragEnd.current?.()
-        },
-        initOptions() {
-            const boundRect = refs.bound.current!.getBoundingClientRect()
-            const endRect = refs.end.current!.getBoundingClientRect()
-            const maxWidth = boundRect.width - endRect.width
+export function createDragOptions(refs: RangeRefs, target: RangeTarget) {
+    type StartState = [RangeRects, DragPointerEvent]
+    type ProgressState = [...StartState, DragPointerEvent]
 
-            return {maxWidth}
+    return {
+        onStart(dragEvent: DragEvent): StartState {
+            const event = asDragPointerEvent(dragEvent)
+            const start = refs.start.current!.getBoundingClientRect()
+            const center = refs.center.current!.getBoundingClientRect()
+            const end = refs.end.current!.getBoundingClientRect()
+            const rects = {start, center, end}
+
+            return [rects, event]
+        },
+        onProgress(dragEvent: DragEvent, startState: StartState): ProgressState {
+            const event = asDragPointerEvent(dragEvent)
+            const [rects, startEvent] = startState
+            const ratio = computeRangeRatio(rects, startEvent, event, target)
+
+            refs.onChange.current!(ratio)
+
+            return [...startState, event]
+        },
+        onEnd(progressState: ProgressState, startState: StartState) {
+            const [rects, startEvent, progressEvent] = progressState
+            const ratio = computeRangeRatio(rects, startEvent, progressEvent, target)
+
+            refs.onChanged.current!(ratio)
         },
     }
 }
 
-export function createResizeEndOptions(refs: RangeRefs<DragResizeElement>): UseResizeOptions {
-    return {
-        horizontal: 'backward',
-        onProgress() {
-            refs.onDragProgress.current?.()
-        },
-        onEnd() {
-            refs.onDragEnd.current?.()
-        },
-        initOptions() {
-            const boundRect = refs.bound.current!.getBoundingClientRect()
-            const startRect = refs.start.current!.getBoundingClientRect()
-            const maxWidth = boundRect.width - startRect.width
+export function computeRangeRatio(
+    rects: RangeRects,
+    initialEvent: DragPointerEvent,
+    currentEvent: DragPointerEvent,
+    target: RangeTarget,
+): Range
+{
+    const total = rects.start.width + rects.center.width + rects.end.width
+    const xDelta = currentEvent.clientX - initialEvent.clientX
 
-            return {maxWidth}
-        },
+    function moveRectX(rect: DOMRect, delta: number, leftLimit: number, rightLimit: number): DOMRect {
+        const x = clamp(
+            leftLimit,
+            rect.left + delta,
+            Math.max(rightLimit - rect.width, leftLimit), // Just in case the rect is bigger than the limits.
+        )
+        const left = x
+        const right = left + rect.width
+
+        return {...rect, x, left, right}
     }
-}
 
-export function createMoveOptions(refs: RangeRefs<DragMoveElement>): UseMoveOptions {
-    return {
-        //// MOVE ABSOLUTE STRATEGY
-        //// START
-        // strategy: 'absolute',
-        //// END
-        vertical: false,
-        boundRef: refs.bound,
-        onStart(startState: {element: DragMoveElement}) {
-            //// MOVE ABSOLUTE STRATEGY
-            //// START
-            // const el = startState.element
-            // const left = el.offsetLeft
-            // const width = el.getBoundingClientRect().width
-            //
-            // el.style.position = 'absolute'
-            // el.style.left = left + 'px'
-            // el.style.width = width + 'px'
-            //// END
-        },
-        onProgress() {
-            refs.onDragProgress.current?.()
-        },
-        onEnd(progressState: {}, startState: {element: DragMoveElement}) {
-            refs.onDragEnd.current?.()
+    const {startDistance, endDistance} = (() => {
+        switch (target) {
+            case 'start': {
+                const leftLimit = rects.start.left - rects.start.width
+                const rightLimit = rects.end.left
+                const nextRect = moveRectX(rects.start, xDelta, leftLimit, rightLimit)
+                const startDistance = distanceBetween(rects.start.left, nextRect.right)
+                const endDistance = distanceBetween(rects.start.left, rects.end.left)
 
-            const el = startState.element
-            //// MOVE TRANSFORM STRATEGY
-            //// START
-            el.style.transform = ''
-            //// END
+                return {startDistance, endDistance}
+            }
+            case 'end': {
+                const leftLimit = rects.start.right
+                const rightLimit = rects.end.right + rects.end.width
+                const nextRect = moveRectX(rects.end, xDelta, leftLimit, rightLimit)
+                const startDistance = distanceBetween(rects.start.left, rects.start.right)
+                const endDistance = distanceBetween(rects.start.left, nextRect.left)
 
-            //// MOVE ABSOLUTE STRATEGY
-            //// START
-            // el.style.position = ''
-            // el.style.width = ''
-            //// END
-        },
-    }
+                return {startDistance, endDistance}
+            }
+            case 'center': {
+                const leftLimit = rects.start.left
+                const rightLimit = rects.end.right
+                const xDelta = currentEvent.clientX - initialEvent.clientX
+                const nextRect = moveRectX(rects.center, xDelta, leftLimit, rightLimit)
+                const startDistance = distanceBetween(rects.start.left, nextRect.left)
+                const endDistance = distanceBetween(rects.start.left, nextRect.right)
+
+                return {startDistance, endDistance}
+            }
+        }
+    })()
+    const startRatio = startDistance / total
+    const endRatio = endDistance / total
+
+    return {start: startRatio, end: endRatio}
 }
 
 export function computeNumericRange(min: number, max: number, range: Range) {
-    const distance = computeDistance(min, max)
+    const distance = distanceBetween(min, max)
     const start = min + (distance * range.start)
     const end = min + (distance * range.end)
+
     return {start, end}
 }
 
@@ -297,30 +369,6 @@ export function computeTimeRange(min: Date, max: Date, range: Range) {
     const numbersRange = computeNumericRange(min.getTime(), max.getTime(), range)
     const start = new Date(numbersRange.start)
     const end = new Date(numbersRange.end)
-    return {start, end}
-}
-
-export function computeRange(refs: RangeRefs<HTMLElement>) {
-    //// MOVE TRANSFORM STRATEGY
-    //// START
-    const boundRect = refs.bound.current!.getBoundingClientRect()
-    const centerRect = refs.center.current!.getBoundingClientRect()
-    const total = boundRect.width
-    const startOffset = centerRect.left - boundRect.left
-    const endOffset = boundRect.right - centerRect.right
-    //// END
-
-    //// MOVE ABSOLUTE STRATEGY
-    //// START
-    // const total = refs.bound.current!.clientWidth
-    // const startOffset = refs.bound.current!.offsetLeft
-    // const endOffset = total - refs.bound.current!.offsetWidth - refs.bound.current!.offsetLeft
-    // // const startOffset = refs.start.current!.clientWidth // Works with resize but not with move.
-    // // const endOffset = refs.end.current!.clientWidth // Works with resize but not with move.
-    //// END
-
-    const start = (1 / total) * startOffset
-    const end = 1 - (1 / total) * endOffset
 
     return {start, end}
 }
@@ -328,12 +376,14 @@ export function computeRange(refs: RangeRefs<HTMLElement>) {
 // Types ///////////////////////////////////////////////////////////////////////
 
 export interface RangeProps extends Omit<React.HTMLAttributes<HTMLDivElement>, 'onChange'> {
-    handleStart?: React.ReactNode
-    handleEnd?: React.ReactNode
     start: undefined | null | number
     end: undefined | null | number
-    onChange?(range: Range): void
-    onChanged?(range: Range): void
+    startHandle?: React.ReactNode
+    startLine?: React.ReactNode
+    endHandle?: React.ReactNode
+    endLine?: React.ReactNode
+    onChange?: RangeObserver
+    onChanged?: RangeObserver
 }
 
 export interface RangeNumericProps extends RangeProps {
@@ -346,24 +396,32 @@ export interface RangeTimeProps extends Omit<RangeProps, 'start' | 'end' | 'onCh
     end: undefined | null | Date
     min: undefined | null | Date
     max: undefined | null | Date
-    onChange?(range: RangeTime): void
-    onChanged?(range: RangeTime): void
+    onChange?: RangeObserver<Date>
+    onChanged?: RangeObserver<Date>
 }
 
-export interface RangeRefs<E extends Element> {
-    bound: React.RefObject<E>
-    center: React.RefObject<E>
-    start: React.RefObject<E>
-    end: React.RefObject<E>
-    onDragProgress: React.RefObject<Function>
-    onDragEnd: React.RefObject<Function>
+export interface RangeRefs {
+    region: React.RefObject<HTMLDivElement>
+    start: React.RefObject<HTMLDivElement>
+    end: React.RefObject<HTMLDivElement>
+    center: React.RefObject<HTMLButtonElement>
+    onChange: React.RefObject<RangeObserver>
+    onChanged: React.RefObject<RangeObserver>
 }
 
-export interface Range {
-    start: number
-    end: number
+export interface RangeRects {
+    start: DOMRect
+    center: DOMRect
+    end: DOMRect
 }
 
-export type RangeTime = {
-    [key in keyof Range]: Date
+export type RangeTarget = 'start' | 'center' | 'end'
+
+export interface RangeObserver<T = number> {
+    (change: Range<T>): void
+}
+
+export interface Range<T = number> {
+    start: T
+    end: T
 }
