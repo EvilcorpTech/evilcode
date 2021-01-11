@@ -1,6 +1,6 @@
 import {isArray, isFunction, isObject} from '@eviljs/std-lib/type.js'
 import {throwInvalidArgument} from '@eviljs/std-lib/error.js'
-import {computeDirection, computeDistance, createLinearScale} from '@eviljs/std-lib/scale.js'
+import {directionOf, distanceBetween, createLinearScale} from '@eviljs/std-lib/scale.js'
 
 export const SpringPrecision = 200
 export const SpringSnapping = 1 / SpringPrecision
@@ -141,11 +141,11 @@ export function createSpringAnimation(options: SpringAnimationOpts) {
 
 export function createSpringScaleAnimation(finalScale: number, initialScale = 1, options?: Partial<SpringAnimationOpts>) {
     const animationDistance = options?.distance ?? SpringScaleDistance
-    const scaleDistance = computeDistance(initialScale, finalScale)
-    const scaleDirection = computeDirection(initialScale, finalScale)
+    const scaleDistance = distanceBetween(initialScale, finalScale)
+    const scaleDirection = directionOf(initialScale, finalScale)
     const overshootScale = finalScale + scaleDirection * scaleDistance
     const mapPositionToScale = createLinearScale([animationDistance, -animationDistance], [initialScale, overshootScale])
-    const inverseDistance = computeDistance(finalScale, -initialScale)
+    const inverseDistance = distanceBetween(finalScale, -initialScale)
     //  5 |\
     //    | \     —
     //    |  \   / \
