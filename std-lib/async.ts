@@ -1,3 +1,7 @@
 export function wait(delay: number) {
-    return new Promise((resolve) => setTimeout(resolve, delay))
+    const promise = new Promise((resolve) =>
+        setTimeout(resolve, delay)
+    )
+
+    return promise
 }

@@ -12,10 +12,10 @@ export function createLinearScale(inputInterval: readonly [number, number], outp
         // OutputValue:           -3.1
         // OutputInterval: [------*-----------]
         //                 -10                10
-        const inputDistance = computeDistance(inputStart, inputEnd) // 2, 8 = 6
-        const outputDistance = computeDistance(outputStart, outputEnd) // 10, -10 = 20
-        const inputValueDistance = computeDistance(inputStart, inputValue) // 2, 6 = 4
-        const scaleDirection = computeDirection(outputStart, outputEnd) // 10, -10 = -1
+        const inputDistance = distanceBetween(inputStart, inputEnd) // 2, 8 = 6
+        const outputDistance = distanceBetween(outputStart, outputEnd) // 10, -10 = 20
+        const inputValueDistance = distanceBetween(inputStart, inputValue) // 2, 6 = 4
+        const scaleDirection = directionOf(outputStart, outputEnd) // 10, -10 = -1
         const scaleFactor = outputDistance / inputDistance // 20 / 6 = 3.3
         const scale = scaleFactor * scaleDirection // 3.3 * -1 = -3.3
         const outputValueDistance = inputValueDistance * scale // 4 * -3.3 = -13.2
@@ -27,11 +27,11 @@ export function createLinearScale(inputInterval: readonly [number, number], outp
     return map
 }
 
-export function computeDistance(x1: number, x2: number) {
+export function distanceBetween(x1: number, x2: number) {
     return Math.abs(x1 - x2)
 }
 
-export function computeDirection(x1: number, x2: number) {
+export function directionOf(x1: number, x2: number) {
     return x1 < x2 ? 1 : -1
 }
 
