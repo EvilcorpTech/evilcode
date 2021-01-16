@@ -4,7 +4,7 @@ import React from 'react'
 import {Transition, TransitionMode} from './animation.js'
 import {useI18n} from './i18n.js'
 import {PropsOf} from './react.js'
-import {createRouteMatches, exact, SwitchRoute, Arg} from './router.js'
+import {withRouteMatches, exact, SwitchRoute, Arg} from './router.js'
 import {TransitionAnimator, TransitionAnimatorEffect} from './widgets/animator.js'
 import {RouteArgs} from './widgets/route-args.js'
 const {useMemo} = React
@@ -17,6 +17,7 @@ export const SiteRouteKey = 'path'
 export const SiteAnimationKey = 'animation'
 export const SiteWidgetKey = 'is'
 export const SiteNestingKey = 'with'
+export const SiteRouteArgsProp = 'routeArgs'
 export const SiteRouterType = 'Router'
 export const SiteRoutePlaceholders = {arg: Arg, id: Arg}
 
@@ -108,6 +109,7 @@ export function createSite
     const widgetKey = spec.widgetKey ?? SiteWidgetKey
     const nestingKey = spec.nestingKey ?? SiteNestingKey
     const routerType = spec.routerType ?? SiteRouterType
+    const routeArgsProp = spec.routeArgsProp ?? SiteRouteArgsProp
     const routerDefault = spec.routerDefault
     const routePlaceholders = spec.routePlaceholders ?? SiteRoutePlaceholders
     const defaultWidgets = {
@@ -132,6 +134,7 @@ export function createSite
         widgetKey,  // model.type is the widget id to create.
         nestingKey, // model.with are the children of the widget.
         routerType,
+        routeArgsProp,
         routerDefault,
         routePlaceholders, // Token-RegExp search-replace for model.path (/book/@{id}).
         widgets,
@@ -202,7 +205,7 @@ export function createDefaultRouter
     >
     (ctx: Site<RK, AK, WK, NK, RT, W>, routesModel: SiteRoutesModel<RK, AK, WK, NK, W>)
 {
-    const {routeKey, translate, routePlaceholders, routerDefault} = ctx
+    const {routeKey, routeArgsProp, translate, routePlaceholders, routerDefault} = ctx
 
     const routes = routesModel.map((routeModel, idx) => {
         const routePath = routeModel[routeKey]
@@ -220,7 +223,8 @@ export function createDefaultRouter
         // => /it/libro/([^/]+)
         const translatedPath = translate(routePath, routePlaceholders)
         const is = exact(translatedPath)
-        const then = createRouteMatches(ctx.createAnimator(routeModel, idx))
+        const then = (...args: Array<string>) =>
+            withRouteMatches(args, ctx.createAnimator({...routeModel, [routeArgsProp]: args}, idx))
 
         return {is, then}
     })
@@ -392,6 +396,7 @@ export interface Site
     widgetKey: WK
     nestingKey: NK
     routerType: RT
+    routeArgsProp: string
     routePlaceholders: {[key: string]: string}
     routerDefault?: JSX.Element
     createRouter(
