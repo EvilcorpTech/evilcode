@@ -11,7 +11,7 @@ export function ThemeView(props: ThemeViewProps) {
     const [accent1RgbHex, setAccent1RgbHex] = useState('')
     const [accent2RgbHex, setAccent2RgbHex] = useState('')
     const [input, setInput] = useState('')
-    const [themeLight, setThemeLight] = useState(true)
+    const [themeDark, setThemeDark] = useState(false)
 
     useEffect(() => {
         const accent1RgbHex = computeAccent()
@@ -36,10 +36,10 @@ export function ThemeView(props: ThemeViewProps) {
         <div
             {...props}
             className={classes('theme-t2eb5b std-theme back', props.className, {
-                'light': themeLight, 'dark': ! themeLight,
+                light: ! themeDark, dark: themeDark,
             })}
         >
-            <h1 className="std-flex std-text-overline std-primary-accent">
+            <h1 className="std-flex align-center std-text-overline std-primary-accent">
                 <input
                     className="picker-t8c25d"
                     type="color"
@@ -58,10 +58,15 @@ export function ThemeView(props: ThemeViewProps) {
 
                 <i className="std-space-m"/>
 
-                <i
-                    className={classes(['std-toggle', {active: themeLight}])}
-                    onClick={() => setThemeLight(state => ! state)}
-                />
+                <label className="std-flex column align-center">
+                    <input
+                        type="checkbox"
+                        checked={themeDark}
+                        onChange={(event) => setThemeDark(event.target.checked)}
+                    />
+                    <i className="std-space-xxs"/>
+                    <b>Dark</b>
+                </label>
             </h1>
             <style>{accentsHsl && `
                 :root,
@@ -93,6 +98,7 @@ export function ThemeView(props: ThemeViewProps) {
                             <label className="text-bead07 std-text-subtitle2">Subtitle 2</label>
                             <label className="text-bead07 std-text-body1">Body 1</label>
                             <label className="text-bead07 std-text-body2">Body 2</label>
+                            <label className="text-bead07 std-text-small">Small</label>
                             <label className="text-bead07 std-text-caption">Caption</label>
                             <label className="text-bead07 std-text-overline">Overline</label>
                             <label className="text-bead07 std-text-button">Button</label>

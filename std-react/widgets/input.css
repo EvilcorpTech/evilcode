@@ -12,7 +12,8 @@
 .input-i7eea4.placeholder {
     background: var(--std-input-back);
 }
-.input-i7eea4.focus {
+.input-i7eea4.focus,
+.input-i7eea4:focus-within {
     border-bottom-color: var(--std-text-primary1);
 }
 
@@ -35,4 +36,7 @@
 .field-cebab4 {
     border-bottom: 1px solid transparent;
     background: transparent;
+}
+.field-cebab4:focus {
+    outline: unset;
 }
