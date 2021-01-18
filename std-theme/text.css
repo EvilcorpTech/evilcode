@@ -3,6 +3,7 @@
     --std-font-primary: 'std-font-primary', Futura, Roboto, sans-serif;
 
     --std-text-size-min: .8rem;
+    --std-text-small-size: calc(.9 * var(--std-text-size-min));
     --std-text-body2-size: calc(1 * var(--std-text-size-min));
     --std-text-body1-size: calc(1.25 * var(--std-text-body2-size));
     --std-text-caption-size: calc(1 * var(--std-text-body1-size));
@@ -20,12 +21,10 @@
     --std-text-display1-size: calc(1.25 * var(--std-text-display2-size));
 
     --std-weight-thin: 200;
-    --std-weight-light: 300;
-    --std-weight-regular: 400;
-    --std-weight-medium: 500;
-    --std-weight-bold: 600;
-    --std-weight-heavy: 700;
-    --std-weight-black: 800;
+    --std-weight-light: calc(var(--std-weight-thin) + 100);
+    --std-weight-regular: calc(var(--std-weight-light) + 100);
+    --std-weight-medium: calc(var(--std-weight-regular) + 100);
+    --std-weight-bold: calc(var(--std-weight-medium) + 100);
 
     font-family: var(--std-font-primary);
 }

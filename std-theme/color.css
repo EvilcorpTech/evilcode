@@ -60,10 +60,10 @@
     --std-back-light2: hsl(0, 0%, 99%);
     --std-back-light3: hsl(0, 0%, 96%);
     --std-back-light4: hsl(0, 0%, 93%);
-    --std-back-dark1: hsl(235, 12%, 26%);
-    --std-back-dark2: hsl(235, 12%, 28%);
-    --std-back-dark3: hsl(235, 12%, 32%);
-    --std-back-dark4: hsl(235, 12%, 36%);
+    --std-back-dark1: hsl(235, 8%, 5%);
+    --std-back-dark2: hsl(235, 8%, 9%);
+    --std-back-dark3: hsl(235, 8%, 13%);
+    --std-back-dark4: hsl(235, 8%, 17%);
 
     --std-input-text: var(--std-text3);
     --std-input-back: var(--std-back3);

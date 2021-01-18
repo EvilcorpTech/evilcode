@@ -11,90 +11,104 @@
 }
 .std-button[disabled],
 .std-button[disabled]:hover {
-    opacity: .3 !important;
     pointer-events: none;
 }
 
 /* Plain /////////////////////////////////////////////////////////////////////*/
 
 .std-button.plain {
-    opacity: .7;
+    opacity: var(--opacity, .7);
+}
+.std-button.plain[disabled] {
+    opacity: var(--std-button-opacity--disabled, .3);
 }
 .std-button.plain:hover,
 .std-button.plain:active {
     opacity: unset;
 }
 .std-button.plain:hover {
-    color: var(--std-primary-accent);
+    color: var(--color--hover, var(--color, var(--std-primary-accent)));
 }
 .std-button.plain:active {
-    color: var(--std-primary-shade1);
+    color: var(--color--active, var(--color, var(--std-text-primary1)));
 }
 
 /* Special ///////////////////////////////////////////////////////////////////*/
 
 .std-button.special {
-    padding: var(--std-gutter-xxs) var(--std-gutter-s);
+    padding: var(--std-button-padding);
     border: 2px solid transparent;
-    border-radius: var(--std-radius-xl);
-    color: var(--std-text1-inverse);
-    background: var(--std-primary-accent);
+    border-radius: var(--std-button-radius);
+    color: var(--color, var(--std-text1-inverse));
+    background: var(--back, var(--std-primary-accent));
+}
+.std-button.special[disabled] {
+    opacity: var(--std-button-opacity--disabled, .3);
 }
 .std-button.special:hover,
 .std-button.special:active {
-    color: var(--std-primary-shade1);
-    border-color: var(--std-primary-accent);
+    border-color: var(--border--active, var(--back, var(--std-primary-accent)));
 }
 .std-button.special:hover {
-    background: var(--std-back1);
+    color: var(--color--hover, var(--back, var(--std-text-primary1)));
+    background: var(--back--hover, var(--std-back1));
 }
 .std-button.special:active {
-    color: var(--std-text1-inverse);
-    background: var(--std-primary-accent);
+    color: var(--color--active, var(--back, var(--std-text-primary3)));
+    background: var(--back--active, var(--std-back1));
 }
 
 /* Primary ///////////////////////////////////////////////////////////////////*/
 
 .std-button.primary {
-    padding: var(--std-gutter-xxs) var(--std-gutter-s);
-    border-radius: var(--std-radius-xl);
-    color: var(--std-text1-inverse);
-    background: var(--std-primary-accent);
+    padding: var(--std-button-padding);
+    border-radius: var(--std-button-radius);
+    color: var(--color, var(--std-text1-inverse));
+    background: var(--back, var(--std-primary-accent));
+}
+.std-button.primary[disabled] {
+    opacity: var(--std-button-opacity--disabled, .3);
 }
 .std-button.primary:hover,
 .std-button.primary:active {
-    color: var(--std-text1-inverse);
+    color: var(--color--active, var(--color, var(--std-text1-inverse)));
 }
 .std-button.primary:hover {
-    background: var(--std-primary-shade1);
+    background: var(--back--hover, var(--back, var(--std-primary-shade1)));
 }
 .std-button.primary:active {
-    background: var(--std-primary-shade3);
+    background: var(--back--active, var(--back, var(--std-primary-shade3)));
 }
 
 /* Secondary /////////////////////////////////////////////////////////////////*/
 
 .std-button.secondary {
-    padding: var(--std-gutter-xxs) var(--std-gutter-s);
-    border-radius: var(--std-radius-xl);
-    color: var(--std-grey7);
-    background: var(--std-grey3);
+    padding: var(--std-button-padding);
+    border-radius: var(--std-button-radius);
+    color: var(--color, var(--std-grey7));
+    background: var(--back, var(--std-grey3));
+}
+.std-button.secondary[disabled] {
+    opacity: var(--std-button-opacity--disabled, .3);
 }
 .std-button.secondary:hover {
-    color: var(--std-grey9);
-    background: var(--std-grey4);
+    color: var(--color--hover, var(--color, var(--std-grey9)));
+    background: var(--back--hover, var(--back, var(--std-grey4)));
 }
 .std-button.secondary:active {
-    background: var(--std-grey5);
+    background: var(--back--active, var(--back, var(--std-grey5)));
 }
 
 /* Tertiary //////////////////////////////////////////////////////////////////*/
 
 .std-button.tertiary {
-    padding: var(--std-gutter-xxs) var(--std-gutter-s);
-    border-radius: var(--std-radius-xl);
-    background: transparent;
+    padding: var(--std-button-padding);
+    border-radius: var(--std-button-radius);
+    background: var(--back, transparent);
     z-index: 0;
+}
+.std-button.tertiary[disabled] {
+    opacity: var(--std-button-opacity--disabled, .3);
 }
 .std-button.tertiary::after {
     content: '';
@@ -104,9 +118,9 @@
     right: 0;
     bottom: 0;
     display: block;
-    border-radius: var(--std-radius-xl);
+    border-radius: var(--std-button-radius);
     z-index: -1;
-    background: var(--std-primary-tint6);
+    background: var(--back--active, var(--std-primary-tint5));
     opacity: 0;
     transform: scale(0);
     transition: all;
@@ -114,36 +128,37 @@
 }
 .std-button.tertiary:hover,
 .std-button.tertiary:active {
-    color: var(--std-primary-shade2);
+    color: var(--color--active, var(--color, var(--std-text-primary2)));
 }
 .std-button.tertiary:hover::after {
-    opacity: 1;
+    opacity: .5;
     transform: scale(1);
 }
-.std-button.tertiary:active::after {
-    background: var(--std-primary-tint5);
+.std-button.tertiary:active::after,
+.std-button.tertiary:hover:active::after {
+    opacity: 1;
 }
 
 /* Flat //////////////////////////////////////////////////////////////////////*/
 
 .std-button.flat {
-    padding: var(--std-gutter-mini) var(--std-gutter-m);
-    border: 2px solid var(--std-text-primary1);
-    border-radius: var(--std-radius-xl);
-    color: var(--std-text-primary1);
-    background: transparent;
+    padding: var(--std-button-padding);
+    border: var(--border-size, 2px) solid var(--color, var(--std-primary-accent));
+    border-radius: var(--std-button-radius);
+    color: var(--color, var(--std-text-primary1));
+    background: var(--back, transparent);
 }
 .std-button.flat[disabled] {
-    opacity: .4;
-    pointer-events: none;
+    opacity: var(--std-button-opacity--disabled, .4);
 }
 .std-button.flat:hover,
 .std-button.flat:active {
-    color: var(--std-text1-inverse);
+    color: var(--color--active, var(--std-text1-inverse));
 }
 .std-button.flat:hover {
-    background: var(--std-text-primary1);
+    background: var(--back--hover, var(--color, var(--std-primary-accent)));
 }
 .std-button.flat:active {
-    border: 2px solid var(--std-text-primary3);
+    background: var(--back--active, var(--color, var(--std-primary-accent)));
+    border-color: var(--back--active, var(--color, var(--std-primary-accent)));
 }

@@ -2,7 +2,9 @@
     color: var(--std-text1);
 
     --std-text-l: 100%;
+    --std-text-ll: -1;
     --std-back-l: 0%;
+    --std-back-ll: 1;
     --std-text1: var(--std-text-light1);
     --std-text2: var(--std-text-light2);
     --std-text3: var(--std-text-light3);

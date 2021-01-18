@@ -1,7 +1,8 @@
-.std-cover {
-    width: 100%;
-    height: 100%;
-}
+.std-cover { width: 100%; height: 100%; }
+.std-cover-h { width: 100%; }
+.std-cover-v { height: 100%; }
+
+.std-extend-v { min-height: 100vh; }
 
 .std-layer {
     position: absolute;
