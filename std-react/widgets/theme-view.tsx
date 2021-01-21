@@ -391,7 +391,7 @@ export function ThemeView(props: ThemeViewProps) {
                             <label key={idx} className={`shadow-t9a257 std-shadow z${idx}`}>{idx}</label>
                         ))}
                         {Array(25).fill(null).map((nil, idx) => idx).slice(12).map(idx => (
-                            <label key={idx} className={`shadow-t9a257 std-shadow primary z${idx}`}>{idx}</label>
+                            <label key={idx} className={`shadow-t9a257 std-shadow primary-accent z${idx}`}>{idx}</label>
                         ))}
                     </div>
 
