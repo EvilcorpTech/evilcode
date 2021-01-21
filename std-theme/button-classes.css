@@ -30,7 +30,7 @@
     color: var(--color--hover, var(--color, var(--std-primary-accent)));
 }
 .std-button.plain:active {
-    color: var(--color--active, var(--color, var(--std-text-primary1)));
+    color: var(--color--active, var(--color--hover, var(--color, var(--std-text-primary1))));
 }
 
 /* Special ///////////////////////////////////////////////////////////////////*/
@@ -128,7 +128,7 @@
 }
 .std-button.tertiary:hover,
 .std-button.tertiary:active {
-    color: var(--color--active, var(--color, var(--std-text-primary2)));
+    color: var(--color--active, var(--color, var(--std-primary-accent)));
 }
 .std-button.tertiary:hover::after {
     opacity: .5;
