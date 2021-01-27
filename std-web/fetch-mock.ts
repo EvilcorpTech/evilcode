@@ -103,14 +103,21 @@ export function mockResponse(mocks: FetchMocks, type: FetchRequestMethod, path: 
     return NoMock
 }
 
-export function jsonResponse(data: unknown, options?: FetchRequestOptions) {
+export function jsonResponse(data: unknown, options?: ResponseInit) {
     const body = JSON.stringify(data)
     const opts = {
         ...options,
-        headers: {
-            ...options?.headers,
-            'Content-Type': JsonType,
-        },
+        headers: options?.headers instanceof Headers
+            ? (() => {
+                const headers = new Headers(options.headers)
+                headers.set('Content-Type', JsonType)
+                return headers
+            })()
+            : {
+                ...options?.headers,
+                'Content-Type': JsonType,
+            }
+        ,
     }
     const response = new Response(body, opts)
 

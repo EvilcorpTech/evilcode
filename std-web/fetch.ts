@@ -1,5 +1,4 @@
-import {assertObject} from '@eviljs/std-lib/assert.js'
-import {ValueOf} from '@eviljs/std-lib/type.js'
+import {isArray, ValueOf} from '@eviljs/std-lib/type.js'
 
 export const FetchRequestMethod = {
     Get: 'get',
@@ -60,7 +59,8 @@ export function asBaseUrl(url?: string) {
 }
 
 export function mergeOptions(...optionsList: Array<FetchRequestOptions>): FetchRequestOptions {
-    const options: FetchRequestOptions = {}
+    type Options = Omit<FetchRequestOptions, 'headers'> & {headers: Record<string, string>}
+    const options: Options = {headers: {}}
 
     for (const optionsSource of optionsList) {
         for (const prop in optionsSource) {
@@ -68,11 +68,23 @@ export function mergeOptions(...optionsList: Array<FetchRequestOptions>): FetchR
 
             switch (optionName) {
                 case 'headers':
-                    assertObject(optionsSource.headers, 'options.headers')
-
-                    options.headers = {
-                        ...options.headers,
-                        ...optionsSource.headers,
+                    if (optionsSource.headers instanceof Headers) {
+                        for (const it of optionsSource.headers.entries()) {
+                            const [key, value] = it
+                            options.headers[key] = value
+                        }
+                    }
+                    else if (isArray(optionsSource.headers)) {
+                        for (const it of optionsSource.headers) {
+                            const [key, value] = it as [string, string]
+                            options.headers[key] = value
+                        }
+                    }
+                    else {
+                        options.headers = {
+                            ...options.headers,
+                            ...optionsSource.headers,
+                        }
                     }
                 break
 
@@ -121,3 +133,9 @@ export interface FetchRequestOptions extends RequestInit {
 }
 
 export type ContentType = ValueOf<typeof ContentType>
+
+declare global {
+    interface Headers {
+        entries(): Array<[string, string]>
+    }
+}
