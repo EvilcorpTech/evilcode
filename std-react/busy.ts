@@ -3,6 +3,7 @@ const {useState} = React
 
 export function useBusy(init = 0) {
     const [busy, setBusy] = useState(init)
+    const isBusy = busy > 0
 
     function busyLock() {
         setBusy(state => state + 1)
@@ -11,5 +12,5 @@ export function useBusy(init = 0) {
         setBusy(state => state - 1)
     }
 
-    return {busy, busyLock, busyRelease, setBusy}
+    return {busy, isBusy, busyLock, busyRelease, setBusy}
 }
