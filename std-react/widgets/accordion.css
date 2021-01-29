@@ -11,8 +11,9 @@
     z-index: 0;
     max-height: 0px;
     transition: all var(--accordion-duration, var(--std-duration-slow));
-    overflow-y: auto;
+    overflow-y: hidden; /* Fixes an issue on Safari (14) not honoring max-height when overflow-y:auto. */
 }
 .section-c3bf3d.selected .content-38aa4e {
     max-height: var(--accordion-height, 50vh);
+    overflow-y: auto;
 }
