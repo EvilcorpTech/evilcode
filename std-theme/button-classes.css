@@ -120,7 +120,7 @@
     display: block;
     border-radius: var(--std-button-radius);
     z-index: -1;
-    background: var(--back--active, var(--std-primary-tint5));
+    background: var(--back--active, var(--std-primary-accent));
     opacity: 0;
     transform: scale(0);
     transition: all;
@@ -130,13 +130,14 @@
 .std-button.tertiary:active {
     color: var(--color--active, var(--color, var(--std-primary-accent)));
 }
-.std-button.tertiary:hover::after {
-    opacity: .5;
+.std-button.tertiary:hover::after,
+.std-button.tertiary:focus::after {
+    opacity: .1;
     transform: scale(1);
 }
 .std-button.tertiary:active::after,
 .std-button.tertiary:hover:active::after {
-    opacity: 1;
+    opacity: .2;
 }
 
 /* Flat //////////////////////////////////////////////////////////////////////*/
