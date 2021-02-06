@@ -1,3 +1,8 @@
+:root,
+.std-theme {
+    --std-font-primary: 'std-font-primary', Roboto, Futura, sans-serif;
+}
+
 @font-face {
     font-family: 'std-font-primary';
     font-style: normal;

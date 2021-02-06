@@ -1,7 +1,5 @@
 :root,
 .std-theme {
-    --std-font-primary: 'std-font-primary', Futura, Roboto, sans-serif;
-
     --std-text-size-min: .8rem;
     --std-text-small-size: calc(.9 * var(--std-text-size-min));
     --std-text-body2-size: calc(1 * var(--std-text-size-min));
@@ -27,4 +25,6 @@
     --std-weight-bold: calc(var(--std-weight-medium) + 100);
 
     font-family: var(--std-font-primary);
+    font-size: var(--std-text-body1-size);
+    font-weight: var(--std-weight-regular);
 }

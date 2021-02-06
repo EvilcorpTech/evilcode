@@ -33,20 +33,17 @@ body {
     min-height: 100%;
     height: 100%;
     max-height: 100%;
+}
 
+html { font-size: 100%; }
+
+body {
     -webkit-font-smoothing: antialiased;
     -webkit-font-smoothing: subpixel-antialiased;
     -moz-osx-font-smoothing: grayscale;
+
     -webkit-overflow-scrolling: touch;
-}
-
-html {
-    font-size: 100%;
-}
-
-body {
-    /* Don't use with the 'html' tag otherwise the page will not be scrollable. */
-    overflow-x: hidden;
+    overflow-x: hidden; /* Don't use with the 'html' tag otherwise the page will not scroll. */
 }
 
 article,
@@ -59,20 +56,15 @@ header,
 hgroup,
 menu,
 nav,
-section {
+ol,
+section,
+ul {
     display: block;
 }
 
-span,
-ul,
-li {
-    display: inline-block;
-}
+span, li { display: inline-block; }
 
-ol,
-ul {
-    list-style: none;
-}
+ol, ul { list-style: none; }
 
 a {
     display: inline-block;
@@ -106,34 +98,24 @@ button:hover {
     cursor: pointer;
 }
 
-h1,
-h2,
-h3,
-h4,
-h5,
-h6 {
-    font-weight: inherit;
-}
+h1 { font-size: var(--std-text-h1-size); }
+h2 { font-size: var(--std-text-h2-size); }
+h3 { font-size: var(--std-text-h3-size); }
+h4 { font-size: var(--std-text-h4-size); }
+h5 { font-size: var(--std-text-h5-size); }
+h6 { font-size: var(--std-text-h6-size); }
+h1, h2, h3, h4, h5, h6 { font-weight: inherit; }
 
-i,
-em {
-    font-style: italic;
-}
+i, em { font-style: italic; }
 
-b,
-strong {
-    font-weight: var(--std-weight-bold);
-}
+b, strong { font-weight: var(--std-weight-bold); }
 
 textarea {
     width: 100%;
     height: 100%;
 }
 
-blockquote,
-q {
-    quotes: none;
-}
+blockquote, q { quotes: none; }
 
 blockquote:before,
 blockquote:after,
