@@ -1,0 +1,46 @@
+{
+    "name": "@eviljs/webpack-html-style-inline-plugin",
+    "version": "0.1.1",
+    "type": "commonjs",
+    "files": [
+        "/LICENSE.txt",
+        "/*.js",
+        "/*.d.ts"
+    ],
+    "dependencies": {
+        "schema-utils": "^3",
+        "tslib": "^2"
+    },
+    "peerDependencies": {
+        "html-webpack-plugin": "^5",
+        "webpack": "^5"
+    },
+    "devDependencies": {
+        "@types/node": "^14",
+        "typescript": "^4.1"
+    },
+    "scripts": {
+        "dev": "npm run build -- --watch",
+        "build": "tsc --listEmittedFiles",
+        "preversion": "npm run build",
+        "prepack": "npm run build"
+    },
+    "author": "Daniele Orlando",
+    "license": "BSD-2-Clause",
+    "description": "Webpack plugin for inlining CSS inside HTML file",
+    "keywords": [
+        "Webpack",
+        "Plugin",
+        "Style",
+        "CSS",
+        "Inline"
+    ],
+    "homepage": "https://github.com/EvilRepo/eviljs",
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/EvilRepo/eviljs.git"
+    },
+    "bugs": {
+        "url": "https://github.com/EvilRepo/eviljs/issues"
+    }
+}
