@@ -193,14 +193,14 @@ export function saveStateToStorage(storage: Storage, key: string, state: any) {
     storage.setItem(key, serializedState)
 }
 
-export function loadStateFromStorage<T = unknown>(storage: Storage, key: string) {
+export function loadStateFromStorage<S = unknown>(storage: Storage, key: string) {
     const serializedState = storage.getItem(key)
 
     if (! serializedState) {
         return
     }
 
-    return JSON.parse(serializedState) as T
+    return JSON.parse(serializedState) as S
 }
 
 export function throwInvalidAction(action: string) {

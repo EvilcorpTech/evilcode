@@ -97,9 +97,9 @@ export function useQuery<A extends Array<unknown>, R>(queryRunner: QueryRunner<A
                 return
             }
 
-            setPending(false) // We settle
-            setResponse(response) // ...with a response
-            setError(null) // ...without any error.
+            setPending(false) // 1) We settle
+            setError(null) // 2) ...without any error
+            setResponse(response) // 3) ...with a response.
 
             return response
         }
@@ -113,9 +113,9 @@ export function useQuery<A extends Array<unknown>, R>(queryRunner: QueryRunner<A
                 return
             }
 
-            setPending(false) // We settle
-            setResponse(null) // ...without a response
-            setError(error) // ...with an error.
+            setPending(false) // 1) We settle
+            setError(error) // 2) ...with an error
+            setResponse(null) // 3) ...without a response.
 
             return // Makes TypeScript happy.
         }
