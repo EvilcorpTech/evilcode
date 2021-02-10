@@ -14,7 +14,7 @@
         + (var(--toggle-border) * 2)
         + (var(--toggle-space) * 2)
     );
-    background: var(--std-back1);
+    background-color: var(--std-back1);
     border: var(--toggle-border) solid var(--std-primary-accent);
     cursor: pointer;
 }
@@ -25,7 +25,7 @@
     left: var(--toggle-space);
     bottom: var(--toggle-space);
     width: var(--toggle-height);
-    background: var(--std-primary-accent);
+    background-color: var(--std-primary-accent);
     transition: all var(--std-duration-fast);
 }
 .toggle-f1a.active::after {

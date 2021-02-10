@@ -102,6 +102,7 @@
 /* Tertiary //////////////////////////////////////////////////////////////////*/
 
 .std-button.tertiary {
+    position: relative;
     padding: var(--std-button-padding);
     border-radius: var(--std-button-radius);
     background: var(--back, transparent);

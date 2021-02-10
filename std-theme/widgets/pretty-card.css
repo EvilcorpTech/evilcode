@@ -13,6 +13,6 @@
 
 @supports not (backdrop-filter: blur(0px) saturate(0%)) {
     .card-1a3 {
-        background: hsla(0, 0%, var(--std-back-l), .97);
+        background-color: hsla(0, 0%, var(--std-back-l), .97);
     }
 }
