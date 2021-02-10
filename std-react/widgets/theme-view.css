@@ -45,7 +45,7 @@
 .duration-t34796,
 .radius-tabc5e,
 .shadow-t9a257 {
-    background: var(--std-back1);
+    background-color: var(--std-back1);
 }
 
 .picker-t8c25d {
@@ -71,7 +71,6 @@
 }
 
 .text-bead07 {
-    border-bottom: var(--std-border1);
     margin-bottom: var(--std-gutter-mini);
 }
 
@@ -96,31 +95,37 @@
 }
 
 .gutter-t1d3c1 {
-    background: var(--std-back4);
-}
-.gutter-t1d3c1.important {
-    display: block;
+    position: relative;
     height: 50px;
-    line-height: 50px;
-}
-.gutter-t1d3c1 > label {
-    transform-origin: left;
 }
 .gutter-t1d3c1:hover {
     font-weight: var(--std-weight-bold);
     color: var(--std-primary-shade4);
-    background: var(--std-primary-tint5);
+}
+.gutter-t1d3c1 > i {
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    background-color: var(--std-back4);
+}
+.gutter-t1d3c1:hover > i {
+    background-color: var(--std-primary-tint5);
+}
+.gutter-t1d3c1 > label {
+    position: relative;
+    transform-origin: top left;
 }
 
 .radius-tabc5e {
     margin: 0 var(--std-gutter-xs);
     padding: var(--std-gutter-s);
     border: 4px solid transparent;
-    background: var(--std-back4);
+    background-color: var(--std-back4);
 }
 .radius-tabc5e:hover {
     color: var(--std-primary-accent);
-    background: var(--std-back1);
+    background-color: var(--std-back1);
     border-color: currentColor;
 }
 

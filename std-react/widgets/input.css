@@ -6,11 +6,11 @@
     border: 1px solid var(--std-input-border);
     border-bottom: 3px solid var(--std-input-border);
     border-radius: var(--std-radius-s);
-    background: transparent;
+    background-color: transparent;
     transition: all var(--std-duration-fast);
 }
 .input-i7eea4.placeholder {
-    background: var(--std-input-back);
+    background-color: var(--std-input-back);
 }
 .input-i7eea4.focus,
 .input-i7eea4:focus-within {
@@ -35,7 +35,7 @@
 
 .field-cebab4 {
     border-bottom: 1px solid transparent;
-    background: transparent;
+    background-color: transparent;
 }
 .field-cebab4:focus {
     outline: unset;

@@ -34,11 +34,11 @@
 
 @keyframes dots-spinner-052aa4 {
     0% {
-        background: var(--std-back1);
+        background-color: var(--std-back1);
         transform: scale(.6);
     }
     100% {
-        background: currentColor;
+        background-color: currentColor;
     }
 }
 
@@ -63,7 +63,7 @@
     left: 0;
     right: 0;
     bottom: 0;
-    background: var(--std-back4-inverse);
+    background-color: var(--std-back4-inverse);
 }
 .spinner-5b07bc.active::before {
     animation: pulse-spinner-a5e4a4 ease 2s 0s infinite;

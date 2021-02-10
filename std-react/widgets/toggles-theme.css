@@ -16,7 +16,7 @@
 }
 .toggle-c9313e.selected {
     color: var(--std-text1-inverse);
-    background: var(--std-primary-accent);
+    background-color: var(--std-primary-accent);
 }
 .toggle-c9313e:hover {
     border-color: var(--std-primary-accent);

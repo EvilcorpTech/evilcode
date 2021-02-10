@@ -46,9 +46,9 @@ export function ThemeView(props: ThemeViewProps) {
                     value={accent1RgbHex}
                     onChange={(event) => setAccent1RgbHex(event.target.value)}
                 />
-                <i className="std-space-m"/>
+                <i className="std-space-h m"/>
                 <label>Theme</label>
-                <i className="std-space-m"/>
+                <i className="std-space-h m"/>
                 <input
                     className="picker-t8c25d"
                     type="color"
@@ -56,7 +56,7 @@ export function ThemeView(props: ThemeViewProps) {
                     onChange={(event) => setAccent2RgbHex(event.target.value)}
                 />
 
-                <i className="std-space-m"/>
+                <i className="std-space-h m"/>
 
                 <label className="std-flex column align-center">
                     <input
@@ -64,10 +64,11 @@ export function ThemeView(props: ThemeViewProps) {
                         checked={themeDark}
                         onChange={(event) => setThemeDark(event.target.checked)}
                     />
-                    <i className="std-space-xxs"/>
+                    <i className="std-space-v xxs"/>
                     <b>Dark</b>
                 </label>
             </h1>
+
             <style>{accentsHsl && `
                 :root,
                 .std-theme {
@@ -80,7 +81,7 @@ export function ThemeView(props: ThemeViewProps) {
                 }
             `}</style>
 
-            <i className="std-space-m"/>
+            <i className="std-space-v m"/>
 
             <div className="std-flex center wrap">
                 <div className="std-flex column">
@@ -104,21 +105,20 @@ export function ThemeView(props: ThemeViewProps) {
                             <label className="text-bead07 std-text-button">Button</label>
                         </div>
 
-                        <div className="std-flex column align-end">
-                            <div className="gutter-t1d3c1 important std-space-mini"><label>Mini</label></div>
-                            <div className="gutter-t1d3c1 important std-space-xxs"><label>XXS</label></div>
-                            <div className="gutter-t1d3c1 important std-space-xs"><label>XS</label></div>
-                            <div className="gutter-t1d3c1 important std-space-s"><label>S</label></div>
-                            <div className="gutter-t1d3c1 important std-space-m"><label>M</label></div>
-                            <div className="gutter-t1d3c1 important std-space-l"><label>L</label></div>
-                            <div className="gutter-t1d3c1 important std-space-xl"><label>XL</label></div>
-                            <div className="gutter-t1d3c1 important std-space-xxl"><label>XXL</label></div>
-                            <div className="gutter-t1d3c1 important std-space-maxi"><label>Maxi</label></div>
+                        <div className="std-flex column">
+                            <div className="gutter-t1d3c1"><i className="std-space-h mini"/><label>Mini</label></div>
+                            <div className="gutter-t1d3c1"><i className="std-space-h xxs"/><label>XXS</label></div>
+                            <div className="gutter-t1d3c1"><i className="std-space-h xs"/><label>XS</label></div>
+                            <div className="gutter-t1d3c1"><i className="std-space-h s"/><label>S</label></div>
+                            <div className="gutter-t1d3c1"><i className="std-space-h m"/><label>M</label></div>
+                            <div className="gutter-t1d3c1"><i className="std-space-h l"/><label>L</label></div>
+                            <div className="gutter-t1d3c1"><i className="std-space-h xl"/><label>XL</label></div>
+                            <div className="gutter-t1d3c1"><i className="std-space-h xxl"/><label>XXL</label></div>
+                            <div className="gutter-t1d3c1"><i className="std-space-h maxi"/><label>Maxi</label></div>
                         </div>
                     </div>
 
-                    <i className="std-space-m"/>
-                    <i className="std-space-m"/>
+                    <i className="std-space-v m"/>
 
                     <div className="std-flex">
                         <label className="contrast-td0891 std-text1 std-back1">
@@ -138,7 +138,7 @@ export function ThemeView(props: ThemeViewProps) {
                             Back&nbsp;4
                         </label>
                     </div>
-                    <i className="std-space-m"/>
+                    <i className="std-space-v m"/>
                     <div className="std-flex">
                         <label className="contrast-td0891 std-text3-inverse std-back4-inverse">
                             Text&nbsp;3<br/>
@@ -161,28 +161,27 @@ export function ThemeView(props: ThemeViewProps) {
                             inverse
                         </label>
                     </div>
-                    <i className="std-space-m"/>
-                    <i className="std-space-m"/>
+                    <i className="std-space-v m"/>
                 </div>
 
-                <i className="std-space-m"/>
+                <i className="std-space-v m"/>
 
                 <div className="std-flex column">
                     <div className="std-flex center align-start wrap">
                         <div className="std-flex align-end column">
                             <div className="std-flex">
                                 <label>Primary Accent</label>
-                                <div className="std-spacer"></div>
+                                <div className="std-spacer"/>
                                 <span
                                     className="color-t75a7b"
                                     title="Primary accent"
                                     style={{backgroundColor: 'var(--std-primary-accent)'}}
                                 />
                             </div>
-                            <div className="std-space-s"></div>
+                            <i className="std-space-v s"/>
                             <div className="std-flex">
                                 <label>Tints</label>
-                                <div className="std-spacer"></div>
+                                <div className="std-spacer"/>
                                 {Array(6).fill(null).map((_, idx) => (
                                     <span
                                         key={idx}
@@ -192,10 +191,10 @@ export function ThemeView(props: ThemeViewProps) {
                                     />
                                 ))}
                             </div>
-                            <div className="std-space-s"></div>
+                            <div className="std-space-v s"/>
                             <div className="std-flex">
                                 <label>Shades</label>
-                                <div className="std-spacer"></div>
+                                <div className="std-spacer"/>
                                 {Array(6).fill(null).map((_, idx) => (
                                     <span
                                         key={idx}
@@ -205,10 +204,10 @@ export function ThemeView(props: ThemeViewProps) {
                                     />
                                 ))}
                             </div>
-                            <div className="std-space-s"></div>
+                            <div className="std-space-v s"/>
                             <div className="std-flex">
                                 <label>Tones</label>
-                                <div className="std-spacer"></div>
+                                <div className="std-spacer"/>
                                 {Array(6).fill(null).map((_, idx) => (
                                     <span
                                         key={idx}
@@ -219,21 +218,21 @@ export function ThemeView(props: ThemeViewProps) {
                                 ))}
                             </div>
 
-                            <i className="std-space-m"/>
+                            <i className="std-space-v m"/>
 
                             <div className="std-flex">
                                 <label>Secondary Accent</label>
-                                <div className="std-spacer"></div>
+                                <div className="std-spacer"/>
                                 <span
                                     className="color-t75a7b"
                                     title="Primary accent"
                                     style={{backgroundColor: 'var(--std-secondary-accent)'}}
                                 />
                             </div>
-                            <div className="std-space-s"></div>
+                            <div className="std-space-v s"/>
                             <div className="std-flex">
                                 <label>Tints</label>
-                                <div className="std-spacer"></div>
+                                <div className="std-spacer"/>
                                 {Array(6).fill(null).map((_, idx) => (
                                     <span
                                         key={idx}
@@ -243,10 +242,10 @@ export function ThemeView(props: ThemeViewProps) {
                                     />
                                 ))}
                             </div>
-                            <div className="std-space-s"></div>
+                            <div className="std-space-v s"/>
                             <div className="std-flex">
                                 <label>Shades</label>
-                                <div className="std-spacer"></div>
+                                <div className="std-spacer"/>
                                 {Array(6).fill(null).map((_, idx) => (
                                     <span
                                         key={idx}
@@ -256,10 +255,10 @@ export function ThemeView(props: ThemeViewProps) {
                                     />
                                 ))}
                             </div>
-                            <div className="std-space-s"></div>
+                            <div className="std-space-v s"/>
                             <div className="std-flex">
                                 <label>Tones</label>
-                                <div className="std-spacer"></div>
+                                <div className="std-spacer"/>
                                 {Array(6).fill(null).map((_, idx) => (
                                     <span
                                         key={idx}
@@ -269,12 +268,10 @@ export function ThemeView(props: ThemeViewProps) {
                                     />
                                 ))}
                             </div>
-                            <i className="std-space-m"/>
-                            <i className="std-space-m"/>
+                            <i className="std-space-v m"/>
                         </div>
 
-                        <i className="std-space-m"/>
-                        <i className="std-space-m"/>
+                        <i className="std-space-h l"/>
 
                         <div className="std-flex column">
                             <div>
@@ -285,7 +282,7 @@ export function ThemeView(props: ThemeViewProps) {
                                 <button className="std-text-button std-button flat">Flat</button>
                                 <button className="std-text-button std-button plain">Plain</button>
                             </div>
-                            <div className="std-space-xs"></div>
+                            <div className="std-space-v xs"/>
                             <div>
                                 <button className="std-text-button std-button special" disabled>Special</button>
                                 <button className="std-text-button std-button primary" disabled>Primary</button>
@@ -295,17 +292,15 @@ export function ThemeView(props: ThemeViewProps) {
                                 <button className="std-text-button std-button plain" disabled>Plain</button>
                             </div>
 
-                            <i className="std-space-m"/>
-                            <i className="std-space-m"/>
+                            <i className="std-space-v xl"/>
 
                             <div className="std-flex">
                                 <Input label="Email" value={input} onChange={setInput}/>
-                                <i className="std-space-m"/>
+                                <i className="std-space-h m"/>
                                 <Input label="Password" type="password" value="123456789"/>
                             </div>
 
-                            <i className="std-space-m"/>
-                            <i className="std-space-m"/>
+                            <i className="std-space-v xl"/>
 
                             <div>
                                 <label className="duration-t34796" style={{transitionDuration: 'var(--std-duration-slower)'}}>Slower</label>
@@ -315,59 +310,57 @@ export function ThemeView(props: ThemeViewProps) {
                                 <label className="duration-t34796" style={{transitionDuration: 'var(--std-duration-flash)'}}>Flash</label>
                             </div>
 
-                            <i className="std-space-m"/>
-                            <i className="std-space-m"/>
+                            <i className="std-space-v xl"/>
 
                             <div className="std-flex align-end">
                                 <div className="icon-e43c30">
                                     <Icon className="std-icon maxi"/>
-                                    <div className="std-space-s"></div>
+                                    <div className="std-space-h s"/>
                                     <label>Maxi</label>
                                 </div>
                                 <div className="icon-e43c30">
                                     <Icon className="std-icon xxl"/>
-                                    <div className="std-space-xs"></div>
+                                    <div className="std-space-h xs"/>
                                     <label>XXL</label>
                                 </div>
                                 <div className="icon-e43c30">
                                     <Icon className="std-icon xl"/>
-                                    <div className="std-space-xs"></div>
+                                    <div className="std-space-h xs"/>
                                     <label>XL</label>
                                 </div>
                                 <div className="icon-e43c30">
                                     <Icon className="std-icon l"/>
-                                    <div className="std-space-xs"></div>
+                                    <div className="std-space-h xs"/>
                                     <label>L</label>
                                 </div>
                                 <div className="icon-e43c30">
                                     <Icon className="std-icon m"/>
-                                    <div className="std-space-xs"></div>
+                                    <div className="std-space-h xs"/>
                                     <label>M</label>
                                 </div>
                                 <div className="icon-e43c30">
                                     <Icon className="std-icon s"/>
-                                    <div className="std-space-xs"></div>
+                                    <div className="std-space-h xs"/>
                                     <label>S</label>
                                 </div>
                                 <div className="icon-e43c30">
                                     <Icon className="std-icon xs"/>
-                                    <div className="std-space-xs"></div>
+                                    <div className="std-space-h xs"/>
                                     <label>XS</label>
                                 </div>
                                 <div className="icon-e43c30">
                                     <Icon className="std-icon xxs"/>
-                                    <div className="std-space-xs"></div>
+                                    <div className="std-space-h xs"/>
                                     <label>XXS</label>
                                 </div>
                                 <div className="icon-e43c30">
                                     <Icon className="std-icon mini"/>
-                                    <div className="std-space-xs"></div>
+                                    <div className="std-space-h xs"/>
                                     <label>Mini</label>
                                 </div>
                             </div>
 
-                            <i className="std-space-m"/>
-                            <i className="std-space-m"/>
+                            <i className="std-space-v xl"/>
 
                             <div>
                                 <label className="radius-tabc5e std-radius-maxi">Maxi</label>
@@ -379,11 +372,11 @@ export function ThemeView(props: ThemeViewProps) {
                                 <label className="radius-tabc5e std-radius-mini">Mini</label>
                             </div>
 
-                            <i className="std-space-m"/>
+                            <i className="std-space-v m"/>
                         </div>
                     </div>
 
-                    <i className="std-space-m"/>
+                    <i className="std-space-v m"/>
 
                     <div className="std-flex wrap std-viewport m">
                         <label className="shadow-t9a257 std-shadow soft">Soft</label>
@@ -395,8 +388,7 @@ export function ThemeView(props: ThemeViewProps) {
                         ))}
                     </div>
 
-                    <i className="std-space-m"/>
-                    <i className="std-space-m"/>
+                    <i className="std-space-v m"/>
                 </div>
             </div>
         </div>
