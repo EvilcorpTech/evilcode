@@ -5,12 +5,55 @@ export const GetArrayOpenRegexp = /\[/g
 export const GetArrayCloseRegexp = /\]/g
 export const GetPathCache: Record<string, Array<string | number>> = {}
 
-export function mapObject<V, R>(object: Record<string, V>, withFn: {key?: MapObjectKeyFn<V>, value?: never}): Record<string, V>
-export function mapObject<V, R>(object: Record<string, V>, withFn: {key?: MapObjectKeyFn<V>, value: MapObjectValueFn<V, R>}): Record<string, R>
-export function mapObject<V, R>(object: Record<string, V>, withFn: {key?: MapObjectKeyFn<V>, value?: MapObjectValueFn<V, R>}) {
-    function mapper(it: [string, V]) {
+export function mapObject
+    <
+        K extends string | number,
+        V,
+        RK extends string | number,
+    >
+    (
+        object: Record<K, V>,
+        withFn: {key: MapObjectKeyFn<K, V, RK>, value?: never},
+    )
+    : Record<RK, V>
+export function mapObject
+    <
+        K extends string | number,
+        V,
+        RV,
+    >
+    (
+        object: Record<K, V>,
+        withFn: {key?: never, value: MapObjectValueFn<V, K, RV>},
+    )
+    : Record<K, RV>
+export function mapObject
+    <
+        K extends string | number,
+        V,
+        RK extends string | number,
+        RV,
+    >
+    (
+        object: Record<K, V>,
+        withFn: {key: MapObjectKeyFn<K, V, RK>, value: MapObjectValueFn<V, K, RV>},
+    )
+    : Record<RK, RV>
+export function mapObject
+    <
+        K extends string | number,
+        V,
+        RK extends string | number,
+        RV,
+    >
+    (
+        object: Record<K, V>,
+        withFn: {key?: MapObjectKeyFn<K, V, RK>, value?: MapObjectValueFn<V, K, RV>},
+    )
+{
+    function mapper(it: [K, V]) {
         const [key, value] = it
-        const tuple: [string, V | R] = [
+        const tuple: [K | RK, V | RV] = [
             withFn.key?.(key, value) ?? key,
             withFn.value?.(value, key) ?? value,
         ]
@@ -83,11 +126,11 @@ export function fromPathToParts(path: string) {
 
 // Types ///////////////////////////////////////////////////////////////////////
 
-export interface MapObjectKeyFn<V> {
-    (key: string, value: V): string
+export interface MapObjectKeyFn<K, V, R> {
+    (key: K, value: V): R
 }
-export interface MapObjectValueFn<V, R> {
-    (value: V, key: string): R
+export interface MapObjectValueFn<V, K, R> {
+    (value: V, key: K): R
 }
 
 export type GetObject = Record<PropertyKey, unknown> | Array<unknown>
