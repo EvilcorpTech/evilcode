@@ -6,6 +6,7 @@ export function AuthBarrier(props: AuthBarrierProps) {
     const {children, progress, fallback} = props
     const {tokenState} = useAuth()
 
+    // We use fragments for typing reasons.
     switch (tokenState) {
         case AuthTokenState.Validating:
             // We are waiting the response from the server.

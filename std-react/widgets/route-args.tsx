@@ -26,7 +26,8 @@ export function RouteArgs(props: RouteArgsProps) {
     if (! routeIsValid) {
         // Skips mapping if current route does not match the pattern.
         // Useful when rendering an component being unmounted, inside a transition.
-        return children
+        return <Fragment>{children}</Fragment>
+        // We use a fragment for typing reasons.
     }
 
     const args = from
@@ -47,6 +48,7 @@ export function RouteArgs(props: RouteArgsProps) {
     })
 
     return (
+        // We use a fragment for typing reasons.
         <Fragment>
             {mappedChildren}
         </Fragment>
