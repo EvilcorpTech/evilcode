@@ -29,8 +29,11 @@
 .std-button.plain:hover {
     color: var(--color--hover, var(--color, var(--std-primary-accent)));
 }
+.std-button.plain:focus {
+    color: var(--color--focus, var(--color--hover, var(--color, var(--std-text-primary1))));
+}
 .std-button.plain:active {
-    color: var(--color--active, var(--color--hover, var(--color, var(--std-text-primary1))));
+    color: var(--color--active, var(--color--focus, var(--color--hover, var(--color, var(--std-text-primary1)))));
 }
 
 /* Special ///////////////////////////////////////////////////////////////////*/
