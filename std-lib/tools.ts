@@ -7,10 +7,8 @@ import {objectWithoutUndefined} from './object.js'
 *
 * EXAMPLE
 * [{id: 123, value: 'A'}, {id: 234, value: 'B'}].reduce(indexBy.bind(null, 'id'))
+* const index = indexBy('id', {}, {id: '123', asd: 123})
 */
-
-const i = indexBy('id', {}, {id: '123', asd: 123})
-
 export function indexBy
     <
         B extends string,
@@ -27,7 +25,6 @@ export function indexBy
         : item[by as keyof typeof item] as unknown as string
 
     index[key] = item
-    const a = index[key] //= item
 
     return index
 }
