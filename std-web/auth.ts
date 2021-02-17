@@ -3,7 +3,7 @@ import {isFunction, isObject} from '@eviljs/std-lib/type.js'
 import {throwInvalidResponse} from './error.js'
 
 export const DefaultUrl = '/auth'
-export const DefaultOptions: FetchRequestOptions = {credentials: 'include'}
+export const DefaultOptions: FetchRequestOptions = {}
 
 export async function authenticate(fetch: Fetch, credentials: AuthCredentials, options?: AuthenticateOptions) {
     const method = options?.method ?? 'post'

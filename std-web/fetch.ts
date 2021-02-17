@@ -7,10 +7,16 @@ export const FetchRequestMethod = {
     Delete: 'delete',
 } as const
 
+export const FormType = 'multipart/form-data'
 export const JsonType = 'application/json'
+export const TextType = 'text/plain'
+export const UrlType = 'application/x-www-form-urlencoded'
 
 export const ContentType = {
+    Form: FormType,
     Json: JsonType,
+    Text: TextType,
+    Url: UrlType,
 } as const
 
 export function createFetch(options?: FetchOptions) {
@@ -110,6 +116,24 @@ export function asJsonOptions(body: unknown): FetchRequestOptions {
     }
 
     return options
+}
+
+export function formatResponse(response: Response) {
+    const type = response.headers.get('Content-Type')?.toLowerCase()
+
+    if (! type) {
+        return response.text()
+    }
+    if (type.startsWith(ContentType.Json)) {
+        return response.json()
+    }
+    if (type.startsWith(ContentType.Form)) {
+        return response.formData()
+    }
+    if (type.startsWith(ContentType.Url)) {
+        return response.text().then(it => new URLSearchParams(it))
+    }
+    return response.text()
 }
 
 // Types ///////////////////////////////////////////////////////////////////////

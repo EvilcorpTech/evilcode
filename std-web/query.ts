@@ -1,6 +1,7 @@
 import {encodeParams, QueryRulesHeader, QueryParams, QueryRules} from '@eviljs/std-lib/query.js'
-import {Fetch, FetchRequestMethod, FetchRequestOptions, JsonType} from './fetch.js'
-import {throwInvalidResponse} from './error.js'
+import {Fetch, FetchRequestMethod, FetchRequestOptions, formatResponse} from './fetch.js'
+
+export {throwInvalidResponse} from './error.js'
 
 export function createQuery(fetch: Fetch) {
     const self: Query = {
@@ -38,23 +39,13 @@ export async function query(fetch: Fetch, method: QueryRequestMethod, path: stri
     requestArgs = setupQueryRules(...requestArgs)
 
     const response = await fetch.request(method, ...requestArgs)
-    const type = response.headers.get('Content-Type')?.toLowerCase()
+    const content = await formatResponse(response)
 
     if (! response.ok) {
-        return throwInvalidResponse(
-            '@eviljs/std-web/query.query() -> ~~Response~~:\n'
-            + `Response must have a 2xx status, given "${response.status}" (${response.statusText}).`
-        )
+        throw [response.status, content] as QueryError
     }
 
-    if (type?.includes(JsonType)) {
-        return response.json()
-    }
-
-    return throwInvalidResponse(
-        '@eviljs/std-web/query.query() -> ~~Response~~:\n'
-        + `Response must have a content type of ${JsonType}, given "${type}".`
-    )
+    return content
 }
 
 export function setupQueryParams(path: string, options?: QueryRequestOptions) {
@@ -114,3 +105,5 @@ export interface QueryRequestOptions extends FetchRequestOptions {
 }
 
 export type QueryRequestMethod = FetchRequestMethod
+
+export type QueryError<E = unknown> = [number, E]
