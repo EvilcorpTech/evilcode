@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom'
 const {createElement, createContext, memo, useContext, useEffect, useMemo, useRef, useState} = React
 const {createPortal} = ReactDOM
 
-export const PortalContext = createContext<PortalElement | null>(null)
+export const PortalContext = createContext<null | PortalElement>(null)
 
 PortalContext.displayName = 'StdPortalContext'
 
@@ -26,38 +26,46 @@ export function PortalProvider(props: PortalProviderProps) {
 * EXAMPLE
 *
 * export function MyMain(props) {
-*     const main = withQuery(<MyMain/>, fetch)
+*     const main = withPortal(Portal =>
+*         <Fragment>
+*             <App/>
+*
+*             <Teleport>
+*                 <h1>Portal Usage Example</h1>
+*                 <p>This code is teleported inside the Portal</p>
+*             </Teleport>
+*
+*             <Portal/>
+*         </Fragment>
+*     )
 *
 *     return <main/>
 * }
 */
-export function withPortal(children?: PortalProviderChild) {
-    const [portal, setPortal] = useState<PortalElement | null>(null)
+export function withPortal(render?: PortalProviderChild) {
+    const [portal, setPortal] = useState<null | PortalElement>(null)
 
     function Portal(props: PortalProps) {
         const {tag, ...otherProps} = props
-        const portalRef = useRef<PortalElement | null>(null)
+        const portalRef = useRef<null | PortalElement>(null)
 
         const elTag = tag ?? 'div'
         const elProps = {...otherProps, ref: portalRef}
 
         useEffect(() => {
-            // This does not lead to an infinite recursive update due to the
-            // same identity React check (===). It's safe to try to update the
-            // state on every render.
-            setPortal(state => portalRef.current)
+            setPortal(portalRef.current)
         })
 
         return createElement(elTag, elProps)
     }
 
-    const MemoPortal = useMemo(() => {
+    const PortalMemo = useMemo(() => {
         return memo(Portal)
     }, [])
 
     return (
         <PortalContext.Provider value={portal}>
-            {children?.(MemoPortal)}
+            {render?.(PortalMemo)}
         </PortalContext.Provider>
     )
 }
@@ -68,6 +76,8 @@ export function withPortal(children?: PortalProviderChild) {
 * return (
 *     <PortalProvider children={Portal =>
 *         <Fragment>
+*             <App/>
+*
 *             <Teleport>
 *                 <h1>Portal Usage Example</h1>
 *                 <p>This code is teleported inside the Portal</p>

@@ -427,12 +427,15 @@ export function Link(props: LinkProps) {
 }
 
 export function Redirect(props: RedirectProps) {
-    const {to, params, state} = props
-    const {replaceRoute} = useRouter()
+    const {to, params, state, replace} = props
+    const {replaceRoute, routeTo} = useRouter()
+    const shouldReplace = replace ?? true
 
-    useEffect(() =>
-        replaceRoute(to, params, state)
-    )
+    useEffect(() => {
+        shouldReplace
+            ? replaceRoute(to, params, state)
+            : routeTo(to, params, state)
+    })
 
     return null
 }
@@ -543,6 +546,7 @@ export interface RedirectProps {
     to: string
     params?: RouterParams
     state?: any
+    replace?: boolean
 }
 
 export interface RouteRenderProps {

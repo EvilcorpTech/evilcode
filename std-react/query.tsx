@@ -1,4 +1,4 @@
-import {Query} from '@eviljs/std-web/query.js'
+import {Query, QueryError} from '@eviljs/std-web/query.js'
 import {useMountedRef} from './react.js'
 import React from 'react'
 const {createContext, useCallback, useContext, useRef, useState} = React
@@ -61,10 +61,10 @@ export function QueryProvider(props: QueryProviderProps) {
     return withQuery(props.children, props.query)
 }
 
-export function useQuery<A extends Array<unknown>, R>(queryRunner: QueryRunner<A, R>) {
+export function useQuery<A extends Array<unknown>, R, E>(queryRunner: QueryRunner<A, R>) {
     const [response, setResponse] = useState<R | null>(null)
     const [pending, setPending] = useState(false)
-    const [error, setError] = useState<unknown>(null)
+    const [error, setError] = useState<QueryError<E> | null>(null)
     const mountedRef = useMountedRef()
     const taskRef = useRef<QueryTask<R> | null>(null)
     const query = useContext(QueryContext)
@@ -76,6 +76,7 @@ export function useQuery<A extends Array<unknown>, R>(queryRunner: QueryRunner<A
         }
 
         setPending(true)
+        setError(null)
         // We must retain current response and error states.
         // Whether the developer wants to clear them, he uses the reset() API
         // before issuing a fetch() request.
@@ -104,8 +105,6 @@ export function useQuery<A extends Array<unknown>, R>(queryRunner: QueryRunner<A
             return response
         }
         catch (error) {
-            console.error(error)
-
             if (! mountedRef.current) {
                 return
             }
