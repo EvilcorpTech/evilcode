@@ -1,46 +1,38 @@
-export function createCookie(options?: CreateCookieOptions) {
+export function createCookie(key: string, options?: CookieOptions) {
     const self: Cookie = {
-        path: options?.path ?? '/',
-        key: options?.key ?? 'token',
-        maxAge: options?.maxAge ?? defaultMaxAge(),
-        expires: options?.expires ?? defaultExpires(),
-
+        key,
         get() {
             return getCookie(self.key)
         },
         set(value: string) {
-            return setCookie(self.path, self.key, value, {maxAge: self.maxAge, expires: self.expires})
+            return setCookie(self.key, value, options)
         },
         delete() {
-            return deleteCookie(self.path, self.key)
-        },
-        clean() {
-            return cleanCookie(self.path)
+            return deleteCookie(self.key, options)
         },
     }
 
     return self
 }
 
-export function defaultMaxAge() {
+export function maxAgeInDays(days: number) {
     const oneSecond = 1
     const oneMinute = 60 * oneSecond
     const oneHour = 60 * oneMinute
     const oneDay = 24 * oneHour
-    const days = 14
     const maxAge = days * oneDay
 
     return maxAge
 }
 
-export function defaultExpires() {
-    const maxAge = defaultMaxAge()
+export function expiresInDays(days: number) {
+    const oneSecond = 1 * 1000 // In milliseconds.
+    const oneMinute = 60 * oneSecond
+    const oneHour = 60 * oneMinute
+    const oneDay = 24 * oneHour
+    const daysMs = days * oneDay
     const date = new Date()
-    const time = date.getTime()
-    const untilDate = time + maxAge
-
-    date.setTime(untilDate)
-
+    date.setTime(date.getTime() + daysMs)
     const expires = date.toUTCString()
 
     return expires
@@ -62,12 +54,17 @@ export function getCookie(key: string) {
     return
 }
 
-export function setCookie(path: string, key: string, val: string, options?: SetCookieOptions) {
-    const maxAge = options?.maxAge ?? defaultMaxAge()
-    const expires = options?.expires ?? defaultExpires()
+export function setCookie(key: string, val: string, options?: CookieOptions) {
+    const path = options?.path
+    const maxAge = options?.maxAge
+    const expires = options?.expires
     const parts = []
 
-    parts.push(`${key}=${val}; path=${path}`)
+    parts.push(`${key}=${val}`)
+
+    if (path) {
+        parts.push(`path=${path}`)
+    }
 
     if (maxAge) {
         parts.push(`max-age=${maxAge}`)
@@ -82,42 +79,34 @@ export function setCookie(path: string, key: string, val: string, options?: SetC
     document.cookie = cookie
 }
 
-export function deleteCookie(path: string, key: string) {
+export function deleteCookie(key: string, options?: CookieOptions) {
     const expires = 'Thu, 01 Jan 1970 00:00:01 GMT'
     const maxAge = 0
 
-    setCookie(path, key, '', {maxAge, expires})
+    setCookie(key, '', {...options, maxAge, expires})
 }
 
-export function cleanCookie(path: string) {
+export function cleanCookies(options?: CookieOptions) {
     const list = document.cookie.split(';')
 
     for (const keyVal of list) {
         const [key] = keyVal.trim().split('=')
 
-        deleteCookie(path, key!)
+        deleteCookie(key!, options)
     }
 }
 
 // Types ///////////////////////////////////////////////////////////////////////
 
 export interface Cookie {
-    path: string
     key: string
-    maxAge: number
-    expires: string
     get(): string | undefined
     set(value: string): void
     delete(): void
-    clean(): void
 }
 
-export interface CreateCookieOptions extends SetCookieOptions {
+export interface CookieOptions {
     path?: string
-    key?: string
-}
-
-export interface SetCookieOptions {
     maxAge?: number
     expires?: string
 }
