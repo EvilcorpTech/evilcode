@@ -1,5 +1,6 @@
 import {encodeParams, defaultEncodeParamValue} from '@eviljs/std-lib/query.js'
 import {isString} from '@eviljs/std-lib/type.js'
+import {asBaseUrl} from './fetch'
 
 export function createRouter<S>(observer: RouterObserver, options?: RouterOptions): Router<S> {
     const type = options?.type ?? 'hash'
@@ -64,7 +65,7 @@ export function createHashRouter<S>(observer: RouterObserver, options?: RouterOp
 }
 
 export function createPathRouter<S>(observer: RouterObserver, options?: RouterOptions): Router<S> {
-    const basePath = asBasePath(options?.basePath)
+    const basePath = asBaseUrl(options?.basePath)
 
     const self = {
         start() {
@@ -185,22 +186,6 @@ export function defaultRouteEncodeParamValue(value: unknown) {
         return value
     }
     return defaultEncodeParamValue(value)
-}
-
-export function asBasePath(path?: string) {
-    if (! path) {
-        return ''
-    }
-    if (! path.trim()) {
-        return ''
-    }
-    if (path.slice(-1) === '/') {
-        // Path, without the trailing slash.
-        // It is fine to have a trailing slash but multiple trailing slashes
-        // are ignored because are an error and should not be amended.
-        return path.slice(0, -1)
-    }
-    return path
 }
 
 // Types ///////////////////////////////////////////////////////////////////////

@@ -24,7 +24,7 @@ export function createFetch(options?: FetchOptions) {
         baseUrl: asBaseUrl(options?.baseUrl),
 
         request(method: FetchRequestMethod, path: string, options?: FetchRequestOptions) {
-            const url = path[0] === '/'
+            const url = path.startsWith('/')
                 ? `${self.baseUrl}${path}`
                 : path
             const opts = mergeOptions(options ?? {}, {method})
@@ -55,7 +55,7 @@ export function asBaseUrl(url?: string) {
     if (! url.trim()) {
         return ''
     }
-    if (url.slice(-1) === '/') {
+    if (url.endsWith('/')) {
         // Url, without the trailing slash.
         // It is fine to have a trailing slash but multiple trailing slashes
         // are ignored because are an error and should not be amended.
