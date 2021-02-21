@@ -8,7 +8,7 @@ import Fs from 'fs'
 * requireAll('/abs/path/to/dir')
 */
 export function requireAll(dir: string) {
-    if (dir[0] !== '/') {
+    if (! dir.startsWith('/')) {
         throw 'Directory path must be absolute. Given: ' + dir
     }
 
