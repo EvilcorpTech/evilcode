@@ -118,7 +118,7 @@ export function useQuery<A extends Array<unknown>, R, E>(queryRunner: QueryRunne
 
             return // Makes TypeScript happy.
         }
-    }, [])
+    }, [queryRunner])
 
     const cancel = useCallback(() => {
         if (taskRef.current) {

@@ -395,7 +395,7 @@ export function Route(props: RouteProps) {
 
 export function Link(props: LinkProps) {
     const {children, to, params, state, ...otherProps} = props
-    const isRoute = to?.[0] === '/'
+    const isRoute = to?.startsWith('/')
 
     if (isRoute) {
         return (
