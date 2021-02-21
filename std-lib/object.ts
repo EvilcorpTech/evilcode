@@ -116,7 +116,7 @@ export function fromPathToParts(path: string) {
             .replace(GetArrayCloseRegexp, '')
             .split('.')
             .map(it =>
-                it[0] === '#'
+                it.startsWith('#')
                     ? Number(it.slice(1))
                     : it
             )
