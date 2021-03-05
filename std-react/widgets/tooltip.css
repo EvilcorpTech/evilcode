@@ -1,0 +1,97 @@
+.Tooltip-ccf9 {
+    display: flex;
+}
+.Tooltip-ccf9.top {
+    flex-direction: column-reverse;
+}
+.Tooltip-ccf9.bottom {
+    flex-direction: column;
+}
+.Tooltip-ccf9.left {
+    flex-direction: row-reverse;
+}
+.Tooltip-ccf9.right {
+    flex-direction: row;
+}
+.Tooltip-ccf9.top.start,
+.Tooltip-ccf9.left.start,
+.Tooltip-ccf9.right.start,
+.Tooltip-ccf9.bottom.start {
+    align-items: flex-start;
+}
+.Tooltip-ccf9.top.center,
+.Tooltip-ccf9.left.center,
+.Tooltip-ccf9.right.center,
+.Tooltip-ccf9.bottom.center {
+    align-items: center;
+}
+.Tooltip-ccf9.top.end,
+.Tooltip-ccf9.left.end,
+.Tooltip-ccf9.right.end,
+.Tooltip-ccf9.bottom.end {
+    align-items: flex-end;
+}
+
+.root-21d5,
+.tooltip-ac0e {
+    transition: all var(--std-duration-normal);
+}
+
+.root-21d5 {
+    /*
+    * Using this technique we avoid to set position:relative on the root tooltip
+    * container, preventing that an expanded tooltip is displayed under a collapsed one.
+    */
+    position: relative;
+    z-index: 1;
+    display: flex;
+    opacity: 0;
+    pointer-events: none;
+    /*
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    */
+}
+.Tooltip-ccf9.center .root-21d5 {
+    justify-content: center;
+    align-items: center;
+}
+.Tooltip-ccf9:hover .root-21d5,
+.Tooltip-ccf9.visible .root-21d5 {
+    opacity: unset;
+    pointer-events: all;
+}
+
+.tooltip-ac0e {
+    position: absolute;
+}
+.Tooltip-ccf9.top .tooltip-ac0e {
+    bottom: 0;
+}
+.Tooltip-ccf9.bottom .tooltip-ac0e {
+    top: 0;
+}
+.Tooltip-ccf9.left .tooltip-ac0e {
+    right: 0;
+}
+.Tooltip-ccf9.right .tooltip-ac0e {
+    left: 0;
+}
+.Tooltip-ccf9.top.start .tooltip-ac0e,
+.Tooltip-ccf9.bottom.start .tooltip-ac0e {
+    left: 0;
+}
+.Tooltip-ccf9.top.end .tooltip-ac0e,
+.Tooltip-ccf9.bottom.end .tooltip-ac0e {
+    right: 0;
+}
+.Tooltip-ccf9.left.start .tooltip-ac0e,
+.Tooltip-ccf9.right.start .tooltip-ac0e {
+    top: 0;
+}
+.Tooltip-ccf9.left.end .tooltip-ac0e,
+.Tooltip-ccf9.right.end .tooltip-ac0e {
+    bottom: 0;
+}
