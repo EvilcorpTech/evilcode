@@ -1,6 +1,6 @@
 {
     "name": "@eviljs/std-theme",
-    "version": "0.1.35",
+    "version": "0.1.36",
     "files": [
         "/LICENSE.txt",
         "/*.css",
