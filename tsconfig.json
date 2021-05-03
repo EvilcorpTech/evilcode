@@ -16,7 +16,7 @@
         // "jsx": "react",
         "jsx": "react-jsx",
         // "jsxFactory": "React.createElement",
-        "lib": ["esnext", "dom"],
+        "lib": ["esnext", "dom", "webworker"],
         "module": "esnext",
         "moduleResolution": "node",
         "noEmitHelpers": true,

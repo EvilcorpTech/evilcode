@@ -4,6 +4,7 @@ export const FetchRequestMethod = {
     Get: 'get',
     Post: 'post',
     Put: 'put',
+    Patch: 'patch',
     Delete: 'delete',
 } as const
 
@@ -39,6 +40,9 @@ export function createFetch(options?: FetchOptions) {
         },
         put(...args) {
             return self.request('put', ...args)
+        },
+        patch(...args) {
+            return self.request('patch', ...args)
         },
         delete(...args) {
             return self.request('delete', ...args)
@@ -144,6 +148,7 @@ export interface Fetch {
     get(path: string, options?: FetchRequestOptions): ReturnType<typeof fetch>
     post(path: string, options?: FetchRequestOptions): ReturnType<typeof fetch>
     put(path: string, options?: FetchRequestOptions): ReturnType<typeof fetch>
+    patch(path: string, options?: FetchRequestOptions): ReturnType<typeof fetch>
     delete(path: string, options?: FetchRequestOptions): ReturnType<typeof fetch>
 }
 

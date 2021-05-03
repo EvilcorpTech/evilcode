@@ -1,15 +1,14 @@
-import {createFetch, Fetch, FetchRequestMethod, FetchRequestOptions, JsonType} from './fetch.js'
-import {error, StdError} from '@eviljs/std-lib/error.js'
-import {randomInt} from '@eviljs/std-lib/random.js'
 import {wait} from '@eviljs/std-lib/async.js'
+import {StdError} from '@eviljs/std-lib/error.js'
+import {randomInt} from '@eviljs/std-lib/random.js'
+import {createFetch, Fetch, FetchRequestMethod, FetchRequestOptions, JsonType} from './fetch.js'
 
 export class MissingMock extends StdError {}
 
 export const NoMock = Symbol('NoMock')
 
 /*
-* Mocks must be an object with the structure
-*
+* Mocks must be an object with the structure:
 * const mocks = {
 *     'get': [
 *         ['^/v1/hello$', (options?: FetchRequestOptions) =>
@@ -63,11 +62,11 @@ export function mockFetch(fetch: Fetch, mocks: FetchMocks) {
     return self
 }
 
-export function mockFetchDelayed(fetch: Fetch, mocks: FetchMocks, opts?: MockFetchDelayedOptions) {
+export function mockFetchDelayed(fetch: Fetch, mocks: FetchMocks, options?: MockFetchDelayedOptions) {
     const mockedFetch = mockFetch(fetch, mocks)
     const {request} = mockedFetch
-    const minDelay = opts?.minDelay ?? 100 // 0.1 seconds.
-    const maxDelay = opts?.maxDelay ?? 2000 // 2 seconds.
+    const minDelay = options?.minDelay ?? 100 // 0.1 seconds.
+    const maxDelay = options?.maxDelay ?? 2000 // 2 seconds.
 
     // We replace the mocked Fetch.request() implementation with one simulating a slow network.
     mockedFetch.request = function (...args) {
@@ -83,7 +82,7 @@ export function mockFetchDelayed(fetch: Fetch, mocks: FetchMocks, opts?: MockFet
 }
 
 export function mockResponse(mocks: FetchMocks, type: FetchRequestMethod, path: string, options?: FetchRequestOptions) {
-    const typeMocks = mocks[type]
+    const typeMocks = mocks[type.toLowerCase() as FetchRequestMethod]
 
     if (! typeMocks) {
         return NoMock
@@ -122,6 +121,62 @@ export function jsonResponse(data: unknown, options?: ResponseInit) {
     const response = new Response(body, opts)
 
     return response
+}
+
+/*
+* EXAMPLE
+*
+* const fetch = createFetch({baseUrl: API_URL})
+* const mockedFetch = mockFetchDelayed(fetch, mocks, {minDelay: 500, maxDelay: 1000})
+* createMockServiceWorker(self, mockedFetch)
+*/
+export function createMockServiceWorker(self: ServiceWorkerGlobalScope, mockedFetch: Fetch) {
+    const fetchUrl = mockedFetch.baseUrl.startsWith('/')
+        ? self.origin + mockedFetch.baseUrl
+        : mockedFetch.baseUrl
+    const fetchUrlInfo = new URL(fetchUrl)
+
+    function log(...args: Array<any>) {
+        console.debug('@eviljs/std-web/fetch-mock.createMockServiceWorker():', ...args)
+    }
+
+    log('evaluating')
+
+    self.addEventListener('install', (event) => {
+        log('installing')
+        self.skipWaiting()
+    })
+
+    self.addEventListener('activate', (event) => {
+        log('activating')
+        self.skipWaiting()
+    })
+
+    self.addEventListener('fetch', (event) => {
+        const {request} = event
+        const requestUrl = new URL(request.url)
+
+        if (requestUrl.origin !== fetchUrlInfo.origin) {
+            event.respondWith(self.fetch(request))
+            return
+        }
+        if (! requestUrl.pathname.startsWith(fetchUrlInfo.pathname)) {
+            event.respondWith(self.fetch(request))
+            return
+        }
+
+        const method = request.method as FetchRequestMethod
+        const url = requestUrl.href.replace(fetchUrlInfo.href, '')
+
+        log(method, url)
+
+        const promise = request.text().then((body => {
+            const options = {...request, body}
+            return mockedFetch.request(method, url, options)
+        }))
+
+        event.respondWith(promise)
+    })
 }
 
 // Types ///////////////////////////////////////////////////////////////////////
