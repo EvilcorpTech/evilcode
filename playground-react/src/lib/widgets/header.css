@@ -1,0 +1,11 @@
+.Header-cf53 {
+    padding: var(--std-gutter-s);
+}
+
+.item-ac64 {
+    margin: var(--std-gutter-s);
+}
+
+.route-d291.route-active {
+    color: var(--std-color-primary-accent);
+}

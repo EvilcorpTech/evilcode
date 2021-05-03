@@ -1,0 +1,34 @@
+{
+    "name": "react-playground",
+    "version": "1.0.0",
+    "private": true,
+    "workspaces": [
+        "../react*",
+        "../std-*"
+    ],
+    "devDependencies": {
+        "@eviljs/react-webpack": "^0",
+        "@eviljs/std-lib": "^0",
+        "@eviljs/std-react": "^0",
+        "@eviljs/std-theme": "^0",
+        "@eviljs/std-web": "^0",
+        "@types/prop-types": "^15",
+        "@types/react": "^17",
+        "@types/react-dom": "^17",
+        "csstype": "^3",
+        "preact": "^10",
+        "prop-types": "^15",
+        "react": "^17",
+        "react-dom": "^17",
+        "webpack-cli": "^4",
+        "webpack-dev-server": "^3"
+    },
+    "scripts": {
+        "init": "npm install",
+        "dev": "NODE_ENV=development webpack serve --progress"
+    },
+    "engines": {
+        "node": ">= 12",
+        "npm": ">= 7"
+    }
+}

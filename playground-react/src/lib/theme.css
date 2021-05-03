@@ -1,0 +1,34 @@
+@import '~@eviljs/std-theme/reset.css';
+@import '~@eviljs/std-theme/reset/extra/focus-outline.css';
+@import '~@eviljs/std-theme/all-classes.css';
+@import '~@eviljs/std-theme/all-props.css';
+@import '~@eviljs/std-theme/scheme-dark.css';
+@import '~@eviljs/std-theme/scheme-light.css';
+@import '~@eviljs/std-theme/font-roboto.css';
+@import '~@eviljs/std-theme/widgets/button.css';
+@import '~@eviljs/std-theme/widgets/button-dye.css';
+@import '~@eviljs/std-theme/widgets/button-flat.css';
+@import '~@eviljs/std-theme/widgets/button-halo.css';
+@import '~@eviljs/std-theme/widgets/button-plain.css';
+
+/*
+#App {
+}
+*/
+
+:root,
+.std-theme {
+    --std-color-primary-h: 250;
+    --std-color-primary-s: 70%;
+    --std-color-primary-l: 60%;
+    --std-color-secondary-h: 0;
+    --std-color-secondary-s: 55%;
+    --std-color-secondary-l: 50%;
+}
+
+.page-title {
+    padding-left: var(--std-gutter-m);
+    border-left: 6px solid var(--std-color-primary-accent);
+    color: var(--std-color-primary-accent);
+    text-transform: uppercase;
+}
