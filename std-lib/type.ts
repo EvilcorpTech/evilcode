@@ -1,5 +1,3 @@
-import {assertObject} from './assert.js'
-
 export const Tests = {
     array: isArray,
     boolean: isBoolean,

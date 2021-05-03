@@ -83,7 +83,7 @@ export function isDateIsoUtcString(value: unknown): value is string {
 
 // Structures //////////////////////////////////////////////////////////////////
 
-export function datetime(date: Date) {
+export function datetimeFrom(date: Date) {
     const self: Datetime = Object.defineProperties(
         [
             year(date),
@@ -150,6 +150,12 @@ export function second(date: Date) {
 
 export function ms(date: Date) {
     return date.getMilliseconds()
+}
+
+// Tools ///////////////////////////////////////////////////////////////////////
+
+export function cloneDate(date: Date) {
+    return new Date(date.getTime())
 }
 
 // Types ///////////////////////////////////////////////////////////////////////

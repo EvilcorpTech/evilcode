@@ -1,5 +1,6 @@
-import {isArray, isFunction, isObject} from './type.js'
 import {throwInvalidArgument} from './error.js'
+import {escapeRegExp} from './regexp.js'
+import {isArray, isFunction, isObject} from './type.js'
 
 export const DefaultSymbol = '@'
 export const SpacesRegexp = /\s+/g
@@ -97,8 +98,8 @@ export function format(i18n: I18n, template: string, values?: MsgValues) {
     const dict =
         isArray(values)
             // It is an Array. We must convert it to an Object.
-            ? values.reduce((dict, it, index) => {
-                dict[index] = it
+            ? values.reduce((dict, it, idx) => {
+                dict[idx] = it
 
                 return dict
             }, {} as Record<string | number, string | number>)
@@ -123,10 +124,20 @@ export function format(i18n: I18n, template: string, values?: MsgValues) {
 
 export function tokenAsRegexp(token: string, symbol: string, cache: Record<string, RegExp>) {
     if (! cache[token]) {
-        cache[token] = new RegExp(`[${symbol}]{\\s*${token}\\s*}`, 'g')
+        cache[token] = new RegExp(`[${symbol}]{\\s*${escapeRegExp(token)}\\s*}`, 'g')
     }
 
     return cache[token]!
+}
+
+export function defineMessages<V extends [] | {}>
+    (messages: {
+        [key: string]: {
+            [key: string]: string | ((values?: V, options?: unknown) => string)
+        }
+    })
+{
+    return messages as I18nMessages
 }
 
 // Types ///////////////////////////////////////////////////////////////////////
@@ -154,8 +165,10 @@ export interface I18nMessages {
         [key: string]: string | MsgComputer
     }
 }
-export type MsgComputer = (values?: MsgValues, options?: unknown)
-    => string
+
+export interface MsgComputer {
+    (values?: MsgValues, options?: unknown): string
+}
 
 export type MsgValues =
     | Array<string | number>

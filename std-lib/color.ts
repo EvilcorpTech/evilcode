@@ -1,12 +1,12 @@
 // https://css-tricks.com/converting-color-spaces-in-javascript/
 // https://gist.github.com/mjackson/5311256
 
-export function rgbFromHexString(rgbHex: string) {
+export function rgbFromHexString(rgbHex: string): Rgb {
     const [hash, r1, r2, g1, g2, b1, b2] = rgbHex
     const r = parseInt(r1! + r2!, 16)
     const g = parseInt(g1! + g2!, 16)
     const b = parseInt(b1! + b2!, 16)
-    return [r, g, b] as const
+    return [r, g, b]
 }
 
 export function rgbToHexString(r: number, g: number, b: number) {
@@ -21,7 +21,7 @@ export function rgbToHexString(r: number, g: number, b: number) {
     return '#' + rx + gx + bx
 }
 
-export function hslFromRgb(r: number, g: number, b: number) {
+export function hslFromRgb(r: number, g: number, b: number): Hsl {
     r /= 255, g /= 255, b /= 255;
 
     const max = Math.max(r, g, b)
@@ -31,7 +31,7 @@ export function hslFromRgb(r: number, g: number, b: number) {
 
     if (max === min) {
         // Achromatic.
-        return [0, 0, l] as const
+        return [0, 0, l]
     }
 
     const s = l > 0.5
@@ -52,13 +52,13 @@ export function hslFromRgb(r: number, g: number, b: number) {
     }
     h /= 6
 
-    return [h, s, l] as const
+    return [h, s, l]
 }
 
-export function rgbFromHsl(h: number, s: number, l: number) {
+export function rgbFromHsl(h: number, s: number, l: number): Hsl {
       if (s == 0) {
         // Achromatic.
-        return [l, l, l] as const
+        return [l, l, l]
 
     }
     function hue2rgb(p: number, q: number, t: number) {
@@ -77,5 +77,8 @@ export function rgbFromHsl(h: number, s: number, l: number) {
     const g = hue2rgb(p, q, h)
     const b = hue2rgb(p, q, h - 1/3)
 
-    return [r * 255, g * 255, b * 255] as const
+    return [r * 255, g * 255, b * 255]
 }
+
+export type Rgb = [number, number, number]
+export type Hsl = [number, number, number]
