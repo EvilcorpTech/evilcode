@@ -1,5 +1,5 @@
 // import {times} from '@eviljs/std-lib/tools'
-import {randomInt, randomItem} from '@eviljs/std-lib/random'
+// import {randomInt, randomItem} from '@eviljs/std-lib/random'
 import {Fetch, FetchRequestMethod, FetchRequestOptions} from '@eviljs/std-web/fetch'
 import {mockFetchDelayed, jsonResponse} from '@eviljs/std-web/fetch-mock'
 import {exact} from '@eviljs/std-web/route'

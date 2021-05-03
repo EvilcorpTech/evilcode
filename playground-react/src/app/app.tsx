@@ -9,6 +9,7 @@ import {withRouter, SwitchRoute, exact, Arg as _arg_} from '@eviljs/std-react/ro
 import {withStore} from '@eviljs/std-react/store'
 import React from 'react'
 import {Container} from '../lib/container'
+import {BasePath, RouterType} from '../lib/context'
 import {AuthBarrier} from '../lib/widgets/auth-barrier'
 import {NotFoundView} from './404-view'
 import {AdminView} from './admin-view'
@@ -27,7 +28,7 @@ export function App(props: AppProps) {
     app = withI18n(app, container.I18n)
     app = withLogger(app, container.Logger)
     app = withQuery(app, container.Query)
-    app = withRouter(app)
+    app = withRouter(app, {type: RouterType, basePath: BasePath})
     app = withStore(app, container.StoreSpec)
     return app
 }

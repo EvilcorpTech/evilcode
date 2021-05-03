@@ -26,7 +26,7 @@
     },
     "scripts": {
         "init": "npm install",
-        "dev": "NODE_ENV=development webpack serve --progress"
+        "dev": "NODE_ENV=${NODE_ENV:-} webpack serve --progress"
     },
     "engines": {
         "node": ">= 12",
