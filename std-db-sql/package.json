@@ -18,10 +18,10 @@
     },
     "peerDependencies": {},
     "devDependencies": {
-        "typescript": "^4.1"
+        "typescript": "^4.2"
     },
     "scripts": {
-        "build": "../tools/build .",
+        "build": "tsc --module esnext --listEmittedFiles",
         "preversion": "npm run build",
         "prepack": "npm run build"
     },
