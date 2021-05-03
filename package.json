@@ -1,0 +1,14 @@
+{
+    "name": "eviljs",
+    "version": "1.0.0",
+    "private": true,
+    "workspaces": [
+        "reactx*",
+        "std-*"
+    ],
+    "scripts": {},
+    "engines": {
+        "node": ">= 12",
+        "npm": ">= 7"
+    }
+}

@@ -6,29 +6,25 @@
 # ./upgrade
 # ./upgrade ./std-lib
 
-ProjectDir="$(cd "$(dirname "$0")/.." && pwd)"
+set -e # errexit
+set -u # nounset
 
-. "$ProjectDir/tools/env.sh"
-. "$ProjectDir/tools/env-styles.sh"
+ProjectDir="$(cd "$(dirname "$0")/.." && pwd)"
 
 : ${NpmUpgrade:=npx npm-upgrade}
 : ${NpmUpgradeArgs:=}
-
-if test $# -eq 0; then
-        set -- "$ProjectDir/std-"*
-fi
 
 for pkg; do (
         if test ! -e "$pkg"; then
                 echo "Package '$pkg' not found."
                 exit 1
         fi
+
         case "$pkg" in
                 /*) cd "$pkg";;
                 *) cd "$PWD/$pkg";;
         esac
+
         set -- $NpmUpgradeArgs
         $NpmUpgrade "$@"
 ) done
-
-echo "${GreenStyle}done${ResetStyle}"

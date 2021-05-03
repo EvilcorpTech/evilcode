@@ -1,0 +1,37 @@
+#!/usr/bin/env sh
+
+# Bumps up a package version and publishes it.
+#
+# EXAMPLE
+# PublishVersion=minor ./publish ./std-lib
+
+set -e # errexit
+set -u # nounset
+
+ProjectDir="$(cd "$(dirname "$0")/.." && pwd)"
+
+: ${PublishVersion:=patch}
+: ${Npm:=npm}
+: ${NpmVersionCmd:=version}
+: ${NpmVersionArgs:=--no-git-tag-version}
+: ${NpmPublishCmd:=publish}
+: ${NpmPublishArgs:=--access public}
+
+for pkg; do (
+        if test ! -e "$pkg"; then
+                echo "Package '$pkg' not found."
+                exit 1
+        fi
+
+        case "$pkg" in
+                /*) cd "$pkg";;
+                *) cd "$PWD/$pkg";;
+        esac
+
+        set -- $NpmVersionCmd $NpmVersionArgs $PublishVersion
+        $Npm "$@"
+        printf -- 'Press Enter to continue'
+        read answer
+        set -- $NpmPublishCmd $NpmPublishArgs
+        $Npm "$@"
+) done
