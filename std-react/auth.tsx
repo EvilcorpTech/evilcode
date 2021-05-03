@@ -186,9 +186,15 @@ export function useRootAuth(fetch: Fetch, cookie: Cookie, options?: AuthOptions)
     }, [fetch, cookie, invalidateOptions, token])
 
     const auth = useMemo(() => {
+        const isAuthenticated = tokenState === AuthTokenState.Valid
         return {
-            token,
+            token: isAuthenticated
+                ? token
+                : null
+            ,
+            storedToken: token,
             tokenState,
+            isAuthenticated,
             pending: busy > 0,
             authenticate: authenticateCredentials,
             destroySession,

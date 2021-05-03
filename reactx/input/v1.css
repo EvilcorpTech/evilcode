@@ -1,0 +1,11 @@
+.Input-i7ee {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+}
+
+.label-id45 {
+    pointer-events: none;
+    transform-origin: top left;
+    transition: all var(--std-duration-normal);
+}

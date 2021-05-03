@@ -1,0 +1,27 @@
+.Range-3f03 {
+    display: flex;
+    justify-content: space-between;
+}
+
+.tail-2c71 {
+    display: flex;
+    align-items: center;
+}
+.tail-2c71.start {
+    justify-content: flex-end;
+}
+.tail-2c71.end {
+    justify-content: flex-start;
+}
+
+.track-7bf1 {
+    flex-grow: 1;
+}
+
+.handle-bd2c {
+    height: 100%;
+}
+
+.slider-fb28 {
+    flex-grow: 1;
+}

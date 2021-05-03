@@ -1,0 +1,45 @@
+.WidgetsView-a252 {
+    gap: var(--std-gutter-m);
+}
+
+.section-0234 {
+    display: flex;
+    align-items: flex-start;
+    align-content: flex-start;
+    flex-wrap: wrap;
+    gap: var(--std-gutter-s);
+}
+
+.section-0234.column {
+    flex-direction: column;
+}
+
+.title-74a6 {
+    width: 100%;
+    font-weight: var(--std-weight-bold);
+}
+
+.section-0234 .Accordion-c2ae {
+    border-radius: var(--std-radius-l);
+    overflow: hidden;
+}
+
+.section-0234 .section-c3bf {
+    background-color: var(--std-color-back2);
+}
+
+.section-0234 .section-c3bf .head-ad0d {
+    padding: var(--std-gutter-s);
+    border-bottom: 4px solid var(--std-color-back1);
+    background-color: var(--std-color-back3);
+    transition: all var(--std-duration-normal);
+}
+
+.section-0234 .section-c3bf.selected .head-ad0d {
+    border-color: var(--std-color-primary-accent);
+}
+
+.section-0234 .section-c3bf .content-38aa > * {
+    padding: var(--std-gutter-s);
+    color: var(--std-color-primary-front1);
+}

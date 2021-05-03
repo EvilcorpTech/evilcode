@@ -5,13 +5,13 @@ import {Transition, TransitionMode} from './animation.js'
 import {useI18n} from './i18n.js'
 import {PropsOf} from './react.js'
 import {withRouteMatches, exact, SwitchRoute, Arg} from './router.js'
-import {TransitionAnimator, TransitionAnimatorEffect} from './widgets/animator.js'
-import {RouteArgs} from './widgets/route-args.js'
+import {TransitionAnimator, TransitionAnimatorEffect} from './animator.js'
+import {RouteArgs} from './route-args.js'
 const {useMemo} = React
 
 export {createRouteMatches, exact, SwitchRoute, withRouteMatches} from './router.js'
-export {TransitionAnimator} from './widgets/animator.js'
-export {RouteArgs, RouteArgsProps} from './widgets/route-args.js'
+export {TransitionAnimator} from './animator.js'
+export {RouteArgs, RouteArgsProps} from './route-args.js'
 
 export const SiteRouteKey = 'path'
 export const SiteAnimationKey = 'animation'
@@ -512,18 +512,20 @@ export type SiteWidgetModel
     //     & {[key: string]: any}
     // >
 
+export interface SiteAnimatorModel {
+    mode?: TransitionMode
+    initial?: boolean
+    enter?: number
+    exit?: number
+    transition?: TransitionAnimatorEffect
+}
+
 export type SiteRouteKeyModel<RK extends string> = {
     [key in RK]: string
 }
 
 export type SiteAnimatorKeyModel<AK extends string> = {
-    [key in AK]?: {
-        mode?: TransitionMode
-        initial?: boolean
-        enter?: number
-        exit?: number
-        transition?: TransitionAnimatorEffect
-    }
+    [key in AK]?: SiteAnimatorModel
 }
 
 export type SiteNestingKeyModel

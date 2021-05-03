@@ -1,0 +1,25 @@
+.Spinner-2a9d {
+    display: inline-block;
+    width: 1em;
+    height: 1em;
+    border-radius: .1em;
+    opacity: 0;
+    background-color: var(--color, currentColor);
+    transition: all var(--std-duration-normal);
+}
+.Spinner-2a9d.active {
+    opacity: 1;
+    animation: spinner-2a9d 1.2s infinite ease-in-out;
+}
+
+@keyframes spinner-2a9d {
+    0% {
+        transform: perspective(3em) rotateX(0deg) rotateY(0deg);
+    }
+    50% {
+        transform: perspective(3em) rotateX(-180.1deg) rotateY(0deg);
+    }
+    100% {
+        transform: perspective(3em) rotateX(-180deg) rotateY(-179.9deg);
+    }
+}

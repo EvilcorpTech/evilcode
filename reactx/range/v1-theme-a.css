@@ -1,0 +1,40 @@
+.Range-3f03 {
+    min-width: 8rem;
+    align-items: center;
+}
+
+.slider-fb28 {
+    height: .5rem;
+    cursor: move;
+    backdrop-filter: unset;
+    box-shadow: unset;
+    background-color: var(--std-color-primary-accent);
+}
+
+.track-7bf1 {
+    height: .3rem;
+    background-color: var(--std-input-back);
+}
+
+.handle-bd2c {
+    min-width: 2rem;
+    height: 2rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-weight: var(--std-weight-bold);
+    box-shadow: var(--std-shadow1);
+    user-select: none;
+    cursor: col-resize;
+    color: var(--std-color-primary-accent);
+    background: var(--std-color-back1);
+    box-shadow: var(--std-shadow1);
+}
+.handle-bd2c.start {
+    border-top-left-radius: 2rem;
+    border-bottom-left-radius: 2rem;
+}
+.handle-bd2c.end {
+    border-top-right-radius: 2rem;
+    border-bottom-right-radius: 2rem;
+}

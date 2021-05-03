@@ -1,16 +1,18 @@
 {
-    "name": "@eviljs/std-react",
-    "version": "0.1.82",
+    "name": "@eviljs/reactx",
+    "version": "0.1.0",
     "type": "module",
     "files": [
         "/LICENSE.txt",
-        "/*.js",
-        "/*.jsx",
-        "/*.d.ts"
+        "/**/*.js",
+        "/**/*.jsx",
+        "/**/*.d.ts",
+        "/**/*.css"
     ],
     "dependencies": {
-        "@eviljs/std-lib": "^0.1",
-        "@eviljs/std-web": "^0.1",
+        "@eviljs/std-lib": "^0",
+        "@eviljs/std-react": "^0",
+        "@eviljs/std-web": "^0",
         "@types/prop-types": "^15",
         "@types/react": "^17",
         "@types/react-dom": "^17",
@@ -19,7 +21,7 @@
         "tslib": "^2"
     },
     "peerDependencies": {
-        "@eviljs/std-theme": "^0.1",
+        "@eviljs/std-theme": "^0",
         "react": "^17"
     },
     "devDependencies": {
@@ -32,12 +34,11 @@
     },
     "author": "Daniele Orlando",
     "license": "BSD-2-Clause",
-    "description": "Awesome React",
+    "description": "Awesome React Widgets",
     "keywords": [
         "React",
-        "Hooks",
-        "TypeScript",
-        "CSS"
+        "Widgets",
+        "TypeScript"
     ],
     "homepage": "https://github.com/EvilRepo/eviljs",
     "repository": {

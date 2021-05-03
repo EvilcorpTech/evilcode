@@ -1,0 +1,41 @@
+.Spinner-sa7b {
+    display: inline-flex;
+}
+
+.dot-sdd5 {
+    opacity: 0;
+    width: .5em;
+    height: .5em;
+    margin: .25em;
+    border-radius: 50%;
+}
+
+.Spinner-sa7b.active .dot-sdd5 {
+    opacity: 1;
+    animation-name: spinner-sa7b;
+    animation-duration: 1s;
+    animation-direction: alternate-reverse;
+    animation-iteration-count: infinite;
+}
+
+.n1-sdd5 {
+    animation-delay: 0s;
+}
+
+.n2-sdd5 {
+    animation-delay: .2s;
+}
+
+.n3-sdd5 {
+    animation-delay: .4s;
+}
+
+@keyframes spinner-sa7b {
+    0% {
+        background-color: transparent;
+        transform: scale(.6);
+    }
+    100% {
+        background-color: currentColor;
+    }
+}

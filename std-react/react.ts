@@ -1,7 +1,7 @@
 import {throwInvalidArgument} from '@eviljs/std-lib/error.js'
 import {isArray, isString, isObject} from '@eviljs/std-lib/type.js'
 import React from 'react'
-const {useEffect, useLayoutEffect, useRef} = React
+const {cloneElement, isValidElement, useEffect, useLayoutEffect, useRef, Children} = React
 
 export {times} from '@eviljs/std-lib/iter.js'
 
@@ -39,6 +39,16 @@ export function classes(...names: Array<ClassName>) {
     }
 
     return list.join(' ')
+}
+
+export function childrenWithProps(children: React.ReactNode, props?: {}) {
+    return Children.map(children, (it, idx) => {
+        if (! isValidElement(it)) {
+            return it
+        }
+
+        return cloneElement(it, {...props, ...it.props, key: idx})
+    })
 }
 
 /*

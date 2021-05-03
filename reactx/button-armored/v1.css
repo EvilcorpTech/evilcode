@@ -1,0 +1,20 @@
+.ArmoredButton-aa3e {
+    position: relative;
+}
+
+.ArmoredButton-aa3e .armor-eb3d.std-button {
+    position: absolute;
+}
+
+.ArmoredButton-aa3e.armored .armor-eb3d.std-button,
+.ArmoredButton-aa3e:not(.armored) .cancel-da15.std-button,
+.ArmoredButton-aa3e:not(.armored) .confirm-eccb.std-button {
+    opacity: 0;
+    pointer-events: none;
+}
+
+.armor-eb3d:hover,
+.confirm-eccb {
+    --std-primary-accent: var(--brand-red);
+    color: var(--std-primary-accent);
+}

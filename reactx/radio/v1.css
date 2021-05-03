@@ -1,0 +1,11 @@
+.item-bf74,
+.radio-1370,
+.label-b0ad {
+    cursor: pointer;
+}
+
+.radio-1370 {
+    font-size: inherit;
+    width: var(--size, 1em);
+    height: var(--size, 1em);
+}

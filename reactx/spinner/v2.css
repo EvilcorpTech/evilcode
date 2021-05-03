@@ -1,0 +1,49 @@
+.Spinner-5b07 {
+    position: relative;
+    width: var(--size, 1em);
+    height: var(--size, 1em);
+    margin: calc(var(--size, 1em) / 4);
+}
+
+.Spinner-5b07::before,
+.Spinner-5b07::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    border-radius: 100%;
+    border: calc(var(--size, 1em) / 8) solid currentColor;
+    animation-duration: 2s;
+    animation-iteration-count: infinite;
+    animation-timing-function: linear;
+    opacity: 0;
+    transform: scale(0);
+}
+.Spinner-5b07.active::before,
+.Spinner-5b07.active::after {
+    opacity: 1;
+    animation-name: spinner-5b07;
+}
+
+.Spinner-5b07::before {
+    animation-delay: 0s;
+}
+
+.Spinner-5b07::after {
+    animation-delay: 1s;
+}
+
+@keyframes spinner-5b07 {
+    0% {
+        transform: scale(0);
+    }
+    80% {
+        opacity: 1;
+    }
+    100% {
+        transform: scale(1.5);
+        opacity: 0;
+    }
+}
