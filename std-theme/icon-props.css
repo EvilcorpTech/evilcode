@@ -1,0 +1,15 @@
+:root,
+.std-theme {
+    --std-icon-mini: calc(var(--std-icon-size-scale, 1.3) * var(--std-icon-size-min, .8rem));
+    --std-icon-xxs: calc(var(--std-icon-size-scale, 1.3) * var(--std-icon-mini));
+    --std-icon-xs: calc(var(--std-icon-size-scale, 1.3) * var(--std-icon-xxs));
+    --std-icon-s: calc(var(--std-icon-size-scale, 1.3) * var(--std-icon-xs));
+    --std-icon-m: calc(var(--std-icon-size-scale, 1.3) * var(--std-icon-s));
+    --std-icon-l: calc(var(--std-icon-size-scale, 1.3) * var(--std-icon-m));
+    --std-icon-xl: calc(var(--std-icon-size-scale, 1.3) * var(--std-icon-l));
+    --std-icon-xxl: calc(var(--std-icon-size-scale, 1.3) * var(--std-icon-xl));
+    --std-icon-maxi: calc(var(--std-icon-size-scale, 1.3) * var(--std-icon-xxl));
+
+    --std-icon-color1: var(--std-color-primary-accent);
+    --std-icon-color2: var(--std-color-secondary-accent);
+}

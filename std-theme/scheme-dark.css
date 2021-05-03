@@ -1,50 +1,38 @@
 .std-theme.dark {
-    color: var(--std-text1);
+    color: var(--std-color-front1);
 
-    --std-text-l: 100%;
-    --std-text-ll: -1;
+    --std-front-l: 100%;
+    --std-front-ll: -1;
     --std-back-l: 0%;
     --std-back-ll: 1;
-    --std-text1: var(--std-text-light1);
-    --std-text2: var(--std-text-light2);
-    --std-text3: var(--std-text-light3);
-    --std-text1-inverse: var(--std-text-dark1);
-    --std-text2-inverse: var(--std-text-dark2);
-    --std-text3-inverse: var(--std-text-dark3);
-    --std-back1: var(--std-back-dark1);
-    --std-back2: var(--std-back-dark2);
-    --std-back3: var(--std-back-dark3);
-    --std-back4: var(--std-back-dark4);
-    --std-back1-inverse: var(--std-back-light1);
-    --std-back2-inverse: var(--std-back-light2);
-    --std-back3-inverse: var(--std-back-light3);
-    --std-back4-inverse: var(--std-back-light4);
 
-    --std-text-primary1: var(--std-primary-tint1);
-    --std-text-primary2: var(--std-primary-tint2);
-    --std-text-primary3: var(--std-primary-tint3);
-    --std-text-primary4: var(--std-primary-tint4);
-    --std-text-primary5: var(--std-primary-tint5);
-    --std-text-primary6: var(--std-primary-tint6);
-    --std-back-primary1: var(--std-primary-shade1);
-    --std-back-primary2: var(--std-primary-shade2);
-    --std-back-primary3: var(--std-primary-shade3);
-    --std-back-primary4: var(--std-primary-shade4);
-    --std-back-primary5: var(--std-primary-shade5);
-    --std-back-primary6: var(--std-primary-shade6);
-    --std-text-secondary1: var(--std-secondary-tint1);
-    --std-text-secondary2: var(--std-secondary-tint2);
-    --std-text-secondary3: var(--std-secondary-tint3);
-    --std-text-secondary4: var(--std-secondary-tint4);
-    --std-text-secondary5: var(--std-secondary-tint5);
-    --std-text-secondary6: var(--std-secondary-tint6);
-    --std-back-secondary1: var(--std-secondary-shade1);
-    --std-back-secondary2: var(--std-secondary-shade2);
-    --std-back-secondary3: var(--std-secondary-shade3);
-    --std-back-secondary4: var(--std-secondary-shade4);
-    --std-back-secondary5: var(--std-secondary-shade5);
-    --std-back-secondary6: var(--std-secondary-shade6);
+    --std-color-front1: hsl(0, 0%, 95%);
+    --std-color-front2: hsl(0, 0%, 87%);
+    --std-color-front3: hsl(0, 0%, 64%);
+    --std-color-back1: hsl(var(--std-color-primary-h), 15%, 15%);
+    --std-color-back2: hsl(var(--std-color-primary-h), 15%, 13%);
+    --std-color-back3: hsl(var(--std-color-primary-h), 15%, 10%);
+    --std-color-back4: hsl(var(--std-color-primary-h), 15%, 6%);
+
+    --std-color-primary-front1: hsl(var(--std-color-primary-h), var(--std-color-primary-s), 70%);
+    --std-color-primary-front2: hsl(var(--std-color-primary-h), var(--std-color-primary-s), 60%);
+    --std-color-primary-front3: hsl(var(--std-color-primary-h), var(--std-color-primary-s), 50%);
+    --std-color-primary-front4: hsl(var(--std-color-primary-h), var(--std-color-primary-s), 40%);
+    --std-color-primary-front5: hsl(var(--std-color-primary-h), var(--std-color-primary-s), 30%);
+    --std-color-primary-back1: hsl(var(--std-color-primary-h), var(--std-color-primary-s), 23%);
+    --std-color-primary-back2: hsl(var(--std-color-primary-h), var(--std-color-primary-s), 36%);
+    --std-color-primary-back3: hsl(var(--std-color-primary-h), var(--std-color-primary-s), 49%);
+    --std-color-primary-back4: hsl(var(--std-color-primary-h), var(--std-color-primary-s), 62%);
+    --std-color-secondary-front1: hsl(var(--std-color-secondary-h), var(--std-color-secondary-s), 70%);
+    --std-color-secondary-front2: hsl(var(--std-color-secondary-h), var(--std-color-secondary-s), 60%);
+    --std-color-secondary-front3: hsl(var(--std-color-secondary-h), var(--std-color-secondary-s), 50%);
+    --std-color-secondary-front4: hsl(var(--std-color-secondary-h), var(--std-color-secondary-s), 40%);
+    --std-color-secondary-front5: hsl(var(--std-color-secondary-h), var(--std-color-secondary-s), 30%);
+    --std-color-secondary-back1: hsl(var(--std-color-secondary-h), var(--std-color-secondary-s), 23%);
+    --std-color-secondary-back2: hsl(var(--std-color-secondary-h), var(--std-color-secondary-s), 36%);
+    --std-color-secondary-back3: hsl(var(--std-color-secondary-h), var(--std-color-secondary-s), 49%);
+    --std-color-secondary-back4: hsl(var(--std-color-secondary-h), var(--std-color-secondary-s), 62%);
 }
 .std-theme.dark.back {
-    background-color: var(--theme-back, var(--std-back1));
+    background-color: var(--theme-back, var(--std-color-back1));
 }

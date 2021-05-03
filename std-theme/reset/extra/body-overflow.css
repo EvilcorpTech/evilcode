@@ -1,0 +1,6 @@
+body {
+    /*
+    * Don't use on the 'html' tag otherwise the page will not scroll.
+    */
+    overflow-x: hidden;
+}

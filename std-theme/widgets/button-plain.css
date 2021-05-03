@@ -1,0 +1,14 @@
+.std-button.plain:hover,
+.std-button.plain:focus,
+.std-button.plain:active {
+    opacity: unset;
+}
+.std-button.plain:hover {
+    color: var(--color--hover, var(--std-color-primary-accent));
+}
+.std-button.plain:focus {
+    color: var(--color--focus, var(--std-color-primary-accent));
+}
+.std-button.plain:active {
+    color: var(--color--active, currentColor);
+}

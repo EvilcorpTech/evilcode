@@ -4,10 +4,14 @@
     "files": [
         "/LICENSE.txt",
         "/*.css",
-        "/widgets/*.css",
-        "/font-roboto/*.woff"
+        "/font-roboto/*.woff",
+        "/reset/*.css",
+        "/reset/extra/*.css",
+        "/widgets/*.css"
     ],
-    "main": "index.css",
+    "scripts": {
+        "build": ""
+    },
     "author": "Daniele Orlando",
     "license": "BSD-2-Clause",
     "description": "Awesome CSS theme",

@@ -1,0 +1,15 @@
+article,
+aside,
+details,
+figcaption,
+figure,
+footer,
+header,
+hgroup,
+menu,
+nav,
+ol,
+section,
+ul {
+    display: block;
+}
