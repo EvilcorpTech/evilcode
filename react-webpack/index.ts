@@ -9,18 +9,6 @@ const Path = require('path')
 const {DefinePlugin} = require('webpack')
 const {BundleAnalyzerPlugin} = require('webpack-bundle-analyzer')
 
-const {
-    DEV_ADDR,
-    DEV_PORT,
-    API_URL,
-    BASE_PATH,
-    NODE_ENV,
-    ROUTER_TYPE,
-    WITH_PREACT,
-} = process.env
-const IsProductionMode = NODE_ENV === 'production'
-const WithPreact = asBoolean(WITH_PREACT, false)
-
 // npm install \
 // @babel/core \
 // @babel/plugin-proposal-nullish-coalescing-operator \
@@ -55,19 +43,26 @@ const WithPreact = asBoolean(WITH_PREACT, false)
 // webpack \
 // webpack-bundle-analyzer
 
-module.exports = (projectDir: string) => ({
-    target: IsProductionMode ? 'browserslist' : 'web',
+const DefaultBasePath = ''
+const DefaultBundleName = ''
+const IsProductionMode = process.env.NODE_ENV === 'production'
+
+function createWebpackConfig(projectDir: string, options: ConfigOptions) {return {
+    target: IsProductionMode
+        ? 'browserslist'
+        : 'web'
+    ,
 
     entry: {
         main: Path.resolve(projectDir, 'src/main.ts'),
     },
 
     output: {
-        publicPath: BASE_PATH || '/',
+        publicPath: options?.basePath ?? DefaultBasePath,
         path: Path.resolve(projectDir, 'build'),
-        filename: 'bundle/entry-[name].js',
-        chunkFilename: 'bundle/chunk-[id].js',
-        assetModuleFilename: 'bundle/asset-[id]-[name][ext]',
+        filename: Path.join(options?.bundleName ?? DefaultBundleName, 'entry-[name].js'),
+        chunkFilename: Path.join(options?.bundleName ?? DefaultBundleName, 'chunk-[id].js'),
+        assetModuleFilename: Path.join(options?.bundleName ?? DefaultBundleName, 'asset-[id]-[name][ext]'),
     },
 
     mode: IsProductionMode
@@ -84,7 +79,7 @@ module.exports = (projectDir: string) => ({
         alias: {
             'react/jsx-runtime': 'react/jsx-runtime.js',
 
-            ...WithPreact && {
+            ...options?.withPreact && {
                 'react': 'preact/compat',
                 'react-dom': 'preact/compat',
                 'react/jsx-runtime': 'preact/jsx-runtime',
@@ -136,21 +131,22 @@ module.exports = (projectDir: string) => ({
             ],
         }),
         new DefinePlugin({
-            'process.env': {
-                API_URL: JSON.stringify(API_URL),
-                BASE_PATH: JSON.stringify(BASE_PATH),
-                NODE_ENV: JSON.stringify(NODE_ENV),
-                ROUTER_TYPE: JSON.stringify(ROUTER_TYPE),
-                WITH_PREACT: JSON.stringify(WITH_PREACT),
-            },
+            // 'process.env': {
+            //     NODE_ENV: JSON.stringify(process.env.NODE_ENV),
+            // },
+            __BASE_PATH__: JSON.stringify(options?.basePath ?? DefaultBasePath),
+            __BUNDLE_NAME__: JSON.stringify(options?.bundleName ?? DefaultBundleName),
+            __ENV__: JSON.stringify(process.env.NODE_ENV),
+            ...options?.define,
         }),
         new MiniCssExtractPlugin({
-            filename: 'bundle/entry-[name].css',
-            chunkFilename: 'bundle/chunk-[id].css',
+            filename: Path.join(options?.bundleName ?? DefaultBundleName, 'entry-[name].css'),
+            chunkFilename: Path.join(options?.bundleName ?? DefaultBundleName, 'chunk-[id].css'),
         }),
         new HtmlPlugin({
             template: 'src/main.html',
-            base: BASE_PATH,
+            chunks : ['main'],
+            base: options?.basePath,
             hash: true,
         }),
         IsProductionMode && new DuplicatesPlugin({
@@ -171,7 +167,10 @@ module.exports = (projectDir: string) => ({
 
     ...IsProductionMode && {
         optimization: {
-            runtimeChunk: 'single',
+            runtimeChunk: options?.withWorkers
+                ? 'multiple' // Workers require their own runtime.
+                : 'single'
+            ,
             splitChunks: {
                 chunks: 'all',
             },
@@ -179,7 +178,6 @@ module.exports = (projectDir: string) => ({
                 '...',
                 new CssMinimizerPlugin({
                     test: /\.css$/i,
-                    // @ts-ignore
                     minify: CssMinimizerPlugin.cssoMinify,
                 }),
             ],
@@ -198,10 +196,10 @@ module.exports = (projectDir: string) => ({
     ,
     devServer: {
         contentBase: Path.resolve(projectDir, 'build'),
-        host: DEV_ADDR ?? '127.0.0.1',
-        port: DEV_PORT ?? 8000,
-        historyApiFallback: ROUTER_TYPE === 'path',
-        writeToDisk: true, // Used by Koa Static for the Server Side Rendering.
+        host: options?.serverAddress ?? '127.0.0.1',
+        port: options?.serverPort ?? 8000,
+        historyApiFallback: true,
+        writeToDisk: true, // Used for testing the Server Side Rendering while developing.
         hot: true,
         clientLogLevel: 'warning',
     },
@@ -210,7 +208,7 @@ module.exports = (projectDir: string) => ({
     },
 
     stats: 'normal',
-})
+}}
 
 function asBoolean<T>(value: undefined | boolean | number | string, defaultValue: T) {
     switch (value) {
@@ -222,4 +220,21 @@ function asBoolean<T>(value: undefined | boolean | number | string, defaultValue
         break
     }
     return defaultValue
+}
+
+module.exports.DefaultBasePath = DefaultBasePath
+module.exports.DefaultBundleName = DefaultBundleName
+module.exports.asBoolean = asBoolean
+module.exports.createWebpackConfig = createWebpackConfig
+
+// Types ///////////////////////////////////////////////////////////////////////
+
+interface ConfigOptions {
+    basePath?: string
+    bundleName?: string
+    define?: Record<string, any>
+    serverAddress?: string
+    serverPort?: number
+    withPreact?: boolean
+    withWorkers?: boolean
 }
