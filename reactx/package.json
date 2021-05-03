@@ -1,18 +1,18 @@
 {
     "name": "@eviljs/reactx",
-    "version": "0.1.0",
+    "version": "1.0.0",
     "type": "module",
     "files": [
         "/LICENSE.txt",
-        "/**/*.js",
-        "/**/*.jsx",
-        "/**/*.d.ts",
-        "/**/*.css"
+        "/*/*.js",
+        "/*/*.jsx",
+        "/*/*.d.ts",
+        "/*/*.css"
     ],
     "dependencies": {
-        "@eviljs/std-lib": "^0",
-        "@eviljs/std-react": "^0",
-        "@eviljs/std-web": "^0",
+        "@eviljs/std-lib": "^1",
+        "@eviljs/std-react": "^1",
+        "@eviljs/std-web": "^1",
         "@types/prop-types": "^15",
         "@types/react": "^17",
         "@types/react-dom": "^17",
@@ -21,7 +21,7 @@
         "tslib": "^2"
     },
     "peerDependencies": {
-        "@eviljs/std-theme": "^0",
+        "@eviljs/std-theme": "^1",
         "react": "^17"
     },
     "devDependencies": {
@@ -34,9 +34,10 @@
     },
     "author": "Daniele Orlando",
     "license": "BSD-2-Clause",
-    "description": "Awesome React Widgets",
+    "description": "Awesome React UI Widgets",
     "keywords": [
         "React",
+        "UI",
         "Widgets",
         "TypeScript"
     ],

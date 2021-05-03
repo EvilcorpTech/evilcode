@@ -1,6 +1,6 @@
 {
     "name": "@eviljs/react-webpack",
-    "version": "0.1.0",
+    "version": "1.0.1",
     "files": [
         "/LICENSE.txt",
         "/README.md",
@@ -10,7 +10,7 @@
     "main": "index.js",
     "module": "index.js",
     "exports": "./index.js",
-    "devDependencies": {
+    "dependencies": {
         "@babel/core": "^7",
         "@babel/plugin-proposal-nullish-coalescing-operator": "^7",
         "@babel/plugin-proposal-numeric-separator": "^7",
@@ -40,9 +40,12 @@
         "postcss-preset-env": "^6",
         "style-loader": "^2",
         "terser-webpack-plugin": "^5",
-        "typescript": "^4",
         "webpack": "^5",
         "webpack-bundle-analyzer": "^4"
+    },
+    "peerDependencies": {},
+    "devDependencies": {
+        "typescript": "^4.2"
     },
     "scripts": {
         "build": "tsc --module esnext --listEmittedFiles",

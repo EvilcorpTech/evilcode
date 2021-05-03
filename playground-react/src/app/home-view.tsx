@@ -29,8 +29,18 @@ export function HomeView(props: HomeViewProps) {
             </h1>
 
             <div className="std-stack h">
-                <Button onClick={history.onUndo}>Undo</Button>
-                <Button onClick={history.onRedo}>Redo</Button>
+                <Button
+                    disabled={history.undoStack.length === 0}
+                    onClick={history.onUndo}
+                >
+                    Undo
+                </Button>
+                <Button
+                    disabled={history.redoStack.length === 0}
+                    onClick={history.onRedo}
+                >
+                    Redo
+                </Button>
                 <Input
                     value={history.state.message}
                     onChange={(value) => history.onSave({message: value})}

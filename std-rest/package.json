@@ -12,8 +12,8 @@
         "/shell/*.d.ts"
     ],
     "dependencies": {
-        "@eviljs/std-lib": "^0.1",
-        "@eviljs/std-node": "^0.1",
+        "@eviljs/std-lib": "^1",
+        "@eviljs/std-node": "^1",
         "@koa/multer": "^3",
         "@koa/router": "^10",
         "@types/bcryptjs": "^2",

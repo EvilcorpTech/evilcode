@@ -10,8 +10,8 @@
         "/services/*.d.ts"
     ],
     "dependencies": {
-        "@eviljs/std-lib": "^0.1",
-        "@eviljs/std-node": "^0.1",
+        "@eviljs/std-lib": "^1",
+        "@eviljs/std-node": "^1",
         "@types/node": ">=12",
         "mariadb": "^2",
         "tslib": "^2"

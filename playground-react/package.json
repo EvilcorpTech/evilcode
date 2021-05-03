@@ -7,11 +7,12 @@
         "../std-*"
     ],
     "devDependencies": {
-        "@eviljs/react-webpack": "^0",
-        "@eviljs/std-lib": "^0",
-        "@eviljs/std-react": "^0",
-        "@eviljs/std-theme": "^0",
-        "@eviljs/std-web": "^0",
+        "@eviljs/react-webpack": "^1",
+        "@eviljs/reactx": "^1",
+        "@eviljs/std-lib": "^1",
+        "@eviljs/std-react": "^1",
+        "@eviljs/std-theme": "^1",
+        "@eviljs/std-web": "^1",
         "@types/prop-types": "^15",
         "@types/react": "^17",
         "@types/react-dom": "^17",

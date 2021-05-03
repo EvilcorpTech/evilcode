@@ -1,6 +1,6 @@
 {
     "name": "@eviljs/std-react",
-    "version": "0.1.82",
+    "version": "1.0.0",
     "type": "module",
     "files": [
         "/LICENSE.txt",
@@ -9,8 +9,8 @@
         "/*.d.ts"
     ],
     "dependencies": {
-        "@eviljs/std-lib": "^0.1",
-        "@eviljs/std-web": "^0.1",
+        "@eviljs/std-lib": "^1",
+        "@eviljs/std-web": "^1",
         "@types/prop-types": "^15",
         "@types/react": "^17",
         "@types/react-dom": "^17",
@@ -19,7 +19,7 @@
         "tslib": "^2"
     },
     "peerDependencies": {
-        "@eviljs/std-theme": "^0.1",
+        "@eviljs/std-theme": "^1",
         "react": "^17"
     },
     "devDependencies": {
