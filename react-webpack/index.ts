@@ -1,5 +1,4 @@
 const {BundleStatsWebpackPlugin: BundleStatsPlugin} = require('bundle-stats-webpack-plugin')
-const {CleanWebpackPlugin: CleanPlugin} = require('clean-webpack-plugin')
 const CopyPlugin = require('copy-webpack-plugin')
 const CssMinimizerPlugin = require('css-minimizer-webpack-plugin')
 const HtmlPlugin = require('html-webpack-plugin')
@@ -24,7 +23,6 @@ const {BundleAnalyzerPlugin} = require('webpack-bundle-analyzer')
 // @types/webpack-bundle-analyzer \
 // babel-loader \
 // bundle-stats-webpack-plugin \
-// clean-webpack-plugin \
 // copy-webpack-plugin \
 // css-loader \
 // css-minimizer-webpack-plugin \
@@ -63,6 +61,7 @@ function createWebpackConfig(projectDir: string, options: ConfigOptions) {return
         filename: Path.join(options?.bundleName ?? DefaultBundleName, 'entry-[name].js'),
         chunkFilename: Path.join(options?.bundleName ?? DefaultBundleName, 'chunk-[id].js'),
         assetModuleFilename: Path.join(options?.bundleName ?? DefaultBundleName, 'asset-[id]-[name][ext]'),
+        clean: true,
     },
 
     mode: IsProductionMode
@@ -124,7 +123,6 @@ function createWebpackConfig(projectDir: string, options: ConfigOptions) {return
     },
 
     plugins: [
-        new CleanPlugin(),
         new CopyPlugin({
             patterns: [
                 {from: 'src/assets', globOptions: {ignore: ['**/.DS_Store']}},
