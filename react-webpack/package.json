@@ -1,6 +1,6 @@
 {
     "name": "@eviljs/react-webpack",
-    "version": "1.0.2",
+    "version": "1.0.3",
     "files": [
         "/LICENSE.txt",
         "/README.md",
