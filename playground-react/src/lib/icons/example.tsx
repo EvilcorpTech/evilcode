@@ -1,4 +1,4 @@
-import {defineIcon, Fragment} from '@eviljs/std-react/icon.js'
+import {defineIcon, Fragment} from '@eviljs/react/icon.js'
 
 export const ExampleIcon = defineIcon({
     name: 'ExampleIcon',

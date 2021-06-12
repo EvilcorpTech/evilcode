@@ -1,4 +1,4 @@
-import {defineMessages} from '@eviljs/std-lib/i18n'
+import {defineMessages} from '@eviljs/std/i18n'
 import it from './messages/it'
 import en from './messages/en'
 

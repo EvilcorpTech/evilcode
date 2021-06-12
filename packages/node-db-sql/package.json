@@ -1,0 +1,45 @@
+{
+    "name": "@eviljs/node-db-sql",
+    "version": "0.1.13",
+    "type": "module",
+    "files": [
+        "/LICENSE.txt",
+        "/*.js",
+        "/*.d.ts",
+        "/services/*.js",
+        "/services/*.d.ts"
+    ],
+    "dependencies": {
+        "@eviljs/std": "^1",
+        "@eviljs/node": "^1",
+        "@types/node": ">=12",
+        "mariadb": "^2",
+        "tslib": "^2"
+    },
+    "peerDependencies": {},
+    "devDependencies": {
+        "typescript": "^4.2"
+    },
+    "scripts": {
+        "build": "tsc --listEmittedFiles",
+        "preversion": "npm run build",
+        "prepack": "npm run build"
+    },
+    "author": "Daniele Orlando",
+    "license": "BSD-2-Clause",
+    "description": "Awesome SQL for Node",
+    "keywords": [
+        "Node",
+        "SQL",
+        "MariaDB",
+        "TypeScript"
+    ],
+    "homepage": "https://github.com/EvilRepo/eviljs",
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/EvilRepo/eviljs.git"
+    },
+    "bugs": {
+        "url": "https://github.com/EvilRepo/eviljs/issues"
+    }
+}

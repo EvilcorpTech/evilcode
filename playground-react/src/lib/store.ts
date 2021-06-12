@@ -1,5 +1,5 @@
-import {loadStateFromStorage, setAction, StoreActionValueComputer} from '@eviljs/std-react/store'
-import {loadSsrState} from '@eviljs/std-web/ssr'
+import {loadStateFromStorage, setAction, StoreActionValueComputer} from '@eviljs/react/store'
+import {loadSsrState} from '@eviljs/web/ssr'
 
 export const StateVersion = 1
 export const Actions = {setCache}

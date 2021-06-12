@@ -1,6 +1,6 @@
 import {AuthBarrier as Barrier} from '@eviljs/reactx/auth-barrier/v1'
-import {Redirect} from '@eviljs/std-react/router'
-import {useI18nMsg} from '@eviljs/std-react/i18n'
+import {Redirect} from '@eviljs/react/router'
+import {useI18nMsg} from '@eviljs/react/i18n'
 
 export const AuthRedirect = '/auth'
 

@@ -1,4 +1,4 @@
-import {createContainer} from '@eviljs/std-lib/container.js'
+import {createContainer} from '@eviljs/std/container'
 import React from 'react'
 import ReactDOM from 'react-dom'
 import {App} from './app/app'
@@ -23,8 +23,5 @@ if (module.hot) {
 }
 
 // Types ///////////////////////////////////////////////////////////////////////
-
-/// <reference path="@eviljs/reactx-webpack/types/assets.d.ts"/>
-/// <reference path="@eviljs/reactx-webpack/types/react.d.ts"/>
 
 declare const module: {hot: {accept(): void}}

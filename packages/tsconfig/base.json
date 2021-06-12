@@ -1,0 +1,23 @@
+{
+    "extends": "./strict.json",
+    "compileOnSave": true,
+    "compilerOptions": {
+        "declaration": true,
+        "noEmit": false,
+        "allowJs": true,
+        "allowSyntheticDefaultImports": true,
+        "checkJs": true,
+        "downlevelIteration": false,
+        "esModuleInterop": true,
+        "importHelpers": true,
+        "isolatedModules": true,
+        "incremental": true,
+        "lib": ["esnext"],
+        "module": "esnext",
+        "moduleResolution": "node",
+        "noEmitHelpers": true,
+        "resolveJsonModule": true,
+        "skipLibCheck": true,
+        "target": "esnext"
+    }
+}

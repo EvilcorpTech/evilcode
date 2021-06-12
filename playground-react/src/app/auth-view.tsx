@@ -1,8 +1,8 @@
 import {AuthCredentials} from '@eviljs/reactx/auth-credentials/v1'
-import {useAuth, AuthTokenState} from '@eviljs/std-react/auth'
-import {useI18nMsg} from '@eviljs/std-react/i18n'
-import {classes} from '@eviljs/std-react/react'
-import {useRouter, Redirect} from '@eviljs/std-react/router'
+import {useAuth, AuthTokenState} from '@eviljs/react/auth'
+import {useI18nMsg} from '@eviljs/react/i18n'
+import {classes} from '@eviljs/react/react'
+import {useRouter, Redirect} from '@eviljs/react/router'
 import React from 'react'
 const {useCallback} = React
 

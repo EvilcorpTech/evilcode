@@ -1,4 +1,4 @@
-import {QueryRequestOptions} from '@eviljs/std-web/query'
+import {QueryRequestOptions} from '@eviljs/web/query'
 
 export function asAuthOptions(token: string): QueryRequestOptions {
     return {

@@ -1,9 +1,9 @@
-#!/usr/bin/env sh
+#!/usr/bin/env bash
 
 # Bumps up a package version and publishes it.
 #
 # EXAMPLE
-# PublishVersion=minor ./publish ./std-lib
+# PublishVersion=minor ./publish ./packages/std
 
 set -e # errexit
 set -u # nounset

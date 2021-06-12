@@ -1,8 +1,8 @@
 import {Button} from '@eviljs/reactx/button/v1'
 import {Input} from '@eviljs/reactx/input/v1'
-import {useI18nMsg} from '@eviljs/std-react/i18n'
-import {classes} from '@eviljs/std-react/react'
-import {useUndoRedo} from '@eviljs/std-react/undoredo'
+import {useI18nMsg} from '@eviljs/react/i18n'
+import {classes} from '@eviljs/react/react'
+import {useUndoRedo} from '@eviljs/react/undoredo'
 import {Header} from 'lib/widgets/header'
 
 import './home-view.css'

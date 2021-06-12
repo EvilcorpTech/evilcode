@@ -1,5 +1,5 @@
-import {classes} from '@eviljs/std-react/react'
-import {Route} from '@eviljs/std-react/router'
+import {classes} from '@eviljs/react/react'
+import {Route} from '@eviljs/react/router'
 
 import './header.css'
 

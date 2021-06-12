@@ -1,4 +1,4 @@
-#!/usr/bin/env sh
+#!/usr/bin/env bash
 
 set -e # errexit
 set -u # nounset
@@ -17,7 +17,7 @@ for pkg; do
         rm -fv "$pkg/.tsbuildinfo" || true
 
         find "$pkg" \
-                \( -iname "*.js" -or -iname "*.jsx" -or -iname "*.d.ts" \) \
+                \( -iname "*.js" -or -iname "*.jsx"\) \
                 -not -ipath "*/node_modules/*" \
                 -exec rm -v "{}" + \
                 2> /dev/null \

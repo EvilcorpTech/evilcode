@@ -1,0 +1,28 @@
+{
+    "name": "@eviljs/style",
+    "version": "1.0.0",
+    "files": [
+        "/LICENSE.txt",
+        "/*.css",
+        "/reset/**/*.css",
+        "/font-roboto/*.woff"
+    ],
+    "scripts": {
+        "build": ""
+    },
+    "author": "Daniele Orlando",
+    "license": "BSD-2-Clause",
+    "description": "Awesome CSS theme",
+    "keywords": [
+        "CSS",
+        "Theme"
+    ],
+    "homepage": "https://github.com/EvilRepo/eviljs",
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/EvilRepo/eviljs.git"
+    },
+    "bugs": {
+        "url": "https://github.com/EvilRepo/eviljs/issues"
+    }
+}

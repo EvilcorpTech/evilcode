@@ -1,0 +1,66 @@
+{
+    "name": "@eviljs/node-rest",
+    "version": "0.1.10",
+    "type": "module",
+    "files": [
+        "/LICENSE.txt",
+        "/*.js",
+        "/*.d.ts",
+        "/middleware/*.js",
+        "/middleware/*.d.ts",
+        "/shell/*.js",
+        "/shell/*.d.ts"
+    ],
+    "dependencies": {
+        "@eviljs/std": "^1",
+        "@eviljs/node": "^1",
+        "@koa/multer": "^3",
+        "@koa/router": "^10",
+        "@types/bcryptjs": "^2",
+        "@types/koa": "^2",
+        "@types/koa__multer": "^2",
+        "@types/koa__router": "^8",
+        "@types/koa-bodyparser": "^4",
+        "@types/koa-compress": "^4",
+        "@types/koa-conditional-get": "^2",
+        "@types/koa-etag": "^3",
+        "@types/koa-logger": "^3",
+        "@types/koa-mount": "^4",
+        "@types/koa-static": "^4",
+        "@types/node": ">=12",
+        "koa": "^2",
+        "koa-bodyparser": "^4",
+        "koa-compress": "^5",
+        "koa-conditional-get": "^3",
+        "koa-etag": "^4",
+        "koa-logger": "^3",
+        "koa-mount": "^4",
+        "koa-static": "^5",
+        "multer": "^1",
+        "tslib": "^2"
+    },
+    "peerDependencies": {},
+    "devDependencies": {
+        "typescript": "^4.2"
+    },
+    "scripts": {
+        "build": "tsc --listEmittedFiles",
+        "preversion": "npm run build",
+        "prepack": "npm run build"
+    },
+    "author": "Daniele Orlando",
+    "license": "BSD-2-Clause",
+    "description": "Awesome Node",
+    "keywords": [
+        "Node",
+        "TypeScript"
+    ],
+    "homepage": "https://github.com/EvilRepo/eviljs",
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/EvilRepo/eviljs.git"
+    },
+    "bugs": {
+        "url": "https://github.com/EvilRepo/eviljs/issues"
+    }
+}

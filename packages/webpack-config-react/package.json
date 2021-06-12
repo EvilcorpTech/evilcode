@@ -1,0 +1,69 @@
+{
+    "name": "@eviljs/webpack-config-react",
+    "version": "1.0.0",
+    "type": "commonjs",
+    "files": [
+        "/LICENSE.txt",
+        "/README.md",
+        "/**/*.js",
+        "/**/*.d.ts"
+    ],
+    "main": "index.js",
+    "dependencies": {
+        "@babel/core": "^7",
+        "@babel/plugin-proposal-nullish-coalescing-operator": "^7",
+        "@babel/plugin-proposal-numeric-separator": "^7",
+        "@babel/plugin-proposal-optional-chaining": "^7",
+        "@babel/plugin-syntax-dynamic-import": "^7",
+        "@babel/preset-react": "^7",
+        "@babel/preset-typescript": "^7",
+        "@babel/runtime": "^7",
+        "@types/copy-webpack-plugin": "^8",
+        "@types/css-minimizer-webpack-plugin": "^3",
+        "@types/mini-css-extract-plugin": "^1",
+        "@types/webpack-bundle-analyzer": "^4",
+        "babel-loader": "^8",
+        "bundle-stats-webpack-plugin": "^3",
+        "copy-webpack-plugin": "^9",
+        "css-loader": "^5",
+        "css-minimizer-webpack-plugin": "^3",
+        "csso": "^4",
+        "file-loader": "^6",
+        "html-webpack-plugin": "^5",
+        "inspectpack": "^4",
+        "mini-css-extract-plugin": "^1",
+        "postcss": "^8",
+        "postcss-import": "^14",
+        "postcss-loader": "^6",
+        "postcss-preset-env": "^6",
+        "style-loader": "^2",
+        "terser-webpack-plugin": "^5",
+        "tslib": "^2",
+        "webpack": "^5",
+        "webpack-bundle-analyzer": "^4"
+    },
+    "peerDependencies": {},
+    "devDependencies": {
+        "typescript": "^4.2"
+    },
+    "scripts": {
+        "build": "tsc --listEmittedFiles",
+        "preversion": "npm run build",
+        "prepack": "npm run build"
+    },
+    "author": "Daniele Orlando",
+    "license": "BSD-2-Clause",
+    "description": "Awesome Webpack config for React",
+    "keywords": [
+        "React",
+        "Webpack"
+    ],
+    "homepage": "https://github.com/EvilRepo/eviljs",
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/EvilRepo/eviljs.git"
+    },
+    "bugs": {
+        "url": "https://github.com/EvilRepo/eviljs/issues"
+    }
+}

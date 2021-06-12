@@ -1,5 +1,5 @@
-import {createFetch} from '@eviljs/std-web/fetch'
-import {createMockServiceWorker} from '@eviljs/std-web/fetch-mock'
+import {createFetch} from '@eviljs/web/fetch'
+import {createMockServiceWorker} from '@eviljs/web/fetch-mock'
 import {ApiUrl} from './lib/context'
 import {mockFetch} from './lib/mock'
 

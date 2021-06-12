@@ -1,4 +1,4 @@
-import {classes} from '@eviljs/std-react/react.js'
+import {classes} from '@eviljs/react/react.js'
 
 export function NotFoundView(props: NotFoundViewProps) {
     return (

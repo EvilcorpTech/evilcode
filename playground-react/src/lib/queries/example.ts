@@ -1,4 +1,4 @@
-import {Query} from '@eviljs/std-web/query'
+import {Query} from '@eviljs/web/query'
 import {DateString, IdString, UrlString} from '../models'
 import {asAuthOptions} from '../kit/auth'
 
