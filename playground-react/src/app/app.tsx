@@ -7,16 +7,15 @@ import {PortalProvider} from '@eviljs/react/portal'
 import {withQuery} from '@eviljs/react/query'
 import {withRouter, SwitchRoute, exact, Arg as _arg_} from '@eviljs/react/router'
 import {withStore} from '@eviljs/react/store'
-import React from 'react'
-import {Container} from '../lib/container'
-import {BasePath, RouterType} from '../lib/context'
-import {AuthBarrier} from '../lib/widgets/auth-barrier'
+import {Fragment} from 'react'
+import {Container} from 'lib/container'
+import {BasePath, RouterType} from 'lib/context'
+import {AuthBarrier} from 'lib/widgets/auth-barrier'
 import {NotFoundView} from './404-view'
 import {AdminView} from './admin-view'
 import {AuthView} from './auth-view'
 import {HomeView} from './home-view'
 import {UiView} from './ui-view'
-const {Fragment} = React
 
 export function App(props: AppProps) {
     const {container} = props

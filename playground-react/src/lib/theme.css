@@ -1,15 +1,15 @@
 @import '~@eviljs/style/reset.css';
-@import '~@eviljs/style/resetx/focus-outline.css';
+@import '~@eviljs/style/reset/even/focus-outline.css';
 @import '~@eviljs/style/all.classes.css';
 @import '~@eviljs/style/all.props.css';
 @import '~@eviljs/style/scheme-dark.css';
 @import '~@eviljs/style/scheme-light.css';
 @import '~@eviljs/style/font-roboto.css';
-@import '~@eviljs/style/widgets/button.css';
-@import '~@eviljs/style/widgets/button-dye.css';
-@import '~@eviljs/style/widgets/button-flat.css';
-@import '~@eviljs/style/widgets/button-halo.css';
-@import '~@eviljs/style/widgets/button-plain.css';
+@import '~@eviljs/stylex/button/v1.css';
+@import '~@eviljs/stylex/button/v1-dye.css';
+@import '~@eviljs/stylex/button/v1-flat.css';
+@import '~@eviljs/stylex/button/v1-halo.css';
+@import '~@eviljs/stylex/button/v1-plain.css';
 
 /*
 #App {

@@ -1,7 +1,6 @@
-import {Container as StdContainer} from '@eviljs/std/container'
+import {Container as ContainerStd} from '@eviljs/std/container'
 import {createI18n} from '@eviljs/std/i18n'
 import {createLogger} from '@eviljs/std/logger'
-import {useContainer as useStdContainer} from '@eviljs/react/container'
 import {createCookie, maxAgeInDays} from '@eviljs/web/cookie'
 import {asBaseUrl, createFetch, Fetch} from '@eviljs/web/fetch'
 import {createQuery} from '@eviljs/web/query'
@@ -37,10 +36,6 @@ export const ContainerSpec = {
     },
 }
 
-export function useContainer() {
-    return useStdContainer() as Container
-}
-
 // Types ///////////////////////////////////////////////////////////////////////
 
-export type Container = StdContainer<typeof ContainerSpec.services>
+export type Container = ContainerStd<typeof ContainerSpec.services>

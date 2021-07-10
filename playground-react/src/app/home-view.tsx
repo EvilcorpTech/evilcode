@@ -1,8 +1,8 @@
-import {Button} from '@eviljs/reactx/button/v1'
-import {Input} from '@eviljs/reactx/input/v1'
-import {useI18nMsg} from '@eviljs/react/i18n'
 import {classes} from '@eviljs/react/react'
 import {useUndoRedo} from '@eviljs/react/undoredo'
+import {Button} from '@eviljs/reactx/button/v1'
+import {Input} from '@eviljs/reactx/input/v1'
+import {useI18nMsg} from 'lib/hooks'
 import {Header} from 'lib/widgets/header'
 
 import './home-view.css'
@@ -11,9 +11,9 @@ export function HomeView(props: HomeViewProps) {
     const {className, ...otherProps} = props
     const history = useUndoRedo({message: ''})
 
-    const msg = useI18nMsg(({ t }) => {
+    const msg = useI18nMsg(({ translate }) => {
         return {
-            title: t`Home`,
+            title: translate('Home'),
         }
     })
 

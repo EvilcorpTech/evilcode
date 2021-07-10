@@ -1,8 +1,8 @@
+import {classes} from '@eviljs/react/react'
 import {ThemeView} from '@eviljs/reactx/theme-view/v1'
 import {WidgetsView} from '@eviljs/reactx/widgets-view/v1'
-import {useI18nMsg} from '@eviljs/react/i18n'
-import {classes} from '@eviljs/react/react'
 import {Header} from 'lib/widgets/header'
+import {useI18nMsg} from 'lib/hooks'
 
 import './ui-view.css'
 

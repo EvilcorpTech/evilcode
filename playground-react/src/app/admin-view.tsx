@@ -1,10 +1,9 @@
+import {classes} from '@eviljs/react/react'
 import {Button} from '@eviljs/reactx/button/v1'
 import {useAuth} from '@eviljs/react/auth'
-import {useI18nMsg} from '@eviljs/react/i18n'
-import {classes} from '@eviljs/react/react'
-import React from 'react'
+import {useCallback} from 'react'
+import {useI18nMsg} from 'lib/hooks'
 import {Header} from 'lib/widgets/header'
-const {useCallback} = React
 
 import './admin-view.css'
 
@@ -12,9 +11,10 @@ export function AdminView(props: AdminViewProps) {
     const {className, ...otherProps} = props
     const {destroySession} = useAuth()
 
+
     const msg = useI18nMsg(({ t }) => {
         return {
-            title: t`Admin page`,
+            title: t`Admin`,
         }
     })
 
