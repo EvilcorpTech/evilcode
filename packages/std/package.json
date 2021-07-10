@@ -8,7 +8,6 @@
         "/*.d.ts"
     ],
     "dependencies": {
-        "@types/node": ">=12",
         "tslib": "^2"
     },
     "peerDependencies": {},

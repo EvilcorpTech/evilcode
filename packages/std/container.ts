@@ -60,12 +60,6 @@ export function registerService
     <C extends Container>
     (container: C, serviceId: ServiceId, serviceFactory: ServiceFactory)
 {
-    if (process.env.NODE_ENV !== 'production') {
-        console.debug(
-            `@eviljs/std/container.registerService(): registering service ${String(serviceId)}.`
-        )
-    }
-
     container[ContainerFactories][serviceId as string] = serviceFactory
 
     // We define a proxy property that returns the service.
@@ -94,11 +88,6 @@ function requireService(container: Container, serviceId: ServiceId, options?: Re
     }
 
     if (! container[ContainerInstances][serviceId as string]) {
-        if (process.env.NODE_ENV !== 'production') {
-            console.debug(
-                `@eviljs/std/container.requireService(): creating service ${String(serviceId)}.`
-            )
-        }
         // By default we use a singleton strategy.
         container[ContainerInstances][serviceId as string] = makeService(container, serviceId)
     }

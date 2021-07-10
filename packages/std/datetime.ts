@@ -84,30 +84,37 @@ export function isDateIsoUtcString(value: unknown): value is string {
 // Structures //////////////////////////////////////////////////////////////////
 
 export function datetimeFrom(date: Date) {
-    const self: Datetime = Object.defineProperties(
-        [
-            year(date),
-            month(date),
-            day(date),
-            hour(date),
-            minute(date),
-            second(date),
-            ms(date),
-        ] as const,
-        {
-            year: {get() { return self[0] }},
-            month: {get() { return self[1] }},
-            day: {get() { return self[2] }},
-            hour: {get() { return self[3] }},
-            minute: {get() { return self[4] }},
-            second: {get() { return self[5] }},
-            ms: {get() { return self[6] }},
-        },
-    )
+    const dict: DatetimeDict = {
+        year: year(date),
+        month: month(date),
+        day: day(date),
+        hour: hour(date),
+        minute: minute(date),
+        second: second(date),
+        ms: ms(date),
+    }
+    const tuple: DatetimeTuple = [
+        dict.year,
+        dict.month,
+        dict.day,
+        dict.hour,
+        dict.minute,
+        dict.second,
+        dict.ms,
+    ]
+    const datetime: Datetime = Object.defineProperties(tuple, {
+        year: { value: dict.year },
+        month: { value: dict.month },
+        day: { value: dict.day },
+        hour: { value: dict.hour },
+        minute: { value: dict.minute },
+        second: { value: dict.second },
+        ms: { value: dict.ms },
+    }) as Datetime
 
-    Object.freeze(self)
+    const frozenDatetime = Object.freeze(datetime)
 
-    return self
+    return frozenDatetime
 }
 
 export function dateFrom(datetime: Datetime) {
@@ -160,25 +167,25 @@ export function cloneDate(date: Date) {
 
 // Types ///////////////////////////////////////////////////////////////////////
 
-export interface Datetime extends ReadonlyArray<number>, DatetimeTuple, DatetimeDict {
+export interface Datetime extends DatetimeTuple, DatetimeDict {
 }
 
 export interface DatetimeTuple {
-    readonly [0]: number // Year.
-    readonly [1]: number // Month.
-    readonly [2]: number // Day.
-    readonly [3]: number // Hour.
-    readonly [4]: number // Minute.
-    readonly [5]: number // Second.
-    readonly [6]: number // Ms.
+    [0]: number // Year.
+    [1]: number // Month.
+    [2]: number // Day.
+    [3]: number // Hour.
+    [4]: number // Minute.
+    [5]: number // Second.
+    [6]: number // Ms.
 }
 
 export interface DatetimeDict {
-    readonly year: number
-    readonly month: number
-    readonly day: number
-    readonly hour: number
-    readonly minute: number
-    readonly second: number
-    readonly ms: number
+    year: number
+    month: number
+    day: number
+    hour: number
+    minute: number
+    second: number
+    ms: number
 }

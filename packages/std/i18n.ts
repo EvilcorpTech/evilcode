@@ -5,10 +5,13 @@ import {isArray, isFunction, isObject} from './type.js'
 export const DefaultSymbol = '@'
 export const SpacesRegexp = /\s+/g
 
-export function createI18n(spec: I18nSpec) {
+export function createI18n
+    <L extends string, L1 extends L, L2 extends L, K extends string>
+    (spec: I18nSpec<L, L1, L2, K>)
+{
     const {locale, fallbackLocale, messages, symbol} = spec
 
-    const self: I18n = {
+    const self: I18n<L, K> = {
         locale,
         fallbackLocale,
         messages,
@@ -48,38 +51,54 @@ export function createI18n(spec: I18nSpec) {
 * translate(i18n, '@{ 0 } items of @{ 1 }', [4, 8])
 * translate(i18n, '@{ count } items of @{ total }', {count: 4, total: 8})
 */
-export function translate(i18n: I18n, id: string, values?: MsgValues, options?: unknown) {
+export function translate
+    <L extends string = string, K extends string = string>
+    (i18n: I18n<L, K>, id: K, values?: MsgValues, options?: unknown)
+{
     const {locale, fallbackLocale, messages} = i18n
 
     if (! id) {
         return id
     }
 
-    let msg = messages[locale]?.[id]
+    const msg = (() => {
+        const localeMsg: undefined | string | MsgComputer = messages[locale]?.[id]
+        const fallbackMsg: undefined | string | MsgComputer = messages[fallbackLocale]?.[id]
 
-    if (! msg && fallbackLocale) {
-        msg = messages[fallbackLocale]?.[id]
-    }
-
-    if (! msg) {
-        msg = id
-    }
+        if (localeMsg) {
+            return localeMsg
+        }
+        if (fallbackMsg) {
+            return fallbackMsg
+        }
+        return id
+    })()
 
     const text = isFunction(msg)
         // The message function handles the interpolation on its own.
-        ? msg(values, options)
+        ? (() => {
+            try {
+                return msg(values, options)
+            }
+            catch (error) {
+                return id
+            }
+        })()
         // The message should be a string. We need to interpolate the values.
-        : i18n.format(msg, values)
+        : i18n.format(msg as K, values)
 
     const tidyText = text.trim().replace(SpacesRegexp, ' ')
 
     return tidyText
 }
 
-export function t(i18n: I18n, id: TemplateStringsArray, ...substitutions: Array<any>) {
+export function t
+    <L extends string = string, K extends string = string>
+    (i18n: I18n<L, K>, id: TemplateStringsArray, ...substitutions: Array<any>)
+{
     const template = String.raw(id, ...substitutions)
 
-    return i18n.translate(template)
+    return i18n.translate(template as K)
 }
 
 /*
@@ -89,7 +108,10 @@ export function t(i18n: I18n, id: TemplateStringsArray, ...substitutions: Array<
 * format(i18n, '@{ 0 } items of @{ 1 }', [4, 8])
 * format(i18n, '@{ count } items of @{ total }', {count: 4, total: 8})
 */
-export function format(i18n: I18n, template: string, values?: MsgValues) {
+export function format
+    <L extends string = string, K extends string = string>
+    (i18n: I18n<L, K>, template: K, values?: MsgValues)
+{
     if (! values) {
         // There are no arguments to interpolate. Optimization.
         return template
@@ -111,7 +133,7 @@ export function format(i18n: I18n, template: string, values?: MsgValues) {
             + `values must be Array | Object, given "${values}".`
         )
 
-    let string = template
+    let string: string = template
 
     for (const token in dict) {
         const value = dict[token]
@@ -130,46 +152,55 @@ export function tokenAsRegexp(token: string, symbol: string, cache: Record<strin
     return cache[token]!
 }
 
-export function defineMessages<V extends [] | {}>
-    (messages: {
-        [key: string]: {
-            [key: string]: string | ((values?: V, options?: unknown) => string)
-        }
-    })
+export function defineMessages
+    <M extends I18nMessages>
+    (messages: M): M
 {
-    return messages as I18nMessages
+    return messages
 }
 
 // Types ///////////////////////////////////////////////////////////////////////
 
-export interface I18n {
-    locale: string
-    fallbackLocale: string
-    messages: I18nMessages
+export interface I18n<L extends string = string, K extends string = string> {
+    locale: L
+    fallbackLocale: L
+    messages: I18nMessages<L, K>
     symbol: string
     __regexpCache__: Record<string, RegExp>
-    translate(id: string, values?: MsgValues, options?: unknown): string
+    translate(id: K, values?: MsgValues, options?: unknown): string
     t(id: TemplateStringsArray, ...substitutions: Array<any>): string
-    format(template: string, values?: MsgValues): string
+    format(template: K, values?: MsgValues): string
 }
 
-export interface I18nSpec {
-    locale: string
-    fallbackLocale: string
-    messages: I18nMessages
+export interface I18nSpec<L extends string, L1 extends L, L2 extends L, K extends string> {
+    locale: L1
+    fallbackLocale: L2
+    messages: I18nMessages<L, K>
     symbol?: string
 }
 
-export interface I18nMessages {
-    [key: string]: {
-        [key: string]: string | MsgComputer
-    }
+export type I18nMessages<L extends string = string, K extends string = string, C = MsgComputer> = {
+    [key in L]: Partial<{
+        [key in K]: string | C
+    }>
 }
 
-export interface MsgComputer {
-    (values?: MsgValues, options?: unknown): string
+export interface MsgComputer<V extends MsgValues = any, O = unknown> {
+    (values?: V, options?: O): string
 }
 
 export type MsgValues =
     | Array<string | number>
     | Record<string | number, string | number>
+
+// interface I18nTemplateKey<K extends string> extends ReadonlyArray<K> {
+//     readonly raw: readonly K[];
+// }
+
+export type I18nLocaleOf<M extends I18nSpec<string, string, string, string>> = M extends I18nSpec<infer L, any, any, string>
+    ? L
+    : string
+
+export type I18nKeyOf<M extends I18nSpec<string, string, string, string>> = M extends I18nSpec<string, any, any, infer K>
+    ? K
+    : string

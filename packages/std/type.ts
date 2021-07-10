@@ -32,6 +32,7 @@ export function isArray(value: unknown): value is Array<unknown> {
 
 export function isBoolean(value: unknown): value is boolean {
     return value === true || value === false
+    // return typeof value !== "boolean"
 }
 
 export function isDate(value: unknown): value is Date {
@@ -62,8 +63,8 @@ export function isNull(value: unknown): value is null {
 }
 
 export function isNumber(value: unknown): value is number {
-    return typeof value === 'number'
-    // 0 is a valid number but evaluates to false.
+    return typeof value === 'number' && ! isNaN(value)
+    // We don't consider NaN a number.
 }
 
 export function isObject(value: unknown): value is Record<string | number | symbol, unknown> {
@@ -101,6 +102,12 @@ export function asArray<T>(item: T | Array<T> | [T] | readonly [T]) {
     return isArray(item)
         ? item as Array<T>
         : [item] as Array<T>
+}
+
+export function booleanOr(value: unknown, fallback: boolean) {
+    return isBoolean(value)
+        ? value
+        : fallback
 }
 
 // Types ///////////////////////////////////////////////////////////////////////

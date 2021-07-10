@@ -1,204 +1,169 @@
-import {isArray, isFunction, isNil, isNumber, isString} from './type.js'
+import {ensureArray, ensureBoolean, ensureFunction, ensureInteger, ensureNumber, ensureString, ensureStringOptional, throwError} from './assert.js'
+import {isArray, isFunction, isNil} from './type.js'
 
-export const ExpType = Symbol('Exp')
-
-export function exp<A extends Array<unknown>, T>(operator: (...args: A) => T, ...args: A) {
-    function evaluator() {
-        return operator(...args)
+export function evaluateExp<C extends Ctx, R>(ctx: C, exp: Exp<C, R>) {
+    if (! isFunction(exp)) {
+        return exp
     }
-
-    const expEvaluator = evaluator as ExpFn<T>
-    expEvaluator.__expType__ = ExpType
-
-    return expEvaluator
-}
-
-export function express<T>(ex: Exp<T>) {
-    if (! isExp(ex)) {
-        return ex
-    }
-    return ex()
-}
-
-export function isExp(ex: unknown): ex is ExpFn<unknown> {
-    if (isFunction(ex) && (ex as ExpFn<unknown>).__expType__ === ExpType) {
-        return true
-    }
-    return false
+    return exp(ctx)
 }
 
 // Operators ///////////////////////////////////////////////////////////////////
 
-export function bool(oneExp: Exp<any>) {
-    const one = express(oneExp)
-
+export function bool(ctx: Ctx, oneExp: Exp<Ctx, any>): boolean {
+    const one = evaluateExp(ctx, oneExp)
     if (one === false) {
         return false
     }
     if (isNil(one)) {
         return false
     }
-    if (isNaN(one)) {
+    if (typeof one === 'number' && isNaN(one)) {
         return false
     }
-    // 0 and '' are true.
+    // 0 and '' are considered true.
     return true
 }
 
-export function and(...exps: Array<Exp<BoolAtom>>) {
-    for (const ex of exps) {
-        const one = bool(ex)
-
-        if (one === false) {
-            return false
-        }
-    }
-    return true
-}
-
-export function or(...exps: Array<Exp<BoolAtom>>) {
+export function and(ctx: Ctx, ...exps: Array<Exp<Ctx, boolean>>): boolean {
     if (exps.length === 0) {
-        return true
+        return throwError('a Non Empty Array', exps)
     }
-    for (const ex of exps) {
-        const one = bool(ex)
-
-        if (one === true) {
-            return true
-        }
-    }
-    return false
+    return exps.every(itExp => ensureBoolean(evaluateExp(ctx, itExp)))
 }
 
-export function not(oneExp: Exp<BoolAtom>) {
-    return ! bool(oneExp)
-}
-
-export function is(oneExp: Exp<Atom>, twoExp: Exp<Atom>) {
-    return express(oneExp) === express(twoExp)
-}
-
-export function isnt(oneExp: Exp<Atom>, twoExp: Exp<Atom>) {
-    return not(is(oneExp, twoExp))
-}
-
-export function less(oneExp: Exp<number>, twoExp: Exp<number>) {
-    const one = express(oneExp)
-    const two = express(twoExp)
-    if (! isNumber(one)) {
-        return false
+export function or(ctx: Ctx, ...exps: Array<Exp<Ctx, boolean>>): boolean {
+    if (exps.length === 0) {
+        return throwError('a Non Empty Array', exps)
     }
-    if (! isNumber(two)) {
-        return false
-    }
+    return exps.some(itExp => ensureBoolean(evaluateExp(ctx, itExp)))
+}
+
+export function not(ctx: Ctx, oneExp: Exp<Ctx, boolean>): boolean {
+    return ! ensureBoolean(evaluateExp(ctx, oneExp))
+}
+
+export function is(ctx: Ctx, oneExp: Exp<Ctx, ScalarAtom>, twoExp: Exp<Ctx, ScalarAtom>): boolean {
+    return evaluateExp(ctx, oneExp) === evaluateExp(ctx, twoExp)
+}
+
+export function isnt(ctx: Ctx, oneExp: Exp<Ctx, ScalarAtom>, twoExp: Exp<Ctx, ScalarAtom>): boolean {
+    return not(ctx, is(ctx, oneExp, twoExp))
+}
+
+export function less(ctx: Ctx, oneExp: Exp<Ctx, number>, twoExp: Exp<Ctx, number>): boolean {
+    const one = ensureNumber(evaluateExp(ctx, oneExp))
+    const two = ensureNumber(evaluateExp(ctx, twoExp))
     return one < two
 }
 
-export function more(oneExp: Exp<number>, twoExp: Exp<number>) {
-    return and(not(less(oneExp, twoExp)), not(is(oneExp, twoExp)))
+export function more(ctx: Ctx, oneExp: Exp<Ctx, number>, twoExp: Exp<Ctx, number>): boolean {
+    return and(ctx, not(ctx, less(ctx, oneExp, twoExp)), not(ctx, is(ctx, oneExp, twoExp)))
 }
 
-export function between(oneExp: Exp<number>, twoExp: Exp<number>, threeExp: Exp<number>) {
-    return and(less(oneExp, twoExp), less(twoExp, threeExp))
+export function between(ctx: Ctx, oneExp: Exp<Ctx, number>, twoExp: Exp<Ctx, number>, threeExp: Exp<Ctx, number>): boolean {
+    return and(ctx, less(ctx, oneExp, twoExp), less(ctx, twoExp, threeExp))
 }
 
-export function match(oneExp: Exp<string>, twoExp: Exp<string>) {
-    const one = express(oneExp)
-    const two = express(twoExp)
-    if (! isString(one)) {
-        return false
-    }
-    if (! isString(two)) {
-        return false
-    }
+export function match(ctx: Ctx, oneExp: Exp<Ctx, string>, twoExp: Exp<Ctx, string>): boolean {
+    const one = ensureString(evaluateExp(ctx, oneExp))
+    const two = ensureString(evaluateExp(ctx, twoExp))
     return one.toLowerCase().includes(two.toLowerCase())
 }
 
-export function list(...args: Array<Exp<unknown>>) {
-    return args.map(express)
+export function regex(ctx: Ctx, textExp: Exp<Ctx, string>, patternExp: Exp<Ctx, string>, flagsExp?: Exp<Ctx, string>): boolean {
+    const text = ensureString(evaluateExp(ctx, textExp))
+    const pattern = ensureString(evaluateExp(ctx, patternExp))
+    const flags = ensureStringOptional(evaluateExp(ctx, flagsExp))
+    const regexp = new RegExp(pattern, flags)
+    return regexp.test(text)
 }
 
-export function regex(textExp: Exp<string>, patternExp: Exp<string>, flagsExp?: Exp<string>) {
-    const text = express(textExp)
-    const pattern = express(patternExp)
-    const flags = express(flagsExp)
-    const regexp = (() => {
-        try {
-            return new RegExp(pattern, flags)
+export function list<I>(ctx: Ctx, ...args: Array<Exp<Ctx, I>>): Array<I> {
+    return args.map(it => evaluateExp(ctx, it))
+}
+
+export function arg(ctx: CtxWithArgs, idExp: Exp<Ctx, number>, idxExp?: Exp<Ctx, number>): unknown {
+    const id = ensureInteger(evaluateExp(ctx, idExp))
+    const idx = idxExp ? ensureInteger(evaluateExp(ctx, idExp)) : 0
+    return ctx.args[idx]?.[id]
+}
+
+export function find<I>(ctx: Ctx | CtxWithArgs, listExp: Exp<Ctx, Array<I>>, testExp: Exp<CtxWithArgs, boolean>): undefined | I {
+    const list = ensureArray(evaluateExp(ctx, listExp))
+    const item = list.find((it, idx) => {
+        const ctxArgs = ('args' in ctx) ? ctx.args : []
+        const ctxWithArgs = {
+            ...ctx,
+            args: [[it, idx], ...ctxArgs],
         }
-        catch (error) {
-            return
-        }
-    })()
-    if (! regexp) {
-        return
-    }
-    if (! isString(text)) {
-        return
-    }
-    return regexp.test(text)
+        return ensureBoolean(evaluateExp(ctxWithArgs, testExp))
+    })
+    return item
+}
+
+export function has<I>(ctx: Ctx | CtxWithArgs, listExp: Exp<Ctx, Array<I>>, testExp: Exp<CtxWithArgs, boolean>): boolean {
+    return bool(ctx, find(ctx, listExp, testExp))
 }
 
 // Evaluation Tree /////////////////////////////////////////////////////////////
 
 /*
-* Evaluates an expression tree.
+* Evaluates a tree.
 *
 * EXAMPLE
-* const expressionTree = ['operator', ...args]
-* const result = evaluateExpression(operators, expressionTree)
+* const tree = ['operator', ...args]
+* const result = evaluateTree(operators, tree)
 */
-export function evaluateExpression<O extends Record<PropertyKey, Operator>>(operators: O, expression: Expression) {
-    return express(buildExpression(operators, expression))
+export function evaluateTree(operators: Record<PropertyKey, Operator>, tree: Tree, ctx: Ctx) {
+    const exp = compileTree(operators, tree)
+    const result = evaluateExp(ctx, exp)
+    return result
 }
 
 /*
-* Builds an evaluable expression from an expression tree.
+* Builds an evaluable expression from a tree of nodes.
 *
 * EXAMPLE
-* const expressionTree = ['operator', ...args]
-* const expression = buildExpression(operators, expressionTree)
-* const result = express(expression)
+* const tree = ['operator', ...args]
+* const exp = compileTree(operators, tree)
+* const result = evaluateExp(exp)
 */
-export function buildExpression<O extends Record<PropertyKey, Operator>>(operators: O, expression: unknown): unknown {
-    if (! isArray(expression)) {
-        return expression // An Atom.
+export function compileTree(operators: Record<PropertyKey, Operator>, tree: Tree): ExpFn<Ctx, unknown> {
+    const [operatorId, ...operatorArgs] = ensureArray(tree)
+    const operator = ensureFunction(operators[ensureString(operatorId)])
+
+    const expArgs = operatorArgs.map(it =>
+        isArray(it)
+            ? compileTree(operators, it)
+            : it
+    )
+
+    function exp(ctx: Ctx) {
+        return operator(ctx, ...expArgs)
     }
-    const [operatorId, ...operatorArgs] = expression
-    if (! operatorId) {
-        return // An empty expression.
-    }
-    const operator = operators[operatorId as string]
-    if (! operator) {
-        return // An invalid operator.
-    }
-    const expressionArgs = operatorArgs.map(it => buildExpression(operators, it))
-    return exp(() => operator(...expressionArgs))
+
+    return exp
 }
 
 // Types ///////////////////////////////////////////////////////////////////////
 
-export type Atom = string | number | BoolAtom
-export type BoolAtom = boolean | NilAtom
 export type NilAtom = null | undefined
+export type ScalarAtom = boolean | number | string
+export type ComplexAtom = {}
+export type Atom = NilAtom | ScalarAtom | ComplexAtom
 
-export type Exp<T> = T | ExpFn<T>
+export type Exp<C extends Ctx, R> = R | ExpFn<C, R>
+export type ExpFn<C extends Ctx, R> = (ctx: C) => R
 
-export interface ExpFn<T> {
-    (): T
-    __expType__: Symbol
+export type Tree = Array<any>
+
+export interface Operator {
+    (ctx: any, ...args: Array<any>): unknown
 }
 
-export type Expression
-    <
-        O extends PropertyKey = PropertyKey,
-        A extends Array<unknown> = Array<any>,
-    >
-    = [O, ...A]
+export interface Ctx {}
 
-export type Operator
-    <
-        A extends Array<unknown> = Array<any>,
-        R = unknown,
-    >
-    = (...args: A) => R
+export interface CtxWithArgs extends Ctx {
+    args: Array<[...Array<unknown>]>
+}
