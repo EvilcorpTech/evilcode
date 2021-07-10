@@ -1,7 +1,6 @@
 import {Query, QueryError} from '@eviljs/web/query.js'
 import {useMountedRef} from './react.js'
-import React from 'react'
-const {createContext, useCallback, useContext, useRef, useState} = React
+import {createContext, useCallback, useContext, useRef, useState} from 'react'
 
 export const QueryContext = createContext<Query>(void undefined as any)
 

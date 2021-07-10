@@ -1,6 +1,5 @@
 import {asArray} from '@eviljs/std/type.js'
-import React from 'react'
-const {useEffect} = React
+import {useEffect} from 'react'
 
 export function useKey(key: Key, handler: KeyHandler, options?: UseKeyOptions) {
     const keys = asArray(key)

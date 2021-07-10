@@ -1,7 +1,6 @@
-import React from 'react'
 import {classes} from './react.js'
 
-export const Fragment = React.Fragment
+export {Fragment} from 'react'
 
 export function defineIcon(options: DefineIconProps) {
     const {name, children, className, viewBox, ...otherOptions} = options

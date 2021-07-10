@@ -1,8 +1,7 @@
 import {asArray, isArray, isString} from '@eviljs/std/type.js'
 import {applyStyles} from '@eviljs/web/animation.js'
-import React, {CSSProperties} from 'react'
+import {useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState, cloneElement, Fragment, Children, CSSProperties} from 'react'
 import {classes} from './react.js'
-const {useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState, cloneElement, Fragment, Children} = React
 
 export let Id = 0
 

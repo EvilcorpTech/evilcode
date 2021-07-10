@@ -1,7 +1,6 @@
+import {useEffect} from 'react'
 import {useI18n} from './i18n.js'
 import {useRouter} from './router.js'
-import React from 'react'
-const {useEffect} = React
 
 export const BaseLocaleRegexp = new RegExp(`/([a-zA-Z]{2})(?:/|$)`)
 

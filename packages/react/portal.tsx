@@ -1,7 +1,5 @@
-import React from 'react'
-import ReactDOM from 'react-dom'
-const {createElement, createContext, memo, useContext, useEffect, useMemo, useRef, useState} = React
-const {createPortal} = ReactDOM
+import {createElement, createContext, memo, useContext, useEffect, useMemo, useRef, useState} from 'react'
+import {createPortal} from 'react-dom'
 
 export const PortalContext = createContext<null | PortalElement>(null)
 

@@ -1,6 +1,5 @@
 import {createI18n, I18n as StdI18n, I18nMessages} from '@eviljs/std/i18n.js'
-import React from 'react'
-const {createContext, useContext, useMemo, useState} = React
+import {createContext, useContext, useMemo, useState} from 'react'
 
 export const I18nContext = createContext<I18n>(void undefined as any)
 
@@ -97,12 +96,12 @@ export function I18nProvider(props: I18nProviderProps) {
     return withI18n(props.children, props.i18n)
 }
 
-export function useI18n() {
-    return useContext(I18nContext)
+export function useI18n<I extends I18n>() {
+    return useContext(I18nContext) as I
 }
 
-export function useI18nMsg<T>(compute: I18nMsgsComputer<T>, deps: Array<unknown> = []) {
-    const i18n = useI18n()
+export function useI18nMsg<I extends I18n, T extends {}>(compute: I18nMsgsComputer<I, T>, deps?: Array<unknown>) {
+    const i18n = useI18n<I>()
     const {locale, fallbackLocale, messages} = i18n
 
     const i18nMsg = useMemo(() => {
@@ -110,7 +109,7 @@ export function useI18nMsg<T>(compute: I18nMsgsComputer<T>, deps: Array<unknown>
             ...compute(i18n),
             $i18n: i18n,
         }
-    }, [i18n, locale, fallbackLocale, messages, ...deps])
+    }, [i18n, locale, fallbackLocale, messages, ...(deps ?? [])])
 
     return i18nMsg
 }
@@ -122,15 +121,15 @@ export interface I18nProviderProps {
     i18n: I18n
 }
 
-export interface I18nMsgsComputer<T> {
-    (i18n: I18n): T
+export interface I18nMsgsComputer<I extends I18n, T extends {}> {
+    (i18n: I): T
 }
 
-export interface I18n extends StdI18n, I18nSetters {
+export interface I18n<L extends string = string, K extends string = string> extends StdI18n<L, K>, I18nSetters<L, K> {
 }
 
-export interface I18nSetters {
-    setLocale(value: string): void
-    setFallbackLocale(value: string): void
-    setMessages(value: I18nMessages): void
+export interface I18nSetters<L extends string = string, K extends string = string> {
+    setLocale(value: L): void
+    setFallbackLocale(value: L): void
+    setMessages(value: I18nMessages<L, K>): void
 }

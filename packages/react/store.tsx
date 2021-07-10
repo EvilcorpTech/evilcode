@@ -1,8 +1,7 @@
 import {error, StdError} from '@eviljs/std/error.js'
 import {isFunction} from '@eviljs/std/type.js'
 import {ValueOf} from '@eviljs/std/type.js'
-import React from 'react'
-const {createContext, useContext, useEffect, useRef, useMemo, useReducer} = React
+import {createContext, useContext, useEffect, useRef, useMemo, useReducer} from 'react'
 
 export const StoreContext = createContext<Store<{}, StoreActions<{}>>>(void undefined as any)
 export class InvalidAction extends StdError {}

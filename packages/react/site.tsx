@@ -1,13 +1,12 @@
 import {createI18n, I18n} from '@eviljs/std/i18n.js'
 import {ElementOf, isArray, isObject, ValueOf} from '@eviljs/std/type.js'
-import React from 'react'
+import {useMemo} from 'react'
 import {Transition, TransitionMode} from './animation.js'
 import {useI18n} from './i18n.js'
 import {PropsOf} from './react.js'
 import {withRouteMatches, exact, SwitchRoute, Arg} from './router.js'
 import {TransitionAnimator, TransitionAnimatorEffect} from './animator.js'
 import {RouteArgs} from './route-args.js'
-const {useMemo} = React
 
 export {createRouteMatches, exact, SwitchRoute, withRouteMatches} from './router.js'
 export {TransitionAnimator} from './animator.js'
@@ -347,7 +346,7 @@ export function createDefaultComponent
 }
 
 export function createDefaultTranslate() {
-    const i18n = createI18n({locale: 'en', fallbackLocale: 'en', messages: {}})
+    const i18n = createI18n({locale: 'en', fallbackLocale: 'en', messages: {en: {}}})
     return i18n.translate
 }
 

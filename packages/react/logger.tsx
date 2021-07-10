@@ -1,6 +1,5 @@
 import {Logger} from '@eviljs/std/logger.js'
-import React from 'react'
-const {createContext, useContext} = React
+import {createContext, useContext} from 'react'
 
 export const LoggerContext = createContext<Logger>(void undefined as any)
 

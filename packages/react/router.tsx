@@ -3,8 +3,7 @@ import {asArray, isFunction, isPromise} from '@eviljs/std/type.js'
 import {classes} from './react.js'
 import {compilePattern, exact, regexpFromPattern} from '@eviljs/web/route.js'
 import {createRouter, serializeRouteToString, RouterOptions, RouterParams, RouterRouteParams} from '@eviljs/web/router.js'
-import React, {CSSProperties} from 'react'
-const {createContext, cloneElement, useCallback, useContext, useEffect, useMemo, useRef, useState, Fragment, Children} = React
+import {createContext, cloneElement, useCallback, useContext, useEffect, useMemo, useRef, useState, Fragment, Children, CSSProperties} from 'react'
 
 export {exact, All, Arg, End, Value, Path, PathOpt, PathGlob, Start} from '@eviljs/web/route.js'
 
@@ -330,7 +329,7 @@ export function WhenRoute(props: WhenRouteProps) {
 * </Route>
 */
 export function Route(props: RouteProps) {
-    const {children, elRef, to, params, state, if: guard, activeWhenExact, activeClass, ...otherProps} = props
+    const {children, className, elRef, to, params, state, if: guard, activeWhenExact, activeClass, ...otherProps} = props
     const {link, routeTo, testRoute} = useRouter()
 
     const onClick = useCallback((event: React.MouseEvent) => {
@@ -379,7 +378,7 @@ export function Route(props: RouteProps) {
         <a
             {...otherProps}
             ref={elRef}
-            className={classes(props.className, {
+            className={classes(className, {
                 [activeClass ?? RouteDefaultActiveClass]: isActive,
             })}
             href={to
@@ -394,14 +393,14 @@ export function Route(props: RouteProps) {
 }
 
 export function Link(props: LinkProps) {
-    const {children, to, params, state, ...otherProps} = props
+    const {children, className, to, params, state, ...otherProps} = props
     const isRoute = to?.startsWith('/')
 
     if (isRoute) {
         return (
             <Route
                 {...otherProps}
-                className={classes('link-181232 route', props.className)}
+                className={classes('Link-b705 route', className)}
                 to={to}
                 params={params}
                 state={state}
@@ -415,7 +414,7 @@ export function Link(props: LinkProps) {
         <a
             target="_blank"
             {...otherProps}
-            className={classes('link-181232 external', props.className)}
+            className={classes('Link-b705 link', className)}
             href={to
                 ? serializeRouteToString(to, params)
                 : undefined
@@ -446,7 +445,6 @@ export function renderRouteChildren(
     props: RouteChildrenProps,
     render?: RouteRenderProps['render'],
 ) {
-
     const children: React.ReactNode = isFunction(then)
         ? then(...matches)
         : then

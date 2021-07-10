@@ -1,6 +1,5 @@
 import {Container} from '@eviljs/std/container.js'
-import React from 'react'
-const {createContext, useContext} = React
+import {createContext, useContext} from 'react'
 
 export const ContainerContext = createContext<Container>(void undefined as any)
 

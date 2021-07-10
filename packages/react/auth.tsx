@@ -11,10 +11,9 @@ import {
 import {Cookie} from '@eviljs/web/cookie.js'
 import {throwInvalidResponse} from '@eviljs/web/error.js'
 import {Fetch} from '@eviljs/web/fetch.js'
-import React from 'react'
+import {createContext, useCallback, useContext, useEffect, useState, useMemo} from 'react'
 import {useBusy} from './busy.js'
 import {useIfMounted, useMountedGuard} from './react.js'
-const {createContext, useCallback, useContext, useEffect, useState, useMemo} = React
 
 export const AuthContext = createContext<Auth>(void undefined as any)
 

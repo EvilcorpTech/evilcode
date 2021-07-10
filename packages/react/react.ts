@@ -1,7 +1,6 @@
 import {throwInvalidArgument} from '@eviljs/std/error.js'
 import {isArray, isString, isObject} from '@eviljs/std/type.js'
-import React from 'react'
-const {cloneElement, isValidElement, useEffect, useLayoutEffect, useRef, Children} = React
+import {cloneElement, isValidElement, useEffect, useLayoutEffect, useRef, Children} from 'react'
 
 export {times} from '@eviljs/std/iter.js'
 

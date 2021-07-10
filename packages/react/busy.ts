@@ -1,5 +1,4 @@
-import React from 'react'
-const {useState} = React
+import {useState} from 'react'
 
 export function useBusy(init = 0) {
     const [busy, setBusy] = useState(init)

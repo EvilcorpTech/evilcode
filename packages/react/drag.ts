@@ -15,8 +15,7 @@ import {
     DragResizeOptions,
     DragResizeState,
 } from '@eviljs/web/drag.js'
-import React from 'react'
-const {useCallback, useEffect, useMemo, useRef, useState} = React
+import {useCallback, useEffect, useMemo, useRef, useState} from 'react'
 
 export {asDragPointerEvent} from '@eviljs/web/drag.js'
 export type {DragMoveChange, DragOptions, DragEvent, DragPointerEvent} from '@eviljs/web/drag.js'

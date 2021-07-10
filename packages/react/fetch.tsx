@@ -1,6 +1,5 @@
 import {Fetch} from '@eviljs/web/fetch.js'
-import React from 'react'
-const {createContext, useContext} = React
+import {createContext, useContext} from 'react'
 
 export const FetchContext = createContext<Fetch>(void undefined as any)
 

@@ -1,8 +1,7 @@
 import {createCssTransition, play} from '@eviljs/web/animation.js'
-import React from 'react'
+import {useEffect, useMemo, useState} from 'react'
 import {useMountedGuard} from './react.js'
 import {useRouterTransition} from './router.js'
-const {useEffect, useMemo, useState} = React
 
 export function useRoutedViewLifecycle(routeRe: RegExp) {
     const [viewLifecycle, setViewLifecycle] = useState<ViewLifecycle>('exited')

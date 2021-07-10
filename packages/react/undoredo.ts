@@ -1,6 +1,5 @@
 import {createHistory} from '@eviljs/std/undoredo.js'
-import React from 'react'
-const {useCallback, useMemo, useState} = React
+import {useCallback, useMemo, useState} from 'react'
 
 export function useUndoRedo<S>(initState: S) {
     const [state, setState] = useState(initState)

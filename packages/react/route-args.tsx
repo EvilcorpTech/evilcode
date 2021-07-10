@@ -1,7 +1,6 @@
 import {regexpFromPattern} from '@eviljs/web/route.js'
-import React from 'react'
+import {cloneElement, useMemo, Children, Fragment} from 'react'
 import {useRouter, useRouteMatches} from './router.js'
-const {cloneElement, useMemo, Children, Fragment} = React
 
 export function RouteArgs(props: RouteArgsProps) {
     const {map, from, if: guard, children, ...otherProps} = props
