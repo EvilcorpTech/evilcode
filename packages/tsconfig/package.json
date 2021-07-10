@@ -5,6 +5,9 @@
         "/LICENSE.txt",
         "/*.json"
     ],
+    "peerDependencies": {
+        "typescript": "^4.3"
+    },
     "scripts": {
         "build": ""
     },
