@@ -8,39 +8,6 @@ const Path = require('path')
 const {DefinePlugin} = require('webpack')
 const {BundleAnalyzerPlugin} = require('webpack-bundle-analyzer')
 
-// npm install \
-// @babel/core \
-// @babel/plugin-proposal-nullish-coalescing-operator \
-// @babel/plugin-proposal-numeric-separator \
-// @babel/plugin-proposal-optional-chaining \
-// @babel/plugin-syntax-dynamic-import \
-// @babel/preset-react \
-// @babel/preset-typescript \
-// @babel/runtime \
-// @types/copy-webpack-plugin \
-// @types/css-minimizer-webpack-plugin \
-// @types/mini-css-extract-plugin \
-// @types/webpack-bundle-analyzer \
-// babel-loader \
-// bundle-stats-webpack-plugin \
-// copy-webpack-plugin \
-// css-loader \
-// css-minimizer-webpack-plugin \
-// csso \
-// file-loader \
-// html-webpack-plugin \
-// inspectpack \
-// mini-css-extract-plugin \
-// postcss \
-// postcss-import \
-// postcss-loader \
-// postcss-preset-env \
-// style-loader \
-// terser-webpack-plugin \
-// typescript \
-// webpack \
-// webpack-bundle-analyzer
-
 const DefaultBasePath = ''
 const DefaultBundleName = ''
 
@@ -105,11 +72,11 @@ function createWebpackConfig(projectDir: string, options?: WebpackConfigOptions)
             rules: [
                 {
                     test: /\.tsx?$/,
-                    loader: 'babel-loader',
+                    loader: require.resolve('babel-loader'),
                 },
                 {
                     test: /\.jsx?$/,
-                    loader: 'babel-loader',
+                    loader: require.resolve('babel-loader'),
                 },
                 {
                     test: /\.css$/,
@@ -119,11 +86,11 @@ function createWebpackConfig(projectDir: string, options?: WebpackConfigOptions)
                             options: {},
                         },
                         {
-                            loader: 'css-loader',
+                            loader: require.resolve('css-loader'),
                             options: {sourceMap: false, importLoaders: 1},
                         },
                         {
-                            loader: 'postcss-loader',
+                            loader: require.resolve('postcss-loader'),
                             options: {sourceMap: false},
                         },
                     ],
