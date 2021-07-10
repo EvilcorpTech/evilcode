@@ -1,6 +1,5 @@
 import {classes} from '@eviljs/react/react.js'
-import React from 'react'
-const {useState, useRef, useLayoutEffect, useMemo} = React
+import {useState, useRef, useLayoutEffect, useMemo} from 'react'
 
 import './v1.css'
 
@@ -10,7 +9,7 @@ export const InputType = {
 } as const
 
 export function Input(props: InputProps) {
-    const {type, label, placeholder, value, autoComplete, autoFocus, tabIndex, onChange, ...otherProps} = props
+    const {className, type, label, placeholder, value, autoComplete, autoFocus, tabIndex, onChange, ...otherProps} = props
     const [focus, setFocus] = useState(false)
     const [translateY, setTranslateY] = useState(0)
     const fieldRef = useRef<HTMLDivElement>(null)
@@ -43,7 +42,7 @@ export function Input(props: InputProps) {
         <div
             {...otherProps}
             ref={fieldRef}
-            className={classes('Input-i7ee', props.className, {
+            className={classes('Input-i7ee', className, {
                 focus, placeholder: labelPlaceholder,
             })}
             onClick={() =>

@@ -1,11 +1,12 @@
 import {classes} from '@eviljs/react/react'
-import React from 'react'
 
 export function ExampleIcon(props: ExampleIconProps) {
+    const {className, ...otherProps} = props
+
     return (
         <svg
-            {...props}
-            className={classes('std-icon', props.className)}
+            {...otherProps}
+            className={classes('std-icon', className)}
             version="1.1"
             xmlns="http://www.w3.org/2000/svg"
             viewBox="0 0 24 24"

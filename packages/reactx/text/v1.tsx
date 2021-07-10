@@ -1,11 +1,10 @@
 import {asArray, isString} from '@eviljs/std/type.js'
 import {useI18n} from '@eviljs/react/i18n.js'
 import {classes} from '@eviljs/react/react.js'
-import React from 'react'
-const {createElement, Fragment, Children} = React
+import {createElement, Fragment, Children} from 'react'
 
 export function Text(props: TextProps) {
-    const {children, tag = 'p', ...otherProps} = props
+    const {children, className, tag = 'p', ...otherProps} = props
     const {translate} = useI18n()
 
     if (! children || Children.count(children) === 0) {
@@ -18,7 +17,7 @@ export function Text(props: TextProps) {
                 createElement(tag, {
                     ...otherProps,
                     key: idx,
-                    className: classes('text-cea2a3', props.className),
+                    className: classes('text-cea2a3', className),
                     children: isString(it)
                         ? translate(it)
                         : it

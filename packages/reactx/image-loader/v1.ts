@@ -1,5 +1,4 @@
-import React from 'react'
-const {useEffect, useRef} = React
+import {useEffect, useRef} from 'react'
 
 export function ImageLoader(props: ImageLoaderProps) {
     const {items} = props

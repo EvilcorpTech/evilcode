@@ -1,7 +1,6 @@
 import {classes} from '@eviljs/react/react.js'
-import React from 'react'
+import {cloneElement} from 'react'
 import {Button, ButtonProps} from '../button/v1.js'
-const {cloneElement} = React
 
 import './v1.css'
 

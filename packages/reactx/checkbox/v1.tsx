@@ -1,18 +1,17 @@
 import {classes} from '@eviljs/react/react.js'
-import React from 'react'
-const {cloneElement, isValidElement} = React
+import {cloneElement, isValidElement} from 'react'
 
 import './v1.css'
 
 export function Checkbox(props: CheckboxProps) {
-    const {children, checked, disabled, onChange, ...otherProps} = props
+    const {className, children, checked, disabled, onChange, ...otherProps} = props
     const enabled = ! disabled
 
     return (
         <button
             tabIndex={0}
             {...otherProps}
-            className={classes('Checkbox-16ba std-button', props.className)}
+            className={classes('Checkbox-16ba std-button', className)}
             role="checkbox"
             aria-checked={
                 checked === 'mixed'

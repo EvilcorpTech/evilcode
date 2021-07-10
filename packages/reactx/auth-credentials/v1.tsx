@@ -1,10 +1,9 @@
 import {useAuth} from '@eviljs/react/auth.js'
 import {classes} from '@eviljs/react/react.js'
-import React, {FormHTMLAttributes} from 'react'
+import {useCallback, useMemo, useState} from 'react'
 import {Button} from '../button/v1.js'
 import {Spinner} from '../spinner/v1.js'
 import {Input} from '../input/v1.js'
-const {useCallback, useMemo, useState} = React
 
 export function useAuthCredentials() {
     const [credentials, setCredentials] = useState({identifier: '', secret: ''})

@@ -1,6 +1,5 @@
 import {classes} from '@eviljs/react/react.js'
-import React from 'react'
-const {useCallback, useMemo} = React
+import {useCallback, useMemo} from 'react'
 
 import './v1.css'
 

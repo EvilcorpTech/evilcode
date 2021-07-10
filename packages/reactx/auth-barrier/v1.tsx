@@ -1,6 +1,5 @@
 import {useAuth, AuthTokenState} from '@eviljs/react/auth.js'
-import React from 'react'
-const {Fragment} = React
+import {Fragment} from 'react'
 
 export function AuthBarrier(props: AuthBarrierProps) {
     const {children, progress, fallback} = props

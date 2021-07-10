@@ -1,5 +1,5 @@
 import {classes} from '@eviljs/react/react.js'
-import React from 'react'
+import {useState} from 'react'
 import {Accordion} from '../accordion/v1.js'
 import {Button} from '../button/v1.js'
 import {ArmoredButton} from '../button-armored/v1.js'
@@ -18,7 +18,6 @@ import {Spinner as SpinnerV3} from '../spinner/v3.js'
 import {Spinner as SpinnerV4} from '../spinner/v4.js'
 import {Switch} from '../switch/v1.js'
 import {Tooltip} from '../tooltip/v1.js'
-const {useState} = React
 
 import '../input/v1-theme-a.css'
 import '../input/v2-theme-a.css'

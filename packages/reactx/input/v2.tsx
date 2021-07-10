@@ -1,7 +1,6 @@
 import {classes} from '@eviljs/react/react.js'
-import React from 'react'
+import {useRef, useState, Fragment} from 'react'
 import {Button} from '../button/v1.js'
-const {useRef, useState, Fragment} = React
 
 import './v2.css'
 

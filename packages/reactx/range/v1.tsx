@@ -3,13 +3,13 @@ import {distanceBetween} from '@eviljs/std/scale.js'
 import {isNil} from '@eviljs/std/type.js'
 import {useDrag, asDragPointerEvent, DragEvent, DragPointerEvent} from '@eviljs/react/drag.js'
 import {classes} from '@eviljs/react/react.js'
-import React from 'react'
-const {useCallback, useEffect, useMemo, useRef, useState, Fragment} = React
+import {useCallback, useEffect, useMemo, useRef, useState, Fragment} from 'react'
 
 import './v1.css'
 
 export function Range(props: RangeProps) {
     const {
+        className,
         start,
         end,
         startHandle,
@@ -65,7 +65,7 @@ export function Range(props: RangeProps) {
         <div
             {...otherProps}
             ref={refs.region}
-            className={classes('Range-3f03', props.className, {
+            className={classes('Range-3f03', className, {
                 resizing: isResizing,
                 sliding: isSliding,
                 moving: isMoving,

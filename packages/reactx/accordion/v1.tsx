@@ -1,11 +1,10 @@
 import {classes} from '@eviljs/react/react.js'
-import React from 'react'
-const {useEffect, useRef, useState} = React
+import {useEffect, useRef, useState} from 'react'
 
 import './v1.css'
 
 export function Accordion<I>(props: AccordionProps<I>) {
-    const {items, children, header, maxOpen, ...otherProps} = props
+    const {className, items, children, header, maxOpen, ...otherProps} = props
     const sectionsRef = useRef<Array<null | HTMLButtonElement>>([])
     const [selected, setSelected] = useState([0])
     const [focused, setFocused] = useState<null | number>(null)
@@ -36,7 +35,7 @@ export function Accordion<I>(props: AccordionProps<I>) {
     return (
         <ul
             {...otherProps}
-            className={classes('Accordion-c2ae', props.className)}
+            className={classes('Accordion-c2ae', className)}
         >
             {items.map((it, idx) =>
                 <li

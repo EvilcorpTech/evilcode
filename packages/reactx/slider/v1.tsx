@@ -2,8 +2,7 @@ import {clamp} from '@eviljs/std/math.js'
 import {classes} from '@eviljs/react/react.js'
 import {isNil, ValueOf} from '@eviljs/std/type.js'
 import {Transition} from '@eviljs/react/animation.js'
-import React from 'react'
-const {useCallback, useEffect, useState} = React
+import {useCallback, useEffect, useState} from 'react'
 
 import './v1.css'
 
@@ -56,12 +55,12 @@ export function Slider(props: SliderProps) {
 }
 
 export function Slide(props: SlideProps) {
-    const {children, ...otherProps} = props
+    const {children, className, ...otherProps} = props
 
     return (
         <div
             {...otherProps}
-            className={classes('Slide-0eab std-layer', props.className)}
+            className={classes('Slide-0eab std-layer', className)}
         >
             {children}
         </div>
