@@ -1,0 +1,38 @@
+#!/usr/bin/env bash
+
+# Commits changes, bumps up package version and publishes it.
+#
+# EXAMPLE
+# PublishVersion=minor ./release ./packages/std
+
+set -e # errexit
+set -u # nounset
+
+ProjectDir="$(cd "$(dirname "$0")/.." && pwd)"
+
+: ${Git:=git}
+: ${Npm:=npm}
+
+for pkg; do (
+        if test ! -e "$pkg"; then
+                echo "Package '$pkg' not found."
+                exit 1
+        fi
+
+        case "$pkg" in
+                /*) cd "$pkg";;
+                *) cd "$PWD/$pkg";;
+        esac
+
+        pkg_name=$(basename "$pkg")
+
+        $Git add --all .
+        $Git commit --message "($pkg_name) MESSAGE" --edit
+
+        "$ProjectDir/tools/publish" "$PWD"
+
+        pkg_version=$(npm pkg get version | tr -d '"')
+
+        $Git add --all .
+        $Git commit --message "($pkg_name) v$pkg_version"
+) done
