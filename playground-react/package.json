@@ -13,6 +13,7 @@
         "@eviljs/stylex": "^1",
         "@eviljs/tsconfig": "^1",
         "@eviljs/web": "^1",
+        "@eviljs/webx": "^1",
         "@eviljs/webpack-config-react": "^1",
         "@types/prop-types": "^15",
         "@types/react": "^17",

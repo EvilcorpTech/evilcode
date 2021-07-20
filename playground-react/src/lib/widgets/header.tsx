@@ -1,12 +1,16 @@
 import {classes} from '@eviljs/react/react'
 import {Route} from '@eviljs/react/router'
+import * as Routes from '../routes'
 
 import './header.css'
 
-const Routes = [
-    {to: '/', message: 'Home'},
-    {to: '/ui', message: 'Ui'},
-    {to: '/admin', message: 'Admin'},
+const Menu = [
+    {to: Routes.RootRoute.path(), message: 'Home'},
+    {to: Routes.ThemeRoute.path(), message: 'Theme'},
+    {to: Routes.WidgetsRoute.path(), message: 'Widgets'},
+    {to: Routes.LabRoute.path(), message: 'Lab'},
+    {to: Routes.AdminRoute.path(), message: 'Admin'},
+    {to: '/arg/123', message: 'Arg'},
 ]
 
 export function Header(props: HeaderProps) {
@@ -19,7 +23,7 @@ export function Header(props: HeaderProps) {
         >
             <nav>
                 <ul className="std-flex align-center">
-                    {Routes.map((it, idx) =>
+                    {Menu.map((it, idx) =>
                         <li
                             key={idx}
                             className="item-ac64"

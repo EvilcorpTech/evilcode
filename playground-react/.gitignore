@@ -1,2 +1,4 @@
+.tsbuildinfo
 /build/
-/node_modules/
+/env.sh
+node_modules
