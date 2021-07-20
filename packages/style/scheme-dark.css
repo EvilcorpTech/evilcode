@@ -9,10 +9,10 @@
     --std-color-front1: hsl(0, 0%, 95%);
     --std-color-front2: hsl(0, 0%, 87%);
     --std-color-front3: hsl(0, 0%, 64%);
-    --std-color-back1: hsl(var(--std-color-primary-h), 15%, 15%);
-    --std-color-back2: hsl(var(--std-color-primary-h), 15%, 13%);
-    --std-color-back3: hsl(var(--std-color-primary-h), 15%, 10%);
-    --std-color-back4: hsl(var(--std-color-primary-h), 15%, 6%);
+    --std-color-back1: hsl(0, 15%, 9%);
+    --std-color-back2: hsl(0, 15%, 11%);
+    --std-color-back3: hsl(0, 15%, 13%);
+    --std-color-back4: hsl(0, 15%, 15%);
 
     --std-color-primary-front1: hsl(var(--std-color-primary-h), var(--std-color-primary-s), 70%);
     --std-color-primary-front2: hsl(var(--std-color-primary-h), var(--std-color-primary-s), 60%);
