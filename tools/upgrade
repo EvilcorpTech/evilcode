@@ -14,17 +14,19 @@ ProjectDir="$(cd "$(dirname "$0")/.." && pwd)"
 : ${NpmUpgrade:=npx npm-upgrade}
 : ${NpmUpgradeArgs:=}
 
-for pkg; do (
-        if test ! -e "$pkg"; then
-                echo "Package '$pkg' not found."
-                exit 1
+for pkg; do
+        if test ! -e "$pkg/package.json"; then
+                echo "Invalid package '$pkg'. Skipping"
+                continue
         fi
 
-        case "$pkg" in
-                /*) cd "$pkg";;
-                *) cd "$PWD/$pkg";;
-        esac
+        (
+                case "$pkg" in
+                        /*) cd "$pkg";;
+                        *) cd "$PWD/$pkg";;
+                esac
 
-        set -- $NpmUpgradeArgs
-        $NpmUpgrade "$@"
-) done
+                set -- $NpmUpgradeArgs
+                $NpmUpgrade "$@"
+        )
+done

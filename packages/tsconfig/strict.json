@@ -1,6 +1,7 @@
 {
     "compilerOptions": {
         "alwaysStrict": true,
+        // "exactOptionalPropertyTypes": true,
         "forceConsistentCasingInFileNames": true,
         "noEmitOnError": true,
         "noErrorTruncation": true,
@@ -16,6 +17,7 @@
         "strictBindCallApply": true,
         "strictFunctionTypes": true,
         "strictNullChecks": true,
-        "strictPropertyInitialization": true
+        "strictPropertyInitialization": true,
+        // "useUnknownInCatchVariables": true
     }
 }

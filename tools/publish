@@ -17,21 +17,23 @@ ProjectDir="$(cd "$(dirname "$0")/.." && pwd)"
 : ${NpmPublishCmd:=publish}
 : ${NpmPublishArgs:=--access public}
 
-for pkg; do (
-        if test ! -e "$pkg"; then
-                echo "Package '$pkg' not found."
-                exit 1
+for pkg; do
+        if test ! -e "$pkg/package.json"; then
+                echo "Invalid package '$pkg'. Skipping"
+                continue
         fi
 
-        case "$pkg" in
-                /*) cd "$pkg";;
-                *) cd "$PWD/$pkg";;
-        esac
+        (
+                case "$pkg" in
+                        /*) cd "$pkg";;
+                        *) cd "$PWD/$pkg";;
+                esac
 
-        set -- $NpmVersionCmd $NpmVersionArgs $PublishVersion
-        $Npm "$@"
-        printf -- 'Press Enter to continue'
-        read answer
-        set -- $NpmPublishCmd $NpmPublishArgs
-        $Npm "$@"
-) done
+                set -- $NpmVersionCmd $NpmVersionArgs $PublishVersion
+                $Npm "$@"
+                printf -- 'Press Enter to continue'
+                read answer
+                set -- $NpmPublishCmd $NpmPublishArgs
+                $Npm "$@"
+        )
+done

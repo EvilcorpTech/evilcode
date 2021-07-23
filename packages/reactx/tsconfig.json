@@ -3,9 +3,5 @@
     "include": ["./**/*.ts", "./**/*.tsx"],
     "exclude": ["./**/*.d.ts", "node_modules"],
     "compilerOptions": {
-        "outDir": ".",
-        "rootDir": ".",
-        "declarationDir": ".",
-        "tsBuildInfoFile": ".tsbuildinfo",
     },
 }

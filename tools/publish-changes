@@ -13,26 +13,28 @@ ProjectDir="$(cd "$(dirname "$0")/.." && pwd)"
 : ${Git:=git}
 : ${Npm:=npm}
 
-for pkg; do (
-        if test ! -e "$pkg"; then
-                echo "Package '$pkg' not found."
-                exit 1
+for pkg; do
+        if test ! -e "$pkg/package.json"; then
+                echo "Invalid package '$pkg'. Skipping"
+                continue
         fi
 
-        case "$pkg" in
-                /*) cd "$pkg";;
-                *) cd "$PWD/$pkg";;
-        esac
+        (
+                case "$pkg" in
+                        /*) cd "$pkg";;
+                        *) cd "$PWD/$pkg";;
+                esac
 
-        pkg_name=$(basename "$pkg")
+                pkg_name=$(basename "$pkg")
 
-        $Git add --all .
-        $Git commit --message "($pkg_name) MESSAGE" --edit
+                $Git add --all .
+                $Git commit --message "($pkg_name) MESSAGE" --edit
 
-        "$ProjectDir/tools/publish" "$PWD"
+                "$ProjectDir/tools/publish" "$PWD"
 
-        pkg_version=$(npm pkg get version | tr -d '"')
+                pkg_version=$(npm pkg get version | tr -d '"')
 
-        $Git add --all .
-        $Git commit --message "($pkg_name) v$pkg_version"
-) done
+                $Git add --all .
+                $Git commit --message "($pkg_name) v$pkg_version"
+        )
+done

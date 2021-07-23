@@ -5,21 +5,36 @@ set -u # nounset
 
 ProjectDir="$(cd "$(dirname "$0")/.." && pwd)"
 
+: ${Git:=git}
+: ${GitCleanForce:=--dry-run}
+: ${GitCleanArgs:=-X}
+
 for pkg; do
-        if test ! -e "$pkg"; then
+        if test ! -e "$pkg/package.json"; then
+                echo "Invalid package '$pkg'. Skipping"
                 continue
         fi
 
-        echo "Cleaning $(basename "$pkg")..."
+        (
+                case "$pkg" in
+                        /*) cd "$pkg";;
+                        *) cd "$PWD/$pkg";;
+                esac
 
-        rm -rf "$pkg/node_modules" || true
-        rm -fv "$pkg/package-lock.json" || true
-        rm -fv "$pkg/.tsbuildinfo" || true
+                echo "Cleaning $(basename "$pkg")..."
 
-        find "$pkg" \
-                \( -iname "*.js" -or -iname "*.jsx"\) \
-                -not -ipath "*/node_modules/*" \
-                -exec rm -v "{}" + \
-                2> /dev/null \
-                || true
+                set -- $GitCleanForce $GitCleanArgs
+                $Git clean "$@" .
+
+                # rm -rf "$pkg/node_modules" || true
+                # rm -fv "$pkg/package-lock.json" || true
+                # rm -fv "$pkg/.tsbuildinfo" || true
+                #
+                # find "$pkg" \
+                #         \( -iname "*.js" -or -iname "*.jsx"\) \
+                #         -not -ipath "*/node_modules/*" \
+                #         -exec rm -v "{}" + \
+                #         2> /dev/null \
+                #         || true
+        )
 done
