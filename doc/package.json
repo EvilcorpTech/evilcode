@@ -1,0 +1,40 @@
+{
+    "name": "doc",
+    "version": "1.0.0",
+    "workspaces": [
+        "../packages/std",
+        "../packages/style",
+        "../packages/stylex",
+        "../packages/vue",
+        "../packages/web",
+        "../packages/webx",
+        "../packages/tsconfig",
+        "../packages/webpack-config-react"
+    ],
+    "dependencies": {
+        "@eviljs/std": "^1",
+        "@eviljs/style": "^1",
+        "@eviljs/stylex": "^1",
+        "@eviljs/vue": "^1",
+        "@eviljs/web": "^1",
+        "@eviljs/webx": "^1",
+        "vue": "^3.1"
+    },
+    "devDependencies": {
+        "@eviljs/tsconfig": "^1",
+        "@vitejs/plugin-vue": "^1",
+        "@vue/compiler-sfc": "^3.1",
+        "typescript": "^4.2",
+        "vite": "^2",
+        "vue-tsc": "^0"
+    },
+    "scripts": {
+        "dev": "vite",
+        "serve": "vite preview",
+        "build": "vue-tsc --noEmit && vite build"
+    },
+    "engines": {
+        "node": ">= 12",
+        "npm": ">= 7"
+    }
+}

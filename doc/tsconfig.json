@@ -1,0 +1,10 @@
+{
+    "extends": "../packages/tsconfig/web.json",
+    "include": ["src/**/*.ts", "src/**/*.tsx", "src/**/*.vue"],
+    "compilerOptions": {
+        "jsx": "preserve",
+        "sourceMap": true,
+        "incremental": false, // Not supported yet.
+        "types": ["vite/client"],
+    },
+}

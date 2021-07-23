@@ -1,0 +1,27 @@
+@import '@eviljs/style/reset.css';
+@import '@eviljs/style/reset/even/focus-outline.css';
+@import '@eviljs/style/all.classes.css';
+@import '@eviljs/style/all.props.css';
+@import '@eviljs/style/scheme-dark.css';
+@import '@eviljs/style/scheme-light.css';
+@import '@eviljs/style/font-roboto.css';
+@import '@eviljs/stylex/button/v1.css';
+@import '@eviljs/stylex/button/v1-dye.css';
+@import '@eviljs/stylex/button/v1-flat.css';
+@import '@eviljs/stylex/button/v1-halo.css';
+@import '@eviljs/stylex/button/v1-plain.css';
+
+/*
+#App {
+}
+*/
+
+:root,
+.std-theme {
+    --std-color-primary-h: 250;
+    --std-color-primary-s: 70%;
+    --std-color-primary-l: 60%;
+    --std-color-secondary-h: 0;
+    --std-color-secondary-s: 55%;
+    --std-color-secondary-l: 50%;
+}
