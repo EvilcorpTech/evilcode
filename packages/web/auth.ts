@@ -1,6 +1,6 @@
-import {asJsonOptions, Fetch, FetchRequestMethod, mergeOptions, FetchRequestOptions} from './fetch.js'
 import {isFunction, isObject} from '@eviljs/std/type.js'
-import {throwInvalidResponse} from './error.js'
+import {asJsonOptions, Fetch, FetchRequestMethod, mergeOptions, FetchRequestOptions} from './fetch.js'
+import {throwInvalidResponse} from './throw.js'
 
 export const DefaultUrl = '/auth'
 export const DefaultOptions: FetchRequestOptions = {}

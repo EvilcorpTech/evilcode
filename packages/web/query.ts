@@ -1,7 +1,7 @@
 import {encodeParams, QueryRulesHeader, QueryParams, QueryRules} from '@eviljs/std/query.js'
 import {Fetch, FetchRequestMethod, FetchRequestOptions, formatResponse} from './fetch.js'
 
-export {throwInvalidResponse} from './error.js'
+export {throwInvalidResponse} from './throw.js'
 
 export function createQuery(fetch: Fetch) {
     const self: Query = {
@@ -33,7 +33,7 @@ export function createQuery(fetch: Fetch) {
     return self
 }
 
-export async function query(fetch: Fetch, method: QueryRequestMethod, path: string, options?: QueryRequestOptions) {
+export async function query(fetch: Fetch, method: QueryRequestMethod, path: string, options?: undefined | QueryRequestOptions) {
     let requestArgs = [path, options] as const
     requestArgs = setupQueryParams(...requestArgs)
     requestArgs = setupQueryRules(...requestArgs)
@@ -48,7 +48,7 @@ export async function query(fetch: Fetch, method: QueryRequestMethod, path: stri
     return content
 }
 
-export function setupQueryParams(path: string, options?: QueryRequestOptions) {
+export function setupQueryParams(path: string, options?: undefined | QueryRequestOptions) {
     const paramsString = encodeParams(options?.params)
 
     if (! paramsString) {
@@ -63,7 +63,7 @@ export function setupQueryParams(path: string, options?: QueryRequestOptions) {
     return [pathWithParams, options] as const
 }
 
-export function setupQueryRules(path: string, options?: QueryRequestOptions) {
+export function setupQueryRules(path: string, options?: undefined | QueryRequestOptions) {
     const rules = options?.rules
 
     if (! rules) {
@@ -92,16 +92,16 @@ export function setupQueryRules(path: string, options?: QueryRequestOptions) {
 
 export interface Query {
     baseUrl: string
-    request<T = unknown>(method: FetchRequestMethod, path: string, options?: QueryRequestOptions): Promise<T>
-    get<T = unknown>(path: string, options?: QueryRequestOptions): Promise<T>
-    post<T = unknown>(path: string, options?: QueryRequestOptions): Promise<T>
-    put<T = unknown>(path: string, options?: QueryRequestOptions): Promise<T>
-    delete<T = unknown>(path: string, options?: QueryRequestOptions): Promise<T>
+    request<T = unknown>(method: FetchRequestMethod, path: string, options?: undefined | QueryRequestOptions): Promise<T>
+    get<T = unknown>(path: string, options?: undefined | QueryRequestOptions): Promise<T>
+    post<T = unknown>(path: string, options?: undefined | QueryRequestOptions): Promise<T>
+    put<T = unknown>(path: string, options?: undefined | QueryRequestOptions): Promise<T>
+    delete<T = unknown>(path: string, options?: undefined | QueryRequestOptions): Promise<T>
 }
 
 export interface QueryRequestOptions extends FetchRequestOptions {
-    params?: QueryParams
-    rules?: QueryRules
+    params?: undefined | QueryParams
+    rules?: undefined | QueryRules
 }
 
 export type QueryRequestMethod = FetchRequestMethod

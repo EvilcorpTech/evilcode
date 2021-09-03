@@ -20,11 +20,11 @@ export const ContentType = {
     Url: UrlType,
 } as const
 
-export function createFetch(options?: FetchOptions) {
+export function createFetch(options?: undefined | FetchOptions) {
     const self: Fetch = {
         baseUrl: asBaseUrl(options?.baseUrl),
 
-        request(method: FetchRequestMethod, path: string, options?: FetchRequestOptions) {
+        request(method: FetchRequestMethod, path: string, options?: undefined | FetchRequestOptions) {
             const url = path.startsWith('/')
                 ? `${self.baseUrl}${path}`
                 : path
@@ -52,7 +52,7 @@ export function createFetch(options?: FetchOptions) {
     return self
 }
 
-export function asBaseUrl(url?: string) {
+export function asBaseUrl(url?: undefined | string) {
     if (! url) {
         return ''
     }
@@ -115,7 +115,7 @@ export function asJsonOptions(body: unknown): FetchRequestOptions {
         },
         body: body
             ? JSON.stringify(body)
-            : void undefined
+            : null
         ,
     }
 
@@ -144,16 +144,16 @@ export function formatResponse(response: Response) {
 
 export interface Fetch {
     baseUrl: string
-    request(method: FetchRequestMethod, path: string, options?: FetchRequestOptions): ReturnType<typeof fetch>
-    get(path: string, options?: FetchRequestOptions): ReturnType<typeof fetch>
-    post(path: string, options?: FetchRequestOptions): ReturnType<typeof fetch>
-    put(path: string, options?: FetchRequestOptions): ReturnType<typeof fetch>
-    patch(path: string, options?: FetchRequestOptions): ReturnType<typeof fetch>
-    delete(path: string, options?: FetchRequestOptions): ReturnType<typeof fetch>
+    request(method: FetchRequestMethod, path: string, options?: undefined | FetchRequestOptions): ReturnType<typeof fetch>
+    get(path: string, options?: undefined | FetchRequestOptions): ReturnType<typeof fetch>
+    post(path: string, options?: undefined | FetchRequestOptions): ReturnType<typeof fetch>
+    put(path: string, options?: undefined | FetchRequestOptions): ReturnType<typeof fetch>
+    patch(path: string, options?: undefined | FetchRequestOptions): ReturnType<typeof fetch>
+    delete(path: string, options?: undefined | FetchRequestOptions): ReturnType<typeof fetch>
 }
 
 export interface FetchOptions {
-    baseUrl?: string
+    baseUrl?: undefined | string
 }
 
 export type FetchRequestMethod = ValueOf<typeof FetchRequestMethod>

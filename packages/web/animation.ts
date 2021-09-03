@@ -1,5 +1,5 @@
 import {isArray, isFunction, isObject} from '@eviljs/std/type.js'
-import {throwInvalidArgument} from '@eviljs/std/error.js'
+import {throwInvalidArgument} from '@eviljs/std/throw.js'
 import {directionOf, distanceBetween, createLinearScale} from '@eviljs/std/scale.js'
 
 export const SpringPrecision = 200

@@ -16,7 +16,7 @@ export function createRouter<S>(observer: RouterObserver, options?: RouterOption
     }
 }
 
-export function createHashRouter<S>(observer: RouterObserver, options?: RouterOptions): Router<S> {
+export function createHashRouter<S>(observer: RouterObserver, options?: RouterBaseOptions): Router<S> {
     const self = {
         start() {
             window.addEventListener('hashchange', onRouteChange)
@@ -64,7 +64,7 @@ export function createHashRouter<S>(observer: RouterObserver, options?: RouterOp
     return self
 }
 
-export function createPathRouter<S>(observer: RouterObserver, options?: RouterOptions): Router<S> {
+export function createPathRouter<S>(observer: RouterObserver, options?: RouterBaseOptions): Router<S> {
     const basePath = asBaseUrl(options?.basePath)
 
     const self = {
@@ -108,7 +108,7 @@ export function createPathRouter<S>(observer: RouterObserver, options?: RouterOp
     return self
 }
 
-export function createMemoryRouter<S>(observer: RouterObserver, options?: RouterOptions): Router<S> {
+export function createMemoryRouter<S>(observer: RouterObserver, options?: RouterBaseOptions): Router<S> {
     let routePath = options?.initMemory ?? '/'
     let routeSearch = ''
     let routeState: S | null | undefined = null
@@ -203,10 +203,13 @@ export interface RouterObserver<S = any> {
     (route: string, params: RouterRouteParams, state: S): void
 }
 
-export interface RouterOptions {
-    type?: 'hash' | 'path' | 'memory'
+export interface RouterBaseOptions {
     basePath?: string
     initMemory?: string
+}
+
+export interface RouterOptions extends RouterBaseOptions {
+    type?: 'hash' | 'path' | 'memory'
 }
 
 export type RouterParams =

@@ -1,5 +1,5 @@
 import {wait} from '@eviljs/std/async.js'
-import {StdError} from '@eviljs/std/error.js'
+import {StdError} from '@eviljs/std/throw.js'
 import {randomInt} from '@eviljs/std/random.js'
 import {createFetch, Fetch, FetchRequestMethod, FetchRequestOptions, JsonType} from './fetch.js'
 

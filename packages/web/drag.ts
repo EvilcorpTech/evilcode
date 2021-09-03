@@ -52,7 +52,7 @@ export function attachDragListeners(el: DragElement, listeners: DragListeners) {
 
 export const MoveDefaultStrategy = 'transform'
 
-export function initMoveState(element: DragMoveElement, event: DragEvent, options?: DragMoveOptions<DragMoveElement>): DragMoveState<DragMoveElement, DragMoveElement> {
+export function initMoveState(element: DragMoveElement, event: DragEvent, options?: undefined | DragMoveOptions<DragMoveElement>): DragMoveState<DragMoveElement, DragMoveElement> {
     const strategy = (element instanceof SVGGraphicsElement)
         ? 'svg'
         : (options?.strategy ?? MoveDefaultStrategy)
@@ -76,7 +76,7 @@ export function initMoveState(element: DragMoveElement, event: DragEvent, option
     }
 }
 
-export function initMoveAbsoluteState(el: HTMLElement, event: DragEvent, options?: DragMoveOptions<HTMLElement>) {
+export function initMoveAbsoluteState(el: HTMLElement, event: DragEvent, options?: undefined | DragMoveOptions<HTMLElement>) {
     const initialLeft = el.offsetLeft
     const initialTop = el.offsetTop
     const minLeft = options?.minLeft ?? (options?.bound
@@ -100,7 +100,7 @@ export function initMoveAbsoluteState(el: HTMLElement, event: DragEvent, options
     return {initialLeft, initialTop, minLeft, maxLeft, minTop, maxTop, moveRatio}
 }
 
-export function initMoveTransformState(el: HTMLElement, event: DragEvent, options?: DragMoveOptions<HTMLElement>) {
+export function initMoveTransformState(el: HTMLElement, event: DragEvent, options?: undefined | DragMoveOptions<HTMLElement>) {
     const [translateX, translateY] = getComputedTransform(el).slice(-2)
     const initialLeft = translateX ?? 0
     const initialTop = translateY ?? 0
@@ -127,7 +127,7 @@ export function initMoveTransformState(el: HTMLElement, event: DragEvent, option
     return {initialLeft, initialTop, minLeft, maxLeft, minTop, maxTop, moveRatio}
 }
 
-export function initMoveSvgState(el: SVGGraphicsElement, event: DragEvent, options?: DragMoveOptions<SVGGraphicsElement>) {
+export function initMoveSvgState(el: SVGGraphicsElement, event: DragEvent, options?: undefined | DragMoveOptions<SVGGraphicsElement>) {
     const svg = el.ownerSVGElement!
     const moveRatio =
         (svg.viewBox.baseVal.width || svg.clientWidth)
@@ -232,7 +232,7 @@ export function moveSvg(state: DragMoveState<SVGGraphicsElement, SVGGraphicsElem
 }
 
 export function computeMove(state: DragMoveState<DragMoveElement, DragMoveElement>, event: DragEvent): DragMoveChange {
-    const size = {
+    const size: DragMoveChange = {
         left: state.horizontal
             ? computeMoveHorizontal(state, event)
             : undefined
@@ -309,7 +309,7 @@ export function getComputedTransform(el: HTMLElement) {
 
 // Resize //////////////////////////////////////////////////////////////////////
 
-export function initResizeState(element: DragResizeElement, event: DragEvent, options?: DragResizeOptions): DragResizeState {
+export function initResizeState(element: DragResizeElement, event: DragEvent, options?: undefined | DragResizeOptions): DragResizeState {
     const horizontalDirection =
         (options?.horizontal === 'forward')
             ? 1
@@ -360,7 +360,7 @@ export function resize(state: DragResizeState, event: DragEvent) {
 }
 
 export function computeResize(state: DragResizeState, event: DragEvent): DragResizeChange {
-    const size = {
+    const size: DragResizeChange = {
         width: state.horizontalDirection
             ? computeResizeHorizontal(state, event)
             : undefined
@@ -430,23 +430,23 @@ export interface DragOptions {
 }
 
 export interface DragMoveOptions<B extends DragMoveElement> extends DragOptions {
-    strategy?: Exclude<DragMoveStrategy, 'svg'>
-    horizontal?: boolean
-    vertical?: boolean
-    bound?: B | null
-    minLeft?: number
-    maxLeft?: number
-    minTop?: number
-    maxTop?: number
+    strategy?: undefined | Exclude<DragMoveStrategy, 'svg'>
+    horizontal?: undefined | boolean
+    vertical?: undefined | boolean
+    bound?: undefined | null | B
+    minLeft?: undefined | number
+    maxLeft?: undefined | number
+    minTop?: undefined | number
+    maxTop?: undefined | number
 }
 
 export interface DragResizeOptions extends DragOptions {
-    horizontal?: 'forward' | 'backward'
-    vertical?: 'forward' | 'backward'
-    minWidth?: number
-    maxWidth?: number
-    minHeight?: number
-    maxHeight?: number
+    horizontal?: undefined | 'forward' | 'backward'
+    vertical?: undefined | 'forward' | 'backward'
+    minWidth?: undefined | number
+    maxWidth?: undefined | number
+    minHeight?: undefined | number
+    maxHeight?: undefined | number
 }
 
 export interface DragListeners {
@@ -457,7 +457,7 @@ export interface DragListeners {
 
 export interface DragState<E, O extends DragOptions> {
     readonly element: E
-    readonly options?: O
+    readonly options?: undefined | O
 }
 
 export interface DragMoveState<E extends DragMoveElement, B extends DragMoveElement> extends DragState<E, DragMoveOptions<B>> {
@@ -468,10 +468,10 @@ export interface DragMoveState<E extends DragMoveElement, B extends DragMoveElem
     readonly initialY: number
     readonly initialLeft: number
     readonly initialTop: number
-    readonly minLeft?: number
-    readonly maxLeft?: number
-    readonly minTop?: number
-    readonly maxTop?: number
+    readonly minLeft?: undefined | number
+    readonly maxLeft?: undefined | number
+    readonly minTop?: undefined | number
+    readonly maxTop?: undefined | number
     readonly moveRatio: number
 }
 
@@ -482,20 +482,20 @@ export interface DragResizeState extends DragState<DragResizeElement, DragResize
     readonly initialY: number
     readonly initialWidth: number
     readonly initialHeight: number
-    readonly minWidth?: number
-    readonly maxWidth?: number
-    readonly minHeight?: number
-    readonly maxHeight?: number
+    readonly minWidth?: undefined | number
+    readonly maxWidth?: undefined | number
+    readonly minHeight?: undefined | number
+    readonly maxHeight?: undefined | number
 }
 
 export type DragMoveChange = undefined | {
-    left?: number
-    top?: number
+    left?: undefined | number
+    top?: undefined | number
 }
 
 export type DragResizeChange = undefined | {
-    width?: number
-    height?: number
+    width?: undefined | number
+    height?: undefined | number
 }
 
 export type DragEvent =
