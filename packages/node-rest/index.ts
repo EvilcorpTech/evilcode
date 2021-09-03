@@ -1,8 +1,7 @@
-import {Context, Next} from 'koa'
 import {Logger} from '@eviljs/std/logger.js'
-import {setupRouter, Routes} from './routing.js'
+import {isNumber, isObject} from '@eviljs/std/type.js'
 import Http from 'http'
-import Koa from 'koa'
+import Koa, {Context, Next} from 'koa'
 import KoaBodyParser from 'koa-bodyparser'
 import KoaCompress from 'koa-compress'
 import KoaConditionalGet from 'koa-conditional-get'
@@ -11,6 +10,7 @@ import KoaLogger from 'koa-logger'
 import KoaMount from 'koa-mount'
 import KoaRouter from '@koa/router'
 import KoaStatic from 'koa-static'
+import {setupRouter, Routes} from './routing.js'
 
 export const ApiPath = '/api'
 export const StaticDir = './public'
@@ -36,7 +36,7 @@ export function RestService<C, M>(container: RestContainer<C, M>) {
     return createRest(spec)
 }
 
-export function createRest<T>(spec?: RestSpec<T>) {
+export function createRest<T>(spec?: undefined | RestSpec<T>) {
     process.on('unhandledRejection', createErrorHandler(spec))
 
     const app = createRestApp(spec)
@@ -45,7 +45,7 @@ export function createRest<T>(spec?: RestSpec<T>) {
     return {server, app}
 }
 
-export function createErrorHandler(spec?: RestSpec) {
+export function createErrorHandler(spec?: undefined | RestSpec) {
     const logger = spec?.logger ?? console
 
     function rejectionHandler(reason: any, promise: Promise<any>) {
@@ -55,7 +55,7 @@ export function createErrorHandler(spec?: RestSpec) {
     return rejectionHandler
 }
 
-export function createRestApp<T>(spec?: RestSpec<T>) {
+export function createRestApp<T>(spec?: undefined | RestSpec<T>) {
     const apiPath = spec?.apiPath ?? ApiPath
     const staticDir = spec?.staticDir ?? StaticDir
     const staticOpts = {
@@ -90,7 +90,7 @@ export function createRestApp<T>(spec?: RestSpec<T>) {
     return app
 }
 
-export function createRestServer(app: Koa<any, any>, spec?: RestSpec) {
+export function createRestServer(app: Koa<any, any>, spec?: undefined | RestSpec) {
     const addr = spec?.httpAddr ?? HttpAddr
     const port = spec?.httpPort ?? HttpPort
     const server = Http.createServer(app.callback())
@@ -111,14 +111,18 @@ export function createRestServer(app: Koa<any, any>, spec?: RestSpec) {
     return server
 }
 
-export function createKoaAppErrorMiddleware(spec?: RestSpec) {
+export function createKoaAppErrorMiddleware(spec?: undefined | RestSpec) {
     async function koaErrorMiddleware(ctx: Context, next: Next) {
         try {
             await next()
         }
         catch (error) {
-            ctx.status = error.status ?? 500
-            ctx.body = error.message
+            ctx.status = isObject(error) && isNumber(error.status)
+                ? error.status
+                : 500
+            ctx.body = isObject(error) && isNumber(error.message)
+                ? error.message
+                : ''
             ctx.app.emit('error', error, ctx)
         }
     }
@@ -126,7 +130,7 @@ export function createKoaAppErrorMiddleware(spec?: RestSpec) {
     return koaErrorMiddleware
 }
 
-export function createKoaAppErrorHandler(spec?: RestSpec) {
+export function createKoaAppErrorHandler(spec?: undefined | RestSpec) {
     const logger = spec?.logger ?? console
 
     function koaErrorHandler(error: Error, ctx: Context) {
@@ -142,23 +146,23 @@ export function createKoaAppErrorHandler(spec?: RestSpec) {
 
 export interface RestContainer<C, M> {
     Context?: {
-        REST_ADDR?: string
-        REST_PORT?: string | number
+        REST_ADDR?: undefined | string
+        REST_PORT?: undefined | string | number
     }
-    Logger?: Logger
-    RestSpec?: RestSpec<C, M>
+    Logger?: undefined | Logger
+    RestSpec?: undefined | RestSpec<C, M>
 }
 
 export interface RestSpec<C = any, M = any> {
-    apiPath?: string
-    context?: C
-    httpAddr?: string
-    httpPort?: string | number
-    logger?: Logger
-    maxAge?: number
-    middleware?: RestMiddleware<M>
-    staticDir?: string
+    apiPath?: undefined | string
+    context?: undefined | C
+    httpAddr?: undefined | string
+    httpPort?: undefined | string | number
+    logger?: undefined | Logger
+    maxAge?: undefined | number
+    middleware?: undefined | RestMiddleware<M>
+    staticDir?: undefined | string
 }
 
 export type RestMiddleware<C> = Array<RestMiddlewareFactory<C>>
-export type RestMiddlewareFactory<C> = (spec?: RestSpec<C, C>) => Routes
+export type RestMiddlewareFactory<C> = (spec?: undefined | RestSpec<C, C>) => Routes
