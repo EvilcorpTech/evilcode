@@ -1,8 +1,8 @@
+import {throwInvalidRequest} from '@eviljs/node/throw.js'
 import {Account} from './Account.js'
 import {createSession, CreateSessionServices} from './createSession.js'
 import {Db} from '../index.js'
 import {getAccountByIdentifier} from './getAccountByIdentifier.js'
-import {throwInvalidRequest} from '@eviljs/node/error.js'
 
 export async function createSessionForAccountIdentifier(
     db: Db<CreateSessionForAccountIdentifierServices>,

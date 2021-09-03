@@ -177,8 +177,8 @@ export type Db<S extends DbServices = {}> = {
     url: string
     user: string
 
-    connectionPromise?: Promise<MariaDB.Connection>
-    connection?: MariaDB.Connection
+    connectionPromise?: undefined | Promise<MariaDB.Connection>
+    connection?: undefined | MariaDB.Connection
 
     ready(): Promise<MariaDB.Connection>
     connect(): Promise<MariaDB.Connection>
@@ -189,25 +189,25 @@ export type Db<S extends DbServices = {}> = {
 
 export interface DbContainer<S extends DbServices> {
     Context?: {
-        DB_HOST?: string
-        DB_PORT?: string | number
-        DB_USER?: string
-        DB_PASS?: string
-        DB_NAME?: string
+        DB_HOST?: undefined | string
+        DB_PORT?: undefined | string | number
+        DB_USER?: undefined | string
+        DB_PASS?: undefined | string
+        DB_NAME?: undefined | string
     }
     DbSpec?: DbSpec<S>
     Logger?: Logger
 }
 
 export interface DbSpec<S extends DbServices> {
-    host?: string
-    logger?: Logger
-    name?: string
-    pass?: string
-    port?: string | number
-    retryDelay?: number
-    services?: S
-    user?: string
+    host?: undefined | string
+    logger?: undefined | Logger
+    name?: undefined | string
+    pass?: undefined | string
+    port?: undefined | string | number
+    retryDelay?: undefined | number
+    services?: undefined | S
+    user?: undefined | string
 }
 
 export interface DbServices {

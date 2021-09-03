@@ -21,13 +21,13 @@ export const Session = {
 export type Session = typeof Session
 
 export interface SessionData {
-    id?: number
-    account?: number
-    token?: string
+    id?: undefined | number
+    account?: undefined | number
+    token?: undefined | string
 }
 
 export interface SessionModel {
-    id?: number
-    account?: number
-    token?: string
+    id?: undefined | number
+    account?: undefined | number
+    token?: undefined | string
 }

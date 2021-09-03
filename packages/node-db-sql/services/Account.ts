@@ -25,15 +25,15 @@ export const Account = {
 export type Account = typeof Account
 
 export interface AccountData {
-    id?: number
-    identifier?: string
-    secret_hash?: string
+    id?: undefined | number
+    identifier?: undefined | string
+    secret_hash?: undefined | string
 }
 
 export interface AccountModel {
-    id?: number
-    identifier?: string
-    secretHash?: string
+    id?: undefined | number
+    identifier?: undefined | string
+    secretHash?: undefined | string
 }
 
 export interface AccountFromDataOptions {
