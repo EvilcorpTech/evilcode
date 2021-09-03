@@ -6,8 +6,8 @@ set -u # nounset
 ProjectDir="$(cd "$(dirname "$0")/.." && pwd)"
 
 : ${Git:=git}
-: ${GitCleanForce:=--dry-run}
-: ${GitCleanArgs:=-X}
+: ${GitCleanArgs:=-X --force}
+: ${GitCleanMoreArgs:=}
 
 for pkg; do
         if test ! -e "$pkg/package.json"; then
@@ -23,7 +23,7 @@ for pkg; do
 
                 echo "Cleaning $(basename "$pkg")..."
 
-                set -- $GitCleanForce $GitCleanArgs
+                set -- $GitCleanArgs $GitCleanMoreArgs
                 $Git clean "$@" .
 
                 # rm -rf "$pkg/node_modules" || true

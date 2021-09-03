@@ -1,9 +1,7 @@
-.tsbuildinfo
 .vscode
 *.code-workspace
 *.d.ts
 *.js
 node_modules
 package-lock.json
-private
 tsconfig.tsbuildinfo

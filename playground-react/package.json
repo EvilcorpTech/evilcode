@@ -31,13 +31,13 @@
     "devDependencies": {
         "@eviljs/tsconfig": "^1",
         "@eviljs/webpack-config-react": "^1",
-        "typescript": "^4.2",
+        "typescript": "^4.4",
         "webpack-cli": "^4",
-        "webpack-dev-server": "^3"
+        "webpack-dev-server": "^4"
     },
     "scripts": {
         "init": "npm install",
-        "dev": "NODE_ENV=${NODE_ENV:-development} webpack serve --progress",
+        "dev": "NODE_ENV=${NODE_ENV:-development} webpack-dev-server --progress",
         "check": "tsc --noEmit",
         "build": "npm dedupe --legacy-peer-deps --no-progress --no-fund --no-color && NODE_ENV=production webpack --mode production"
     },

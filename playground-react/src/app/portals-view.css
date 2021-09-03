@@ -1,0 +1,11 @@
+.main-b3bf {
+    padding: var(--std-gutter-m);
+}
+
+.card-8a91 {
+    max-width: var(--size, 20rem);
+    max-height: var(--size, 20rem);
+    margin: auto;
+    border-radius: var(--size, 20rem);
+    overflow: hidden;
+}

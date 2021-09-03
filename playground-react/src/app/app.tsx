@@ -4,11 +4,13 @@ import {withFetch} from '@eviljs/react/fetch'
 import {withI18n} from '@eviljs/react/i18n'
 import {withLogger} from '@eviljs/react/logger'
 import {PortalProvider} from '@eviljs/react/portal'
+import {withPortals} from '@eviljs/react/portals'
 import {withQuery} from '@eviljs/react/query'
 import {Arg, exact, SwitchRoute, withRouter} from '@eviljs/react/router'
 import {withStore} from '@eviljs/react/store'
 import {ThemeView} from '@eviljs/reactx/theme-view/v1'
 import {WidgetsView} from '@eviljs/reactx/widgets-view/v1'
+import {pipe} from '@eviljs/std/pipe'
 import {Fragment} from 'react'
 import {Container} from 'lib/container'
 import {BasePath, RouterType} from 'lib/context'
@@ -20,20 +22,22 @@ import {AdminView} from './admin-view'
 import {AuthView} from './auth-view'
 import {HomeView} from './home-view'
 import {LabView} from './lab-view'
+import {PortalsView} from './portals-view'
 
 export function App(props: AppProps) {
     const {container} = props
 
-    let app = <AppMain/>
-    app = withAuth(app, container.Fetch, container.Cookie)
-    app = withContainer(app, container)
-    app = withFetch(app, container.Fetch)
-    app = withI18n(app, container.I18n)
-    app = withLogger(app, container.Logger)
-    app = withQuery(app, container.Query)
-    app = withRouter(app, {type: RouterType, basePath: BasePath})
-    app = withStore(app, container.StoreSpec)
-    return app
+    return pipe(<AppMain/>)
+    .to(it => withAuth(it, container.Fetch, container.Cookie))
+    .to(it => withContainer(it, container))
+    .to(it => withFetch(it, container.Fetch))
+    .to(it => withI18n(it, container.I18n))
+    .to(it => withLogger(it, container.Logger))
+    .to(it => withPortals(it))
+    .to(it => withQuery(it, container.Query))
+    .to(it => withRouter(it, {type: RouterType, basePath: BasePath}))
+    .to(it => withStore(it, container.StoreSpec))
+    .end()
 }
 
 export function AppMain(props: AppMainProps) {
@@ -57,8 +61,17 @@ export function AppMain(props: AppMainProps) {
                                 <WidgetsView/>
                             </div>
                         },
+                        {is: Routes.PortalsRoute.pattern, then:
+                            <PortalsView/>
+                        },
                         {is: Routes.LabRoute.pattern, then:
                             <LabView/>
+                        },
+                        {is: exact('/arg/' + Arg), then: (id) =>
+                        <div className="std-theme light">
+                                <Header/>
+                                <h1>Route ID {id}</h1>
+                            </div>
                         },
                         {is: Routes.AdminRoute.pattern, then:
                             <AuthBarrier>
@@ -67,9 +80,6 @@ export function AppMain(props: AppMainProps) {
                         },
                         {is: Routes.AuthRoute.pattern, then:
                             <AuthView/>
-                        },
-                        {is: exact('/arg/' + Arg), then: (id) =>
-                            <h1>Route ID {id}</h1>
                         },
                     ]}
                 </SwitchRoute>
