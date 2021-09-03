@@ -1,4 +1,4 @@
-import {throwInvalidArgument} from './error.js'
+import {throwInvalidArgument} from './throw.js'
 import {ValueOf} from './type.js'
 
 export const Level = {
@@ -29,33 +29,33 @@ export function LoggerService(container: LoggerContainer) {
     return createLogger(spec)
 }
 
-export function createLogger(spec?: LoggerSpec) {
+export function createLogger(spec?: undefined | LoggerSpec) {
     const self: LoggerProxy = {
         adapter: spec?.adapter ?? console,
         level: spec?.level ?? DefaultLevel,
         Level,
 
         log(...args) {
-            return log(self, ...args)
+            return logDefault(self, ...args)
         },
         debug(...args) {
-            return debug(self, ...args)
+            return logDebug(self, ...args)
         },
         info(...args) {
-            return info(self, ...args)
+            return logInfo(self, ...args)
         },
         warn(...args) {
-            return warn(self, ...args)
+            return logWarn(self, ...args)
         },
         error(...args) {
-            return error(self, ...args)
+            return logError(self, ...args)
         },
     }
 
     return self
 }
 
-export function log(logger: LoggerProxy, level: Level, ...args: Array<unknown>) {
+export function logDefault(logger: LoggerProxy, level: Level, ...args: Array<unknown>) {
     switch (level) {
         case Level.Debug:
             return logger.debug(...args)
@@ -73,7 +73,7 @@ export function log(logger: LoggerProxy, level: Level, ...args: Array<unknown>) 
     }
 }
 
-export function debug(logger: LoggerProxy, ...args: Array<unknown>) {
+export function logDebug(logger: LoggerProxy, ...args: Array<unknown>) {
     if (logger.level > Level.Debug) {
         return logger
     }
@@ -83,7 +83,7 @@ export function debug(logger: LoggerProxy, ...args: Array<unknown>) {
     return logger
 }
 
-export function info(logger: LoggerProxy, ...args: Array<unknown>) {
+export function logInfo(logger: LoggerProxy, ...args: Array<unknown>) {
     if (logger.level > Level.Info) {
         return logger
     }
@@ -93,7 +93,7 @@ export function info(logger: LoggerProxy, ...args: Array<unknown>) {
     return logger
 }
 
-export function warn(logger: LoggerProxy, ...args: Array<unknown>) {
+export function logWarn(logger: LoggerProxy, ...args: Array<unknown>) {
     if (logger.level > Level.Warn) {
         return logger
     }
@@ -103,7 +103,7 @@ export function warn(logger: LoggerProxy, ...args: Array<unknown>) {
     return logger
 }
 
-export function error(logger: LoggerProxy, ...args: Array<unknown>) {
+export function logError(logger: LoggerProxy, ...args: Array<unknown>) {
     if (logger.level > Level.Error) {
         return logger
     }
@@ -116,10 +116,10 @@ export function error(logger: LoggerProxy, ...args: Array<unknown>) {
 // Types ///////////////////////////////////////////////////////////////////////
 
 export interface LoggerContainer {
-    Context?: {
+    Context?: undefined | {
         LOGGER_LEVEL: Level
     }
-    LoggerSpec?: LoggerSpec
+    LoggerSpec?: undefined | LoggerSpec
 }
 
 export interface LoggerStateless {
@@ -140,8 +140,8 @@ export interface LoggerProxy extends Logger {
 }
 
 export interface LoggerSpec {
-    adapter?: LoggerStateless
-    level?: Level
+    adapter?: undefined | LoggerStateless
+    level?: undefined | Level
 }
 
 export type Level = ValueOf<typeof Level>

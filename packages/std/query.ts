@@ -1,5 +1,5 @@
+import {throwInvalidArgument} from './throw.js'
 import {isArray, isNumber, isObject, isString, kindOf} from './type.js'
-import {throwInvalidArgument} from './error.js'
 
 export const QueryRulesHeader = 'X-Query'
 

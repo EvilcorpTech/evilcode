@@ -1,32 +1,23 @@
-export class StdError extends Error {
-    constructor(message?: string) {
-        super(message)
-        this.name = this.constructor.name
+import {isObject} from './type.js'
+
+export const ErrorTag: symbol = Symbol('Error')
+
+export function Error<E>(error: E): Error<E> {
+    return {[ErrorTag]: true, error} as Error<E>
+}
+
+export function isError(error: unknown): error is Error<unknown> {
+    if (! isObject(error)) {
+        return false
     }
-}
-
-export class InvalidArgument extends StdError {}
-
-export function throwInvalidArgument(message?: string) {
-    return error({type: InvalidArgument, message})
-}
-
-export function error<T extends StdErrorConstructor>(spec: ErrorSpec<T>): never {
-    const {type = StdError, message} = spec
-
-    throw new type(message)
+    return ErrorTag in error
 }
 
 // Types ///////////////////////////////////////////////////////////////////////
 
-export interface ErrorSpec<T extends StdErrorConstructor> {
-    type?: T
-    message?: string
-}
+export type Result<E extends Error<unknown>, V> = E | V
 
-export interface StdErrorConstructor {
-    new(message?: string): StdError
-}
-
-export interface StdError extends Error {
+export interface Error<E> {
+    error: E
+    // [key: symbol]: true // FIXME in TypeScript 4.4.
 }

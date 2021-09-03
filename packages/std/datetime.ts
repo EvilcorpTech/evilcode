@@ -1,4 +1,4 @@
-import {assertStringNotEmpty, ensureOptionalWith, throwError} from './assert.js'
+import {assertStringNotEmpty, ensureOptionalWith, throwAssertError} from './assert.js'
 import {isString} from './type.js'
 
 // Assertions //////////////////////////////////////////////////////////////////
@@ -27,7 +27,7 @@ export function ensureDateString(value: unknown, ctx?: any) {
     assertStringNotEmpty(value, ctx)
 
     if (! isDateString(value)) {
-        return throwError('a Date string', value, ctx)
+        return throwAssertError('a Date string', value, ctx)
     }
 
     return value
@@ -45,7 +45,7 @@ export function ensureDateAsIsoUtcString(value: unknown, ctx?: any) {
     assertDateString(value, ctx)
 
     if (! isDateIsoUtcString(value)) {
-        return throwError('a Date as ISO string with UTC timezone', value, ctx)
+        return throwAssertError('a Date as ISO string with UTC timezone', value, ctx)
     }
 
     return value

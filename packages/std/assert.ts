@@ -1,4 +1,4 @@
-import {throwInvalidArgument} from './error.js'
+import {throwInvalidArgument} from './throw.js'
 import {isArray, isBoolean, isDate, isFunction, isInteger, isNil, isNumber, isObject, isString, isUndefined} from './type.js'
 
 // Assertions //////////////////////////////////////////////////////////////////
@@ -93,7 +93,7 @@ export function ensureArray<T extends Array<unknown>>(value: T, ctx?: any): T
 export function ensureArray(value: unknown, ctx?: any): Array<unknown>
 export function ensureArray(value: unknown, ctx?: any) {
     if (! isArray(value)) {
-        return throwError('an Array', value, ctx)
+        return throwAssertError('an Array', value, ctx)
     }
 
     return value
@@ -109,7 +109,7 @@ export function ensureBoolean<T extends boolean>(value: T, ctx?: any): T
 export function ensureBoolean(value: unknown, ctx?: any): boolean
 export function ensureBoolean(value: unknown, ctx?: any) {
     if (! isBoolean(value)) {
-        return throwError('a Boolean', value, ctx)
+        return throwAssertError('a Boolean', value, ctx)
     }
 
     return value
@@ -125,7 +125,7 @@ export function ensureDate<T extends Date>(value: T, ctx?: any): T
 export function ensureDate(value: unknown, ctx?: any): Date
 export function ensureDate(value: unknown, ctx?: any) {
     if (! isDate(value)) {
-        return throwError('a Date', value, ctx)
+        return throwAssertError('a Date', value, ctx)
     }
 
     return value
@@ -148,7 +148,7 @@ export function ensureEnum<E>(value: unknown, enumValues: Array<E>, ctx?: any) {
         }
     }
 
-    return throwError(`one of ${enumValues.join(' | ')}`, value, ctx)
+    return throwAssertError(`one of ${enumValues.join(' | ')}`, value, ctx)
 }
 
 export function ensureEnumOptional<E, T extends undefined | E>(value: T, enumValues: Array<E>, ctx?: any): T
@@ -161,7 +161,7 @@ export function ensureFunction<T extends Function>(value: T, ctx?: any): T
 export function ensureFunction(value: unknown, ctx?: any): Function
 export function ensureFunction(value: unknown, ctx?: any) {
     if (! isFunction(value)) {
-        return throwError('a Function', value, ctx)
+        return throwAssertError('a Function', value, ctx)
     }
 
     return value
@@ -179,7 +179,7 @@ export function ensureInteger(value: unknown, ctx?: any) {
     assertNumber(value, ctx)
 
     if (! isInteger(value)) {
-        return throwError('an Integer', value, ctx)
+        return throwAssertError('an Integer', value, ctx)
     }
 
     return value
@@ -195,7 +195,7 @@ export function ensureNumber<T extends number>(value: T, ctx?: any): T
 export function ensureNumber(value: unknown, ctx?: any): number
 export function ensureNumber(value: unknown, ctx?: any) {
     if (! isNumber(value)) {
-        return throwError('a Number', value, ctx)
+        return throwAssertError('a Number', value, ctx)
     }
 
     return value
@@ -211,7 +211,7 @@ export function ensureObject<T extends {} | Record<PropertyKey, unknown>>(value:
 export function ensureObject(value: unknown, ctx?: any): Record<PropertyKey, unknown>
 export function ensureObject(value: unknown, ctx?: any) {
     if (! isObject(value)) {
-        return throwError('an Object', value, ctx)
+        return throwAssertError('an Object', value, ctx)
     }
 
     return value
@@ -227,7 +227,7 @@ export function ensureString<T extends string>(value: T, ctx?: any): T
 export function ensureString(value: unknown, ctx?: any): string
 export function ensureString(value: unknown, ctx?: any) {
     if (! isString(value)) {
-        return throwError('a String', value, ctx)
+        return throwAssertError('a String', value, ctx)
     }
 
     return value
@@ -243,7 +243,7 @@ export function ensureStringNotEmpty<T extends string>(value: T, ctx?: any): T
 export function ensureStringNotEmpty(value: unknown, ctx?: any): string
 export function ensureStringNotEmpty(value: unknown, ctx?: any) {
     if (ensureString(value, ctx).trim() === '') {
-        return throwError('a not empty String', value, ctx)
+        return throwAssertError('a not empty String', value, ctx)
     }
 
     return value
@@ -259,7 +259,7 @@ export function ensureUndefined<T extends undefined>(value: T, ctx?: any): T
 export function ensureUndefined(value: unknown, ctx?: any): undefined
 export function ensureUndefined(value: unknown, ctx?: any) {
     if (value !== void undefined) {
-        return throwError('undefined', value, ctx)
+        return throwAssertError('undefined', value, ctx)
     }
 
     return
@@ -283,7 +283,7 @@ export function errorMessage(expected: string, actual: unknown, ctx?: any) {
     )
 }
 
-export function throwError(type: string, value: unknown, ctx?: any) {
+export function throwAssertError(type: string, value: unknown, ctx?: any) {
     return throwInvalidArgument(errorMessage(type, value, ctx))
 }
 

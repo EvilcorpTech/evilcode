@@ -1,5 +1,5 @@
-import {throwInvalidArgument} from './error.js'
 import {escapeRegExp} from './regexp.js'
+import {throwInvalidArgument} from './throw.js'
 import {isArray, isFunction, isObject} from './type.js'
 
 export const DefaultSymbol = '@'

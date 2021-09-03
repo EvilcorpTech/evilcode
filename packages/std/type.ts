@@ -54,7 +54,7 @@ export function isInteger(value: unknown): value is number {
     // 0 is a valid number but evaluates to false.
 }
 
-export function isNil(value: unknown): value is null | undefined {
+export function isNil(value: unknown): value is Nil {
     return isUndefined(value) || isNull(value)
 }
 
@@ -67,7 +67,7 @@ export function isNumber(value: unknown): value is number {
     // We don't consider NaN a number.
 }
 
-export function isObject(value: unknown): value is Record<string | number | symbol, unknown> {
+export function isObject(value: unknown): value is Record<PropertyKey, unknown> {
     if (! value || Object.getPrototypeOf(value).constructor !== Object) {
         return false
     }
@@ -111,6 +111,8 @@ export function booleanOr(value: unknown, fallback: boolean) {
 }
 
 // Types ///////////////////////////////////////////////////////////////////////
+
+export type Nil = undefined | null
 
 export type ValueOf<T> = T[keyof T]
 

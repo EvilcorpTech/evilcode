@@ -1,4 +1,5 @@
-import {ensureArray, ensureBoolean, ensureFunction, ensureInteger, ensureNumber, ensureString, ensureStringOptional, throwError} from './assert.js'
+import {assertFunctionOptional, assertObject, ensureArray, ensureBoolean, ensureFunction, ensureInteger, ensureNumber, ensureString, ensureStringOptional, throwAssertError} from './assert.js'
+import {get} from './object.js'
 import {isArray, isFunction, isNil} from './type.js'
 
 export function evaluateExp<C extends Ctx, R>(ctx: C, exp: Exp<C, R>) {
@@ -27,14 +28,14 @@ export function bool(ctx: Ctx, oneExp: Exp<Ctx, any>): boolean {
 
 export function and(ctx: Ctx, ...exps: Array<Exp<Ctx, boolean>>): boolean {
     if (exps.length === 0) {
-        return throwError('a Non Empty Array', exps)
+        return throwAssertError('a Non Empty Array', exps)
     }
     return exps.every(itExp => ensureBoolean(evaluateExp(ctx, itExp)))
 }
 
 export function or(ctx: Ctx, ...exps: Array<Exp<Ctx, boolean>>): boolean {
     if (exps.length === 0) {
-        return throwError('a Non Empty Array', exps)
+        return throwAssertError('a Non Empty Array', exps)
     }
     return exps.some(itExp => ensureBoolean(evaluateExp(ctx, itExp)))
 }
@@ -106,6 +107,32 @@ export function has<I>(ctx: Ctx | CtxWithArgs, listExp: Exp<Ctx, Array<I>>, test
     return bool(ctx, find(ctx, listExp, testExp))
 }
 
+/*
+* The lookup operator.
+* Lookups a path inside a resolver, and if it is not found, lookups the path inside
+* an object using the Object Path Syntax.
+*
+* EXAMPLE
+* const $ = {info: {title: 'Moby Dick'}}
+* const resolvers = {'info.title': (obj) => obj.title.toUpperCase()}
+* lookup({$}, 'info.title') => 'Moby Dick'
+* lookup({$, resolvers}, 'info.title') => 'MOBY DICK'
+*/
+export function lookup(ctx: CtxWithResolver, pathExp: Exp<Ctx, string>) {
+    const {$, resolvers} = ctx
+    assertObject($)
+    const path = ensureString(evaluateExp(ctx, pathExp))
+    const resolver = resolvers?.[path]
+    assertFunctionOptional(resolver)
+    if (resolver) {
+        // There is a resolver for the path.
+        // We use the resolver.
+        return resolver($, path)
+    }
+    // There is not a resolver for the path. We use the getter.
+    return get($, path)
+}
+
 // Evaluation Tree /////////////////////////////////////////////////////////////
 
 /*
@@ -166,4 +193,13 @@ export interface Ctx {}
 
 export interface CtxWithArgs extends Ctx {
     args: Array<[...Array<unknown>]>
+}
+
+export interface CtxWithResolver {
+    $: {},
+    resolvers?: Record<string, Resolver>
+}
+
+export interface Resolver {
+    (obj: {}, path: string): unknown
 }
