@@ -1,0 +1,84 @@
+:root,
+.std-theme {
+    --std-font-primary: 'std-font-primary', Roboto, Futura, sans-serif;
+}
+
+@font-face {
+    font-family: 'std-font-primary';
+    font-style: normal;
+    font-weight: 100;
+    font-display: swap;
+    src: url('./font-gilroy/1_thin.ttf') format('truetype');
+}
+
+@font-face {
+    font-family: 'std-font-primary';
+    font-style: normal;
+    font-weight: 200;
+    font-display: swap;
+    src: url('./font-gilroy/2_ultra_light.ttf') format('truetype');
+}
+
+@font-face {
+    font-family: 'std-font-primary';
+    font-style: normal;
+    font-weight: 300;
+    font-display: swap;
+    src: url('./font-gilroy/3_light.ttf') format('truetype');
+}
+
+@font-face {
+    font-family: 'std-font-primary';
+    font-style: normal;
+    font-weight: 400;
+    font-display: swap;
+    src: url('./font-gilroy/4_regular.ttf') format('truetype');
+}
+
+@font-face {
+    font-family: 'std-font-primary';
+    font-style: normal;
+    font-weight: 500;
+    font-display: swap;
+    src: url('./font-gilroy/5_medium.ttf') format('truetype');
+}
+
+@font-face {
+    font-family: 'std-font-primary';
+    font-style: normal;
+    font-weight: 600;
+    font-display: swap;
+    src: url('./font-gilroy/6_semi_bold.ttf') format('truetype');
+}
+
+@font-face {
+    font-family: 'std-font-primary';
+    font-style: normal;
+    font-weight: 700;
+    font-display: swap;
+    src: url('./font-gilroy/7_bold.ttf') format('truetype');
+}
+
+@font-face {
+    font-family: 'std-font-primary';
+    font-style: normal;
+    font-weight: 800;
+    font-display: swap;
+    src: url('./font-gilroy/8_extra_bold.ttf') format('truetype');
+}
+
+@font-face {
+    font-family: 'std-font-primary';
+    font-style: normal;
+    font-weight: 900;
+    font-display: swap;
+    src: url('./font-gilroy/9_black.ttf') format('truetype');
+}
+
+@font-face {
+    font-family: 'std-font-primary';
+    font-style: normal;
+    font-weight: 1000;
+    font-display: swap;
+    src: url('./font-gilroy/10_heavy.ttf') format('truetype');
+}

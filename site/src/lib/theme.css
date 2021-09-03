@@ -4,24 +4,35 @@
 @import '@eviljs/style/all.props.css';
 @import '@eviljs/style/scheme-dark.css';
 @import '@eviljs/style/scheme-light.css';
-@import '@eviljs/style/font-roboto.css';
+/* @import '@eviljs/style/font-roboto.css'; */
 @import '@eviljs/stylex/button/v1.css';
 @import '@eviljs/stylex/button/v1-dye.css';
 @import '@eviljs/stylex/button/v1-flat.css';
 @import '@eviljs/stylex/button/v1-halo.css';
 @import '@eviljs/stylex/button/v1-plain.css';
+@import ':/lib/theme/font-gilroy.css';
 
-/*
+body,
 #App {
+    min-height: 100vh;
 }
-*/
 
 :root,
 .std-theme {
-    --std-color-primary-h: 250;
-    --std-color-primary-s: 70%;
-    --std-color-primary-l: 60%;
-    --std-color-secondary-h: 0;
+    --std-color-primary-h: 50;
+    --std-color-primary-s: 93%;
+    --std-color-primary-l: 54%;
+    --std-color-secondary-h: 30;
     --std-color-secondary-s: 55%;
     --std-color-secondary-l: 50%;
+
+    --view-gutter: var(--std-gutter-l);
+}
+
+.media-cover {
+    object-fit: cover;
+    object-position: 50% 50%;
+    background-size: cover;
+    background-position: 50% 50%;
+    background-repeat: no-repeat;
 }

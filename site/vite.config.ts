@@ -6,6 +6,12 @@ export default defineConfig({
     root: Path.resolve('src'),
     publicDir: 'assets',
 
+    resolve: {
+        alias: {
+            ':': Path.resolve('src'),
+        },
+    },
+
     plugins: [VuePlugin()],
 
     build: {
@@ -16,5 +22,8 @@ export default defineConfig({
 
     server: {
         port: 8000,
+        fs: {
+            strict: true,
+        },
     },
 })

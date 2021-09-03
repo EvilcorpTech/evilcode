@@ -1,5 +1,5 @@
 import {createApp} from 'vue'
-import App from './app/App.vue'
+import {App} from './app/App'
 
 import './lib/theme.css'
 
