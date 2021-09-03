@@ -8,15 +8,15 @@ import {Input} from '../input/v1.js'
 export function useAuthCredentials() {
     const [credentials, setCredentials] = useState({identifier: '', secret: ''})
     const {authenticate, pending} = useAuth()
-    const [error, setError] = useState('')
+    const [error, setError] = useState<null | unknown>(null)
 
     const onIdentifierChange = useCallback((identifier: string) => {
-        setError('')
+        setError(null)
         setCredentials(state => ({...state, identifier}))
     }, [])
 
     const onSecretChange = useCallback((secret: string) => {
-        setError('')
+        setError(null)
         setCredentials(state => ({...state, secret}))
     }, [])
 
@@ -107,7 +107,10 @@ export function AuthCredentials(props: AuthCredentialsProps) {
             </Button>
 
             <div className="error-a131">
-                {error && (formatError?.(error) ?? error)}
+                {error
+                    ? formatError?.(error)
+                    : null
+                }
             </div>
         </form>
     )
@@ -116,12 +119,12 @@ export function AuthCredentials(props: AuthCredentialsProps) {
 // Types ///////////////////////////////////////////////////////////////////////
 
 export interface AuthCredentialsProps extends React.FormHTMLAttributes<HTMLFormElement> {
-    messages?: {
-        identifier?: string
-        secret?: string
-        signin?: string
+    messages?: undefined | {
+        identifier?: undefined | string
+        secret?: undefined | string
+        signin?: undefined | string
     }
-    formatError?(error: string): string
+    formatError?(error: unknown): undefined | string
 }
 
 type FormEvent = React.FormEvent<HTMLFormElement>
