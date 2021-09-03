@@ -173,13 +173,19 @@ function createWebpackConfig(projectDir: string, options?: WebpackConfigOptions)
             : 'eval-source-map'
         ,
         devServer: {
-            contentBase: Path.resolve(projectDir, 'build'),
             host: serverAddress ?? '127.0.0.1',
             port: serverPort ?? 8000,
+            devMiddleware: {
+                writeToDisk: true,  // Used for testing the Server Side Rendering while development.
+            },
+            static: {
+                directory: Path.resolve(projectDir, 'build'),
+            },
+            client: {
+                logging: 'warn',
+            },
             historyApiFallback: true,
-            writeToDisk: true, // Used for testing the Server Side Rendering while developing.
             hot: true,
-            clientLogLevel: 'warning',
         },
         snapshot: {
             managedPaths: [], // Processes changes inside the node_modules directory.
