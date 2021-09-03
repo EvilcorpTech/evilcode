@@ -5,9 +5,9 @@ type HtmlWebpackPluginClass = typeof HtmlWebpackPlugin
 
 export class HtmlStyleInlinePlugin {
     readonly HtmlWebpackPlugin: HtmlWebpackPluginClass
-    readonly options?: HtmlStyleInlinePluginOptions
+    readonly options?: undefined | HtmlStyleInlinePluginOptions
 
-	constructor(HtmlWebpackPlugin: HtmlWebpackPluginClass, options?: HtmlStyleInlinePluginOptions) {
+	constructor(HtmlWebpackPlugin: HtmlWebpackPluginClass, options?: undefined | HtmlStyleInlinePluginOptions) {
         this.HtmlWebpackPlugin = HtmlWebpackPlugin
 		this.options = options
 	}
@@ -56,7 +56,7 @@ function createTagInline(
     compiler: Compiler,
     compilation: Compilation,
     tag: HtmlTagObject,
-    options?: HtmlStyleInlinePluginOptions,
+    options?: undefined | HtmlStyleInlinePluginOptions,
 ): HtmlTagObject
 {
 	if (tag.tagName !== 'link') {
@@ -105,6 +105,6 @@ function createTagInline(
 // Types ///////////////////////////////////////////////////////////////////////
 
 export interface HtmlStyleInlinePluginOptions {
-    delete?: boolean
-    tests?: Array<string | RegExp>
+    delete?: undefined | boolean
+    tests?: undefined | Array<string | RegExp>
 }
