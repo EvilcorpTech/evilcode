@@ -11,9 +11,13 @@ PortalContext.displayName = 'PortalContext'
 * return (
 *     <PortalProvider children={Portal =>
 *         <Fragment>
+*             <Teleport>
+*                 <p>This code is teleported inside the Portal</p>
+*             </Teleport>
+*
 *             <Portal tag="section"/>
 *         </Fragment>
-*     </PortalProvider>
+*     }/>
 * )
 */
 export function PortalProvider(props: PortalProviderProps) {
@@ -24,20 +28,15 @@ export function PortalProvider(props: PortalProviderProps) {
 * EXAMPLE
 *
 * export function MyMain(props) {
-*     const main = withPortal(Portal =>
+*     return withPortal(Portal =>
 *         <Fragment>
-*             <App/>
-*
 *             <Teleport>
-*                 <h1>Portal Usage Example</h1>
 *                 <p>This code is teleported inside the Portal</p>
 *             </Teleport>
 *
 *             <Portal/>
 *         </Fragment>
 *     )
-*
-*     return <main/>
 * }
 */
 export function withPortal(render?: PortalProviderChild) {
@@ -74,16 +73,13 @@ export function withPortal(render?: PortalProviderChild) {
 * return (
 *     <PortalProvider children={Portal =>
 *         <Fragment>
-*             <App/>
-*
 *             <Teleport>
-*                 <h1>Portal Usage Example</h1>
 *                 <p>This code is teleported inside the Portal</p>
 *             </Teleport>
 *
 *             <Portal/>
 *         </Fragment>
-*     </PortalProvider>
+*     }/>
 * )
 */
 export function Teleport(props: TeleportProps) {
@@ -106,10 +102,10 @@ export interface PortalProviderProps {
 }
 
 export interface PortalProviderChild {
-    (portal: React.ElementType<PortalProps>): React.ReactNode
+    (portal: React.ComponentType<PortalProps>): React.ReactNode
 }
 
-export interface PortalProps {
+export interface PortalProps extends React.HTMLAttributes<PortalElement> {
     tag?: keyof React.ReactDOM
     [key: string]: unknown
 }

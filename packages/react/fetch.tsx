@@ -9,12 +9,12 @@ FetchContext.displayName = 'FetchContext'
 * EXAMPLE
 *
 * const fetch = createFetch({baseUrl: '/api'})
-* const main = WithFetch(MyMain, fetch)
+* const Main = WithFetch(MyMain, fetch)
 *
-* render(<main/>, document.body)
+* render(<Main/>, document.body)
 */
-export function WithFetch(Child: React.ElementType, fetch: Fetch) {
-    function FetchProviderProxy(props: any) {
+export function WithFetch<P extends {}>(Child: React.ComponentType<P>, fetch: Fetch) {
+    function FetchProviderProxy(props: P) {
         return withFetch(<Child {...props}/>, fetch)
     }
 
@@ -24,11 +24,10 @@ export function WithFetch(Child: React.ElementType, fetch: Fetch) {
 /*
 * EXAMPLE
 *
-* export function MyMain(props) {
-*     const fetch = createFetch({baseUrl: '/api'})
-*     const main = withFetch(<Main/>, fetch)
+* const fetch = createFetch({baseUrl: '/api'})
 *
-*     return main
+* export function MyMain(props) {
+*     return withFetch(<Children/>, fetch)
 * }
 */
 export function withFetch(children: React.ReactNode, fetch: Fetch) {
@@ -42,9 +41,9 @@ export function withFetch(children: React.ReactNode, fetch: Fetch) {
 /*
 * EXAMPLE
 *
-* export function MyMain(props) {
-*     const fetch = createFetch({baseUrl: '/api'})
+* const fetch = createFetch({baseUrl: '/api'})
 *
+* export function MyMain(props) {
 *     return (
 *         <FetchProvider fetch={fetch}>
 *             <MyApp/>

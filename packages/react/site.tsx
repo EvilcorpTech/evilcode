@@ -40,14 +40,14 @@ export function useSite
                 W
             >
         ,
-        routesModel?:
+        routesModel?: null |
             SiteRoutesModel<
                 NonNullable<RK> | SiteRouteKey,
                 NonNullable<AK> | SiteAnimationKey,
                 NonNullable<WK> | SiteWidgetKey,
                 NonNullable<NK> | SiteNestingKey,
                 W & SiteDefaultWidgets<RT>
-            > | null
+            >
         ,
     )
 {
@@ -158,7 +158,7 @@ export function createSite
                     SiteAnimatorKeyModel<AK>
                 >
             ,
-            key?: React.Key,
+            key?: undefined | React.Key,
         ) {
             return createAnimator(self, animatorModel, key)
         },
@@ -170,7 +170,7 @@ export function createSite
                     W & SiteDefaultWidgets<NonNullable<RT> | SiteRouterType>
                 >
             ,
-            key?: React.Key,
+            key?: undefined | React.Key,
         ) {
             return createWidget(self, widgetModel, key)
         },
@@ -183,7 +183,7 @@ export function createSite
                     W & SiteDefaultWidgets<NonNullable<RT> | SiteRouterType>
                 >
             ,
-            key?: React.Key,
+            key?: undefined | React.Key,
         ) {
             return createComponent(self, component, widgetModel, key)
         },
@@ -248,7 +248,7 @@ export function createDefaultAnimator
     (
         ctx: Site<RK, AK, WK, NK, RT, W>,
         widgetModel: SiteWidgetModel<WK, NK, W, SiteAnimatorKeyModel<AK>>,
-        key?: React.Key,
+        key?: undefined | React.Key,
     )
 {
     const {animationKey} = ctx
@@ -281,7 +281,7 @@ export function createDefaultWidget
     (
         ctx: Site<RK, AK, WK, NK, RT, W>,
         widgetModel: SiteWidgetModel<WK, NK, W>,
-        key?: React.Key,
+        key?: undefined | React.Key,
     )
 {
     const {widgetKey} = ctx
@@ -321,7 +321,7 @@ export function createDefaultComponent
         ctx: Site<RK, AK, WK, NK, RT, W>,
         Component: SiteComponent,
         widgetModel: SiteWidgetModel<WK, NK, W>,
-        key?: React.Key,
+        key?: undefined | React.Key,
     )
 {
     const {nestingKey} = ctx
@@ -397,22 +397,22 @@ export interface Site
     routerType: RT
     routeArgsProp: string
     routePlaceholders: {[key: string]: string}
-    routerDefault?: JSX.Element
+    routerDefault?: undefined | JSX.Element
     createRouter(
         routesModel: SiteRoutesModel<RK, AK, WK, NK, W>,
     ): SiteElement
     createAnimator(
         widgetModel: SiteWidgetModel<WK, NK, W, SiteAnimatorKeyModel<AK>>,
-        key?: React.Key,
+        key?: undefined | React.Key,
     ): SiteElement
     createWidget(
         widgetModel: SiteWidgetModel<WK, NK, W>,
-        key?: React.Key,
+        key?: undefined | React.Key,
     ): SiteElement
     createComponent(
         Component: SiteComponent,
         widgetModel: SiteWidgetModel<WK, NK, W>,
-        key?: React.Key
+        key?: undefined | React.Key
     ): SiteElement
     translate: I18n['translate']
     widgets: W
@@ -438,20 +438,20 @@ export interface SiteSpec
     createAnimator?(
         ctx: Site<RK, AK, WK, NK, RT, W & SiteDefaultWidgets<RT>>,
         widgetModel: SiteWidgetModel<WK, NK, W & SiteDefaultWidgets<RT>, SiteAnimatorKeyModel<AK>>,
-        key?: React.Key,
+        key?: undefined | React.Key,
     ): SiteElement
     createWidget?(
         ctx: Site<RK, AK, WK, NK, RT, W & SiteDefaultWidgets<RT>>,
         widgetModel: SiteWidgetModel<WK, NK, W & SiteDefaultWidgets<RT>>,
-        key?: React.Key,
+        key?: undefined | React.Key,
     ): SiteElement
     createComponent?(
         ctx: Site<RK, AK, WK, NK, RT, W & SiteDefaultWidgets<RT>>,
         Component: SiteComponent,
         widgetModel: SiteWidgetModel<WK, NK, W & SiteDefaultWidgets<RT>>,
-        key?: React.Key
+        key?: undefined | React.Key
     ): SiteElement
-    widgets?: W
+    widgets?: undefined | W
 }
 
 export interface SiteWidgets {
@@ -498,7 +498,7 @@ export type SiteWidgetModel
     & P
     & SiteKeyKeyModel
     & {[key in WK]: keyof W} // widgetKey (model.type).
-    & {[key in NK]?: SiteNestingKeyModel<WK, NK, W>} // nestingKey (model.with).
+    & {[key in NK]?: undefined | SiteNestingKeyModel<WK, NK, W>} // nestingKey (model.with).
     & {[key: string]: any}
     // =
     // // Implementation with widgets' props typing.
@@ -507,16 +507,16 @@ export type SiteWidgetModel
     //     W,
     //     & P
     //     & SiteKeyKeyModel
-    //     & {[key in NK]?: SiteNestingKeyModel<WK, NK, W>}
+    //     & {[key in NK]?: undefined | SiteNestingKeyModel<WK, NK, W>}
     //     & {[key: string]: any}
     // >
 
 export interface SiteAnimatorModel {
-    mode?: TransitionMode
-    initial?: boolean
-    enter?: number
-    exit?: number
-    transition?: TransitionAnimatorEffect
+    mode?: undefined | TransitionMode
+    initial?: undefined | boolean
+    enter?: undefined | number
+    exit?: undefined | number
+    transition?: undefined | TransitionAnimatorEffect
 }
 
 export type SiteRouteKeyModel<RK extends string> = {
@@ -524,7 +524,7 @@ export type SiteRouteKeyModel<RK extends string> = {
 }
 
 export type SiteAnimatorKeyModel<AK extends string> = {
-    [key in AK]?: SiteAnimatorModel
+    [key in AK]?: undefined | SiteAnimatorModel
 }
 
 export type SiteNestingKeyModel
@@ -538,8 +538,8 @@ export type SiteNestingKeyModel
     | SiteWidgetModel<WK, NK, W>
     | Array<SiteWidgetModel<WK, NK, W>>
 
-export interface SiteKeyKeyModel {key?: React.Key}
-export interface SiteWidgetChildrenProps {children?: any}
+export interface SiteKeyKeyModel {key?: undefined | React.Key}
+export interface SiteWidgetChildrenProps {children?: undefined | any}
 
 export type SiteWidgetModelOf
     <
@@ -559,4 +559,4 @@ export type SiteWidgetPropsOf<W extends SiteWidgets> =
     }>
 
 export type SiteComponent<P = any> = React.FunctionComponent<P> // React.ComponentType
-export type SiteElement = JSX.Element | null
+export type SiteElement = null | JSX.Element

@@ -11,12 +11,12 @@ QueryContext.displayName = 'QueryContext'
 *
 * const fetch = createFetch({baseUrl: '/api'})
 * const query = createQuery(fetch)
-* const main = WithQuery(MyMain, query)
+* const Main = WithQuery(MyMain, query)
 *
-* render(<main/>, document.body)
+* render(<Main/>, document.body)
 */
-export function WithQuery(Child: React.ElementType, query: Query) {
-    function QueryProviderProxy(props: any) {
+export function WithQuery<P extends {}>(Child: React.ComponentType<P>, query: Query) {
+    function QueryProviderProxy(props: P) {
         return withQuery(<Child {...props}/>, query)
     }
 
@@ -26,12 +26,11 @@ export function WithQuery(Child: React.ElementType, query: Query) {
 /*
 * EXAMPLE
 *
-* export function MyMain(props) {
-*     const fetch = createFetch({baseUrl: '/api'})
-*     const query = createQuery(fetch)
-*     const main = withQuery(<Main/>, fetch)
+* const fetch = createFetch({baseUrl: '/api'})
+* const query = createQuery(fetch)
 *
-*     return main
+* export function MyMain(props) {
+*     return withQuery(<Children/>, fetch)
 * }
 */
 export function withQuery(children: React.ReactNode, query: Query) {
@@ -45,10 +44,10 @@ export function withQuery(children: React.ReactNode, query: Query) {
 /*
 * EXAMPLE
 *
-* export function MyMain(props) {
-*     const fetch = createFetch({baseUrl: '/api'})
-*     const query = createQuery(fetch)
+* const fetch = createFetch({baseUrl: '/api'})
+* const query = createQuery(fetch)
 *
+* export function MyMain(props) {
 *     return (
 *         <QueryProvider query={query}>
 *             <MyApp/>
@@ -60,12 +59,12 @@ export function QueryProvider(props: QueryProviderProps) {
     return withQuery(props.children, props.query)
 }
 
-export function useQuery<A extends Array<unknown>, R, E>(queryRunner: QueryRunner<A, R>) {
-    const [response, setResponse] = useState<R | null>(null)
+export function useQuery<A extends Array<unknown>, R>(queryRunner: QueryRunner<A, R>) {
+    const [response, setResponse] = useState<null | R>(null)
     const [pending, setPending] = useState(false)
-    const [error, setError] = useState<QueryError<E> | null>(null)
+    const [error, setError] = useState<null | unknown>(null)
     const mountedRef = useMountedRef()
-    const taskRef = useRef<QueryTask<R> | null>(null)
+    const taskRef = useRef<null | QueryTask<R>>(null)
     const query = useContext(QueryContext)
 
     const fetch = useCallback(async (...args: A) => {

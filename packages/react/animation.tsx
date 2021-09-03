@@ -1,4 +1,4 @@
-import {asArray, isArray, isString} from '@eviljs/std/type.js'
+import {asArray, isArray, isString, Nil} from '@eviljs/std/type.js'
 import {applyStyles} from '@eviljs/web/animation.js'
 import {useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState, cloneElement, Fragment, Children, CSSProperties} from 'react'
 import {classes} from './react.js'
@@ -103,7 +103,7 @@ export function Transition(props: TransitionProps) {
 export function Animator(props: AnimatorProps) {
     const {children, id, type, events, source, onEnd} = props
     const [state, setState] = useState(() => createAnimatorState(id, events))
-    const elRef = useRef<HTMLDivElement | null>(null)
+    const elRef = useRef<null | HTMLDivElement>(null)
     const {lifecycle} = state
 
     if (id !== state.id) {
@@ -326,7 +326,7 @@ function createTask(
     action: TransitionTaskAction,
     child: TransitionElement,
     observers: TransitionObservers,
-    options?: Partial<TransitionTask>,
+    options?: undefined | Partial<TransitionTask>,
 ): TransitionTask
 {
     return {
@@ -518,7 +518,7 @@ export function createInOutTasks(spec: {
 
 export function updateTasks(
     queue: TransitionQueue,
-    macroTask: TransitionMacroTask | null,
+    macroTask: null | TransitionMacroTask,
     newChild: TransitionElement,
     observers: TransitionObservers,
 ) {
@@ -654,7 +654,7 @@ export function onlyChild(child: TransitionChildren) {
     if (child.length !== 1) {
         console.warn(
             '@eviljs/react/animation.onlyChild(~~child~~):\n'
-            + `child can be undefined | null | boolean | object or an array with one element, given '${child.length}'.`
+            + `child can be Nil | boolean | object or an array with one element, given '${child.length}'.`
         )
     }
 
@@ -675,7 +675,7 @@ export function isValidChild(children: TransitionChildren): children is Transiti
     return true
 }
 
-export function areSameChildren(a?: TransitionElement | null, b?: TransitionElement | null) {
+export function areSameChildren(a?: Nil | TransitionElement, b?: Nil | TransitionElement) {
     if (! a && ! b) {
         return true
     }
@@ -729,7 +729,7 @@ export function macroTaskIsCompleted(macroTask: TransitionMacroTask) {
     return macroTask.every(it => it.completed)
 }
 
-export function findTargetTasks(queue: Array<TransitionMacroTask | null>) {
+export function findTargetTasks(queue: Array<null | TransitionMacroTask>) {
     const targets: Array<TransitionTask> = []
 
     for (const it of queue) {
@@ -748,7 +748,7 @@ export function findTargetTasks(queue: Array<TransitionMacroTask | null>) {
     return transactionTasks
 }
 
-export function findTargetTasksOf(task: TransitionMacroTask | null) {
+export function findTargetTasksOf(task: null | TransitionMacroTask) {
     if (! task) {
         return []
     }
@@ -778,12 +778,12 @@ export interface TransitionObservers {
 }
 
 export interface TransitionProps extends TransitionObservers {
-    children?: TransitionChildren
-    enter?: number
-    exit?: number
-    source?: string | AnimatorEventSource
-    initial?: boolean
-    mode?: TransitionMode
+    children?: undefined | TransitionChildren
+    enter?: undefined | number
+    exit?: undefined | number
+    source?: undefined | string | AnimatorEventSource
+    initial?: undefined | boolean
+    mode?: undefined | TransitionMode
 }
 
 export interface AnimatorProps {
@@ -826,7 +826,7 @@ export interface TransitionTask {
     source: AnimatorEventSource
     observers: TransitionObservers
     flags: TransitionTaskFlags
-    key?(keys: Array<string>): string
+    key?(keys: Array<string>): undefined | string
     target: boolean
     completed: boolean
 }

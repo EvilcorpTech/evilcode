@@ -10,12 +10,12 @@ ContainerContext.displayName = 'ContainerContext'
 *
 * const spec = {services}
 * const container = createContainer(spec)
-* const main = WithContainer(MyMain, container)
+* const Main = WithContainer(MyMain, container)
 *
-* render(<main/>, document.body)
+* render(<Main/>, document.body)
 */
-export function WithContainer(Child: React.ElementType, container: Container) {
-    function ContainerProviderProxy(props: any) {
+export function WithContainer<P extends {}>(Child: React.ComponentType<P>, container: Container) {
+    function ContainerProviderProxy(props: P) {
         return withContainer(<Child {...props}/>, container)
     }
 
@@ -25,12 +25,11 @@ export function WithContainer(Child: React.ElementType, container: Container) {
 /*
 * EXAMPLE
 *
-* export function MyMain(props) {
-*     const spec = {services}
-*     const container = createContainer(spec)
-*     const main = withContainer(<Main/>, container)
+* const spec = {services}
+* const container = createContainer(spec)
 *
-*     return main
+* export function MyMain(props) {
+*     return withContainer(<Child/>, container)
 * }
 */
 export function withContainer(children: React.ReactNode, container: Container) {
@@ -44,10 +43,10 @@ export function withContainer(children: React.ReactNode, container: Container) {
 /*
 * EXAMPLE
 *
-* export function MyMain(props) {
-*     const spec = {services}
-*     const container = createContainer(spec)
+* const spec = {services}
+* const container = createContainer(spec)
 *
+* export function MyMain(props) {
 *     return (
 *         <ContainerProvider container={container}>
 *             <MyApp/>

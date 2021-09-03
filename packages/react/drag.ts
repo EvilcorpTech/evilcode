@@ -24,7 +24,7 @@ export type {DragMoveChange, DragOptions, DragEvent, DragPointerEvent} from '@ev
 // even when the event listener is detached, due to the Synthetic Event global
 // listener always monitoring the mouse movement.
 
-export function useDrag<O extends UseDragOptions<S, P>, S, P>(options?: O) {
+export function useDrag<O extends UseDragOptions<S, P>, S, P>(options?: undefined | O) {
     const [dragging, setDragging] = useState<boolean>(false)
     const dragInfoRef = useRef<UseDragInfo<S, P>>({})
 
@@ -81,7 +81,7 @@ export function useDrag<O extends UseDragOptions<S, P>, S, P>(options?: O) {
     return {dragging, withDrag}
 }
 
-export function useMove(targetRef: DragElementRef<DragMoveElement>, options?: UseMoveOptions) {
+export function useMove(targetRef: DragElementRef<DragMoveElement>, options?: undefined | UseMoveOptions) {
     function onStart(event: DragEvent) {
         if (! targetRef.current) {
             return
@@ -112,7 +112,7 @@ export function useMove(targetRef: DragElementRef<DragMoveElement>, options?: Us
     return {moving, withMove}
 }
 
-export function useResize(targetRef: DragElementRef<DragResizeElement>, options?: UseResizeOptions) {
+export function useResize(targetRef: DragElementRef<DragResizeElement>, options?: undefined | UseResizeOptions) {
     function onStart(event: DragEvent) {
         if (! targetRef.current) {
             return
@@ -147,9 +147,9 @@ export function useResize(targetRef: DragElementRef<DragResizeElement>, options?
 export type DragElementRef<T extends Element> = React.RefObject<T>
 
 export interface UseDragInfo<S, P> {
-    startState?: S | null
-    progressState?: P
-    unmount?: (() => void) | null
+    startState?: undefined | null | S
+    progressState?: undefined | P
+    unmount?: undefined | null | (() => void)
 }
 
 export interface UseDragOptions<S, P> extends DragOptions {
@@ -159,7 +159,7 @@ export interface UseDragOptions<S, P> extends DragOptions {
 }
 
 export interface UseMoveOptions extends DragMoveOptions<DragMoveElement> {
-    boundRef?: React.RefObject<DragMoveElement>
+    boundRef?: undefined | React.RefObject<DragMoveElement>
     initOptions?(): undefined | DragMoveOptions<DragMoveElement>
     onStart?(startState: DragMoveState<DragMoveElement, DragMoveElement>): void
     onProgress?(progressState: DragMoveChange, startState: DragMoveState<DragMoveElement, DragMoveElement>): void

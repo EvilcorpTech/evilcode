@@ -10,12 +10,12 @@ I18nContext.displayName = 'I18nContext'
 *
 * const spec = {locale, fallbackLocale, messages}
 * const i18n = createI18n(spec)
-* const main = WithI18n(MyMain, i18n)
+* const Main = WithI18n(MyMain, i18n)
 *
-* render(<main/>, document.body)
+* render(<Main/>, document.body)
 */
-export function WithI18n(Child: React.ElementType, spec: I18n) {
-    function I18nProviderProxy(props: any) {
+export function WithI18n<P extends {}>(Child: React.ComponentType<P>, spec: I18n) {
+    function I18nProviderProxy(props: P) {
         return withI18n(<Child {...props}/>, spec)
     }
 
@@ -25,12 +25,11 @@ export function WithI18n(Child: React.ElementType, spec: I18n) {
 /*
 * EXAMPLE
 *
-* export function MyMain(props) {
-*     const spec = {locale, fallbackLocale, messages}
-*     const i18n = createI18n(spec)
-*     const main = withI18n(<Main/>, i18n)
+* const spec = {locale, fallbackLocale, messages}
+* const i18n = createI18n(spec)
 *
-*     return main
+* export function MyMain(props) {
+*     return withI18n(<Children/>, i18n)
 * }
 */
 export function withI18n(children: React.ReactNode, spec: StdI18n) {
@@ -81,10 +80,10 @@ export function withI18n(children: React.ReactNode, spec: StdI18n) {
 /*
 * EXAMPLE
 *
-* export function MyMain(props) {
-*     const spec = {locale, fallbackLocale, messages}
-*     const i18n = createI18n(spec)
+* const spec = {locale, fallbackLocale, messages}
+* const i18n = createI18n(spec)
 *
+* export function MyMain(props) {
 *     return (
 *         <I18nProvider i18n={i18n}>
 *             <MyApp/>

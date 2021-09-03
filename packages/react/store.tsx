@@ -1,4 +1,4 @@
-import {error, StdError} from '@eviljs/std/error.js'
+import {throwError, StdError} from '@eviljs/std/throw.js'
 import {isFunction} from '@eviljs/std/type.js'
 import {ValueOf} from '@eviljs/std/type.js'
 import {createContext, useContext, useEffect, useRef, useMemo, useReducer} from 'react'
@@ -19,12 +19,12 @@ StoreContext.displayName = 'StoreContext'
 * EXAMPLE
 *
 * const spec = {createState, actions}
-* const main = WithStore(MyMain, spec)
+* const Main = WithStore(MyMain, spec)
 *
-* render(<main/>, document.body)
+* render(<Main/>, document.body)
 */
-export function WithStore<S extends {}, A extends StoreActions<S>>(Child: React.ElementType, spec: StoreSpec<S, A>) {
-    function StoreProviderProxy(props: any) {
+export function WithStore<P extends {}, S extends {}, A extends StoreActions<S>>(Child: React.ComponentType<P>, spec: StoreSpec<S, A>) {
+    function StoreProviderProxy(props: P) {
         return withStore(<Child {...props}/>, spec)
     }
 
@@ -34,11 +34,10 @@ export function WithStore<S extends {}, A extends StoreActions<S>>(Child: React.
 /*
 * EXAMPLE
 *
-* export function MyMain(props) {
-*     const spec = {createState, actions}
-*     const main = withStore(<Main/>, spec)
+* const spec = {createState, actions}
 *
-*     return main
+* export function MyMain(props) {
+*     return withStore(<Child/>, spec)
 * }
 */
 export function withStore<S extends {}, A extends StoreActions<S>>(children: React.ReactNode, spec: StoreSpec<S, A>) {
@@ -54,9 +53,9 @@ export function withStore<S extends {}, A extends StoreActions<S>>(children: Rea
 /*
 * EXAMPLE
 *
-* export function MyMain(props) {
-*     const spec = {createState, actions}
+* const spec = {createState, actions}
 *
+* export function MyMain(props) {
 *     return (
 *         <StoreProvider spec={spec}>
 *             <MyApp/>
@@ -206,7 +205,7 @@ export function throwInvalidAction(action: string) {
     const message =
         '@eviljs/react/store:\n'
         + `missing action '${action}'.`
-    return error({type: InvalidAction, message})
+    return throwError({type: InvalidAction, message})
 }
 
 // Types ///////////////////////////////////////////////////////////////////////

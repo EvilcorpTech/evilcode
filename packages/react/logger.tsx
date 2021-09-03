@@ -9,12 +9,12 @@ LoggerContext.displayName = 'LoggerContext'
 * EXAMPLE
 *
 * const logger = createLogger()
-* const main = WithLogger(MyMain, logger)
+* const Main = WithLogger(MyMain, logger)
 *
-* render(<main/>, document.body)
+* render(<Main/>, document.body)
 */
-export function WithLogger(Child: React.ElementType, logger: Logger) {
-    function LoggerProviderProxy(props: any) {
+export function WithLogger<P extends {}>(Child: React.ComponentType<P>, logger: Logger) {
+    function LoggerProviderProxy(props: P) {
         return withLogger(<Child {...props}/>, logger)
     }
 
@@ -24,11 +24,10 @@ export function WithLogger(Child: React.ElementType, logger: Logger) {
 /*
 * EXAMPLE
 *
-* export function MyMain(props) {
-*     const logger = createLogger()
-*     const main = withLogger(<Main/>, logger)
+* const logger = createLogger()
 *
-*     return main
+* export function MyMain(props) {
+*     return withLogger(<Children/>, logger)
 * }
 */
 export function withLogger(children: React.ReactNode, logger: Logger) {
@@ -42,9 +41,9 @@ export function withLogger(children: React.ReactNode, logger: Logger) {
 /*
 * EXAMPLE
 *
-* export function MyMain(props) {
-*     const logger = createLogger()
+* const logger = createLogger()
 *
+* export function MyMain(props) {
 *     return (
 *         <LoggerProvider logger={logger}>
 *             <MyApp/>

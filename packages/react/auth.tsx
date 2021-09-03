@@ -9,7 +9,7 @@ import {
     ValidateOptions,
 } from '@eviljs/web/auth.js'
 import {Cookie} from '@eviljs/web/cookie.js'
-import {throwInvalidResponse} from '@eviljs/web/error.js'
+import {throwInvalidResponse} from '@eviljs/web/throw.js'
 import {Fetch} from '@eviljs/web/fetch.js'
 import {createContext, useCallback, useContext, useEffect, useState, useMemo} from 'react'
 import {useBusy} from './busy.js'
@@ -36,12 +36,12 @@ export const AuthTokenState = {
 * const validate = {method, url} // Optional.
 * const invalidate = {method, url} // Optional.
 * const options = {authenticate, validate, invalidate}
-* const main = WithAuth(MyMain, fetch, cookie, options)
+* const Main = WithAuth(MyMain, fetch, cookie, options)
 *
-* render(<main/>, document.body)
+* render(<Main/>, document.body)
 */
-export function WithAuth(Child: React.ElementType, fetch: Fetch, cookie: Cookie, options?: AuthOptions) {
-    function AuthProviderProxy(props: any) {
+export function WithAuth<P extends {}>(Child: React.ComponentType<P>, fetch: Fetch, cookie: Cookie, options?: AuthOptions) {
+    function AuthProviderProxy(props: P) {
         return withAuth(<Child {...props}/>, fetch, cookie, options)
     }
 
@@ -59,9 +59,7 @@ export function WithAuth(Child: React.ElementType, fetch: Fetch, cookie: Cookie,
 * const options = {authenticate, validate, invalidate}
 *
 * export function MyMain(props) {
-*     const main = withAuth(<Main/>, fetch, cookie, options)
-*
-*     return main
+*     return withAuth(<Child/>, fetch, cookie, options)
 * }
 */
 export function withAuth(children: React.ReactNode, fetch: Fetch, cookie: Cookie, options?: AuthOptions) {
@@ -87,7 +85,7 @@ export function withAuth(children: React.ReactNode, fetch: Fetch, cookie: Cookie
 * export function MyMain(props) {
 *     return (
 *         <AuthProvider fetch={fetch} cookie={cookie} {...options}>
-*             <MyApp/>
+*             <Child/>
 *         </AuthProvider>
 *     )
 * }

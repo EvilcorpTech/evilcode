@@ -1,4 +1,4 @@
-import {throwInvalidArgument} from '@eviljs/std/error.js'
+import {throwInvalidArgument} from '@eviljs/std/throw.js'
 import {isArray, isString, isObject} from '@eviljs/std/type.js'
 import {cloneElement, isValidElement, useEffect, useLayoutEffect, useRef, Children} from 'react'
 

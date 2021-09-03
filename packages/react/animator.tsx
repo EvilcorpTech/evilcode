@@ -20,8 +20,8 @@ export function TransitionAnimator(props: TransitionAnimatorProps) {
 // Types ///////////////////////////////////////////////////////////////////////
 
 export interface TransitionAnimatorProps extends React.HTMLAttributes<HTMLDivElement> {
-    children?: React.ReactNode
-    effect?: TransitionAnimatorEffect
+    children?: undefined | React.ReactNode
+    effect?: undefined | TransitionAnimatorEffect
 }
 
 export type TransitionAnimatorEffect = 'none' | 'fade' | 'zoom' | 'leak' | 'skid-left'
