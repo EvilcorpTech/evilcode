@@ -124,7 +124,6 @@ function createWebpackConfig(projectDir: string, options?: WebpackConfigOptions)
             new HtmlPlugin({
                 template: 'src/main.html',
                 chunks : ['main'],
-                base: basePath,
                 hash: true,
             }),
             isProductionMode && new DuplicatesPlugin({
