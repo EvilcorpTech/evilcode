@@ -35,12 +35,12 @@
         "CSS",
         "Inline"
     ],
-    "homepage": "https://github.com/EvilRepo/eviljs",
+    "homepage": "https://github.com/evilrepo/evilcode",
     "repository": {
         "type": "git",
-        "url": "git+https://github.com/EvilRepo/eviljs.git"
+        "url": "git+https://github.com/evilrepo/evilcode.git"
     },
     "bugs": {
-        "url": "https://github.com/EvilRepo/eviljs/issues"
+        "url": "https://github.com/evilrepo/evilcode/issues"
     }
 }
