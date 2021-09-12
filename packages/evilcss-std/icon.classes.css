@@ -1,13 +1,15 @@
 .std-icon {
     display: inline-block;
+}
+.std-icon * {
     fill: currentColor;
     stroke: currentColor;
 }
-.std-icon.expand {
+.std-icon.cover {
     width: 100%;
     height: 100%;
 }
-.std-icon.text {
+.std-icon.fluid {
     width: 1em;
     height: 1em;
 }

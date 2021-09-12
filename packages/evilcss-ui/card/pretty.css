@@ -1,10 +1,10 @@
-.card-1a3 {
+.std-card.pretty {
     border-radius: var(--card-radius, var(--std-radius-m));
     backdrop-filter: blur(var(--card-blur, 60px)) saturate(var(--card-saturation, 50%));
     box-shadow: var(--card-shadow, var(--std-shadow24));
 }
 
-.card-1a3.with-shining-borders {
+.std-card.pretty.with-shining-borders {
     border-top: 1px solid hsla(0, 0%, 100%, .3);
     border-left: 1px solid hsla(0, 0%, 100%, .15);
     border-right: 1px solid transparent;
@@ -12,7 +12,7 @@
 }
 
 @supports not (backdrop-filter: blur(0px) saturate(0%)) {
-    .card-1a3 {
+    .std-card.pretty {
         background-color: hsla(0, 0%, var(--std-back-l), .97);
     }
 }

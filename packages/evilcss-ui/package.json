@@ -1,21 +1,22 @@
 {
-    "name": "@evilcss/std",
+    "name": "@evilcss/ui",
     "version": "1.0.0",
     "files": [
         "/LICENSE.txt",
-        "/**/*.css",
-        "/*/*.woff"
+        "/*/*.css"
     ],
+    "peerDependencies": {
+        "@evilcss/std": "^1"
+    },
     "scripts": {
         "build": ""
     },
     "author": "Daniele Orlando",
     "license": "BSD-2-Clause",
-    "description": "Awesome CSS design system and UI widgets",
+    "description": "Awesome CSS UI widgets",
     "keywords": [
         "CSS",
         "UI",
-        "Design System",
         "Widgets"
     ],
     "homepage": "https://github.com/evilrepo/evilcode",

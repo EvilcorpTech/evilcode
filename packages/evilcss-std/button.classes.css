@@ -1,13 +1,12 @@
 .std-button {
-    border-radius: var(--radius, .4em);
+    border-radius: var(--border-radius, .4em);
     padding: var(--padding, .4em .8em);
     display: inline-flex;
     justify-content: center;
     align-items: center;
     text-align: center;
     user-select: none;
-    transition: all;
-    transition-duration: var(--transition-duration, var(--std-duration-normal));
+    transition: all var(--transition-duration, var(--std-duration-normal));
 }
 .std-button:disabled,
 .std-button[disabled],
