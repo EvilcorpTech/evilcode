@@ -46,7 +46,7 @@
 .duration-t347,
 .radius-75ca,
 .shadow-t9a2 {
-    background-color: var(--std-color-back1);
+    background-color: var(--std-color-bg1);
 }
 
 .picker-t8c2 {
@@ -104,21 +104,21 @@
     color: var(--std-color-primary-accent);
 }
 .gutter-t1d3 > i {
-    border-bottom: 1rem solid var(--std-color-back4)
+    border-bottom: 1rem solid var(--std-color-bg4)
 }
 .gutter-t1d3:hover > i {
-    border-color: var(--std-color-secondary-back2);
+    border-color: var(--std-color-secondary-bg2);
 }
 
 .radius-75ca {
     margin: 0 var(--std-gutter-xs);
     padding: var(--std-gutter-s);
     border: 4px solid transparent;
-    background-color: var(--std-color-back4);
+    background-color: var(--std-color-bg4);
 }
 .radius-75ca:hover {
     color: var(--std-color-primary-accent);
-    background-color: var(--std-color-back1);
+    background-color: var(--std-color-bg1);
     border-color: currentColor;
 }
 

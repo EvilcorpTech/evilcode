@@ -174,7 +174,7 @@ export function WidgetsView(props: WidgetsViewProps) {
                     style={{
                         width: '400px',
                         height: '200px',
-                        background: 'var(--std-color-back3)',
+                        background: 'var(--std-color-bg3)',
                     }}
                 >
                     <Slide className="std-stack h"><h6>1</h6></Slide>

@@ -49,12 +49,12 @@
 /*
 .content-b6b3,
 .tooltip-ac0e::before {
-    background: var(--std-color-back1);
-    border: 1px solid hsla(0, 0%, var(--std-front-l), .05);
+    background: var(--std-color-bg1);
+    border: 1px solid hsla(0, 0%, var(--std-fg-l), .05);
 }
 
 .content-b6b3 {
     padding: var(--padding, var(--std-gutter-xs));
-    background-color: var(--std-color-back1);
+    background-color: var(--std-color-bg1);
 }
 */

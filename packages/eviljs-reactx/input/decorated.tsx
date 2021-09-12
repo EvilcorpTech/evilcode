@@ -12,7 +12,7 @@ export function InputLabel(props: InputLabelProps) {
             {...otherProps}
             className={classes('InputLabel-5738', className)}
         >
-            <label className={classes('label-b082 std-text-body2 std-color-front2', labelClass)}>
+            <label className={classes('label-b082 std-text-body2 std-color-fg2', labelClass)}>
                 {title}
             </label>
 

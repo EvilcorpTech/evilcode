@@ -25,13 +25,13 @@
 }
 
 .section-0234 .section-c3bf {
-    background-color: var(--std-color-back2);
+    background-color: var(--std-color-bg2);
 }
 
 .section-0234 .section-c3bf .head-ad0d {
     padding: var(--std-gutter-s);
-    border-bottom: 4px solid var(--std-color-back1);
-    background-color: var(--std-color-back3);
+    border-bottom: 4px solid var(--std-color-bg1);
+    background-color: var(--std-color-bg3);
     transition: all var(--std-duration-normal);
 }
 
@@ -41,5 +41,5 @@
 
 .section-0234 .section-c3bf .content-38aa > * {
     padding: var(--std-gutter-s);
-    color: var(--std-color-primary-front1);
+    color: var(--std-color-primary-fg1);
 }

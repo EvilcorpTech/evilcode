@@ -184,7 +184,7 @@ export function Colors() {
                             key={idx}
                             className="color-t75a"
                             title={`Primary text ${idx+1}`}
-                            style={{backgroundColor: `var(--std-color-primary-front${idx+1})`}}
+                            style={{backgroundColor: `var(--std-color-primary-fg${idx+1})`}}
                         />
                     ))}
                 </div>
@@ -201,7 +201,7 @@ export function Colors() {
                             key={idx}
                             className="color-t75a"
                             title={`Primary back ${idx+1}`}
-                            style={{backgroundColor: `var(--std-color-primary-back${idx+1})`}}
+                            style={{backgroundColor: `var(--std-color-primary-bg${idx+1})`}}
                         />
                     ))}
                 </div>
@@ -317,16 +317,16 @@ export function Colors() {
 export function Typography() {
     return (
         <div className="std-flex column align-start">
-            <label className="text-8fa3 std-text-display1 std-color-primary-front1">Display 1</label>
-            <label className="text-8fa3 std-text-display2 std-color-primary-front2">Display 2</label>
-            <label className="text-8fa3 std-text-h1 std-color-primary-front3">Headline 1</label>
-            <label className="text-8fa3 std-text-h2 std-color-primary-front4">Headline 2</label>
-            <label className="text-8fa3 std-text-h3 std-color-primary-front5">Headline 3</label>
-            <label className="text-8fa3 std-text-h4 std-color-secondary-front1">Headline 4</label>
-            <label className="text-8fa3 std-text-h5 std-color-secondary-front2">Headline 5</label>
-            <label className="text-8fa3 std-text-h6 std-color-secondary-front3">Headline 6</label>
-            <label className="text-8fa3 std-text-subtitle1 std-color-secondary-front4">Subtitle 1</label>
-            <label className="text-8fa3 std-text-subtitle2 std-color-secondary-front5">Subtitle 2</label>
+            <label className="text-8fa3 std-text-display1 std-color-primary-fg1">Display 1</label>
+            <label className="text-8fa3 std-text-display2 std-color-primary-fg1">Display 2</label>
+            <label className="text-8fa3 std-text-h1 std-color-primary-fg2">Headline 1</label>
+            <label className="text-8fa3 std-text-h2 std-color-primary-fg2">Headline 2</label>
+            <label className="text-8fa3 std-text-h3 std-color-primary-fg2">Headline 3</label>
+            <label className="text-8fa3 std-text-h4 std-color-primary-fg2">Headline 4</label>
+            <label className="text-8fa3 std-text-h5 std-color-primary-fg2">Headline 5</label>
+            <label className="text-8fa3 std-text-h6 std-color-primary-fg2">Headline 6</label>
+            <label className="text-8fa3 std-text-subtitle1 std-color-primary-fg3">Subtitle 1</label>
+            <label className="text-8fa3 std-text-subtitle2 std-color-primary-fg3">Subtitle 2</label>
             <label className="text-8fa3 std-text-body1">Body 1</label>
             <label className="text-8fa3 std-text-body2">Body 2</label>
             <label className="text-8fa3 std-text-small">Small</label>
@@ -366,103 +366,87 @@ export function Contrast() {
     return (
         <div className="std-flex column center align-center">
             <div className="std-flex wrap">
-                <label className="contrast-td08 std-color-back1">
-                    <div className="std-color-front1">Back 1</div>
-                    <div className="std-color-front1">Front 1</div>
-                    <div className="std-color-front2">Front 2</div>
-                    <div className="std-color-front3">Front 3</div>
+                <label className="contrast-td08 std-color-bg1">
+                    <div className="std-color-fg1">Back 1</div>
+                    <div className="std-color-fg1">Front 1</div>
+                    <div className="std-color-fg2">Front 2</div>
+                    <div className="std-color-fg3">Front 3</div>
                 </label>
-                <label className="contrast-td08 std-color-back2">
-                    <div className="std-color-front1">Back 2</div>
-                    <div className="std-color-front1">Front 1</div>
-                    <div className="std-color-front2">Front 2</div>
-                    <div className="std-color-front3">Front 3</div>
+                <label className="contrast-td08 std-color-bg2">
+                    <div className="std-color-fg1">Back 2</div>
+                    <div className="std-color-fg1">Front 1</div>
+                    <div className="std-color-fg2">Front 2</div>
+                    <div className="std-color-fg3">Front 3</div>
                 </label>
-                <label className="contrast-td08 std-color-back3">
-                    <div className="std-color-front1">Back 3</div>
-                    <div className="std-color-front1">Front 1</div>
-                    <div className="std-color-front2">Front 2</div>
-                    <div className="std-color-front3">Front 3</div>
+                <label className="contrast-td08 std-color-bg3">
+                    <div className="std-color-fg1">Back 3</div>
+                    <div className="std-color-fg1">Front 1</div>
+                    <div className="std-color-fg2">Front 2</div>
+                    <div className="std-color-fg3">Front 3</div>
                 </label>
-                <label className="contrast-td08 std-color-back4">
-                    <div className="std-color-front1">Back 4</div>
-                    <div className="std-color-front1">Front 1</div>
-                    <div className="std-color-front2">Front 2</div>
-                    <div className="std-color-front3">Front 3</div>
-                </label>
-            </div>
-
-            <i className="std-space-v s"/>
-
-            <div className="std-flex wrap">
-                <label className="contrast-td08 std-color-primary-back1">
-                    <div className="std-color-front1">Primary Back 1</div>
-                    <div className="std-color-primary-front1">Primary Front 1</div>
-                    <div className="std-color-primary-front2">Primary Front 2</div>
-                    <div className="std-color-primary-front3">Primary Front 3</div>
-                    <div className="std-color-primary-front4">Primary Front 4</div>
-                    <div className="std-color-primary-front5">Primary Front 5</div>
-                </label>
-                <label className="contrast-td08 std-color-primary-back2">
-                    <div className="std-color-front1">Primary Back 2</div>
-                    <div className="std-color-primary-front1">Primary Front 1</div>
-                    <div className="std-color-primary-front2">Primary Front 2</div>
-                    <div className="std-color-primary-front3">Primary Front 3</div>
-                    <div className="std-color-primary-front4">Primary Front 4</div>
-                    <div className="std-color-primary-front5">Primary Front 5</div>
-                </label>
-                <label className="contrast-td08 std-color-primary-back3">
-                    <div className="std-color-front1">Primary Back 3</div>
-                    <div className="std-color-primary-front1">Primary Front 1</div>
-                    <div className="std-color-primary-front2">Primary Front 2</div>
-                    <div className="std-color-primary-front3">Primary Front 3</div>
-                    <div className="std-color-primary-front4">Primary Front 4</div>
-                    <div className="std-color-primary-front5">Primary Front 5</div>
-                </label>
-                <label className="contrast-td08 std-color-primary-back4">
-                    <div className="std-color-front1">Primary Back 4</div>
-                    <div className="std-color-primary-front1">Primary Front 1</div>
-                    <div className="std-color-primary-front2">Primary Front 2</div>
-                    <div className="std-color-primary-front3">Primary Front 3</div>
-                    <div className="std-color-primary-front4">Primary Front 4</div>
-                    <div className="std-color-primary-front5">Primary Front 5</div>
+                <label className="contrast-td08 std-color-bg4">
+                    <div className="std-color-fg1">Back 4</div>
+                    <div className="std-color-fg1">Front 1</div>
+                    <div className="std-color-fg2">Front 2</div>
+                    <div className="std-color-fg3">Front 3</div>
                 </label>
             </div>
 
             <i className="std-space-v s"/>
 
             <div className="std-flex wrap">
-                <label className="contrast-td08 std-color-secondary-back1">
-                    <div className="std-color-front1">Secondary Back 1</div>
-                    <div className="std-color-secondary-front1">Secondary Front 1</div>
-                    <div className="std-color-secondary-front2">Secondary Front 2</div>
-                    <div className="std-color-secondary-front3">Secondary Front 3</div>
-                    <div className="std-color-secondary-front4">Secondary Front 4</div>
-                    <div className="std-color-secondary-front5">Secondary Front 5</div>
+                <label className="contrast-td08 std-color-primary-bg1">
+                    <div className="std-color-fg1">Primary Back 1</div>
+                    <div className="std-color-primary-fg1">Primary Front 1</div>
+                    <div className="std-color-primary-fg2">Primary Front 2</div>
+                    <div className="std-color-primary-fg3">Primary Front 3</div>
                 </label>
-                <label className="contrast-td08 std-color-secondary-back2">
-                    <div className="std-color-front1">Secondary Back 2</div>
-                    <div className="std-color-secondary-front1">Secondary Front 1</div>
-                    <div className="std-color-secondary-front2">Secondary Front 2</div>
-                    <div className="std-color-secondary-front3">Secondary Front 3</div>
-                    <div className="std-color-secondary-front4">Secondary Front 4</div>
-                    <div className="std-color-secondary-front5">Secondary Front 5</div>
+                <label className="contrast-td08 std-color-primary-bg2">
+                    <div className="std-color-fg1">Primary Back 2</div>
+                    <div className="std-color-primary-fg1">Primary Front 1</div>
+                    <div className="std-color-primary-fg2">Primary Front 2</div>
+                    <div className="std-color-primary-fg3">Primary Front 3</div>
                 </label>
-                <label className="contrast-td08 std-color-secondary-back3">
-                    <div className="std-color-front1">Secondary Back 3</div>
-                    <div className="std-color-secondary-front1">Secondary Front 1</div>
-                    <div className="std-color-secondary-front2">Secondary Front 2</div>
-                    <div className="std-color-secondary-front3">Secondary Front 3</div>
-                    <div className="std-color-secondary-front4">Secondary Front 4</div>
-                    <div className="std-color-secondary-front5">Secondary Front 5</div>
+                <label className="contrast-td08 std-color-primary-bg3">
+                    <div className="std-color-fg1">Primary Back 3</div>
+                    <div className="std-color-primary-fg1">Primary Front 1</div>
+                    <div className="std-color-primary-fg2">Primary Front 2</div>
+                    <div className="std-color-primary-fg3">Primary Front 3</div>
                 </label>
-                <label className="contrast-td08 std-color-secondary-back4">
-                    <div className="std-color-front1">Secondary Back 4</div>
-                    <div className="std-color-secondary-front1">Secondary Front 1</div>
-                    <div className="std-color-secondary-front2">Secondary Front 2</div>
-                    <div className="std-color-secondary-front3">Secondary Front 3</div>
-                    <div className="std-color-secondary-front4">Secondary Front 4</div>
-                    <div className="std-color-secondary-front5">Secondary Front 5</div>
+                <label className="contrast-td08 std-color-primary-bg4">
+                    <div className="std-color-fg1">Primary Back 4</div>
+                    <div className="std-color-primary-fg1">Primary Front 1</div>
+                    <div className="std-color-primary-fg2">Primary Front 2</div>
+                    <div className="std-color-primary-fg3">Primary Front 3</div>
+                </label>
+            </div>
+
+            <i className="std-space-v s"/>
+
+            <div className="std-flex wrap">
+                <label className="contrast-td08 std-color-secondary-bg1">
+                    <div className="std-color-fg1">Secondary Back 1</div>
+                    <div className="std-color-secondary-fg1">Secondary Front 1</div>
+                    <div className="std-color-secondary-fg2">Secondary Front 2</div>
+                    <div className="std-color-secondary-fg3">Secondary Front 3</div>
+                </label>
+                <label className="contrast-td08 std-color-secondary-bg2">
+                    <div className="std-color-fg1">Secondary Back 2</div>
+                    <div className="std-color-secondary-fg1">Secondary Front 1</div>
+                    <div className="std-color-secondary-fg2">Secondary Front 2</div>
+                    <div className="std-color-secondary-fg3">Secondary Front 3</div>
+                </label>
+                <label className="contrast-td08 std-color-secondary-bg3">
+                    <div className="std-color-fg1">Secondary Back 3</div>
+                    <div className="std-color-secondary-fg1">Secondary Front 1</div>
+                    <div className="std-color-secondary-fg2">Secondary Front 2</div>
+                    <div className="std-color-secondary-fg3">Secondary Front 3</div>
+                </label>
+                <label className="contrast-td08 std-color-secondary-bg4">
+                    <div className="std-color-fg1">Secondary Back 4</div>
+                    <div className="std-color-secondary-fg1">Secondary Front 1</div>
+                    <div className="std-color-secondary-fg2">Secondary Front 2</div>
+                    <div className="std-color-secondary-fg3">Secondary Front 3</div>
                 </label>
             </div>
         </div>
