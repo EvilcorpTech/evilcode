@@ -1,7 +1,0 @@
-{
-    "extends": "../tsconfig/react.json",
-    "include": ["./**/*.ts", "./**/*.tsx"],
-    "exclude": ["./**/*.d.ts", "node_modules"],
-    "compilerOptions": {
-    },
-}
