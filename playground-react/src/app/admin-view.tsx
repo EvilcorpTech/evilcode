@@ -1,5 +1,5 @@
 import {classes} from '@eviljs/react/react'
-import {Button} from '@eviljs/reactx/button/v1'
+import {Button} from '@eviljs/reactx/button/index'
 import {useAuth} from '@eviljs/react/auth'
 import {useCallback} from 'react'
 import {useI18nMsg} from 'lib/hooks'

@@ -28,7 +28,7 @@ export function PortalsView(props: PortalsViewProps) {
             </Teleport>
 
             <main className="main-b3bf">
-                <div className="card-8a91 std-color-back2 std-shadow z4">
+                <div className="card-8a91 std-color-bg2 std-shadow z4">
                     <Teleport to="title">
                         {msg.title}
                     </Teleport>

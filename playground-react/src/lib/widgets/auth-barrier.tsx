@@ -1,4 +1,4 @@
-import {AuthBarrier as Barrier} from '@eviljs/reactx/auth-barrier/v1'
+import {AuthBarrier as Barrier} from '@eviljs/reactx/auth-barrier/index'
 import {Redirect} from '@eviljs/react/router'
 import {useI18nMsg} from 'lib/hooks'
 

@@ -1,19 +1,19 @@
 {
-    "name": "doc",
+    "name": "site",
     "version": "1.0.0",
     "workspaces": [
-        "../packages/std",
-        "../packages/style",
-        "../packages/stylex",
-        "../packages/vue",
-        "../packages/web",
-        "../packages/webx",
-        "../packages/tsconfig"
+        "../packages/evilcss-std",
+        "../packages/evilcss-ui",
+        "../packages/eviljs-std",
+        "../packages/eviljs-tsconfig",
+        "../packages/eviljs-vue",
+        "../packages/eviljs-web",
+        "../packages/eviljs-webx"
     ],
     "dependencies": {
+        "@evilcss/std": "^1",
+        "@evilcss/ui": "^1",
         "@eviljs/std": "^1",
-        "@eviljs/style": "^1",
-        "@eviljs/stylex": "^1",
         "@eviljs/vue": "^1",
         "@eviljs/web": "^1",
         "@eviljs/webx": "^1",

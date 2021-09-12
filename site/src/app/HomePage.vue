@@ -96,7 +96,7 @@
         /* border-radius: var(--std-radius-xs); */
         padding: var(--std-gutter-m);
         font-weight: var(--std-weight-medium);
-        background-color: var(--std-color-back1);
+        background-color: var(--std-color-bg1);
         background-repeat: no-repeat;
         background-position: 10rem 130%;
         background-size: 100%;

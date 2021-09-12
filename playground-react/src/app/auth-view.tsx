@@ -1,7 +1,7 @@
 import {useAuth, AuthTokenState} from '@eviljs/react/auth'
 import {classes} from '@eviljs/react/react'
 import {useRouter, Redirect} from '@eviljs/react/router'
-import {AuthCredentials} from '@eviljs/reactx/auth-credentials/v1'
+import {AuthCredentials} from '@eviljs/reactx/auth-credentials/index'
 import {useCallback} from 'react'
 import {useI18nMsg} from 'lib/hooks'
 
