@@ -1,8 +1,10 @@
 .std-icon {
     display: inline-block;
 }
-.std-icon * {
+.std-icon *:not([fill]) {
     fill: currentColor;
+}
+.std-icon *:not([stroke]) {
     stroke: currentColor;
 }
 .std-icon.cover {

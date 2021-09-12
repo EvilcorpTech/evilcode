@@ -1,38 +1,34 @@
 .std-theme.light {
-    color: var(--std-color-front1);
+    color: var(--std-color-fg1);
 
-    --std-front-l: 0%;
-    --std-front-ll: 1;
-    --std-back-l: 100%;
-    --std-back-ll: -1;
+    --std-fg-l: 0%;
+    --std-fg-ll: 1;
+    --std-bg-l: 100%;
+    --std-bg-ll: -1;
 
-    --std-color-front1: hsl(0, 0%, 13%);
-    --std-color-front2: hsl(0, 0%, 36%);
-    --std-color-front3: hsl(0, 0%, 69%);
-    --std-color-back1: hsl(0, 0%, 100%);
-    --std-color-back2: hsl(0, 0%, 98%);
-    --std-color-back3: hsl(0, 0%, 96%);
-    --std-color-back4: hsl(0, 0%, 94%);
+    --std-color-fg1: hsl(0, 0%, 13%);
+    --std-color-fg2: hsl(0, 0%, 36%);
+    --std-color-fg3: hsl(0, 0%, 59%);
+    --std-color-bg1: hsl(0, 0%, 100%);
+    --std-color-bg2: hsl(0, 0%, 98%);
+    --std-color-bg3: hsl(0, 0%, 96%);
+    --std-color-bg4: hsl(0, 0%, 94%);
 
-    --std-color-primary-front1: hsl(var(--std-color-primary-h), var(--std-color-primary-s), 30%);
-    --std-color-primary-front2: hsl(var(--std-color-primary-h), var(--std-color-primary-s), 40%);
-    --std-color-primary-front3: hsl(var(--std-color-primary-h), var(--std-color-primary-s), 50%);
-    --std-color-primary-front4: hsl(var(--std-color-primary-h), var(--std-color-primary-s), 60%);
-    --std-color-primary-front5: hsl(var(--std-color-primary-h), var(--std-color-primary-s), 70%);
-    --std-color-primary-back1: hsl(var(--std-color-primary-h), var(--std-color-primary-s), 97%);
-    --std-color-primary-back2: hsl(var(--std-color-primary-h), var(--std-color-primary-s), 84%);
-    --std-color-primary-back3: hsl(var(--std-color-primary-h), var(--std-color-primary-s), 71%);
-    --std-color-primary-back4: hsl(var(--std-color-primary-h), var(--std-color-primary-s), 57%);
-    --std-color-secondary-front1: hsl(var(--std-color-secondary-h), var(--std-color-secondary-s), 30%);
-    --std-color-secondary-front2: hsl(var(--std-color-secondary-h), var(--std-color-secondary-s), 40%);
-    --std-color-secondary-front3: hsl(var(--std-color-secondary-h), var(--std-color-secondary-s), 50%);
-    --std-color-secondary-front4: hsl(var(--std-color-secondary-h), var(--std-color-secondary-s), 60%);
-    --std-color-secondary-front5: hsl(var(--std-color-secondary-h), var(--std-color-secondary-s), 70%);
-    --std-color-secondary-back1: hsl(var(--std-color-secondary-h), var(--std-color-secondary-s), 97%);
-    --std-color-secondary-back2: hsl(var(--std-color-secondary-h), var(--std-color-secondary-s), 84%);
-    --std-color-secondary-back3: hsl(var(--std-color-secondary-h), var(--std-color-secondary-s), 71%);
-    --std-color-secondary-back4: hsl(var(--std-color-secondary-h), var(--std-color-secondary-s), 57%);
+    --std-color-primary-fg1: hsl(var(--std-color-primary-h), var(--std-color-primary-s), 48%);
+    --std-color-primary-fg2: hsl(var(--std-color-primary-h), var(--std-color-primary-s), 40%);
+    --std-color-primary-fg3: hsl(var(--std-color-primary-h), var(--std-color-primary-s), 32%);
+    --std-color-primary-bg1: hsl(var(--std-color-primary-h), var(--std-color-primary-s), 97%);
+    --std-color-primary-bg2: hsl(var(--std-color-primary-h), var(--std-color-primary-s), 84%);
+    --std-color-primary-bg3: hsl(var(--std-color-primary-h), var(--std-color-primary-s), 71%);
+    --std-color-primary-bg4: hsl(var(--std-color-primary-h), var(--std-color-primary-s), 57%);
+    --std-color-secondary-fg1: hsl(var(--std-color-secondary-h), var(--std-color-secondary-s), 48%);
+    --std-color-secondary-fg2: hsl(var(--std-color-secondary-h), var(--std-color-secondary-s), 40%);
+    --std-color-secondary-fg3: hsl(var(--std-color-secondary-h), var(--std-color-secondary-s), 32%);
+    --std-color-secondary-bg1: hsl(var(--std-color-secondary-h), var(--std-color-secondary-s), 97%);
+    --std-color-secondary-bg2: hsl(var(--std-color-secondary-h), var(--std-color-secondary-s), 84%);
+    --std-color-secondary-bg3: hsl(var(--std-color-secondary-h), var(--std-color-secondary-s), 71%);
+    --std-color-secondary-bg4: hsl(var(--std-color-secondary-h), var(--std-color-secondary-s), 57%);
 }
 .std-theme.light.back {
-    background-color: var(--theme-back, var(--std-color-back1));
+    background-color: var(--theme-back, var(--std-color-bg1));
 }

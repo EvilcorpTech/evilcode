@@ -1,7 +1,7 @@
 :root,
 .std-theme {
-    --std-input-text: var(--std-color-front3);
-    --std-input-back: var(--std-color-back3);
+    --std-input-text: var(--std-color-fg3);
+    --std-input-back: var(--std-color-bg3);
     --std-input-border: var(--std-border1-color);
 
     --std-color-action: var(--std-color-primary-accent);
@@ -9,6 +9,6 @@
     --std-color-warning: #ffc107; /* --std-color-amber6 */
     --std-color-error: #ff5722; /* --std-color-deeporange6 */
 
-    --std-border1-color: var(--std-color-back4);
+    --std-border1-color: var(--std-color-bg4);
     --std-border1: 1px solid var(--std-border1-color);
 }
