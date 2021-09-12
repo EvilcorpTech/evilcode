@@ -1,6 +1,6 @@
 {
-    "name": "@eviljs/style",
-    "version": "1.0.2",
+    "name": "@evilcss/std",
+    "version": "1.0.0",
     "files": [
         "/LICENSE.txt",
         "/*.css",
@@ -12,17 +12,17 @@
     },
     "author": "Daniele Orlando",
     "license": "BSD-2-Clause",
-    "description": "Awesome CSS theme",
+    "description": "Awesome CSS design system",
     "keywords": [
         "CSS",
-        "Theme"
+        "Design System"
     ],
-    "homepage": "https://github.com/EvilRepo/eviljs",
+    "homepage": "https://github.com/evilrepo/evilcode",
     "repository": {
         "type": "git",
-        "url": "git+https://github.com/EvilRepo/eviljs.git"
+        "url": "git+https://github.com/evilrepo/evilcode.git"
     },
     "bugs": {
-        "url": "https://github.com/EvilRepo/eviljs/issues"
+        "url": "https://github.com/evilrepo/evilcode/issues"
     }
 }
