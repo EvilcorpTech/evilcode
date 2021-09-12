@@ -4,12 +4,8 @@
     "type": "module",
     "files": [
         "/LICENSE.txt",
-        "/*.js",
-        "/*.d.ts",
-        "/middleware/*.js",
-        "/middleware/*.d.ts",
-        "/shell/*.js",
-        "/shell/*.d.ts"
+        "/**/*.js",
+        "/**/*.d.ts"
     ],
     "dependencies": {
         "@eviljs/std": "^1",
@@ -55,12 +51,12 @@
         "Node",
         "TypeScript"
     ],
-    "homepage": "https://github.com/EvilRepo/eviljs",
+    "homepage": "https://github.com/evilrepo/evilcode",
     "repository": {
         "type": "git",
-        "url": "git+https://github.com/EvilRepo/eviljs.git"
+        "url": "git+https://github.com/evilrepo/evilcode.git"
     },
     "bugs": {
-        "url": "https://github.com/EvilRepo/eviljs/issues"
+        "url": "https://github.com/evilrepo/evilcode/issues"
     }
 }
