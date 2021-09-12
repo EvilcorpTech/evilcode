@@ -9,18 +9,17 @@ export class WebElement extends HTMLElement {
     constructor() {
         super()
 
-        this[WebElementState] = {
-            mounted: [],
-            unmounted: [],
-        }
+        this[WebElementState] = {mounted: [], unmounted: []}
     }
 
     connectedCallback() {
-        flushTasksQueue(this[WebElementState].mounted)
+        runTasksQueue(this[WebElementState].mounted)
     }
 
     disconnectedCallback() {
-        this[WebElementState].unmounted = flushTasksQueue(this[WebElementState].unmounted)
+        runTasksQueue(this[WebElementState].unmounted)
+
+        this[WebElementState].unmounted = []
     }
 }
 
@@ -61,12 +60,10 @@ export function useEventListener(element: WebElement, target: Window | Document 
 
 // Tools ///////////////////////////////////////////////////////////////////////
 
-export function flushTasksQueue(queue: Array<Function>): Array<Function> {
+export function runTasksQueue(queue: Array<Function>) {
     for (const it of queue) {
         it()
     }
-
-    return []
 }
 
 // Types ///////////////////////////////////////////////////////////////////////
