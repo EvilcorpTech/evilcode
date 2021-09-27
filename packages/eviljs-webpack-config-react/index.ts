@@ -1,29 +1,39 @@
-const {BundleStatsWebpackPlugin: BundleStatsPlugin} = require('bundle-stats-webpack-plugin')
-const CopyPlugin = require('copy-webpack-plugin')
-const CssMinimizerPlugin = require('css-minimizer-webpack-plugin')
-const HtmlPlugin = require('html-webpack-plugin')
-const {DuplicatesPlugin} = require('inspectpack/plugin')
-const MiniCssExtractPlugin = require('mini-css-extract-plugin')
-const Path = require('path')
-const {DefinePlugin} = require('webpack')
-const {BundleAnalyzerPlugin} = require('webpack-bundle-analyzer')
+import {BundleStatsWebpackPlugin as BundleStatsPlugin} from 'bundle-stats-webpack-plugin'
+import CopyPlugin from 'copy-webpack-plugin'
+import CssMinimizerPlugin from 'css-minimizer-webpack-plugin'
+import HtmlPlugin from 'html-webpack-plugin'
+import {DuplicatesPlugin} from 'inspectpack/plugin/index.js'
+import MiniCssExtractPlugin from 'mini-css-extract-plugin'
+import {createRequire} from 'module'
+import Path from 'path'
+import Webpack from 'webpack'
+import {BundleAnalyzerPlugin} from 'webpack-bundle-analyzer'
+import {createBabelConfig} from './babel.config.js'
+import {createPostcssConfig} from './postcss.config.js'
 
-const DefaultBasePath = ''
-const DefaultBundleName = ''
+const {DefinePlugin} = Webpack
+const require = createRequire(import.meta.url)
 
-function createWebpackConfig(projectDir: string, options?: WebpackConfigOptions) {
-    const {
-        basePath,
-        bundleName,
-        define,
-        mode,
-        serverAddress,
-        serverPort,
-        withPreact,
-        withWorkers,
-    } = options ?? {}
+export const DefaultBasePath = ''
+export const DefaultBundleName = ''
+export const DefaultServerAddress =  '127.0.0.1'
+export const DefaultServerPort = 8000
 
-    const isProductionMode = (mode ?? process.env.NODE_ENV) === 'production'
+export default createWebpackConfig()
+
+export function createWebpackConfig(options?: WebpackConfigOptions) {
+    const basePath = options?.basePath ?? DefaultBasePath
+    const bundleName = options?.bundleName ?? DefaultBundleName
+    const define = options?.define ?? {}
+    const mode = options?.mode ?? process.env.NODE_ENV
+    const serverAddress = options?.serverAddress ?? DefaultServerAddress
+    const serverPort = options?.serverPort ?? DefaultServerPort
+    const withPreact = options?.withPreact ?? false
+    const withWorkers = options?.withWorkers ?? false
+    const workDir = options?.workDir ?? process.cwd()
+    const isProductionMode = mode === 'production'
+    const babelConfig = options?.babelConfig || createBabelConfig({workDir})
+    const postcssConfig = options?.postcssConfig || createPostcssConfig({workDir})
 
     return {
         target: isProductionMode
@@ -32,15 +42,15 @@ function createWebpackConfig(projectDir: string, options?: WebpackConfigOptions)
         ,
 
         entry: {
-            main: Path.resolve(projectDir, 'src/main.ts'),
+            main: Path.resolve(workDir, 'src/main.ts'),
         },
 
         output: {
-            publicPath: basePath ?? DefaultBasePath,
-            path: Path.resolve(projectDir, 'build'),
-            filename: Path.join(bundleName ?? DefaultBundleName, 'entry-[name].js'),
-            chunkFilename: Path.join(bundleName ?? DefaultBundleName, 'chunk-[id].js'),
-            assetModuleFilename: Path.join(bundleName ?? DefaultBundleName, 'asset-[id]-[name][ext]'),
+            publicPath: basePath,
+            path: Path.resolve(workDir, 'build'),
+            filename: Path.join(bundleName, 'entry-[name].js'),
+            chunkFilename: Path.join(bundleName, 'chunk-[id].js'),
+            assetModuleFilename: Path.join(bundleName, 'asset-[id]-[name][ext]'),
             clean: true,
         },
 
@@ -51,8 +61,8 @@ function createWebpackConfig(projectDir: string, options?: WebpackConfigOptions)
 
         resolve: {
             modules: [
-                Path.resolve(projectDir, 'src'),
-                Path.resolve(projectDir, '.node_modules'),
+                Path.resolve(workDir, 'src'),
+                Path.resolve(workDir, '.node_modules'),
                 'node_modules',
             ],
             alias: {
@@ -73,10 +83,12 @@ function createWebpackConfig(projectDir: string, options?: WebpackConfigOptions)
                 {
                     test: /\.tsx?$/,
                     loader: require.resolve('babel-loader'),
+                    options: babelConfig,
                 },
                 {
                     test: /\.jsx?$/,
                     loader: require.resolve('babel-loader'),
+                    options: babelConfig,
                 },
                 {
                     test: /\.css$/,
@@ -91,7 +103,10 @@ function createWebpackConfig(projectDir: string, options?: WebpackConfigOptions)
                         },
                         {
                             loader: require.resolve('postcss-loader'),
-                            options: {sourceMap: false},
+                            options: {
+                                sourceMap: false,
+                                postcssOptions: postcssConfig,
+                            },
                         },
                     ],
                 },
@@ -112,14 +127,14 @@ function createWebpackConfig(projectDir: string, options?: WebpackConfigOptions)
                 // 'process.env': {
                 //     NODE_ENV: JSON.stringify(process.env.NODE_ENV),
                 // },
-                __BASE_PATH__: JSON.stringify(basePath ?? DefaultBasePath),
-                __BUNDLE_NAME__: JSON.stringify(bundleName ?? DefaultBundleName),
+                __BASE_PATH__: JSON.stringify(basePath),
+                __BUNDLE_NAME__: JSON.stringify(bundleName),
                 __ENV__: JSON.stringify(process.env.NODE_ENV),
                 ...define,
             }),
             new MiniCssExtractPlugin({
-                filename: Path.join(bundleName ?? DefaultBundleName, 'entry-[name].css'),
-                chunkFilename: Path.join(bundleName ?? DefaultBundleName, 'chunk-[id].css'),
+                filename: Path.join(bundleName, 'entry-[name].css'),
+                chunkFilename: Path.join(bundleName, 'chunk-[id].css'),
             }),
             new HtmlPlugin({
                 template: 'src/main.html',
@@ -172,16 +187,18 @@ function createWebpackConfig(projectDir: string, options?: WebpackConfigOptions)
             : 'eval-source-map'
         ,
         devServer: {
-            host: serverAddress ?? '127.0.0.1',
-            port: serverPort ?? 8000,
+            host: serverAddress,
+            port: serverPort,
             devMiddleware: {
                 writeToDisk: true,  // Used for testing the Server Side Rendering while development.
             },
             static: {
-                directory: Path.resolve(projectDir, 'build'),
+                directory: Path.resolve(workDir, 'build'),
             },
             client: {
-                logging: 'warn',
+                logging: 'info', // 'verbose'
+                progress: true,
+                overlay: true,
             },
             historyApiFallback: true,
             hot: true,
@@ -190,11 +207,17 @@ function createWebpackConfig(projectDir: string, options?: WebpackConfigOptions)
             managedPaths: [], // Processes changes inside the node_modules directory.
         },
 
-        stats: 'normal',
+        stats: isProductionMode
+            ? 'normal'
+            : 'minimal' // 'verbose'
+        ,
+        infrastructureLogging: {
+            level: 'info', // 'verbose'
+        },
     }
 }
 
-function asBoolean<T>(value: undefined | boolean | number | string, defaultValue: T) {
+export function asBoolean<T>(value: undefined | boolean | number | string, defaultValue: T) {
     switch (value) {
         case true: case 1: case '1': case 'yes': case 'on': case 'true':
             return true
@@ -206,20 +229,18 @@ function asBoolean<T>(value: undefined | boolean | number | string, defaultValue
     return defaultValue
 }
 
-module.exports.DefaultBasePath = DefaultBasePath
-module.exports.DefaultBundleName = DefaultBundleName
-module.exports.asBoolean = asBoolean
-module.exports.createWebpackConfig = createWebpackConfig
-
 // Types ///////////////////////////////////////////////////////////////////////
 
 export interface WebpackConfigOptions {
-    basePath?: string
-    bundleName?: string
-    define?: Record<string, any>
-    mode?: string
-    serverAddress?: string
-    serverPort?: number
-    withPreact?: boolean
-    withWorkers?: boolean
+    babelConfig?: undefined | {}
+    basePath?: undefined | string
+    bundleName?: undefined | string
+    define?: undefined | Record<string, any>
+    mode?: undefined | string
+    postcssConfig?: undefined | {}
+    serverAddress?: undefined | string
+    serverPort?: undefined | number
+    withPreact?: undefined | boolean
+    withWorkers?: undefined | boolean
+    workDir?: undefined | string
 }

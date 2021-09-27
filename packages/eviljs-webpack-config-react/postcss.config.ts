@@ -1,10 +1,16 @@
-function createPostcssConfig(projectDir: string, options?: PostcssConfigOptions) {
-    const {mode} = options ?? {}
-    // const isProductionMode = (mode ?? process.env.NODE_ENV) === 'production'
+// @ts-ignore
+import PostCssPresetEnv from 'postcss-preset-env'
+
+export default createPostcssConfig()
+
+export function createPostcssConfig(options?: PostcssConfigOptions) {
+    // const mode = options?.mode ?? process.env.NODE_ENV
+    // const workDir = options?.workDir ?? process.cwd()
+    // const isProductionMode = mode === 'production'
 
     return {
         plugins: [
-            require('postcss-preset-env')({
+            PostCssPresetEnv({
                 stage: 3,
                 features: {
                     'postcss-focus-within': false,
@@ -14,10 +20,9 @@ function createPostcssConfig(projectDir: string, options?: PostcssConfigOptions)
     }
 }
 
-module.exports.createPostcssConfig = createPostcssConfig
-
 // Types ///////////////////////////////////////////////////////////////////////
 
 export interface PostcssConfigOptions {
-    mode?: string
+    mode?: undefined | string
+    workDir?: undefined | string
 }

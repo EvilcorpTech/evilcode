@@ -1,7 +1,7 @@
 {
     "name": "@eviljs/webpack-config-react",
     "version": "1.0.5",
-    "type": "commonjs",
+    "type": "module",
     "files": [
         "/LICENSE.txt",
         "/README.md",
