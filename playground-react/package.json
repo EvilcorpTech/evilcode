@@ -1,48 +1,38 @@
 {
     "name": "playground-react",
     "version": "1.0.0",
-    "workspaces": [
-        "../packages/evilcss-std",
-        "../packages/evilcss-ui",
-        "../packages/eviljs-react",
-        "../packages/eviljs-reactx",
-        "../packages/eviljs-std",
-        "../packages/eviljs-tsconfig",
-        "../packages/eviljs-web",
-        "../packages/eviljs-webpack-config-react",
-        "../packages/eviljs-webx"
-    ],
+    "type": "module",
+    "workspaces": ["../packages/*"],
     "dependencies": {
         "@evilcss/std": "^1",
         "@evilcss/ui": "^1",
         "@eviljs/react": "^1",
         "@eviljs/reactx": "^1",
         "@eviljs/std": "^1",
+        "@eviljs/tsconfig": "^1",
         "@eviljs/web": "^1",
+        "@eviljs/webpack-config-react": "^1",
         "@eviljs/webx": "^1",
         "@types/prop-types": "^15",
-        "@types/react": "^17",
         "@types/react-dom": "^17",
+        "@types/react": "^17",
         "preact": "^10",
         "prop-types": "^15",
+        "react-dom": "^17",
         "react": "^17",
-        "react-dom": "^17"
-    },
-    "devDependencies": {
-        "@eviljs/tsconfig": "^1",
-        "@eviljs/webpack-config-react": "^1",
         "typescript": "^4.4",
         "webpack-cli": "^4",
         "webpack-dev-server": "^4"
     },
     "scripts": {
-        "init": "npm install",
-        "dev": "NODE_ENV=${NODE_ENV:-development} webpack-dev-server --progress",
+        "build": "npm dedupe --legacy-peer-deps --no-progress --no-fund --no-color && npm run bundle",
+        "bundle": "NODE_ENV=production webpack-cli --mode production",
         "check": "tsc --noEmit",
-        "build": "npm dedupe --legacy-peer-deps --no-progress --no-fund --no-color && NODE_ENV=production webpack --mode production"
+        "dev": "NODE_ENV=${NODE_ENV:-development} webpack-dev-server --progress",
+        "init": "npm install"
     },
     "engines": {
-        "node": ">= 12",
+        "node": ">= 14",
         "npm": ">= 7"
     }
 }

@@ -27,10 +27,10 @@ export function createBabelConfig(options?: BabelConfigOptions) {
         ],
         plugins: [
             // Language Features ///////////////////////////////////////////////////
-            BabelPluginSyntaxDynamicImport, // import()
-            BabelPluginProposalNullishCoalescingOperator, // STANDARD: a?.b ?? c
-            BabelPluginProposalNumericSeparator, // STAGE 4: 1_000_000
-            BabelPluginProposalOptionalChaining, // STANDARD: a?.b?.c?.()?.[1]
+            BabelPluginSyntaxDynamicImport, // import() (STANDARD)
+            BabelPluginProposalNullishCoalescingOperator, // a?.b ?? c (STANDARD)
+            BabelPluginProposalNumericSeparator, // 1_000_000 (STANDARD)
+            BabelPluginProposalOptionalChaining, // a?.b?.c?.()?.[1] (STANDARD)
         ],
     }
 }

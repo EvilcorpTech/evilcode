@@ -9,7 +9,6 @@
         "/*.d.ts",
         "/types/*.d.ts"
     ],
-    "main": "index.js",
     "dependencies": {
         "@babel/core": "^7",
         "@babel/plugin-proposal-nullish-coalescing-operator": "^7",

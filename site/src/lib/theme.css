@@ -27,11 +27,3 @@ body,
 
     --view-gutter: var(--std-gutter-l);
 }
-
-.media-cover {
-    object-fit: cover;
-    object-position: 50% 50%;
-    background-size: cover;
-    background-position: 50% 50%;
-    background-repeat: no-repeat;
-}

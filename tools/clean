@@ -7,7 +7,7 @@ ProjectDir="$(cd "$(dirname "$0")/.." && pwd)"
 
 : ${Git:=git}
 : ${GitCleanArgs:=-X --force}
-: ${GitCleanMoreArgs:=}
+: ${GitCleanMoreArgs:=} # --dry-run,-n
 
 for pkg; do
         if test ! -e "$pkg/package.json"; then
