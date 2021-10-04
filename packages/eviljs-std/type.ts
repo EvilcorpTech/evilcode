@@ -2,6 +2,7 @@ export const Tests = {
     array: isArray,
     boolean: isBoolean,
     date: isDate,
+    defined: isDefined,
     function: isFunction,
     integer: isInteger,
     nil: isNil,
@@ -40,6 +41,10 @@ export function isDate(value: unknown): value is Date {
         return false
     }
     return true
+}
+
+export function isDefined<T>(value: undefined | T): value is T {
+    return ! isUndefined(value)
 }
 
 export function isFunction(value: unknown): value is Function {
