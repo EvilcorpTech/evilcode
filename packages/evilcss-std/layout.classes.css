@@ -11,3 +11,11 @@
     right: 0;
     bottom: 0;
 }
+
+.std-media-cover {
+    object-fit: var(--fit, cover);
+    object-position: var(--position, 50% 50%);
+    background-size: var(--fit, cover);
+    background-position: var(--position, 50% 50%);
+    background-repeat: no-repeat;
+}
