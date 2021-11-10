@@ -8,9 +8,6 @@
     "peerDependencies": {
         "@evilcss/std": "^1"
     },
-    "scripts": {
-        "build": ""
-    },
     "author": "Daniele Orlando",
     "license": "BSD-2-Clause",
     "description": "Awesome CSS UI widgets",
