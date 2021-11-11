@@ -1,6 +1,6 @@
 import {classes} from '@eviljs/react/react.js'
 import {useRef, useState, Fragment} from 'react'
-import {Button} from '../button/index.js'
+import {Button} from '../button.js'
 
 import './decorated.css'
 

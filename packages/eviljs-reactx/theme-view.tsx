@@ -1,9 +1,9 @@
 import {hslFromRgb, rgbFromHexString, rgbFromHsl, rgbToHexString, Hsl} from '@eviljs/std/color.js'
 import {classes, times} from '@eviljs/react/react.js'
-import {useEffect, useRef, useState, CSSProperties} from 'react'
-import {ExampleIcon as Icon} from '../icon-example/v2.js'
+import {CSSProperties, useEffect, useRef, useState} from 'react'
+import {ExampleIcon as Icon} from './icon-example/v2.js'
 
-import './index.css'
+import './theme-view.css'
 
 export function ThemeView(props: ThemeViewProps) {
     const {className, head, children} = props
@@ -14,7 +14,7 @@ export function ThemeView(props: ThemeViewProps) {
     return (
         <div
             {...props}
-            className={classes('ThemeView-t2eb std-theme back', className, theme)}
+            className={classes('ThemeView-t2eb', `std std-theme-${theme} back`, className)}
             style={{
                 '--std-color-primary-h': primaryAccent[0] * 360,
                 '--std-color-primary-s': primaryAccent[1] * 100 + '%',

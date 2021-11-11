@@ -1,6 +1,6 @@
 import {classes} from '@eviljs/react/react.js'
 import {Fragment} from 'react'
-import {CheckboxModel} from '../checkbox/index.js'
+import {CheckboxModel} from '../checkbox.js'
 
 import './sign.css'
 

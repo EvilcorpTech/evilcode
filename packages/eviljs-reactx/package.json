@@ -10,8 +10,8 @@
         "/*/*.css"
     ],
     "dependencies": {
-        "@eviljs/std": "^1",
         "@eviljs/react": "^1",
+        "@eviljs/std": "^1",
         "@eviljs/web": "^1",
         "@types/prop-types": "^15",
         "@types/react": "^17",

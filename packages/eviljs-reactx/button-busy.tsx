@@ -1,6 +1,6 @@
 import {classes} from '@eviljs/react/react.js'
 import {cloneElement} from 'react'
-import {Button, ButtonProps} from '../button/index.js'
+import {Button, ButtonProps} from './button.js'
 
 export function BusyButton(props: BusyButtonProps) {
     const {className, busy, children, spinner, ...otherProps} = props

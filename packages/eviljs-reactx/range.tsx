@@ -5,7 +5,7 @@ import {useDrag, asDragPointerEvent, DragEvent, DragPointerEvent} from '@eviljs/
 import {classes} from '@eviljs/react/react.js'
 import {useCallback, useEffect, useMemo, useRef, useState, Fragment} from 'react'
 
-import './index.css'
+import './range.css'
 
 export function Range(props: RangeProps) {
     const {

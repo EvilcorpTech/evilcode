@@ -1,9 +1,9 @@
 import {useAuth} from '@eviljs/react/auth.js'
 import {classes} from '@eviljs/react/react.js'
 import {useCallback, useMemo, useState} from 'react'
-import {Button} from '../button/index.js'
-import {Spinner} from '../spinner/v1.js'
-import {Input} from '../input/floating.js'
+import {Button} from './button.js'
+import {Spinner} from './spinner/v1.js'
+import {Input} from './input/floating.js'
 
 export function useAuthCredentials() {
     const [credentials, setCredentials] = useState({identifier: '', secret: ''})

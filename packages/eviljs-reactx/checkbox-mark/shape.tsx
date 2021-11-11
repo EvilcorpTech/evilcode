@@ -1,5 +1,5 @@
 import {classes} from '@eviljs/react/react.js'
-import {CheckboxModel} from '../checkbox/index.js'
+import {CheckboxModel} from '../checkbox.js'
 
 import './shape.css'
 

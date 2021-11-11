@@ -4,7 +4,7 @@ import {isNil, ValueOf} from '@eviljs/std/type.js'
 import {Transition} from '@eviljs/react/animation.js'
 import {useCallback, useEffect, useState} from 'react'
 
-import './index.css'
+import './slider.css'
 
 export const InitialIndex = 0
 

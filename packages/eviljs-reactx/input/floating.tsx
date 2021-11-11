@@ -79,11 +79,11 @@ export function Input(props: InputProps) {
 // Types ///////////////////////////////////////////////////////////////////////
 
 export interface InputProps extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'onChange'> {
-    type?: (typeof InputType)[keyof typeof InputType]
-    label?: string
-    value?: string
-    autoComplete?: string
-    autoFocus?: boolean
-    tabIndex?: number
-    onChange?: (event: string) => void
+    type?: undefined | (typeof InputType)[keyof typeof InputType]
+    label?: undefined | string
+    value?: undefined | string
+    autoComplete?: undefined | string
+    autoFocus?: undefined | boolean
+    tabIndex?: undefined | number
+    onChange?: undefined | ((event: string) => void)
 }

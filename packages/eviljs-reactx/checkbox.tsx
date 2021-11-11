@@ -1,7 +1,7 @@
 import {classes} from '@eviljs/react/react.js'
 import {cloneElement, isValidElement} from 'react'
 
-import './index.css'
+import './checkbox.css'
 
 export function Checkbox(props: CheckboxProps) {
     const {className, children, checked, disabled, onChange, ...otherProps} = props

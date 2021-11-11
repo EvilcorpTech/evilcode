@@ -1,7 +1,7 @@
 import {classes} from '@eviljs/react/react.js'
 import {useEffect, useRef, useState} from 'react'
 
-import './index.css'
+import './accordion.css'
 
 export function Accordion<I>(props: AccordionProps<I>) {
     const {className, items, children, header, maxOpen, ...otherProps} = props

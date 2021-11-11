@@ -1,6 +1,6 @@
 import {classes} from '@eviljs/react/react.js'
 
-import './index.css'
+import './tooltip.css'
 
 export function Tooltip(props: TooltipProps) {
     const {children, className, content, contentClass, position, ...otherProps} = props
