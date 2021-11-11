@@ -1,0 +1,63 @@
+#!/usr/bin/env bash
+
+set -e # errexit
+set -u # nounset
+
+# Inits package dependencies.
+#
+# EXAMPLE
+# ./init-package ./packages/evil*
+
+Dir="$(cd "$(dirname "$0")/.." && pwd)"
+
+: ${Git:=git}
+: ${Npm:=npm}
+
+init() {
+        local pkg="$1"
+
+        rm -fv "$pkg/tsconfig.tsbuildinfo" || true
+        rm -fv "$pkg/package-lock.json" || true
+        if test -e "$pkg/node_modules"; then
+                echo "$pkg/node_modules"
+                rm -rf "$pkg/node_modules" || true
+        fi
+        $Git clean --dry-run -X -d --force "$pkg"
+
+        (
+        case "$pkg" in
+                /*) cd "$pkg";;
+                *) cd "$PWD/$pkg";;
+        esac
+
+        $Npm install --global-style --no-package-lock
+        )
+
+        link "$pkg" evilcss
+        link "$pkg" eviljs
+}
+
+link() {
+        local pkg="$1"
+        local scope="$2"
+
+        for dep in "$pkg/node_modules/@$scope/"*; do
+                if test ! -e "$dep"; then
+                        continue
+                fi
+
+                dep_name="$(basename "$dep")"
+                echo "linking @$scope/$dep_name"
+                rm -rf "$dep"
+                ln -s "../../../$scope-$dep_name" "$pkg/node_modules/@$scope/$dep_name"
+        done
+}
+
+for pkg; do
+        if test ! -e "$pkg/package.json"; then
+                echo "skipping invalid package '$pkg'."
+                continue
+        fi
+
+        init "$pkg"
+done

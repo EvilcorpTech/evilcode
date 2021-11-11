@@ -13,7 +13,6 @@
         "@eviljs/web": "^1",
         "tslib": "^2"
     },
-    "peerDependencies": {},
     "devDependencies": {
         "typescript": "^4.4"
     },

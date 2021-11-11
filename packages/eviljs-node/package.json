@@ -14,7 +14,6 @@
         "bcryptjs": "^2",
         "tslib": "^2"
     },
-    "peerDependencies": {},
     "devDependencies": {
         "typescript": "^4.4"
     },

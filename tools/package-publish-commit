@@ -1,0 +1,39 @@
+#!/usr/bin/env bash
+
+# Commits changes, bumps up package version and publishes it.
+#
+# EXAMPLE
+# PublishVersion=minor ./package-publish-commit ./packages/evil*
+
+set -e # errexit
+set -u # nounset
+
+Dir="$(cd "$(dirname "$0")/.." && pwd)"
+
+: ${Git:=git}
+
+for pkg; do
+        if test ! -e "$pkg/package.json"; then
+                echo "skipping invalid package '$pkg'."
+                continue
+        fi
+
+        (
+        case "$pkg" in
+                /*) cd "$pkg";;
+                *) cd "$PWD/$pkg";;
+        esac
+
+        pkg_name=$(basename "$pkg")
+
+        $Git add --all .
+        $Git commit --message "($pkg_name) MESSAGE" --edit
+
+        "$Dir/tools/package-publish" "$PWD"
+
+        pkg_version=$(npm pkg get version | tr -d '"')
+
+        $Git add --all .
+        $Git commit --message "($pkg_name) v$pkg_version"
+        )
+done

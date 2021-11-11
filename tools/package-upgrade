@@ -1,0 +1,33 @@
+#!/usr/bin/env bash
+
+# Upgrades the dependencies of the packages.
+#
+# EXAMPLE
+# ./package-upgrade ./packages/evil*
+
+set -e # errexit
+set -u # nounset
+
+Dir="$(cd "$(dirname "$0")/.." && pwd)"
+
+: ${NpmUpgrade:=npx npm-upgrade}
+: ${NpmUpgradeArgs:=}
+
+for pkg; do
+        if test ! -e "$pkg/package.json"; then
+                echo "skipping invalid package '$pkg'."
+                continue
+        fi
+
+        (
+        case "$pkg" in
+                /*) cd "$pkg";;
+                *) cd "$PWD/$pkg";;
+        esac
+
+        set -- $NpmUpgradeArgs
+        $NpmUpgrade "$@"
+        )
+
+
+done
