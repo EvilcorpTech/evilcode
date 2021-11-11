@@ -7,15 +7,14 @@
         "/**/*.js",
         "/**/*.d.ts"
     ],
+    "main": "./index.js",
     "dependencies": {
-        "@eviljs/std": "^1",
         "@eviljs/node": "^1",
+        "@eviljs/std": "^1",
         "@koa/multer": "^3",
         "@koa/router": "^10",
         "@types/bcryptjs": "^2",
         "@types/koa": "^2",
-        "@types/koa__multer": "^2",
-        "@types/koa__router": "^8",
         "@types/koa-bodyparser": "^4",
         "@types/koa-compress": "^4",
         "@types/koa-conditional-get": "^2",
@@ -23,6 +22,8 @@
         "@types/koa-logger": "^3",
         "@types/koa-mount": "^4",
         "@types/koa-static": "^4",
+        "@types/koa__multer": "^2",
+        "@types/koa__router": "^8",
         "@types/node": ">=12",
         "koa": "^2",
         "koa-bodyparser": "^4",
@@ -35,7 +36,6 @@
         "multer": "^1",
         "tslib": "^2"
     },
-    "peerDependencies": {},
     "devDependencies": {
         "typescript": "^4.4"
     },
