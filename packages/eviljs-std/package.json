@@ -10,7 +10,6 @@
     "dependencies": {
         "tslib": "^2"
     },
-    "peerDependencies": {},
     "devDependencies": {
         "typescript": "^4.4"
     },
