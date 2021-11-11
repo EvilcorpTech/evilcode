@@ -8,9 +8,6 @@
     "peerDependencies": {
         "typescript": "^4.4"
     },
-    "scripts": {
-        "build": ""
-    },
     "author": "Daniele Orlando",
     "license": "BSD-2-Clause",
     "description": "TypeScript tsconfig presets",
