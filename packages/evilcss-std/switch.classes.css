@@ -8,18 +8,17 @@
     box-sizing: content-box;
     width: var(--width, 2em);
     height: var(--height, 1em);
+    border: 1px solid transparent;
     border-radius: var(--height, 1em);
-    color: var(--std-color-primary-accent);
-    background-color: hsla(0, 0%, var(--std-fg-l), .1);
+    background-color: var(--back, hsla(0, 0%, var(--std-fg-l), .1));
     box-shadow: inset 0 0 2px 0 hsla(0, 0%, 0%, .2);
     cursor: pointer;
 }
 .std-switch[aria-checked="true"] {
-    background-color: currentColor;
+    background-color: var(--accent, var(--std-color-primary-accent, currentColor));
 }
 .std-switch:focus {
-    outline: none;
-    /* outline-offset: .1em; */
+    border-color: var(--accent, var(--std-color-primary-accent, currentColor));
 }
 
 .std-switch::after {
@@ -37,7 +36,7 @@
     border-radius: var(--height, 1em);
     transform: translateY(-50%) translateX(var(--gap, .05em));
     background-color: var(--std-color-bg1);
-    box-shadow: 0 0 3px 0 hsla(0, 0%, 0%, .2);
+    box-shadow: var(--shadow, 0 0 3px 0 hsla(0, 0%, 0%, .2));
 }
 .std-switch[aria-checked="true"]::after {
     transform:

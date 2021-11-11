@@ -1,5 +1,4 @@
-:root,
-.std-theme {
+.std {
     --std-icon-mini: calc(var(--std-icon-size-scale, 1.3) * var(--std-icon-size-min, .8rem));
     --std-icon-xxs: calc(var(--std-icon-size-scale, 1.3) * var(--std-icon-mini));
     --std-icon-xs: calc(var(--std-icon-size-scale, 1.3) * var(--std-icon-xxs));

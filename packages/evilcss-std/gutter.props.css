@@ -1,5 +1,4 @@
-:root,
-.std-theme {
+.std {
     --std-gutter: 4px;
     --std-gutter-mini: calc(var(--std-gutter) * 1.5);
     --std-gutter-xxs: calc(var(--std-gutter) * 2);

@@ -1,5 +1,4 @@
-:root,
-.std-theme,
+.std,
 .std-shadow {
     --std-umbra-opacity: .1;
     --std-penumbra-opacity: .08;

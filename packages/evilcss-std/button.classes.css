@@ -10,6 +10,8 @@
 }
 .std-button:disabled,
 .std-button[disabled],
+.std-button[disabled]:active,
+.std-button[disabled]:focus,
 .std-button[disabled]:hover {
     pointer-events: none;
     opacity: var(--opacity--disabled, .3);

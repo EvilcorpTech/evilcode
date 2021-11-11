@@ -1,5 +1,4 @@
-:root,
-.std-theme {
+.std {
     --std-text-size-min: .8rem;
     --std-text-small-size: calc(.9 * var(--std-text-size-min));
     --std-text-body2-size: calc(1 * var(--std-text-size-min));

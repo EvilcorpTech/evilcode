@@ -1,5 +1,4 @@
-:root,
-.std-theme {
+.std {
     --std-input-text: var(--std-color-fg3);
     --std-input-back: var(--std-color-bg3);
     --std-input-border: var(--std-border1-color);

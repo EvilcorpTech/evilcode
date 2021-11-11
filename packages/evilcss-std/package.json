@@ -6,9 +6,6 @@
         "/**/*.css",
         "/*/*.woff"
     ],
-    "scripts": {
-        "build": ""
-    },
     "author": "Daniele Orlando",
     "license": "BSD-2-Clause",
     "description": "Awesome CSS design system and UI widgets",
