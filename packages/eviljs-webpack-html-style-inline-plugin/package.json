@@ -7,6 +7,7 @@
         "/*.js",
         "/*.d.ts"
     ],
+    "main": "./index.js",
     "dependencies": {
         "@types/node": ">=12",
         "schema-utils": "^3",
