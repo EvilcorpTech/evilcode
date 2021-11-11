@@ -1,5 +1,5 @@
-import {AuthBarrier as Barrier} from '@eviljs/reactx/auth-barrier/index'
 import {Redirect} from '@eviljs/react/router'
+import {AuthBarrier as Barrier} from '@eviljs/reactx/auth-barrier'
 import {useI18nMsg} from 'lib/hooks'
 
 export const AuthRedirect = '/auth'
@@ -32,5 +32,5 @@ export function AuthProgress() {
 // Types ///////////////////////////////////////////////////////////////////////
 
 export interface AuthBarrierProps {
-    children: JSX.Element
+    children: React.ReactNode
 }

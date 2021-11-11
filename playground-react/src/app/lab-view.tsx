@@ -1,8 +1,8 @@
 import {classes} from '@eviljs/react/react'
 import {useUndoRedo} from '@eviljs/react/undoredo'
-import {Button} from '@eviljs/reactx/button/index'
+import {Button} from '@eviljs/reactx/button'
 import {Input} from '@eviljs/reactx/input/floating'
-import {HtmlSandbox} from '@eviljs/webx/html-sandbox/index'
+import {HtmlSandbox} from '@eviljs/webx/html-sandbox'
 import {createElement, useState} from 'react'
 import {useI18nMsg} from 'lib/hooks'
 import {Header} from 'lib/widgets/header'
@@ -28,7 +28,7 @@ export function LabView(props: LabViewProps) {
     return (
         <div
             {...otherProps}
-            className={classes('LabView-54e6 std-theme light', className)}
+            className={classes('LabView-54e6 std std-theme-light', className)}
         >
             <Header/>
 

@@ -8,8 +8,8 @@ import {withPortals} from '@eviljs/react/portals'
 import {withQuery} from '@eviljs/react/query'
 import {Arg, exact, SwitchRoute, withRouter} from '@eviljs/react/router'
 import {withStore} from '@eviljs/react/store'
-import {ThemeView} from '@eviljs/reactx/theme-view/index'
-import {WidgetsView} from '@eviljs/reactx/widgets-view/index'
+import {ThemeView} from '@eviljs/reactx/theme-view'
+import {WidgetsView} from '@eviljs/reactx/widgets-view'
 import {pipe} from '@eviljs/std/pipe'
 import {Fragment} from 'react'
 import {Container} from 'lib/container'
@@ -50,13 +50,13 @@ export function AppMain(props: AppMainProps) {
                             <HomeView/>
                         },
                         {is: Routes.ThemeRoute.pattern, then:
-                            <div className="std-theme light">
+                            <div className="std std-theme-light">
                                 <Header/>
                                 <ThemeView/>
                             </div>
                         },
                         {is: Routes.WidgetsRoute.pattern, then:
-                            <div className="std-theme light">
+                            <div className="std std-theme-light">
                                 <Header/>
                                 <WidgetsView/>
                             </div>
@@ -68,7 +68,7 @@ export function AppMain(props: AppMainProps) {
                             <LabView/>
                         },
                         {is: exact('/arg/' + Arg), then: (id) =>
-                        <div className="std-theme light">
+                        <div className="std std-theme-light">
                                 <Header/>
                                 <h1>Route ID {id}</h1>
                             </div>

@@ -17,7 +17,7 @@ export function PortalsView(props: PortalsViewProps) {
     return (
         <div
             {...otherProps}
-            className={classes('PortalsView-2ab9 std-theme light', className)}
+            className={classes('PortalsView-2ab9 std std-theme-light', className)}
         >
             <Header/>
 

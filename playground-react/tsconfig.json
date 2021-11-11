@@ -3,5 +3,8 @@
     "include": ["./src/**/*.ts", "./src/**/*.tsx"],
     "compilerOptions": {
         "baseUrl": "./src",
+        "paths": {
+            "*": ["./*", "../vendor/*"],
+        },
     },
 }

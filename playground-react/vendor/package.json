@@ -1,0 +1,21 @@
+{
+    "dependencies": {
+        "@evilcss/std": "^1",
+        "@evilcss/ui": "^1",
+        "@eviljs/react": "^1",
+        "@eviljs/reactx": "^1",
+        "@eviljs/std": "^1",
+        "@eviljs/web": "^1",
+        "@eviljs/webx": "^1",
+        "preact": "^10",
+        "prop-types": "^15",
+        "react-dom": "^17",
+        "react": "^17"
+    },
+    "scripts": {
+        "init": "npm install && npm dedupe --no-fund"
+    },
+    "engines": {
+        "npm": ">= 7"
+    }
+}

@@ -16,7 +16,7 @@ export function HomeView(props: HomeViewProps) {
     return (
         <div
             {...otherProps}
-            className={classes('HomeView-0d51 std-theme light', className)}
+            className={classes('HomeView-0d51 std std-theme-light', className)}
         >
             <Header/>
 

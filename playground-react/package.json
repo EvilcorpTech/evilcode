@@ -1,35 +1,23 @@
 {
-    "name": "playground-react",
     "version": "1.0.0",
     "type": "module",
-    "workspaces": ["../packages/*"],
     "dependencies": {
-        "@evilcss/std": "^1",
-        "@evilcss/ui": "^1",
-        "@eviljs/react": "^1",
-        "@eviljs/reactx": "^1",
-        "@eviljs/std": "^1",
         "@eviljs/tsconfig": "^1",
-        "@eviljs/web": "^1",
         "@eviljs/webpack-config-react": "^1",
-        "@eviljs/webx": "^1",
         "@types/prop-types": "^15",
         "@types/react-dom": "^17",
         "@types/react": "^17",
-        "preact": "^10",
-        "prop-types": "^15",
-        "react-dom": "^17",
-        "react": "^17",
         "typescript": "^4.4",
         "webpack-cli": "^4",
         "webpack-dev-server": "^4"
     },
     "scripts": {
-        "build": "npm dedupe --legacy-peer-deps --no-progress --no-fund --no-color && npm run bundle",
-        "bundle": "NODE_ENV=production webpack-cli --mode production",
-        "check": "tsc --noEmit",
+        "init": "npm install --global-style",
+        "init-vendor": "npm --prefix vendor run init",
         "dev": "NODE_ENV=${NODE_ENV:-development} webpack-dev-server --progress",
-        "init": "npm install"
+        "check": "tsc --noEmit",
+        "bundle": "NODE_ENV=production webpack-cli --mode production",
+        "build": "npm dedupe --legacy-peer-deps --no-progress --no-fund --no-color && npm run bundle"
     },
     "engines": {
         "node": ">= 14",
