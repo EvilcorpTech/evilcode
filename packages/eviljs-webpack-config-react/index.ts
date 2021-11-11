@@ -1,4 +1,4 @@
-import {BundleStatsWebpackPlugin as BundleStatsPlugin} from 'bundle-stats-webpack-plugin'
+import BundleStats from 'bundle-stats-webpack-plugin'
 import CopyPlugin from 'copy-webpack-plugin'
 import CssMinimizerPlugin from 'css-minimizer-webpack-plugin'
 import HtmlPlugin from 'html-webpack-plugin'
@@ -11,6 +11,7 @@ import {BundleAnalyzerPlugin} from 'webpack-bundle-analyzer'
 import {createBabelConfig} from './babel.config.js'
 import {createPostcssConfig} from './postcss.config.js'
 
+const {BundleStatsWebpackPlugin: BundleStatsPlugin} = BundleStats
 const {DefinePlugin} = Webpack
 const require = createRequire(import.meta.url)
 
@@ -62,8 +63,8 @@ export function createWebpackConfig(options?: WebpackConfigOptions) {
         resolve: {
             modules: [
                 Path.resolve(workDir, 'src'),
-                Path.resolve(workDir, '.node_modules'),
                 'node_modules',
+                'vendor',
             ],
             alias: {
                 'react/jsx-runtime': 'react/jsx-runtime.js',
@@ -75,7 +76,7 @@ export function createWebpackConfig(options?: WebpackConfigOptions) {
                 },
             },
             extensions: ['.js', '.jsx', '.ts', '.tsx'],
-            symlinks: false,
+            symlinks: true, // False breaks pnpm.
         },
 
         module: {
@@ -129,7 +130,7 @@ export function createWebpackConfig(options?: WebpackConfigOptions) {
                 // },
                 __BASE_PATH__: JSON.stringify(basePath),
                 __BUNDLE_NAME__: JSON.stringify(bundleName),
-                __ENV__: JSON.stringify(process.env.NODE_ENV),
+                __MODE__: JSON.stringify(mode),
                 ...define,
             }),
             new MiniCssExtractPlugin({
@@ -189,12 +190,12 @@ export function createWebpackConfig(options?: WebpackConfigOptions) {
         devServer: {
             host: serverAddress,
             port: serverPort,
-            devMiddleware: {
-                writeToDisk: true,  // Used for testing the Server Side Rendering while development.
-            },
-            static: {
-                directory: Path.resolve(workDir, 'build'),
-            },
+            // devMiddleware: {
+            //     writeToDisk: true, // Breaks HMR.
+            // },
+            // static: {
+            //     directory: Path.resolve(workDir, 'build'),
+            // },
             client: {
                 logging: 'info', // 'verbose'
                 progress: true,

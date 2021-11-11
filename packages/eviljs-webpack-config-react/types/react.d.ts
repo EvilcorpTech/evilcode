@@ -3,12 +3,12 @@ export {}
 declare global {
     namespace JSX {
         interface IntrinsicAttributes {
-            invisible?: null | string
+            invisible?: undefined | null | string
         }
     }
     namespace React {
         interface HTMLAttributes<T> extends AriaAttributes, DOMAttributes<T> {
-            invisible?: null | string
+            invisible?: undefined | null | string
         }
     }
 }
