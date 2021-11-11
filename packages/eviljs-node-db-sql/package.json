@@ -1,6 +1,6 @@
 {
     "name": "@eviljs/node-db-sql",
-    "version": "0.1.14",
+    "version": "0.1.15",
     "type": "module",
     "files": [
         "/LICENSE.txt",
