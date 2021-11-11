@@ -64,7 +64,6 @@ export function createWebpackConfig(options?: WebpackConfigOptions) {
             modules: [
                 Path.resolve(workDir, 'src'),
                 'node_modules',
-                'vendor',
             ],
             alias: {
                 'react/jsx-runtime': 'react/jsx-runtime.js',
