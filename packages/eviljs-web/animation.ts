@@ -1,6 +1,8 @@
-import {isArray, isFunction, isObject} from '@eviljs/std/type.js'
-import {throwInvalidArgument} from '@eviljs/std/throw.js'
 import {directionOf, distanceBetween, createLinearScale} from '@eviljs/std/scale.js'
+import {PromiseCancellable} from '@eviljs/std/async.js'
+
+export {play, wait} from '@eviljs/std/async.js'
+export type {AsyncTimeline, AsyncTimelineParallel, AsyncTimelineSequence, AsyncTimelineTask} from '@eviljs/std/async.js'
 
 export const SpringPrecision = 200
 export const SpringSnapping = 1 / SpringPrecision
@@ -22,30 +24,6 @@ export function applyStyles(...elements: Array<HTMLElement>) {
         void element.offsetTop
         void element.offsetLeft
     }
-}
-
-export async function play(timeline: AnimationTimeline) {
-    if (isFunction(timeline)) {
-        await timeline()
-        return
-    }
-    if (isArray(timeline)) {
-        for (const task of timeline) {
-            await play(task)
-        }
-        return
-    }
-    if (isObject(timeline)) {
-        await Promise.all(
-            Object.values(timeline).map(play)
-        )
-        return
-    }
-
-    return throwInvalidArgument(
-        '@eviljs/web/animation.play(~~timeline~~):\n'
-        + `timeline must be a Function | Object | Array, given "${timeline}".`
-    )
 }
 
 export function playCssTransition
@@ -87,17 +65,15 @@ export function createCssTransition
     return play
 }
 
-export function createSpringAnimation(options: SpringAnimationOpts) {
-    let cancelled = false
-
-    class Task<T> extends Promise<T> {
-        cancel() {
-            cancelled = true
-        }
-    }
+export function createSpringAnimation(options: SpringAnimationOptions) {
+    let promise: undefined | PromiseCancellable
 
     function loop(initialTime: number, done: Function, wasSnapped = false) {
-        if (cancelled) {
+        if (! promise) {
+            return
+        }
+
+        if (promise.cancelled) {
             options.onCancel?.()
             options.onFinally?.()
             done()
@@ -129,7 +105,7 @@ export function createSpringAnimation(options: SpringAnimationOpts) {
     }
 
     function play() {
-        const promise: AnimationTask<undefined> = new Task((resolve, reject) => {
+        promise = new PromiseCancellable((resolve, reject) => {
             loop(Date.now(), resolve)
         })
 
@@ -139,7 +115,7 @@ export function createSpringAnimation(options: SpringAnimationOpts) {
     return play
 }
 
-export function createSpringScaleAnimation(finalScale: number, initialScale = 1, options?: Partial<SpringAnimationOpts>) {
+export function createSpringScaleAnimation(finalScale: number, initialScale = 1, options?: Partial<SpringAnimationOptions>) {
     const animationDistance = options?.distance ?? SpringScaleDistance
     const scaleDistance = distanceBetween(initialScale, finalScale)
     const scaleDirection = directionOf(initialScale, finalScale)
@@ -187,7 +163,7 @@ export function createSpringScaleAnimation(finalScale: number, initialScale = 1,
     return play
 }
 
-export function computeDampedSimpleHarmonicMotion(time: number, options: SpringOpts) {
+export function computeDampedSimpleHarmonicMotion(time: number, options: SpringOptions) {
     const damping = options.damping ?? SpringDamping
     const distance = options.distance ?? SpringDistance
     const mass = options.mass ?? SpringMass
@@ -225,24 +201,13 @@ export function scheduleAnimationTask(task: Function) {
 
 // Types ///////////////////////////////////////////////////////////////////////
 
-export type AnimationTimeline =
-    | (() => Promise<any> | AnimationTask<any>)
-    | AnimationTimeline[]
-    | readonly AnimationTimeline[]
-    | { [key in string | number]: AnimationTimeline }
-    | { readonly [key in string | number]: AnimationTimeline }
-
-export interface AnimationTask<T> extends Promise<T> {
-    cancel(): void
-}
-
 export interface AnimationCssHooks<T extends HTMLElement, S1, S2 = S1> {
     setup?(target: T): S1
     play(target: T, state: S1): S2
     clean?(target: T, state: S2): void
 }
 
-export interface SpringOpts {
+export interface SpringOptions {
     damping?: number
     distance?: number
     mass?: number
@@ -250,7 +215,7 @@ export interface SpringOpts {
     stiffness?: number
 }
 
-export interface SpringAnimationOpts extends SpringOpts {
+export interface SpringAnimationOptions extends SpringOptions {
     snapping?: number
     onTick(position: number, tick: number): void
     onEnd?(): void
