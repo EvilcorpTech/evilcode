@@ -1,6 +1,6 @@
 import {asArray, isArray, isString, Nil} from '@eviljs/std/type.js'
 import {applyStyles} from '@eviljs/web/animation.js'
-import {useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState, cloneElement, Fragment, Children, CSSProperties} from 'react'
+import {Children, cloneElement, CSSProperties, Fragment, useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState} from 'react'
 import {classes} from './react.js'
 
 export let Id = 0
@@ -275,8 +275,8 @@ export function enqueueTask(state: TransitionState, spec: {
     } = spec
     const oldChildren = state.children
     const isInitialRender = state.initial
-    const oldChild = onlyChild(oldChildren)
-    const newChild = onlyChild(newChildren)
+    const oldChild = asOnlyChild(oldChildren)
+    const newChild = asOnlyChild(newChildren)
 
     if (! isValidChild(oldChild) && ! isValidChild(newChild)) {
         // We have nothing to do.
@@ -646,19 +646,21 @@ export function presenceAnimationStyles(type: TransitionTaskAction, lifecycle: A
     return {display: 'contents'}
 }
 
-export function onlyChild(child: TransitionChildren) {
+export function asOnlyChild(child: TransitionChildren | Array<TransitionChildren>): TransitionChildren {
     if (! isArray(child)) {
         return child
     }
 
     if (child.length !== 1) {
         console.warn(
-            '@eviljs/react/animation.onlyChild(~~child~~):\n'
+            '@eviljs/react/animation.asOnlyChild(~~child~~):\n'
             + `child can be Nil | boolean | object or an array with one element, given '${child.length}'.`
         )
     }
 
-    return child[0]
+    const onlyChild = child[0]
+
+    return asOnlyChild(onlyChild)
 }
 
 export function isValidChild(children: TransitionChildren): children is TransitionElement {
@@ -768,7 +770,7 @@ export function createKey() {
 // Types ///////////////////////////////////////////////////////////////////////
 
 export type TransitionMode = 'cross' | 'out-in' | 'in-out'
-export type TransitionChildren = React.ReactNode
+export type TransitionChildren = undefined | null | boolean | React.ReactChild | React.ReactPortal
 export type TransitionElement = JSX.Element
 
 export interface TransitionObservers {

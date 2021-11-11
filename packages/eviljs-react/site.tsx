@@ -4,7 +4,7 @@ import {useMemo} from 'react'
 import {Transition, TransitionMode} from './animation.js'
 import {useI18n} from './i18n.js'
 import {PropsOf} from './react.js'
-import {withRouteMatches, exact, SwitchRoute, Arg} from './router.js'
+import {Arg, exact, SwitchRoute, withRouteMatches} from './router.js'
 import {TransitionAnimator, TransitionAnimatorEffect} from './animator.js'
 import {RouteArgs} from './route-args.js'
 
@@ -40,7 +40,7 @@ export function useSite
                 W
             >
         ,
-        routesModel?: null |
+        routes: null |
             SiteRoutesModel<
                 NonNullable<RK> | SiteRouteKey,
                 NonNullable<AK> | SiteAnimationKey,
@@ -54,17 +54,17 @@ export function useSite
     const i18n = useI18n()
 
     const site = useMemo(() => {
-        if (! routesModel) {
+        if (! routes) {
             return []
         }
 
         const {translate} = i18n
         const spec = {translate, ...specOptional}
         const ctx = createSite(spec)
-        const router = ctx.createRouter(routesModel)
+        const router = ctx.createRouter(routes)
 
         return [ctx, router] as const
-    }, [i18n, specOptional, routesModel])
+    }, [i18n, specOptional, routes])
 
     return site
 }

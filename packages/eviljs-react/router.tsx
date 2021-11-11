@@ -492,7 +492,7 @@ export interface RouterProviderProps {
 }
 
 export interface RouteMatchProviderProps {
-    children?: undefined | React.ReactNode
+    children?: React.ReactNode
     value: Array<string>
 }
 

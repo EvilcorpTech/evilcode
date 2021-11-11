@@ -1,9 +1,10 @@
+import {isArray, isFunction} from '@eviljs/std/type.js'
 import {regexpFromPattern} from '@eviljs/web/route.js'
-import {cloneElement, useMemo, Children, Fragment} from 'react'
+import {Children, cloneElement, Fragment, useMemo} from 'react'
 import {useRouter, useRouteMatches} from './router.js'
 
 export function RouteArgs(props: RouteArgsProps) {
-    const {map, from, if: guard, children, ...otherProps} = props
+    const {route, fromProp, guard, children, ...otherProps} = props
     const {testRoute} = useRouter()
     const matches = useRouteMatches()
 
@@ -28,15 +29,33 @@ export function RouteArgs(props: RouteArgsProps) {
         return <Fragment>{children}</Fragment>
     }
 
-    const routedProps: Record<string, string | undefined> = {}
-    const args = from
-        ? otherProps[from]
+
+    const args = fromProp
+        ? otherProps[fromProp]
         : matches
 
-    for (const it of map) {
-        const {arg, prop} = it
-        routedProps[prop] = args?.[arg]
-    }
+    const routedProps = (() => {
+        if (isArray(route)) {
+            const props: Record<string, any> = {}
+
+            for (const it of route) {
+                const {fromArg, toProp, map} = it
+                const value = args?.[fromArg]
+
+                props[toProp] = map
+                    ? map(value)
+                    : value
+            }
+
+            return props
+        }
+
+        if (isFunction(route)) {
+            return route(args)
+        }
+
+        return {}
+    })()
 
     const mappedChildren = Children.map(children, (it) =>
         cloneElement(it, {
@@ -57,11 +76,14 @@ export function RouteArgs(props: RouteArgsProps) {
 
 export interface RouteArgsProps {
     children: React.ReactElement | Array<React.ReactElement>
-    from?: string
-    if?: string | RegExp
-    map: Array<{
-        arg: number
-        prop: string
-    }>
+    fromProp?: undefined | string
+    guard?: undefined | string | RegExp
+    route:
+        | Array<{
+            fromArg: number
+            toProp: string
+            map?(arg: undefined | string): any
+        }>
+        | ((args: Array<string>) => Record<string, any>)
     [key: string]: any
 }
