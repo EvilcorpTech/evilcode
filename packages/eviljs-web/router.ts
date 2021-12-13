@@ -12,7 +12,6 @@ export function createRouter<S>(observer: RouterObserver, options?: RouterOption
             return createPathRouter(observer, options)
         case 'memory':
             return createMemoryRouter(observer, options)
-        break
     }
 }
 

@@ -66,13 +66,10 @@ export function initMoveState(element: DragMoveElement, event: DragEvent, option
     switch (strategy) {
         case 'absolute':
             return {...state, ...initMoveAbsoluteState(element as HTMLElement, event, options as DragMoveOptions<HTMLElement>)}
-        break
         case 'transform':
             return {...state, ...initMoveTransformState(element as HTMLElement, event, options as DragMoveOptions<HTMLElement>)}
-        break
         case 'svg':
             return {...state, ...initMoveSvgState(element as SVGAElement, event, options as DragMoveOptions<SVGGraphicsElement>)}
-        break
     }
 }
 
@@ -162,13 +159,10 @@ export function move(state: DragMoveState<DragMoveElement, DragMoveElement>, eve
     switch (state.strategy) {
         case 'absolute':
             return moveAbsolute(state as DragMoveState<HTMLElement, HTMLElement>, event)
-        break
         case 'transform':
             return moveTransform(state as DragMoveState<HTMLElement, HTMLElement>, event)
-        break
         case 'svg':
             return moveSvg(state as DragMoveState<SVGGraphicsElement, SVGGraphicsElement>, event)
-        break
     }
 }
 

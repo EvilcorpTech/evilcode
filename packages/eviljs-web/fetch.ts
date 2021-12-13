@@ -99,7 +99,7 @@ export function mergeOptions(...optionsList: Array<FetchRequestOptions>): FetchR
                 break
 
                 default:
-                    options[optionName] = optionsSource[optionName]
+                    options[optionName] = optionsSource[optionName] as any
                 break
             }
         }

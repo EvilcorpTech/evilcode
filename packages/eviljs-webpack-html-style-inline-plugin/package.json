@@ -10,7 +10,7 @@
     "main": "./index.js",
     "dependencies": {
         "@types/node": ">=12",
-        "schema-utils": "^3",
+        "schema-utils": "^4",
         "tslib": "^2"
     },
     "peerDependencies": {
@@ -18,7 +18,7 @@
         "webpack": "^5"
     },
     "devDependencies": {
-        "typescript": "^4.4"
+        "typescript": "^4.5"
     },
     "scripts": {
         "dev": "npm run build -- --watch",
