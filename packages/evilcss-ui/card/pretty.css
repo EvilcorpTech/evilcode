@@ -5,14 +5,14 @@
 }
 
 .std-card.pretty.with-shining-borders {
-    border-top: 1px solid hsla(0, 0%, 100%, .3);
-    border-left: 1px solid hsla(0, 0%, 100%, .15);
+    border-top: 1px solid hsl(0deg 0% 100% / .3);
+    border-left: 1px solid hsl(0deg 0% 100% / .15);
     border-right: 1px solid transparent;
     border-bottom: 1px solid transparent;
 }
 
 @supports not (backdrop-filter: blur(0px) saturate(0%)) {
     .std-card.pretty {
-        background-color: hsla(0, 0%, var(--std-bg-l), .97);
+        background-color: hsl(0deg 0% var(--std-bg-l) / .97);
     }
 }
