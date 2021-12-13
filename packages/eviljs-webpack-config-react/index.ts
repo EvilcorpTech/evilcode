@@ -69,9 +69,10 @@ export function createWebpackConfig(options?: WebpackConfigOptions) {
                 'react/jsx-runtime': 'react/jsx-runtime.js',
 
                 ...withPreact && {
-                    'react': 'preact/compat',
-                    'react-dom': 'preact/compat',
+                    'react/jsx-runtime.js': 'preact/jsx-runtime',
                     'react/jsx-runtime': 'preact/jsx-runtime',
+                    'react-dom': 'preact/compat',
+                    'react': 'preact/compat',
                 },
             },
             extensions: ['.js', '.jsx', '.ts', '.tsx'],
@@ -221,10 +222,8 @@ export function asBoolean<T>(value: undefined | boolean | number | string, defau
     switch (value) {
         case true: case 1: case '1': case 'yes': case 'on': case 'true':
             return true
-        break
         case false: case 0: case '0': case 'no': case 'off': case 'false':
             return false
-        break
     }
     return defaultValue
 }
