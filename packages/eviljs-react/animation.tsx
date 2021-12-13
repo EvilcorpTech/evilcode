@@ -420,15 +420,12 @@ export function createExchangeTasks(spec: {
         case 'cross':
             // We must unmount previous child and mount the new one, in parallel.
             return createCrossTasks({oldChild, newChild, observers, exit, enter, source})
-        break
         case 'out-in':
             // We must unmount previous child and mount the new one, in sequence.
             return createOutInTasks({oldChild, newChild, observers, exit, enter, source})
-        break
         case 'in-out':
             // We must mount the new child and unmount previous one, in sequence.
             return createInOutTasks({oldChild, newChild, observers, exit, enter, source})
-        break
     }
 }
 
@@ -615,10 +612,8 @@ export function presenceAnimationClasses(type: TransitionTaskAction, lifecycle: 
         switch (type) {
             case 'unmount':
                 return 'exit'
-            break
             case 'mount':
                 return 'enter'
-            break
         }
     })()
     return {

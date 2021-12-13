@@ -1,10 +1,9 @@
 import {asArray} from '@eviljs/std/type.js'
-import {useEffect} from 'react'
+import {useLayoutEffect} from 'react'
 
 export function useKey(key: Key, handler: KeyHandler, options?: UseKeyOptions) {
-    const keys = asArray(key)
-
-    useEffect(() => {
+    useLayoutEffect(() => {
+        const keys = asArray(key)
         const event = options?.event ?? 'keyup'
         const phase = (() => {
             switch (options?.phase) {
@@ -34,7 +33,7 @@ export function useKey(key: Key, handler: KeyHandler, options?: UseKeyOptions) {
         document.addEventListener(event, onKey, phase)
 
         return unmount
-    }, [handler])
+    }, [key, handler, options])
 }
 
 // Types ///////////////////////////////////////////////////////////////////////

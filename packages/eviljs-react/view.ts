@@ -54,7 +54,6 @@ export function useRoutedViewAnimation(routeRe: RegExp, enterOptional?: Animator
             case 'entering':
             case 'exited':
                 return 0
-            break
         }
         return undefined // Makes TypeScript happy.
     })()

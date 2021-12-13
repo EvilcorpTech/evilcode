@@ -328,8 +328,20 @@ export function WhenRoute(props: WhenRouteProps) {
 * </Route>
 */
 export function Route(props: RouteProps) {
-    const {children, className, elRef, to, params, state, if: guard, activeWhenExact, activeClass, ...otherProps} = props
-    const {link, routeTo, testRoute} = useRouter()
+    const {
+        activeClass,
+        activeWhenExact,
+        children,
+        className,
+        elRef,
+        if: guard,
+        params,
+        replace,
+        state,
+        to,
+        ...otherProps
+    } = props
+    const {link, replaceRoute, routeTo, testRoute} = useRouter()
 
     const onClick = useCallback((event: React.MouseEvent) => {
         event.preventDefault()
@@ -344,7 +356,11 @@ export function Route(props: RouteProps) {
                 return
             }
 
-            routeTo(to, params, state)
+            const action = replace
+                ? replaceRoute
+                : routeTo
+
+            action(to, params, state)
         }
 
         const guardResponse = isFunction(guard)
@@ -357,7 +373,7 @@ export function Route(props: RouteProps) {
         else {
             tryRouting(guardResponse)
         }
-    }, [routeTo, to, params, state, guard])
+    }, [routeTo, to, params, state, guard, replace])
 
     const isActive = useMemo(() => {
         if (! to) {
@@ -527,6 +543,7 @@ export interface RouteProps extends React.AnchorHTMLAttributes<HTMLAnchorElement
     to?: undefined | string
     params?: undefined | RouterParams
     state?: undefined | any
+    replace?: undefined | boolean
     if?(): undefined | boolean | Promise<boolean>
     activeWhenExact?: undefined | boolean
     activeClass?: undefined | string
