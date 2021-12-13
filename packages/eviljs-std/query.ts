@@ -86,15 +86,10 @@ export function encodeParamsObject(params: QueryParamsDict, options?: EncodePara
         switch (type) {
             case 'undefined':
                 return ''
-            break
-
             case 'null':
                 return encodedName
-            break
-
             default:
                 return joinParam(encodedName, encodeValue(value))
-            break
         }
     })
     const encodedParams = joinParts(paramsParts)
@@ -113,16 +108,11 @@ export function encodeParamsArray(params: QueryParamsList, options?: EncodeParam
             case 'undefined':
             case 'null':
                 return ''
-            break
-
             case 'array':
             case 'object':
                 return encodeParams(name as QueryParamsList | QueryParamsDict, options)
-            break
-
             default:
                 return encodeName(name)
-            break
         }
     })
     const encodedParams = joinParts(paramsParts)
@@ -136,19 +126,14 @@ export function defaultEncodeParamName(name: unknown) {
     switch (type) {
         case 'string':
             return encodeURIComponent(name as string)
-        break
-
         case 'number':
             return String(name)
-        break
-
         default:
             return throwInvalidArgument(
                 '@eviljs/std/query.defaultEncodeParamName(~~name~~):\n'
                 + `name is of an invalid type.\n`
                 + `Must be <number | string>, given "${name}".`
             )
-        break
     }
 }
 
@@ -158,25 +143,18 @@ export function defaultEncodeParamValue(value: unknown) {
     switch (type) {
         case 'string':
             return encodeURIComponent(value as string)
-        break
-
         case 'number':
         case 'boolean':
             return String(value)
-        break
-
         case 'array':
         case 'object':
             return encodeURIComponent(JSON.stringify(value))
-        break
-
         default:
             return throwInvalidArgument(
                 '@eviljs/std/query.defaultEncodeParamValue(~~value~~):\n'
                 + `value is of an invalid type.\n`
                 + `Must be <string | number | boolean | array | object>, given "${value}".`
             )
-        break
     }
 }
 

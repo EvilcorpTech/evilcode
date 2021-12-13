@@ -1,4 +1,4 @@
-export function createLinearScale(inputInterval: readonly [number, number], outputInterval: readonly [number, number]) {
+export function createLinearScale(inputInterval: [number, number], outputInterval: [number, number]) {
     const [inputStart, inputEnd] = inputInterval
     const [outputStart, outputEnd] = outputInterval
 
