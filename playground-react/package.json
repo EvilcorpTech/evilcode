@@ -8,16 +8,16 @@
         "@types/react-dom": "^17",
         "@types/react": "^17",
         "typescript": "^4.4",
+        "webpack": "^5",
         "webpack-cli": "^4",
         "webpack-dev-server": "^4"
     },
     "scripts": {
         "init": "npm install --global-style",
-        "init-vendor": "npm --prefix vendor run init",
+        "init-lib": "npm --prefix lib run init",
         "dev": "NODE_ENV=${NODE_ENV:-development} webpack-dev-server --progress",
         "check": "tsc --noEmit",
-        "bundle": "NODE_ENV=production webpack-cli --mode production",
-        "build": "npm dedupe --legacy-peer-deps --no-progress --no-fund --no-color && npm run bundle"
+        "build": "NODE_ENV=production BASE_PATH=${BASE_PATH:-/} ROUTER_TYPE=${ROUTER_TYPE:-path} WITH_PREACT=${WITH_PREACT:-1} webpack-cli --mode production"
     },
     "engines": {
         "node": ">= 14",
