@@ -1,7 +1,7 @@
 {
     "extends": "./web.json",
     "compilerOptions": {
-        "jsx": "preserve",
-        "incremental": false
+        "incremental": false,
+        "jsx": "preserve"
     }
 }
