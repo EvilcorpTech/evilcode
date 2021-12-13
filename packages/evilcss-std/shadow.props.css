@@ -4,9 +4,9 @@
     --std-penumbra-opacity: .08;
     --std-ambient-opacity: .06;
 
-    --std-umbra: hsla(0, 0%, 0%, var(--std-umbra-opacity));
-    --std-penumbra: hsla(0, 0%, 0%, var(--std-penumbra-opacity));
-    --std-ambient: hsla(0, 0%, 0%, var(--std-ambient-opacity));
+    --std-umbra: hsl(0deg 0% 0% / var(--std-umbra-opacity));
+    --std-penumbra: hsl(0deg 0% 0% / var(--std-penumbra-opacity));
+    --std-ambient: hsl(0deg 0% 0% / var(--std-ambient-opacity));
 
     --std-shadow-soft: var(--std-umbra) 0 1px 3px 0, var(--std-penumbra) 0 0 0, var(--std-ambient) 0 0 0;
     --std-shadow0: var(--std-umbra) 0 0 0, var(--std-penumbra) 0 0 0, var(--std-ambient) 0 0 0;
