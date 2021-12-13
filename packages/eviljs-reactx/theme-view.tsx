@@ -16,10 +16,10 @@ export function ThemeView(props: ThemeViewProps) {
             {...props}
             className={classes('ThemeView-t2eb', `std std-theme-${theme} back`, className)}
             style={{
-                '--std-color-primary-h': primaryAccent[0] * 360,
+                '--std-color-primary-h': primaryAccent[0] * 360 + 'deg',
                 '--std-color-primary-s': primaryAccent[1] * 100 + '%',
                 '--std-color-primary-l': primaryAccent[2] * 100 + '%',
-                '--std-color-secondary-h': secondaryAccent[0] * 360,
+                '--std-color-secondary-h': secondaryAccent[0] * 360 + 'deg',
                 '--std-color-secondary-s': secondaryAccent[1] * 100 + '%',
                 '--std-color-secondary-l': secondaryAccent[2] * 100 + '%',
             } as CSSProperties}

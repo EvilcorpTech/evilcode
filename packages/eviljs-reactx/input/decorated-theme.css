@@ -1,12 +1,12 @@
 .Input-cc0a {
-    border: 2px solid hsla(0, 0%, var(--std-fg-l), .07);
+    border: 2px solid hsl(0deg 0% var(--std-fg-l) / .07);
     border-radius: var(--std-radius-mini);
     padding: var(--gutter, var(--std-gutter-s));
     color: var(--std-color-fg1);
     transition: all var(--std-duration-normal);
 }
 .Input-cc0a:hover:not(:focus-within) {
-    border-color: hsla(0, 0%, var(--std-fg-l), .5);
+    border-color: hsl(0deg 0% var(--std-fg-l) / .5);
 }
 .Input-cc0a:focus-within {
     color: var(--accent, var(--std-color-primary-accent));

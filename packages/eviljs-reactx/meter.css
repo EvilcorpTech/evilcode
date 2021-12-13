@@ -1,0 +1,52 @@
+.Meter-0aa2,
+.markers-c0dd {
+    position: relative;
+}
+
+.Meter-0aa2 {
+    width: var(--width, 8rem);
+    height: var(--height, 2rem);
+}
+
+.layer-33f0.bg,
+.layer-33f0.fg {
+    position: absolute;
+    inset: 0;
+}
+.layer-33f0.bg {
+    background-color: var(--background-color, transparent);
+    opacity: var(--background-opacity, 1);
+}
+.layer-33f0.fg {
+    /*
+    * color1:
+    * - cornflowerblue
+    * - darkviolet
+    * - deeppink
+    * - indigo
+    * - magenta
+    * - orchid
+    * - violet
+    *
+    * color2:
+    * - aqua
+    * - deepskyblue
+    *
+    * color3:
+    * - aquamarine
+    * - lime
+    * - springgreen
+    */
+    background-image: linear-gradient(
+        to right,
+        var(--color1, violet) 0%,
+        var(--color2, deepskyblue) 40%,
+        var(--color3, aquamarine) 80%
+    );
+    clip-path: polygon(
+        0% 0%,
+        0% 100%,
+        calc(var(--value) * 100%) 100%,
+        calc(var(--value) * 100%) 0%
+    );
+}

@@ -1,0 +1,29 @@
+.Meter-0aa2.v1 {
+    clip-path: polygon(0% 70%, 100% 0%, 100% 100%, 0% 100%);
+}
+
+.Meter-0aa2.v1 .markers-c0dd {
+    clip-path: polygon(
+        0% 0%,
+        calc(20% - var(--gap, 2%)) 0%,
+        calc(20% - var(--gap, 2%)) 100%,
+        calc(20% + var(--gap, 2%)) 100%,
+        calc(20% + var(--gap, 2%)) 0%,
+        calc(40% - var(--gap, 2%)) 0%,
+        calc(40% - var(--gap, 2%)) 100%,
+        calc(40% + var(--gap, 2%)) 100%,
+        calc(40% + var(--gap, 2%)) 0%,
+        calc(60% - var(--gap, 2%)) 0%,
+        calc(60% - var(--gap, 2%)) 100%,
+        calc(60% + var(--gap, 2%)) 100%,
+        calc(60% + var(--gap, 2%)) 0%,
+        calc(80% - var(--gap, 2%)) 0%,
+        calc(80% - var(--gap, 2%)) 100%,
+        calc(80% + var(--gap, 2%)) 100%,
+        calc(80% + var(--gap, 2%)) 0%,
+        100% 0%,
+        100% 100%,
+        0% 100%,
+        0% 0%
+    );
+}

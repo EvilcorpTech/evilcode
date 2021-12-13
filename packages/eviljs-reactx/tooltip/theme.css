@@ -50,7 +50,7 @@
 .content-b6b3,
 .tooltip-ac0e::before {
     background: var(--std-color-bg1);
-    border: 1px solid hsla(0, 0%, var(--std-fg-l), .05);
+    border: 1px solid hsl(0deg 0% var(--std-fg-l) / .05);
 }
 
 .content-b6b3 {

@@ -10,16 +10,13 @@ export function AuthBarrier(props: AuthBarrierProps) {
         case AuthTokenState.Validating:
             // We are waiting the response from the server.
             return <Fragment>{progress}</Fragment>
-        break
         case AuthTokenState.Valid:
             // Token has been verified and is valid. We can safely continue.
             return <Fragment>{children}</Fragment>
-        break
         case AuthTokenState.Missing:
         case AuthTokenState.Invalid:
             // Token is missing or invalid.
             return <Fragment>{fallback}</Fragment>
-        break
     }
 
     return null
