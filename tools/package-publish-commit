@@ -18,22 +18,17 @@ for pkg; do
                 continue
         fi
 
-        (
-        case "$pkg" in
-                /*) cd "$pkg";;
-                *) cd "$PWD/$pkg";;
-        esac
-
         pkg_name=$(basename "$pkg")
 
-        $Git add --all .
-        $Git commit --message "($pkg_name) MESSAGE" --edit
+        "$Dir/tools/package-build" "$pkg"
 
-        "$Dir/tools/package-publish" "$PWD"
+        $Git -C "$pkg" add --all .
+        $Git -C "$pkg" commit --edit --message "($pkg_name) MESSAGE"
 
-        pkg_version=$(npm pkg get version | tr -d '"')
+        "$Dir/tools/package-publish" "$pkg"
 
-        $Git add --all .
-        $Git commit --message "($pkg_name) v$pkg_version"
-        )
+        pkg_version=$(npm --prefix "$pkg" pkg get version | tr -d '"')
+
+        $Git -C "$pkg" add --all .
+        $Git -C "$pkg" commit --message "($pkg_name) v$pkg_version"
 done
