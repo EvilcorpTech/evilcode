@@ -1,4 +1,3 @@
-import ReactRefreshPlugin from '@pmmmwh/react-refresh-webpack-plugin'
 import BundleStats from 'bundle-stats-webpack-plugin'
 import CopyPlugin from 'copy-webpack-plugin'
 import CssMinimizerPlugin from 'css-minimizer-webpack-plugin'
@@ -134,8 +133,6 @@ export function createWebpackConfig(options?: WebpackConfigOptions) {
                 __BUNDLE_NAME__: JSON.stringify(bundleName),
                 __MODE__: JSON.stringify(mode),
                 ...define,
-            }),
-            isDevelopmentMode && new ReactRefreshPlugin({
             }),
             new MiniCssExtractPlugin({
                 filename: Path.join(bundleName, 'entry-[name].css'),

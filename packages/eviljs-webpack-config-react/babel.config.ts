@@ -4,8 +4,7 @@ import BabelPresetTypescript from '@babel/preset-typescript' // @ts-ignore
 import BabelPluginSyntaxDynamicImport from '@babel/plugin-syntax-dynamic-import' // @ts-ignore
 import BabelPluginProposalNullishCoalescingOperator from '@babel/plugin-proposal-nullish-coalescing-operator' // @ts-ignore
 import BabelPluginProposalNumericSeparator from '@babel/plugin-proposal-numeric-separator' // @ts-ignore
-import BabelPluginProposalOptionalChaining from '@babel/plugin-proposal-optional-chaining' // @ts-ignore
-import BabelPluginReactRefresh from 'react-refresh/babel.js'
+import BabelPluginProposalOptionalChaining from '@babel/plugin-proposal-optional-chaining'
 
 export default createBabelConfig()
 
@@ -33,8 +32,6 @@ export function createBabelConfig(options?: BabelConfigOptions) {
             BabelPluginProposalNullishCoalescingOperator, // a?.b ?? c (STANDARD)
             BabelPluginProposalNumericSeparator, // 1_000_000 (STANDARD)
             BabelPluginProposalOptionalChaining, // a?.b?.c?.()?.[1] (STANDARD)
-            // React Fast Refresh //////////////////////////////////////////////
-            isDevelopmentMode && BabelPluginReactRefresh,
         ].filter(Boolean),
     }
 }
