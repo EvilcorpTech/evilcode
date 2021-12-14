@@ -9,7 +9,9 @@ import {Header} from 'lib/widgets/header'
 
 import './lab-view.css'
 
-customElements.define('html-sandbox', HtmlSandbox)
+if (! customElements.get('html-sandbox')) { // HMR Compatibility.
+    customElements.define('html-sandbox', HtmlSandbox)
+}
 
 export function LabView(props: LabViewProps) {
     const {className, ...otherProps} = props

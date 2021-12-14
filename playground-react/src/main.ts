@@ -16,10 +16,10 @@ const rootProps = {container}
 
 render(createElement(rootComponent, rootProps), rootElement)
 
+// Hot Module Replacement (development mode) ///////////////////////////////////
+// BEGIN
+declare const module: {hot: {accept(): void}}
 if (module.hot) {
     module.hot.accept()
 }
-
-// Types ///////////////////////////////////////////////////////////////////////
-
-declare const module: {hot: {accept(): void}}
+// END

@@ -6,6 +6,7 @@ import {asBaseUrl, createFetch, Fetch} from '@eviljs/web/fetch'
 import {createQuery} from '@eviljs/web/query'
 import {ApiUrl, BasePath, BundleName} from './context'
 import {I18nSpec} from './i18n'
+import {mockFetch} from './mock'
 import {StoreSpec} from './store'
 
 export const ContainerSpec = {
@@ -14,12 +15,17 @@ export const ContainerSpec = {
             return createCookie('token', {maxAge: maxAgeInDays(7)})
         },
         Fetch(container: {}) {
+            const fetch = createFetch({baseUrl: ApiUrl})
+
+            // SERVICE WORKER //////////////////////////////////////////////////
             const serviceWorkerPath = [asBaseUrl(BasePath), BundleName, 'entry-mocks-service-worker.js']
             const serviceWorkerUrl = serviceWorkerPath.filter(Boolean).join('/')
+            // navigator.serviceWorker.register(serviceWorkerUrl)
+            // return fetch
 
-            navigator.serviceWorker.register(serviceWorkerUrl)
+            // PROXY ///////////////////////////////////////////////////////////
+            return mockFetch(fetch)
 
-            return createFetch({baseUrl: ApiUrl})
         },
         I18n(container: {}) {
             return createI18n(I18nSpec)
