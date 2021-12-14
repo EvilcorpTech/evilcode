@@ -1,3 +1,4 @@
+import ReactRefreshPlugin from '@pmmmwh/react-refresh-webpack-plugin'
 import BundleStats from 'bundle-stats-webpack-plugin'
 import CopyPlugin from 'copy-webpack-plugin'
 import CssMinimizerPlugin from 'css-minimizer-webpack-plugin'
@@ -23,18 +24,19 @@ export const DefaultServerPort = 8000
 export default createWebpackConfig()
 
 export function createWebpackConfig(options?: WebpackConfigOptions) {
+    const workDir = options?.workDir ?? process.cwd()
+    const mode = options?.mode ?? process.env.NODE_ENV
+    const isProductionMode = mode === 'production'
+    const isDevelopmentMode = ! isProductionMode
     const basePath = options?.basePath ?? DefaultBasePath
     const bundleName = options?.bundleName ?? DefaultBundleName
+    const runtime = options?.runtime ?? 'single' // Workers require 'multiple' runtime.
     const define = options?.define ?? {}
-    const mode = options?.mode ?? process.env.NODE_ENV
-    const serverAddress = options?.serverAddress ?? DefaultServerAddress
-    const serverPort = options?.serverPort ?? DefaultServerPort
-    const withPreact = options?.withPreact ?? false
-    const withWorkers = options?.withWorkers ?? false
-    const workDir = options?.workDir ?? process.cwd()
-    const isProductionMode = mode === 'production'
     const babelConfig = options?.babelConfig || createBabelConfig({workDir})
     const postcssConfig = options?.postcssConfig || createPostcssConfig({workDir})
+    const preact = options?.preact ?? false
+    const serverAddress = options?.serverAddress ?? DefaultServerAddress
+    const serverPort = options?.serverPort ?? DefaultServerPort
 
     return {
         target: isProductionMode
@@ -68,7 +70,7 @@ export function createWebpackConfig(options?: WebpackConfigOptions) {
             alias: {
                 'react/jsx-runtime': 'react/jsx-runtime.js',
 
-                ...withPreact && {
+                ...preact && {
                     'react/jsx-runtime.js': 'preact/jsx-runtime',
                     'react/jsx-runtime': 'preact/jsx-runtime',
                     'react-dom': 'preact/compat',
@@ -133,6 +135,8 @@ export function createWebpackConfig(options?: WebpackConfigOptions) {
                 __MODE__: JSON.stringify(mode),
                 ...define,
             }),
+            isDevelopmentMode && new ReactRefreshPlugin({
+            }),
             new MiniCssExtractPlugin({
                 filename: Path.join(bundleName, 'entry-[name].css'),
                 chunkFilename: Path.join(bundleName, 'chunk-[id].css'),
@@ -160,10 +164,7 @@ export function createWebpackConfig(options?: WebpackConfigOptions) {
 
         ...isProductionMode && {
             optimization: {
-                runtimeChunk: withWorkers
-                    ? 'multiple' // Workers require their own runtime.
-                    : 'single'
-                ,
+                runtimeChunk: runtime,
                 splitChunks: {
                     chunks: 'all',
                 },
@@ -197,9 +198,12 @@ export function createWebpackConfig(options?: WebpackConfigOptions) {
             //     directory: Path.resolve(workDir, 'build'),
             // },
             client: {
-                logging: 'info', // 'verbose'
-                progress: true,
-                overlay: true,
+                logging: 'warn', // 'verbose' | 'info' | 'warn'
+                progress: false,
+                overlay: {
+                    errors: true,
+                    warnings: true,
+                },
             },
             historyApiFallback: true,
             hot: true,
@@ -237,9 +241,9 @@ export interface WebpackConfigOptions {
     define?: undefined | Record<string, any>
     mode?: undefined | string
     postcssConfig?: undefined | {}
+    preact?: undefined | boolean
+    runtime?: undefined | boolean
     serverAddress?: undefined | string
     serverPort?: undefined | number
-    withPreact?: undefined | boolean
-    withWorkers?: undefined | boolean
     workDir?: undefined | string
 }
