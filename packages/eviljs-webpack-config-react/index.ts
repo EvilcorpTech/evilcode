@@ -44,7 +44,7 @@ export function createWebpackConfig(options?: WebpackConfigOptions) {
         ,
 
         entry: {
-            main: Path.resolve(workDir, 'src/main.ts'),
+            main: Path.resolve(workDir, 'src/main'),
         },
 
         output: {
