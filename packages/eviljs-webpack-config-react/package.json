@@ -4,8 +4,8 @@
     "type": "module",
     "files": [
         "/LICENSE.txt",
-        "/*/*.js",
-        "/*/*.ts"
+        "/**/*.js",
+        "/**/*.ts"
     ],
     "main": "./index.js",
     "dependencies": {
