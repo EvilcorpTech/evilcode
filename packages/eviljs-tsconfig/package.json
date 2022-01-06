@@ -3,7 +3,7 @@
     "version": "1.0.4",
     "files": [
         "/LICENSE.txt",
-        "/*.json"
+        "/**/*.json"
     ],
     "peerDependencies": {
         "typescript": "^4.5"
@@ -15,12 +15,12 @@
         "TypeScript",
         "tsconfig"
     ],
-    "homepage": "https://github.com/evilrepo/evilcode",
+    "homepage": "https://github.com/EvilcorpTech/evilcode",
     "repository": {
         "type": "git",
-        "url": "git+https://github.com/evilrepo/evilcode.git"
+        "url": "git+https://github.com/EvilcorpTech/evilcode.git"
     },
     "bugs": {
-        "url": "https://github.com/evilrepo/evilcode/issues"
+        "url": "https://github.com/EvilcorpTech/evilcode/issues"
     }
 }
