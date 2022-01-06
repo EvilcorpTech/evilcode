@@ -3,7 +3,7 @@
     "version": "1.0.2",
     "files": [
         "/LICENSE.txt",
-        "/*/*.css"
+        "/**/*.css"
     ],
     "peerDependencies": {
         "@evilcss/std": "^1"
@@ -16,12 +16,12 @@
         "UI",
         "Widgets"
     ],
-    "homepage": "https://github.com/evilrepo/evilcode",
+    "homepage": "https://github.com/EvilcorpTech/evilcode",
     "repository": {
         "type": "git",
-        "url": "git+https://github.com/evilrepo/evilcode.git"
+        "url": "git+https://github.com/EvilcorpTech/evilcode.git"
     },
     "bugs": {
-        "url": "https://github.com/evilrepo/evilcode/issues"
+        "url": "https://github.com/EvilcorpTech/evilcode/issues"
     }
 }

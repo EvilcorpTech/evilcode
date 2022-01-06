@@ -1,5 +1,5 @@
 .std-card.pretty {
-    border-radius: var(--card-radius, var(--std-radius-m));
+    border-radius: var(--card-radius, var(--std-radius4));
     backdrop-filter: blur(var(--card-blur, 60px)) saturate(var(--card-saturation, 50%));
     box-shadow: var(--card-shadow, var(--std-shadow24));
 }
