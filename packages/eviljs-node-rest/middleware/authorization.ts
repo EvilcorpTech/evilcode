@@ -116,8 +116,8 @@ export function tokenFromCookieHeader(request: Request, options?: AuthorizationO
 
     // Cookie: param=abc; token=123; path=/; max-age=3600
     const cookieKey = options?.cookieKey || 'token'
-    const cookieRe = new RegExp(`\\b${cookieKey}=([^;]*);?`)
-    const cookieMatch = headerValue.match(cookieRe)
+    const cookieRegexp = new RegExp(`\\b${cookieKey}=([^;]*);?`)
+    const cookieMatch = headerValue.match(cookieRegexp)
 
     if (! cookieMatch) {
         // There is no cookie matching the key.
