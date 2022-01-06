@@ -1,6 +1,6 @@
 {
     "name": "@eviljs/node-rest",
-    "version": "0.1.12",
+    "version": "0.1.13",
     "type": "module",
     "files": [
         "/LICENSE.txt",
