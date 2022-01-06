@@ -1,4 +1,4 @@
-.animator-c385.layer {
+.TransitionAnimator-c385.layer {
     position: absolute;
     top: 0;
     left: 0;
@@ -10,45 +10,45 @@
 
 /* none ***********************************************************************/
 
-.animator-c385.none.exit-from {
+.TransitionAnimator-c385.none.exit-from {
     opacity: 1;
 }
-.animator-c385.none.exit-to {
+.TransitionAnimator-c385.none.exit-to {
     opacity: 0;
     transition: opacity 1ms;
 }
-.animator-c385.none.enter-from {
+.TransitionAnimator-c385.none.enter-from {
     opacity: 0;
 }
-.animator-c385.none.enter-to {
+.TransitionAnimator-c385.none.enter-to {
     opacity: 1;
     transition: opacity 1ms;
 }
 
 /* fade ***********************************************************************/
 
-.animator-c385.fade.exit-from {
+.TransitionAnimator-c385.fade.exit-from {
     opacity: 1;
 }
-.animator-c385.fade.exit-to {
+.TransitionAnimator-c385.fade.exit-to {
     opacity: 0;
     transition: opacity var(--exit-duration, var(--std-duration-fast));
 }
-.animator-c385.fade.enter-from {
+.TransitionAnimator-c385.fade.enter-from {
     opacity: 0;
 }
-.animator-c385.fade.enter-to {
+.TransitionAnimator-c385.fade.enter-to {
     opacity: 1;
     transition: opacity var(--enter-duration, var(--std-duration-slow));
 }
 
 /* zoom ***********************************************************************/
 
-.animator-c385.zoom.exit-from {
+.TransitionAnimator-c385.zoom.exit-from {
     opacity: 1;
     transform: scale(1);
 }
-.animator-c385.zoom.exit-to {
+.TransitionAnimator-c385.zoom.exit-to {
     opacity: 0;
     transform: scale(.9);
     transition:
@@ -56,26 +56,26 @@
         transform var(--exit-duration, var(--std-duration-fast))
     ;
 }
-.animator-c385.zoom.enter-from {
+.TransitionAnimator-c385.zoom.enter-from {
     opacity: 0;
     transform: scale(.9);
 }
-.animator-c385.zoom.enter-to {
+.TransitionAnimator-c385.zoom.enter-to {
     opacity: 1;
     transform: scale(1);
     transition:
-        opacity var(--exit-duration, var(--std-duration-slow)),
-        transform var(--exit-duration, var(--std-duration-slow))
+        opacity var(--enter-duration, var(--std-duration-slow)),
+        transform var(--enter-duration, var(--std-duration-slow))
     ;
 }
 
 /* leak ***********************************************************************/
 
-.animator-c385.leak.exit-from {
+.TransitionAnimator-c385.leak.exit-from {
     opacity: 1;
     transform: translateY(0px);
 }
-.animator-c385.leak.exit-to {
+.TransitionAnimator-c385.leak.exit-to {
     opacity: 0;
     transform: translateY(100%);
     transition:
@@ -83,26 +83,26 @@
         transform var(--exit-duration, var(--std-duration-fast))
     ;
 }
-.animator-c385.leak.enter-from {
+.TransitionAnimator-c385.leak.enter-from {
     opacity: 0;
     transform: translateY(-100%);
 }
-.animator-c385.leak.enter-to {
+.TransitionAnimator-c385.leak.enter-to {
     opacity: 1;
     transform: translateY(0%);
     transition:
-        opacity var(--exit-duration, var(--std-duration-slow)),
-        transform var(--exit-duration, var(--std-duration-slow))
+        opacity var(--enter-duration, var(--std-duration-slow)),
+        transform var(--enter-duration, var(--std-duration-slow))
     ;
 }
 
 /* skid-left ******************************************************************/
 
-.animator-c385.skid-left.exit-from {
+.TransitionAnimator-c385.skid-left.exit-from {
     opacity: 1;
     transform: translateX(0px);
 }
-.animator-c385.skid-left.exit-to {
+.TransitionAnimator-c385.skid-left.exit-to {
     opacity: 0;
     transform: translateX(-100%);
     transition:
@@ -110,15 +110,15 @@
         transform var(--exit-duration, var(--std-duration-fast))
     ;
 }
-.animator-c385.skid-left.enter-from {
+.TransitionAnimator-c385.skid-left.enter-from {
     opacity: 0;
     transform: translateX(100%);
 }
-.animator-c385.skid-left.enter-to {
+.TransitionAnimator-c385.skid-left.enter-to {
     opacity: 1;
     transform: translateX(0%);
     transition:
-        opacity var(--exit-duration, var(--std-duration-slow)),
-        transform var(--exit-duration, var(--std-duration-slow))
+        opacity var(--enter-duration, var(--std-duration-slow)),
+        transform var(--enter-duration, var(--std-duration-slow))
     ;
 }

@@ -1,4 +1,4 @@
-import {Query, QueryError} from '@eviljs/web/query.js'
+import {Query} from '@eviljs/web/query.js'
 import {useMountedRef} from './react.js'
 import {createContext, useCallback, useContext, useRef, useState} from 'react'
 

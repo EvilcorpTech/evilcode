@@ -10,7 +10,7 @@ export function TransitionAnimator(props: TransitionAnimatorProps) {
     return (
         <div
             {...otherProps}
-            className={classes('animator-c385', className, effect ?? DefaultTransitionEffect)}
+            className={classes('TransitionAnimator-c385', className, effect ?? DefaultTransitionEffect)}
         >
             {children}
         </div>

@@ -70,7 +70,7 @@ export function useSite
 }
 
 // Used only for TypeScript validation.
-export function createSiteSpec
+export function asSiteSpec
     <
         RK extends string,
         AK extends string,
@@ -80,7 +80,7 @@ export function createSiteSpec
         W extends SiteWidgets,
         S extends SiteSpec<RK, AK, WK, NK, RT, W>
     >
-    (spec: S)
+    (spec: S): S
 {
     return spec
 }
@@ -261,8 +261,8 @@ export function createDefaultAnimator
     const transition = animatorModel?.transition
 
     return (
-        <Transition mode={mode} initial={initial} enter={enter} exit={exit} source="animator-d352d9">
-            <TransitionAnimator key={key} className="animator-d352d9 layer" effect={transition}>
+        <Transition mode={mode} initial={initial} enter={enter} exit={exit} target="animator-d352">
+            <TransitionAnimator key={key} className="animator-d352" effect={transition}>
                 {widget}
             </TransitionAnimator>
         </Transition>

@@ -3,13 +3,13 @@ import {useEffect, useMemo, useState} from 'react'
 import {useMountedGuard} from './react.js'
 import {useRouterTransition} from './router.js'
 
-export function useRoutedViewLifecycle(routeRe: RegExp) {
+export function useRoutedViewLifecycle(routeRegexp: RegExp) {
     const [viewLifecycle, setViewLifecycle] = useState<ViewLifecycle>('exited')
     const {fromRoute, toRoute} = useRouterTransition()
 
     useEffect(() => {
-        const toThisView = routeRe.test(toRoute)
-        const fromThisView = routeRe.test(fromRoute)
+        const toThisView = routeRegexp.test(toRoute)
+        const fromThisView = routeRegexp.test(fromRoute)
         const isEntered = fromThisView && toThisView
         const isEntering = ! fromThisView && toThisView
         const isExiting = fromThisView && ! toThisView
@@ -43,9 +43,9 @@ export function useRoutedViewLifecycle(routeRe: RegExp) {
 * }
 * return <div style={style}>...</div>
 */
-export function useRoutedViewAnimation(routeRe: RegExp, enterOptional?: Animator, exitOptional?: Animator) {
+export function useRoutedViewAnimation(routeRegexp: RegExp, enterOptional?: Animator, exitOptional?: Animator) {
     const guardMounted = useMountedGuard()
-    const [viewLifecycle, setViewLifecycle] = useRoutedViewLifecycle(routeRe)
+    const [viewLifecycle, setViewLifecycle] = useRoutedViewLifecycle(routeRegexp)
     const enter = enterOptional ?? (() => Promise.resolve())
     const exit = exitOptional ?? (() => Promise.resolve())
 
@@ -138,7 +138,7 @@ export function getViewElement(selector: string) {
 
     if (! el) {
         console.warn(
-            '@eviljs/react.getViewElement(~~selector~~)\n'
+            '@eviljs/react/routed-view.getViewElement(~~selector~~)\n'
             + `missing view's animated element "${selector}".`
         )
     }

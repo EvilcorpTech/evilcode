@@ -2,15 +2,15 @@ import {useEffect} from 'react'
 import {useI18n} from './i18n.js'
 import {useRouter} from './router.js'
 
-export const BaseLocaleRegexp = new RegExp(`/([a-zA-Z]{2})(?:/|$)`)
+export const BaseLocaleRegexp = /\/([a-zA-Z]{2})(?:\/|$)/
 
-export function useRouteLocale(localeRe?: RegExp) {
+export function useRouteLocale(localeRegexpOptional?: RegExp) {
     const {locale, setLocale} = useI18n()
     const {matchRoute} = useRouter()
 
     useEffect(() => {
-        const re = localeRe ?? BaseLocaleRegexp
-        const [wholeMatch, routeLocale] = matchRoute(re) ?? []
+        const localeRegexp = localeRegexpOptional ?? BaseLocaleRegexp
+        const [wholeMatch, routeLocale] = matchRoute(localeRegexp) ?? []
 
         if (! routeLocale) {
             return

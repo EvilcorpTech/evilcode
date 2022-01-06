@@ -1,12 +1,30 @@
+import {lastOf} from '@eviljs/std/array.js'
 import {asArray, isArray, isString, Nil} from '@eviljs/std/type.js'
 import {applyStyles} from '@eviljs/web/animation.js'
-import {Children, cloneElement, CSSProperties, Fragment, useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState} from 'react'
+import {
+    Children,
+    cloneElement,
+    createContext,
+    CSSProperties,
+    Fragment,
+    useCallback,
+    useContext,
+    useEffect,
+    useLayoutEffect,
+    useMemo,
+    useRef,
+    useState,
+} from 'react'
 import {classes} from './react.js'
+
+export const TransitionContext = createContext<TransitionContext>([])
+
+TransitionContext.displayName = 'TransitionContext'
 
 export let Id = 0
 
 export function Transition(props: TransitionProps) {
-    const {children, exit, enter, source, initial, mode, onEntered, onExited, onEnd} = props
+    const {children, exit, enter, target, initial, mode, onEntered, onExited, onEnd} = props
     const [state, setState] = useState<TransitionState>(createTransitionState)
 
     if (children !== state.children) {
@@ -21,18 +39,18 @@ export function Transition(props: TransitionProps) {
             observers,
             exit: exitEvents,
             enter: enterEvents,
-            source: asArray(source ?? []),
+            target: asArray(target ?? []),
             exchangeMode,
             animateInitial,
         })
-        const nextState = consumeQueue({...state, children, initial: false, queue})
+        const nextState = consumeQueue({...state, children, queue, initial: false})
 
         // We derive the state from the props.
         setState(nextState)
     }
 
     useEffect(() => {
-        if (! macroTaskIsCompleted(state.task)) {
+        if (! isMacroTaskCompleted(state.task)) {
             // Macro task is in progress.
             return
         }
@@ -64,14 +82,14 @@ export function Transition(props: TransitionProps) {
         setState(consumeQueue(state))
     }, [state])
 
-    function onTaskCompleted(srcMicroTask: TransitionTask) {
-        setState((state) => {
-            const microTask = state.task.find(it => it.id === srcMicroTask.id)
+    const onTaskCompleted = useCallback((completedMicroTask: TransitionTask) => {
+        setState(state => {
+            const microTask = state.task.find(it => it.id === completedMicroTask.id)
 
             if (! microTask) {
                 console.warn(
                     '@eviljs/react/animation.Transition.onTaskCompleted:\n'
-                    + 'Missing micro task.'
+                    + 'missing micro task.'
                 )
                 return state
             }
@@ -81,46 +99,60 @@ export function Transition(props: TransitionProps) {
             // ...so we must force the update.
             return {...state}
         })
-    }
-
-    const onMountEnd = useCallback((task: TransitionTask) => {
-        onTaskCompleted(task)
-    }, [])
-
-    const onUnmountEnd = useCallback((task: TransitionTask) => {
-        onTaskCompleted(task)
     }, [])
 
     return (
         <Fragment>
             {state.task.map((it, idx) =>
-                renderTask(it, state.keys[idx]!, onMountEnd, onUnmountEnd))
+                renderAnimator(it, state.keys[idx]!, onTaskCompleted))
             }
         </Fragment>
     )
 }
 
 export function Animator(props: AnimatorProps) {
-    const {children, id, type, events, source, onEnd} = props
-    const [state, setState] = useState(() => createAnimatorState(id, events))
+    const {children, id, type, events, target, onEnd} = props
+    const [state, setState] = useState(() => createAnimatorState(id))
     const elRef = useRef<null | HTMLDivElement>(null)
+    const collectedEventsRef = useRef(0)
     const {lifecycle} = state
 
     if (id !== state.id) {
-        // We derive the state from the id. Which means that when the task is
+        // We derive the state from the id. Which means that when the task
         // changes, we create a new default state, re-rendering immediately.
-        setState(createAnimatorState(id, events))
+        setState(createAnimatorState(id))
+    }
+    if (events === 0 && state.lifecycle !== 'end') {
+        // 0 events transitions immediately to the final state.
+        // 'render' tasks have always 0 expected events.
+        setState(state => ({...state, lifecycle: 'end'}))
     }
 
-    useEffect(() => {
-        switch (lifecycle) {
-            case 'end':
-                onEnd?.()
-            break
+    const context = useMemo((): TransitionContext => {
+        switch (type) {
+            case 'render': {
+                return ['mount', 'entered']
+            }
+            case 'mount': {
+                switch (lifecycle) {
+                    case 'init': return ['mount', 'enter']
+                    case 'active': return ['mount', 'entering']
+                    case 'end': return ['mount', 'entered']
+                }
+            }
+            case 'unmount': {
+                switch (lifecycle) {
+                    case 'init': return ['unmount', 'exit']
+                    case 'active': return ['unmount', 'exiting']
+                    case 'end': return ['unmount', 'exited']
+                }
+            }
         }
-    }, [id, lifecycle])
-    // We need id as dependency because the state can transition from
-    // 'end' to 'end' again, when the events are 0.
+    }, [type, lifecycle])
+
+    useEffect(() => {
+        collectedEventsRef.current = 0
+    }, [id])
 
     useLayoutEffect(() => {
         if (type === 'render') {
@@ -137,7 +169,7 @@ export function Animator(props: AnimatorProps) {
 
         applyStyles(elRef.current)
 
-        setState((state) =>
+        setState(state =>
             state.lifecycle === 'init'
                 ? {...state, lifecycle: 'active'}
                 : state
@@ -146,45 +178,51 @@ export function Animator(props: AnimatorProps) {
     // We need id as dependency because the state can transition from
     // 'end' to 'end' again, when the events are 0.
 
+    useEffect(() => {
+        switch (lifecycle) {
+            case 'end':
+                onEnd?.()
+            break
+        }
+    }, [id, lifecycle])
+    // We need id as dependency because the state can transition from
+    // 'end' to 'end' again, when the events are 0.
+
     const listeners = useMemo(() => {
         if (type === 'render') {
             return
         }
-
         if (lifecycle === 'end') {
             return
         }
 
         function onAnimated(event: AnimatorEvent) {
-            const isValidEvent = isValidAnimatorEvent(event, source)
+            const validEvent = isValidAnimatorEvent(event, target)
 
-            if (! isValidEvent) {
+            if (! validEvent) {
                 return
             }
 
-            setState((state) => {
+            collectedEventsRef.current += 1
+
+            if (collectedEventsRef.current < events) {
+                return
+            }
+
+            setState(state => {
                 if (state.lifecycle !== 'active') {
                     return state
                 }
 
-                const collectedEvents = state.collectedEvents + 1
-
-                return {
-                    ...state,
-                    lifecycle: (collectedEvents < state.expectedEvents)
-                        ? 'active'
-                        : 'end'
-                    ,
-                    collectedEvents,
-                } as const
+                return {...state, lifecycle: 'end'}
             })
         }
 
         const onAnimationEnd = onAnimated
         const onTransitionEnd = onAnimated
 
-        return {onTransitionEnd, onAnimationEnd}
-    }, [id, type, lifecycle])
+        return {onAnimationEnd, onTransitionEnd}
+    }, [id, lifecycle])
 
     const child = Children.only(children)
     const presenceStyles = presenceAnimationStyles(type, lifecycle)
@@ -195,63 +233,35 @@ export function Animator(props: AnimatorProps) {
     }
 
     return (
-        <div
-            {...listeners}
-            ref={elRef}
-            className={classes('transition-cbb1ec')}
-            style={presenceStyles}
-        >
-            {cloneElement(child, childProps)}
-        </div>
+        <TransitionContext.Provider value={context}>
+            <div
+                {...listeners}
+                ref={elRef}
+                className="Animator-cbb1"
+                style={presenceStyles}
+            >
+                {cloneElement(child, childProps)}
+            </div>
+        </TransitionContext.Provider>
     )
 }
 
-export function Render(props: RenderProps) {
-    const {children, id, onEnd} = props
-
-    useEffect(() => {
-        onEnd?.()
-    }, [id])
-
-    return children
+export function useTransitionLifecycle() {
+    return useContext(TransitionContext)
 }
 
-function renderTask(task: TransitionTask, key: string, onMounted: TransitionTaskEnd, onUnmounted: TransitionTaskEnd) {
-    switch (task.action) {
-        case 'unmount':
-            return createAnimator(task, key, onUnmounted)
-        case 'mount':
-            return createAnimator(task, key, onMounted)
-        case 'render':
-            // return createRender(task, key, onMounted)
-            return createAnimator(task, key, onMounted)
-    }
-}
-
-function createAnimator(task: TransitionTask, key: string, onEnd: TransitionTaskEnd) {
+function renderAnimator(task: TransitionTask, key: string, onEnd: TransitionTaskEnd) {
     return (
         <Animator
             key={key}
             id={task.id}
             type={task.action}
             events={task.events}
-            source={task.source}
+            target={task.target}
             onEnd={() => onEnd(task)}
         >
             {task.child}
         </Animator>
-    )
-}
-
-function createRender(task: TransitionTask, key: string, onEnd: TransitionTaskEnd) {
-    return (
-        <Render
-            key={key}
-            id={task.id}
-            onEnd={() => onEnd(task)}
-        >
-            {task.child}
-        </Render>
     )
 }
 
@@ -260,7 +270,7 @@ export function enqueueTask(state: TransitionState, spec: {
     observers: TransitionObservers,
     exit: number,
     enter: number,
-    source: AnimatorEventSource,
+    target: AnimatorEventTarget,
     exchangeMode: TransitionMode,
     animateInitial: boolean,
 }) {
@@ -269,7 +279,7 @@ export function enqueueTask(state: TransitionState, spec: {
         observers,
         enter,
         exit,
-        source,
+        target,
         exchangeMode,
         animateInitial,
     } = spec
@@ -285,26 +295,26 @@ export function enqueueTask(state: TransitionState, spec: {
 
     if (! isValidChild(oldChild) && isValidChild(newChild)) {
         // The child has been passed; we must mount it.
-        const spec = {newChild, observers, enter, source, initial: animateInitial, isInitialRender}
+        const spec = {newChild, observers, enter, target, initial: animateInitial, isInitialRender}
         return [...state.queue, ...createMountTasks(spec)]
     }
 
     if (isValidChild(oldChild) && ! isValidChild(newChild)) {
         // The child has been removed; we must unmount it.
-        const spec = {oldChild, observers, exit, source}
+        const spec = {oldChild, observers, exit, target}
         return [...state.queue, ...createUnmountTasks(spec)]
     }
 
     if (isValidChild(oldChild) && isValidChild(newChild) && ! areSameChildren(oldChild, newChild)) {
         // The child has exchanged; we must unmount previous one and mount the new one.
-        const spec = {mode: exchangeMode, oldChild, newChild, observers, exit, enter, source}
+        const spec = {mode: exchangeMode, oldChild, newChild, observers, exit, enter, target}
         return [...state.queue, ...createExchangeTasks(spec)]
     }
 
     if (isValidChild(oldChild) && isValidChild(newChild) && areSameChildren(oldChild, newChild)) {
         // The child has been update; we must propagate the update.
         updateTasks(state.queue, state.task, newChild, observers)
-        return state.queue
+        return [...state.queue]
     }
 
     return state.queue
@@ -332,10 +342,10 @@ function createTask(
     return {
         // Defaults.
         events: 0,
-        target: false,
+        alive: false,
         flags: [],
         completed: false,
-        source: [],
+        target: [],
         // Options.
         ...options,
         // Mandatory not overwrite-able.
@@ -351,7 +361,7 @@ export function createMountTasks(spec: {
     newChild: TransitionElement,
     observers: TransitionObservers,
     enter: number,
-    source: AnimatorEventSource,
+    target: AnimatorEventTarget,
     initial: boolean,
     isInitialRender: boolean,
 }) {
@@ -359,7 +369,7 @@ export function createMountTasks(spec: {
         newChild,
         observers,
         enter,
-        source,
+        target,
         initial,
         isInitialRender,
     } = spec
@@ -374,7 +384,7 @@ export function createMountTasks(spec: {
         : enter
 
     return createTasksTransaction([
-        createTask(action, newChild, observers, {events, source, target: true, flags: ['enter']})
+        createTask(action, newChild, observers, {events, target, alive: true, flags: ['enter']})
     ])
 }
 
@@ -382,17 +392,17 @@ export function createUnmountTasks(spec: {
     oldChild: TransitionElement,
     observers: TransitionObservers,
     exit: number,
-    source: AnimatorEventSource,
+    target: AnimatorEventTarget,
 }) {
     const {
         oldChild,
         observers,
         exit,
-        source,
+        target,
     } = spec
 
     return createTasksTransaction(
-        [createTask('unmount', oldChild, observers, {events: exit, source, target: true})],
+        [createTask('unmount', oldChild, observers, {events: exit, target, alive: true})],
         [createTask('render', <Fragment/>, observers, {flags: ['exit']})],
     )
 }
@@ -404,7 +414,7 @@ export function createExchangeTasks(spec: {
     observers: TransitionObservers,
     exit: number,
     enter: number,
-    source: AnimatorEventSource,
+    target: AnimatorEventTarget,
 }) {
     const {
         mode,
@@ -413,19 +423,19 @@ export function createExchangeTasks(spec: {
         observers,
         exit,
         enter,
-        source,
+        target,
     } = spec
 
     switch (mode) {
         case 'cross':
             // We must unmount previous child and mount the new one, in parallel.
-            return createCrossTasks({oldChild, newChild, observers, exit, enter, source})
+            return createCrossTasks({oldChild, newChild, observers, exit, enter, target})
         case 'out-in':
             // We must unmount previous child and mount the new one, in sequence.
-            return createOutInTasks({oldChild, newChild, observers, exit, enter, source})
+            return createOutInTasks({oldChild, newChild, observers, exit, enter, target})
         case 'in-out':
             // We must mount the new child and unmount previous one, in sequence.
-            return createInOutTasks({oldChild, newChild, observers, exit, enter, source})
+            return createInOutTasks({oldChild, newChild, observers, exit, enter, target})
     }
 }
 
@@ -435,7 +445,7 @@ export function createCrossTasks(spec: {
     observers: TransitionObservers,
     exit: number,
     enter: number,
-    source: AnimatorEventSource,
+    target: AnimatorEventTarget,
 }) {
     const {
         oldChild,
@@ -443,17 +453,17 @@ export function createCrossTasks(spec: {
         observers,
         exit,
         enter,
-        source,
+        target,
     } = spec
 
     return createTasksTransaction(
         [
             // Parallel unmount and mount.
-            createTask('unmount', oldChild, observers, {events: exit, source, flags: ['exit']}),
-            createTask('mount', newChild, observers, {events: enter, source, target: true, key: createKey}),
+            createTask('unmount', oldChild, observers, {events: exit, target, flags: ['exit']}),
+            createTask('mount', newChild, observers, {events: enter, target, alive: true, key: createKey}),
         ],
         [
-            createTask('render', newChild, observers, {target: true, flags: ['enter'], key: (keys) => keys[1]!}),
+            createTask('render', newChild, observers, {alive: true, flags: ['enter'], key: (keys) => keys[1]!}),
         ],
     )
 }
@@ -464,7 +474,7 @@ export function createOutInTasks(spec: {
     observers: TransitionObservers,
     exit: number,
     enter: number,
-    source: AnimatorEventSource,
+    target: AnimatorEventTarget,
 }) {
     const {
         oldChild,
@@ -472,12 +482,12 @@ export function createOutInTasks(spec: {
         observers,
         exit,
         enter,
-        source,
+        target,
     } = spec
 
     return createTasksTransaction(
-        [createTask('unmount', oldChild, observers, {events: exit, source, flags: ['exit']})],
-        [createTask('mount', newChild, observers, {events: enter, source, target: true, flags: ['enter']})],
+        [createTask('unmount', oldChild, observers, {events: exit, target, flags: ['exit']})],
+        [createTask('mount', newChild, observers, {events: enter, target, alive: true, flags: ['enter']})],
     )
 }
 
@@ -487,7 +497,7 @@ export function createInOutTasks(spec: {
     observers: TransitionObservers,
     exit: number,
     enter: number,
-    source: AnimatorEventSource,
+    target: AnimatorEventTarget,
 }) {
     const {
         oldChild,
@@ -495,20 +505,20 @@ export function createInOutTasks(spec: {
         observers,
         exit,
         enter,
-        source,
+        target,
     } = spec
 
     return createTasksTransaction(
         [
             createTask('render', oldChild, observers),
-            createTask('mount', newChild, observers, {events: enter, source, target: true, key: createKey}),
+            createTask('mount', newChild, observers, {events: enter, target, alive: true, key: createKey}),
         ],
         [
-            createTask('unmount', oldChild, observers, {events: exit, source, flags: ['exit']}),
-            createTask('render', newChild, observers, {target: true}),
+            createTask('unmount', oldChild, observers, {events: exit, target, flags: ['exit']}),
+            createTask('render', newChild, observers, {alive: true}),
         ],
         [
-            createTask('render', newChild, observers, {target: true, flags: ['enter'], key: (keys) => keys[1]!}),
+            createTask('render', newChild, observers, {alive: true, flags: ['enter'], key: (keys) => keys[1]!}),
         ],
     )
 }
@@ -521,32 +531,32 @@ export function updateTasks(
 ) {
     // Current macro task must be the first one (the one with lowest priority).
     const tasksList = [macroTask, ...queue]
-    const targetTasks = findTargetTasks(tasksList)
-    const hasTargetsTasks = targetTasks.length > 0
+    const aliveTasks = findAliveTasks(tasksList)
+    const hasAliveTasks = aliveTasks.length > 0
     let forceUpdate = false
 
-    for (const it of targetTasks) {
+    for (const it of aliveTasks) {
         // We mutate the reference in place. It is safe for queued macro tasks
         // because they are not rendered yet.
         updateTask(it, newChild, observers)
         // But it is not safe for current macro task.
         if (macroTask?.includes(it)) {
-            // A target task is inside the current macro task. We need to force the update.
+            // An alive task is inside the current macro task. We need to force the update.
             forceUpdate = true
         }
     }
 
-    if (! hasTargetsTasks) {
+    if (! hasAliveTasks) {
         console.warn(
             '@eviljs/react/animation.Transition:\n'
-            + 'targets tasks can\'t be found.'
+            + 'alive tasks can\'t be found.'
         )
     }
 
     return forceUpdate
 }
 
-export function updateTask(task: TransitionTask, child: TransitionElement, observers: TransitionObservers) {
+export function updateTask(task: TransitionTask, child: TransitionElement, observers: TransitionObservers): TransitionTask {
     task.child = child
 
     if (! task.completed) {
@@ -556,8 +566,8 @@ export function updateTask(task: TransitionTask, child: TransitionElement, obser
     return task
 }
 
-export function consumeQueue(state: TransitionState) {
-    if (! macroTaskIsCompleted(state.task)) {
+export function consumeQueue(state: TransitionState): TransitionState {
+    if (! isMacroTaskCompleted(state.task)) {
         // Task is in progress. We can't consume.
         return state
     }
@@ -577,28 +587,23 @@ export function consumeQueue(state: TransitionState) {
         ?? String(idx) // As last resort, we fallback to the index.
     )
 
-    return {...state, queue, task, keys}
+    return {...state, task, queue, keys}
 }
 
 export function createTransitionState(): TransitionState {
     return {
         children: null,
+        initial: true,
+        keys: [],
         queue: [],
         task: [],
-        keys: [],
-        initial: true,
     }
 }
 
-export function createAnimatorState(id: TransitionTaskId, expectedEvents: number): AnimatorState {
+export function createAnimatorState(id: TransitionTaskId): AnimatorState {
     return {
         id,
-        lifecycle: expectedEvents
-            ? 'init'
-            : 'end' // 0 transitions to the final state.
-        ,
-        collectedEvents: 0,
-        expectedEvents: expectedEvents,
+        lifecycle: 'init',
     }
 }
 
@@ -616,13 +621,17 @@ export function presenceAnimationClasses(type: TransitionTaskAction, lifecycle: 
                 return 'enter'
         }
     })()
+
     return {
         [`${name}-from`]: lifecycle === 'init',
         [`${name}-to`]: lifecycle === 'active',
     }
 }
 
-export function presenceAnimationStyles(type: TransitionTaskAction, lifecycle: AnimatorLifecycle): CSSProperties | undefined {
+export function presenceAnimationStyles(
+    type: TransitionTaskAction,
+    lifecycle: AnimatorLifecycle,
+): undefined | CSSProperties {
     switch (type) {
         case 'unmount':
             if (lifecycle === 'end') {
@@ -633,7 +642,7 @@ export function presenceAnimationStyles(type: TransitionTaskAction, lifecycle: A
         break
         case 'mount':
             if (lifecycle === 'init') {
-                return {display: 'contents', visibility: 'hidden'} // {width: '100vh', height: '100vw'}
+                return {display: 'contents', visibility: 'hidden'}
             }
         break
     }
@@ -688,70 +697,44 @@ export function areSameChildren(a?: Nil | TransitionElement, b?: Nil | Transitio
 
 export function isValidAnimatorEvent(
     event: AnimatorEvent,
-    source: AnimatorEventSource,
+    target: AnimatorEventTarget,
 ) {
-    if (source.length === 0) {
+    if (target.length === 0) {
         return true
     }
 
-    const target = event.target as HTMLElement
+    const eventTarget = event.target as HTMLElement
 
-    for (const it of source) {
-        const [selectorType] = it
-
-        switch (selectorType) {
-            case '.':
-            case '#':
-                const el = document.querySelector(it)
-
-                if (target === el) {
-                    return true
-                }
-            break
-            default:
-                if (target.id === it) {
-                    return true
-                }
-                if (target.classList.contains(it)) {
-                    return true
-                }
-            break
+    for (const it of target) {
+        if (eventTarget.id === it) {
+            return true
+        }
+        if (eventTarget.classList.contains(it)) {
+            return true
         }
     }
-
     return false
 }
 
-export function macroTaskIsCompleted(macroTask: TransitionMacroTask) {
+export function isMacroTaskCompleted(macroTask: TransitionMacroTask) {
     return macroTask.every(it => it.completed)
 }
 
-export function findTargetTasks(queue: Array<null | TransitionMacroTask>) {
-    const targets: Array<TransitionTask> = []
+export function findAliveTasks(queue: Array<null | TransitionMacroTask>) {
+    const aliveTasks = queue
+        // There is at most one alive task per parallel macro task.
+        .map(macroTask => macroTask?.find(it => it.alive))
+        .filter(Boolean) as Array<TransitionTask>
 
-    for (const it of queue) {
-        const targetTasks = findTargetTasksOf(it)
-        targets.push(...targetTasks)
-    }
-
-    const lastTargetTask = targets[targets.length - 1] // We select the last inserted task (in time).
-    const transactionId = lastTargetTask?.tid
-    const transactionTasks = targets.filter(it =>
-        // We can't return all targets tasks, but only those being part
-        // of the last transaction.
-        it.tid === transactionId
+    const lastAliveTask = lastOf(aliveTasks) // We select the last inserted task (in time).
+    const aliveTransactionId = lastAliveTask?.tid
+    const aliveTransactionTasks = aliveTasks.filter(it =>
+        // We can't return all alive tasks, but only those being part
+        // of last transaction.
+        it.tid === aliveTransactionId
     )
 
-    return transactionTasks
-}
-
-export function findTargetTasksOf(task: null | TransitionMacroTask) {
-    if (! task) {
-        return []
-    }
-
-    // There is at most one target per parallel task.
-    return task.filter(it => it.target)
+    return aliveTransactionTasks
 }
 
 export function createId() {
@@ -759,7 +742,7 @@ export function createId() {
 }
 
 export function createKey() {
-    return `key-${createId()}`
+    return `id#${createId()}`
 }
 
 // Types ///////////////////////////////////////////////////////////////////////
@@ -778,32 +761,26 @@ export interface TransitionProps extends TransitionObservers {
     children?: undefined | TransitionChildren
     enter?: undefined | number
     exit?: undefined | number
-    source?: undefined | string | AnimatorEventSource
     initial?: undefined | boolean
     mode?: undefined | TransitionMode
+    target?: undefined | string | AnimatorEventTarget
 }
 
 export interface AnimatorProps {
     children: TransitionElement
-    id: number
-    type: TransitionTaskAction
     events: number
-    source: AnimatorEventSource
-    onEnd?(): void
-}
-
-export interface RenderProps {
-    children: TransitionElement
     id: number
+    target: AnimatorEventTarget
+    type: TransitionTaskAction
     onEnd?(): void
 }
 
 export interface TransitionState {
     children: TransitionChildren
+    initial: boolean
+    keys: Array<string>
     queue: TransitionQueue
     task: TransitionMacroTask
-    keys: Array<string>
-    initial: boolean
 }
 
 export type TransitionTaskEnd = (task: TransitionTask) => void
@@ -814,18 +791,19 @@ export type TransitionTaskFlags = Array<TransitionTaskFlag>
 
 export type TransitionQueue = Array<TransitionMacroTask>
 export type TransitionMacroTask = Array<TransitionTask>
+
 export interface TransitionTask {
     id: TransitionTaskId
     tid: TransitionTaskId
     action: TransitionTaskAction
+    alive: boolean
     child: TransitionElement
-    events: number
-    source: AnimatorEventSource
-    observers: TransitionObservers
-    flags: TransitionTaskFlags
-    key?(keys: Array<string>): undefined | string
-    target: boolean
     completed: boolean
+    events: number
+    flags: TransitionTaskFlags
+    observers: TransitionObservers
+    target: AnimatorEventTarget
+    key?(keys: Array<string>): undefined | string
 }
 
 export type AnimatorLifecycle =
@@ -836,10 +814,13 @@ export type AnimatorLifecycle =
 export interface AnimatorState {
     id: TransitionTaskId
     lifecycle: AnimatorLifecycle
-    expectedEvents: number
-    collectedEvents: number
 }
 
-export type AnimatorEventSource = Array<string>
+export type AnimatorEventTarget = Array<string>
 
 export type AnimatorEvent = React.AnimationEvent<HTMLDivElement> | React.TransitionEvent<HTMLDivElement>
+
+export type TransitionContext =
+    | []
+    | ['mount', 'enter' | 'entering' | 'entered']
+    | ['unmount', 'exit' | 'exiting' | 'exited']

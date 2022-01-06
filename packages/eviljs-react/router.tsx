@@ -1,4 +1,4 @@
-import {escapeRegExp} from '@eviljs/std/regexp.js'
+import {escapeRegexp} from '@eviljs/std/regexp.js'
 import {asArray, isFunction, isPromise, Nil} from '@eviljs/std/type.js'
 import {classes} from './react.js'
 import {compilePattern, exact, regexpFromPattern} from '@eviljs/web/route.js'
@@ -225,9 +225,12 @@ export function useRouterTransition() {
     const {routePath: toRoute} = useRouter()
     const prevRouteRef = useRef(toRoute)
 
+    useEffect(() => {
+        prevRouteRef.current = toRoute
+    }, [toRoute])
+
     const transition = useMemo(() => {
         const fromRoute = prevRouteRef.current
-        prevRouteRef.current = toRoute
         return {fromRoute, toRoute}
     }, [toRoute])
 
@@ -258,8 +261,8 @@ export function SwitchRoute(props: SwitchRouteProps) {
         for (const it of asArray(children)) {
             const {is, then} = it as SwitchRouteChildren
 
-            const pathRe = compilePattern(is)
-            const matches = matchRoute(pathRe)
+            const pathRegexp = compilePattern(is)
+            const matches = matchRoute(pathRegexp)
 
             if (matches) {
                 return [then, cleanMatches(matches)] as const
@@ -294,7 +297,7 @@ export function SwitchRoute(props: SwitchRouteProps) {
 * <WhenRoute is={new RegExp('^/book(?:/)?$', 'i')}>
 *     <h1>/book</h1>
 * </WhenRoute>
-* <WhenRoute is={`^/book/${Arg}/${Arg}${End}`}>
+* <WhenRoute is={`${Start}/book/${Arg}/${Arg}${End}`}>
 *     {(arg1, arg2) =>
 *         <h1>/book/{arg1}/{arg2}</h1>
 *     }
@@ -305,8 +308,8 @@ export function WhenRoute(props: WhenRouteProps) {
     const {matchRoute} = useRouter()
 
     const matches = useMemo(() => {
-        const pathRe = regexpFromPattern(is)
-        const matches = matchRoute(pathRe)
+        const pathRegexp = regexpFromPattern(is)
+        const matches = matchRoute(pathRegexp)
 
         return cleanMatches(matches)
     }, [is, matchRoute])
@@ -380,13 +383,13 @@ export function Route(props: RouteProps) {
             return false
         }
 
-        const escapedTo = escapeRegExp(to)
+        const escapedTo = escapeRegexp(to)
         const path = activeWhenExact
             ? exact(escapedTo)
             : escapedTo
-        const pathRe = regexpFromPattern(path)
+        const pathRegexp = regexpFromPattern(path)
 
-        return testRoute(pathRe)
+        return testRoute(pathRegexp)
     }, [to, testRoute])
 
     return (

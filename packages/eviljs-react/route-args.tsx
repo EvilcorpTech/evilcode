@@ -12,8 +12,8 @@ export function RouteArgs(props: RouteArgsProps) {
         if (! guard) {
             return true
         }
-        const guardRe = regexpFromPattern(guard)
-        const isValid = testRoute(guardRe)
+        const guardRegexp = regexpFromPattern(guard)
+        const isValid = testRoute(guardRegexp)
 
         return isValid
     }, [guard, testRoute])

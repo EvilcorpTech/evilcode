@@ -98,11 +98,11 @@ export function useRootAuth(fetch: Fetch, cookie: Cookie, options?: AuthOptions)
     const authenticateOptions = options?.authenticate
     const validateOptions = options?.validate
     const invalidateOptions = options?.invalidate
+    const [token, setToken] = useState<undefined | string>(() => cookie.get()) // Reading document.cookie is slow.
     const [tokenState, setTokenState] = useState<AuthTokenState>(AuthTokenState.Init)
     const {busy, busyLock, busyRelease} = useBusy()
     const ifMounted = useIfMounted()
     const guardMounted = useMountedGuard()
-    const token = cookie.get()
 
     useEffect(() => {
         if (! token) {
@@ -117,17 +117,16 @@ export function useRootAuth(fetch: Fetch, cookie: Cookie, options?: AuthOptions)
         }
 
         setTokenState(AuthTokenState.Validating)
-
         busyLock()
 
-        validate(fetch, token, validateOptions).then(guardMounted((isTokenValid) =>
+        validate(fetch, token, validateOptions)
+        .then(guardMounted(isTokenValid => {
             setTokenState(isTokenValid
                 ? AuthTokenState.Valid
                 : AuthTokenState.Invalid
             )
-        )).finally(guardMounted(() =>
-            busyRelease()
-        ))
+        }))
+        .finally(guardMounted(busyRelease))
     }, [fetch, validateOptions, token])
 
     const authenticateCredentials = useCallback(async (credentials: AuthCredentials) => {
@@ -135,23 +134,22 @@ export function useRootAuth(fetch: Fetch, cookie: Cookie, options?: AuthOptions)
         try {
             const token = await authenticate(fetch, credentials, authenticateOptions)
 
-            cookie.set(token)
-
-            ifMounted(() =>
+            ifMounted(() => {
+                cookie.set(token)
+                setToken(token)
                 setTokenState(AuthTokenState.Valid)
-            )
+            })
 
             return token
         }
         finally {
-            ifMounted(() =>
-                busyRelease()
-            )
+            ifMounted(busyRelease)
         }
     }, [fetch, cookie, authenticateOptions])
 
     const destroySession = useCallback(async () => {
         cookie.delete()
+        setToken(undefined)
         setTokenState(AuthTokenState.Missing)
 
         if (! token) {
@@ -174,9 +172,7 @@ export function useRootAuth(fetch: Fetch, cookie: Cookie, options?: AuthOptions)
             return false
         }
         finally {
-            ifMounted(() =>
-                busyRelease()
-            )
+            ifMounted(busyRelease)
         }
 
         return true
