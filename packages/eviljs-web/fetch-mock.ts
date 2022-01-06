@@ -1,7 +1,15 @@
 import {wait} from '@eviljs/std/async.js'
 import {StdError} from '@eviljs/std/throw.js'
 import {randomInt} from '@eviljs/std/random.js'
-import {createFetch, Fetch, FetchRequestMethod, FetchRequestOptions, JsonType} from './fetch.js'
+import {
+    asJsonOptions,
+    createFetch,
+    Fetch,
+    FetchRequestMethod,
+    FetchRequestOptions,
+    mergeOptions,
+} from './fetch.js'
+import {regexpFromPattern} from './route.js'
 
 export class MissingMock extends StdError {}
 
@@ -81,7 +89,12 @@ export function mockFetchDelayed(fetch: Fetch, mocks: FetchMocks, options?: Mock
     return mockedFetch
 }
 
-export function mockResponse(mocks: FetchMocks, type: FetchRequestMethod, path: string, options?: FetchRequestOptions) {
+export function mockResponse(
+    mocks: FetchMocks,
+    type: FetchRequestMethod,
+    path: string,
+    options?: FetchRequestOptions,
+) {
     const typeMocks = mocks[type.toLowerCase() as FetchRequestMethod]
 
     if (! typeMocks) {
@@ -89,36 +102,25 @@ export function mockResponse(mocks: FetchMocks, type: FetchRequestMethod, path: 
     }
 
     for (const mock of typeMocks) {
-        const [re, response] = mock
-        const regexp = new RegExp(re, 'i')
+        const [pattern, responseFor] = mock
+        const regexp = regexpFromPattern(pattern)
 
         if (! regexp.test(path)) {
             continue
         }
 
-        return response(type, path, options)
+        return responseFor(type, path, options)
     }
 
     return NoMock
 }
 
 export function jsonResponse(data: unknown, options?: ResponseInit) {
-    const body = JSON.stringify(data)
-    const opts = {
-        ...options,
-        headers: options?.headers instanceof Headers
-            ? (() => {
-                const headers = new Headers(options.headers)
-                headers.set('Content-Type', JsonType)
-                return headers
-            })()
-            : {
-                ...options?.headers,
-                'Content-Type': JsonType,
-            }
-        ,
-    }
-    const response = new Response(body, opts)
+    const jsonOptions = asJsonOptions(data)
+    const responseOptions = mergeOptions(options ?? {}, jsonOptions)
+    const body = responseOptions.body
+    delete responseOptions.body
+    const response = new Response(body, responseOptions)
 
     return response
 }
@@ -128,16 +130,16 @@ export function jsonResponse(data: unknown, options?: ResponseInit) {
 *
 * const fetch = createFetch({baseUrl: API_URL})
 * const mockedFetch = mockFetchDelayed(fetch, mocks, {minDelay: 500, maxDelay: 1000})
-* createMockServiceWorker(self, mockedFetch)
+* createFetchServiceWorker(self, mockedFetch)
 */
-export function createMockServiceWorker(self: ServiceWorkerGlobalScope, mockedFetch: Fetch) {
-    const fetchUrl = mockedFetch.baseUrl.startsWith('/')
-        ? self.origin + mockedFetch.baseUrl
-        : mockedFetch.baseUrl
+export function createFetchServiceWorker(self: ServiceWorkerGlobalScope, fetch: Fetch) {
+    const fetchUrl = fetch.baseUrl.startsWith('/')
+        ? self.origin + fetch.baseUrl
+        : fetch.baseUrl
     const fetchUrlInfo = new URL(fetchUrl)
 
     function log(...args: Array<any>) {
-        console.debug('@eviljs/web/fetch-mock.createMockServiceWorker():', ...args)
+        console.debug('@eviljs/web/fetch-mock.createFetchServiceWorker():', ...args)
     }
 
     log('evaluating')
@@ -172,22 +174,27 @@ export function createMockServiceWorker(self: ServiceWorkerGlobalScope, mockedFe
 
         const promise = request.text().then((body => {
             const options = {...request, body}
-            return mockedFetch.request(method, url, options)
+            return fetch.request(method, url, options)
         }))
 
         event.respondWith(promise)
     })
 }
 
+export function asFetchMock(mocks: FetchMocks) {
+    // Only for TypeScript typing purpose.
+    return mocks
+}
+
 // Types ///////////////////////////////////////////////////////////////////////
 
 export type FetchMocks = {
-    [key in FetchRequestMethod]?: FetchMethodMocks
+    [key in FetchRequestMethod]?: Array<[string, FetchMockHandler]>
 }
 
-export type FetchMethodMocks = Array<
-    readonly [string, (type: FetchRequestMethod, path: string, options?: FetchRequestOptions) => Response]
->
+export interface FetchMockHandler {
+    (type: FetchRequestMethod, path: string, options?: FetchRequestOptions): Response
+}
 
 export interface MockFetchDelayedOptions {
     minDelay?: number

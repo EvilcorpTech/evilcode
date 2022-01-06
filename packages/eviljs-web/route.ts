@@ -17,7 +17,7 @@ export const CapturingGroupRegexp = /\([^()]+\)/    // An opening round bracket,
                                                     // not followed by an opening or closing round bracket,
                                                     // followed by a closing round bracket.
 
-export const RegExpCache: RegExpCache = {}
+export const PatternRegExpCache: Record<string, RegExp> = {}
 
 /*
 * Creates a Route. Used mostly for type checking.
@@ -115,11 +115,11 @@ export function regexpFromPattern(pattern: string | RegExp) {
         return pattern
     }
 
-    if (! RegExpCache[pattern]) {
-        RegExpCache[pattern] = new RegExp(pattern, 'i')
+    if (! PatternRegExpCache[pattern]) {
+        PatternRegExpCache[pattern] = new RegExp(pattern, 'i')
     }
 
-    return RegExpCache[pattern]!
+    return PatternRegExpCache[pattern]!
 }
 
 export function exact(pattern: string) {
@@ -132,10 +132,6 @@ export interface Route<E extends Args, D> {
     pattern: RegExp
     path(...args: E): string
     params(path: string): D
-}
-
-export interface RegExpCache {
-    [key: string]: RegExp
 }
 
 type Args = Array<unknown>

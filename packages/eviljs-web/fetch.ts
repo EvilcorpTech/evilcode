@@ -1,4 +1,4 @@
-import {isArray, ValueOf} from '@eviljs/std/type.js'
+import {isArray, isNil, isObject, ValueOf} from '@eviljs/std/type.js'
 
 export const FetchRequestMethod = {
     Get: 'get',
@@ -70,7 +70,9 @@ export function asBaseUrl(url?: undefined | string) {
 
 export function mergeOptions(...optionsList: Array<FetchRequestOptions>): FetchRequestOptions {
     type Options = Omit<FetchRequestOptions, 'headers'> & {headers: Record<string, string>}
-    const options: Options = {headers: {}}
+    const options: Options = {
+        headers: {},
+    }
 
     for (const optionsSource of optionsList) {
         for (const prop in optionsSource) {
@@ -90,11 +92,19 @@ export function mergeOptions(...optionsList: Array<FetchRequestOptions>): FetchR
                             options.headers[key] = value
                         }
                     }
-                    else {
+                    else if (isObject(optionsSource.headers)) {
                         options.headers = {
                             ...options.headers,
                             ...optionsSource.headers,
                         }
+                    }
+                    else if (isNil(optionsSource.headers)) {
+                    }
+                    else {
+                        const message =
+                            '@eviljs/web/fetch.mergeOptions(...optionsList):\n'
+                            + `headers must be Object | Array | Headers, given "${optionsSource.headers}".`
+                        console.warn(message)
                     }
                 break
 

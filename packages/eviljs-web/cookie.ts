@@ -1,11 +1,15 @@
+import {escapeRegexp} from '@eviljs/std/regexp.js'
+
+export const KeyRegExpCache: Record<string, RegExp> = {}
+
 export function createCookie(key: string, options?: CookieOptions) {
     const self: Cookie = {
         key,
         get() {
-            return getCookie(self.key)
+            return readCookie(self.key)
         },
         set(value: string) {
-            return setCookie(self.key, value, options)
+            return writeCookie(self.key, value, options)
         },
         delete() {
             return deleteCookie(self.key, options)
@@ -38,13 +42,13 @@ export function expiresInDays(days: number) {
     return expires
 }
 
-export function getCookie(key: string) {
+export function readCookie(key: string) {
     if (! document.cookie) {
         return
     }
 
     const cookie = document.cookie
-    const regexp = new RegExp(`\\b${key}=([^;]*);?`)
+    const regexp = regexpFromKey(key)
     const matches = cookie.match(regexp)
 
     if (matches) {
@@ -54,7 +58,7 @@ export function getCookie(key: string) {
     return
 }
 
-export function setCookie(key: string, val: string, options?: CookieOptions) {
+export function writeCookie(key: string, val: string, options?: CookieOptions) {
     const path = options?.path
     const maxAge = options?.maxAge
     const expires = options?.expires
@@ -83,7 +87,7 @@ export function deleteCookie(key: string, options?: CookieOptions) {
     const expires = 'Thu, 01 Jan 1970 00:00:01 GMT'
     const maxAge = 0
 
-    setCookie(key, '', {...options, maxAge, expires})
+    writeCookie(key, '', {...options, maxAge, expires})
 }
 
 export function cleanCookies(options?: CookieOptions) {
@@ -94,6 +98,14 @@ export function cleanCookies(options?: CookieOptions) {
 
         deleteCookie(key!, options)
     }
+}
+
+export function regexpFromKey(key: string) {
+    if (! KeyRegExpCache[key]) {
+        KeyRegExpCache[key] = new RegExp(`\\b${escapeRegexp(key)}=([^;]*);?`)
+    }
+
+    return KeyRegExpCache[key]!
 }
 
 // Types ///////////////////////////////////////////////////////////////////////
