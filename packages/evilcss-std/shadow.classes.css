@@ -1,7 +1,7 @@
 .std-shadow.primary-accent {
-    --std-umbra: hsl(var(--std-color-primary-h) var(--std-color-primary-s) calc(var(--std-color-primary-l) * .8) var(--std-umbra-opacity));
-    --std-penumbra: hsl(var(--std-color-primary-h) var(--std-color-primary-s) calc(var(--std-color-primary-l) * .8) var(--std-penumbra-opacity));
-    --std-ambient: hsl(var(--std-color-primary-h) var(--std-color-primary-s) calc(var(--std-color-primary-l) * .8) var(--std-ambient-opacity));
+    --std-umbra: hsl(var(--std-color-primary-h) var(--std-color-primary-s) calc(var(--std-color-primary-l) * .8) / var(--std-umbra-opacity));
+    --std-penumbra: hsl(var(--std-color-primary-h) var(--std-color-primary-s) calc(var(--std-color-primary-l) * .8) / var(--std-penumbra-opacity));
+    --std-ambient: hsl(var(--std-color-primary-h) var(--std-color-primary-s) calc(var(--std-color-primary-l) * .8) / var(--std-ambient-opacity));
 }
 
 .std-shadow.soft { box-shadow: var(--std-shadow-soft); }

@@ -1,171 +1,24 @@
-.std-text-display1 {
-    font-family: var(--font, var(--std-font-primary));
-    font-size: var(--std-text-display1-size);
-    font-weight: var(--font-weight, var(--std-text-display1-weight, var(--std-weight-bold)));
-    font-style: var(--font-style, var(--std-text-display1-style, normal));
-    letter-spacing: var(--font-spacing, var(--std-text-display1-spacing, normal));
-    line-height: var(--font-height, var(--std-text-display1-height, normal));
-    text-transform: var(--font-transform, var(--std-text-display1-transform, none));
-    opacity: var(--opacity, var(--std-text-display1-opacity, 1));
-}
-.std-text-display2 {
-    font-family: var(--font, var(--std-font-primary));
-    font-size: var(--std-text-display2-size);
-    font-weight: var(--font-weight, var(--std-text-display2-weight, var(--std-weight-light)));
-    font-style: var(--font-style, var(--std-text-display2-style, normal));
-    letter-spacing: var(--font-spacing, var(--std-text-display2-spacing, normal));
-    line-height: var(--font-height, var(--std-text-display2-height, normal));
-    text-transform: var(--font-transform, var(--std-text-display2-transform, none));
-    opacity: var(--opacity, var(--std-text-display2-opacity, 1));
-}
-.std-text-h1 {
-    font-family: var(--font, var(--std-font-primary));
-    font-size: var(--std-text-h1-size);
-    font-weight: var(--font-weight, var(--std-text-h1-weight, var(--std-weight-bold)));
-    font-style: var(--font-style, var(--std-text-h1-style, normal));
-    letter-spacing: var(--font-spacing, var(--std-text-h1-spacing, normal));
-    line-height: var(--font-height, var(--std-text-h1-height, normal));
-    text-transform: var(--font-transform, var(--std-text-h1-transform, none));
-    opacity: var(--opacity, var(--std-text-h1-opacity, 1));
-}
-.std-text-h2 {
-    font-family: var(--font, var(--std-font-primary));
-    font-size: var(--std-text-h2-size);
-    font-weight: var(--font-weight, var(--std-text-h2-weight, var(--std-weight-bold)));
-    font-style: var(--font-style, var(--std-text-h2-style, normal));
-    letter-spacing: var(--font-spacing, var(--std-text-h2-spacing, normal));
-    line-height: var(--font-height, var(--std-text-h2-height, normal));
-    text-transform: var(--font-transform, var(--std-text-h2-transform, none));
-    opacity: var(--opacity, var(--std-text-h2-opacity, 1));
-}
-.std-text-h3 {
-    font-family: var(--font, var(--std-font-primary));
-    font-size: var(--std-text-h3-size);
-    font-weight: var(--font-weight, var(--std-text-h3-weight, var(--std-weight-medium)));
-    font-style: var(--font-style, var(--std-text-h3-style, normal));
-    letter-spacing: var(--font-spacing, var(--std-text-h3-spacing, normal));
-    line-height: var(--font-height, var(--std-text-h3-height, normal));
-    text-transform: var(--font-transform, var(--std-text-h3-transform, none));
-    opacity: var(--opacity, var(--std-text-h3-opacity, 1));
-}
-.std-text-h4 {
-    font-family: var(--font, var(--std-font-primary));
-    font-size: var(--std-text-h4-size);
-    font-weight: var(--font-weight, var(--std-text-h4-weight, var(--std-weight-regular)));
-    font-style: var(--font-style, var(--std-text-h4-style, normal));
-    letter-spacing: var(--font-spacing, var(--std-text-h4-spacing, normal));
-    line-height: var(--font-height, var(--std-text-h4-height, normal));
-    text-transform: var(--font-transform, var(--std-text-h4-transform, none));
-    opacity: var(--opacity, var(--std-text-h4-opacity, 1));
-}
-.std-text-h5 {
-    font-family: var(--font, var(--std-font-primary));
-    font-size: var(--std-text-h5-size);
-    font-weight: var(--font-weight, var(--std-text-h5-weight, var(--std-weight-regular)));
-    font-style: var(--font-style, var(--std-text-h5-style, normal));
-    letter-spacing: var(--font-spacing, var(--std-text-h5-spacing, normal));
-    line-height: var(--font-height, var(--std-text-h5-height, normal));
-    text-transform: var(--font-transform, var(--std-text-h5-transform, none));
-    opacity: var(--opacity, var(--std-text-h5-opacity, 1));
-}
-.std-text-h6 {
-    font-family: var(--font, var(--std-font-primary));
-    font-size: var(--std-text-h6-size);
-    font-weight: var(--font-weight, var(--std-text-h6-weight, var(--std-weight-bold)));
-    font-style: var(--font-style, var(--std-text-h6-style, normal));
-    letter-spacing: var(--font-spacing, var(--std-text-h6-spacing, normal));
-    line-height: var(--font-height, var(--std-text-h6-height, normal));
-    text-transform: var(--font-transform, var(--std-text-h6-transform, none));
-    opacity: var(--opacity, var(--std-text-h6-opacity, 1));
-}
-.std-text-subtitle1 {
-    font-family: var(--font, var(--std-font-primary));
-    font-size: var(--std-text-subtitle1-size);
-    font-weight: var(--font-weight, var(--std-text-subtitle1-weight, var(--std-weight-regular)));
-    font-style: var(--font-style, var(--std-text-subtitle1-style, normal));
-    letter-spacing: var(--font-spacing, var(--std-text-subtitle1-spacing, normal));
-    line-height: var(--font-height, var(--std-text-subtitle1-height, normal));
-    text-transform: var(--font-transform, var(--std-text-subtitle1-transform, none));
-    opacity: var(--opacity, var(--std-text-subtitle1-opacity, 1));
-}
-.std-text-subtitle2 {
-    font-family: var(--font, var(--std-font-primary));
-    font-size: var(--std-text-subtitle2-size);
-    font-weight: var(--font-weight, var(--std-text-subtitle2-weight, var(--std-weight-bold)));
-    font-style: var(--font-style, var(--std-text-subtitle2-style, normal));
-    letter-spacing: var(--font-spacing, var(--std-text-subtitle2-spacing, normal));
-    line-height: var(--font-height, var(--std-text-subtitle2-height, normal));
-    text-transform: var(--font-transform, var(--std-text-subtitle2-transform, none));
-    opacity: var(--opacity, var(--std-text-subtitle2-opacity, 1));
-}
-.std-text-body1 {
-    font-family: var(--font, var(--std-font-primary));
-    font-size: var(--std-text-body1-size);
-    font-weight: var(--font-weight, var(--std-text-body1-weight, var(--std-weight-regular)));
-    font-style: var(--font-style, var(--std-text-body1-style, normal));
-    letter-spacing: var(--font-spacing, var(--std-text-body1-weight, normal));
-    line-height: var(--font-height, var(--std-text-body1-height, normal));
-    text-transform: var(--font-transform, var(--std-text-body1-transform, none));
-    opacity: var(--opacity, var(--std-text-body1-opacity, 1));
-}
-.std-text-body2 {
-    font-family: var(--font, var(--std-font-primary));
-    font-size: var(--std-text-body2-size);
-    font-weight: var(--font-weight, var(--std-text-body2-weight, var(--std-weight-regular)));
-    font-style: var(--font-style, var(--std-text-body2-style, normal));
-    letter-spacing: var(--font-spacing, var(--std-text-body2-spacing, normal));
-    line-height: var(--font-height, var(--std-text-body2-height, normal));
-    text-transform: var(--font-transform, var(--std-text-body2-transform, none));
-    opacity: var(--opacity, var(--std-text-body2-opacity, 1));
-}
-.std-text-small {
-    font-family: var(--font, var(--std-font-primary));
-    font-size: var(--std-text-small-size);
-    font-weight: var(--font-weight, var(--std-text-small-weight, var(--std-weight-regular)));
-    font-style: var(--font-style, var(--std-text-small-style, normal));
-    letter-spacing: var(--font-spacing, var(--std-text-small-spacing, normal));
-    line-height: var(--font-height, var(--std-text-small-height, normal));
-    text-transform: var(--font-transform, var(--std-text-small-transform, none));
-    opacity: var(--opacity, var(--std-text-small-opacity, 1));
-}
-.std-text-caption {
-    font-family: var(--font, var(--std-font-primary));
-    font-size: var(--std-text-caption-size);
-    font-weight: var(--font-weight, var(--std-text-caption-weight, var(--std-weight-medium)));
-    font-style: var(--font-style, var(--std-text-caption-style, normal));
-    letter-spacing: var(--font-spacing, var(--std-text-caption-spacing, normal));
-    line-height: var(--font-height, var(--std-text-caption-height, normal));
-    text-transform: var(--font-transform, var(--std-text-caption-transform, none));
-    opacity: var(--opacity, var(--std-text-caption-opacity, 1));
-}
-.std-text-overline {
-    font-family: var(--font, var(--std-font-primary));
-    font-size: var(--std-text-overline-size);
-    font-weight: var(--font-weight, var(--std-text-overline-weight, var(--std-weight-bold)));
-    font-style: var(--font-style, var(--std-text-overline-style, normal));
-    letter-spacing: var(--font-spacing, var(--std-text-overline-spacing, normal));
-    line-height: var(--font-height, var(--std-text-overline-height, normal));
-    text-transform: var(--font-transform, var(--std-text-overline-transform, uppercase));
-    opacity: var(--opacity, var(--std-text-overline-opacity, 1));
-}
-.std-text-button {
-    font-family: var(--font, var(--std-font-primary));
-    font-size: var(--std-text-button-size);
-    font-weight: var(--font-weight, var(--std-text-button-weight, var(--std-weight-medium)));
-    font-style: var(--font-style, var(--std-text-button-style, normal));
-    letter-spacing: var(--font-spacing, var(--std-text-button-spacing, normal));
-    line-height: var(--font-height, var(--std-text-button-height, normal));
-    text-transform: var(--font-transform, var(--std-text-button-transform, none));
-    opacity: var(--opacity, var(--std-text-button-opacity, 1));
-}
+.std-text-size-2 { font-size: var(--std-text-size-2); }
+.std-text-size-1 { font-size: var(--std-text-size-1); }
+.std-text-size { font-size: var(--std-text-size); }
+.std-text-size1 { font-size: var(--std-text-size1); }
+.std-text-size2 { font-size: var(--std-text-size2); }
+.std-text-size3 { font-size: var(--std-text-size3); }
+.std-text-size4 { font-size: var(--std-text-size4); }
+.std-text-size5 { font-size: var(--std-text-size5); }
+.std-text-size6 { font-size: var(--std-text-size6); }
+.std-text-size7 { font-size: var(--std-text-size7); }
+.std-text-size8 { font-size: var(--std-text-size8); }
+.std-text-size9 { font-size: var(--std-text-size9); }
+.std-text-size10 { font-size: var(--std-text-size10); }
 
-.std-font-primary { --font: var(--std-font-primary); font-family: var(--font); }
+.std-font-primary { --text-font: var(--std-font-primary); font-family: var(--text-font); }
 
-.std-weight-thin { --font-weight: var(--std-weight-thin); font-weight: var(--font-weight); }
-.std-weight-light { --font-weight: var(--std-weight-light); font-weight: var(--font-weight); }
-.std-weight-regular { --font-weight: var(--std-weight-regular); font-weight: var(--font-weight); }
-.std-weight-medium { --font-weight: var(--std-weight-medium); font-weight: var(--font-weight); }
-.std-weight-bold { --font-weight: var(--std-weight-bold); font-weight: var(--font-weight); }
+.std-text-weight-2 { --text-weight: var(--std-text-weight-2); font-weight: var(--text-weight); }
+.std-text-weight-1 { --text-weight: var(--std-text-weight-1); font-weight: var(--text-weight); }
+.std-text-weight { --text-weight: var(--std-text-weight); font-weight: var(--text-weight); }
+.std-text-weight1 { --text-weight: var(--std-text-weight1); font-weight: var(--text-weight); }
+.std-text-weight2 { --text-weight: var(--std-text-weight2); font-weight: var(--text-weight); }
 
 .std-capitalize { text-transform: capitalize; }
 .std-lowercase { text-transform: lowercase; }

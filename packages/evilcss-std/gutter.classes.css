@@ -16,12 +16,13 @@
     height: 1em;
     max-height: 1em;
 }
-.std-space-h.mini, .std-space-v.mini { font-size: var(--std-gutter-mini); }
-.std-space-h.xxs, .std-space-v.xxs { font-size: var(--std-gutter-xxs); }
-.std-space-h.xs, .std-space-v.xs { font-size: var(--std-gutter-xs); }
-.std-space-h.s, .std-space-v.s { font-size: var(--std-gutter-s); }
-.std-space-h.m, .std-space-v.m { font-size: var(--std-gutter-m); }
-.std-space-h.l, .std-space-v.l { font-size: var(--std-gutter-l); }
-.std-space-h.xl, .std-space-v.xl { font-size: var(--std-gutter-xl); }
-.std-space-h.xxl, .std-space-v.xxl { font-size: var(--std-gutter-xxl); }
-.std-space-h.maxi, .std-space-v.maxi { font-size: var(--std-gutter-maxi); }
+.std-space-h.gap1, .std-space-v.gap1 { font-size: var(--std-gutter1); }
+.std-space-h.gap2, .std-space-v.gap2 { font-size: var(--std-gutter2); }
+.std-space-h.gap3, .std-space-v.gap3 { font-size: var(--std-gutter3); }
+.std-space-h.gap4, .std-space-v.gap4 { font-size: var(--std-gutter4); }
+.std-space-h.gap5, .std-space-v.gap5 { font-size: var(--std-gutter5); }
+.std-space-h.gap6, .std-space-v.gap6 { font-size: var(--std-gutter6); }
+.std-space-h.gap7, .std-space-v.gap7 { font-size: var(--std-gutter7); }
+.std-space-h.gap8, .std-space-v.gap8 { font-size: var(--std-gutter8); }
+.std-space-h.gap9, .std-space-v.gap8 { font-size: var(--std-gutter9); }
+.std-space-h.gap10, .std-space-v.gap10 { font-size: var(--std-gutter10); }
