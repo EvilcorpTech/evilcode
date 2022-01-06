@@ -1,4 +1,4 @@
-import {escapeRegExp} from './regexp.js'
+import {escapeRegexp} from './regexp.js'
 import {throwInvalidArgument} from './throw.js'
 import {isArray, isFunction, isObject} from './type.js'
 
@@ -137,16 +137,16 @@ export function format
 
     for (const token in dict) {
         const value = dict[token]
-        const tokenRe = tokenAsRegexp(token, i18n.symbol, i18n.__regexpCache__)
-        string = string.replace(tokenRe, String(value))
+        const tokenRegexp = regexpFromToken(token, i18n.symbol, i18n.__regexpCache__)
+        string = string.replace(tokenRegexp, String(value))
     }
 
     return string
 }
 
-export function tokenAsRegexp(token: string, symbol: string, cache: Record<string, RegExp>) {
+export function regexpFromToken(token: string, symbol: string, cache: Record<string, RegExp>) {
     if (! cache[token]) {
-        cache[token] = new RegExp(`[${symbol}]{\\s*${escapeRegExp(token)}\\s*}`, 'g')
+        cache[token] = new RegExp(`[${symbol}]{\\s*${escapeRegexp(token)}\\s*}`, 'g')
     }
 
     return cache[token]!

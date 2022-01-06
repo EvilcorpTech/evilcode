@@ -52,6 +52,14 @@ export function valueForItem<I>(it: number | I, getter?: undefined | ItemGetter<
     return getter?.(it as I) ?? it as number
 }
 
+export function isBetween(a: number, value: number, b: number) {
+    return (
+        false
+        || (a <= value && value <= b)
+        || (b <= value && value <= a)
+    )
+}
+
 // Types ///////////////////////////////////////////////////////////////////////
 
 export type MaybeMinMax = [undefined, undefined] | MinMax

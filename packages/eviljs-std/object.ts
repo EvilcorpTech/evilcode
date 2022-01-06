@@ -1,11 +1,11 @@
 import {assertObject} from './assert.js'
 import {isArray, isObject, isUndefined} from './type.js'
 
-export const GetArrayOpenRegexp = /\[/g
-export const GetArrayCloseRegexp = /\]/g
-export const GetPathCache: Record<string, Array<string | number>> = {}
+export const ObjectPathArrayOpenRegexp = /\[/g
+export const ObjectPathArrayCloseRegexp = /\]/g
+export const ObjectPathCache: Record<string, Array<string | number>> = {}
 
-export function mapObject
+export function map
     <
         K extends string | number,
         V,
@@ -16,7 +16,7 @@ export function mapObject
         withFn: {key: MapObjectKeyFn<K, V, RK>, value?: never},
     )
     : Record<RK, V>
-export function mapObject
+export function map
     <
         K extends string | number,
         V,
@@ -27,7 +27,7 @@ export function mapObject
         withFn: {key?: never, value: MapObjectValueFn<V, K, RV>},
     )
     : Record<K, RV>
-export function mapObject
+export function map
     <
         K extends string | number,
         V,
@@ -39,7 +39,7 @@ export function mapObject
         withFn: {key: MapObjectKeyFn<K, V, RK>, value: MapObjectValueFn<V, K, RV>},
     )
     : Record<RK, RV>
-export function mapObject
+export function map
     <
         K extends string | number,
         V,
@@ -66,7 +66,7 @@ export function mapObject
     )
 }
 
-export function objectWithout<O, P extends keyof O>(object: O, ...props: Array<P>) {
+export function withoutProps<O, P extends keyof O>(object: O, ...props: Array<P>) {
     assertObject(object, 'object')
 
     const obj = {...object}
@@ -78,7 +78,7 @@ export function objectWithout<O, P extends keyof O>(object: O, ...props: Array<P
     return obj as Omit<O, P>
 }
 
-export function objectWithoutUndefined<O>(object: O) {
+export function withoutUndefinedProps<O>(object: O) {
     assertObject(object, 'object')
 
     const obj = {...object}
@@ -110,10 +110,10 @@ export function get(obj: GetObject, path: GetPath) {
 }
 
 export function fromPathToParts(path: string) {
-    if (! GetPathCache[path]) {
-        GetPathCache[path] = path
-            .replace(GetArrayOpenRegexp, '.#')
-            .replace(GetArrayCloseRegexp, '')
+    if (! ObjectPathCache[path]) {
+        ObjectPathCache[path] = path
+            .replace(ObjectPathArrayOpenRegexp, '.#')
+            .replace(ObjectPathArrayCloseRegexp, '')
             .split('.')
             .map(it =>
                 it.startsWith('#')
@@ -121,7 +121,7 @@ export function fromPathToParts(path: string) {
                     : it
             )
     }
-    return GetPathCache[path]!
+    return ObjectPathCache[path]!
 }
 
 // Types ///////////////////////////////////////////////////////////////////////

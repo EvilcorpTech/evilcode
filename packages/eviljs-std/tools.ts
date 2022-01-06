@@ -1,5 +1,5 @@
+import {withoutUndefinedProps} from './object.js'
 import {isFunction, isNil, isObject} from './type.js'
-import {objectWithoutUndefined} from './object.js'
 
 /*
 * Stores an item inside an object, returning the object. Useful when used inside
@@ -62,7 +62,7 @@ export function excludeUndefinedWith<A extends Array<unknown>, R>(fn: (...args: 
     function decorator(...args: A) {
         const result = fn(...args)
         if (isObject(result)) {
-            return objectWithoutUndefined(result)
+            return withoutUndefinedProps(result)
         }
         return result
     }

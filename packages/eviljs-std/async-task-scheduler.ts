@@ -1,4 +1,4 @@
-export function createScheduler(task: Function, delay:number, options: SchedulerOptions) {
+export function createScheduler(task: () => void, delay: number, options: SchedulerOptions) {
     const self: Scheduler = {
         delay: delay,
         immediate: options?.immediate ?? true,
