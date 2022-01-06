@@ -32,7 +32,7 @@ export function ThemeView(props: ThemeViewProps) {
                 onThemeChange={(it) => setTheme(it)}
             />
 
-            <i className="std-space-v m"/>
+            <i className="std-space-v gap5"/>
 
             <div className="grid-1c73 std-flex center wrap">
                 <Colors/>
@@ -74,9 +74,9 @@ export function Picker(props: PickerProps) {
                 type="color"
                 onChange={(event) => onPrimaryChange(computeHslFromHexColor(event.target.value))}
             />
-            <i className="std-space-h m"/>
+            <i className="std-space-h gap5"/>
             <label>Theme</label>
-            <i className="std-space-h m"/>
+            <i className="std-space-h gap5"/>
             <input
                 ref={secondaryRef}
                 className="picker-t8c2"
@@ -84,7 +84,7 @@ export function Picker(props: PickerProps) {
                 onChange={(event) => onSecondaryChange(computeHslFromHexColor(event.target.value))}
             />
 
-            <i className="std-space-h m"/>
+            <i className="std-space-h gap5"/>
 
             <label className="std-flex column align-center">
                 <input
@@ -95,7 +95,7 @@ export function Picker(props: PickerProps) {
                             : 'light'
                     )}
                 />
-                <i className="std-space-v xxs"/>
+                <i className="std-space-v gap1"/>
                 <b>Dark</b>
             </label>
         </h1>
@@ -110,7 +110,7 @@ export function Colors() {
                 <div className="std-spacer"/>
             </div>
 
-            <i className="std-space-v s"/>
+            <i className="std-space-v gap4"/>
 
             <div className="std-flex">
                 <label>Accent</label>
@@ -122,7 +122,7 @@ export function Colors() {
                 />
             </div>
 
-            <i className="std-space-v s"/>
+            <i className="std-space-v gap4"/>
 
             <div className="std-flex">
                 <label>Tint</label>
@@ -139,7 +139,7 @@ export function Colors() {
                 </div>
             </div>
 
-            <div className="std-space-v s"/>
+            <div className="std-space-v gap4"/>
 
             <div className="std-flex">
                 <label>Shade</label>
@@ -156,7 +156,7 @@ export function Colors() {
                 </div>
             </div>
 
-            <div className="std-space-v s"/>
+            <div className="std-space-v gap4"/>
 
             <div className="std-flex">
                 <label>Tone</label>
@@ -173,7 +173,7 @@ export function Colors() {
                 </div>
             </div>
 
-            <div className="std-space-v s"/>
+            <div className="std-space-v gap4"/>
 
             <div className="std-flex">
                 <label>Front</label>
@@ -190,7 +190,7 @@ export function Colors() {
                 </div>
             </div>
 
-            <div className="std-space-v s"/>
+            <div className="std-space-v gap4"/>
 
             <div className="std-flex">
                 <label>Back</label>
@@ -207,14 +207,14 @@ export function Colors() {
                 </div>
             </div>
 
-            <i className="std-space-v m"/>
+            <i className="std-space-v gap5"/>
 
             <div className="std-flex">
                 <label className="std-text-h6 std-color-secondary-accent">Secondary</label>
                 <div className="std-spacer"/>
             </div>
 
-            <div className="std-space-v s"/>
+            <div className="std-space-v gap4"/>
 
             <div className="std-flex">
                 <label>Accent</label>
@@ -226,7 +226,7 @@ export function Colors() {
                 />
             </div>
 
-            <div className="std-space-v s"/>
+            <div className="std-space-v gap4"/>
 
             <div className="std-flex">
                 <label>Tint</label>
@@ -243,7 +243,7 @@ export function Colors() {
                 </div>
             </div>
 
-            <div className="std-space-v s"/>
+            <div className="std-space-v gap4"/>
 
             <div className="std-flex">
                 <label>Shade</label>
@@ -260,7 +260,7 @@ export function Colors() {
                 </div>
             </div>
 
-            <div className="std-space-v s"/>
+            <div className="std-space-v gap4"/>
 
             <div className="std-flex">
                 <label>Tone</label>
@@ -277,7 +277,7 @@ export function Colors() {
                 </div>
             </div>
 
-            <div className="std-space-v s"/>
+            <div className="std-space-v gap4"/>
 
             <div className="std-flex">
                 <label>Front</label>
@@ -294,7 +294,7 @@ export function Colors() {
                 </div>
             </div>
 
-            <div className="std-space-v s"/>
+            <div className="std-space-v gap4"/>
 
             <div className="std-flex">
                 <label>Back</label>
@@ -327,12 +327,12 @@ export function Typography() {
             <label className="text-8fa3 std-text-h6 std-color-primary-fg2">Headline 6</label>
             <label className="text-8fa3 std-text-subtitle1 std-color-primary-fg3">Subtitle 1</label>
             <label className="text-8fa3 std-text-subtitle2 std-color-primary-fg3">Subtitle 2</label>
+            <label className="text-8fa3 std-text-overline">Overline</label>
+            <label className="text-8fa3 std-text-caption">Caption</label>
+            <label className="text-8fa3 std-text-button">Button</label>
             <label className="text-8fa3 std-text-body1">Body 1</label>
             <label className="text-8fa3 std-text-body2">Body 2</label>
             <label className="text-8fa3 std-text-small">Small</label>
-            <label className="text-8fa3 std-text-caption">Caption</label>
-            <label className="text-8fa3 std-text-overline">Overline</label>
-            <label className="text-8fa3 std-text-button">Button</label>
         </div>
     )
 }
@@ -340,24 +340,26 @@ export function Typography() {
 export function Gutters() {
     return (
         <div className="std-flex center column">
-            <label className="gutter-t1d3 std-flex column"><span>Mini</span><i className="std-space-h mini"/></label>
-            <i className="std-space-v xs"/>
-            <label className="gutter-t1d3 std-flex column"><span>XXS</span><i className="std-space-h xxs"/></label>
-            <i className="std-space-v xs"/>
-            <label className="gutter-t1d3 std-flex column"><span>XS</span><i className="std-space-h xs"/></label>
-            <i className="std-space-v xs"/>
-            <label className="gutter-t1d3 std-flex column"><span>S</span><i className="std-space-h s"/></label>
-            <i className="std-space-v xs"/>
-            <label className="gutter-t1d3 std-flex column"><span>M</span><i className="std-space-h m"/></label>
-            <i className="std-space-v xs"/>
-            <label className="gutter-t1d3 std-flex column"><span>L</span><i className="std-space-h l"/></label>
-            <i className="std-space-v xs"/>
-            <label className="gutter-t1d3 std-flex column"><span>XL</span><i className="std-space-h xl"/></label>
-            <i className="std-space-v xs"/>
-            <label className="gutter-t1d3 std-flex column"><span>XXL</span><i className="std-space-h xxl"/></label>
-            <i className="std-space-v xs"/>
-            <label className="gutter-t1d3 std-flex column"><span>Maxi</span><i className="std-space-h maxi"/></label>
-            <i className="std-space-v xs"/>
+            <label className="gutter-t1d3 std-flex column"><span>Gap 1</span><i className="std-space-h gap1"/></label>
+            <i className="std-space-v gap3"/>
+            <label className="gutter-t1d3 std-flex column"><span>Gap 2</span><i className="std-space-h gap2"/></label>
+            <i className="std-space-v gap3"/>
+            <label className="gutter-t1d3 std-flex column"><span>Gap 3</span><i className="std-space-h gap3"/></label>
+            <i className="std-space-v gap3"/>
+            <label className="gutter-t1d3 std-flex column"><span>Gap 4</span><i className="std-space-h gap4"/></label>
+            <i className="std-space-v gap3"/>
+            <label className="gutter-t1d3 std-flex column"><span>Gap 5</span><i className="std-space-h gap5"/></label>
+            <i className="std-space-v gap3"/>
+            <label className="gutter-t1d3 std-flex column"><span>Gap 6</span><i className="std-space-h gap6"/></label>
+            <i className="std-space-v gap3"/>
+            <label className="gutter-t1d3 std-flex column"><span>Gap 7</span><i className="std-space-h gap7"/></label>
+            <i className="std-space-v gap3"/>
+            <label className="gutter-t1d3 std-flex column"><span>Gap 8</span><i className="std-space-h gap8"/></label>
+            <i className="std-space-v gap3"/>
+            <label className="gutter-t1d3 std-flex column"><span>Gap 9</span><i className="std-space-h gap9"/></label>
+            <i className="std-space-v gap3"/>
+            <label className="gutter-t1d3 std-flex column"><span>Gap 10</span><i className="std-space-h gap10"/></label>
+            <i className="std-space-v gap3"/>
         </div>
     )
 }
@@ -367,83 +369,83 @@ export function Contrast() {
         <div className="std-flex column center align-center">
             <div className="std-flex wrap">
                 <label className="contrast-td08 std-color-bg1">
-                    <div className="std-color-fg1">Back 1</div>
+                    <div className="std-color-fg1 std-text-weight1">Back 1</div>
                     <div className="std-color-fg1">Front 1</div>
                     <div className="std-color-fg2">Front 2</div>
                     <div className="std-color-fg3">Front 3</div>
                 </label>
                 <label className="contrast-td08 std-color-bg2">
-                    <div className="std-color-fg1">Back 2</div>
+                    <div className="std-color-fg1 std-text-weight1">Back 2</div>
                     <div className="std-color-fg1">Front 1</div>
                     <div className="std-color-fg2">Front 2</div>
                     <div className="std-color-fg3">Front 3</div>
                 </label>
                 <label className="contrast-td08 std-color-bg3">
-                    <div className="std-color-fg1">Back 3</div>
+                    <div className="std-color-fg1 std-text-weight1">Back 3</div>
                     <div className="std-color-fg1">Front 1</div>
                     <div className="std-color-fg2">Front 2</div>
                     <div className="std-color-fg3">Front 3</div>
                 </label>
                 <label className="contrast-td08 std-color-bg4">
-                    <div className="std-color-fg1">Back 4</div>
+                    <div className="std-color-fg1 std-text-weight1">Back 4</div>
                     <div className="std-color-fg1">Front 1</div>
                     <div className="std-color-fg2">Front 2</div>
                     <div className="std-color-fg3">Front 3</div>
                 </label>
             </div>
 
-            <i className="std-space-v s"/>
+            <i className="std-space-v gap4"/>
 
             <div className="std-flex wrap">
                 <label className="contrast-td08 std-color-primary-bg1">
-                    <div className="std-color-fg1">Primary Back 1</div>
+                    <div className="std-color-fg1 std-text-weight1">Primary Back 1</div>
                     <div className="std-color-primary-fg1">Primary Front 1</div>
                     <div className="std-color-primary-fg2">Primary Front 2</div>
                     <div className="std-color-primary-fg3">Primary Front 3</div>
                 </label>
                 <label className="contrast-td08 std-color-primary-bg2">
-                    <div className="std-color-fg1">Primary Back 2</div>
+                    <div className="std-color-fg1 std-text-weight1">Primary Back 2</div>
                     <div className="std-color-primary-fg1">Primary Front 1</div>
                     <div className="std-color-primary-fg2">Primary Front 2</div>
                     <div className="std-color-primary-fg3">Primary Front 3</div>
                 </label>
                 <label className="contrast-td08 std-color-primary-bg3">
-                    <div className="std-color-fg1">Primary Back 3</div>
+                    <div className="std-color-fg1 std-text-weight1">Primary Back 3</div>
                     <div className="std-color-primary-fg1">Primary Front 1</div>
                     <div className="std-color-primary-fg2">Primary Front 2</div>
                     <div className="std-color-primary-fg3">Primary Front 3</div>
                 </label>
                 <label className="contrast-td08 std-color-primary-bg4">
-                    <div className="std-color-fg1">Primary Back 4</div>
+                    <div className="std-color-fg1 std-text-weight1">Primary Back 4</div>
                     <div className="std-color-primary-fg1">Primary Front 1</div>
                     <div className="std-color-primary-fg2">Primary Front 2</div>
                     <div className="std-color-primary-fg3">Primary Front 3</div>
                 </label>
             </div>
 
-            <i className="std-space-v s"/>
+            <i className="std-space-v gap4"/>
 
             <div className="std-flex wrap">
                 <label className="contrast-td08 std-color-secondary-bg1">
-                    <div className="std-color-fg1">Secondary Back 1</div>
+                    <div className="std-color-fg1 std-text-weight1">Secondary Back 1</div>
                     <div className="std-color-secondary-fg1">Secondary Front 1</div>
                     <div className="std-color-secondary-fg2">Secondary Front 2</div>
                     <div className="std-color-secondary-fg3">Secondary Front 3</div>
                 </label>
                 <label className="contrast-td08 std-color-secondary-bg2">
-                    <div className="std-color-fg1">Secondary Back 2</div>
+                    <div className="std-color-fg1 std-text-weight1">Secondary Back 2</div>
                     <div className="std-color-secondary-fg1">Secondary Front 1</div>
                     <div className="std-color-secondary-fg2">Secondary Front 2</div>
                     <div className="std-color-secondary-fg3">Secondary Front 3</div>
                 </label>
                 <label className="contrast-td08 std-color-secondary-bg3">
-                    <div className="std-color-fg1">Secondary Back 3</div>
+                    <div className="std-color-fg1 std-text-weight1">Secondary Back 3</div>
                     <div className="std-color-secondary-fg1">Secondary Front 1</div>
                     <div className="std-color-secondary-fg2">Secondary Front 2</div>
                     <div className="std-color-secondary-fg3">Secondary Front 3</div>
                 </label>
                 <label className="contrast-td08 std-color-secondary-bg4">
-                    <div className="std-color-fg1">Secondary Back 4</div>
+                    <div className="std-color-fg1 std-text-weight1">Secondary Back 4</div>
                     <div className="std-color-secondary-fg1">Secondary Front 1</div>
                     <div className="std-color-secondary-fg2">Secondary Front 2</div>
                     <div className="std-color-secondary-fg3">Secondary Front 3</div>
@@ -463,7 +465,7 @@ export function Buttons() {
                 <button className="std-text-button std-button plain">Plain</button>
             </div>
 
-            <div className="std-space-v xs"/>
+            <div className="std-space-v gap3"/>
 
             <div>
                 <button className="std-text-button std-button dye" disabled>Dye</button>
@@ -492,47 +494,47 @@ export function Icons() {
         <div className="std-flex center align-end wrap">
             <div className="icon-e43c">
                 <Icon className="std-icon maxi"/>
-                <div className="std-space-h s"/>
+                <div className="std-space-h gap3"/>
                 <label>Maxi</label>
             </div>
             <div className="icon-e43c">
                 <Icon className="std-icon xxl"/>
-                <div className="std-space-h xs"/>
+                <div className="std-space-h gap3"/>
                 <label>XXL</label>
             </div>
             <div className="icon-e43c">
                 <Icon className="std-icon xl"/>
-                <div className="std-space-h xs"/>
+                <div className="std-space-h gap3"/>
                 <label>XL</label>
             </div>
             <div className="icon-e43c">
                 <Icon className="std-icon l"/>
-                <div className="std-space-h xs"/>
+                <div className="std-space-h gap3"/>
                 <label>L</label>
             </div>
             <div className="icon-e43c">
                 <Icon className="std-icon m"/>
-                <div className="std-space-h xs"/>
+                <div className="std-space-h gap3"/>
                 <label>M</label>
             </div>
             <div className="icon-e43c">
                 <Icon className="std-icon s"/>
-                <div className="std-space-h xs"/>
+                <div className="std-space-h gap3"/>
                 <label>S</label>
             </div>
             <div className="icon-e43c">
                 <Icon className="std-icon xs"/>
-                <div className="std-space-h xs"/>
+                <div className="std-space-h gap3"/>
                 <label>XS</label>
             </div>
             <div className="icon-e43c">
                 <Icon className="std-icon xxs"/>
-                <div className="std-space-h xs"/>
+                <div className="std-space-h gap3"/>
                 <label>XXS</label>
             </div>
             <div className="icon-e43c">
                 <Icon className="std-icon mini"/>
-                <div className="std-space-h xs"/>
+                <div className="std-space-h gap3"/>
                 <label>Mini</label>
             </div>
         </div>
@@ -542,13 +544,12 @@ export function Icons() {
 export function Radiuses() {
     return (
         <div className="std-flex center align-center wrap">
-            <label className="radius-75ca std-radius-maxi">Maxi</label>
-            <label className="radius-75ca std-radius-xl">XL</label>
-            <label className="radius-75ca std-radius-l">L</label>
-            <label className="radius-75ca std-radius-m">M</label>
-            <label className="radius-75ca std-radius-s">S</label>
-            <label className="radius-75ca std-radius-xs">XS</label>
-            <label className="radius-75ca std-radius-mini">Mini</label>
+            <label className="radius-75ca std-radius1">Radius 1</label>
+            <label className="radius-75ca std-radius2">Radius 2</label>
+            <label className="radius-75ca std-radius3">Radius 3</label>
+            <label className="radius-75ca std-radius4">Radius 4</label>
+            <label className="radius-75ca std-radius5">Radius 5</label>
+            <label className="radius-75ca std-radius6">Radius 6</label>
         </div>
     )
 }

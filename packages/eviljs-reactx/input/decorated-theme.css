@@ -1,7 +1,7 @@
 .Input-cc0a {
     border: 2px solid hsl(0deg 0% var(--std-fg-l) / .07);
-    border-radius: var(--std-radius-mini);
-    padding: var(--gutter, var(--std-gutter-s));
+    border-radius: var(--std-radius1);
+    padding: var(--gutter, var(--std-gutter4));
     color: var(--std-color-fg1);
     transition: all var(--std-duration-normal);
 }
@@ -16,12 +16,12 @@
 .input-2d2b {
     flex-grow: 1;
     font-size: var(--std-text-body2-size);
-    font-weight: var(--std-weight-medium);
+    font-weight: var(--std-text-weight1);
     color: inherit;
     background-color: transparent;
 }
 .input-2d2b::placeholder {
-    font-weight: var(--std-weight-regular);
+    font-weight: var(--std-text-weight);
     color: var(--std-color-fg2);
 }
 .input-2d2b:focus {
@@ -29,10 +29,10 @@
 }
 
 .Input-cc0a > *:first-child:not(input) {
-    margin-right: var(--gutter, var(--std-gutter-s));
+    margin-right: var(--gutter, var(--std-gutter4));
 }
 .Input-cc0a > *:last-child:not(input) {
-    margin-left: var(--gutter, var(--std-gutter-s));
+    margin-left: var(--gutter, var(--std-gutter4));
 }
 
 /* SecretInput ****************************************************************/
@@ -54,7 +54,7 @@
 
 .label-b082 {
     display: block;
-    margin-bottom: var(--std-gutter-xs);
+    margin-bottom: var(--std-gutter3);
 }
 .InputLabel-5738:focus-within .label-b082 {
     color: var(--accent, var(--std-color-primary-accent));

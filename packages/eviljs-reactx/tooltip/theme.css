@@ -1,14 +1,14 @@
 /*
 .Tooltip-ccf9:hover .tooltip-ac0e,
 .Tooltip-ccf9.visible .tooltip-ac0e {
-    padding-top: var(--tooltip-distance, var(--std-gutter-mini));
+    padding-top: var(--tooltip-distance, var(--std-gutter1));
 }
 
 .Tooltip-ccf9.start .tooltip-ac0e {
-    left: calc(-1 * var(--std-gutter-s));
+    left: calc(-1 * var(--std-gutter4));
 }
 .Tooltip-ccf9.end .tooltip-ac0e {
-    right: calc(-1 * var(--std-gutter-s));
+    right: calc(-1 * var(--std-gutter4));
 }
 */
 
@@ -24,8 +24,8 @@
     margin-top: calc(-.5 * var(--arrow-size, var(--default-arrow-size)));
     width: var(--arrow-size, var(--default-arrow-size));
     height: var(--arrow-size, var(--default-arrow-size));
-    margin-left: var(--std-gutter-s);
-    margin-right: var(--std-gutter-s);
+    margin-left: var(--std-gutter4);
+    margin-right: var(--std-gutter4);
     border-right: unset;
     border-bottom: unset;
     border-bottom-right-radius: 100%;
@@ -54,7 +54,7 @@
 }
 
 .content-b6b3 {
-    padding: var(--padding, var(--std-gutter-xs));
+    padding: var(--padding, var(--std-gutter3));
     background-color: var(--std-color-bg1);
 }
 */

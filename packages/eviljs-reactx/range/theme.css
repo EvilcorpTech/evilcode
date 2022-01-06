@@ -22,7 +22,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    font-weight: var(--std-weight-bold);
+    font-weight: var(--std-text-weight2);
     box-shadow: var(--std-shadow1);
     user-select: none;
     cursor: col-resize;

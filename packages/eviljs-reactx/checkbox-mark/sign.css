@@ -11,7 +11,7 @@
     max-width: var(--size, 1.5em);
     max-height: var(--size, 1.5em);
     border: 2px solid currentColor;
-    border-radius: var(--std-radius-mini);
+    border-radius: var(--std-radius1);
     color: var(--color, currentColor);
 }
 .Checkbox-16ba:hover .CheckboxMark-3ae4,

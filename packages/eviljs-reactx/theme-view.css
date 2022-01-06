@@ -7,7 +7,7 @@
 }
 
 .grid-1c73 > * {
-    margin: var(--std-gutter-l);
+    margin: var(--std-gutter6);
 }
 
 .ThemeView-t2eb label {
@@ -61,8 +61,8 @@
 .color-t75a {
     width: 2em;
     height: 2em;
-    margin: 0 var(--std-gutter-xs);
-    border: var(--std-gutter-mini) solid white;
+    margin: 0 var(--std-gutter3);
+    border: var(--std-gutter1) solid white;
     border-radius: 50%;
     box-shadow: var(--std-shadow-soft);
     transition: all var(--std-duration-normal);
@@ -72,19 +72,19 @@
 }
 
 .text-8fa3 {
-    margin-bottom: var(--std-gutter-mini);
+    margin-bottom: var(--std-gutter1);
 }
 
 .contrast-td08 {
     width: 14rem;
     min-height: 100px;
-    margin-left: calc(-1 * var(--std-gutter-s));
+    margin-left: calc(-1 * var(--std-gutter4));
     display: flex;
     justify-content: center;
     align-items: center;
-    border: var(--std-gutter-mini) solid transparent;
-    padding: var(--std-gutter-xs);
-    border-radius: var(--std-radius-l);
+    border: var(--std-gutter1) solid transparent;
+    padding: var(--std-gutter3);
+    border-radius: var(--std-radius5);
     overflow: hidden;
     box-shadow: var(--std-shadow1);
 }
@@ -93,14 +93,14 @@
 }
 
 .buttons-45cb .std-button {
-    margin: 0 var(--std-gutter-xs);
+    margin: 0 var(--std-gutter3);
 }
 
 .gutter-t1d3 {
     transform-origin: top left;
 }
 .gutter-t1d3:hover {
-    font-weight: var(--std-weight-bold);
+    font-weight: var(--std-text-weight2);
     color: var(--std-color-primary-accent);
 }
 .gutter-t1d3 > i {
@@ -111,8 +111,8 @@
 }
 
 .radius-75ca {
-    margin: 0 var(--std-gutter-xs);
-    padding: var(--std-gutter-s);
+    margin: 0 var(--std-gutter3);
+    padding: var(--std-gutter4);
     border: 4px solid transparent;
     background-color: var(--std-color-bg4);
 }
@@ -126,7 +126,7 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    margin: 0 var(--std-gutter-s);
+    margin: 0 var(--std-gutter4);
 }
 .icon-e43c:hover label {
     color: var(--std-color-primary-accent);
@@ -136,7 +136,7 @@
     width: 80px;
     line-height: 80px;
     text-align: center;
-    margin: 0 var(--std-gutter-s);
+    margin: 0 var(--std-gutter4);
     box-shadow: var(--std-shadow4);
 }
 .duration-t347:hover {
@@ -146,7 +146,7 @@
 .shadow-t9a2 {
     width: 60px;
     line-height: 60px;
-    margin: var(--std-gutter-xs) var(--std-gutter-s);
+    margin: var(--std-gutter3) var(--std-gutter4);
     border-radius: 50%;
     text-align: center;
 }

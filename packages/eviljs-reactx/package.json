@@ -4,10 +4,10 @@
     "type": "module",
     "files": [
         "/LICENSE.txt",
-        "/*/*.js",
-        "/*/*.jsx",
-        "/*/*.d.ts",
-        "/*/*.css"
+        "/**/*.js",
+        "/**/*.ts",
+        "/**/*.tsx",
+        "/**/*.css"
     ],
     "dependencies": {
         "@eviljs/react": "^1",
@@ -41,12 +41,12 @@
         "Widgets",
         "TypeScript"
     ],
-    "homepage": "https://github.com/evilrepo/evilcode",
+    "homepage": "https://github.com/EvilcorpTech/evilcode",
     "repository": {
         "type": "git",
-        "url": "git+https://github.com/evilrepo/evilcode.git"
+        "url": "git+https://github.com/EvilcorpTech/evilcode.git"
     },
     "bugs": {
-        "url": "https://github.com/evilrepo/evilcode/issues"
+        "url": "https://github.com/EvilcorpTech/evilcode/issues"
     }
 }

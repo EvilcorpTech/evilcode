@@ -51,7 +51,7 @@ export function WidgetsView(props: WidgetsViewProps) {
                     items={[{name: 'Pizza'}, {name: 'Pasta'}, {name: 'Patate'}]}
                 >
                     {(it) =>
-                        <div className="std-viewport s std-text-body2 std-weight-light">
+                        <div className="std-viewport s std-text-body2 std-text-weight-1">
                             {Lorem}
                         </div>
                     }
@@ -117,20 +117,20 @@ export function WidgetsView(props: WidgetsViewProps) {
                 <Switch className="std-text-subtitle1" checked={checkbox} onChange={setCheckbox}/>
 
                 <Checkbox checked="mixed" disabled>
-                    <CheckboxMarkV2 className="std-text-subtitle2"/>
+                    <CheckboxMarkV2/>
                 </Checkbox>
                 <Checkbox checked={checkbox} onChange={setCheckbox}>
-                    <CheckboxMarkV2 className="std-text-subtitle2"/>
+                    <CheckboxMarkV2/>
                 </Checkbox>
 
                 <Checkbox checked={true} disabled>
-                    <CheckboxMarkV1 className="std-icon xxs"/>
+                    <CheckboxMarkV1 className="std-text-body1"/>
                 </Checkbox>
                 <Checkbox checked={checkbox} onChange={setCheckbox}>
-                    <CheckboxMarkV1 className="std-icon xxs"/>
+                    <CheckboxMarkV1 className="std-text-body1"/>
                 </Checkbox>
                 <Checkbox checked={checkbox} onChange={setCheckbox}>
-                    <CheckboxMarkV1 className="round std-icon xxs"/>
+                    <CheckboxMarkV1 className="round std-text-body1"/>
                 </Checkbox>
 
                 <RadioGroup

@@ -45,7 +45,7 @@ export function Slider(props: SliderProps) {
                 forwards: towards === 1,
             })}
         >
-            <Transition enter={1} exit={1} source="slide-1c54" onEntered={onEnd}>
+            <Transition enter={1} exit={1} target="slide-1c54" onEntered={onEnd}>
                 <Slide key={selectedIndex} className="slide-1c54">
                     {child}
                 </Slide>

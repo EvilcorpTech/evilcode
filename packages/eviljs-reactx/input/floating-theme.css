@@ -1,8 +1,8 @@
 .Input-i7ee {
-    padding: var(--std-gutter-xxs) var(--std-gutter-xs);
+    padding: var(--std-gutter3);
     border: 1px solid var(--std-input-border);
     border-bottom: 3px solid var(--std-input-border);
-    border-radius: var(--std-radius-s);
+    border-radius: var(--std-radius2);
     background-color: transparent;
     transition: all var(--std-duration-fast);
 }
@@ -21,15 +21,18 @@
 
 .label-id45 {
     color: var(--std-input-text);
-    margin-bottom: var(--std-gutter-xxs);
+    margin-bottom: .2em;
 }
 .Input-i7ee.placeholder .label-id45 {
-    font-weight: var(--std-weight-regular);
+    font-weight: var(--std-text-weight);
 }
 
 .field-ceba {
     border-bottom: 1px solid transparent;
     background-color: transparent;
+}
+.field-ceba.std-text-body1 {
+    --text-height: 1;
 }
 .field-ceba:focus {
     outline: unset;

@@ -3,11 +3,6 @@ import {useState, useRef, useLayoutEffect, useMemo} from 'react'
 
 import './floating.css'
 
-export const InputType = {
-    Text: 'text',
-    Password: 'password',
-} as const
-
 export function Input(props: InputProps) {
     const {className, type, label, placeholder, value, autoComplete, autoFocus, tabIndex, onChange, ...otherProps} = props
     const [focus, setFocus] = useState(false)
@@ -61,8 +56,8 @@ export function Input(props: InputProps) {
 
             <input
                 ref={inputRef}
-                className="field-ceba std-text-subtitle2"
-                type={type || InputType.Text}
+                className="field-ceba std-text-body1"
+                type={type || 'text'}
                 value={value}
                 autoComplete={autoComplete}
                 autoFocus={autoFocus}
@@ -79,7 +74,7 @@ export function Input(props: InputProps) {
 // Types ///////////////////////////////////////////////////////////////////////
 
 export interface InputProps extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'onChange'> {
-    type?: undefined | (typeof InputType)[keyof typeof InputType]
+    type?: undefined | React.HTMLInputTypeAttribute
     label?: undefined | string
     value?: undefined | string
     autoComplete?: undefined | string
