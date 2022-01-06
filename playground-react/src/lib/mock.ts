@@ -1,40 +1,35 @@
-import {times} from '@eviljs/std/iter'
-import {randomInt, randomItem, randomItems, randomTimes} from '@eviljs/std/random'
-import {Fetch, FetchRequestMethod, FetchRequestOptions} from '@eviljs/web/fetch'
-import {mockFetchDelayed, jsonResponse} from '@eviljs/web/fetch-mock'
+// import {times} from '@eviljs/std/iter'
+// import {randomInt, randomItem, randomItems, randomTimes} from '@eviljs/std/random'
+import {FetchMocks, jsonResponse} from '@eviljs/web/fetch-mock'
 import {exact} from '@eviljs/web/route'
 
-export function mockFetch(fetch: Fetch) {
-    return mockFetchDelayed(fetch, FetchMocks, {minDelay: 500, maxDelay: 1000})
-}
-
-export const FetchMocks = {
+export const FetchMocksSpec: FetchMocks = {
     'get': [
-        [exact('/auth'), (type: FetchRequestMethod, path: string, options?: FetchRequestOptions) =>
+        [exact('/auth'), (type, path, options) =>
             new Response(null, {status: 204}) // 204 | 401
-        ] as const,
-        [exact('/account/\\w+'), (type: FetchRequestMethod, path: string, options?: FetchRequestOptions) =>
+        ],
+        [exact('/account/\\w+'), (type, path, options) =>
             jsonResponse({
                 id: '123',
                 firstName: 'Peter',
                 lastName: 'Pan',
                 avatar: 'https://www.tekoway.com/wp-content/uploads/2018/12/John-Doe.jpg',
             })
-        ] as const,
+        ],
     ],
     'post': [
-        [exact('/auth'), (type: FetchRequestMethod, path: string, options?: FetchRequestOptions) => {
+        [exact('/auth'), (type, path, options) => {
             const body = JSON.parse(options?.body as string)
             if (body.identifier !== 'demo' || body.secret !== 'demo') {
                 return new Response(null, {status: 404})
             }
             return jsonResponse({token: 'abc1234567890'})
-        }] as const,
+        }],
     ],
     'delete': [
-        [exact('/auth'), (type: FetchRequestMethod, path: string, options?: FetchRequestOptions) =>
+        [exact('/auth'), (type, path, options) =>
             new Response(null, {status: 204})
-        ] as const,
+        ],
     ],
 }
 

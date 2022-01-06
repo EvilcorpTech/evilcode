@@ -1,27 +1,25 @@
-import {loadStateFromStorage, setAction, StoreActionValueComputer} from '@eviljs/react/store'
+import {loadStateFromStorage} from '@eviljs/react/store-storage'
 import {loadSsrState} from '@eviljs/web/ssr'
 
 export const StateVersion = 1
-export const Actions = {setCache}
-export const StoreSpec = {actions: Actions, createState}
+export const StoreSpec = {createState}
 export const StoreStateStorageId = 'AppState-' + StateVersion
 export const StoreStateSsrId = StoreStateStorageId
-export const Storage: Storage | undefined = window.localStorage
-
-export const StorageState = loadStateFromStorage<State>(Storage, StoreStateStorageId)
-export const SsrState = loadSsrState<State>(StoreStateSsrId)
+export const Storage: Storage = window.localStorage
 
 export function createState(): State {
     const initialState = createInitialState()
+    const storageState = loadStateFromStorage<State>(Storage, StoreStateStorageId)
+    const ssrState = loadSsrState<State>(StoreStateSsrId)
 
-    if (StorageState) {
+    if (storageState) {
         console.debug('app:', 'store state restored from LocalStorage')
-        return mergeState(initialState, StorageState)
+        return mergeState(initialState, storageState)
     }
 
-    if (SsrState) {
+    if (ssrState) {
         console.debug('app:', 'store state restored from SsrStorage')
-        return mergeState(initialState, SsrState)
+        return mergeState(initialState, ssrState)
     }
 
     return initialState
@@ -35,7 +33,7 @@ export function createInitialState(): State {
     }
 }
 
-export function mergeState(state: State, savedState: SavedState) {
+export function mergeState(state: State, savedState: State) {
     return {
         // We overwrite the base state...
         ...state,
@@ -45,29 +43,19 @@ export function mergeState(state: State, savedState: SavedState) {
 }
 
 export function filterStorageState(state: State) {
-    const savedState: SavedState = {...state} // Shallow clone.
-    delete savedState.__cache__ // Cache Metadata must not persist.
-    return savedState
-}
-
-export function setCache(state: State, stateCache: StoreActionValueComputer<StateCache, Partial<StateCache>>) {
     return {
+        // Shallow clone.
         ...state,
-        __cache__: setAction(state.__cache__, stateCache),
+        __cache__: {}, // Cache Metadata must not persist.
     }
 }
 
 // Types ///////////////////////////////////////////////////////////////////////
 
-export type Actions = typeof Actions
-
 export interface State {
     __cache__: StateCache
     theme: null | 'light' | 'dark'
     token: null | string
-}
-
-export interface SavedState extends Partial<State> {
 }
 
 export type StateCache = {

@@ -1,5 +1,5 @@
 import {classes} from '@eviljs/react/react'
-import {useI18nMsg} from 'lib/hooks'
+import {useI18nMsg} from 'lib/hooks/i18n'
 import {Header} from 'lib/widgets/header'
 
 import './home-view.css'

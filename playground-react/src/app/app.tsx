@@ -7,7 +7,7 @@ import {PortalProvider} from '@eviljs/react/portal'
 import {withPortals} from '@eviljs/react/portals'
 import {withQuery} from '@eviljs/react/query'
 import {Arg, exact, SwitchRoute, withRouter} from '@eviljs/react/router'
-import {withStore} from '@eviljs/react/store'
+import {useRootStoreStorage, withStore} from '@eviljs/react/store'
 import {ThemeView} from '@eviljs/reactx/theme-view'
 import {WidgetsView} from '@eviljs/reactx/widgets-view'
 import {pipe} from '@eviljs/std/pipe'
@@ -41,6 +41,8 @@ export function App(props: AppProps) {
 }
 
 export function AppMain(props: AppMainProps) {
+    useRootStoreStorage()
+
     return (
         <PortalProvider children={Portal =>
             <Fragment>
@@ -69,9 +71,9 @@ export function AppMain(props: AppMainProps) {
                         },
                         {is: exact('/arg/' + Arg), then: (id) =>
                         <div className="std std-theme-light">
-                                <Header/>
-                                <h1>Route ID {id}</h1>
-                            </div>
+                            <Header/>
+                            <h1>Route ID {id}</h1>
+                        </div>
                         },
                         {is: Routes.AdminRoute.pattern, then:
                             <AuthBarrier>

@@ -1,5 +1,5 @@
 import {createContainer} from '@eviljs/std/container'
-import {createElement} from 'react'
+import {StrictMode} from 'react'
 import {render} from 'react-dom'
 import {App} from './app/app'
 import {ContainerSpec} from './lib/container'
@@ -11,10 +11,12 @@ console.table({...Context})
 
 const container = createContainer(ContainerSpec)
 const rootElement = document.getElementById('App') ?? document.body
-const rootComponent = App
-const rootProps = {container}
 
-render(createElement(rootComponent, rootProps), rootElement)
+render(
+    <StrictMode>
+        <App container={container}/>
+    </StrictMode>
+, rootElement)
 
 // Hot Module Replacement (development mode) ///////////////////////////////////
 // BEGIN

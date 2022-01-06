@@ -1,3 +1,5 @@
+@import '@evilcss/std/reset.css';
+@import '@evilcss/std/reset-even/focus-outline.css';
 @import '@evilcss/std/all.classes.css';
 @import '@evilcss/std/all.props.css';
 @import '@evilcss/std/button/dye.css';
@@ -5,10 +7,10 @@
 @import '@evilcss/std/button/halo.css';
 @import '@evilcss/std/button/plain.css';
 @import '@evilcss/std/font-default.css';
-@import '@evilcss/std/reset.css';
-@import '@evilcss/std/reset/even/focus-outline.css';
 @import '@evilcss/std/theme/dark.css';
 @import '@evilcss/std/theme/light.css';
+@import '@evilcss/std/typography/standard.classes.css';
+@import '@evilcss/std/typography/standard.props.css';
 
 /*
 #App {
@@ -16,16 +18,16 @@
 */
 
 .std {
-    --std-color-primary-h: 250;
+    --std-color-primary-h: 250deg;
     --std-color-primary-s: 70%;
     --std-color-primary-l: 60%;
-    --std-color-secondary-h: 0;
+    --std-color-secondary-h: 0deg;
     --std-color-secondary-s: 55%;
     --std-color-secondary-l: 50%;
 }
 
 .page-title {
-    padding-left: var(--std-gutter-m);
+    padding-left: var(--std-gutter5);
     border-left: 6px solid var(--std-color-primary-accent);
     color: var(--std-color-primary-accent);
     text-transform: uppercase;

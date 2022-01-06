@@ -1,12 +1,15 @@
 import {createFetch} from '@eviljs/web/fetch'
-import {createMockServiceWorker} from '@eviljs/web/fetch-mock'
+import {createFetchServiceWorker, mockFetchDelayed} from '@eviljs/web/fetch-mock'
 import {ApiUrl} from './lib/context'
-import {mockFetch} from './lib/mock'
+import {FetchMocksSpec} from './lib/mock'
 
-const fetch = createFetch({baseUrl: ApiUrl})
-const mockedFetch = mockFetch(fetch)
+const fetch = mockFetchDelayed(
+    createFetch({baseUrl: ApiUrl}),
+    FetchMocksSpec,
+    {minDelay: 500, maxDelay: 1000},
+)
 
-createMockServiceWorker(self, mockedFetch)
+createFetchServiceWorker(self, fetch)
 
 // Types ///////////////////////////////////////////////////////////////////////
 

@@ -3,7 +3,7 @@ import {classes} from '@eviljs/react/react'
 import {useRouter, Redirect} from '@eviljs/react/router'
 import {AuthCredentials} from '@eviljs/reactx/auth-credentials'
 import {useCallback} from 'react'
-import {useI18nMsg} from 'lib/hooks'
+import {useI18nMsg} from 'lib/hooks/i18n'
 
 import './auth-view.css'
 

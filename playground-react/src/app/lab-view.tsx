@@ -4,7 +4,8 @@ import {Button} from '@eviljs/reactx/button'
 import {Input} from '@eviljs/reactx/input/floating'
 import {HtmlSandbox} from '@eviljs/webx/html-sandbox'
 import {createElement, useState} from 'react'
-import {useI18nMsg} from 'lib/hooks'
+import {useI18nMsg} from 'lib/hooks/i18n'
+import {State, useStore} from 'lib/hooks/store'
 import {Header} from 'lib/widgets/header'
 
 import './lab-view.css'
@@ -18,6 +19,7 @@ export function LabView(props: LabViewProps) {
 
     const [text, setText] = useState('<b>Hello<b/>')
     const [color, setColor] = useState('red')
+    const [token, setToken] = useStore((state: State) => state.token)
 
     const history = useUndoRedo({message: ''})
 
@@ -58,12 +60,12 @@ export function LabView(props: LabViewProps) {
                     />
                 </div>
 
-                <i className="std-space-v l"/>
+                <i className="std-space-v gap6"/>
 
                 <div>
                     <h6>Html Sandbox</h6>
-                    <div><input value={text} onChange={(event) => setText(event.target.value)}/></div>
-                    <div><input value={color} onChange={(event) => setColor(event.target.value)}/></div>
+                    <div><input value={text} onChange={event => setText(event.target.value)}/></div>
+                    <div><input value={color} onChange={event => setColor(event.target.value)}/></div>
 
                     {createElement('html-sandbox', {
                         style: {'--color': color},
