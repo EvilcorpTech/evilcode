@@ -46,12 +46,11 @@ export function RadioGroup(props: RadioGroupProps) {
 
 // Types ///////////////////////////////////////////////////////////////////////
 
-
 export interface RadioGroupProps extends Omit<React.HTMLAttributes<HTMLElement>, 'onChange'> {
-    selected?: null | string
-    items?: null | Array<{
+    selected?: undefined | null | string
+    items?: undefined | null | Array<{
         value: string
         label: React.ReactNode
     }>
-    onChange?(value: string, idx: number): void
+    onChange?: undefined | ((value: string, idx: number) => void)
 }

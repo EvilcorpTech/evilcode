@@ -34,7 +34,7 @@ export interface TooltipProps extends React.HTMLAttributes<HTMLElement>, Tooltip
 
 export interface TooltipModel {
     content: React.ReactNode
-    contentClass?: string
+    contentClass?: undefined | string
     position: TooltipPosition
 }
 
