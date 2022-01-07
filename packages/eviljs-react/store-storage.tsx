@@ -17,8 +17,9 @@ export function useRootStoreStorage<S, L = S>(state: S, options: StoreStorageOpt
         // We try deriving the state from LocalStorage.
         // We need to derive the state inside an effect instead of inside
         // the render function because we are mutating a different component.
+
+        // We use a ref avoiding triggering a re-render if not needed.
         isLoadedRef.current = true
-        // we use a ref avoiding triggering a re-render if not needed.
 
         const savedState = loadStateFromStorage<L>(storage, storageKey)
 
@@ -28,7 +29,7 @@ export function useRootStoreStorage<S, L = S>(state: S, options: StoreStorageOpt
             return
         }
 
-        onLoad(savedState, state)
+        onLoad(savedState)
     }, [])
 
     useEffect(() => {
@@ -63,7 +64,12 @@ export function saveStateToStorage(storage: Storage, key: string, state: unknown
 
     const serializedState = JSON.stringify(state)
 
-    storage.setItem(key, serializedState)
+    try {
+        storage.setItem(key, serializedState)
+    }
+    catch (error: unknown) {
+        console.warn(error)
+    }
 }
 
 export function loadStateFromStorage<S = unknown>(storage: Storage, key: string) {
@@ -73,7 +79,13 @@ export function loadStateFromStorage<S = unknown>(storage: Storage, key: string)
         return
     }
 
-    return JSON.parse(serializedState) as S
+    try {
+        return JSON.parse(serializedState) as S
+    }
+    catch (error: unknown) {
+        console.warn(error)
+    }
+    return // Makes TypeScript happy.
 }
 
 // Types ///////////////////////////////////////////////////////////////////////
@@ -83,13 +95,13 @@ export interface StoreStorageOptions<S extends {}, L extends {}> {
     version?: undefined | number | string
     storage?: undefined | 'localStorage' | 'sessionStorage'
     storageKey?: undefined | string
-    onLoad: StoreStorageOnLoad<S, L>,
+    onLoad: StoreStorageOnLoad<L>,
     onMissing?: undefined | (() => void)
     onSave?: undefined | StoreStorageOnSave<S, L>
 }
 
-export interface StoreStorageOnLoad<S, L> {
-    (savedState: L, state: S): void
+export interface StoreStorageOnLoad<L> {
+    (savedState: L): void
 }
 
 export interface StoreStorageOnSave<S, L = S> {

@@ -98,14 +98,16 @@ export function useRootStore<S extends {}, A extends StoreActions<S>>(spec: Stor
 
 export function useRootStoreStorage<S extends {}, L extends {} = S>(options?: StoreStorageOptions<S, L>) {
     const onLoad = options?.onLoad
+    const onMerge = options?.onMerge
     const {state, commit} = useStore<S, StoreDefaultActions<S>>()
 
     useCoreRootStoreStorage<S, L>(state, {
         ...options,
-        onLoad(savedState, state) {
-            const mergedState = onLoad?.(savedState, state) ?? defaultOnLoad(savedState, state)
-
-            commit({type: 'reset', value: mergedState})
+        onLoad(savedState) {
+            onLoad?.(savedState)
+            commit({type: 'reset', value(state) {
+                return onMerge?.(savedState, state) ?? defaultOnMerge(savedState, state)
+            }})
         },
     })
 }
@@ -132,7 +134,7 @@ export function resetAction<S extends {}>(state: S, value: React.SetStateAction<
     )
 }
 
-export function defaultOnLoad<S extends {}, L extends {} = S>(savedState: L, state: S): S {
+export function defaultOnMerge<S extends {}, L extends {} = S>(savedState: L, state: S): S {
     // Shallow merge.
     // Saved state from LocalStorage overwrites current state.
     return {...state, ...savedState}
@@ -188,8 +190,8 @@ export type StoreActionsOf<S extends {}, A extends StoreActions<S>> = ValueOf<{
     }
 }>
 
-export interface StoreStorageOptions<S extends {}, L extends {} = S> extends Omit<Partial<CoreStoreStorageOptions<S, L>>, 'onLoad'> {
-    onLoad?: undefined | StoreStorageOnLoad<S, L>
+export interface StoreStorageOptions<S extends {}, L extends {} = S> extends Partial<CoreStoreStorageOptions<S, L>> {
+    onMerge?: undefined | StoreStorageOnLoad<S, L>
 }
 
 export interface StoreStorageOnLoad<S extends {}, L extends {} = S> {

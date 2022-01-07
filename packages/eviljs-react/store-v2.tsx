@@ -1,6 +1,6 @@
 import {createContext, useContext, useState} from 'react'
 import {useRootStoreStorage as useCoreRootStoreStorage} from './store-storage.js'
-import {defaultOnLoad, StoreStorageOptions} from './store-v1.js'
+import {defaultOnMerge, StoreStorageOptions} from './store-v1.js'
 
 export const StoreV2Context = createContext<Store<any>>(void undefined as any)
 
@@ -66,14 +66,14 @@ export function useRootStore<S>(spec: StoreSpec<S>): Store<S> {
 
 export function useRootStoreStorage<S extends {}, L extends {} = S>(options?: StoreStorageOptions<S, L>) {
     const onLoad = options?.onLoad
+    const onMerge = options?.onMerge
     const [state, setState] = useStore<S>()
 
     useCoreRootStoreStorage<S, L>(state, {
         ...options,
-        onLoad(savedState, state) {
-            const mergedState = onLoad?.(savedState, state) ?? defaultOnLoad(savedState, state)
-
-            setState(mergedState)
+        onLoad(savedState) {
+            onLoad?.(savedState)
+            setState(state => onMerge?.(savedState, state) ?? defaultOnMerge(savedState, state))
         },
     })
 }
