@@ -1,15 +1,15 @@
+.std-spacer {
+    flex-grow: 1;
+}
+
 .std-cover { width: 100%; height: 100%; }
 .std-cover-h { width: 100%; }
 .std-cover-v { height: 100%; }
-
 .std-extend-v { min-height: 100vh; }
 
 .std-layer {
     position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
+    inset: 0;
 }
 
 .std-media-cover {
