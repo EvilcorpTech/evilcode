@@ -20,9 +20,9 @@
 .std-text-weight1 { --text-weight: var(--std-text-weight1); font-weight: var(--text-weight); }
 .std-text-weight2 { --text-weight: var(--std-text-weight2); font-weight: var(--text-weight); }
 
-.std-capitalize { text-transform: capitalize; }
-.std-lowercase { text-transform: lowercase; }
-.std-uppercase { text-transform: uppercase; }
+.std-capitalize { --text-transform: capitalize; text-transform: var(--text-transform); }
+.std-lowercase { --text-transform: lowercase; text-transform: var(--text-transform); }
+.std-uppercase { --text-transform: uppercase; text-transform: var(--text-transform); }
 
 .std-ellipsis {
     white-space: nowrap;

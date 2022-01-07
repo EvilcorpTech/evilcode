@@ -16,47 +16,52 @@
     height: 1em;
 }
 .std-icon.mini {
-    font-size: var(--std-icon-mini);
-    width: var(--std-icon-mini);
-    height: var(--std-icon-mini);
+    font-size: var(--std-icon-size);
+    width: var(--std-icon-size);
+    height: var(--std-icon-size);
 }
 .std-icon.xxs {
-    font-size: var(--std-icon-xxs);
-    width: var(--std-icon-xxs);
-    height: var(--std-icon-xxs);
+    font-size: var(--std-icon-size1);
+    width: var(--std-icon-size1);
+    height: var(--std-icon-size1);
 }
 .std-icon.xs {
-    font-size: var(--std-icon-xs);
-    width: var(--std-icon-xs);
-    height: var(--std-icon-xs);
+    font-size: var(--std-icon-size2);
+    width: var(--std-icon-size2);
+    height: var(--std-icon-size2);
 }
 .std-icon.s {
-    font-size: var(--std-icon-s);
-    width: var(--std-icon-s);
-    height: var(--std-icon-s);
+    font-size: var(--std-icon-size3);
+    width: var(--std-icon-size3);
+    height: var(--std-icon-size3);
 }
 .std-icon.m {
-    font-size: var(--std-icon-m);
-    width: var(--std-icon-m);
-    height: var(--std-icon-m);
+    font-size: var(--std-icon-size4);
+    width: var(--std-icon-size4);
+    height: var(--std-icon-size4);
 }
 .std-icon.l {
-    font-size: var(--std-icon-l);
-    width: var(--std-icon-l);
-    height: var(--std-icon-l);
+    font-size: var(--std-icon-size5);
+    width: var(--std-icon-size5);
+    height: var(--std-icon-size5);
 }
 .std-icon.xl {
-    font-size: var(--std-icon-xl);
-    width: var(--std-icon-xl);
-    height: var(--std-icon-xl);
+    font-size: var(--std-icon-size6);
+    width: var(--std-icon-size6);
+    height: var(--std-icon-size6);
 }
 .std-icon.xxl {
-    font-size: var(--std-icon-xxl);
-    width: var(--std-icon-xxl);
-    height: var(--std-icon-xxl);
+    font-size: var(--std-icon-size7);
+    width: var(--std-icon-size7);
+    height: var(--std-icon-size7);
 }
 .std-icon.maxi {
-    font-size: var(--std-icon-maxi);
-    width: var(--std-icon-maxi);
-    height: var(--std-icon-maxi);
+    font-size: var(--std-icon-size8);
+    width: var(--std-icon-size8);
+    height: var(--std-icon-size8);
+}
+.std-icon.xmaxi {
+    font-size: var(--std-icon-size9);
+    width: var(--std-icon-size9);
+    height: var(--std-icon-size9);
 }

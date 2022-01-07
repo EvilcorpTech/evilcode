@@ -1,15 +1,15 @@
 .std {
-    --std-icon-size: var(--std-text-size-1);
     --std-icon-scale: 1.3;
-    --std-icon-mini: calc(var(--std-icon-size) * var(--std-icon-scale));
-    --std-icon-xxs: calc(var(--std-icon-mini) * var(--std-icon-scale));
-    --std-icon-xs: calc(var(--std-icon-xxs) * var(--std-icon-scale));
-    --std-icon-s: calc(var(--std-icon-xs) * var(--std-icon-scale));
-    --std-icon-m: calc(var(--std-icon-s) * var(--std-icon-scale));
-    --std-icon-l: calc(var(--std-icon-m) * var(--std-icon-scale));
-    --std-icon-xl: calc(var(--std-icon-l) * var(--std-icon-scale));
-    --std-icon-xxl: calc(var(--std-icon-xl) * var(--std-icon-scale));
-    --std-icon-maxi: calc(var(--std-icon-xxl) * var(--std-icon-scale));
+    --std-icon-size: var(--std-text-size-1);
+    --std-icon-size1: calc(var(--std-icon-size) * var(--std-icon-scale));
+    --std-icon-size2: calc(var(--std-icon-size1) * var(--std-icon-scale));
+    --std-icon-size3: calc(var(--std-icon-size2) * var(--std-icon-scale));
+    --std-icon-size4: calc(var(--std-icon-size3) * var(--std-icon-scale));
+    --std-icon-size5: calc(var(--std-icon-size4) * var(--std-icon-scale));
+    --std-icon-size6: calc(var(--std-icon-size5) * var(--std-icon-scale));
+    --std-icon-size7: calc(var(--std-icon-size6) * var(--std-icon-scale));
+    --std-icon-size8: calc(var(--std-icon-size7) * var(--std-icon-scale));
+    --std-icon-size9: calc(var(--std-icon-size8) * var(--std-icon-scale));
 
     --std-icon-color1: var(--std-color-primary-accent);
     --std-icon-color2: var(--std-color-secondary-accent);
