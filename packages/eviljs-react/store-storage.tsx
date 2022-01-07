@@ -1,13 +1,17 @@
+import {isObject} from '@eviljs/std/type.js'
 import {useEffect, useRef} from 'react'
+
+export const DefaultDebounce = 1000
+export const DefaultStateVersion = '1'
+export const DefaultStorageKey = '@eviljs/react/store-storage.state'
 
 export function useRootStoreStorage<S, L = S>(state: S, options: StoreStorageOptions<S, L>) {
     const {onLoad, onMissing, onSave} = options
-    const debounce = options.debounce ?? 0
-    const version = options.version ?? 1
-    const storageType = options.storage ?? 'localStorage'
-    const storageKey = options.storageKey ?? 'store-state-v' + version
-    const storage = window[storageType] as undefined | Storage
-    const isLoadedRef = useRef(false)
+    const debounce = options.debounce ?? DefaultDebounce
+    const stateVersion = options.stateVersion ?? DefaultStateVersion
+    const storage = options.storage ?? globalThis.localStorage
+    const storageKey = options.storageKey ?? DefaultStorageKey
+    const loadedRef = useRef(false)
 
     useEffect(() => {
         if (! storage) {
@@ -19,17 +23,17 @@ export function useRootStoreStorage<S, L = S>(state: S, options: StoreStorageOpt
         // the render function because we are mutating a different component.
 
         // We use a ref avoiding triggering a re-render if not needed.
-        isLoadedRef.current = true
+        loadedRef.current = true
 
-        const savedState = loadStateFromStorage<L>(storage, storageKey)
+        const payload = loadJsonFromStorage(storage, storageKey) as undefined | Record<PropertyKey, L>
+        const savedState = payload?.[stateVersion]
 
-        if (! savedState) {
-            // We don't have a saved state. We have nothing to do.
+        if (! payload || ! isObject(payload) || ! payload[stateVersion]) {
             onMissing?.()
             return
         }
 
-        onLoad(savedState)
+        onLoad(savedState as L)
     }, [])
 
     useEffect(() => {
@@ -37,7 +41,7 @@ export function useRootStoreStorage<S, L = S>(state: S, options: StoreStorageOpt
             return
         }
 
-        if (! isLoadedRef.current) {
+        if (! loadedRef.current) {
             // We can't save the state yet.
             return
         }
@@ -45,8 +49,9 @@ export function useRootStoreStorage<S, L = S>(state: S, options: StoreStorageOpt
         // We debounce the Storage saving.
         const timeoutId = setTimeout(() => {
             const savedState = onSave?.(state) ?? state
+            const payload = {[stateVersion]: savedState}
 
-            saveStateToStorage(storage, storageKey, savedState)
+            saveJsonToStorage(storage, storageKey, payload)
         }, debounce)
 
         function unmount() {
@@ -57,30 +62,30 @@ export function useRootStoreStorage<S, L = S>(state: S, options: StoreStorageOpt
     }, [state])
 }
 
-export function saveStateToStorage(storage: Storage, key: string, state: unknown) {
-    if (! state) {
+export function saveJsonToStorage(storage: Storage, key: string, payload: unknown) {
+    if (! payload) {
         return
     }
 
-    const serializedState = JSON.stringify(state)
-
     try {
-        storage.setItem(key, serializedState)
+        const serializedPayload = JSON.stringify(payload)
+        storage.setItem(key, serializedPayload)
     }
     catch (error: unknown) {
+        // The serialization could fail or we could exceed the storage quota.
         console.warn(error)
     }
 }
 
-export function loadStateFromStorage<S = unknown>(storage: Storage, key: string) {
-    const serializedState = storage.getItem(key)
+export function loadJsonFromStorage(storage: Storage, key: string) {
+    const serializedPayload = storage.getItem(key)
 
-    if (! serializedState) {
+    if (! serializedPayload) {
         return
     }
 
     try {
-        return JSON.parse(serializedState) as S
+        return JSON.parse(serializedPayload)
     }
     catch (error: unknown) {
         console.warn(error)
@@ -92,8 +97,8 @@ export function loadStateFromStorage<S = unknown>(storage: Storage, key: string)
 
 export interface StoreStorageOptions<S extends {}, L extends {}> {
     debounce?: undefined | number
-    version?: undefined | number | string
-    storage?: undefined | 'localStorage' | 'sessionStorage'
+    stateVersion?: undefined | number | string
+    storage?: undefined | Storage
     storageKey?: undefined | string
     onLoad: StoreStorageOnLoad<L>,
     onMissing?: undefined | (() => void)
