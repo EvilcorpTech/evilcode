@@ -32,7 +32,7 @@ export function ThemeView(props: ThemeViewProps) {
                 onThemeChange={(it) => setTheme(it)}
             />
 
-            <i className="std-space-v gap5"/>
+            <i className="std-space-v s5"/>
 
             <div className="grid-1c73 std-flex center wrap">
                 <Colors/>
@@ -74,9 +74,9 @@ export function Picker(props: PickerProps) {
                 type="color"
                 onChange={(event) => onPrimaryChange(computeHslFromHexColor(event.target.value))}
             />
-            <i className="std-space-h gap5"/>
+            <i className="std-space-h s5"/>
             <label>Theme</label>
-            <i className="std-space-h gap5"/>
+            <i className="std-space-h s5"/>
             <input
                 ref={secondaryRef}
                 className="picker-t8c2"
@@ -84,7 +84,7 @@ export function Picker(props: PickerProps) {
                 onChange={(event) => onSecondaryChange(computeHslFromHexColor(event.target.value))}
             />
 
-            <i className="std-space-h gap5"/>
+            <i className="std-space-h s5"/>
 
             <label className="std-flex column align-center">
                 <input
@@ -95,7 +95,7 @@ export function Picker(props: PickerProps) {
                             : 'light'
                     )}
                 />
-                <i className="std-space-v gap1"/>
+                <i className="std-space-v s1"/>
                 <b>Dark</b>
             </label>
         </h1>
@@ -110,7 +110,7 @@ export function Colors() {
                 <div className="std-spacer"/>
             </div>
 
-            <i className="std-space-v gap4"/>
+            <i className="std-space-v s4"/>
 
             <div className="std-flex">
                 <label>Accent</label>
@@ -122,7 +122,7 @@ export function Colors() {
                 />
             </div>
 
-            <i className="std-space-v gap4"/>
+            <i className="std-space-v s4"/>
 
             <div className="std-flex">
                 <label>Tint</label>
@@ -139,7 +139,7 @@ export function Colors() {
                 </div>
             </div>
 
-            <div className="std-space-v gap4"/>
+            <div className="std-space-v s4"/>
 
             <div className="std-flex">
                 <label>Shade</label>
@@ -156,7 +156,7 @@ export function Colors() {
                 </div>
             </div>
 
-            <div className="std-space-v gap4"/>
+            <div className="std-space-v s4"/>
 
             <div className="std-flex">
                 <label>Tone</label>
@@ -173,7 +173,7 @@ export function Colors() {
                 </div>
             </div>
 
-            <div className="std-space-v gap4"/>
+            <div className="std-space-v s4"/>
 
             <div className="std-flex">
                 <label>Front</label>
@@ -190,7 +190,7 @@ export function Colors() {
                 </div>
             </div>
 
-            <div className="std-space-v gap4"/>
+            <div className="std-space-v s4"/>
 
             <div className="std-flex">
                 <label>Back</label>
@@ -207,14 +207,14 @@ export function Colors() {
                 </div>
             </div>
 
-            <i className="std-space-v gap5"/>
+            <i className="std-space-v s5"/>
 
             <div className="std-flex">
                 <label className="std-text-h6 std-color-secondary-accent">Secondary</label>
                 <div className="std-spacer"/>
             </div>
 
-            <div className="std-space-v gap4"/>
+            <div className="std-space-v s4"/>
 
             <div className="std-flex">
                 <label>Accent</label>
@@ -226,7 +226,7 @@ export function Colors() {
                 />
             </div>
 
-            <div className="std-space-v gap4"/>
+            <div className="std-space-v s4"/>
 
             <div className="std-flex">
                 <label>Tint</label>
@@ -243,7 +243,7 @@ export function Colors() {
                 </div>
             </div>
 
-            <div className="std-space-v gap4"/>
+            <div className="std-space-v s4"/>
 
             <div className="std-flex">
                 <label>Shade</label>
@@ -260,7 +260,7 @@ export function Colors() {
                 </div>
             </div>
 
-            <div className="std-space-v gap4"/>
+            <div className="std-space-v s4"/>
 
             <div className="std-flex">
                 <label>Tone</label>
@@ -277,7 +277,7 @@ export function Colors() {
                 </div>
             </div>
 
-            <div className="std-space-v gap4"/>
+            <div className="std-space-v s4"/>
 
             <div className="std-flex">
                 <label>Front</label>
@@ -294,7 +294,7 @@ export function Colors() {
                 </div>
             </div>
 
-            <div className="std-space-v gap4"/>
+            <div className="std-space-v s4"/>
 
             <div className="std-flex">
                 <label>Back</label>
@@ -340,26 +340,26 @@ export function Typography() {
 export function Gutters() {
     return (
         <div className="std-flex center column">
-            <label className="gutter-t1d3 std-flex column"><span>Gap 1</span><i className="std-space-h gap1"/></label>
-            <i className="std-space-v gap3"/>
-            <label className="gutter-t1d3 std-flex column"><span>Gap 2</span><i className="std-space-h gap2"/></label>
-            <i className="std-space-v gap3"/>
-            <label className="gutter-t1d3 std-flex column"><span>Gap 3</span><i className="std-space-h gap3"/></label>
-            <i className="std-space-v gap3"/>
-            <label className="gutter-t1d3 std-flex column"><span>Gap 4</span><i className="std-space-h gap4"/></label>
-            <i className="std-space-v gap3"/>
-            <label className="gutter-t1d3 std-flex column"><span>Gap 5</span><i className="std-space-h gap5"/></label>
-            <i className="std-space-v gap3"/>
-            <label className="gutter-t1d3 std-flex column"><span>Gap 6</span><i className="std-space-h gap6"/></label>
-            <i className="std-space-v gap3"/>
-            <label className="gutter-t1d3 std-flex column"><span>Gap 7</span><i className="std-space-h gap7"/></label>
-            <i className="std-space-v gap3"/>
-            <label className="gutter-t1d3 std-flex column"><span>Gap 8</span><i className="std-space-h gap8"/></label>
-            <i className="std-space-v gap3"/>
-            <label className="gutter-t1d3 std-flex column"><span>Gap 9</span><i className="std-space-h gap9"/></label>
-            <i className="std-space-v gap3"/>
-            <label className="gutter-t1d3 std-flex column"><span>Gap 10</span><i className="std-space-h gap10"/></label>
-            <i className="std-space-v gap3"/>
+            <label className="gutter-t1d3 std-flex column"><span>Gap 1</span><i className="std-space-h s1"/></label>
+            <i className="std-space-v s3"/>
+            <label className="gutter-t1d3 std-flex column"><span>Gap 2</span><i className="std-space-h s2"/></label>
+            <i className="std-space-v s3"/>
+            <label className="gutter-t1d3 std-flex column"><span>Gap 3</span><i className="std-space-h s3"/></label>
+            <i className="std-space-v s3"/>
+            <label className="gutter-t1d3 std-flex column"><span>Gap 4</span><i className="std-space-h s4"/></label>
+            <i className="std-space-v s3"/>
+            <label className="gutter-t1d3 std-flex column"><span>Gap 5</span><i className="std-space-h s5"/></label>
+            <i className="std-space-v s3"/>
+            <label className="gutter-t1d3 std-flex column"><span>Gap 6</span><i className="std-space-h s6"/></label>
+            <i className="std-space-v s3"/>
+            <label className="gutter-t1d3 std-flex column"><span>Gap 7</span><i className="std-space-h s7"/></label>
+            <i className="std-space-v s3"/>
+            <label className="gutter-t1d3 std-flex column"><span>Gap 8</span><i className="std-space-h s8"/></label>
+            <i className="std-space-v s3"/>
+            <label className="gutter-t1d3 std-flex column"><span>Gap 9</span><i className="std-space-h s9"/></label>
+            <i className="std-space-v s3"/>
+            <label className="gutter-t1d3 std-flex column"><span>Gap 10</span><i className="std-space-h s10"/></label>
+            <i className="std-space-v s3"/>
         </div>
     )
 }
@@ -394,7 +394,7 @@ export function Contrast() {
                 </label>
             </div>
 
-            <i className="std-space-v gap4"/>
+            <i className="std-space-v s4"/>
 
             <div className="std-flex wrap">
                 <label className="contrast-td08 std-color-primary-bg1">
@@ -423,7 +423,7 @@ export function Contrast() {
                 </label>
             </div>
 
-            <i className="std-space-v gap4"/>
+            <i className="std-space-v s4"/>
 
             <div className="std-flex wrap">
                 <label className="contrast-td08 std-color-secondary-bg1">
@@ -465,7 +465,7 @@ export function Buttons() {
                 <button className="std-text-button std-button plain">Plain</button>
             </div>
 
-            <div className="std-space-v gap3"/>
+            <div className="std-space-v s3"/>
 
             <div>
                 <button className="std-text-button std-button dye" disabled>Dye</button>
@@ -494,47 +494,47 @@ export function Icons() {
         <div className="std-flex center align-end wrap">
             <div className="icon-e43c">
                 <Icon className="std-icon maxi"/>
-                <div className="std-space-h gap3"/>
+                <div className="std-space-h s3"/>
                 <label>Maxi</label>
             </div>
             <div className="icon-e43c">
                 <Icon className="std-icon xxl"/>
-                <div className="std-space-h gap3"/>
+                <div className="std-space-h s3"/>
                 <label>XXL</label>
             </div>
             <div className="icon-e43c">
                 <Icon className="std-icon xl"/>
-                <div className="std-space-h gap3"/>
+                <div className="std-space-h s3"/>
                 <label>XL</label>
             </div>
             <div className="icon-e43c">
                 <Icon className="std-icon l"/>
-                <div className="std-space-h gap3"/>
+                <div className="std-space-h s3"/>
                 <label>L</label>
             </div>
             <div className="icon-e43c">
                 <Icon className="std-icon m"/>
-                <div className="std-space-h gap3"/>
+                <div className="std-space-h s3"/>
                 <label>M</label>
             </div>
             <div className="icon-e43c">
                 <Icon className="std-icon s"/>
-                <div className="std-space-h gap3"/>
+                <div className="std-space-h s3"/>
                 <label>S</label>
             </div>
             <div className="icon-e43c">
                 <Icon className="std-icon xs"/>
-                <div className="std-space-h gap3"/>
+                <div className="std-space-h s3"/>
                 <label>XS</label>
             </div>
             <div className="icon-e43c">
                 <Icon className="std-icon xxs"/>
-                <div className="std-space-h gap3"/>
+                <div className="std-space-h s3"/>
                 <label>XXS</label>
             </div>
             <div className="icon-e43c">
                 <Icon className="std-icon mini"/>
-                <div className="std-space-h gap3"/>
+                <div className="std-space-h s3"/>
                 <label>Mini</label>
             </div>
         </div>
