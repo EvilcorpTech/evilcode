@@ -13,7 +13,7 @@ export function createPostcssConfig(options?: PostcssConfigOptions) {
             PostCssPresetEnv({
                 stage: 3,
                 features: {
-                    'postcss-focus-within': false,
+                    'focus-within-pseudo-class': false,
                 },
             }),
         ],
