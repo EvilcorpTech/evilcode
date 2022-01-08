@@ -17,6 +17,7 @@
         "@babel/preset-react": "^7",
         "@babel/preset-typescript": "^7",
         "@babel/runtime": "^7",
+        "@eviljs/std": "^1",
         "@types/copy-webpack-plugin": "^8",
         "@types/mini-css-extract-plugin": "^2",
         "@types/webpack-bundle-analyzer": "^4",

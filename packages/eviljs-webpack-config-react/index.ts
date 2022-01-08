@@ -15,6 +15,8 @@ const {BundleStatsWebpackPlugin: BundleStatsPlugin} = BundleStats
 const {DefinePlugin} = Webpack
 const require = createRequire(import.meta.url)
 
+export {asBooleanLike} from '@eviljs/std/type.js'
+
 export const DefaultBasePath = ''
 export const DefaultBundleName = ''
 export const DefaultServerAddress =  '127.0.0.1'
@@ -217,16 +219,6 @@ export function createWebpackConfig(options?: WebpackConfigOptions) {
             level: 'info', // 'verbose'
         },
     }
-}
-
-export function asBoolean<T>(value: undefined | boolean | number | string, defaultValue: T) {
-    switch (value) {
-        case true: case 1: case '1': case 'yes': case 'on': case 'true':
-            return true
-        case false: case 0: case '0': case 'no': case 'off': case 'false':
-            return false
-    }
-    return defaultValue
 }
 
 // Types ///////////////////////////////////////////////////////////////////////
