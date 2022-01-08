@@ -86,7 +86,6 @@ export function isPromise(value: unknown): value is Promise<unknown> {
     return true
 }
 
-
 export function isRegExp(value: unknown): value is RegExp {
     if (! value || ! (value instanceof RegExp)) {
         return false
@@ -103,16 +102,52 @@ export function isUndefined(value: unknown): value is undefined {
     return value === void undefined
 }
 
-export function asArray<T>(item: T | Array<T> | [T] | readonly [T]) {
+export function asArray<T>(item: T | Array<T> | [T] | readonly [T]): Array<T> {
     return isArray(item)
-        ? item as Array<T>
+        ? item
         : [item] as Array<T>
 }
 
-export function booleanOr(value: unknown, fallback: boolean) {
+export function asBoolean(value: unknown): undefined | boolean {
     return isBoolean(value)
         ? value
-        : fallback
+        : undefined
+}
+
+export function asBooleanLike(value: unknown): undefined | boolean {
+    switch (value) {
+        case true: case 1: case '1': case 'yes': case 'on': case 'true':
+            return true
+        case false: case 0: case '0': case 'no': case 'off': case 'false':
+            return false
+    }
+    return
+}
+
+export function asNumber(value: number): number
+export function asNumber(value: string): undefined | number
+export function asNumber<T>(value: T): unknown extends T ? undefined | number : undefined
+export function asNumber(value: unknown): undefined | number {
+    const result = Number(value)
+
+    if (isNaN(result)) {
+        return
+    }
+
+    return result
+}
+
+export function asNumberInteger(value: number): number
+export function asNumberInteger(value: string): undefined | number
+export function asNumberInteger<T>(value: T): unknown extends T ? undefined | number : undefined
+export function asNumberInteger(value: unknown): undefined | number {
+    const result = Number(value)
+
+    if (isNaN(result)) {
+        return
+    }
+
+    return Math.trunc(result)
 }
 
 // Types ///////////////////////////////////////////////////////////////////////
