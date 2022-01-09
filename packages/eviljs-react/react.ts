@@ -1,6 +1,15 @@
 import {throwInvalidArgument} from '@eviljs/std/throw.js'
 import {isArray, isString, isObject} from '@eviljs/std/type.js'
-import {Children, cloneElement, isValidElement, useEffect, useLayoutEffect, useRef} from 'react'
+import {
+    Children,
+    cloneElement,
+    isValidElement,
+    useCallback,
+    useEffect,
+    useLayoutEffect,
+    useRef,
+    useState,
+} from 'react'
 
 export {times} from '@eviljs/std/iter.js'
 
@@ -54,6 +63,7 @@ export function childrenWithProps(children: React.ReactNode, props?: {}) {
 * Used to access the previous value of a prop.
 *
 * EXAMPLE
+*
 * function MyComponent(props) {
 *     const {selected} = props
 *     const prevSelected = usePrevious(props.selected)
@@ -73,6 +83,7 @@ export function usePrevious<T>(value: T) {
 * Used to perform an asynchronous task only on a mounted component.
 *
 * EXAMPLE
+*
 * function MyComponent(props) {
 *     const [state, setState] = useState()
 *     const ifMounted = useIfMounted()
@@ -135,6 +146,7 @@ export function useMountedGuard() {
 * Used to track the mounted state of a component. Useful inside async tasks.
 *
 * EXAMPLE
+*
 * function MyComponent(props) {
 *     const [state, setState] = useState()
 *     const mountedRef = useMountedRef()
@@ -167,6 +179,32 @@ export function useMountedRef() {
     }, [])
 
     return mountedRef
+}
+
+/*
+* Used to force the rendering of a component.
+*
+* EXAMPLE
+*
+* function MyComponent(props) {
+*     const requestRender = useRequestRender()
+*
+*     useEffect(() => {
+*         promise.then((value) => {
+*             // Do something, then
+*             requestRender()
+*         })
+*     }, [])
+* }
+*/
+export function useRequestRender() {
+    const [, setShouldRender] = useState(-1)
+
+    const requestRender = useCallback(() => {
+        setShouldRender(state => -1 * state)
+    }, [])
+
+    return requestRender
 }
 
 // Types ///////////////////////////////////////////////////////////////////////
