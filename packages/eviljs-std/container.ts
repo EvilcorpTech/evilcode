@@ -5,6 +5,7 @@ export const ContainerInstances = Symbol('ContainerInstances')
 * Creates a container instance.
 *
 * EXAMPLE
+*
 * const services = {
 *     MyService(container) {
 *         const {MyDep: myDep} = container
@@ -53,6 +54,7 @@ export function createContainer<F extends ContainerFactories>(spec?: ContainerSp
 * Associates a factory function to an id, for later retrieval.
 *
 * EXAMPLE
+*
 * registerService(container, 'MyService', container => MyService())
 * registerService(container, Symbol(), container => MyService())
 */
@@ -78,6 +80,7 @@ export function registerService
 * Provides a service instance.
 *
 * EXAMPLE
+*
 * requireService(container, 'MyService')
 * requireService(container, 'MyService', {type: 'prototype'})
 */
@@ -100,6 +103,7 @@ function requireService(container: Container, serviceId: ServiceId, options?: Re
 * Same of `container.require(serviceId, {type: 'prototype'})`.
 *
 * EXAMPLE
+*
 * makeService(container, 'MyService')
 * // is the same of
 * requireService(container, 'MyService', {type: 'prototype'})

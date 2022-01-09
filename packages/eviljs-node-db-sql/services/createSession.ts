@@ -7,6 +7,7 @@ import {Session} from './Session.js'
 * Creates a session for an user account.
 *
 * EXAMPLE
+*
 * createSession(db, 123)
 */
 export async function createSession(db: Db<CreateSessionServices>, accountId: number, model?: CreateSessionModel) {

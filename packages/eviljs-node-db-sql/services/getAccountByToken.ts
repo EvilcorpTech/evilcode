@@ -4,6 +4,7 @@ import {Db, ReadResult} from '../index.js'
 import {Session} from './Session.js'
 /*
 * EXAMPLE
+*
 * // Secret Hash is omitted from the results by default...
 * getAccountByToken(db, token)
 * // ...but it can be explicitly requested.

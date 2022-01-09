@@ -5,6 +5,7 @@ import {isUndefined, ValueOf} from '@eviljs/std/type.js'
 * through an INSERT or an UPDATE.
 *
 * EXAMPLE
+*
 * const model = {id: ..., name: ..., phone: ..., email: ...}
 * const cols = ['name', 'phone', 'email']
 * const {columns, placeholders, values} = asTuple(model, cols)
@@ -34,6 +35,7 @@ export function asTuple<O extends {}>(data: O, cols: Array<keyof O>) {
 * Generates an insert statement used for persisting an object.
 *
 * EXAMPLE
+*
 * const table = 'Accounts'
 * const model = {id: ..., name: ..., phone: ..., email: ...}
 * const cols = ['name', 'phone', 'email']
@@ -50,6 +52,7 @@ export function insert<O extends {}>(table: string, data: O, cols: Array<keyof O
 * Joins strings if the conditions are true.
 *
 * EXAMPLE
+*
 * joinStatement(
 *     ['WHERE', 'ts >= ?', 'AND', 'ts <= ?'],
 *     [start || end, start, start && end, end],

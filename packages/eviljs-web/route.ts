@@ -23,6 +23,7 @@ export const PatternRegExpCache: Record<string, RegExp> = {}
 * Creates a Route. Used mostly for type checking.
 *
 * EXAMPLE
+*
 * const route = createRoute(
 *     /^\/book/\/i,
 *     (id: string) => `/book/${id}`,
@@ -44,6 +45,7 @@ export function createRoute<E extends Args, D>(
 * Creates a Route from RegExp capturing groups.
 *
 * EXAMPLE
+*
 * const bookRoute = createSimpleRoute('/book/(\\w+)/(\\w+)')
 * bookRoute.path(123, 'Harry-Potter') === '/book/123/Harry-Potter'
 * bookRoute.params('/book/123/Harry-Potter') === ['123', 'Harry-Potter']
@@ -70,6 +72,7 @@ export function createSimpleRoute(originalPattern: string): Route<Array<string |
 * Encodes the route parameters inside the pattern.
 *
 * EXAMPLE
+*
 * computeRoutePath('/book/(\\w+)/(\\w+)', 'abc', 123) === '/book/abc/123'
 */
 export function computeRoutePath(patternStr: string, ...args: Array<string | number>) {
@@ -86,6 +89,7 @@ export function computeRoutePath(patternStr: string, ...args: Array<string | num
 * Decodes the route parameters from a path.
 *
 * EXAMPLE
+*
 * computeRouteParams(new RegExp('/book/(\\w+)/(\\w+)'), '/book/abc/123') === ['abc', '123']
 */
 function computeRouteParams(patternRe: RegExp, path: string) {

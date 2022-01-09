@@ -1,16 +1,19 @@
 import {tryOrNull} from '@eviljs/std/try.js'
 import {onMounted, useEventListener, WebElement} from '@eviljs/web/element.js'
 
-// EXAMPLE
-// customElements.define('html-sandbox', HtmlSandbox)
-//
-// <html-sandbox>
-//     <style>
-//         p { color: red; }
-//     </style>
-//
-//     <p>Hello World!</p>
-// </html-sandbox>
+/*
+* EXAMPLE
+*
+* customElements.define('html-sandbox', HtmlSandbox)
+*
+* <html-sandbox>
+*     <style>
+*         p { color: red; }
+*     </style>
+*
+*     <p>Hello World!</p>
+* </html-sandbox>
+*/
 export class HtmlSandbox extends WebElement {
     constructor() {
         super()

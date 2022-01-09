@@ -6,6 +6,7 @@ import {getAccountByIdentifier} from './getAccountByIdentifier.js'
 
 /*
 * EXAMPLE
+*
 * // Secret Hash is omitted from the results by default...
 * getAccountByIdentifierAndSecret(db, identifier, secret)
 * // ...but it can be explicitly requested.

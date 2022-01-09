@@ -5,52 +5,55 @@ export {Error, isError} from './error.js'
 export type {Result} from './error.js'
 export {tryCatch} from './try.js'
 
-// EXAMPLE
-// import {ensureStringNotEmpty} from './assert.js'
-// import {theFalse, theNull} from './return.js'
-// const result = pipe({name: 'Super Mario', age: 21})
-// .to(it => it.age > 18 ? it : Error('TooYoung' as const))
-// .to(it => mapValueWith(it, it => it))
-// .to(it => mapErrorWith(it, it => it))
-// .to(it => mapResultWith(it, it => it, it => it))
-// .to(mapValue(it => it))
-// .to(mapError(it => it))
-// .to(mapResult(it => it, it => it))
-// .to(it => tryCatch(
-//     () => mapValueWith(it, it => it.name.toUpperCase()),
-//     error => Error('NotString' as const)
-// ))
-// .to(tryOr(
-//     mapValue(it => (ensureStringNotEmpty(it), it)),
-//     error => Error('EmptyString' as const),
-// ))
-// .to(it => {
-//     if (! isError(it)) return it
-//     switch (it.error) {
-//         case 'EmptyString':
-//         case 'NotString':
-//         case 'TooYoung': {
-//             return 'John Snow'
-//         }
-//     }
-// })
-// .to(it => `Hello, ${it}!`)
-// .end()
-// const result2 = pipe(result)
-// .to(it => Promise.resolve(it))
-// .to(then(it => it))
-// .to(then(
-//     it => it,
-//     error => Error('BadRequest' as const)
-// ))
-// .to(thenOr(
-//     it => it,
-//     error => Error('BadRequest' as const)
-// ))
-// .to(thenCatch(error => Error('BadRequest' as const)))
-// .to(then(mapValue(it => it)))
-// .to(then(mapError(it => 'Hello World!')))
-// .end()
+/*
+* EXAMPLE
+*
+* import {ensureStringNotEmpty} from './assert.js'
+* import {theFalse, theNull} from './return.js'
+* const result = pipe({name: 'Super Mario', age: 21})
+* .to(it => it.age > 18 ? it : Error('TooYoung' as const))
+* .to(it => mapValueWith(it, it => it))
+* .to(it => mapErrorWith(it, it => it))
+* .to(it => mapResultWith(it, it => it, it => it))
+* .to(mapValue(it => it))
+* .to(mapError(it => it))
+* .to(mapResult(it => it, it => it))
+* .to(it => tryCatch(
+*     () => mapValueWith(it, it => it.name.toUpperCase()),
+*     error => Error('NotString' as const)
+* ))
+* .to(tryOr(
+*     mapValue(it => (ensureStringNotEmpty(it), it)),
+*     error => Error('EmptyString' as const),
+* ))
+* .to(it => {
+*     if (! isError(it)) return it
+*     switch (it.error) {
+*         case 'EmptyString':
+*         case 'NotString':
+*         case 'TooYoung': {
+*             return 'John Snow'
+*         }
+*     }
+* })
+* .to(it => `Hello, ${it}!`)
+* .end()
+* const result2 = pipe(result)
+* .to(it => Promise.resolve(it))
+* .to(then(it => it))
+* .to(then(
+*     it => it,
+*     error => Error('BadRequest' as const)
+* ))
+* .to(thenOr(
+*     it => it,
+*     error => Error('BadRequest' as const)
+* ))
+* .to(thenCatch(error => Error('BadRequest' as const)))
+* .to(then(mapValue(it => it)))
+* .to(then(mapError(it => 'Hello World!')))
+* .end()
+*/
 export function pipe<V1>(input: V1) {
     const task: PipeTask = {type: 'MapValue', mapValue: () => input}
 

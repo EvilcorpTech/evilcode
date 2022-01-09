@@ -7,6 +7,7 @@ export const QueryRulesHeader = 'X-Query'
 * Flatten a (recursive) rules structure to a flat list of rules.
 *
 * EXAMPLE
+*
 * const root = 'account'
 * flattenRules(root, {user: ['name', 'email']})
 * // ['account.user.name', 'account.user.email']

@@ -6,6 +6,7 @@ export function times(count: number) {
 * Creates an iterator with an upper bound.
 *
 * EXAMPLE
+*
 * for (const it of iterate(10)) {
 * }
 */

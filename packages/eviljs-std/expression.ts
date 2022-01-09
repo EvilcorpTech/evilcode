@@ -113,6 +113,7 @@ export function has<I>(ctx: Ctx | CtxWithArgs, listExp: Exp<Ctx, Array<I>>, test
 * an object using the Object Path Syntax.
 *
 * EXAMPLE
+*
 * const $ = {info: {title: 'Moby Dick'}}
 * const resolvers = {'info.title': (obj) => obj.title.toUpperCase()}
 * lookup({$}, 'info.title') => 'Moby Dick'
@@ -139,6 +140,7 @@ export function lookup(ctx: CtxWithResolver, pathExp: Exp<Ctx, string>) {
 * Evaluates a tree.
 *
 * EXAMPLE
+*
 * const tree = ['operator', ...args]
 * const result = evaluateTree(operators, tree)
 */
@@ -152,6 +154,7 @@ export function evaluateTree(operators: Record<PropertyKey, Operator>, tree: Tre
 * Builds an evaluable expression from a tree of nodes.
 *
 * EXAMPLE
+*
 * const tree = ['operator', ...args]
 * const exp = compileTree(operators, tree)
 * const result = evaluateExp(exp)

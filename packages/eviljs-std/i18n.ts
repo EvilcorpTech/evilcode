@@ -47,6 +47,7 @@ export function createI18n
 * Converts a string in its translated counterpart.
 *
 * EXAMPLE
+*
 * translate(i18n, 'Hello world')
 * translate(i18n, '@{ 0 } items of @{ 1 }', [4, 8])
 * translate(i18n, '@{ count } items of @{ total }', {count: 4, total: 8})
@@ -105,6 +106,7 @@ export function t
 * Interpolates values inside a string.
 *
 * EXAMPLE
+*
 * format(i18n, '@{ 0 } items of @{ 1 }', [4, 8])
 * format(i18n, '@{ count } items of @{ total }', {count: 4, total: 8})
 */

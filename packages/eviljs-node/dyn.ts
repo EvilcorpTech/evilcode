@@ -87,6 +87,7 @@ export function importApis(dir: string) {
 * Augments an object with modules dynamically required.
 *
 * EXAMPLE
+*
 * const api = buildApi().add('/abs/myApi1').add('/abs/myApi2').end()
 * const api = buildApi().withPath(__dirname).add('myApi1').add('myApi2').end()
 * const api = buildApi(otherApi, {path: __dirname}).add('myApi1').add('myApi2').end()

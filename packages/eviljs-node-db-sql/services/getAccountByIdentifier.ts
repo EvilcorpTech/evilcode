@@ -4,6 +4,7 @@ import {Db, ReadResult} from '../index.js'
 
 /*
 * EXAMPLE
+*
 * // Secret Hash is omitted from the results by default...
 * getAccountByIdentifier(db, identifier)
 * // ...but it can be explicitly requested.

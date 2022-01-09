@@ -34,6 +34,7 @@ export function useRoutedViewLifecycle(routeRegexp: RegExp) {
 
 /*
 * EXAMPLE
+*
 * const {viewLifecycle, style} = useRoutedViewAnimation(new RegExp('^/about'),
 *     () => playFadeInAnimation('.MyView', {transform: 'scale(1.2)'}),
 *     () => playFadeOutAnimation('.MyView'),

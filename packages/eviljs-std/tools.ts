@@ -6,6 +6,7 @@ import {isFunction, isNil, isObject} from './type.js'
 * an Array.reduce() function.
 *
 * EXAMPLE
+*
 * [{id: 123, value: 'A'}, {id: 234, value: 'B'}].reduce(indexBy.bind(null, 'id'))
 * const index = indexBy('id', {}, {id: '123', asd: 123})
 */
@@ -34,6 +35,7 @@ export function indexBy
 * Useful when used inside an Array.reduce() function.
 *
 * EXAMPLE
+*
 * [{id: 123, value: 'A'}, {id: 234, value: 'B'}].reduce(indexById)
 */
 export function indexById
@@ -51,6 +53,7 @@ export function indexById
 * returned object.
 *
 * EXAMPLE
+*
 * const fn = excludeUndefinedWith((age?: number) => ({
 *     name: 'John',
 *     age: age,
@@ -75,6 +78,7 @@ export function excludeUndefinedWith<A extends Array<unknown>, R>(fn: (...args: 
 * (null or undefined) value.
 *
 * EXAMPLE
+*
 * const fn = skipNilWith((value: number) => 100 / value)
 * fn(50) // 2
 * fn(null) // undefined

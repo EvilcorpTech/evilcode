@@ -14,6 +14,7 @@ export function setupRouter(router: Router, ...routes: Array<Routes>) {
 * Applies routes to a Koa Router.
 *
 * EXAMPLE
+*
 * setupRouter(new KoaRouter(), function middleware(ctx, next) {}, ...)
 * setupRouter(new KoaRouter(), {method: ['PUT', 'POST'], path: '/path', middleware: functionOrArray}, ...)
 * setupRouter(new KoaRouter(), [middleware, {...}, ...], ...)

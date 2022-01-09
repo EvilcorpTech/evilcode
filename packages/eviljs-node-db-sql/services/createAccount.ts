@@ -8,6 +8,7 @@ import {Db, ReadResult, WriteResult} from '../index.js'
 * Creates an user account.
 *
 * EXAMPLE
+*
 * createAccount(db, {identifier: 'foo.bar@world.com', secret: 'secret'})
 */
 export async function createAccount(db: Db<CreateAccountServices>, model: CreateAccountModel) {
