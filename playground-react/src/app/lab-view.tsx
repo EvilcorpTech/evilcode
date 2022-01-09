@@ -16,10 +16,9 @@ if (! customElements.get('html-sandbox')) { // HMR Compatibility.
 
 export function LabView(props: LabViewProps) {
     const {className, ...otherProps} = props
-
     const [text, setText] = useState('<b>Hello<b/>')
     const [color, setColor] = useState('red')
-    const [token, setToken] = useStore((state: State) => state.token)
+    const [theme, setTheme] = useStore((state: State) => state.theme)
 
     const history = useUndoRedo({message: ''})
 

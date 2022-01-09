@@ -14,6 +14,7 @@ import {pipe} from '@eviljs/std/pipe'
 import {Fragment} from 'react'
 import {Container} from 'lib/container'
 import {BasePath, RouterType} from 'lib/context'
+import {StoreStorageSpec} from 'lib/hooks/store'
 import * as Routes from 'lib/routes'
 import {AuthBarrier} from 'lib/widgets/auth-barrier'
 import {Header} from 'lib/widgets/header'
@@ -41,7 +42,7 @@ export function App(props: AppProps) {
 }
 
 export function AppMain(props: AppMainProps) {
-    useRootStoreStorage()
+    useRootStoreStorage(StoreStorageSpec)
 
     return (
         <PortalProvider children={Portal =>

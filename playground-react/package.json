@@ -15,6 +15,8 @@
     "scripts": {
         "init": "npm install --global-style",
         "init-lib": "npm --prefix lib run init",
+        "upgrade": "npx npm-upgrade && npm run init && npm update --global-style",
+        "upgrade-lib": "npm --prefix lib run upgrade",
         "dev": "NODE_ENV=${NODE_ENV:-development} webpack-dev-server --progress",
         "check": "tsc --noEmit",
         "build": "NODE_ENV=production BASE_PATH=${BASE_PATH:-/} ROUTER_TYPE=${ROUTER_TYPE:-path} PREACT=${PREACT:-yes} webpack-cli --mode production"

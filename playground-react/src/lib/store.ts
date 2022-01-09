@@ -1,21 +1,14 @@
-import {loadStateFromStorage} from '@eviljs/react/store-storage'
 import {loadSsrState} from '@eviljs/web/ssr'
+import {Version} from './context'
 
-export const StateVersion = 1
-export const StoreSpec = {createState}
-export const StoreStateStorageId = 'AppState-' + StateVersion
-export const StoreStateSsrId = StoreStateStorageId
+export const StateVersion = Version.replaceAll('.', '-')
+export const StoreSpec = {actions: {}, createState}
+export const StoreStateSsrId = 'AppState-' + StateVersion
 export const Storage: Storage = window.localStorage
 
 export function createState(): State {
     const initialState = createInitialState()
-    const storageState = loadStateFromStorage<State>(Storage, StoreStateStorageId)
     const ssrState = loadSsrState<State>(StoreStateSsrId)
-
-    if (storageState) {
-        console.debug('app:', 'store state restored from LocalStorage')
-        return mergeState(initialState, storageState)
-    }
 
     if (ssrState) {
         console.debug('app:', 'store state restored from SsrStorage')
@@ -38,7 +31,8 @@ export function mergeState(state: State, savedState: State) {
         // We overwrite the base state...
         ...state,
         // ...skipping those fields already initialized.
-        // account: state.account ?? savedState.account ?? null,
+        theme: state.theme ?? savedState.theme ?? null,
+        token: state.token ?? savedState.token ?? null,
     }
 }
 

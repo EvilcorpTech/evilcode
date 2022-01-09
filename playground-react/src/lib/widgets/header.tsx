@@ -1,5 +1,6 @@
 import {classes} from '@eviljs/react/react'
 import {Route} from '@eviljs/react/router'
+import {State, useStore} from '../hooks/store'
 import * as Routes from '../routes'
 
 import './header.css'
@@ -16,6 +17,7 @@ const Menu = [
 
 export function Header(props: HeaderProps) {
     const {children, className, ...otherProps} = props
+    const [theme] = useStore((state: State) => state.theme)
 
     return (
         <header

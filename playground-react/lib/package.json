@@ -13,7 +13,8 @@
         "react": "^17"
     },
     "scripts": {
-        "init": "npm install && npm dedupe --no-fund"
+        "init": "npm install && npm dedupe --no-fund",
+        "upgrade": "npx npm-upgrade && npm run init && npm update --global-style"
     },
     "engines": {
         "npm": ">= 7"
