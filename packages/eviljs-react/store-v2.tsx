@@ -64,6 +64,10 @@ export function useRootStore<S>(spec: StoreSpec<S>): Store<S> {
     return useState(createState)
 }
 
+export function useStore<S>() {
+    return useContext(StoreV2Context) as Store<S>
+}
+
 export function useRootStoreStorage<S extends {}, L extends {} = S>(options?: StoreStorageOptions<S, L>) {
     const onLoad = options?.onLoad
     const onMerge = options?.onMerge
@@ -76,10 +80,6 @@ export function useRootStoreStorage<S extends {}, L extends {} = S>(options?: St
             setState(state => onMerge?.(savedState, state) ?? defaultOnMerge(savedState, state))
         },
     })
-}
-
-export function useStore<S>() {
-    return useContext(StoreV2Context) as Store<S>
 }
 
 // Types ///////////////////////////////////////////////////////////////////////

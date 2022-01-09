@@ -96,6 +96,10 @@ export function useRootStore<S extends {}, A extends StoreActions<S>>(spec: Stor
     return store as Store<S, A>
 }
 
+export function useStore<S extends {}, A extends StoreActions<S>>() {
+    return useContext(StoreV1Context) as Store<S, A>
+}
+
 export function useRootStoreStorage<S extends {}, L extends {} = S>(options?: StoreStorageOptions<S, L>) {
     const onLoad = options?.onLoad
     const onMerge = options?.onMerge
@@ -110,10 +114,6 @@ export function useRootStoreStorage<S extends {}, L extends {} = S>(options?: St
             }})
         },
     })
-}
-
-export function useStore<S extends {}, A extends StoreActions<S>>() {
-    return useContext(StoreV1Context) as Store<S, A>
 }
 
 export function setAction<S extends {}>(state: S, value: StoreSetStateAction<S>): S {

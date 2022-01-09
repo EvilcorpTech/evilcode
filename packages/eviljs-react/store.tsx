@@ -124,20 +124,6 @@ export function useRootStore<S extends {}>(spec: StoreSpec<S>): StoreService<S> 
     return store
 }
 
-export function useRootStoreStorage<S extends {}, L extends {} = S>(options?: StoreStorageOptions<S, L>) {
-    const onLoad = options?.onLoad
-    const onMerge = options?.onMerge
-    const [state, setState] = useStore<S>()
-
-    useCoreRootStoreStorage<S, L>(state, {
-        ...options,
-        onLoad(savedState) {
-            onLoad?.(savedState)
-            setState(state => onMerge?.(savedState, state) ?? defaultOnMerge(savedState, state))
-        },
-    })
-}
-
 export function useStore<S extends {}, V>(optionalSelector: StoreSelector<S, V>, deps?: Array<unknown>): Store<V>
 export function useStore<S extends {}>(): Store<S>
 export function useStore<S extends {}, V>(optionalSelector?: StoreSelector<S, V>, deps?: Array<unknown>): Store<V> {
@@ -165,6 +151,20 @@ export function useStore<S extends {}, V>(optionalSelector?: StoreSelector<S, V>
     }, [path])
 
     return [selectedState, setSelectedState]
+}
+
+export function useRootStoreStorage<S extends {}, L extends {} = S>(options?: StoreStorageOptions<S, L>) {
+    const onLoad = options?.onLoad
+    const onMerge = options?.onMerge
+    const [state, setState] = useStore<S>()
+
+    useCoreRootStoreStorage<S, L>(state, {
+        ...options,
+        onLoad(savedState) {
+            onLoad?.(savedState)
+            setState(state => onMerge?.(savedState, state) ?? defaultOnMerge(savedState, state))
+        },
+    })
 }
 
 export function select<S extends {}, V>(state: S, selector: StoreSelector<S, V>): ChangePath {
