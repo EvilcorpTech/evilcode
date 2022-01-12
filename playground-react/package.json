@@ -5,12 +5,16 @@
         "@eviljs/tsconfig": "^1",
         "@eviljs/webpack-config-react": "^1",
         "@types/prop-types": "^15",
-        "@types/react-dom": "^17",
         "@types/react": "^17",
+        "@types/react-dom": "^17",
         "typescript": "^4.5",
         "webpack": "^5",
         "webpack-cli": "^4",
         "webpack-dev-server": "^4"
+    },
+    "engines": {
+        "node": ">= 14",
+        "npm": ">= 7"
     },
     "scripts": {
         "init": "npm install --global-style",
@@ -20,9 +24,5 @@
         "dev": "NODE_ENV=${NODE_ENV:-development} webpack-dev-server --progress",
         "check": "tsc --noEmit",
         "build": "NODE_ENV=production BASE_PATH=${BASE_PATH:-/} ROUTER_TYPE=${ROUTER_TYPE:-path} PREACT=${PREACT:-yes} webpack-cli --mode production"
-    },
-    "engines": {
-        "node": ">= 14",
-        "npm": ">= 7"
     }
 }

@@ -1,6 +1,6 @@
 import {Query} from '@eviljs/web/query'
-import {DateString, IdString, UrlString} from '../models'
 import {asAuthOptions} from '../kit/auth'
+import {DateString, IdString, UrlString} from '../models/types'
 
 export async function queryAccount(query: Query, token: string): Promise<AccountModel> {
     const options = asAuthOptions(token)

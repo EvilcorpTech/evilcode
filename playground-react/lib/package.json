@@ -12,11 +12,11 @@
         "react-dom": "^17",
         "react": "^17"
     },
+    "engines": {
+        "npm": ">= 7"
+    },
     "scripts": {
         "init": "npm install && npm dedupe --no-fund",
         "upgrade": "npx npm-upgrade && npm run init && npm update --global-style"
-    },
-    "engines": {
-        "npm": ">= 7"
     }
 }

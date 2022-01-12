@@ -1,5 +1,5 @@
 {
-    "extends": "../packages/eviljs-tsconfig/react.json",
+    "extends": "./node_modules/@eviljs/tsconfig/react.json",
     "include": ["./src/**/*.ts", "./src/**/*.tsx"],
     "compilerOptions": {
         "baseUrl": "./src",
