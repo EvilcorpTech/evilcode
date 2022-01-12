@@ -4,7 +4,7 @@
     border-bottom: 3px solid var(--std-border1-color);
     border-radius: var(--std-radius2);
     background-color: transparent;
-    transition: all var(--std-duration-fast);
+    transition: all var(--std-duration2);
 }
 .Input-i7ee.placeholder {
     background-color: var(--std-color-bg3);

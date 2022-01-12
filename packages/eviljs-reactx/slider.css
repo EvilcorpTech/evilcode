@@ -35,7 +35,7 @@
         calc(var(--direction-x) * -1 * var(--to) * var(--distance, 100%)),
         calc(var(--direction-y) * -1 * var(--to) * var(--distance, 100%))
     );
-    transition: transform var(--duration, var(--std-duration-normal)) var(--easing, ease);
+    transition: transform var(--duration, var(--std-duration3)) var(--easing, ease);
 }
 .Slide-0eab.enter-from {
     transform: translate(
@@ -45,5 +45,5 @@
 }
 .Slide-0eab.enter-to {
     transform: translate(0px, 0px);
-    transition: transform var(--duration, var(--std-duration-normal)) var(--easing, ease);
+    transition: transform var(--duration, var(--std-duration3)) var(--easing, ease);
 }

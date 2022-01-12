@@ -1,14 +1,14 @@
 import {classes} from '@eviljs/react/react.js'
 
 export function Switch(props: SwitchProps) {
-    const {className, checked, disabled, onChange, ...otherProps} = props
+    const {className, checked, children, disabled, onChange, ...otherProps} = props
     const enabled = ! disabled
 
     return (
         <button
             tabIndex={0}
             {...otherProps}
-            className={classes('Switch-5a04 std-switch', className)}
+            className={classes('Switch-5a04 std-button std-switch', className)}
             type="button"
             role="switch"
             aria-checked={checked ? 'true' : 'false'}
@@ -17,7 +17,9 @@ export function Switch(props: SwitchProps) {
                 ? () => onChange?.(! checked)
                 : undefined
             }
-        />
+        >
+            {children}
+        </button>
     )
 }
 

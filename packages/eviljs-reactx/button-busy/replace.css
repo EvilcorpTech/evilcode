@@ -4,7 +4,7 @@
 
 .BusyButton-f1d2.replace .content-6f92,
 .BusyButton-f1d2.replace .spinner-932c {
-    transition: all var(--std-duration-normal);
+    transition: all var(--std-duration3);
 }
 
 .BusyButton-f1d2.replace.busy .content-6f92 {

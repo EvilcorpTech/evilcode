@@ -5,7 +5,7 @@
     border-radius: .1em;
     opacity: 0;
     background-color: var(--color, currentColor);
-    transition: all var(--std-duration-normal);
+    transition: all var(--std-duration3);
 }
 .Spinner-2a9d.active {
     opacity: 1;

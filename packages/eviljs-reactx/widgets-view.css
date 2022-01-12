@@ -20,7 +20,7 @@
 }
 
 .section-0234 .Accordion-c2ae {
-    border-radius: var(--std-radius5);
+    border-radius: var(--std-radius4);
     overflow: hidden;
 }
 
@@ -32,7 +32,7 @@
     padding: var(--std-gutter3);
     border-bottom: 4px solid var(--std-color-bg1);
     background-color: var(--std-color-bg3);
-    transition: all var(--std-duration-normal);
+    transition: all var(--std-duration3);
 }
 
 .section-0234 .section-c3bf.selected .head-ad0d {

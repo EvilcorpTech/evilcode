@@ -34,7 +34,7 @@
 
 .root-21d5,
 .tooltip-ac0e {
-    transition: all var(--std-duration-normal);
+    transition: all var(--std-duration3);
     transition-delay: var(--delay, 0);
 }
 

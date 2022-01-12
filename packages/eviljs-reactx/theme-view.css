@@ -29,7 +29,7 @@
 .radius-75ca,
 .shadow-t9a2,
 .text-8fa3 {
-    transition: all var(--std-duration-normal);
+    transition: all var(--std-duration3);
 }
 .color-t75a:hover,
 .duration-t347:hover,
@@ -59,13 +59,13 @@
 }
 
 .color-t75a {
-    width: var(--std-icon-size2);
-    height: var(--std-icon-size2);
+    width: var(--std-icon4);
+    height: var(--std-icon4);
     margin: 0 var(--std-gutter3);
     border: 4px solid white;
     border-radius: 50%;
     box-shadow: var(--std-shadow-soft);
-    transition: all var(--std-duration-normal);
+    transition: all var(--std-duration3);
 }
 .color-t75a:hover {
     box-shadow: var(--std-shadow4);
@@ -80,7 +80,7 @@
     align-items: center;
     border: var(--std-gutter1) solid transparent;
     padding: var(--std-gutter3);
-    border-radius: var(--std-radius5);
+    border-radius: var(--std-radius3);
     overflow: hidden;
     box-shadow: var(--std-shadow1);
 }

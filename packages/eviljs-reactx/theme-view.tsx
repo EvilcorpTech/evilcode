@@ -480,11 +480,11 @@ export function Buttons() {
 export function Transitions() {
     return (
         <div className="std-flex center align-center wrap">
-            <label className="duration-t347" style={{transitionDuration: 'var(--std-duration-flash)'}}>Flash</label>
-            <label className="duration-t347" style={{transitionDuration: 'var(--std-duration-fast)'}}>Fast</label>
-            <label className="duration-t347" style={{transitionDuration: 'var(--std-duration-normal)'}}>Normal</label>
-            <label className="duration-t347" style={{transitionDuration: 'var(--std-duration-slow)'}}>Slow</label>
-            <label className="duration-t347" style={{transitionDuration: 'var(--std-duration-slower)'}}>Slower</label>
+            <label className="duration-t347" style={{transitionDuration: 'var(--std-duration1)'}}>Duration 1</label>
+            <label className="duration-t347" style={{transitionDuration: 'var(--std-duration2)'}}>Duration 2</label>
+            <label className="duration-t347" style={{transitionDuration: 'var(--std-duration3)'}}>Duration 3</label>
+            <label className="duration-t347" style={{transitionDuration: 'var(--std-duration4)'}}>Duration 4</label>
+            <label className="duration-t347" style={{transitionDuration: 'var(--std-duration5)'}}>Duration 5</label>
         </div>
     )
 }
@@ -493,49 +493,49 @@ export function Icons() {
     return (
         <div className="std-flex center align-end wrap">
             <div className="icon-e43c">
-                <Icon className="std-icon maxi"/>
+                <Icon className="std-icon9"/>
                 <div className="std-space-h s3"/>
-                <label>Maxi</label>
+                <label>9</label>
             </div>
             <div className="icon-e43c">
-                <Icon className="std-icon xxl"/>
+                <Icon className="std-icon8"/>
                 <div className="std-space-h s3"/>
-                <label>XXL</label>
+                <label>8</label>
             </div>
             <div className="icon-e43c">
-                <Icon className="std-icon xl"/>
+                <Icon className="std-icon7"/>
                 <div className="std-space-h s3"/>
-                <label>XL</label>
+                <label>7</label>
             </div>
             <div className="icon-e43c">
-                <Icon className="std-icon l"/>
+                <Icon className="std-icon6"/>
                 <div className="std-space-h s3"/>
-                <label>L</label>
+                <label>6</label>
             </div>
             <div className="icon-e43c">
-                <Icon className="std-icon m"/>
+                <Icon className="std-icon5"/>
                 <div className="std-space-h s3"/>
-                <label>M</label>
+                <label>5</label>
             </div>
             <div className="icon-e43c">
-                <Icon className="std-icon s"/>
+                <Icon className="std-icon4"/>
                 <div className="std-space-h s3"/>
-                <label>S</label>
+                <label>4</label>
             </div>
             <div className="icon-e43c">
-                <Icon className="std-icon xs"/>
+                <Icon className="std-icon3"/>
                 <div className="std-space-h s3"/>
-                <label>XS</label>
+                <label>3</label>
             </div>
             <div className="icon-e43c">
-                <Icon className="std-icon xxs"/>
+                <Icon className="std-icon2"/>
                 <div className="std-space-h s3"/>
-                <label>XXS</label>
+                <label>2</label>
             </div>
             <div className="icon-e43c">
-                <Icon className="std-icon mini"/>
+                <Icon className="std-icon1"/>
                 <div className="std-space-h s3"/>
-                <label>Mini</label>
+                <label>1</label>
             </div>
         </div>
     )
@@ -548,8 +548,6 @@ export function Radiuses() {
             <label className="radius-75ca std-radius2">Radius 2</label>
             <label className="radius-75ca std-radius3">Radius 3</label>
             <label className="radius-75ca std-radius4">Radius 4</label>
-            <label className="radius-75ca std-radius5">Radius 5</label>
-            <label className="radius-75ca std-radius6">Radius 6</label>
         </div>
     )
 }

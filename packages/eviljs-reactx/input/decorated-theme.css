@@ -2,7 +2,7 @@
     border: 2px solid hsl(0deg 0% var(--std-fg-l) / .07);
     border-radius: var(--std-radius1);
     padding: var(--gutter, var(--std-gutter2));
-    transition: all var(--std-duration-normal);
+    transition: all var(--std-duration3);
 }
 .Input-cc0a:hover:not(:focus-within) {
     border-color: hsl(0deg 0% var(--std-fg-l) / .5);

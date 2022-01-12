@@ -7,5 +7,5 @@
 .label-id45 {
     pointer-events: none;
     transform-origin: top left;
-    transition: all var(--std-duration-normal);
+    transition: all var(--std-duration3);
 }

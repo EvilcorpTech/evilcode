@@ -1,10 +1,6 @@
 .Checkbox-16ba {
-    --padding: var(--std-gutter);
+    --padding: var(--std-gutter1);
     border: 2px solid currentColor;
-    outline-offset: 2px;
-    outline-width: 1px;
-    outline-style: solid;
-    outline-color: transparent;
 }
 
 .Checkbox-16ba:not([disabled]):hover,
@@ -25,7 +21,7 @@
 
 .Checkbox-16ba,
 .Checkbox-16ba > * {
-    transition: all var(--std-duration-fast);
+    transition: all var(--std-duration2);
 }
 
 .Checkbox-16ba > * {
