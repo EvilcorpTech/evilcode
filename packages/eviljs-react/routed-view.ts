@@ -103,7 +103,7 @@ export function playFadeInAnimation(selector: string, options?: {transform?: str
             el.style.transform = transform
         },
         play(el) {
-            el.style.transition = 'all var(--std-duration-slow)'
+            el.style.transition = 'all var(--std-duration4)'
             el.style.transform = ''
             el.style.opacity = '1'
         },
@@ -125,7 +125,7 @@ export function playFadeOutAnimation(selector: string) {
 
     const animation = createCssTransition(el, {
         play(el) {
-            el.style.transition = 'all var(--std-duration-fast)'
+            el.style.transition = 'all var(--std-duration2)'
             el.style.opacity = '0'
         },
         // Opacity is cleaned by the render function.
