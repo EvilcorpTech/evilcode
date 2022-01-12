@@ -29,7 +29,7 @@
 }
 
 .section-0234 .section-c3bf .head-ad0d {
-    padding: var(--std-gutter4);
+    padding: var(--std-gutter3);
     border-bottom: 4px solid var(--std-color-bg1);
     background-color: var(--std-color-bg3);
     transition: all var(--std-duration-normal);

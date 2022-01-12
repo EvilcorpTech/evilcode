@@ -1,13 +1,13 @@
 .Input-i7ee {
-    padding: var(--std-gutter3);
-    border: 1px solid var(--std-input-border);
-    border-bottom: 3px solid var(--std-input-border);
+    padding: var(--std-gutter1) var(--std-gutter2);
+    border: 1px solid var(--std-border1-color);
+    border-bottom: 3px solid var(--std-border1-color);
     border-radius: var(--std-radius2);
     background-color: transparent;
     transition: all var(--std-duration-fast);
 }
 .Input-i7ee.placeholder {
-    background-color: var(--std-input-back);
+    background-color: var(--std-color-bg3);
 }
 .Input-i7ee.focus,
 .Input-i7ee:focus-within {
@@ -20,7 +20,7 @@
 }
 
 .label-id45 {
-    color: var(--std-input-text);
+    --text-opacity: .6;
     margin-bottom: .2em;
 }
 .Input-i7ee.placeholder .label-id45 {

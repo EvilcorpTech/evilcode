@@ -1,31 +1,13 @@
-.CheckboxMark-3ae4,
-.mark-63aa {
-    transition: all var(--std-duration-fast);
-}
-
 .CheckboxMark-3ae4 {
-    width: var(--size, 1.5em);
-	height: var(--size, 1.5em);
-	min-width: var(--size, 1.5em);
-    min-height: var(--size, 1.5em);
-    max-width: var(--size, 1.5em);
-    max-height: var(--size, 1.5em);
-    border: 2px solid currentColor;
-    border-radius: var(--std-radius1);
-    color: var(--color, currentColor);
-}
-.Checkbox-16ba:hover .CheckboxMark-3ae4,
-.Checkbox-16ba:focus .CheckboxMark-3ae4,
-.Checkbox-16ba:active .CheckboxMark-3ae4,
-.CheckboxMark-3ae4:hover,
-.Checkbox-16ba:not([aria-checked="false"]) .CheckboxMark-3ae4 {
-    color: var(--std-color-primary-accent, currentColor);
+    min-width: var(--size, 1em);
+    width: var(--size, 1em);
+    max-width: var(--size, 1em);
+    min-height: var(--size, 1em);
+    height: var(--size, 1em);
+    max-height: var(--size, 1em);
 }
 
-.mark-63aa {
-    transform-origin: bottom left;
-    transform: scale(1);
-}
-.Checkbox-16ba[aria-checked="false"] .mark-63aa {
-    transform: scale(.4);
+.Checkbox-16ba[aria-checked="false"] .CheckboxMark-3ae4 {
+    opacity: 0;
+    transform: scale(.6);
 }

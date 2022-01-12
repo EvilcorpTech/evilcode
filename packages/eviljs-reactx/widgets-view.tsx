@@ -120,17 +120,20 @@ export function WidgetsView(props: WidgetsViewProps) {
                     <CheckboxMarkV2/>
                 </Checkbox>
                 <Checkbox checked={checkbox} onChange={setCheckbox}>
-                    <CheckboxMarkV2/>
+                    <CheckboxMarkV2 className="std-icon mini"/>
+                </Checkbox>
+                <Checkbox className="round" checked={checkbox} onChange={setCheckbox}>
+                    <CheckboxMarkV2 className="std-icon xxs"/>
                 </Checkbox>
 
                 <Checkbox checked={true} disabled>
-                    <CheckboxMarkV1 className="std-text-body1"/>
+                    <CheckboxMarkV1 className="std-icon xs"/>
                 </Checkbox>
                 <Checkbox checked={checkbox} onChange={setCheckbox}>
-                    <CheckboxMarkV1 className="std-text-body1"/>
+                    <CheckboxMarkV1 className="std-icon s"/>
                 </Checkbox>
-                <Checkbox checked={checkbox} onChange={setCheckbox}>
-                    <CheckboxMarkV1 className="round std-text-body1"/>
+                <Checkbox className="round" checked={checkbox} onChange={setCheckbox}>
+                    <CheckboxMarkV1 className="std-icon m"/>
                 </Checkbox>
 
                 <RadioGroup

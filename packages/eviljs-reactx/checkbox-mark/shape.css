@@ -1,42 +1,19 @@
 .CheckboxMark-67ba {
-    position: relative;
+    min-width: var(--size, 1em);
     width: var(--size, 1em);
-	height: var(--size, 1em);
-	min-width: var(--size, 1em);
-    min-height: var(--size, 1em);
     max-width: var(--size, 1em);
+    min-height: var(--size, 1em);
+    height: var(--size, 1em);
     max-height: var(--size, 1em);
-    border: 2px solid currentColor;
-    color: var(--color, currentColor);
-    background-color: transparent;
-    transition: all var(--std-duration-fast);
-}
-.Checkbox-16ba:hover .CheckboxMark-67ba,
-.Checkbox-16ba:focus .CheckboxMark-67ba,
-.Checkbox-16ba:active .CheckboxMark-67ba,
-.CheckboxMark-67ba:hover,
-.Checkbox-16ba[aria-checked="true"] .CheckboxMark-67ba {
-    color: var(--std-color-primary-accent, currentColor);
+    border-radius: inherit;
+    background-color: currentColor;
 }
 
-.CheckboxMark-67ba::after {
-    content: '';
-    position: absolute;
-    top: 50%;
-    left: 50%;
-	width: var(--mark-size, calc(var(--size, 1em) / 2));
-	height: var(--mark-size, calc(var(--size, 1em) / 2));
-	opacity: 0;
-	background-color: var(--std-color-primary-accent, currentColor);
-	transform: translate(-50%, -50%) scale(.5);
-	transition: all var(--std-duration-fast);
-}
-.Checkbox-16ba[aria-checked="true"] .CheckboxMark-67ba::after {
-	opacity: 1;
-	transform: translate(-50%, -50%) scale(1);
+.Checkbox-16ba[aria-checked="false"] .CheckboxMark-67ba {
+    opacity: 0;
+    transform: scale(.6);
 }
 
-.CheckboxMark-67ba.round,
-.CheckboxMark-67ba.round::after {
-	border-radius: var(--size, 1em);
+.Checkbox-16ba.round .CheckboxMark-67ba {
+    border-radius: 100%;
 }

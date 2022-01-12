@@ -1,3 +1,33 @@
 .Checkbox-16ba {
-    --padding: 0;
+    --padding: var(--std-gutter);
+    border: 2px solid currentColor;
+    outline-offset: 2px;
+    outline-width: 1px;
+    outline-style: solid;
+    outline-color: transparent;
+}
+
+.Checkbox-16ba:not([disabled]):hover,
+.Checkbox-16ba:not([disabled]):focus,
+.Checkbox-16ba:not([disabled]):active,
+.Checkbox-16ba:not([disabled]):hover,
+.Checkbox-16ba:not([disabled])[aria-checked="true"] {
+    color: var(--std-color-primary-accent, currentColor);
+}
+
+.Checkbox-16ba:not([disabled]):focus {
+    outline-color: currentColor;
+}
+
+.Checkbox-16ba.round {
+    border-radius: 100%;
+}
+
+.Checkbox-16ba,
+.Checkbox-16ba > * {
+    transition: all var(--std-duration-fast);
+}
+
+.Checkbox-16ba > * {
+    display: inline-block;
 }

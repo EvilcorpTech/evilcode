@@ -59,20 +59,16 @@
 }
 
 .color-t75a {
-    width: 2em;
-    height: 2em;
+    width: var(--std-icon-size2);
+    height: var(--std-icon-size2);
     margin: 0 var(--std-gutter3);
-    border: var(--std-gutter1) solid white;
+    border: 4px solid white;
     border-radius: 50%;
     box-shadow: var(--std-shadow-soft);
     transition: all var(--std-duration-normal);
 }
 .color-t75a:hover {
     box-shadow: var(--std-shadow4);
-}
-
-.text-8fa3 {
-    margin-bottom: var(--std-gutter1);
 }
 
 .contrast-td08 {

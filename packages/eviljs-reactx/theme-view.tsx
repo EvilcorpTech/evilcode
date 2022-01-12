@@ -288,7 +288,7 @@ export function Colors() {
                             key={idx}
                             className="color-t75a"
                             title={`Secondary text ${idx+1}`}
-                            style={{backgroundColor: `var(--std-color-secondary-front${idx+1})`}}
+                            style={{backgroundColor: `var(--std-color-secondary-fg${idx+1})`}}
                         />
                     ))}
                 </div>
@@ -305,7 +305,7 @@ export function Colors() {
                             key={idx}
                             className="color-t75a"
                             title={`Secondary back ${idx+1}`}
-                            style={{backgroundColor: `var(--std-color-secondary-back${idx+1})`}}
+                            style={{backgroundColor: `var(--std-color-secondary-bg${idx+1})`}}
                         />
                     ))}
                 </div>
