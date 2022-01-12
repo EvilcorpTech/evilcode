@@ -20,5 +20,5 @@
 .std-space-h.s6, .std-space-v.s6 { --space: var(--std-gutter6); }
 .std-space-h.s7, .std-space-v.s7 { --space: var(--std-gutter7); }
 .std-space-h.s8, .std-space-v.s8 { --space: var(--std-gutter8); }
-.std-space-h.s8, .std-space-v.s8 { --space: var(--std-gutter9); }
+.std-space-h.s9, .std-space-v.s9 { --space: var(--std-gutter9); }
 .std-space-h.s10, .std-space-v.s10 { --space: var(--std-gutter10); }

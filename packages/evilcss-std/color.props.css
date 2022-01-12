@@ -1,8 +1,4 @@
 .std {
-    --std-input-text: var(--std-color-fg3);
-    --std-input-back: var(--std-color-bg3);
-    --std-input-border: var(--std-border1-color);
-
     --std-color-action: var(--std-color-primary-accent);
     --std-color-success: #388e3c; /* --std-color-green8 */
     --std-color-warning: #ffc107; /* --std-color-amber6 */

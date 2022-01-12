@@ -1,6 +1,6 @@
 .std-button {
-    border-radius: var(--border-radius, .4em);
-    padding: var(--padding, .4em .8em);
+    border-radius: var(--border-radius, var(--std-radius2));
+    padding: var(--padding, var(--std-gutter1) var(--std-gutter2));
     display: inline-flex;
     justify-content: center;
     align-items: center;
