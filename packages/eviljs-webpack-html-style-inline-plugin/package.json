@@ -8,6 +8,12 @@
         "/**/*.ts"
     ],
     "main": "./index.js",
+    "scripts": {
+        "dev": "npm run build -- --watch",
+        "build": "tsc --listEmittedFiles",
+        "preversion": "npm run build",
+        "prepack": "npm run build"
+    },
     "dependencies": {
         "@types/node": ">=12",
         "schema-utils": "^4",
@@ -19,12 +25,6 @@
     },
     "devDependencies": {
         "typescript": "^4.5"
-    },
-    "scripts": {
-        "dev": "npm run build -- --watch",
-        "build": "tsc --listEmittedFiles",
-        "preversion": "npm run build",
-        "prepack": "npm run build"
     },
     "author": "Daniele Orlando",
     "license": "BSD-2-Clause",

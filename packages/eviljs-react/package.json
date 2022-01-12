@@ -9,6 +9,11 @@
         "/**/*.tsx",
         "/**/*.css"
     ],
+    "scripts": {
+        "build": "tsc --listEmittedFiles",
+        "preversion": "npm run build",
+        "prepack": "npm run build"
+    },
     "dependencies": {
         "@eviljs/std": "^1",
         "@eviljs/web": "^1",
@@ -24,11 +29,6 @@
     },
     "devDependencies": {
         "typescript": "^4.5"
-    },
-    "scripts": {
-        "build": "tsc --listEmittedFiles",
-        "preversion": "npm run build",
-        "prepack": "npm run build"
     },
     "author": "Daniele Orlando",
     "license": "BSD-2-Clause",
