@@ -2,15 +2,11 @@
 @import '@evilcss/std/reset-even/focus-outline.css';
 @import '@evilcss/std/all.classes.css';
 @import '@evilcss/std/all.props.css';
-@import '@evilcss/std/button/dye.css';
-@import '@evilcss/std/button/flat.css';
-@import '@evilcss/std/button/halo.css';
-@import '@evilcss/std/button/plain.css';
-@import '@evilcss/std/font-default.css';
+@import '@evilcss/std/text-font/roboto.css';
 @import '@evilcss/std/theme/dark.css';
 @import '@evilcss/std/theme/light.css';
-@import '@evilcss/std/typography/standard.classes.css';
-@import '@evilcss/std/typography/standard.props.css';
+@import '@evilcss/std/text-typography/material.classes.css';
+@import '@evilcss/std/text-typography/material.props.css';
 
 /*
 #App {

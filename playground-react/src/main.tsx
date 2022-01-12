@@ -5,7 +5,7 @@ import {App} from './app/app'
 import {ContainerSpec} from './lib/container'
 import * as Context from './lib/context'
 
-import './lib/theme.css'
+import './lib/style.css'
 
 console.table({...Context})
 
