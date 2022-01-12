@@ -1,0 +1,5 @@
+.std {
+    font-family: var(--std-font-primary);
+    font-size: var(--std-text-size3);
+    font-weight: var(--std-text-weight);
+}

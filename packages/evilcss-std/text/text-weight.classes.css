@@ -1,0 +1,5 @@
+.std-text-weight-2 { --text-weight: var(--std-text-weight-2); font-weight: var(--text-weight); }
+.std-text-weight-1 { --text-weight: var(--std-text-weight-1); font-weight: var(--text-weight); }
+.std-text-weight { --text-weight: var(--std-text-weight); font-weight: var(--text-weight); }
+.std-text-weight1 { --text-weight: var(--std-text-weight1); font-weight: var(--text-weight); }
+.std-text-weight2 { --text-weight: var(--std-text-weight2); font-weight: var(--text-weight); }

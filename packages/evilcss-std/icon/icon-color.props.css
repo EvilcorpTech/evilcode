@@ -1,0 +1,4 @@
+.std {
+    --std-icon-color1: var(--std-color-primary-accent);
+    --std-icon-color2: var(--std-color-secondary-accent);
+}

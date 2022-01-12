@@ -1,15 +1,15 @@
 .std {
-    --std-gutter-scale: 2;
+    --std-gutter-factor: 2;
     /* Values must be integer, for a pixel perfect result. */
-    --std-gutter: calc(1px * ((0 + var(--std-gutter-scale)) * (0 + var(--std-gutter-scale))));
-    --std-gutter1: calc(1px * ((1 + var(--std-gutter-scale)) * (1 + var(--std-gutter-scale))));
-    --std-gutter2: calc(1px * ((2 + var(--std-gutter-scale)) * (2 + var(--std-gutter-scale))));
-    --std-gutter3: calc(1px * ((3 + var(--std-gutter-scale)) * (3 + var(--std-gutter-scale))));
-    --std-gutter4: calc(1px * ((4 + var(--std-gutter-scale)) * (4 + var(--std-gutter-scale))));
-    --std-gutter5: calc(1px * ((5 + var(--std-gutter-scale)) * (5 + var(--std-gutter-scale))));
-    --std-gutter6: calc(1px * ((6 + var(--std-gutter-scale)) * (6 + var(--std-gutter-scale))));
-    --std-gutter7: calc(1px * ((7 + var(--std-gutter-scale)) * (7 + var(--std-gutter-scale))));
-    --std-gutter8: calc(1px * ((8 + var(--std-gutter-scale)) * (8 + var(--std-gutter-scale))));
-    --std-gutter9: calc(1px * ((9 + var(--std-gutter-scale)) * (9 + var(--std-gutter-scale))));
-    --std-gutter10: calc(1px * ((10 + var(--std-gutter-scale)) * (10 + var(--std-gutter-scale))));
+    --std-gutter-base: 4px;
+    --std-gutter1: calc(var(--std-gutter-base) + 0px * var(--std-gutter-factor));
+    --std-gutter2: calc(var(--std-gutter1) + 1px * var(--std-gutter-factor));
+    --std-gutter3: calc(var(--std-gutter2) + 1px * var(--std-gutter-factor));
+    --std-gutter4: calc(var(--std-gutter3) + 2px * var(--std-gutter-factor));
+    --std-gutter5: calc(var(--std-gutter4) + 2px * var(--std-gutter-factor));
+    --std-gutter6: calc(var(--std-gutter5) + 4px * var(--std-gutter-factor));
+    --std-gutter7: calc(var(--std-gutter6) + 4px * var(--std-gutter-factor));
+    --std-gutter8: calc(var(--std-gutter7) + 6px * var(--std-gutter-factor));
+    --std-gutter9: calc(var(--std-gutter8) + 6px * var(--std-gutter-factor));
+    --std-gutter10: calc(var(--std-gutter9) + 8px * var(--std-gutter-factor));
 }

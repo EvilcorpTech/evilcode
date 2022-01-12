@@ -32,13 +32,3 @@
 .std-flex.align-center, .std-stack.align-center { align-items: center; }
 .std-flex.align-end, .std-stack.align-end { align-items: flex-end; }
 .std-flex.align-stretch, .std-stack.align-stretch { align-items: stretch; }
-
-/* Presets ********************************************************************/
-.std-stack {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-wrap: wrap;
-}
-.std-stack.h { flex-direction: row; }
-.std-stack.v { flex-direction: column; }

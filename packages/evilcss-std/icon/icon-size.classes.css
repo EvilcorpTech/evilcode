@@ -1,0 +1,63 @@
+.std-icon {
+    display: inline-block;
+}
+.std-icon *:not([fill]) {
+    fill: currentColor;
+}
+.std-icon *:not([stroke]) {
+    stroke: currentColor;
+}
+
+.std-icon-cover {
+    width: 100%;
+    height: 100%;
+}
+.std-icon-text {
+    width: 1em;
+    height: 1em;
+}
+.std-icon1 {
+    font-size: var(--std-icon1);
+    width: var(--std-icon1);
+    height: var(--std-icon1);
+}
+.std-icon2 {
+    font-size: var(--std-icon2);
+    width: var(--std-icon2);
+    height: var(--std-icon2);
+}
+.std-icon3 {
+    font-size: var(--std-icon3);
+    width: var(--std-icon3);
+    height: var(--std-icon3);
+}
+.std-icon4 {
+    font-size: var(--std-icon4);
+    width: var(--std-icon4);
+    height: var(--std-icon4);
+}
+.std-icon5 {
+    font-size: var(--std-icon5);
+    width: var(--std-icon5);
+    height: var(--std-icon5);
+}
+.std-icon6 {
+    font-size: var(--std-icon6);
+    width: var(--std-icon6);
+    height: var(--std-icon6);
+}
+.std-icon7 {
+    font-size: var(--std-icon7);
+    width: var(--std-icon7);
+    height: var(--std-icon7);
+}
+.std-icon8 {
+    font-size: var(--std-icon8);
+    width: var(--std-icon8);
+    height: var(--std-icon8);
+}
+.std-icon9 {
+    font-size: var(--std-icon9);
+    width: var(--std-icon9);
+    height: var(--std-icon9);
+}

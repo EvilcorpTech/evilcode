@@ -1,7 +1,14 @@
 .std-button.halo {
     position: relative;
-    background: var(--back, transparent);
     z-index: 0;
+    outline-offset: var(--outline-offset, 0px);
+}
+.std-button.halo:focus,
+.std-button.halo:hover {
+    color: var(--accent--hover, var(--accent, var(--std-color-primary-accent)));
+}
+.std-button.halo:active {
+    color: var(--accent--active, var(--accent, var(--std-color-primary-accent)));
 }
 .std-button.halo::after {
     content: '';
@@ -15,27 +22,18 @@
     height: 100%;
     border-radius: var(--border-radius, .4em);
     z-index: -1;
-    background: var(--back, var(--std-color-primary-accent));
+    background: var(--accent, var(--std-color-primary-accent));
     opacity: 0;
     transform: scale(0);
     transition: all;
-    transition-duration: var(--duration, var(--std-duration-normal));
+    transition-duration: var(--duration, var(--std-duration3));
 }
-.std-button.halo:hover {
-    color: var(--color--hover, var(--std-color-primary-accent));
-}
-.std-button.halo:focus {
-    color: var(--color--focus, var(--std-color-primary-accent));
-}
-.std-button.halo:active {
-    color: var(--color--active, var(--std-color-primary-accent));
-}
-.std-button.halo:hover::after,
-.std-button.halo:focus::after {
-    opacity: .1;
+.std-button.halo:focus::after,
+.std-button.halo:hover::after {
+    opacity: var(--halo-opacity--hover, .1);
     transform: scale(1);
 }
 .std-button.halo:active::after,
 .std-button.halo:hover:active::after {
-    opacity: .2;
+    opacity: var(--halo-opacity--active, .2);
 }

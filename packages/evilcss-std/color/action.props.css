@@ -3,7 +3,4 @@
     --std-color-success: #388e3c; /* --std-color-green8 */
     --std-color-warning: #ffc107; /* --std-color-amber6 */
     --std-color-error: #ff5722; /* --std-color-deeporange6 */
-
-    --std-border1-color: var(--std-color-bg4);
-    --std-border1: 1px solid var(--std-border1-color);
 }

@@ -6,7 +6,17 @@
     align-items: center;
     text-align: center;
     user-select: none;
-    transition: all var(--transition-duration, var(--std-duration-normal));
+    outline-offset: var(--outline-offset, 2px);
+    outline-width: var(--outline-width, 1px);
+    outline-style: solid;
+    outline-color: transparent;
+    transition: all var(--transition-duration, var(--std-duration3));
+}
+.std-button:focus {
+    outline-color: var(--outline-color, var(--accent, var(--std-color-primary-accent, initial)));
+}
+.std-button:focus:hover {
+    outline-color: transparent;
 }
 .std-button:disabled,
 .std-button[disabled],

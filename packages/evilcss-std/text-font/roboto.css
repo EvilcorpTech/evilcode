@@ -10,47 +10,47 @@
     font-style: normal;
     font-weight: 200;
     font-display: swap;
-    src: url('./font-default/1_thin.woff') format('woff');
+    src: url('./roboto/1_thin.woff') format('woff');
 }
 @font-face {
     font-family: 'std-font-primary';
     font-style: normal;
     font-weight: 300;
     font-display: swap;
-    src: url('./font-default/2_light.woff') format('woff');
+    src: url('./roboto/2_light.woff') format('woff');
 }
 @font-face {
     font-family: 'std-font-primary';
     font-style: normal;
     font-weight: 400;
     font-display: swap;
-    src: url('./font-default/3_regular.woff') format('woff');
+    src: url('./roboto/3_regular.woff') format('woff');
 }
 @font-face {
     font-family: 'std-font-primary';
     font-style: normal;
     font-weight: 500;
     font-display: swap;
-    src: url('./font-default/4_medium.woff') format('woff');
+    src: url('./roboto/4_medium.woff') format('woff');
 }
 @font-face {
     font-family: 'std-font-primary';
     font-style: normal;
     font-weight: 600;
     font-display: swap;
-    src: url('./font-default/5_bold.woff') format('woff');
+    src: url('./roboto/5_bold.woff') format('woff');
 }
 @font-face {
     font-family: 'std-font-primary';
     font-style: normal;
     font-weight: 700;
     font-display: swap;
-    src: url('./font-default/6_black.woff') format('woff');
+    src: url('./roboto/6_black.woff') format('woff');
 }
 @font-face {
     font-family: 'std-font-primary';
     font-style: normal;
     font-weight: 800;
     font-display: swap;
-    src: url('./font-default/6_black.woff') format('woff');
+    src: url('./roboto/6_black.woff') format('woff');
 }

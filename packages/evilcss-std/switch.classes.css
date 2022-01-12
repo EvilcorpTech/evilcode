@@ -1,53 +1,53 @@
-.std-switch,
-.std-switch::after {
-    transition: all var(--std-duration-fast);
-}
-
 .std-switch {
-    position: relative;
     box-sizing: content-box;
     width: var(--width, 2em);
-    height: var(--height, 1em);
-    border: 1px solid transparent;
+    /* border: 1px solid transparent; */
     border-radius: var(--height, 1em);
     background-color: var(--back, hsl(0deg 0% var(--std-fg-l) / .1));
     box-shadow: inset 0 0 2px 0 hsl(0deg 0% 0% / .2);
     cursor: pointer;
+    /* (var(--knob-width, var(--knob-size, 1em)) / 2) */
+    --knob-shift: calc((var(--width, 2em) / 2) - 50%);
+}
+.std-switch,
+.std-switch.std-button {
+    padding: var(--gap, var(--std-gutter1, 4px));
 }
 .std-switch[aria-checked="true"] {
-    background-color: var(--accent, var(--std-color-primary-accent, currentColor));
-}
-.std-switch:focus {
-    border-color: var(--accent, var(--std-color-primary-accent, currentColor));
+    background-color:
+        var(--back--checked,
+            var(--accent,
+                var(--std-color-primary-accent, currentColor)
+            )
+        )
+    ;
 }
 
-.std-switch::after {
-    --def-knob-size: calc(
-        var(--knob-size, var(--height, 1em))
-        - 2 * var(--gap, .05em)
-    );
+.std-switch,
+.std-switch .std-knob,
+.std-switch.std-knob::after {
+    transition: all var(--std-duration2);
+}
+
+.std-switch .std-knob,
+.std-switch.std-knob::after {
+    transform: translateX(calc(-1 * var(--knob-shift)));
+}
+
+.std-switch[aria-checked="true"] .std-knob,
+.std-switch[aria-checked="true"].std-knob::after {
+    transform: translateX(var(--knob-shift));
+}
+
+.std-switch.std-knob::after {
     content: '';
-    position: absolute;
-    top: 50%;
-    left: 0;
-    width: var(--def-knob-size);
-    height: var(--def-knob-size);
+    width: var(--knob-width, var(--knob-size, 1em));
+    height: var(--knob-height, var(--knob-size, 1em));
     border: var(--knob-border, .2em) solid var(--std-color-bg1);
     border-radius: var(--height, 1em);
-    transform: translateY(-50%) translateX(var(--gap, .05em));
     background-color: var(--std-color-bg1);
     box-shadow: var(--shadow, 0 0 3px 0 hsl(0deg 0% 0% / .2));
 }
-.std-switch[aria-checked="true"]::after {
-    transform:
-        translateY(-50%)
-        translateX(calc(
-            var(--width, 2em)
-            - var(--def-knob-size)
-            - var(--gap, .05em)
-        ))
-    ;
-}
-.std-switch:focus::after {
-    background-color: currentColor;
+.std-switch.std-knob:active::after {
+    background-color: var(--accent, var(--std-color-primary-accent, currentColor));
 }

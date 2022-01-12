@@ -1,20 +1,20 @@
 .std {
-    --std-text-small-size: var(--std-text-size-2);
-    --std-text-body2-size: var(--std-text-size-1);
-    --std-text-body1-size: var(--std-text-size);
-    --std-text-button-size: var(--std-text-size);
-    --std-text-caption-size: var(--std-text-size);
-    --std-text-overline-size: var(--std-text-size);
-    --std-text-subtitle2-size: var(--std-text-size1);
-    --std-text-subtitle1-size: var(--std-text-size2);
-    --std-text-h6-size: var(--std-text-size3);
-    --std-text-h5-size: var(--std-text-size4);
-    --std-text-h4-size: var(--std-text-size5);
-    --std-text-h3-size: var(--std-text-size6);
-    --std-text-h2-size: var(--std-text-size7);
-    --std-text-h1-size: var(--std-text-size8);
-    --std-text-display2-size: var(--std-text-size9);
-    --std-text-display1-size: var(--std-text-size10);
+    --std-text-small-size: var(--std-text-size1);
+    --std-text-body2-size: var(--std-text-size2);
+    --std-text-body1-size: var(--std-text-size3);
+    --std-text-button-size: var(--std-text-size3);
+    --std-text-caption-size: var(--std-text-size3);
+    --std-text-overline-size: var(--std-text-size3);
+    --std-text-subtitle2-size: var(--std-text-size4);
+    --std-text-subtitle1-size: var(--std-text-size5);
+    --std-text-h6-size: var(--std-text-size6);
+    --std-text-h5-size: var(--std-text-size7);
+    --std-text-h4-size: var(--std-text-size8);
+    --std-text-h3-size: var(--std-text-size9);
+    --std-text-h2-size: var(--std-text-size10);
+    --std-text-h1-size: var(--std-text-size11);
+    --std-text-display2-size: var(--std-text-size12);
+    --std-text-display1-size: var(--std-text-size13);
 
     --std-text-small-weight: var(--std-text-weight);
     --std-text-body2-weight: var(--std-text-weight);
