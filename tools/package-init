@@ -16,13 +16,7 @@ Dir="$(cd "$(dirname "$0")/.." && pwd)"
 init() {
         local pkg="$1"
 
-        rm -fv "$pkg/tsconfig.tsbuildinfo" || true
-        rm -fv "$pkg/package-lock.json" || true
-        if test -e "$pkg/node_modules"; then
-                echo "$pkg/node_modules"
-                rm -rf "$pkg/node_modules" || true
-        fi
-        $Git clean --dry-run -X -d --force "$pkg"
+        "$Dir/tools/package-clean" "$pkg"
 
         (
         case "$pkg" in
@@ -30,7 +24,8 @@ init() {
                 *) cd "$PWD/$pkg";;
         esac
 
-        $Npm install --global-style --no-package-lock
+        # --no-package-lock ignores the shrinkwrap.json too.
+        $Npm install --global-style
         )
 
         link "$pkg" evilcss

@@ -1,0 +1,34 @@
+#!/usr/bin/env bash
+
+set -e # errexit
+set -u # nounset
+
+# Cleans package generated files.
+#
+# EXAMPLE
+# ./init-package ./packages/evil*
+
+Dir="$(cd "$(dirname "$0")/.." && pwd)"
+
+: ${Git:=git}
+
+clean() {
+        local pkg="$1"
+
+        # rm -fv "$pkg/tsconfig.tsbuildinfo" || true
+        # rm -fv "$pkg/package-lock.json" || true
+        # if test -e "$pkg/node_modules"; then
+        #         echo "$pkg/node_modules"
+        #         rm -rf "$pkg/node_modules" || true
+        # fi
+        $Git clean -X -d --force "$pkg"
+}
+
+for pkg; do
+        if test ! -e "$pkg"; then
+                echo "skipping invalid package '$pkg'."
+                continue
+        fi
+
+        clean "$pkg"
+done
