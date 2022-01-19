@@ -25,7 +25,6 @@
         "@babel/runtime": "^7",
         "@eviljs/std": "^1",
         "@types/copy-webpack-plugin": "^8",
-        "@types/mini-css-extract-plugin": "^2",
         "@types/webpack-bundle-analyzer": "^4",
         "babel-loader": "^8",
         "bundle-stats-webpack-plugin": "^3",

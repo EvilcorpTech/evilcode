@@ -17,7 +17,7 @@ const require = createRequire(import.meta.url)
 
 export {asBooleanLike} from '@eviljs/std/type.js'
 
-export const DefaultBasePath = ''
+export const DefaultBasePath = '/'
 export const DefaultBundleName = ''
 export const DefaultServerAddress =  '127.0.0.1'
 export const DefaultServerPort = 8000
@@ -25,19 +25,19 @@ export const DefaultServerPort = 8000
 export default createWebpackConfig()
 
 export function createWebpackConfig(options?: WebpackConfigOptions) {
-    const workDir = options?.workDir ?? process.cwd()
-    const mode = options?.mode ?? process.env.NODE_ENV
+    const workDir = options?.workDir || process.cwd()
+    const mode = options?.mode || process.env.NODE_ENV
     const isProductionMode = mode === 'production'
     const isDevelopmentMode = ! isProductionMode
-    const basePath = options?.basePath ?? DefaultBasePath
-    const bundleName = options?.bundleName ?? DefaultBundleName
-    const runtime = options?.runtime ?? 'single' // Workers require 'multiple' runtime.
+    const basePath = options?.basePath || DefaultBasePath
+    const bundleName = options?.bundleName || DefaultBundleName
+    const runtime = options?.runtime || 'single' // Workers require 'multiple' runtime.
     const define = options?.define ?? {}
-    const babelConfig = options?.babelConfig || createBabelConfig({workDir})
-    const postcssConfig = options?.postcssConfig || createPostcssConfig({workDir})
+    const babelConfig = options?.babelConfig ?? createBabelConfig({workDir})
+    const postcssConfig = options?.postcssConfig ?? createPostcssConfig({workDir})
     const preact = options?.preact ?? false
-    const serverAddress = options?.serverAddress ?? DefaultServerAddress
-    const serverPort = options?.serverPort ?? DefaultServerPort
+    const serverAddress = options?.serverAddress || DefaultServerAddress
+    const serverPort = options?.serverPort || DefaultServerPort
 
     return {
         target: isProductionMode
