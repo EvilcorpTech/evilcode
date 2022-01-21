@@ -5,9 +5,11 @@
 .std-button.flat:focus,
 .std-button.flat:hover {
     color: var(--color--hover, white);
+    border-color: var(--border--hover, var(--accent, var(--std-color-primary-accent)));
     background: var(--back--hover, var(--accent, var(--std-color-primary-accent)));
 }
 .std-button.flat:active {
-    color: var(--color--focus, white);
+    color: var(--color--active, white);
+    border-color: var(--border--active, var(--accent, var(--std-color-primary-shade1)));
     background: var(--back--active, var(--accent, var(--std-color-primary-shade1)));
 }

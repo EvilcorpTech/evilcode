@@ -1,11 +1,7 @@
-.std-button.plain {
-    outline-offset: var(--outline-offset, 0px);
-}
-
 .std-button.plain:focus,
 .std-button.plain:hover {
     color: var(--color--hover, var(--accent, var(--std-color-primary-accent)));
 }
 .std-button.plain:active {
-    color: var(--color--active, var(--accent, var(--std-color-primary-shade1)));
+    color: var(--color--active, var(--accent, var(--std-color-primary-shade2)));
 }
