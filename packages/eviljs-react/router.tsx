@@ -1,10 +1,10 @@
 import {ComputableValue, computeValue} from '@eviljs/std/fn.js'
 import {escapeRegexp} from '@eviljs/std/regexp.js'
-import {asArray, isFunction, isPromise, Nil} from '@eviljs/std/type.js'
+import {asArray, isPromise, Nil} from '@eviljs/std/type.js'
 import {classes} from './react.js'
 import {compilePattern, exact, regexpFromPattern} from '@eviljs/web/route.js'
 import {createRouter, serializeRouteToString, RouterOptions, RouterParams, RouterRouteParams} from '@eviljs/web/router.js'
-import {createContext, cloneElement, useCallback, useContext, useEffect, useMemo, useRef, useState, Fragment, Children, CSSProperties} from 'react'
+import {createContext, CSSProperties, Fragment, useCallback, useContext, useEffect, useMemo, useRef, useState} from 'react'
 
 export {exact, All, Arg, End, Value, Path, PathOpt, PathGlob, Start} from '@eviljs/web/route.js'
 
@@ -265,7 +265,7 @@ export function useRouterTransition() {
 * </SwitchRoute>
 */
 export function SwitchRoute(props: SwitchRouteProps) {
-    const {children, default: fallback, ...otherProps} = props
+    const {children, default: fallback} = props
     const {matchRoute} = useRouter()
 
     const [matchingChild, matchingRouteArgs] = useMemo(() => {
@@ -293,7 +293,11 @@ export function SwitchRoute(props: SwitchRouteProps) {
         return []
     }, [children, matchRoute])
 
-    return renderRouteChildren(matchingChild, matchingRouteArgs, otherProps)
+    return (
+        <Fragment>
+            {computeValue(matchingChild, ...matchingRouteArgs)}
+        </Fragment>
+    )
 }
 
 export function CaseRoute(props: CaseRouteProps) {
@@ -337,7 +341,11 @@ export function WhenRoute(props: WhenRouteProps) {
         return cleanRouteMatches(routeMatches)
     }, [is, matchRoute])
 
-    return renderRouteChildren(children, routeMatches)
+    return (
+        <Fragment>
+            {computeValue(children, ...routeMatches)}
+        </Fragment>
+    )
 }
 
 /*
@@ -486,37 +494,6 @@ export function Redirect(props: RedirectProps) {
     return null
 }
 
-export function renderRouteChildren(
-    childrenOrRouteMatchHandler: Nil | RouteMatchChildren,
-    routeMatches: Nil | RouteMatches,
-    parentProps?: undefined | RouteChildrenProps,
-) {
-    const children: React.ReactNode = computeValue(childrenOrRouteMatchHandler, ...routeMatches)
-
-    if (! children) {
-        return null
-    }
-
-    const clonedChildren = Children.map(children, it => {
-        const child = it as React.ReactElement<RouteChildrenProps, typeof CaseRoute>
-        const className = classes(parentProps?.className, child.props.className)
-        const style = {...parentProps?.style, ...child.props.style}
-        const childProps = {
-            ...parentProps,
-            ...child.props,
-            className,
-            style,
-        }
-        return cloneElement(child, childProps)
-    })
-
-    return (
-        <Fragment>
-            {clonedChildren}
-        </Fragment>
-    )
-}
-
 export function cleanRouteMatches(routeMatches: null | RegExpMatchArray) {
     if (! routeMatches) {
         return []
@@ -550,12 +527,11 @@ export interface Router<S = any> {
     stop(): void
 }
 
-export interface SwitchRouteProps extends Omit<React.AllHTMLAttributes<Element>, 'default'> {
+export interface SwitchRouteProps {
     children?: undefined
         | React.ReactElement<CaseRouteProps, typeof CaseRoute>
         | Array<React.ReactElement<CaseRouteProps, typeof CaseRoute>>
     default?: undefined | React.ReactNode
-    [key: string]: any
 }
 
 export interface CaseRouteProps {
