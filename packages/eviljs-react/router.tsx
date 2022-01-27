@@ -1,3 +1,4 @@
+import {ComputableValue, computeValue} from '@eviljs/std/fn.js'
 import {escapeRegexp} from '@eviljs/std/regexp.js'
 import {asArray, isFunction, isPromise, Nil} from '@eviljs/std/type.js'
 import {classes} from './react.js'
@@ -66,9 +67,9 @@ export function withRouter(children: React.ReactNode, options?: undefined | Rout
 * ]}
 * </SwitchRoute>
 */
-export function withRouteMatches(matches: RouteMatches, children?: undefined | React.ReactNode) {
+export function withRouteMatches(routeMatches: RouteMatches, children?: undefined | React.ReactNode) {
     return (
-        <RouteMatchesContext.Provider value={matches}>
+        <RouteMatchesContext.Provider value={routeMatches}>
             {children}
         </RouteMatchesContext.Provider>
     )
@@ -98,8 +99,8 @@ export function withRouteMatches(matches: RouteMatches, children?: undefined | R
 * }
 */
 export function createRouteMatches(children?: undefined | React.ReactNode) {
-    function routeMatchesProxy(...matches: RouteMatches) {
-        return withRouteMatches(matches, children)
+    function routeMatchesProxy(...routeMatches: RouteMatches) {
+        return withRouteMatches(routeMatches, children)
     }
 
     return routeMatchesProxy
@@ -241,42 +242,64 @@ export function useRouterTransition() {
 * EXAMPLE
 *
 * <SwitchRoute default={<NotFoundView/>}>
-* {[
-*     {is: new RegExp(`^/book/${Arg}/${Arg}`, 'i'), then: (arg1, arg2) => (
-*         <h1>/book/{arg1}/{arg2}</h1>
-*     )},
-*     {is: Start+'/book'+End, then: <h1>/book exact</h1>},
-*     {is: exact('/book'), then: <h1>/book exact</h1>},
-*     {is: '^/book', then: <h1>/book*</h1>},
-*     {is: '^/$', then: <h1>/ exact</h1>},
-*     {is: '^/', then: <h1>/*</h1>},
-* ]}
+*     <CaseRoute is={new RegExp(`^/book/${Arg}/${Arg}`, 'i')}>
+*         {(arg1, arg2) => (
+*             <h1>/book/{arg1}/{arg2}</h1>
+*         )}
+*     </CaseRoute>
+*     <CaseRoute is={Start+'/book'+End}>
+*         <h1>/book exact</h1>
+*     </CaseRoute>
+*     <CaseRoute is={exact('/book')}>
+*         <h1>/book exact</h1>
+*     </CaseRoute>
+*     <CaseRoute is={'^/book'}>
+*          <h1>/book*</h1>
+*     </CaseRoute>
+*     <CaseRoute is={'^/$'}>
+*          <h1>/ exact</h1>
+*     </CaseRoute>
+*     <CaseRoute is={'^/'}>
+*          <h1>/*</h1>
+*     </CaseRoute>
 * </SwitchRoute>
 */
 export function SwitchRoute(props: SwitchRouteProps) {
-    const {children, default: fallback, render, ...otherProps} = props
+    const {children, default: fallback, ...otherProps} = props
     const {matchRoute} = useRouter()
 
-    const [then, matches] = useMemo(() => {
-        for (const it of asArray(children)) {
-            const {is, then} = it as SwitchRouteChildren
+    const [matchingChild, matchingRouteArgs] = useMemo(() => {
+        if (! children)  {
+            return []
+        }
 
-            const pathRegexp = compilePattern(is)
-            const matches = matchRoute(pathRegexp)
+        for (const child of asArray(children)) {
+            const pathRegexp = compilePattern(child.props.is)
+            const matchingRouteArgs = matchRoute(pathRegexp)
 
-            if (matches) {
-                return [then, cleanMatches(matches)] as const
+            if (! matchingRouteArgs) {
+                continue
             }
+
+            return [child.props.children, cleanRouteMatches(matchingRouteArgs)] as (
+                [RouteMatchChildren, Array<string>]
+            )
         }
 
         if (fallback) {
-            return [fallback, []] as const
+            return [fallback, []] as [SwitchRouteProps['default'], Array<string>]
         }
 
-        return [] as const
+        return []
     }, [children, matchRoute])
 
-    return renderRouteChildren(then, matches, otherProps, render)
+    return renderRouteChildren(matchingChild, matchingRouteArgs, otherProps)
+}
+
+export function CaseRoute(props: CaseRouteProps) {
+    const {children} = props
+
+    return <Fragment>{children}</Fragment>
 }
 
 /*
@@ -304,17 +327,17 @@ export function SwitchRoute(props: SwitchRouteProps) {
 * </WhenRoute>
 */
 export function WhenRoute(props: WhenRouteProps) {
-    const {children, is, render, ...otherProps} = props
+    const {children, is} = props
     const {matchRoute} = useRouter()
 
-    const matches = useMemo(() => {
+    const routeMatches = useMemo(() => {
         const pathRegexp = regexpFromPattern(is)
-        const matches = matchRoute(pathRegexp)
+        const routeMatches = matchRoute(pathRegexp)
 
-        return cleanMatches(matches)
+        return cleanRouteMatches(routeMatches)
     }, [is, matchRoute])
 
-    return renderRouteChildren(children, matches, otherProps, render)
+    return renderRouteChildren(children, routeMatches)
 }
 
 /*
@@ -328,11 +351,12 @@ export function WhenRoute(props: WhenRouteProps) {
 * </Route>
 * <Route to="/book/123" if={() => Promise.resolve(formSaved)}>
 *     <button>Click</button>
-* </Route>
+* </Route>`
 */
 export function Route(props: RouteProps) {
     const {
         activeClass,
+        activeProps,
         activeWhenExact,
         children,
         className,
@@ -349,12 +373,12 @@ export function Route(props: RouteProps) {
     const onClick = useCallback((event: React.MouseEvent) => {
         event.preventDefault()
 
-        function tryRouting(response: Nil | boolean) {
+        function tryRouting(result: undefined | boolean) {
             if (! to) {
                 return
             }
 
-            if (response === false) {
+            if (result === false) {
                 // Routing is blocked only in case of false return value.
                 return
             }
@@ -366,15 +390,15 @@ export function Route(props: RouteProps) {
             action(to, params, state)
         }
 
-        const guardResponse = isFunction(guard)
-            ? guard()
-            : guard
+        const guardResult = computeValue(guard)
 
-        if (isPromise(guardResponse)) {
-            guardResponse.then(tryRouting)
+        if (isPromise(guardResult)) {
+            // Async behavior.
+            guardResult.then(tryRouting)
         }
         else {
-            tryRouting(guardResponse)
+            // Sync behavior.
+            tryRouting(guardResult)
         }
     }, [routeTo, to, params, state, guard, replace])
 
@@ -392,18 +416,23 @@ export function Route(props: RouteProps) {
         return testRoute(pathRegexp)
     }, [to, testRoute])
 
+    const activeClasses = false
+        || activeClass
+        || activeProps?.className
+        || RouteDefaultActiveClass
+
     return (
         <a
+            onClick={onClick} // It should be possible to change the onClick behavior.
             {...otherProps}
             ref={elRef}
             className={classes(className, {
-                [activeClass ?? RouteDefaultActiveClass]: isActive,
+                [activeClasses]: isActive,
             })}
             href={to
                 ? link(to, params)
                 : undefined
             }
-            onClick={onClick}
         >
             {children}
         </a>
@@ -458,35 +487,28 @@ export function Redirect(props: RedirectProps) {
 }
 
 export function renderRouteChildren(
-    then: Nil | RouteMatchChildren,
-    matches: Nil | RouteMatches,
-    props: RouteChildrenProps,
-    render?: undefined | RouteRenderProps['render'],
+    childrenOrRouteMatchHandler: Nil | RouteMatchChildren,
+    routeMatches: Nil | RouteMatches,
+    parentProps?: undefined | RouteChildrenProps,
 ) {
-    const children: React.ReactNode = isFunction(then)
-        ? then(...matches)
-        : then
+    const children: React.ReactNode = computeValue(childrenOrRouteMatchHandler, ...routeMatches)
 
     if (! children) {
         return null
     }
 
-    const clonedChildren = Children.map(children, (it) => {
-        const child = it as React.ReactElement<RouteChildrenProps>
-        const className = classes(child.props.className, props.className)
-        const style = {...child.props.style, ...props.style}
+    const clonedChildren = Children.map(children, it => {
+        const child = it as React.ReactElement<RouteChildrenProps, typeof CaseRoute>
+        const className = classes(parentProps?.className, child.props.className)
+        const style = {...parentProps?.style, ...child.props.style}
         const childProps = {
+            ...parentProps,
             ...child.props,
-            ...props,
             className,
             style,
         }
         return cloneElement(child, childProps)
     })
-
-    if (render) {
-        return render(clonedChildren)
-    }
 
     return (
         <Fragment>
@@ -495,12 +517,12 @@ export function renderRouteChildren(
     )
 }
 
-export function cleanMatches(matches: null | RegExpMatchArray) {
-    if (! matches) {
+export function cleanRouteMatches(routeMatches: null | RegExpMatchArray) {
+    if (! routeMatches) {
         return []
     }
 
-    return matches.slice(1) // Without the whole match.
+    return routeMatches.slice(1) // Without the whole match.
 }
 
 // Types ///////////////////////////////////////////////////////////////////////
@@ -528,58 +550,59 @@ export interface Router<S = any> {
     stop(): void
 }
 
-export interface SwitchRouteProps extends RouteRenderProps, Omit<React.AllHTMLAttributes<Element>, 'default'> {
-    children: SwitchRouteChildren | Array<SwitchRouteChildren>
+export interface SwitchRouteProps extends Omit<React.AllHTMLAttributes<Element>, 'default'> {
+    children?: undefined
+        | React.ReactElement<CaseRouteProps, typeof CaseRoute>
+        | Array<React.ReactElement<CaseRouteProps, typeof CaseRoute>>
     default?: undefined | React.ReactNode
     [key: string]: any
 }
 
-export interface WhenRouteProps extends RouteRenderProps, Omit<React.AllHTMLAttributes<Element>, 'is'> {
-    children: RouteMatchChildren
+export interface CaseRouteProps {
+    children?: undefined | RouteMatchChildren
     is: string | RegExp
-    [key: string]: any
+}
+
+export interface WhenRouteProps {
+    children?: undefined | RouteMatchChildren
+    is: string | RegExp
 }
 
 export interface RouteProps extends React.AnchorHTMLAttributes<HTMLAnchorElement> {
+    activeClass?: undefined | string
+    activeProps?: undefined | {className?: undefined | string}
+    activeWhenExact?: undefined | boolean
     children?: undefined | React.ReactNode
     elRef?: undefined | React.Ref<HTMLAnchorElement>
-    to?: undefined | string
+    if?: undefined | ComputableValue<RouteGuardResult>
     params?: undefined | RouterParams
-    state?: undefined | any
     replace?: undefined | boolean
-    if?(): undefined | boolean | Promise<boolean>
-    activeWhenExact?: undefined | boolean
-    activeClass?: undefined | string
+    state?: undefined | any
+    to?: undefined | string
 }
 
 export interface LinkProps extends React.AnchorHTMLAttributes<HTMLAnchorElement> {
     children: React.ReactNode
-    to?: undefined | string
     params?: undefined | RouterParams
     state?: undefined | any
+    to?: undefined | string
 }
 
 export interface RedirectProps {
-    to: string
     params?: undefined | RouterParams
-    state?: undefined | any
     replace?: undefined | boolean
+    state?: undefined | any
+    to: string
 }
 
-export interface RouteRenderProps {
-    render?(children: React.ReactNode): React.ReactElement
-}
-
-export interface SwitchRouteChildren {
-    is: string | RegExp
-    then: RouteMatchChildren
-}
+export type RouteGuardResult = undefined | boolean | Promise<boolean>
 
 export type RouteMatchChildren =
     | React.ReactNode
-    | ((...matches: RouteMatches) => React.ReactNode)
+    | ((...routeMatches: RouteMatches) => React.ReactNode)
 
-export type RouteMatches = Array<string> | readonly string[]
+export interface RouteMatches extends Array<string> {
+}
 
 export interface RouteChildrenProps {
     className?: undefined | string

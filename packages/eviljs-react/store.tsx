@@ -1,4 +1,5 @@
-import {isArray, isFunction, isObject} from '@eviljs/std/type.js'
+import {computeValue} from '@eviljs/std/fn.js'
+import {isArray, isObject} from '@eviljs/std/type.js'
 import React, {createContext, useCallback, useContext, useLayoutEffect, useMemo, useRef} from 'react'
 import {useRequestRender} from './react.js'
 import {useRootStoreStorage as useCoreRootStoreStorage} from './store-storage.js'
@@ -17,7 +18,7 @@ StoreContext.displayName = 'StoreContext'
 *
 * render(<Main/>, document.body)
 */
-export function WithStore<P extends {}, S extends {}>(Child: React.ComponentType<P>, spec: StoreSpec<S>) {
+export function WithStore<P extends {}, S>(Child: React.ComponentType<P>, spec: StoreSpec<S>) {
     function StoreProviderProxy(props: P) {
         return withStore(<Child {...props}/>, spec)
     }
@@ -34,7 +35,7 @@ export function WithStore<P extends {}, S extends {}>(Child: React.ComponentType
 *     return withStore(<Child/>, spec)
 * }
 */
-export function withStore<S extends {}>(children: React.ReactNode, spec: StoreSpec<S>) {
+export function withStore<S>(children: React.ReactNode, spec: StoreSpec<S>) {
     const store = useRootStore(spec)
 
     return (
@@ -57,22 +58,23 @@ export function withStore<S extends {}>(children: React.ReactNode, spec: StoreSp
 *     )
 * }
 */
-export function StoreProvider<S extends {}>(props: StoreProviderProps<S>) {
+export function StoreProvider<S>(props: StoreProviderProps<S>) {
     return withStore(props.children, props.spec)
 }
 
-export function useRootStore<S extends {}>(spec: StoreSpec<S>): StoreService<S> {
+export function useRootStore<S>(spec: StoreSpec<S>): StoreService<S> {
     const {createState} = spec
     const stateRef = useRef(createState())
-    const soreObservers = useMemo(() =>
+    const storeObservers = useMemo(() =>
         new Map<string, Array<ChangeObserver>>()
     , [])
 
-    const mutate = useCallback((path: ChangePath, value: React.SetStateAction<any>) => {
-        mutateState(stateRef, path, value)
+    const mutate = useCallback((path: StatePath, value: React.SetStateAction<any>) => {
+        const nextState = mutateState(stateRef.current, path, value)
+        stateRef.current = nextState
 
-        const pathKey = keyForPath(path)
-        const observers = soreObservers.get(pathKey)
+        const pathId = asPathId(path)
+        const observers = storeObservers.get(pathId)
 
         if (! observers) {
             const message =
@@ -87,14 +89,14 @@ export function useRootStore<S extends {}>(spec: StoreSpec<S>): StoreService<S> 
         }
     }, [])
 
-    const observe = useCallback((path: ChangePath, observer: ChangeObserver) => {
-        const pathKey = keyForPath(path)
+    const observe = useCallback((path: StatePath, observer: ChangeObserver) => {
+        const pathId = asPathId(path)
 
         // Optimization.
         // We use Map.get(), instead of Map.has() + Map.get().
-        const keyObservers = soreObservers.get(pathKey) ?? (() => {
+        const keyObservers = storeObservers.get(pathId) ?? (() => {
             const observers: Array<ChangeObserver> = []
-            soreObservers.set(pathKey, observers)
+            storeObservers.set(pathId, observers)
             return observers
         })()
 
@@ -117,28 +119,39 @@ export function useRootStore<S extends {}>(spec: StoreSpec<S>): StoreService<S> 
         return stop
     }, [])
 
+    const state = useCallback(() => {
+        return stateRef.current
+    }, [])
+
     const store = useMemo(() => {
-        return {mutate, observe, stateRef}
-    }, [observe])
+        return {mutate, observe, state, stateRef}
+    }, [mutate, observe, state])
 
     return store
 }
 
-export function useStore<S extends {}, V>(optionalSelector: StoreSelector<S, V>, deps?: Array<unknown>): Store<V>
-export function useStore<S extends {}>(): Store<S>
-export function useStore<S extends {}, V>(optionalSelector?: StoreSelector<S, V>, deps?: Array<unknown>): Store<V> {
+export function useStoreContext<S>() {
+    return useContext<StoreService<S>>(StoreContext)
+}
+
+/*
+* EXAMPLE
+*
+* const [books, setBooks] = useStore(state => state.books)
+* const [selectedFoodIndex, setSelectedFoodIndex] = useStore(state => state.selectedFoodIndex)
+* const [selectedFood, setSelectedFood] = useStore(state => state.food[selectedFoodIndex], [selectedFoodIndex])
+*/
+export function useStore<S, V>(optionalSelector: StoreSelector<S, V>, deps?: Array<unknown>): Store<V>
+export function useStore<S>(): Store<S>
+export function useStore<S, V>(optionalSelector?: StoreSelector<S, V>, deps?: Array<unknown>): Store<V> {
     const selector = optionalSelector ?? (defaultSelector as StoreSelector<S, V>)
-    const store = useContext<StoreService<S>>(StoreContext)
+    const store = useStoreContext<S>()
     const state = store.stateRef.current
-    const path = useMemo(() => select(state, selector), deps ?? [])
+    const path = useMemo(() => selectPath(state, selector), deps ?? [])
     const requestRender = useRequestRender()
 
     const selectedState = useMemo((): V => {
-        let selectedState: any = state
-        for (const it of path) {
-            selectedState = selectedState[it]
-        }
-        return selectedState
+        return selectStateValue(state, path)
     }, [state, path])
 
     useLayoutEffect(() => {
@@ -153,7 +166,7 @@ export function useStore<S extends {}, V>(optionalSelector?: StoreSelector<S, V>
     return [selectedState, setSelectedState]
 }
 
-export function useRootStoreStorage<S extends {}, L extends {} = S>(options?: StoreStorageOptions<S, L>) {
+export function useRootStoreStorage<S, L = S>(options?: StoreStorageOptions<S, L>) {
     const onLoad = options?.onLoad
     const onMerge = options?.onMerge
     const [state, setState] = useStore<S>()
@@ -167,74 +180,91 @@ export function useRootStoreStorage<S extends {}, L extends {} = S>(options?: St
     })
 }
 
-export function select<S extends {}, V>(state: S, selector: StoreSelector<S, V>): ChangePath {
-    const path: ChangePath = []
-    const stateProxy = createProxy(state, onAccess)
+export function selectPath<S, V>(state: S, selector: StoreSelector<S, V>): StatePath {
+    const path: StatePath = []
 
-    selector(stateProxy)
+    if (! isObject(state) && ! isArray(state)) {
+        // A number or a string.
+        return path
+    }
 
-    function onAccess(key: PropertyKey) {
+    function onGet(key: PropertyKey) {
         path.push(key)
     }
+
+    const stateProxy = createStateProxy(state, onGet)
+
+    selector(stateProxy)
 
     return path
 }
 
-export function defaultSelector<S extends {}>(state: S): S {
+export function selectStateValue<S>(state: S, path: StatePath) {
+    let selectedState: any = state
+
+    for (const it of path) {
+        selectedState = selectedState[it]
+    }
+
+    return selectedState
+}
+
+export function defaultSelector<S>(state: S): S {
     return state
 }
 
-export function mutateState(
-    stateRef: React.MutableRefObject<any>,
-    path: ChangePath,
-    value: React.SetStateAction<any>
-) {
+export function mutateState<S = {}>(
+    state: S,
+    path: StatePath,
+    value: React.SetStateAction<S>
+): S {
     if (path.length === 0) {
-        stateRef.current = computeValue(value, stateRef.current)
-        return
+        // We are mutating the state root.
+        return computeValue(value, state)
     }
 
-    stateRef.current = cloneShallow(stateRef.current)
+    const nextState = cloneShallow(state)
 
-    let selectedState = stateRef.current
+    let stateHead: any = nextState
+    let pathIndex = -1
 
-    let idx = -1
-    while (++idx < path.length) {
-        if (! selectedState) {
+    while (++pathIndex < path.length) {
+        if (! stateHead) {
             const message =
                 '@eviljs/react/store:\n'
                 + `mutated state vanished from '${JSON.stringify(path)}'.`
             console.warn(message)
-            return
+            break
         }
 
-        const it = path[idx]!
+        const stateKey = path[pathIndex]!
 
-        if (! (it in selectedState)) {
+        if (! (stateKey in stateHead)) {
             const message =
                 '@eviljs/react/store:\n'
                 + `mutated state path vanished from '${JSON.stringify(path)}'.`
             console.warn(message)
-            return
+            break
         }
 
-        if (idx === path.length - 1) {
-            selectedState[it] = computeValue(value, selectedState[it])
+        const prevValue = stateHead[stateKey]
+
+        if (pathIndex === path.length - 1) {
+            // We reached the end of the path. Time to compute the state value.
+            stateHead[stateKey] = computeValue(value, prevValue)
         }
         else {
-            selectedState[it] = cloneShallow(selectedState[it])
+            // We are traversing the path. We shallow clone all structures on this path.
+            stateHead[stateKey] = cloneShallow(prevValue)
         }
-        selectedState = selectedState[it]
+        // We move the state head pointer.
+        stateHead = stateHead[stateKey]
     }
+
+    return nextState
 }
 
-export function computeValue<S = any>(nextState: React.SetStateAction<S>, prevState: S) {
-    return isFunction(nextState)
-        ? nextState(prevState)
-        : nextState
-}
-
-export function createProxy<O extends {}>(state: O, onAccess: (key: PropertyKey) => void) {
+export function createStateProxy<O extends {}>(state: O, onGet: (key: PropertyKey) => void) {
     const proxy = new Proxy(state, {
         get(obj, prop, proxy): unknown {
             if (! (prop in obj)) {
@@ -254,10 +284,10 @@ export function createProxy<O extends {}>(state: O, onAccess: (key: PropertyKey)
 
             const value = (obj as Record<PropertyKey, any>)[prop]
 
-            onAccess(prop)
+            onGet(prop)
 
             if (isObject(value) || isArray(value)) {
-                return createProxy(value, onAccess)
+                return createStateProxy(value, onGet)
             }
 
             return value
@@ -295,7 +325,7 @@ export function cloneShallow<T>(value: T): T {
     return value
 }
 
-export function keyForPath(path: ChangePath) {
+export function asPathId(path: StatePath) {
     let id = '/'
     for (const it of path) {
         id += String(it) + '/'
@@ -305,29 +335,30 @@ export function keyForPath(path: ChangePath) {
 
 // Types ///////////////////////////////////////////////////////////////////////
 
-export interface StoreProviderProps<S extends {}> {
+export interface StoreProviderProps<S> {
     children: React.ReactNode
     spec: StoreSpec<S>
 }
 
-export interface StoreSpec<S extends {}> {
+export interface StoreSpec<S> {
     createState(): S
 }
 
-export interface StoreService<S extends {}> {
+export interface StoreService<S> {
     stateRef: React.MutableRefObject<S>
-    observe(path: ChangePath, observer: ChangeObserver): Unobserve
-    mutate(path: ChangePath, value: React.SetStateAction<any>): void
+    state(): S
+    observe(path: StatePath, observer: ChangeObserver): Unobserve
+    mutate<V>(path: StatePath, value: React.SetStateAction<V>): void
 }
 
 export interface Store<S> extends StoreV2<S> {
 }
 
-export interface StoreSelector<S extends {}, V> {
+export interface StoreSelector<S, V> {
     (state: S): V
 }
 
-export interface ChangePath extends Array<PropertyKey> {
+export interface StatePath extends Array<PropertyKey> {
 }
 
 export interface ChangeObserver {

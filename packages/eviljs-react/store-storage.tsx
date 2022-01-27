@@ -1,3 +1,4 @@
+import {tryCatch, TryOnError} from '@eviljs/std/try.js'
 import {isObject} from '@eviljs/std/type.js'
 import {useEffect, useRef} from 'react'
 
@@ -51,7 +52,25 @@ export function useRootStoreStorage<S, L = S>(state: S, options: StoreStorageOpt
             const savedState = onSave?.(state) ?? state
             const payload = {[stateVersion]: savedState}
 
-            saveJsonToStorage(storage, storageKey, payload)
+            function trySaving<F>(onError?: undefined | TryOnError<F>) {
+                tryCatch(
+                    () => saveJsonToStorage(storage, storageKey, payload),
+                    onError,
+                )
+            }
+
+            trySaving(error => {
+                // The serialization could fail or we could exceed the storage quota.
+                console.warn(error)
+
+                if (! (error instanceof DOMException)) {
+                    return
+                }
+
+                // One more attempt.
+                storage.clear() // But clearing the storage first.
+                trySaving()
+            })
         }, debounce)
 
         function unmount() {
@@ -62,19 +81,16 @@ export function useRootStoreStorage<S, L = S>(state: S, options: StoreStorageOpt
     }, [state])
 }
 
+/**
+* @throws DOMException
+*/
 export function saveJsonToStorage(storage: Storage, key: string, payload: unknown) {
     if (! payload) {
         return
     }
 
-    try {
-        const serializedPayload = JSON.stringify(payload)
-        storage.setItem(key, serializedPayload)
-    }
-    catch (error: unknown) {
-        // The serialization could fail or we could exceed the storage quota.
-        console.warn(error)
-    }
+    const serializedPayload = JSON.stringify(payload)
+    storage.setItem(key, serializedPayload)
 }
 
 export function loadJsonFromStorage(storage: Storage, key: string) {
