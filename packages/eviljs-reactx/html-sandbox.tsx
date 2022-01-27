@@ -10,7 +10,7 @@ export function HtmlSandbox(props: HtmlSandboxProps) {
     return (
         createElement(tag ?? HtmlSandboxTag, {
             ...otherProps,
-            className: classes('html-sandbox-d25f', className),
+            class: classes('HtmlSandbox-d25f', className),
         }, children)
     )
 }
