@@ -11,8 +11,20 @@
     color: var(--std-color-primary-accent, currentColor);
 }
 
-.Checkbox-16ba:not([disabled]):focus {
+.Checkbox-16ba:not([disabled]):focus-visible {
     outline-color: currentColor;
+}
+@supports not selector(:focus-visible) {
+    /*
+    * :focus-visible is not supported by Safari yet, but it is coming.
+    * In the meantime we can use "@supports selector()" which is supported
+    * since Safari 14.1.
+    *
+    * :focus:not(:focus-visible) is treated as :focus on Chrome, so it is useless.
+    */
+    .Checkbox-16ba:not([disabled]):focus {
+        outline-color: currentColor;
+    }
 }
 
 .Checkbox-16ba.round {
