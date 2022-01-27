@@ -6,10 +6,9 @@ import {withLogger} from '@eviljs/react/logger'
 import {PortalProvider} from '@eviljs/react/portal'
 import {withPortals} from '@eviljs/react/portals'
 import {withQuery} from '@eviljs/react/query'
-import {Arg, exact, SwitchRoute, withRouter} from '@eviljs/react/router'
+import {Arg, CaseRoute, exact, SwitchRoute, withRouter} from '@eviljs/react/router'
 import {useRootStoreStorage, withStore} from '@eviljs/react/store'
-import {ThemeView} from '@eviljs/reactx/theme-view'
-import {WidgetsView} from '@eviljs/reactx/widgets-view'
+import {Showcase} from '@eviljs/reactx/showcase'
 import {pipe} from '@eviljs/std/pipe'
 import {Fragment} from 'react'
 import {Container} from 'lib/container'
@@ -22,8 +21,9 @@ import {NotFoundView} from './404-view'
 import {AdminView} from './admin-view'
 import {AuthView} from './auth-view'
 import {HomeView} from './home-view'
-import {LabView} from './lab-view'
-import {PortalsView} from './portals-view'
+import ShowcaseIndex from './showcase'
+
+import '@eviljs/reactx/showcase/theme-v1.css'
 
 export function App(props: AppProps) {
     const {container} = props
@@ -48,43 +48,31 @@ export function AppMain(props: AppMainProps) {
         <PortalProvider children={Portal =>
             <Fragment>
                 <SwitchRoute default={<NotFoundView/>}>
-                    {[
-                        {is: Routes.RootRoute.pattern, then:
-                            <HomeView/>
-                        },
-                        {is: Routes.ThemeRoute.pattern, then:
-                            <div className="std std-theme-light">
-                                <Header/>
-                                <ThemeView/>
-                            </div>
-                        },
-                        {is: Routes.WidgetsRoute.pattern, then:
-                            <div className="std std-theme-light">
-                                <Header/>
-                                <WidgetsView/>
-                            </div>
-                        },
-                        {is: Routes.PortalsRoute.pattern, then:
-                            <PortalsView/>
-                        },
-                        {is: Routes.LabRoute.pattern, then:
-                            <LabView/>
-                        },
-                        {is: exact('/arg/' + Arg), then: (id) =>
+                    <CaseRoute is={Routes.RootRoute.pattern}>
+                        <HomeView/>
+                    </CaseRoute>
+                    <CaseRoute is={Routes.ShowcaseRoute.pattern}>
                         <div className="std std-theme-light">
                             <Header/>
-                            <h1>Route ID {id}</h1>
+                            <Showcase>{ShowcaseIndex}</Showcase>
                         </div>
-                        },
-                        {is: Routes.AdminRoute.pattern, then:
-                            <AuthBarrier>
-                                <AdminView/>
-                            </AuthBarrier>
-                        },
-                        {is: Routes.AuthRoute.pattern, then:
-                            <AuthView/>
-                        },
-                    ]}
+                    </CaseRoute>
+                    <CaseRoute is={exact('/arg/' + Arg)}>
+                        {(id) =>
+                            <div className="std std-theme-light">
+                                <Header/>
+                                <h1>Route ID {id}</h1>
+                            </div>
+                        }
+                    </CaseRoute>
+                    <CaseRoute is={Routes.AdminRoute.pattern}>
+                        <AuthBarrier>
+                            <AdminView/>
+                        </AuthBarrier>
+                    </CaseRoute>
+                    <CaseRoute is={Routes.AuthRoute.pattern}>
+                        <AuthView/>
+                    </CaseRoute>
                 </SwitchRoute>
 
                 <Portal/>

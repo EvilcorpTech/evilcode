@@ -7,10 +7,7 @@ import './header.css'
 
 const Menu = [
     {to: Routes.RootRoute.path(), message: 'Home'},
-    {to: Routes.ThemeRoute.path(), message: 'Theme'},
-    {to: Routes.WidgetsRoute.path(), message: 'Widgets'},
-    {to: Routes.PortalsRoute.path(), message: 'Portals'},
-    {to: Routes.LabRoute.path(), message: 'Lab'},
+    {to: Routes.ShowcaseRoute.path(), message: 'Showcase'},
     {to: '/arg/123', message: 'Arg'},
     {to: Routes.AdminRoute.path(), message: 'Admin'},
 ]
