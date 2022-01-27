@@ -52,14 +52,14 @@ export function AppMain(props: AppMainProps) {
                         <HomeView/>
                     </CaseRoute>
                     <CaseRoute is={Routes.ShowcaseRoute.pattern}>
-                        <div className="std std-theme-light">
+                        <div className="std theme-light">
                             <Header/>
                             <Showcase>{ShowcaseIndex}</Showcase>
                         </div>
                     </CaseRoute>
                     <CaseRoute is={exact('/arg/' + Arg)}>
                         {(id) =>
-                            <div className="std std-theme-light">
+                            <div className="std theme-light">
                                 <Header/>
                                 <h1>Route ID {id}</h1>
                             </div>

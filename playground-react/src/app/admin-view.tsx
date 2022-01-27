@@ -25,7 +25,7 @@ export function AdminView(props: AdminViewProps) {
     return (
         <div
             {...otherProps}
-            className={classes('AdminView-a22c std std-theme-light', className)}
+            className={classes('AdminView-a22c std theme-light', className)}
         >
             <Header/>
 

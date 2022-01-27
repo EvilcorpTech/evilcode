@@ -31,7 +31,7 @@ export function AuthView(props: AuthViewProps) {
     return (
         <div
             {...otherProps}
-            className={classes('AuthView-b622 std std-theme-light std-extend-v std-stack h', className)}
+            className={classes('AuthView-b622 std theme-light std-extend-v std-stack h', className)}
         >
             <AuthCredentials
                 className="credentials-b2be"
