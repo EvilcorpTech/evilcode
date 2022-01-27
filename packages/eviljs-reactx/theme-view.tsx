@@ -14,7 +14,7 @@ export function ThemeView(props: ThemeViewProps) {
     return (
         <div
             {...props}
-            className={classes('ThemeView-t2eb', `std std-theme-${theme} back`, className)}
+            className={classes('ThemeView-t2eb', `std theme-${theme} back`, className)}
             style={{
                 '--std-color-primary-h': primaryAccent[0] * 360 + 'deg',
                 '--std-color-primary-s': primaryAccent[1] * 100 + '%',

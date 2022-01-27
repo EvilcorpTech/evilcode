@@ -223,7 +223,7 @@ export function createDefaultRouter
         const translatedPath = translate(routePath, routePlaceholders)
 
         return (
-            <CaseRoute is={exact(translatedPath)}>
+            <CaseRoute key={idx} is={exact(translatedPath)}>
                 {(...args) => {
                     const animatorProps = {
                         ...routeModel,
