@@ -1,4 +1,4 @@
-.std-theme-light {
+.std.theme-light {
     color: var(--std-color-fg1);
 
     --std-fg-l: 0%;
@@ -29,6 +29,6 @@
     --std-color-secondary-bg3: hsl(var(--std-color-secondary-h) var(--std-color-secondary-s) 71%);
     --std-color-secondary-bg4: hsl(var(--std-color-secondary-h) var(--std-color-secondary-s) 57%);
 }
-.std-theme-light.back {
+.std.theme-light.back {
     background-color: var(--theme-back, var(--std-color-bg1));
 }
