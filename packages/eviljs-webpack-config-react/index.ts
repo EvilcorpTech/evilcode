@@ -22,6 +22,18 @@ export const DefaultBundleName = ''
 export const DefaultServerAddress =  '127.0.0.1'
 export const DefaultServerPort = 8000
 
+export const Plugins = {
+    BundleAnalyzerPlugin,
+    BundleStatsPlugin,
+    CopyPlugin,
+    CssMinimizerPlugin,
+    DefinePlugin,
+    DuplicatesPlugin,
+    HtmlPlugin,
+    MiniCssExtractPlugin,
+    Webpack,
+}
+
 export default createWebpackConfig()
 
 export function createWebpackConfig(options?: WebpackConfigOptions) {
