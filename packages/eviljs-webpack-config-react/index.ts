@@ -19,10 +19,10 @@ export {asBooleanLike} from '@eviljs/std/type.js'
 
 export const DefaultBasePath = '/'
 export const DefaultBundleName = ''
-export const DefaultServerAddress =  '127.0.0.1'
+export const DefaultServerAddress =  '0.0.0.0'
 export const DefaultServerPort = 8000
 
-export const Plugins = {
+export const WebpackPlugins = {
     BundleAnalyzerPlugin,
     BundleStatsPlugin,
     CopyPlugin,
@@ -52,11 +52,6 @@ export function createWebpackConfig(options?: WebpackConfigOptions) {
     const serverPort = options?.serverPort || DefaultServerPort
 
     return {
-        target: isProductionMode
-            ? 'browserslist'
-            : 'web'
-        ,
-
         entry: {
             main: Path.resolve(workDir, 'src/main'),
         },

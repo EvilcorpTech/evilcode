@@ -7,6 +7,16 @@ import BabelPluginTransformRuntime from '@babel/plugin-transform-runtime' // @ts
 import BabelPresetReact from '@babel/preset-react' // @ts-ignore
 import BabelPresetTypescript from '@babel/preset-typescript'
 
+export const BabelPlugins = {
+    BabelPluginProposalNullishCoalescingOperator,
+    BabelPluginProposalNumericSeparator,
+    BabelPluginProposalOptionalChaining,
+    BabelPluginSyntaxDynamicImport,
+    BabelPluginTransformRuntime,
+    BabelPresetReact,
+    BabelPresetTypescript,
+}
+
 export default createBabelConfig()
 
 export function createBabelConfig(options?: BabelConfigOptions) {
