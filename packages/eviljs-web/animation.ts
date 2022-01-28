@@ -1,5 +1,5 @@
-import {directionOf, distanceBetween, createLinearScale} from '@eviljs/std/scale.js'
 import {PromiseCancellable} from '@eviljs/std/async.js'
+import {directionOf, distanceBetween, createLinearScale} from '@eviljs/std/scale.js'
 
 export {play, wait} from '@eviljs/std/async.js'
 export type {AsyncTimeline, AsyncTimelineParallel, AsyncTimelineSequence, AsyncTimelineTask} from '@eviljs/std/async.js'
