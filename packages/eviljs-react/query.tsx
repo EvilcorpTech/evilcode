@@ -2,6 +2,8 @@ import {Query} from '@eviljs/web/query.js'
 import {useMountedRef} from './react.js'
 import {createContext, useCallback, useContext, useRef, useState} from 'react'
 
+export {joinPath} from '@eviljs/web/fetch.js'
+
 export const QueryContext = createContext<Query>(void undefined as any)
 
 QueryContext.displayName = 'QueryContext'

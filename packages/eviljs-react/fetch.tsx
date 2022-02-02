@@ -1,6 +1,8 @@
 import {Fetch} from '@eviljs/web/fetch.js'
 import {createContext, useContext} from 'react'
 
+export {joinPath} from '@eviljs/web/fetch.js'
+
 export const FetchContext = createContext<Fetch>(void undefined as any)
 
 FetchContext.displayName = 'FetchContext'
