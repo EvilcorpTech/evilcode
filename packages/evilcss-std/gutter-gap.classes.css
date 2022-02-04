@@ -1,0 +1,10 @@
+.std-gap1 { gap: var(--std-gutter1); }
+.std-gap2 { gap: var(--std-gutter2); }
+.std-gap3 { gap: var(--std-gutter3); }
+.std-gap4 { gap: var(--std-gutter4); }
+.std-gap5 { gap: var(--std-gutter5); }
+.std-gap6 { gap: var(--std-gutter6); }
+.std-gap7 { gap: var(--std-gutter7); }
+.std-gap8 { gap: var(--std-gutter8); }
+.std-gap9 { gap: var(--std-gutter9); }
+.std-gap10 { gap: var(--std-gutter10); }

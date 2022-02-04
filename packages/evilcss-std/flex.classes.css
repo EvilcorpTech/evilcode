@@ -1,0 +1,31 @@
+.std-flex { display: flex; }
+.std-flex.inline { display: inline-flex; }
+
+.std-flex.row { flex-direction: row; }
+.std-flex.row-reverse { flex-direction: row-reverse; }
+.std-flex.column { flex-direction: column; }
+.std-flex.column-reverse { flex-direction: column-reverse; }
+
+.std-flex.wrap { flex-wrap: wrap; }
+.std-flex.wrap-reverse { flex-wrap: wrap-reverse; }
+
+.std-flex.stretch { justify-content: stretch; }
+.std-flex.start { justify-content: flex-start; }
+.std-flex.center { justify-content: center; }
+.std-flex.end { justify-content: flex-end; }
+.std-flex.between { justify-content: space-between; }
+.std-flex.around { justify-content: space-around; }
+.std-flex.evenly { justify-content: space-evenly; }
+
+.std-flex.align-stretch { align-items: stretch; }
+.std-flex.align-start { align-items: flex-start; }
+.std-flex.align-center { align-items: center; }
+.std-flex.align-end { align-items: flex-end; }
+
+.std-flex.aligned-stretch { align-content: stretch; }
+.std-flex.aligned-start { align-content: flex-start; }
+.std-flex.aligned-center { align-content: center; }
+.std-flex.aligned-end { align-content: flex-end; }
+.std-flex.aligned-between { align-content: space-between; }
+.std-flex.aligned-around { align-content: space-around; }
+.std-flex.aligned-evenly { align-content: space-evenly; }

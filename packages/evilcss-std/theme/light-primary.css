@@ -1,0 +1,9 @@
+.std.theme-light {
+    --std-color-primary-fg1: hsl(var(--std-color-primary-h) var(--std-color-primary-s) 48%);
+    --std-color-primary-fg2: hsl(var(--std-color-primary-h) var(--std-color-primary-s) 40%);
+    --std-color-primary-fg3: hsl(var(--std-color-primary-h) var(--std-color-primary-s) 32%);
+    --std-color-primary-bg1: hsl(var(--std-color-primary-h) var(--std-color-primary-s) 97%);
+    --std-color-primary-bg2: hsl(var(--std-color-primary-h) var(--std-color-primary-s) 84%);
+    --std-color-primary-bg3: hsl(var(--std-color-primary-h) var(--std-color-primary-s) 71%);
+    --std-color-primary-bg4: hsl(var(--std-color-primary-h) var(--std-color-primary-s) 57%);
+}

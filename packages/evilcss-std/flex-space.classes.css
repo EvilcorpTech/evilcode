@@ -1,0 +1,5 @@
+.std-grow { flex-grow: 1; }
+.std-grow0 { flex-grow: 0; }
+.std-shrink { flex-shrink: 1; }
+.std-shrink0 { flex-shrink: 0; }
+.std-basis0 { flex-basis: 0; }

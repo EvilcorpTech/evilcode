@@ -1,0 +1,16 @@
+.std-spacing {
+    margin: calc(-1 * var(--size));
+}
+.std-spacing > * {
+    margin: var(--size);
+}
+.std-spacing.s1 { --size: var(--std-gutter1); }
+.std-spacing.s2 { --size: var(--std-gutter2); }
+.std-spacing.s3 { --size: var(--std-gutter3); }
+.std-spacing.s4 { --size: var(--std-gutter4); }
+.std-spacing.s5 { --size: var(--std-gutter5); }
+.std-spacing.s6 { --size: var(--std-gutter6); }
+.std-spacing.s7 { --size: var(--std-gutter7); }
+.std-spacing.s8 { --size: var(--std-gutter8); }
+.std-spacing.s9 { --size: var(--std-gutter9); }
+.std-spacing.s10 { --size: var(--std-gutter10); }

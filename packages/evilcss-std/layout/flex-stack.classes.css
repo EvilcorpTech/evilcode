@@ -1,8 +1,0 @@
-.std-stack {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-wrap: wrap;
-}
-.std-stack.h { flex-direction: row; }
-.std-stack.v { flex-direction: column; }

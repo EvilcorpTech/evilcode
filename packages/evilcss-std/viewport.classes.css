@@ -1,5 +1,7 @@
 .std-viewport {
     width: 100%;
+}
+.std-viewport.centered {
     margin-left: auto;
     margin-right: auto;
 }
