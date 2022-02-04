@@ -1,6 +1,6 @@
 import {classes} from '@eviljs/react/react.js'
 import {Fragment, useState} from 'react'
-import {Accordion} from './accordion.js'
+import {Accordion, AccordionList} from './accordion.js'
 import {Button} from './button.js'
 import {ArmoredButton} from './button-armored.js'
 import {BusyButton} from './button-busy.js'
@@ -46,16 +46,18 @@ export function WidgetsView(props: WidgetsViewProps) {
             <div className="section-0234">
                 <h6 className="title-74a6">Accordion</h6>
 
-                <Accordion
-                    header={(it, idx) => `${it.name}`}
-                    items={[{name: 'Pizza'}, {name: 'Pasta'}, {name: 'Patate'}]}
-                >
-                    {(it) =>
-                        <div className="std-viewport s std-text-body2 std-text-weight-1">
-                            {Lorem}
-                        </div>
-                    }
-                </Accordion>
+                <AccordionList maxOpen={2}>
+                    {[{name: 'Pizza'}, {name: 'Pasta'}, {name: 'Patate'}].map((it, idx) =>
+                        <Accordion
+                            key={idx}
+                            head={it.name}
+                        >
+                            <div className="std-viewport s std-text-body2 std-text-weight-1">
+                                {Lorem}
+                            </div>
+                        </Accordion>
+                    )}
+                </AccordionList>
             </div>
 
             <div className="section-0234 column">
@@ -193,9 +195,9 @@ export function WidgetsView(props: WidgetsViewProps) {
                         background: 'var(--std-color-bg3)',
                     }}
                 >
-                    <Slide className="std-stack h"><h6>1</h6></Slide>
-                    <Slide className="std-stack h"><h6>2</h6></Slide>
-                    <Slide className="std-stack h"><h6>3</h6></Slide>
+                    <Slide className="std-stack"><h6>1</h6></Slide>
+                    <Slide className="std-stack"><h6>2</h6></Slide>
+                    <Slide className="std-stack"><h6>3</h6></Slide>
                 </Slider>
                 <Button className="plain" onClick={(event) => setSlide(Math.min(2, slide + 1))}>
                     Next

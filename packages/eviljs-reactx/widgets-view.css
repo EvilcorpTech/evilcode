@@ -19,27 +19,23 @@
     font-weight: var(--std-text-weight2);
 }
 
-.section-0234 .Accordion-c2ae {
+.section-0234 .AccordionList-c2ae {
     border-radius: var(--std-radius4);
     overflow: hidden;
-}
-
-.section-0234 .section-c3bf {
     background-color: var(--std-color-bg2);
 }
 
-.section-0234 .section-c3bf .head-ad0d {
+.section-0234 .head-ad0d {
     padding: var(--std-gutter3);
     border-bottom: 4px solid var(--std-color-bg1);
     background-color: var(--std-color-bg3);
-    transition: all var(--std-duration3);
+    transition: all var(--duration, var(--std-duration2));
 }
-
-.section-0234 .section-c3bf.selected .head-ad0d {
+.section-0234 .AccordionItem-de4f.selected .head-ad0d {
     border-color: var(--std-color-primary-accent);
 }
 
-.section-0234 .section-c3bf .content-38aa > * {
+.section-0234 .content-38aa > * {
     padding: var(--std-gutter4);
     color: var(--std-color-primary-fg1);
 }
