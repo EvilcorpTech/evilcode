@@ -1,7 +1,6 @@
 import {Transition, TransitionMode} from '@eviljs/react/animation.js'
 import {TransitionAnimator, TransitionAnimatorEffect} from '@eviljs/react/animator.js'
 import {useI18n} from '@eviljs/react/i18n.js'
-import {PropsOf} from '@eviljs/react/react.js'
 import {RouteArgs} from '@eviljs/react/route-args.js'
 import {Arg, CaseRoute, exact, SwitchRoute, withRouteMatches} from '@eviljs/react/router.js'
 import {createI18n, I18n} from '@eviljs/std/i18n.js'
@@ -568,3 +567,8 @@ export type SiteWidgetPropsOf<W extends SiteWidgets> =
 
 export type SiteComponent<P = any> = React.FunctionComponent<P> // React.ComponentType
 export type SiteElement = null | JSX.Element
+
+export type PropsOf<T extends ((props: any) => any)> =
+    T extends ((props: infer P) => any)
+        ? P
+        : never
