@@ -2,7 +2,7 @@ import {clamp} from '@eviljs/std/math.js'
 import {distanceBetween} from '@eviljs/std/scale.js'
 import {isNil} from '@eviljs/std/type.js'
 import {useDrag, asDragPointerEvent, DragEvent, DragPointerEvent} from '@eviljs/react/drag.js'
-import {classes} from '@eviljs/react/react.js'
+import {classes} from '@eviljs/web/classes.js'
 import {useCallback, useEffect, useMemo, useRef, useState, Fragment} from 'react'
 
 import './range.css'

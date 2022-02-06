@@ -1,6 +1,6 @@
 import {asArray, isString} from '@eviljs/std/type.js'
 import {useI18n} from '@eviljs/react/i18n.js'
-import {classes} from '@eviljs/react/react.js'
+import {classes} from '@eviljs/web/classes.js'
 import {createElement, Fragment, Children} from 'react'
 
 export function Text(props: TextProps) {

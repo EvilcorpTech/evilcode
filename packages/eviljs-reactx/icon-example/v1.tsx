@@ -1,4 +1,4 @@
-import {classes} from '@eviljs/react/react.js'
+import {classes} from '@eviljs/web/classes.js'
 
 export function ExampleIcon(props: ExampleIconProps) {
     const {className, ...otherProps} = props

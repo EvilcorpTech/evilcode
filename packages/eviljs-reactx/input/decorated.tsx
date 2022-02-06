@@ -1,4 +1,4 @@
-import {classes} from '@eviljs/react/react.js'
+import {classes} from '@eviljs/web/classes.js'
 import {useRef, useState, Fragment} from 'react'
 import {Button} from '../button.js'
 

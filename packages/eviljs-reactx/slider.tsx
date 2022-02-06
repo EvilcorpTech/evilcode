@@ -1,7 +1,7 @@
 import {clamp} from '@eviljs/std/math.js'
-import {classes} from '@eviljs/react/react.js'
 import {isNil, ValueOf} from '@eviljs/std/type.js'
 import {Transition} from '@eviljs/react/animation.js'
+import {classes} from '@eviljs/web/classes.js'
 import {useCallback, useEffect, useState} from 'react'
 
 import './slider.css'

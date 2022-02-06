@@ -1,4 +1,4 @@
-import {classes} from '@eviljs/react/react.js'
+import {classes} from '@eviljs/web/classes.js'
 
 export function Switch(props: SwitchProps) {
     const {className, checked, children, disabled, onChange, ...otherProps} = props

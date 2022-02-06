@@ -1,7 +1,7 @@
 import {Box, BoxProps} from '@eviljs/react/box.js'
-import {classes} from '@eviljs/react/react.js'
 import {asArray} from '@eviljs/std/type.js'
 import {applyStyles} from '@eviljs/web/animation.js'
+import {classes} from '@eviljs/web/classes.js'
 import {Children, isValidElement, useCallback, useEffect, useRef, useState} from 'react'
 
 import './accordion.css'

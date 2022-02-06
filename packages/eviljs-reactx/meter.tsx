@@ -1,4 +1,4 @@
-import {classes} from '@eviljs/react/react'
+import {classes} from '@eviljs/web/classes.js'
 import {CSSProperties} from 'react'
 
 import './meter.css'

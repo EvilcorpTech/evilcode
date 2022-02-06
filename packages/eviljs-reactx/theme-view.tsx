@@ -1,5 +1,6 @@
 import {hslFromRgb, rgbFromHexString, rgbFromHsl, rgbToHexString, Hsl} from '@eviljs/std/color.js'
-import {classes, times} from '@eviljs/react/react.js'
+import {times} from '@eviljs/std/iter.js'
+import {classes} from '@eviljs/web/classes.js'
 import {CSSProperties, useEffect, useRef, useState} from 'react'
 import {ExampleIcon as Icon} from './icon-example/v2.js'
 

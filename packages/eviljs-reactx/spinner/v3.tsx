@@ -1,4 +1,4 @@
-import {classes} from '@eviljs/react/react.js'
+import {classes} from '@eviljs/web/classes.js'
 
 import './v3.css'
 

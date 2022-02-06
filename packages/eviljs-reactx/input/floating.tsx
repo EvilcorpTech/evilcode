@@ -1,5 +1,5 @@
-import {classes} from '@eviljs/react/react.js'
-import {useState, useRef, useLayoutEffect, useMemo} from 'react'
+import {classes} from '@eviljs/web/classes.js'
+import {useLayoutEffect, useMemo, useRef, useState} from 'react'
 
 import './floating.css'
 

@@ -1,4 +1,4 @@
-import {classes} from '@eviljs/react/react.js'
+import {classes} from '@eviljs/web/classes.js'
 import {Fragment, useState} from 'react'
 import {Accordion, AccordionList} from './accordion.js'
 import {Button} from './button.js'
