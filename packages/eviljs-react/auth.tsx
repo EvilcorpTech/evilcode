@@ -13,7 +13,7 @@ import {Fetch} from '@eviljs/web/fetch.js'
 import {throwInvalidResponse} from '@eviljs/web/throw.js'
 import {createContext, useCallback, useContext, useEffect, useMemo, useState} from 'react'
 import {useBusy} from './busy.js'
-import {useIfMounted, useMountedGuard} from './react.js'
+import {useIfMounted, useMountedGuard} from './hook.js'
 
 export const AuthContext = createContext<Auth>(void undefined as any)
 

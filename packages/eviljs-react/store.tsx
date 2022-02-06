@@ -1,7 +1,7 @@
 import {computeValue} from '@eviljs/std/fn.js'
 import {isArray, isObject} from '@eviljs/std/type.js'
-import React, {createContext, useCallback, useContext, useLayoutEffect, useMemo, useRef} from 'react'
-import {useRequestRender} from './react.js'
+import {createContext, useCallback, useContext, useLayoutEffect, useMemo, useRef} from 'react'
+import {useRender} from './hook.js'
 import {useRootStoreStorage as useCoreRootStoreStorage} from './store-storage.js'
 import {defaultOnMerge, StoreStorageOptions} from './store-v1.js'
 import {Store as StoreV2} from './store-v2.js'
@@ -148,14 +148,14 @@ export function useStore<S, V>(optionalSelector?: StoreSelector<S, V>, deps?: Ar
     const store = useStoreContext<S>()
     const state = store.stateRef.current
     const path = useMemo(() => selectPath(state, selector), deps ?? [])
-    const requestRender = useRequestRender()
+    const render = useRender()
 
     const selectedState = useMemo((): V => {
         return selectStateValue(state, path)
     }, [state, path])
 
     useLayoutEffect(() => {
-        const stopObserving = store.observe(path, requestRender)
+        const stopObserving = store.observe(path, render)
         return stopObserving
     }, [path])
 

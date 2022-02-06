@@ -1,6 +1,6 @@
 import {createCssTransition, play} from '@eviljs/web/animation.js'
 import {useEffect, useMemo, useState} from 'react'
-import {useMountedGuard} from './react.js'
+import {useMountedGuard} from './hook.js'
 import {useRouterTransition} from './router.js'
 
 export function useRoutedViewLifecycle(routeRegexp: RegExp) {
