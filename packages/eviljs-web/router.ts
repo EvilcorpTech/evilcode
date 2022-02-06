@@ -1,6 +1,6 @@
 import {encodeParams, defaultEncodeParamValue} from '@eviljs/std/query.js'
 import {isString} from '@eviljs/std/type.js'
-import {asBaseUrl} from './fetch.js'
+import {asBaseUrl} from './url.js'
 
 export function createRouter<S>(observer: RouterObserver, options?: RouterOptions): Router<S> {
     const type = options?.type ?? 'hash'
