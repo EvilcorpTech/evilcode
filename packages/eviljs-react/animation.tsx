@@ -15,7 +15,7 @@ import {
     useRef,
     useState,
 } from 'react'
-import {classes} from './react.js'
+import {classes} from './classes.js'
 
 export const TransitionContext = createContext<TransitionContext>([])
 

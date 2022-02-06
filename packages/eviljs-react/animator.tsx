@@ -1,4 +1,4 @@
-import {classes} from './react.js'
+import {classes} from './classes.js'
 
 import './animator.css'
 

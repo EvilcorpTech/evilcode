@@ -1,7 +1,7 @@
 import {ComputableValue, computeValue} from '@eviljs/std/fn.js'
 import {escapeRegexp} from '@eviljs/std/regexp.js'
 import {asArray, isPromise, Nil} from '@eviljs/std/type.js'
-import {classes} from './react.js'
+import {classes} from './classes.js'
 import {compilePattern, exact, regexpFromPattern} from '@eviljs/web/route.js'
 import {createRouter, serializeRouteToString, RouterOptions, RouterParams, RouterRouteParams} from '@eviljs/web/router.js'
 import {createContext, CSSProperties, Fragment, useCallback, useContext, useEffect, useMemo, useRef, useState} from 'react'
