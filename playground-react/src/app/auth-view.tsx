@@ -1,5 +1,5 @@
 import {useAuth, AuthTokenState} from '@eviljs/react/auth'
-import {classes} from '@eviljs/react/react'
+import {classes} from '@eviljs/react/classes'
 import {useRouter, Redirect} from '@eviljs/react/router'
 import {AuthCredentials} from '@eviljs/reactx/auth-credentials'
 import {useCallback} from 'react'

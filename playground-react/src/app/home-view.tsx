@@ -1,4 +1,4 @@
-import {classes} from '@eviljs/react/react'
+import {classes} from '@eviljs/react/classes'
 import {useI18nMsg} from 'lib/hooks/i18n'
 import {Header} from 'lib/widgets/header'
 

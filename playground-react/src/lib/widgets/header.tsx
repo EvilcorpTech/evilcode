@@ -1,4 +1,4 @@
-import {classes} from '@eviljs/react/react'
+import {classes} from '@eviljs/react/classes'
 import {Route} from '@eviljs/react/router'
 import {State, useStore} from '../hooks/store'
 import * as Routes from '../routes'
