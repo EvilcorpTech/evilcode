@@ -1,7 +1,7 @@
 import {hslFromRgb, rgbFromHexString, rgbFromHsl, rgbToHexString, Hsl} from '@eviljs/std/color.js'
 import {times} from '@eviljs/std/iter.js'
 import {classes} from '@eviljs/web/classes.js'
-import {CSSProperties, useEffect, useRef, useState} from 'react'
+import {CSSProperties, Fragment, useEffect, useRef, useState} from 'react'
 import {ExampleIcon as Icon} from './icon-example/v2.js'
 
 import './theme-view.css'
@@ -28,9 +28,9 @@ export function ThemeView(props: ThemeViewProps) {
             {head}
 
             <Picker
-                onPrimaryChange={(it) => setPrimaryAccent(it)}
-                onSecondaryChange={(it) => setSecondaryAccent(it)}
-                onThemeChange={(it) => setTheme(it)}
+                onPrimaryChange={setPrimaryAccent}
+                onSecondaryChange={setSecondaryAccent}
+                onThemeChange={setTheme}
             />
 
             <i className="std-space-v s5"/>
@@ -73,7 +73,7 @@ export function Picker(props: PickerProps) {
                 ref={primaryRef}
                 className="picker-t8c2"
                 type="color"
-                onChange={(event) => onPrimaryChange(computeHslFromHexColor(event.target.value))}
+                onChange={event => onPrimaryChange(computeHslFromHexColor(event.target.value))}
             />
             <i className="std-space-h s5"/>
             <label>Theme</label>
@@ -82,7 +82,7 @@ export function Picker(props: PickerProps) {
                 ref={secondaryRef}
                 className="picker-t8c2"
                 type="color"
-                onChange={(event) => onSecondaryChange(computeHslFromHexColor(event.target.value))}
+                onChange={event => onSecondaryChange(computeHslFromHexColor(event.target.value))}
             />
 
             <i className="std-space-h s5"/>
@@ -90,7 +90,7 @@ export function Picker(props: PickerProps) {
             <label className="std-flex column align-center">
                 <input
                     type="checkbox"
-                    onChange={(event) => onThemeChange(
+                    onChange={event => onThemeChange(
                         event.target.checked
                             ? 'dark'
                             : 'light'
@@ -129,7 +129,7 @@ export function Colors() {
                 <label>Tint</label>
                 <div className="std-grow"/>
                 <div className="std-flex row-reverse">
-                    {times(6).map((idx) => (
+                    {times(6).map(idx => (
                         <span
                             key={idx}
                             className="color-t75a"
@@ -146,7 +146,7 @@ export function Colors() {
                 <label>Shade</label>
                 <div className="std-grow"/>
                 <div className="std-flex row-reverse">
-                    {times(6).map((idx) => (
+                    {times(6).map(idx => (
                         <span
                             key={idx}
                             className="color-t75a"
@@ -163,7 +163,7 @@ export function Colors() {
                 <label>Tone</label>
                 <div className="std-grow"/>
                 <div className="std-flex row-reverse">
-                    {times(6).map((idx) => (
+                    {times(6).map(idx => (
                         <span
                             key={idx}
                             className="color-t75a"
@@ -180,7 +180,7 @@ export function Colors() {
                 <label>Fg</label>
                 <div className="std-grow"/>
                 <div className="std-flex row-reverse">
-                    {times(5).map((idx) => (
+                    {times(5).map(idx => (
                         <span
                             key={idx}
                             className="color-t75a"
@@ -197,7 +197,7 @@ export function Colors() {
                 <label>Bg</label>
                 <div className="std-grow"/>
                 <div className="std-flex row-reverse">
-                    {times(4).map((idx) => (
+                    {times(4).map(idx => (
                         <span
                             key={idx}
                             className="color-t75a"
@@ -233,7 +233,7 @@ export function Colors() {
                 <label>Tint</label>
                 <div className="std-grow"/>
                 <div className="std-flex row-reverse">
-                    {times(6).map((idx) => (
+                    {times(6).map(idx => (
                         <span
                             key={idx}
                             className="color-t75a"
@@ -250,7 +250,7 @@ export function Colors() {
                 <label>Shade</label>
                 <div className="std-grow"/>
                 <div className="std-flex row-reverse">
-                    {times(6).map((idx) => (
+                    {times(6).map(idx => (
                         <span
                             key={idx}
                             className="color-t75a"
@@ -267,7 +267,7 @@ export function Colors() {
                 <label>Tone</label>
                 <div className="std-grow"/>
                 <div className="std-flex row-reverse">
-                    {times(6).map((idx) => (
+                    {times(6).map(idx => (
                         <span
                             key={idx}
                             className="color-t75a"
@@ -284,7 +284,7 @@ export function Colors() {
                 <label>Fg</label>
                 <div className="std-grow"/>
                 <div className="std-flex row-reverse">
-                    {times(5).map((idx) => (
+                    {times(5).map(idx => (
                         <span
                             key={idx}
                             className="color-t75a"
@@ -301,7 +301,7 @@ export function Colors() {
                 <label>Bg</label>
                 <div className="std-grow"/>
                 <div className="std-flex row-reverse">
-                    {times(4).map((idx) => (
+                    {times(4).map(idx => (
                         <span
                             key={idx}
                             className="color-t75a"
@@ -341,26 +341,15 @@ export function Typography() {
 export function Gutters() {
     return (
         <div className="std-flex center column">
-            <label className="gutter-t1d3 std-flex column"><span>Gap 1</span><i className="std-space-h s1"/></label>
-            <i className="std-space-v s3"/>
-            <label className="gutter-t1d3 std-flex column"><span>Gap 2</span><i className="std-space-h s2"/></label>
-            <i className="std-space-v s3"/>
-            <label className="gutter-t1d3 std-flex column"><span>Gap 3</span><i className="std-space-h s3"/></label>
-            <i className="std-space-v s3"/>
-            <label className="gutter-t1d3 std-flex column"><span>Gap 4</span><i className="std-space-h s4"/></label>
-            <i className="std-space-v s3"/>
-            <label className="gutter-t1d3 std-flex column"><span>Gap 5</span><i className="std-space-h s5"/></label>
-            <i className="std-space-v s3"/>
-            <label className="gutter-t1d3 std-flex column"><span>Gap 6</span><i className="std-space-h s6"/></label>
-            <i className="std-space-v s3"/>
-            <label className="gutter-t1d3 std-flex column"><span>Gap 7</span><i className="std-space-h s7"/></label>
-            <i className="std-space-v s3"/>
-            <label className="gutter-t1d3 std-flex column"><span>Gap 8</span><i className="std-space-h s8"/></label>
-            <i className="std-space-v s3"/>
-            <label className="gutter-t1d3 std-flex column"><span>Gap 9</span><i className="std-space-h s9"/></label>
-            <i className="std-space-v s3"/>
-            <label className="gutter-t1d3 std-flex column"><span>Gap 10</span><i className="std-space-h s10"/></label>
-            <i className="std-space-v s3"/>
+            {times(10).map(it =>
+                <Fragment key={it}>
+                    <label className="gutter-t1d3 std-flex column">
+                        <span>Gap {it + 1}</span>
+                        <i className={`std-space-h s${it + 1}`}/>
+                    </label>
+                    <i className="std-space-v s3"/>
+                </Fragment>
+            )}
         </div>
     )
 }
@@ -481,63 +470,29 @@ export function Buttons() {
 export function Transitions() {
     return (
         <div className="std-flex center align-center wrap">
-            <label className="duration-t347" style={{transitionDuration: 'var(--std-duration1)'}}>Duration 1</label>
-            <label className="duration-t347" style={{transitionDuration: 'var(--std-duration2)'}}>Duration 2</label>
-            <label className="duration-t347" style={{transitionDuration: 'var(--std-duration3)'}}>Duration 3</label>
-            <label className="duration-t347" style={{transitionDuration: 'var(--std-duration4)'}}>Duration 4</label>
-            <label className="duration-t347" style={{transitionDuration: 'var(--std-duration5)'}}>Duration 5</label>
+            {times(5).map(it =>
+                <label
+                    key={it}
+                    className="duration-t347"
+                    style={{transitionDuration: `var(--std-duration${it + 1})`}}
+                >
+                    Duration 1
+                </label>
+            )}
         </div>
     )
 }
 
 export function Icons() {
     return (
-        <div className="std-flex center align-end wrap">
-            <div className="icon-e43c">
-                <Icon className="std-icon9"/>
-                <div className="std-space-h s3"/>
-                <label>9</label>
-            </div>
-            <div className="icon-e43c">
-                <Icon className="std-icon8"/>
-                <div className="std-space-h s3"/>
-                <label>8</label>
-            </div>
-            <div className="icon-e43c">
-                <Icon className="std-icon7"/>
-                <div className="std-space-h s3"/>
-                <label>7</label>
-            </div>
-            <div className="icon-e43c">
-                <Icon className="std-icon6"/>
-                <div className="std-space-h s3"/>
-                <label>6</label>
-            </div>
-            <div className="icon-e43c">
-                <Icon className="std-icon5"/>
-                <div className="std-space-h s3"/>
-                <label>5</label>
-            </div>
-            <div className="icon-e43c">
-                <Icon className="std-icon4"/>
-                <div className="std-space-h s3"/>
-                <label>4</label>
-            </div>
-            <div className="icon-e43c">
-                <Icon className="std-icon3"/>
-                <div className="std-space-h s3"/>
-                <label>3</label>
-            </div>
-            <div className="icon-e43c">
-                <Icon className="std-icon2"/>
-                <div className="std-space-h s3"/>
-                <label>2</label>
-            </div>
-            <div className="icon-e43c">
-                <Icon className="std-icon1"/>
-                <div className="std-space-h s3"/>
-                <label>1</label>
-            </div>
+        <div className="std-flex row-reverse center align-end wrap">
+            {times(10).map(it =>
+                <div key={it} className="icon-e43c">
+                    <Icon className={`std-icon${it + 1}`}/>
+                    <div className="std-space-h s3"/>
+                    <label>{it + 1}</label>
+                </div>
+            )}
         </div>
     )
 }
@@ -545,10 +500,14 @@ export function Icons() {
 export function Radiuses() {
     return (
         <div className="std-flex center align-center wrap">
-            <label className="radius-75ca std-radius1">Radius 1</label>
-            <label className="radius-75ca std-radius2">Radius 2</label>
-            <label className="radius-75ca std-radius3">Radius 3</label>
-            <label className="radius-75ca std-radius4">Radius 4</label>
+            {times(4).map(it =>
+                <label
+                    key={it}
+                    className={`radius-75ca std-radius${it + 1}`}
+                >
+                    Radius {it + 1}
+                </label>
+            )}
         </div>
     )
 }
@@ -557,11 +516,21 @@ export function Shadows() {
     return (
         <div className="std-flex center align-center wrap std-viewport m">
             <label className="shadow-t9a2 std-shadow soft">Soft</label>
-            {times(12).map((idx) => (
-                <label key={idx} className={`shadow-t9a2 std-shadow z${idx}`}>{idx}</label>
+            {times(12).map(idx => (
+                <label
+                    key={idx}
+                    className={`shadow-t9a2 std-shadow z${idx}`}
+                >
+                    {idx}
+                </label>
             ))}
             {times(25).map((nil, idx) => idx).slice(12).map(idx => (
-                <label key={idx} className={`shadow-t9a2 std-shadow primary-accent z${idx}`}>{idx}</label>
+                <label
+                    key={idx}
+                    className={`shadow-t9a2 std-shadow primary-accent z${idx}`}
+                >
+                    {idx}
+                </label>
             ))}
         </div>
     )

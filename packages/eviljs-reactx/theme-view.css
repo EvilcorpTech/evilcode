@@ -59,8 +59,8 @@
 }
 
 .color-t75a {
-    width: var(--std-icon4);
-    height: var(--std-icon4);
+    width: var(--std-icon6);
+    height: var(--std-icon6);
     margin: 0 var(--std-gutter3);
     border: 4px solid white;
     border-radius: 50%;
