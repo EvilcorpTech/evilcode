@@ -1,8 +1,0 @@
-.std {
-    /* We respect user's rem choice for small sizes. */
-    --std-text-size1: .8rem;
-    --std-text-size2: .9rem;
-    --std-text-size3: 1rem;
-    /* For bigger sizes, we respect the design. */
-    --std-text-size4: 20px;
-}

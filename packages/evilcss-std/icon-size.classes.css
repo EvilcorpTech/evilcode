@@ -61,3 +61,8 @@
     width: var(--std-icon9);
     height: var(--std-icon9);
 }
+.std-icon10 {
+    font-size: var(--std-icon10);
+    width: var(--std-icon10);
+    height: var(--std-icon10);
+}
