@@ -9,5 +9,4 @@ html[no-scroll] body {
     top: 0;
     width: 100vw;
     height: min(100%, 100vh);
-    overflow-y: auto;
 }
