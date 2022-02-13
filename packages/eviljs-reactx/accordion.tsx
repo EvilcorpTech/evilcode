@@ -228,7 +228,7 @@ export interface AccordionListProps extends Omit<React.HTMLAttributes<HTMLUListE
     onChange?: (list: Array<number>) => void
 }
 
-export interface AccordionProps extends BoxProps, React.HTMLAttributes<HTMLElement> {
+export interface AccordionProps extends BoxProps {
     head: React.ReactNode
     buttonProps?: React.ButtonHTMLAttributes<HTMLButtonElement> & {ref: React.Ref<HTMLButtonElement>}
     contentProps?: React.HTMLAttributes<HTMLDivElement>

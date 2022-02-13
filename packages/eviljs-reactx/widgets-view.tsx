@@ -195,9 +195,9 @@ export function WidgetsView(props: WidgetsViewProps) {
                         background: 'var(--std-color-bg3)',
                     }}
                 >
-                    <Slide className="std-stack"><h6>1</h6></Slide>
-                    <Slide className="std-stack"><h6>2</h6></Slide>
-                    <Slide className="std-stack"><h6>3</h6></Slide>
+                    <Slide className="std-flex-stack"><h6>1</h6></Slide>
+                    <Slide className="std-flex-stack"><h6>2</h6></Slide>
+                    <Slide className="std-flex-stack"><h6>3</h6></Slide>
                 </Slider>
                 <Button className="plain" onClick={(event) => setSlide(Math.min(2, slide + 1))}>
                     Next
