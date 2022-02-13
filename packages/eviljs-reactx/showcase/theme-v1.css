@@ -4,6 +4,7 @@
         'n w'
     ;
     grid-template-columns: min-content 1fr;
+    isolation: isolate;
 }
 
 .navigation-70eb {
