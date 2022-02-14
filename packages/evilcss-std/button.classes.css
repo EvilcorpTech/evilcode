@@ -1,43 +1,19 @@
 .std-button {
-    border-radius: var(--border-radius, var(--std-radius2));
-    padding: var(--padding, var(--std-gutter1) var(--std-gutter2));
+    border-radius: var(--button-radius, var(--std-radius1));
+    padding: var(--button-padding, var(--std-gutter1) var(--std-gutter2));
     display: inline-flex;
-    justify-content: center;
     align-items: center;
+    justify-content: center;
     text-align: center;
     user-select: none;
-    outline-offset: var(--outline-offset, 2px);
-    outline-width: var(--outline-width, 2px);
-    outline-style: solid;
-    outline-color: transparent;
-    transition: all var(--transition-duration, var(--std-duration3));
-}
-.std-button:focus-visible {
-    outline-color: var(--outline-color, var(--accent, var(--std-color-primary-accent, deepskyblue)));
-}
-@supports not selector(:focus-visible) {
-    /*
-    * :focus-visible is not supported by Safari yet, but it is coming.
-    * In the meantime we can use "@supports selector()" which is supported
-    * since Safari 14.1.
-    *
-    * :focus:not(:focus-visible) is treated as :focus on Chrome, so it is useless.
-    */
-    .std-button:focus {
-        outline-color: var(--outline-color, var(--accent, var(--std-color-primary-accent, deepskyblue)));
-    }
-}
-.std-button:focus:hover,
-.std-button:focus:active,
-.std-button:focus:hover:active {
-    outline-color: transparent;
+    transition: all var(--button-duration, var(--std-duration3));
 }
 .std-button:disabled,
 .std-button[disabled],
-.std-button[disabled]:active,
+.std-button[disabled]:hover,
 .std-button[disabled]:focus,
-.std-button[disabled]:hover {
+.std-button[disabled]:active {
     pointer-events: none;
-    opacity: var(--opacity--disabled, .3);
-    filter: saturate(var(--saturation--disabled, 0));
+    opacity: var(--button-opacity--disabled, .3);
+    filter: saturate(var(--button-saturation--disabled, 0));
 }

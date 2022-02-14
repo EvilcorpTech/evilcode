@@ -1,15 +1,19 @@
 .std-button.flat {
-    border: var(--border-size, 2px) solid var(--accent, var(--std-color-primary-accent));
-    color: var(--accent, var(--std-color-primary-accent));
+    border: var(--button-border-size, 2px) var(--button-border-style, solid) var(--button-accent, var(--std-color-primary-accent));
+    color: var(--button-accent, var(--std-color-primary-accent));
 }
-.std-button.flat:focus,
 .std-button.flat:hover {
-    color: var(--color--hover, white);
-    border-color: var(--border--hover, var(--accent, var(--std-color-primary-accent)));
-    background: var(--back--hover, var(--accent, var(--std-color-primary-accent)));
+    border-color: var(--button-border-color--hover, var(--button-accent, var(--std-color-primary-accent)));
+    color: var(--button-color--hover, white);
+    background: var(--button-bg--hover, var(--button-accent, var(--std-color-primary-accent)));
+}
+.std-button.flat:focus {
+    border-color: var(--button-border-color--focus, var(--button-accent, var(--std-color-primary-accent)));
+    color: var(--button-color--focus, white);
+    background: var(--button-bg--focus, var(--button-accent, var(--std-color-primary-accent)));
 }
 .std-button.flat:active {
-    color: var(--color--active, white);
-    border-color: var(--border--active, var(--accent, var(--std-color-primary-shade1)));
-    background: var(--back--active, var(--accent, var(--std-color-primary-shade1)));
+    border-color: var(--button-border-color--active, var(--button-accent, var(--std-color-primary-shade1)));
+    color: var(--button-color--active, white);
+    background: var(--button-bg--active, var(--button-accent, var(--std-color-primary-shade1)));
 }

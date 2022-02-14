@@ -1,6 +1,4 @@
 .std.theme-dark {
-    color: var(--theme-fg, var(--std-color-fg1));
-
     --std-fg-l: 100%;
     --std-fg-ll: -1;
     --std-bg-l: 0%;
@@ -13,7 +11,4 @@
     --std-color-bg2: hsl(0deg 15% 11%);
     --std-color-bg3: hsl(0deg 15% 13%);
     --std-color-bg4: hsl(0deg 15% 15%);
-}
-.std.theme-dark.bg {
-    background-color: var(--theme-bg, var(--std-color-bg1));
 }

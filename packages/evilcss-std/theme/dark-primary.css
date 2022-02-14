@@ -1,9 +1,0 @@
-.std.theme-dark {
-    --std-color-primary-fg1: hsl(var(--std-color-primary-h) var(--std-color-primary-s) 56%);
-    --std-color-primary-fg2: hsl(var(--std-color-primary-h) var(--std-color-primary-s) 77%);
-    --std-color-primary-fg3: hsl(var(--std-color-primary-h) var(--std-color-primary-s) 86%);
-    --std-color-primary-bg1: hsl(var(--std-color-primary-h) var(--std-color-primary-s) 23%);
-    --std-color-primary-bg2: hsl(var(--std-color-primary-h) var(--std-color-primary-s) 36%);
-    --std-color-primary-bg3: hsl(var(--std-color-primary-h) var(--std-color-primary-s) 49%);
-    --std-color-primary-bg4: hsl(var(--std-color-primary-h) var(--std-color-primary-s) 62%);
-}
