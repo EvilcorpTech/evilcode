@@ -7,14 +7,14 @@ import {ExampleIcon as Icon} from './icon-example/v2.js'
 import './theme-view.css'
 
 export function ThemeView(props: ThemeViewProps) {
-    const {className, head, children} = props
+    const {className, head, children, ...otherProps} = props
     const [primaryAccent, setPrimaryAccent] = useState<Hsl>([0, 0, 0])
     const [secondaryAccent, setSecondaryAccent] = useState<Hsl>([0, 0, 0])
     const [theme, setTheme] = useState<'light' | 'dark'>('light')
 
     return (
         <div
-            {...props}
+            {...otherProps}
             className={classes('ThemeView-t2eb', `std theme-${theme} bg`, className)}
             style={{
                 '--std-color-primary-h': primaryAccent[0] * 360 + 'deg',
@@ -39,8 +39,8 @@ export function ThemeView(props: ThemeViewProps) {
                 <Colors/>
                 <Typography/>
                 <Gutters/>
-                <Contrast/>
                 <Icons/>
+                <Contrast/>
                 <Radiuses/>
                 <Shadows/>
                 <Transitions/>
@@ -485,7 +485,7 @@ export function Transitions() {
 
 export function Icons() {
     return (
-        <div className="std-flex row-reverse center align-end wrap">
+        <div className="std-flex row center align-end aligned-center wrap">
             {times(10).map(it =>
                 <div key={it} className="icon-e43c">
                     <Icon className={`std-icon${it + 1}`}/>
