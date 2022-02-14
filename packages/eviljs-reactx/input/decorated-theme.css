@@ -37,7 +37,7 @@
 /* SecretInput ****************************************************************/
 
 .button-2bdf {
-    --padding: 0;
+    --button-padding: 0;
     color: var(--std-color-fg2);
 }
 .button-2bdf:focus,

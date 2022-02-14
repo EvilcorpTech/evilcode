@@ -89,7 +89,7 @@ export function WidgetsView(props: WidgetsViewProps) {
                     {({armor, close}) =>
                         <Fragment>
                             <Button
-                                className="armor halo"
+                                className="armor plain halo"
                                 onClick={armor}
                             >
                                 Armor
@@ -127,7 +127,10 @@ export function WidgetsView(props: WidgetsViewProps) {
                     checked={checkbox}
                     onChange={setCheckbox}
                 >
-                    <CheckboxMarkV1 className="std-knob round std-icon-text"/>
+                    <CheckboxMarkV1
+                        className="std-knob round std-icon-text"
+                        style={{color: 'var(--std-color-bg1)'}}
+                    />
                 </Switch>
 
                 <Checkbox checked="mixed" disabled>
@@ -211,10 +214,10 @@ export function WidgetsView(props: WidgetsViewProps) {
                     Toggle
                 </Button>
 
-                <SpinnerV1 active={spinner}/>
-                <SpinnerV3 active={spinner}/>
-                <SpinnerV4 active={spinner}/>
-                <SpinnerV2 active={spinner}/>
+                <SpinnerV1 className="std-color-secondary-accent" active={spinner}/>
+                <SpinnerV3 className="std-color-secondary-accent" active={spinner}/>
+                <SpinnerV4 className="std-color-secondary-accent" active={spinner}/>
+                <SpinnerV2 className="std-color-secondary-accent" active={spinner}/>
             </div>
 
             <div className="section-0234">

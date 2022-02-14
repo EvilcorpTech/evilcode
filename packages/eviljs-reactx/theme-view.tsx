@@ -451,7 +451,7 @@ export function Buttons() {
             <div>
                 <button className="std-text-button std-button dye">Dye</button>
                 <button className="std-text-button std-button flat">Flat</button>
-                <button className="std-text-button std-button halo">Halo</button>
+                <button className="std-text-button std-button plain halo">Halo</button>
                 <button className="std-text-button std-button plain">Plain</button>
             </div>
 
@@ -460,7 +460,7 @@ export function Buttons() {
             <div>
                 <button className="std-text-button std-button dye" disabled>Dye</button>
                 <button className="std-text-button std-button flat" disabled>Flat</button>
-                <button className="std-text-button std-button halo" disabled>Halo</button>
+                <button className="std-text-button std-button plain halo" disabled>Halo</button>
                 <button className="std-text-button std-button plain" disabled>Plain</button>
             </div>
         </div>
@@ -476,7 +476,7 @@ export function Transitions() {
                     className="duration-t347"
                     style={{transitionDuration: `var(--std-duration${it + 1})`}}
                 >
-                    Duration 1
+                    Duration {it + 1}
                 </label>
             )}
         </div>

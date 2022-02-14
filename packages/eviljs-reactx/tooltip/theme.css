@@ -54,7 +54,7 @@
 }
 
 .content-b6b3 {
-    padding: var(--padding, var(--std-gutter3));
+    padding: var(--tooltip-padding, var(--std-gutter3));
     background-color: var(--std-color-bg1);
 }
 */

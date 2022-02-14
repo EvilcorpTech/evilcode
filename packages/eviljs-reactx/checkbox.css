@@ -1,5 +1,5 @@
 .Checkbox-16ba {
-    --padding: var(--std-gutter1);
+    --button-padding: var(--std-gutter1);
     border: 2px solid currentColor;
 }
 
