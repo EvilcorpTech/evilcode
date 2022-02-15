@@ -1,12 +1,21 @@
 .std-button {
     border-radius: var(--button-radius, var(--std-radius1));
     padding: var(--button-padding, var(--std-gutter1) var(--std-gutter2));
+    user-select: none;
+    transition: all var(--button-duration, var(--std-duration3));
+}
+.std-button.flex {
     display: inline-flex;
     align-items: center;
     justify-content: center;
     text-align: center;
-    user-select: none;
-    transition: all var(--button-duration, var(--std-duration3));
+}
+.std-button.grid {
+    display: inline-grid;
+    grid-auto-flow: column;
+    place-content: center;
+    place-items: center;
+    text-align: center;
 }
 .std-button:disabled,
 .std-button[disabled],
