@@ -1,14 +1,5 @@
-.std-flex-stack {
-    display: flex;
+.std-flex.stack {
     align-items: center;
     align-content: center;
     justify-content: center;
-    flex-wrap: wrap;
 }
-.std-flex-stack.inline {
-    display: inline-flex;
-}
-.std-flex-stack.row { flex-direction: row; }
-.std-flex-stack.row-reverse { flex-direction: row-reverse; }
-.std-flex-stack.column { flex-direction: column; }
-.std-flex-stack.column-reverse { flex-direction: column-reverse; }
