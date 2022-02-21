@@ -1,14 +1,8 @@
+.std-layer-root {
+    position: relative;
+}
+
 .std-layer {
     position: absolute;
     inset: 0;
-}
-
-.std-layers {
-    display: grid;
-}
-.std-layers.inline {
-    display: inline-grid;
-}
-.std-layers > * {
-    grid-area: 1 / 1;
 }
