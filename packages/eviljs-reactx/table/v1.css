@@ -1,0 +1,20 @@
+.Table-87f7.fixed .table-inner-295a {
+    table-layout: fixed;
+}
+
+.TableScroller-ef6a {
+    width: 100%;
+    height: var(--TableScroller-height);
+    overflow: auto;
+}
+
+.table-inner-295a {
+    width: 100%;
+    border-collapse: collapse;
+    border-spacing: 0;
+}
+
+.TableColumn-ebec {
+    position: sticky;
+    top: 0;
+}
