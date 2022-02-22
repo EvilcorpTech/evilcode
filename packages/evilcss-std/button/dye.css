@@ -7,8 +7,8 @@
     background: var(--button-accent--hover, var(--button-accent, var(--std-color-primary-tone1)));
 }
 .std-button.dye:focus {
-    color: var(--button-color--active, var(--button-color, white));
-    background: var(--button-accent--active, var(--button-accent, var(--std-color-primary-tone1)));
+    color: var(--button-color--focus, var(--button-color, white));
+    background: var(--button-accent--focus, var(--button-accent, var(--std-color-primary-tone1)));
 }
 .std-button.dye:active {
     color: var(--button-color--active, var(--button-color, white));

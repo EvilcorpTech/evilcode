@@ -23,11 +23,11 @@
 .std-button.halo:hover::after {
     transform: scale(1);
 }
-.std-button.halo:focus::after {
-    opacity: var(--halo-opacity--focus, .1);
-}
 .std-button.halo:hover::after {
     opacity: var(--halo-opacity--hover, .1);
+}
+.std-button.halo:focus::after {
+    opacity: var(--halo-opacity--focus, .1);
 }
 .std-button.halo:active::after {
     opacity: var(--halo-opacity--active, .2);
