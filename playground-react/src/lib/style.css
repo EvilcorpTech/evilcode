@@ -22,6 +22,7 @@
 @import '@evilcss/std/flex-space.classes.css';
 @import '@evilcss/std/flex-stack.classes.css';
 @import '@evilcss/std/flex.classes.css';
+@import '@evilcss/std/grid-layers.classes.css';
 @import '@evilcss/std/grid.css';
 @import '@evilcss/std/gutter-gap.classes.css';
 @import '@evilcss/std/gutter-scale/default.props.css';
@@ -59,6 +60,7 @@
 @import '@evilcss/std/shadow/material.classes.css';
 @import '@evilcss/std/shadow/material.props.css';
 @import '@evilcss/std/switch.classes.css';
+@import '@evilcss/std/text-align.classes.css';
 @import '@evilcss/std/text-font.classes.css';
 @import '@evilcss/std/text-font/roboto.css';
 @import '@evilcss/std/text-height.props.css';
