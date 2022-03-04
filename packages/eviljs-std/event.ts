@@ -27,6 +27,7 @@ export function debounce<A extends Array<unknown>>(task: Task<A>, delay: number)
         }
 
         clearTimeout(state.timeoutId)
+        state.timeoutId = null
     }
 
     function run() {
@@ -74,6 +75,7 @@ export function throttle<A extends Array<unknown>>(task: Task<A>, delay: number)
         }
 
         clearTimeout(state.timeoutId)
+        state.timeoutId = null
     }
 
     function run() {
