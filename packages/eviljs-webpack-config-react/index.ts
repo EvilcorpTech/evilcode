@@ -178,7 +178,7 @@ export function createWebpackConfig(options?: WebpackConfigOptions) {
                     '...',
                     new CssMinimizerPlugin({
                         test: /\.css$/i,
-                        minify: CssMinimizerPlugin.cssoMinify,
+                        minify: CssMinimizerPlugin.parcelCssMinify,
                     }),
                 ],
             },
