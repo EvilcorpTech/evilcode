@@ -76,11 +76,11 @@ export function createImageLoader(image: Image, onEndObserver?: ImageOnEnd) {
 export function mountImageLoader(img: HTMLImageElement) {
     document.body.appendChild(img)
 
-    function unmount() {
+    function onUnmount() {
         unmountImageLoader(img)
     }
 
-    return unmount
+    return onUnmount
 }
 
 export function unmountImageLoader(img: HTMLImageElement) {

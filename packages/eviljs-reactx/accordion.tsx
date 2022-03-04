@@ -222,7 +222,7 @@ export function AccordionItem(props: AccordionItemProps) {
 // Types ///////////////////////////////////////////////////////////////////////
 
 export interface AccordionListProps extends Omit<React.HTMLAttributes<HTMLUListElement>, 'onChange'> {
-    children: React.ReactElement<AccordionProps> | Array<React.ReactElement<AccordionProps>>
+    children?: undefined | null | React.ReactElement<AccordionProps> | Array<React.ReactElement<AccordionProps>>
     initial?: Array<number>
     maxOpen?: number
     onChange?: (list: Array<number>) => void
