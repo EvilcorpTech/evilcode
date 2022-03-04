@@ -12,11 +12,11 @@ export function usePageScroll(onScroll: ScrollListener) {
 
         document.addEventListener('scroll', onPageScroll, {passive: true})
 
-        function unmount() {
+        function onUnmount() {
             document.removeEventListener('scroll', onPageScroll)
         }
 
-        return unmount
+        return onUnmount
     }, [onScroll])
 }
 

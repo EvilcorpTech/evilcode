@@ -112,11 +112,11 @@ export function useMountedRef() {
     // that's what we need to reflect as soon as possible the state
     // (mounted/unmounted) inside the reference.
     useLayoutEffect(() => {
-        function unmount() {
+        function onUnmount() {
             mountedRef.current = false
         }
 
-        return unmount
+        return onUnmount
     }, [])
 
     return mountedRef

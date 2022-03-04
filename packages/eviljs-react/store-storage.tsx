@@ -73,11 +73,11 @@ export function useRootStoreStorage<S, L = S>(state: S, options: StoreStorageOpt
             })
         }, debounce)
 
-        function unmount() {
+        function onUnmount() {
             clearTimeout(timeoutId)
         }
 
-        return unmount
+        return onUnmount
     }, [state])
 }
 

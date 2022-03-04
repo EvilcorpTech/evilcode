@@ -62,9 +62,16 @@ export function QueryProvider(props: QueryProviderProps) {
 }
 
 export function useQuery<A extends Array<unknown>, R>(queryRunner: QueryRunner<A, R>) {
-    const [response, setResponse] = useState<null | R>(null)
-    const [pending, setPending] = useState(false)
-    const [error, setError] = useState<null | unknown>(null)
+    interface UseQueryState {
+        pending: boolean
+        response: undefined | R
+        error: undefined | unknown
+    }
+    const [state, setState] = useState<UseQueryState>({
+        pending: false,
+        response: undefined,
+        error: undefined,
+    })
     const mountedRef = useMountedRef()
     const taskRef = useRef<null | QueryTask<R>>(null)
     const query = useContext(QueryContext)
@@ -75,11 +82,13 @@ export function useQuery<A extends Array<unknown>, R>(queryRunner: QueryRunner<A
             taskRef.current.cancelled = true
         }
 
-        setPending(true)
-        setError(null)
         // We must retain current response and error states.
         // Whether the developer wants to clear them, he uses the reset() API
         // before issuing a fetch() request.
+        setState(state => ({
+            ...state,
+            pending: true,
+        }))
 
         taskRef.current = {
             promise: queryRunner(query, ...args),
@@ -98,9 +107,12 @@ export function useQuery<A extends Array<unknown>, R>(queryRunner: QueryRunner<A
                 return
             }
 
-            setPending(false) // 1) We settle
-            setError(null) // 2) ...without any error
-            setResponse(response) // 3) ...with a response.
+            setState(state => ({
+                ...state,
+                pending: false, // We settle.
+                response, // With a response.
+                error: undefined, // Without any error.
+            }))
 
             return response
         }
@@ -112,9 +124,12 @@ export function useQuery<A extends Array<unknown>, R>(queryRunner: QueryRunner<A
                 return
             }
 
-            setPending(false) // 1) We settle
-            setError(error) // 2) ...with an error
-            setResponse(null) // 3) ...without a response.
+            setState(state => ({
+                ...state,
+                pending: false, // We settle.
+                response: undefined, // Without a response.
+                error, // With an error.
+            }))
 
             return // Makes TypeScript happy.
         }
@@ -125,15 +140,33 @@ export function useQuery<A extends Array<unknown>, R>(queryRunner: QueryRunner<A
             taskRef.current.cancelled = true
         }
 
-        setPending(false)
+        setState(state => ({...state, pending: false}))
     }, [])
 
+    const resetResponse = useCallback(() => {
+        setState(state => ({...state, response: undefined}))
+    }, [])
+    const resetError = useCallback(() => {
+        setState(state => ({...state, error: undefined}))
+    }, [])
     const reset = useCallback(() => {
-        setResponse(null)
-        setError(null)
+        setState(state => ({
+            ...state,
+            response: undefined,
+            error: undefined,
+        }))
     }, [])
 
-    return {fetch, response, error, pending, reset, cancel}
+    return {
+        fetch,
+        pending: state.pending,
+        response: state.response,
+        error: state.error,
+        reset,
+        resetError,
+        resetResponse,
+        cancel,
+    }
 }
 
 // Types ///////////////////////////////////////////////////////////////////////

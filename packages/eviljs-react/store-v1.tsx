@@ -84,14 +84,20 @@ export function useRootStore<S extends {}, A extends StoreActions<S>>(spec: Stor
             return throwInvalidAction(action.type)
         }
 
-        return handler(state, action.value)
+        return handler(state, action.value);
     }
 
-    const [state, commit] = useReducer(reduce, null, createState)
+    const [state, dispatch] = useReducer(reduce, null, createState)
 
     const store = useMemo(() => {
+        function commit(action: StoreAction<unknown>) {
+            spec?.listener?.(action, state)
+
+            dispatch(action)
+        }
+
         return {state, commit}
-    }, [state, commit])
+    }, [state])
 
     return store as Store<S, A>
 }
@@ -157,6 +163,7 @@ export interface StoreProviderProps<S extends {}, A extends StoreActions<S>> {
 export interface StoreSpec<S extends {}, A extends StoreActions<S>> {
     actions: A
     createState(): S
+    listener?: (action: StoreActionsOf<S, A>, oldState: S) => void
 }
 
 export interface Store<S extends {}, A extends StoreActions<S>> {

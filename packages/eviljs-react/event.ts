@@ -9,11 +9,11 @@ export function useDebounce<A extends Array<unknown>>(task: Task<A>, delay: numb
     }, [task, delay])
 
     useLayoutEffect(() => {
-        function unmount() {
-            taskDebounced?.cancel()
+        function onUnmount() {
+            taskDebounced.cancel()
         }
 
-        return unmount
+        return onUnmount
     }, [taskDebounced])
 
     return taskDebounced
@@ -25,11 +25,11 @@ export function useThrottle<A extends Array<unknown>>(task: Task<A>, delay: numb
     }, [task, delay])
 
     useLayoutEffect(() => {
-        function unmount() {
-            taskThrottled?.cancel()
+        function onUnmount() {
+            taskThrottled.cancel()
         }
 
-        return unmount
+        return onUnmount
     }, [taskThrottled])
 
     return taskThrottled

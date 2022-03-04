@@ -171,11 +171,11 @@ export function useRootRouter(options?: undefined | RouterOptions) {
     useEffect(() => {
         globalRouter.start()
 
-        function unmount() {
+        function onUnmount() {
             globalRouter.stop()
         }
 
-        return unmount
+        return onUnmount
     }, [globalRouter])
 
     const router = useMemo(() => {

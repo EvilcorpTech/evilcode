@@ -26,13 +26,13 @@ export function useKey(key: Key, handler: KeyHandler, options?: UseKeyOptions) {
             handler(event)
         }
 
-        function unmount() {
+        function onUnmount() {
             document.removeEventListener(event, onKey, phase)
         }
 
         document.addEventListener(event, onKey, phase)
 
-        return unmount
+        return onUnmount
     }, [key, handler, options])
 }
 
