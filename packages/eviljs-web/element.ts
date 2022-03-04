@@ -50,11 +50,11 @@ export function useEventListener(element: WebElement, target: Window | Document 
     onMounted(element, () => {
         target.addEventListener(type, listener, options)
 
-        function unmount() {
+        function onUnmount() {
             target.removeEventListener(type, listener, options)
         }
 
-        return unmount
+        return onUnmount
     })
 }
 

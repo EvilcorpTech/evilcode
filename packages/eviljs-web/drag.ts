@@ -36,7 +36,7 @@ export function attachDragListeners(el: DragElement, listeners: DragListeners) {
     el.addEventListener('mouseleave', onMouseLeave, eventOptions)
     el.addEventListener('touchcancel', onTouchCancel, eventOptions)
 
-    function unmount() {
+    function onUnmount() {
         el.removeEventListener('mousemove', onMouseMove, eventOptions.capture)
         el.removeEventListener('touchmove', onTouchMove, eventOptions.capture)
         el.removeEventListener('mouseup', onMouseUp, eventOptions.capture)
@@ -45,7 +45,7 @@ export function attachDragListeners(el: DragElement, listeners: DragListeners) {
         el.removeEventListener('touchcancel', onTouchCancel, eventOptions.capture)
     }
 
-    return unmount
+    return onUnmount
 }
 
 // Move ////////////////////////////////////////////////////////////////////////

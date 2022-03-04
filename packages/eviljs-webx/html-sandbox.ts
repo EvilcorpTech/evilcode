@@ -24,11 +24,11 @@ export class HtmlSandbox extends WebElement {
             const observer = new MutationObserver(() => onContentChange(this))
             observer.observe(this, {subtree: true, characterData: true})
 
-            function unmount() {
+            function onUnmount() {
                 observer.disconnect()
             }
 
-            return unmount
+            return onUnmount
         })
 
         useEventListener(this, window, 'hashchange', onHashChange.bind(this, this))
