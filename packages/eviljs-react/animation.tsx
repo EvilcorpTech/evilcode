@@ -57,8 +57,8 @@ export function Transition(props: TransitionProps) {
 
         // Macro task is completed.
         const {task} = state
-        const enterObserver = task.find(it => it.flags.includes('enter'))
-        const exitObserver = task.find(it => it.flags.includes('exit'))
+        const enterObserver = task.find(it => it.kind === 'enter')
+        const exitObserver = task.find(it => it.kind === 'exit')
 
         if (enterObserver) {
             enterObserver.observers.onEntered?.()
@@ -150,7 +150,7 @@ export function Animator(props: AnimatorProps) {
         }
     }, [type, lifecycle])
 
-    useEffect(() => {
+    useLayoutEffect(() => {
         collectedEventsRef.current = 0
     }, [id])
 
@@ -343,8 +343,8 @@ function createTask(
         // Defaults.
         events: 0,
         alive: false,
-        flags: [],
         completed: false,
+        kind: undefined,
         target: [],
         // Options.
         ...options,
@@ -384,7 +384,7 @@ export function createMountTasks(spec: {
         : enter
 
     return createTasksTransaction([
-        createTask(action, newChild, observers, {events, target, alive: true, flags: ['enter']})
+        createTask(action, newChild, observers, {events, target, alive: true, kind: 'enter'})
     ])
 }
 
@@ -403,7 +403,7 @@ export function createUnmountTasks(spec: {
 
     return createTasksTransaction(
         [createTask('unmount', oldChild, observers, {events: exit, target, alive: true})],
-        [createTask('render', <Fragment/>, observers, {flags: ['exit']})],
+        [createTask('render', <Fragment/>, observers, {kind: 'exit'})],
     )
 }
 
@@ -459,11 +459,11 @@ export function createCrossTasks(spec: {
     return createTasksTransaction(
         [
             // Parallel unmount and mount.
-            createTask('unmount', oldChild, observers, {events: exit, target, flags: ['exit']}),
+            createTask('unmount', oldChild, observers, {events: exit, target, kind: 'exit'}),
             createTask('mount', newChild, observers, {events: enter, target, alive: true, key: createKey}),
         ],
         [
-            createTask('render', newChild, observers, {alive: true, flags: ['enter'], key: (keys) => keys[1]!}),
+            createTask('render', newChild, observers, {alive: true, kind: 'enter', key: (keys) => keys[1]!}),
         ],
     )
 }
@@ -486,8 +486,8 @@ export function createOutInTasks(spec: {
     } = spec
 
     return createTasksTransaction(
-        [createTask('unmount', oldChild, observers, {events: exit, target, flags: ['exit']})],
-        [createTask('mount', newChild, observers, {events: enter, target, alive: true, flags: ['enter']})],
+        [createTask('unmount', oldChild, observers, {events: exit, target, kind: 'exit'})],
+        [createTask('mount', newChild, observers, {events: enter, target, alive: true, kind: 'enter'})],
     )
 }
 
@@ -514,11 +514,11 @@ export function createInOutTasks(spec: {
             createTask('mount', newChild, observers, {events: enter, target, alive: true, key: createKey}),
         ],
         [
-            createTask('unmount', oldChild, observers, {events: exit, target, flags: ['exit']}),
+            createTask('unmount', oldChild, observers, {events: exit, target, kind: 'exit'}),
             createTask('render', newChild, observers, {alive: true}),
         ],
         [
-            createTask('render', newChild, observers, {alive: true, flags: ['enter'], key: (keys) => keys[1]!}),
+            createTask('render', newChild, observers, {alive: true, kind: 'enter', key: (keys) => keys[1]!}),
         ],
     )
 }
@@ -786,8 +786,7 @@ export interface TransitionState {
 export type TransitionTaskEnd = (task: TransitionTask) => void
 export type TransitionTaskId = number
 export type TransitionTaskAction = 'unmount' | 'mount' | 'render'
-export type TransitionTaskFlag = 'enter' | 'exit'
-export type TransitionTaskFlags = Array<TransitionTaskFlag>
+export type TransitionTaskKind = undefined | 'enter' | 'exit'
 
 export type TransitionQueue = Array<TransitionMacroTask>
 export type TransitionMacroTask = Array<TransitionTask>
@@ -800,7 +799,7 @@ export interface TransitionTask {
     child: TransitionElement
     completed: boolean
     events: number
-    flags: TransitionTaskFlags
+    kind: TransitionTaskKind
     observers: TransitionObservers
     target: AnimatorEventTarget
     key?(keys: Array<string>): undefined | string

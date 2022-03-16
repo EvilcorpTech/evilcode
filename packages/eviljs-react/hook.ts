@@ -112,6 +112,8 @@ export function useMountedRef() {
     // that's what we need to reflect as soon as possible the state
     // (mounted/unmounted) inside the reference.
     useLayoutEffect(() => {
+        mountedRef.current = true // Supports React Fast Refresh.
+
         function onUnmount() {
             mountedRef.current = false
         }

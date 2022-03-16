@@ -1,10 +1,9 @@
-import {Query} from '@eviljs/web/query.js'
 import {createContext, useCallback, useContext, useRef, useState} from 'react'
 import {useMountedRef} from './hook.js'
 
 export {asBaseUrl, joinPath} from '@eviljs/web/url.js'
 
-export const QueryContext = createContext<Query>(void undefined as any)
+export const QueryContext = createContext<any>(void undefined)
 
 QueryContext.displayName = 'QueryContext'
 
@@ -17,7 +16,7 @@ QueryContext.displayName = 'QueryContext'
 *
 * render(<Main/>, document.body)
 */
-export function WithQuery<P extends {}>(Child: React.ComponentType<P>, query: Query) {
+export function WithQuery<P extends {}>(Child: React.ComponentType<P>, query: any) {
     function QueryProviderProxy(props: P) {
         return withQuery(<Child {...props}/>, query)
     }
@@ -32,10 +31,10 @@ export function WithQuery<P extends {}>(Child: React.ComponentType<P>, query: Qu
 * const query = createQuery(fetch)
 *
 * export function MyMain(props) {
-*     return withQuery(<Children/>, fetch)
+*     return withQuery(<Children/>, query)
 * }
 */
-export function withQuery(children: React.ReactNode, query: Query) {
+export function withQuery(children: React.ReactNode, query: any) {
     return (
         <QueryContext.Provider value={query}>
             {children}
@@ -61,7 +60,7 @@ export function QueryProvider(props: QueryProviderProps) {
     return withQuery(props.children, props.query)
 }
 
-export function useQuery<A extends Array<unknown>, R>(queryRunner: QueryRunner<A, R>) {
+export function useQuery<Q, A extends Array<unknown>, R>(queryRunner: QueryRunner<Q, A, R>) {
     interface UseQueryState {
         pending: boolean
         response: undefined | R
@@ -74,7 +73,7 @@ export function useQuery<A extends Array<unknown>, R>(queryRunner: QueryRunner<A
     })
     const mountedRef = useMountedRef()
     const taskRef = useRef<null | QueryTask<R>>(null)
-    const query = useContext(QueryContext)
+    const query = useContext<Q>(QueryContext)
 
     const fetch = useCallback(async (...args: A) => {
         if (taskRef.current) {
@@ -173,11 +172,11 @@ export function useQuery<A extends Array<unknown>, R>(queryRunner: QueryRunner<A
 
 export interface QueryProviderProps {
     children: React.ReactNode
-    query: Query
+    query: any
 }
 
-export interface QueryRunner<A extends Array<unknown>, R> {
-    (query: Query, ...args: A): Promise<R>
+export interface QueryRunner<Q, A extends Array<unknown>, R> {
+    (query: Q, ...args: A): Promise<R>
 }
 
 export interface QueryTask<T> {
