@@ -1,5 +1,5 @@
 import {assertObject} from './assert.js'
-import {isArray, isObject, isUndefined} from './type.js'
+import {isArray, isDefined, isObject, isUndefined} from './type.js'
 
 export const ObjectPathArrayOpenRegexp = /\[/g
 export const ObjectPathArrayCloseRegexp = /\]/g
@@ -66,7 +66,7 @@ export function map
     )
 }
 
-export function withoutProps<O, P extends keyof O>(object: O, ...props: Array<P>) {
+export function withoutProps<O extends {}, P extends keyof O>(object: O, ...props: Array<P>) {
     assertObject(object, 'object')
 
     const obj = {...object}
@@ -78,7 +78,7 @@ export function withoutProps<O, P extends keyof O>(object: O, ...props: Array<P>
     return obj as Omit<O, P>
 }
 
-export function withoutUndefinedProps<O>(object: O) {
+export function withoutUndefinedProps<O extends {}>(object: O) {
     assertObject(object, 'object')
 
     const obj = {...object}
@@ -90,6 +90,16 @@ export function withoutUndefinedProps<O>(object: O) {
     }
 
     return obj
+}
+
+export function asObjectWithDefinedValue<K extends PropertyKey, V>(
+    key: K,
+    value: undefined | V,
+): {} | {[key in K]: V}
+{
+    return isDefined(value)
+        ? {[key]: value}
+        : {}
 }
 
 export function get(obj: GetObject, path: GetPath) {

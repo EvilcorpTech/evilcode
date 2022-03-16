@@ -156,6 +156,10 @@ export type Nil = undefined | null
 
 export type ValueOf<T> = T[keyof T]
 
+export type Defined<O> = {
+    [P in keyof O]-?: Exclude<O[P], undefined>
+}
+
 export type ElementOf<A extends Array<unknown>> =
     A extends Array<infer T>
         ? T
