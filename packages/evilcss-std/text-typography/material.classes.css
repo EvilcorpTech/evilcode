@@ -23,7 +23,7 @@
     font-size: var(--std-text-body1-size);
     font-weight: var(--text-weight, var(--std-text-body1-weight));
     font-style: var(--text-style, var(--std-text-body1-style));
-    letter-spacing: var(--text-spacing, var(--std-text-body1-weight));
+    letter-spacing: var(--text-spacing, var(--std-text-body1-spacing));
     line-height: var(--text-height, var(--std-text-body1-height));
     text-transform: var(--text-transform, var(--std-text-body1-transform));
     opacity: var(--text-opacity, var(--std-text-body1-opacity));
