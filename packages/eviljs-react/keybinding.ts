@@ -4,6 +4,7 @@ import {useLayoutEffect} from 'react'
 export function useKey(key: Key, handler: KeyHandler, options?: UseKeyOptions) {
     useLayoutEffect(() => {
         const keys = asArray(key)
+        const el: GlobalEventHandlers = options?.ref?.current ?? document
         const event = options?.event ?? 'keyup'
         const phase = (() => {
             switch (options?.phase) {
@@ -26,14 +27,14 @@ export function useKey(key: Key, handler: KeyHandler, options?: UseKeyOptions) {
             handler(event)
         }
 
+        el.addEventListener(event, onKey, phase)
+
         function onUnmount() {
-            document.removeEventListener(event, onKey, phase)
+            el.removeEventListener(event, onKey, phase)
         }
 
-        document.addEventListener(event, onKey, phase)
-
         return onUnmount
-    }, [key, handler, options])
+    }, [key, handler, options?.event, options?.phase])
 }
 
 // Types ///////////////////////////////////////////////////////////////////////
@@ -45,6 +46,7 @@ export interface KeyHandler {
 }
 
 export interface UseKeyOptions {
-    event?: 'keyup' | 'keydown'
-    phase?: 'capturing' | 'bubbling'
+    ref?: undefined | React.RefObject<HTMLElement> | React.MutableRefObject<HTMLElement>
+    event?: undefined | 'keyup' | 'keydown'
+    phase?: undefined | 'capturing' | 'bubbling'
 }
