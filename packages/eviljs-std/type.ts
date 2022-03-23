@@ -171,3 +171,8 @@ export type PromiseOf<T extends Promise<unknown>> =
         : never
 
 export type UnionFrom<T extends Array<unknown>> = T[number]
+
+export type PartialDeep<T> =
+    T extends object
+        ? {[P in keyof T]?: PartialDeep<T[P]>}
+        : T
