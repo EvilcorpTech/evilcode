@@ -3,25 +3,25 @@ import {NoItems} from './model.js'
 
 export function useFilter<I, F>(
     items: undefined | Array<I>,
-    test: (filters: F, it: I) => boolean,
-    initialFilters: F | (() => F),
-): Filter<I, F> {
-    const [filters, setFilters] = useState<F>(initialFilters)
+    test: (filter: F, it: I) => boolean,
+    initialFilter: F | (() => F),
+): FilterManager<I, F> {
+    const [filter, setFilter] = useState<F>(initialFilter)
 
     const filteredItems = useMemo(() => {
         if (! items) {
             return NoItems
         }
-        return items.filter(it => test(filters, it))
-    }, [items, filters, test])
+        return items.filter(it => test(filter, it))
+    }, [items, filter, test])
 
     const itemIdxOf = useCallback((filteredItemIdx: number) => {
         return resolveFilteredItemIdx(items ?? NoItems, filteredItems, filteredItemIdx)
     }, [items, filteredItems])
 
-    const onChangeFilters = setFilters
+    const onChange = setFilter
 
-    return {filters, filteredItems, itemIdxOf, onChangeFilters}
+    return {filter, filteredItems, itemIdxOf, onChange}
 }
 
 export function resolveFilteredItemIdx<I>(
@@ -44,9 +44,9 @@ export function resolveFilteredItemIdx<I>(
 
 // Types ///////////////////////////////////////////////////////////////////////
 
-export interface Filter<I, F extends {}> {
-    filters: F
+export interface FilterManager<I, F> {
+    filter: F
     filteredItems: Array<I>
     itemIdxOf: (filteredItemIdx: number) => undefined | number
-    onChangeFilters: React.Dispatch<React.SetStateAction<F>>
+    onChange: React.Dispatch<React.SetStateAction<F>>
 }
