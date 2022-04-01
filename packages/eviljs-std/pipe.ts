@@ -12,14 +12,14 @@ export {tryCatch} from './try.js'
 * import {theFalse, theNull} from './return.js'
 * const result = pipe({name: 'Super Mario', age: 21})
 * .to(it => it.age > 18 ? it : Error('TooYoung' as const))
-* .to(it => mapValueWith(it, it => it))
-* .to(it => mapErrorWith(it, it => it))
-* .to(it => mapResultWith(it, it => it, it => it))
+* .to(it => mapValueOf(it, it => it))
+* .to(it => mapErrorOf(it, it => it))
+* .to(it => mapResultOf(it, it => it, it => it))
 * .to(mapValue(it => it))
 * .to(mapError(it => it))
 * .to(mapResult(it => it, it => it))
 * .to(it => tryCatch(
-*     () => mapValueWith(it, it => it.name.toUpperCase()),
+*     () => mapValueOf(it, it => it.name.toUpperCase()),
 *     error => Error('NotString' as const)
 * ))
 * .to(tryOr(
@@ -96,18 +96,18 @@ export function computePipe(stack: Array<PipeTask>, input: unknown): unknown {
     }
 }
 
-export function mapResultWith<V1, V2, V3>(
+export function mapResultOf<V1, V2, V3>(
     input: V1,
     onValue: Fn<Exclude<V1, Error<unknown>>, V2>,
     onError: Fn<Extract<V1, Error<unknown>>, V3>,
 ): V2 | V3
 {
     return ! isError(input)
-        ? mapValueWith(input as Exclude<V1, Error<unknown>>, onValue) as V2
-        : mapErrorWith(input as Extract<V1, Error<unknown>>, onError) as V3
+        ? mapValueOf(input as Exclude<V1, Error<unknown>>, onValue) as V2
+        : mapErrorOf(input as Extract<V1, Error<unknown>>, onError) as V3
 }
 
-export function mapValueWith<V1, V2>(
+export function mapValueOf<V1, V2>(
     input: V1,
     fn: Fn<Exclude<V1, Error<unknown>>, V2>,
 ): Extract<V1, Error<unknown>> | V2
@@ -117,7 +117,7 @@ export function mapValueWith<V1, V2>(
         : input as Extract<V1, Error<unknown>>
 }
 
-function mapErrorWith<V1, V2>(
+function mapErrorOf<V1, V2>(
     input: V1,
     fn: Fn<Extract<V1, Error<unknown>>, V2>,
 ): Exclude<V1, Error<unknown>> | V2
@@ -132,21 +132,21 @@ export function mapResult<V1, V2, V3>(
     onError: Fn<Extract<V1, Error<unknown>>, V3>
 ): Fn<V1, V2 | V3>
 {
-    return (input: V1) => mapResultWith(input, onValue, onError)
+    return (input: V1) => mapResultOf(input, onValue, onError)
 }
 
 export function mapValue<V1, V2>(
     fn: Fn<Exclude<V1, Error<unknown>>, V2>
 ): Fn<V1, Extract<V1, Error<unknown>> | V2>
 {
-    return (input: V1) => mapValueWith(input, fn)
+    return (input: V1) => mapValueOf(input, fn)
 }
 
 export function mapError<V1, V2>(
     fn: Fn<Extract<V1, Error<unknown>>, V2>
 ): Fn<V1, Exclude<V1, Error<unknown>> | V2>
 {
-    return (input: V1) => mapErrorWith(input, fn)
+    return (input: V1) => mapErrorOf(input, fn)
 }
 
 export function tryOr
