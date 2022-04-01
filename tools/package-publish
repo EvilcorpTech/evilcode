@@ -24,16 +24,20 @@ for pkg; do
         fi
 
         (
-        case "$pkg" in
-                /*) cd "$pkg";;
-                *) cd "$PWD/$pkg";;
-        esac
+                case "$pkg" in
+                        /*) cd "$pkg";;
+                        *) cd "$PWD/$pkg";;
+                esac
 
-        set -- $NpmVersionCmd $NpmVersionArgs $PublishVersion
-        $Npm "$@"
-        printf -- 'Press Enter to continue'
-        read answer
-        set -- $NpmPublishCmd $NpmPublishArgs
-        $Npm "$@"
+                set -- $NpmVersionCmd $NpmVersionArgs $PublishVersion
+                $Npm "$@"
+                printf -- 'Press Enter to continue'
+                read answer
+                set -- $NpmPublishCmd $NpmPublishArgs
+
+                until $Npm "$@"; do
+                        printf -- 'Press Enter to retry'
+                        read answer
+                done
         )
 done

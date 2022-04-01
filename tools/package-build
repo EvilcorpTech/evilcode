@@ -14,12 +14,12 @@ build() {
         local pkg="$1"
 
         (
-        case "$pkg" in
-                /*) cd "$pkg";;
-                *) cd "$PWD/$pkg";;
-        esac
+                case "$pkg" in
+                        /*) cd "$pkg";;
+                        *) cd "$PWD/$pkg";;
+                esac
 
-        $Npm run build --if-present
+                $Npm run build --if-present
         )
 }
 

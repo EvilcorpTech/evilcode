@@ -19,13 +19,13 @@ init() {
         "$Dir/tools/package-clean" "$pkg"
 
         (
-        case "$pkg" in
-                /*) cd "$pkg";;
-                *) cd "$PWD/$pkg";;
-        esac
+                case "$pkg" in
+                        /*) cd "$pkg";;
+                        *) cd "$PWD/$pkg";;
+                esac
 
-        # --no-package-lock ignores the shrinkwrap.json too.
-        $Npm install --global-style
+                # --no-package-lock ignores the shrinkwrap.json too.
+                $Npm install --global-style
         )
 
         link "$pkg" evilcss

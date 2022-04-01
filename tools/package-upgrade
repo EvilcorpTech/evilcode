@@ -20,14 +20,12 @@ for pkg; do
         fi
 
         (
-        case "$pkg" in
-                /*) cd "$pkg";;
-                *) cd "$PWD/$pkg";;
-        esac
+                case "$pkg" in
+                        /*) cd "$pkg";;
+                        *) cd "$PWD/$pkg";;
+                esac
 
-        set -- $NpmUpgradeArgs
-        $NpmUpgrade "$@"
+                set -- $NpmUpgradeArgs
+                $NpmUpgrade "$@"
         )
-
-
 done
