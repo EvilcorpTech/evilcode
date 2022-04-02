@@ -1,5 +1,19 @@
 import {useCallback, useEffect, useLayoutEffect, useRef, useState} from 'react'
 
+export function useClosure<A extends Array<unknown>, R>(closure: (...args: A) => R) {
+    const closureRef = useRef(closure)
+
+    useLayoutEffect(() => {
+        closureRef.current = closure
+    })
+
+    const callback = useCallback((...args: A) => {
+        return closureRef.current(...args)
+    }, [])
+
+    return callback
+}
+
 /*
 * Used to access the previous value of a prop.
 *

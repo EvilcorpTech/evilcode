@@ -1,6 +1,6 @@
-import {classes} from './classes.js'
+import {classes} from '@eviljs/react/classes.js'
 
-import './animator.css'
+import './transition-animator.css'
 
 export const DefaultTransitionEffect = 'fade'
 

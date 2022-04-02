@@ -1,6 +1,6 @@
 {
     "name": "@eviljs/reactx",
-    "version": "1.0.23",
+    "version": "1.0.24",
     "type": "module",
     "files": [
         "/LICENSE.txt",
@@ -27,7 +27,7 @@
     "peerDependencies": {
         "@evilcss/std": "^1",
         "@evilcss/ui": "^1",
-        "react": "^17"
+        "react": "^17 || ^18"
     },
     "devDependencies": {
         "typescript": "^4.6"

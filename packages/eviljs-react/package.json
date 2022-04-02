@@ -1,6 +1,6 @@
 {
     "name": "@eviljs/react",
-    "version": "1.0.24",
+    "version": "1.0.25",
     "type": "module",
     "files": [
         "/LICENSE.txt",
@@ -24,8 +24,8 @@
         "tslib": "^2"
     },
     "peerDependencies": {
-        "react": "^17",
-        "react-dom": "^17"
+        "react": "^17 || ^18",
+        "react-dom": "^17 || ^18"
     },
     "devDependencies": {
         "typescript": "^4.6"
