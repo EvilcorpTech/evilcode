@@ -1,6 +1,6 @@
 {
     "name": "@eviljs/reactx",
-    "version": "1.0.24",
+    "version": "1.0.25",
     "type": "module",
     "files": [
         "/LICENSE.txt",
