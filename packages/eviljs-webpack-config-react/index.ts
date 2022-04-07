@@ -76,10 +76,10 @@ export function createWebpackConfig(options?: WebpackConfigOptions) {
                 'node_modules',
             ],
             alias: {
-                'react/jsx-runtime': 'react/jsx-runtime.js',
+                // 'react/jsx-runtime': 'react/jsx-runtime.js', // React 17.
 
                 ...preact && {
-                    'react/jsx-runtime.js': 'preact/jsx-runtime',
+                    // 'react/jsx-runtime.js': 'preact/jsx-runtime', // React 17.
                     'react/jsx-runtime': 'preact/jsx-runtime',
                     'react-dom': 'preact/compat',
                     'react': 'preact/compat',
