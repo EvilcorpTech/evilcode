@@ -1,0 +1,9 @@
+.std-icon *:not([fill]) {
+    fill: currentColor;
+}
+.std-icon *:not([stroke]) {
+    stroke: currentColor;
+}
+.std-icon[fill="none"] *:not([fill]) {
+    fill: none;
+}

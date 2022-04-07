@@ -1,0 +1,10 @@
+.std-no-scrollbars {
+    overflow: -moz-scrollbars-none; /* For Firefox. */
+    scrollbar-width: none; /* For Firefox. */
+    scrollbar-color: hsl(0deg 0% 0% / 0) hsl(0deg 0% 0% / 0); /* For Firefox. */
+    -ms-overflow-style: none; /* For Internet Explorer and Edge. */
+}
+.std-no-scrollbars::-webkit-scrollbar {
+    width: 0px !important; /* For Chrome, Safari and Opera. */
+    height: 0px !important;  /* For Chrome, Safari and Opera. */
+}
