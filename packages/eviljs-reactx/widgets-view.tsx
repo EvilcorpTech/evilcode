@@ -1,3 +1,4 @@
+import {times} from '@eviljs/std/iter.js'
 import {classes} from '@eviljs/web/classes.js'
 import {Fragment, useState} from 'react'
 import {Accordion, AccordionList} from './accordion.js'
@@ -198,11 +199,13 @@ export function WidgetsView(props: WidgetsViewProps) {
                         background: 'var(--std-color-bg3)',
                     }}
                 >
-                    <Slide className="std-flex stack"><h6>1</h6></Slide>
-                    <Slide className="std-flex stack"><h6>2</h6></Slide>
-                    <Slide className="std-flex stack"><h6>3</h6></Slide>
+                    {times(5).map(it =>
+                        <Slide key={it} className="std-flex stack">
+                            <h6>{it}</h6>
+                        </Slide>
+                    )}
                 </Slider>
-                <Button className="plain" onClick={(event) => setSlide(Math.min(2, slide + 1))}>
+                <Button className="plain" onClick={(event) => setSlide(Math.min(4, slide + 1))}>
                     Next
                 </Button>
             </div>

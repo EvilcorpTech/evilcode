@@ -1,55 +1,42 @@
-import {clamp} from '@eviljs/std/math.js'
-import {isNil, ValueOf} from '@eviljs/std/type.js'
+import {asArray} from '@eviljs/std/type.js'
 import {classes} from '@eviljs/web/classes.js'
-import {useCallback, useEffect, useState} from 'react'
-import {Transition} from './transition.js'
+import {CSSProperties} from 'react'
 
 import './slider.css'
 
-export const InitialIndex = 0
-
-export const SliderDirection = {
-    horizontal: 'horizontal',
-    horizontalInverse: 'horizontal-inverse',
-    vertical: 'vertical',
-    verticalInverse: 'vertical-inverse',
-} as const
+export enum SliderDirection {
+    Row = 'row',
+    RowReverse = 'row-reverse',
+    Column = 'column',
+    ColumnReverse = 'column-reverse',
+}
 
 export function Slider(props: SliderProps) {
     const {className, children, selected, direction, ...otherProps} = props
-    const selectedIndex = clamp(0, selected ?? InitialIndex, children.length - 1)
-    const [queue, setQueue] = useState<Array<number>>([selectedIndex])
-
-    useEffect(() => {
-        setQueue((state) =>
-            [...state, selectedIndex]
-        )
-    }, [selectedIndex])
-
-    const onEnd = useCallback(() => {
-        setQueue((state) =>
-            state.length > 0
-                ? state.slice(1)
-                : state
-        )
-    }, [])
-
-    const towards = computeSlideDirection(selectedIndex, queue[0] ?? InitialIndex)
-    const child = children[selectedIndex]!
+    const childrenList = asArray(children)
 
     return (
         <div
             {...otherProps}
-            className={classes('Slider-73e4', className, direction ?? SliderDirection.horizontal, {
-                backwards: towards === -1,
-                forwards: towards === 1,
-            })}
+            className={classes('Slider-73e4 std-grid-layers', className)}
         >
-            <Transition enter={1} exit={1} target="slide-1c54" onEntered={onEnd}>
-                <Slide key={selectedIndex} className="slide-1c54">
-                    {child}
+            {childrenList.map((it, idx) =>
+                <Slide
+                    key={idx}
+                    className={classes('slide-1c54', {
+                        previous: idx < selected,
+                        selected: idx === selected,
+                        following: idx > selected,
+                    })}
+                    style={computeSlideStyle({
+                        index: idx,
+                        selected,
+                        direction: direction ?? SliderDirection.Row,
+                    })}
+                >
+                    {it}
                 </Slide>
-            </Transition>
+            )}
         </div>
     )
 }
@@ -60,32 +47,48 @@ export function Slide(props: SlideProps) {
     return (
         <div
             {...otherProps}
-            className={classes('Slide-0eab std-layer', className)}
+            className={classes('Slide-0eab', className)}
         >
             {children}
         </div>
     )
 }
 
-export function computeSlideDirection(index?: number, prevIndex?: number) {
-    if (isNil(index) || isNil(prevIndex)) {
-        return 0
+export function computeSlideStyle(args: {
+    index: number
+    selected: number
+    direction: SliderDirection
+}): CSSProperties {
+    const {index, selected, direction} = args
+
+    const [xDirection, yDirection] = (() => {
+        switch (direction) {
+            case SliderDirection.Column:
+                return [0, 1]
+            case SliderDirection.ColumnReverse:
+                return [0, -1]
+            case SliderDirection.Row:
+                return [1, 0]
+            case SliderDirection.RowReverse:
+                return [-1, 0]
+        }
+    })()
+
+    const distance = index - selected
+    const x = `calc(${xDirection} * ${distance} * 100%)`
+    const y = `calc(${yDirection} * ${distance} * 100%)`
+
+    return {
+        transform: `translate(${x}, ${y})`,
     }
-    if (index > prevIndex) {
-        return 1
-    }
-    if (index < prevIndex) {
-        return -1
-    }
-    return 0
 }
 
 // Types ///////////////////////////////////////////////////////////////////////
 
 export interface SliderProps extends React.HTMLAttributes<HTMLDivElement> {
-    children: Array<JSX.Element>
-    selected?: null | number
-    direction?: ValueOf<typeof SliderDirection>
+    children: Array<React.ReactNode>
+    selected: number
+    direction?: undefined | SliderDirection
 }
 
 export interface SlideProps extends React.HTMLAttributes<HTMLElement> {

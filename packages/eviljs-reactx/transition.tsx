@@ -30,7 +30,7 @@ export function Transition(props: TransitionProps) {
 
     if (children !== state.children) {
         // Component rendered. Let's see what to do with the updated children.
-        const updatedState = reduceStateUpdate(state, {
+        const queue = reduceStateQueue(state, {
             children,
             observers: {onEntered, onExited, onEnd},
             exit: exit ?? 0,
@@ -39,9 +39,10 @@ export function Transition(props: TransitionProps) {
             mode: mode ?? 'cross',
             initial: initial ?? false,
         })
-        const nextState = consumeStateQueue(updatedState)
+        const nextState = consumeStateQueue({...state, queue})
 
-        setState(nextState) // We derive the state from the props.
+        // We derive the state from the props.
+        setState({...nextState, children, initial: false})
     }
 
     useEffect(() => {
@@ -85,7 +86,7 @@ export function Transition(props: TransitionProps) {
 
             if (! task) {
                 console.warn(
-                    '@eviljs/reactx/transition.Transition.onTaskCompleted:\n'
+                    '@eviljs/reactx/transition.onTaskCompleted:\n'
                     + 'missing completed task.'
                 )
                 return state
@@ -266,7 +267,7 @@ function renderAnimator(task: TransitionTask, key: string, onEnd: TransitionTask
     )
 }
 
-export function reduceStateUpdate(state: TransitionState, spec: {
+export function reduceStateQueue(state: TransitionState, args: {
     children: TransitionChildren,
     observers: TransitionObservers,
     exit: number,
@@ -274,7 +275,7 @@ export function reduceStateUpdate(state: TransitionState, spec: {
     target: AnimatorEventTarget,
     mode: TransitionMode,
     initial: boolean,
-}): TransitionState {
+}): TransitionTasksQueue {
     const {
         children: newChildren,
         observers,
@@ -283,50 +284,49 @@ export function reduceStateUpdate(state: TransitionState, spec: {
         target,
         mode,
         initial,
-    } = spec
+    } = args
     const oldChildren = state.children
-    const isInitialRender = state.initial
+    const initialRender = state.initial
     const oldChild = asOnlyChild(oldChildren)
     const newChild = asOnlyChild(newChildren)
 
     if (! isValidChild(oldChild) && ! isValidChild(newChild)) {
         // We have nothing to do.
-        return state.initial
-            ? {...state, initial: false}
-            : state
+        return state.queue
     }
 
     if (! isValidChild(oldChild) && isValidChild(newChild)) {
         // The child has been passed; we must mount it.
-        const spec = {newChild, observers, enter, target, initial, isInitialRender}
-        const queue = [...state.queue, ...createMountTasks(spec)]
-        return {...state, children: newChild, queue, initial: false}
+        const childQueue = createMountTasks({newChild, observers, enter, target, initial, initialRender})
+        return [...state.queue, ...childQueue]
     }
 
     if (isValidChild(oldChild) && ! isValidChild(newChild)) {
         // The child has been removed; we must unmount it.
-        const spec = {oldChild, observers, exit, target}
-        const queue = [...state.queue, ...createUnmountTasks(spec)]
-        return {...state, children: newChild, queue, initial: false}
+        const childQueue = createUnmountTasks({oldChild, observers, exit, target})
+        return [...state.queue, ...childQueue]
     }
 
     if (isValidChild(oldChild) && isValidChild(newChild) && ! areSameChildren(oldChild, newChild)) {
         // The child has exchanged; we must unmount previous one and mount the new one.
-        const spec = {mode, oldChild, newChild, observers, exit, enter, target}
-        const queue = [...state.queue, ...createExchangeTasks(spec)]
-        return {...state, children: newChild, queue, initial: false}
+        const childQueue = createExchangeTasks({mode, oldChild, newChild, observers, enter, exit, target})
+        return [...state.queue, ...childQueue]
     }
 
     if (isValidChild(oldChild) && isValidChild(newChild) && areSameChildren(oldChild, newChild)) {
         // The child has been update; we must propagate the update.
-        updateTasks(state.queue, state.tasks, newChild, observers)
-        const queue = [...state.queue]
-        return {...state, children: newChild, queue, initial: false}
+        updateTasks({tasks: state.tasks, queue: state.queue, child: newChild, observers})
+        return state.queue
     }
 
-    return state.initial
-        ? {...state, initial: false}
-        : state
+    console.warn(
+        '@eviljs/reactx/transition.reduceStateQueue:\n'
+        + 'unrecognized children case.',
+        oldChild,
+        newChild,
+    )
+
+    return state.queue
 }
 
 function createTasksTransaction(...transaction: Array<TransitionTasksGroup>) {
@@ -351,7 +351,6 @@ function createTask(
     return {
         // Defaults.
         events: 0,
-        alive: false,
         completed: false,
         kind: undefined,
         target: [],
@@ -366,13 +365,13 @@ function createTask(
     }
 }
 
-export function createMountTasks(spec: {
+export function createMountTasks(args: {
     newChild: TransitionElement,
     observers: TransitionObservers,
     enter: number,
     target: AnimatorEventTarget,
     initial: boolean,
-    isInitialRender: boolean,
+    initialRender: boolean,
 }) {
     const {
         newChild,
@@ -380,24 +379,24 @@ export function createMountTasks(spec: {
         enter,
         target,
         initial,
-        isInitialRender,
-    } = spec
-    const initialAnimation = true // We animate the initial render if...
-        && isInitialRender // ...it is the initial render...
-        && initial // ...and we have to animate the initial render.
-    const action = initialAnimation
+        initialRender,
+    } = args
+    const animated = false
+        || (initialRender && initial) // On first render, it is animated only if requested.
+        || ! initialRender // After the initial render, it is always animated.
+    const action = animated
         ? 'mount'
         : 'render'
-    const events = initialAnimation
+    const events = animated
         ? enter
         : 0 // Because we don't animate, we have no event to wait for.
 
     return createTasksTransaction([
-        createTask(action, newChild, observers, {events, target, alive: true, kind: 'enter'}),
+        createTask(action, newChild, observers, {events, target, kind: 'enter'}),
     ])
 }
 
-export function createUnmountTasks(spec: {
+export function createUnmountTasks(args: {
     oldChild: TransitionElement,
     observers: TransitionObservers,
     exit: number,
@@ -408,15 +407,15 @@ export function createUnmountTasks(spec: {
         observers,
         exit,
         target,
-    } = spec
+    } = args
 
     return createTasksTransaction(
-        [createTask('unmount', oldChild, observers, {events: exit, target, alive: true})],
+        [createTask('unmount', oldChild, observers, {events: exit, target})],
         [createTask('render', <Fragment/>, observers, {kind: 'exit'})],
     )
 }
 
-export function createExchangeTasks(spec: {
+export function createExchangeTasks(args: {
     mode: TransitionMode,
     oldChild: TransitionElement,
     newChild: TransitionElement,
@@ -433,7 +432,7 @@ export function createExchangeTasks(spec: {
         exit,
         enter,
         target,
-    } = spec
+    } = args
 
     switch (mode) {
         case 'cross':
@@ -448,7 +447,7 @@ export function createExchangeTasks(spec: {
     }
 }
 
-export function createCrossTasks(spec: {
+export function createCrossTasks(args: {
     oldChild: TransitionElement,
     newChild: TransitionElement,
     observers: TransitionObservers,
@@ -463,21 +462,21 @@ export function createCrossTasks(spec: {
         exit,
         enter,
         target,
-    } = spec
+    } = args
 
     return createTasksTransaction(
         [
             // Parallel unmount and mount.
             createTask('unmount', oldChild, observers, {events: exit, target, kind: 'exit'}),
-            createTask('mount', newChild, observers, {events: enter, target, alive: true, key: createKey}),
+            createTask('mount', newChild, observers, {events: enter, target, key: createKey}),
         ],
         [
-            createTask('render', newChild, observers, {alive: true, kind: 'enter', key: (keys) => keys[1]!}),
+            createTask('render', newChild, observers, {kind: 'enter', key: (keys) => keys[1]!}),
         ],
     )
 }
 
-export function createOutInTasks(spec: {
+export function createOutInTasks(args: {
     oldChild: TransitionElement,
     newChild: TransitionElement,
     observers: TransitionObservers,
@@ -492,15 +491,15 @@ export function createOutInTasks(spec: {
         exit,
         enter,
         target,
-    } = spec
+    } = args
 
     return createTasksTransaction(
         [createTask('unmount', oldChild, observers, {events: exit, target, kind: 'exit'})],
-        [createTask('mount', newChild, observers, {events: enter, target, alive: true, kind: 'enter'})],
+        [createTask('mount', newChild, observers, {events: enter, target, kind: 'enter'})],
     )
 }
 
-export function createInOutTasks(spec: {
+export function createInOutTasks(args: {
     oldChild: TransitionElement,
     newChild: TransitionElement,
     observers: TransitionObservers,
@@ -515,53 +514,65 @@ export function createInOutTasks(spec: {
         exit,
         enter,
         target,
-    } = spec
+    } = args
 
     return createTasksTransaction(
         [
             createTask('render', oldChild, observers),
-            createTask('mount', newChild, observers, {events: enter, target, alive: true, key: createKey}),
+            createTask('mount', newChild, observers, {events: enter, target, key: createKey}),
         ],
         [
             createTask('unmount', oldChild, observers, {events: exit, target, kind: 'exit'}),
-            createTask('render', newChild, observers, {alive: true}),
+            createTask('render', newChild, observers, {}),
         ],
         [
-            createTask('render', newChild, observers, {alive: true, kind: 'enter', key: (keys) => keys[1]!}),
+            createTask('render', newChild, observers, {kind: 'enter', key: (keys) => keys[1]!}),
         ],
     )
 }
 
-export function updateTasks(
-    queue: TransitionTasksQueue,
-    tasks: null | TransitionTasksGroup,
-    newChild: TransitionElement,
-    observers: TransitionObservers,
-) {
+export function updateTasks(args: {
+    tasks: TransitionTasksGroup
+    queue: TransitionTasksQueue
+    child: TransitionElement
+    observers: TransitionObservers
+}) {
+    const {tasks, queue, child, observers} = args
+
     // Current tasks group must be the first one (the one with lowest priority).
-    const aliveTasks = findAliveTasks([tasks, ...queue])
-    const hasAliveTasks = aliveTasks.length > 0
-    let forceUpdate = false
+    const allTasks = [tasks, ...queue]
+    const lastTasksGroup = lastOf(allTasks)
+    const lastTransactionId = lastTasksGroup?.[0]?.tid
 
-    for (const it of aliveTasks) {
-        // We mutate the reference in place. It is safe for queued tasks groups
-        // because they are not rendered yet.
-        updateTask(it, newChild, observers)
-        // But it is not safe for current tasks group.
-        if (tasks?.includes(it)) {
-            // An alive task is inside the current tasks group. We need to force the update.
-            forceUpdate = true
-        }
-    }
-
-    if (! hasAliveTasks) {
+    if (! lastTransactionId) {
         console.warn(
-            '@eviljs/reactx/transition.Transition:\n'
-            + 'missing alive tasks.'
+            '@eviljs/reactx/transition.updateTasks:\n'
+            + 'missing transaction.'
         )
     }
 
-    return forceUpdate
+    const lastTransactionTasks = allTasks
+        .filter(tasksGroup => tasksGroup.filter(it =>
+            true
+            && it.tid === lastTransactionId // Those tasks being part of last transaction.
+            && areSameChildren(child, it.child) // Who match the child sign.
+        ))
+        .flat(1)
+
+    if (lastTransactionTasks.length === 0) {
+        console.warn(
+            '@eviljs/reactx/transition.updateTasks:\n'
+            + 'missing updatable tasks.'
+        )
+    }
+
+    for (const it of lastTransactionTasks) {
+        // We mutate the references in place.
+        // It is safe because:
+        // - queued tasks are not rendered yet
+        // - current tasks are rendered updated
+        updateTask(it, child, observers)
+    }
 }
 
 export function updateTask(task: TransitionTask, child: TransitionElement, observers: TransitionObservers): TransitionTask {
@@ -613,7 +624,6 @@ export function createAnimatorState(id: TransitionTaskId): AnimatorState {
         lifecycle: 'initial',
     }
 }
-
 
 export function presenceAnimationClasses(type: TransitionTaskAction, lifecycle: AnimatorLifecycle) {
     if (type === 'render') {
@@ -737,29 +747,12 @@ export function areTasksCompleted(tasks: TransitionTasksGroup) {
     return tasks.every(it => it.completed)
 }
 
-export function findAliveTasks(queue: Array<null | TransitionTasksGroup>) {
-    const aliveTasks = queue
-        // There is at most one alive task per parallel tasks group.
-        .map(tasks => tasks?.find(it => it.alive))
-        .filter(filterDefined)
-
-    const lastAliveTask = lastOf(aliveTasks) // We select the last inserted task (in time).
-    const aliveTransactionId = lastAliveTask?.tid
-    const aliveTransactionTasks = aliveTasks.filter(it =>
-        // We can't return all alive tasks, but only those being part
-        // of last transaction.
-        it.tid === aliveTransactionId
-    )
-
-    return aliveTransactionTasks
-}
-
 export function createId() {
     return ++Id
 }
 
 export function createKey() {
-    return `id#${createId()}`
+    return `transition#${createId()}`
 }
 
 // Types ///////////////////////////////////////////////////////////////////////
@@ -812,7 +805,6 @@ export interface TransitionTask {
     id: TransitionTaskId
     tid: TransitionTaskId
     action: TransitionTaskAction
-    alive: boolean
     child: TransitionElement
     completed: boolean
     events: number

@@ -1,49 +1,8 @@
 .Slider-73e4 {
-    position: relative;
-    overflow: var(--overflow, hidden);
-    --to: 0;
-    --direction-x: 0;
-    --direction-y: 0;
-}
-.Slider-73e4.backwards {
-    --to: -1;
-}
-.Slider-73e4.forwards {
-    --to: 1;
-}
-.Slider-73e4.horizontal {
-    --direction-x: 1;
-}
-.Slider-73e4.horizontal-inverse {
-    --direction-x: -1;
-}
-.Slider-73e4.vertical {
-    --direction-y: 1;
-}
-.Slider-73e4.vertical-inverse {
-    --direction-y: -1;
+    overflow: var(--Slider-overflow, hidden);
 }
 
 .Slide-0eab {
-    transform-style: preserve-3d;
-}
-.Slide-0eab.exit-from {
-    transform: translate(0px, 0px);
-}
-.Slide-0eab.exit-to {
-    transform: translate(
-        calc(var(--direction-x) * -1 * var(--to) * var(--distance, 100%)),
-        calc(var(--direction-y) * -1 * var(--to) * var(--distance, 100%))
-    );
-    transition: transform var(--duration, var(--std-duration3)) var(--easing, ease);
-}
-.Slide-0eab.enter-from {
-    transform: translate(
-        calc(var(--direction-x) * 1 * var(--to) * var(--distance, 100%)),
-        calc(var(--direction-y) * 1 * var(--to) * var(--distance, 100%))
-    );
-}
-.Slide-0eab.enter-to {
-    transform: translate(0px, 0px);
-    transition: transform var(--duration, var(--std-duration3)) var(--easing, ease);
+    transition: all var(--Slider-duration, 1s) var(--Slider-easing, ease);
+    will-change: transform;
 }

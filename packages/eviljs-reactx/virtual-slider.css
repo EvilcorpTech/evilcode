@@ -1,0 +1,3 @@
+.v-item-ed22 {
+    transition: all var(--VirtualSlider-duration, .5s) var(--VirtualSlider-easing, ease);
+}
