@@ -1,5 +1,22 @@
-import {useCallback, useEffect, useLayoutEffect, useRef, useState} from 'react'
+import React, {useCallback, useEffect, useLayoutEffect, useRef, useState} from 'react'
 
+/*
+* Used to invoke a closure with updated scope.
+*
+* EXAMPLE
+*
+* function MyComponent(props) {
+*     const value = useMemo(() => {...}, [])
+*
+*     const onChange = useClosure(() => {
+*         console.log(value)
+*     })
+*
+*     return (
+*         <ExpensiveMemoizedComponent onChange={onChange}/>
+*     )
+* }
+*/
 export function useClosure<A extends Array<unknown>, R>(closure: (...args: A) => R) {
     const closureRef = useRef(closure)
 
@@ -7,11 +24,42 @@ export function useClosure<A extends Array<unknown>, R>(closure: (...args: A) =>
         closureRef.current = closure
     })
 
-    const callback = useCallback((...args: A) => {
+    return useCallback((...args: A) => {
         return closureRef.current(...args)
     }, [])
+}
 
-    return callback
+/*
+* Used to shallow merge the state with a change.
+*
+* EXAMPLE
+*
+function MyComponent(props) {
+    const [state, setState] = useState({
+        checkbox: false,
+        input: '',
+    })
+    const patchState = useStatePatch(setState)
+
+    return (
+        <Fragment>
+            <Checkbox
+                onChange={checkbox => patchState({checkbox})}
+            />
+            <Input
+                onChange={input => patchState({input})}
+            />
+        </Fragment>
+    )
+}
+*/
+export function useStatePatch<S>(setState: React.Dispatch<React.SetStateAction<S>>) {
+    return useCallback((statePatch: Partial<S>) => {
+        setState(state => ({
+            ...state,
+            ...statePatch,
+        }))
+    }, [setState])
 }
 
 /*

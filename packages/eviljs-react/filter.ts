@@ -1,5 +1,6 @@
 import {useCallback, useMemo, useState} from 'react'
-import {NoItems} from './model.js'
+
+const NoItems: [] = []
 
 export function useFilter<I, F>(
     items: undefined | Array<I>,
