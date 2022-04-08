@@ -8,7 +8,6 @@ export default defineShowcase('Store', (props) => {
 
     return (
         <div>
-
         </div>
     )
 })
