@@ -1,18 +1,21 @@
-import BundleStats from 'bundle-stats-webpack-plugin'
-import CopyPlugin from 'copy-webpack-plugin'
-import CssMinimizerPlugin from 'css-minimizer-webpack-plugin'
-import HtmlPlugin from 'html-webpack-plugin'
-import {DuplicatesPlugin} from 'inspectpack/plugin/index.js'
-import MiniCssExtractPlugin from 'mini-css-extract-plugin'
+import {BundleStatsWebpackPlugin as WebpackPluginBundleStats} from 'bundle-stats-webpack-plugin'
+import WebpackPluginCaseSensitivePaths from 'case-sensitive-paths-webpack-plugin'
+import WebpackPluginCopy from 'copy-webpack-plugin'
+import WebpackPluginCssMinimizer from 'css-minimizer-webpack-plugin'
+import WebpackPluginHtml from 'html-webpack-plugin'
+import {DuplicatesPlugin as WebpackPluginDuplicates} from 'inspectpack/plugin/index.js'
+import WebpackPluginMiniCssExtract from 'mini-css-extract-plugin'
 import {createRequire} from 'module'
-import Path from 'path'
+import Path from 'path' // @ts-ignore
+import WebpackPluginTypeScriptCheck from 'react-dev-utils/ForkTsCheckerWarningWebpackPlugin.js'
+import WebpackPluginInterpolateHtml from 'react-dev-utils/InterpolateHtmlPlugin.js'
+import WebpackPluginReactRefresh from '@pmmmwh/react-refresh-webpack-plugin'
 import Webpack from 'webpack'
-import {BundleAnalyzerPlugin} from 'webpack-bundle-analyzer'
+import {BundleAnalyzerPlugin as WebpackPluginBundleAnalyzer} from 'webpack-bundle-analyzer'
 import {createBabelConfig} from './babel.config.js'
 import {createPostcssConfig} from './postcss.config.js'
 
-const {BundleStatsWebpackPlugin: BundleStatsPlugin} = BundleStats
-const {DefinePlugin} = Webpack
+const {DefinePlugin: WebpackPluginDefine} = Webpack
 const require = createRequire(import.meta.url)
 
 export {asBooleanLike} from '@eviljs/std/type.js'
@@ -23,15 +26,19 @@ export const DefaultServerAddress =  '0.0.0.0'
 export const DefaultServerPort = 8000
 
 export const WebpackPlugins = {
-    BundleAnalyzerPlugin,
-    BundleStatsPlugin,
-    CopyPlugin,
-    CssMinimizerPlugin,
-    DefinePlugin,
-    DuplicatesPlugin,
-    HtmlPlugin,
-    MiniCssExtractPlugin,
     Webpack,
+    WebpackPluginBundleAnalyzer,
+    WebpackPluginBundleStats,
+    WebpackPluginCaseSensitivePaths,
+    WebpackPluginCopy,
+    WebpackPluginCssMinimizer,
+    WebpackPluginDefine,
+    WebpackPluginDuplicates,
+    WebpackPluginHtml,
+    WebpackPluginInterpolateHtml,
+    WebpackPluginMiniCssExtract,
+    WebpackPluginReactRefresh,
+    WebpackPluginTypeScriptCheck,
 }
 
 export default createWebpackConfig()
@@ -39,6 +46,7 @@ export default createWebpackConfig()
 export function createWebpackConfig(options?: WebpackConfigOptions) {
     const workDir = options?.workDir || process.cwd()
     const mode = options?.mode || process.env.NODE_ENV
+    const isDebugMode = options?.debug === true
     const isProductionMode = mode === 'production'
     const isDevelopmentMode = ! isProductionMode
     const basePath = options?.basePath || DefaultBasePath
@@ -92,20 +100,19 @@ export function createWebpackConfig(options?: WebpackConfigOptions) {
         module: {
             rules: [
                 {
-                    test: /\.tsx?$/,
+                    test: /\.[jt]sx?$/,
                     loader: require.resolve('babel-loader'),
-                    options: babelConfig,
-                },
-                {
-                    test: /\.jsx?$/,
-                    loader: require.resolve('babel-loader'),
+                    exclude: [
+                        /[\\/]node_modules[\\/]preact/,
+                        /[\\/]node_modules[\\/]react/,
+                    ],
                     options: babelConfig,
                 },
                 {
                     test: /\.css$/,
                     use: [
                         {
-                            loader: MiniCssExtractPlugin.loader,
+                            loader: WebpackPluginMiniCssExtract.loader,
                             options: {},
                         },
                         {
@@ -129,12 +136,15 @@ export function createWebpackConfig(options?: WebpackConfigOptions) {
         },
 
         plugins: [
-            new CopyPlugin({
+            new WebpackPluginCaseSensitivePaths({
+                // debug: false,
+            }),
+            new WebpackPluginCopy({
                 patterns: [
                     {from: 'src/assets', globOptions: {ignore: ['**/.DS_Store']}},
                 ],
             }),
-            new DefinePlugin({
+            new WebpackPluginDefine({
                 // 'process.env': {
                 //     NODE_ENV: JSON.stringify(process.env.NODE_ENV),
                 // },
@@ -143,27 +153,70 @@ export function createWebpackConfig(options?: WebpackConfigOptions) {
                 __MODE__: JSON.stringify(mode),
                 ...define,
             }),
-            new MiniCssExtractPlugin({
+            new WebpackPluginInterpolateHtml(WebpackPluginHtml, {
+                __BASE_PATH__: JSON.stringify(basePath),
+                __BUNDLE_NAME__: JSON.stringify(bundleName),
+                __MODE__: JSON.stringify(mode),
+                ...define,
+            }),
+            new WebpackPluginMiniCssExtract({
                 filename: Path.join(bundleName, 'entry-[name].css'),
                 chunkFilename: Path.join(bundleName, 'chunk-[id].css'),
             }),
-            new HtmlPlugin({
+            new WebpackPluginHtml({
                 template: 'src/main.html',
                 chunks : ['main'],
                 hash: true,
             }),
-            isProductionMode && new DuplicatesPlugin({
+            new WebpackPluginTypeScriptCheck({
+                // https://github.com/TypeStrong/fork-ts-checker-webpack-plugin
+                // async: isDevelopmentMode,
+                // typescript: {
+                //     // typescriptPath: ,
+                //     configOverwrite: {
+                //         compilerOptions: {
+                //             sourceMap: true,
+                //             skipLibCheck: true,
+                //             inlineSourceMap: false,
+                //             declarationMap: false,
+                //             noEmit: true,
+                //             incremental: true,
+                //         },
+                //     },
+                //     // context: paths.appPath,
+                //     diagnosticOptions: {
+                //         syntactic: true,
+                //     },
+                //     mode: 'write-references',
+                //     // profile: true,
+                // },
+                // issue: {
+                //     include: [
+                //         {file: '.**/*.{ts,tsx}'},
+                //     ],
+                //     exclude: [
+                //         {file: '**/node_modules/**/*'},
+                //     ],
+                // },
+                // logger: {
+                //     infrastructure: 'silent',
+                // },
+            }),
+            isDevelopmentMode && new WebpackPluginReactRefresh({
+                overlay: false,
+            }),
+            isProductionMode && new WebpackPluginDuplicates({
                 emitErrors: false,
                 verbose: false,
             }),
-            isProductionMode && new BundleAnalyzerPlugin({
+            isProductionMode && new WebpackPluginBundleAnalyzer({
                 analyzerMode: 'static',
                 generateStatsFile: true,
                 reportFilename: 'meta/report.html',
                 statsFilename: 'meta/stats.json',
                 openAnalyzer: false,
             }),
-            isProductionMode && new BundleStatsPlugin({
+            isProductionMode && new WebpackPluginBundleStats({
                 outDir: 'meta',
             }),
         ].filter(Boolean),
@@ -176,9 +229,9 @@ export function createWebpackConfig(options?: WebpackConfigOptions) {
                 },
                 minimizer: [
                     '...',
-                    new CssMinimizerPlugin({
+                    new WebpackPluginCssMinimizer({
                         test: /\.css$/i,
-                        minify: CssMinimizerPlugin.parcelCssMinify,
+                        minify: WebpackPluginCssMinimizer.parcelCssMinify,
                     }),
                 ],
             },
@@ -204,8 +257,14 @@ export function createWebpackConfig(options?: WebpackConfigOptions) {
             //     directory: Path.resolve(workDir, 'build'),
             // },
             client: {
-                logging: 'warn', // 'verbose' | 'info' | 'warn'
-                progress: false,
+                logging: isDebugMode
+                    ? 'verbose'
+                    : 'warn' // 'info'
+                ,
+                progress: isDebugMode
+                    ? true
+                    : false
+                ,
                 overlay: {
                     errors: true,
                     warnings: true,
@@ -215,15 +274,21 @@ export function createWebpackConfig(options?: WebpackConfigOptions) {
             hot: true,
         },
         snapshot: {
-            managedPaths: [], // Processes changes inside the node_modules directory.
+            managedPaths: [], // Forces processing changes inside node_modules directory.
         },
 
-        stats: isProductionMode
-            ? 'normal'
-            : 'minimal' // 'verbose'
+        stats:
+            isDebugMode
+                ? 'verbose'
+            : isProductionMode
+                ? 'normal'
+            : 'minimal'
         ,
         infrastructureLogging: {
-            level: 'info', // 'verbose'
+            level: isDebugMode
+                ? 'verbose'
+                : 'info'
+            ,
         },
     }
 }
@@ -234,6 +299,7 @@ export interface WebpackConfigOptions {
     babelConfig?: undefined | {}
     basePath?: undefined | string
     bundleName?: undefined | string
+    debug?: undefined | boolean
     define?: undefined | Record<string, any>
     mode?: undefined | string
     postcssConfig?: undefined | {}
