@@ -4,6 +4,7 @@
     "compilerOptions": {
         "allowJs": true,
         "allowSyntheticDefaultImports": true,
+        "allowUnreachableCode": true,
         "checkJs": true,
         "declaration": true,
         "downlevelIteration": false,
@@ -11,15 +12,18 @@
         "experimentalDecorators": true,
         "importHelpers": true,
         "incremental": true,
+        "inlineSourceMap": false,
+        "inlineSources": false,
         "isolatedModules": true,
         "lib": ["esnext"],
         "module": "esnext",
         "moduleResolution": "node",
         "noEmit": false,
-        "noEmitHelpers": true,
+        "noEmitHelpers": false,
         "preserveSymlinks": true,
         "resolveJsonModule": true,
         "skipLibCheck": true,
+        "sourceMap": false,
         "target": "esnext"
     }
 }
