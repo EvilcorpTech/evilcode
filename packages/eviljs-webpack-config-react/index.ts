@@ -2,13 +2,12 @@ import {BundleStatsWebpackPlugin as WebpackPluginBundleStats} from 'bundle-stats
 import WebpackPluginCaseSensitivePaths from 'case-sensitive-paths-webpack-plugin'
 import WebpackPluginCopy from 'copy-webpack-plugin'
 import WebpackPluginCssMinimizer from 'css-minimizer-webpack-plugin'
+import WebpackPluginForkTsChecker from 'fork-ts-checker-webpack-plugin'
 import WebpackPluginHtml from 'html-webpack-plugin'
 import {DuplicatesPlugin as WebpackPluginDuplicates} from 'inspectpack/plugin/index.js'
 import WebpackPluginMiniCssExtract from 'mini-css-extract-plugin'
 import {createRequire} from 'module'
 import Path from 'path' // @ts-ignore
-import WebpackPluginTypeScriptCheck from 'react-dev-utils/ForkTsCheckerWarningWebpackPlugin.js'
-// import WebpackPluginInterpolateHtml from 'react-dev-utils/InterpolateHtmlPlugin.js'
 // import WebpackPluginReactRefresh from '@pmmmwh/react-refresh-webpack-plugin'
 import Webpack from 'webpack'
 import {BundleAnalyzerPlugin as WebpackPluginBundleAnalyzer} from 'webpack-bundle-analyzer'
@@ -34,11 +33,10 @@ export const WebpackPlugins = {
     WebpackPluginCssMinimizer,
     WebpackPluginDefine,
     WebpackPluginDuplicates,
+    WebpackPluginForkTsChecker,
     WebpackPluginHtml,
-    // WebpackPluginInterpolateHtml,
     WebpackPluginMiniCssExtract,
     // WebpackPluginReactRefresh,
-    WebpackPluginTypeScriptCheck,
 }
 
 export default createWebpackConfig()
@@ -168,13 +166,17 @@ export function createWebpackConfig(options?: WebpackConfigOptions) {
                 chunks : ['main'],
                 hash: true,
             }),
-            new WebpackPluginTypeScriptCheck({
+            new WebpackPluginForkTsChecker({
                 // https://github.com/TypeStrong/fork-ts-checker-webpack-plugin
                 async: isDevelopmentMode,
+                devServer: true,
                 typescript: {
+                    mode: 'write-tsbuildinfo',
+                    context: workDir,
                     // typescriptPath: ,
                     configOverwrite: {
                         compilerOptions: {
+                            checkJs: false,
                             declarationMap: false,
                             incremental: true,
                             inlineSourceMap: false,
@@ -183,24 +185,21 @@ export function createWebpackConfig(options?: WebpackConfigOptions) {
                             sourceMap: false,
                         },
                     },
-                //     context: paths.appPath,
-                //     diagnosticOptions: {
-                //         syntactic: true,
-                //     },
-                //     mode: 'write-references',
-                //     profile: true,
+                    diagnosticOptions: {
+                        syntactic: true,
+                        semantic: true,
+                        declaration: false,
+                        global: false,
+                    },
                 },
                 issue: {
                     include: [
-                        {file: 'src/**/*.{ts,tsx}'},
+                        {file: '**/*.{ts,tsx}'},
                     ],
-                    // exclude: [
-                    //     {file: '**/node_modules/**/*'},
-                    // ],
+                    exclude: [
+                        {file: '**/node_modules/**/*'},
+                    ],
                 },
-                // logger: {
-                //     infrastructure: 'silent',
-                // },
             }),
             // isDevelopmentMode && new WebpackPluginReactRefresh({
             //     overlay: true,
