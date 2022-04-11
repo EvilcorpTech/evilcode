@@ -1,6 +1,6 @@
 {
     "name": "@eviljs/webpack-config-react",
-    "version": "1.0.24",
+    "version": "1.0.25",
     "type": "module",
     "files": [
         "/LICENSE.txt",
