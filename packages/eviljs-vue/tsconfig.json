@@ -1,5 +1,5 @@
 {
-    "extends": "../eviljs-tsconfig/vite.json",
+    "extends": "@eviljs/tsconfig/vite.json",
     "include": ["./**/*.ts", "./**/*.tsx", "./**/*.vue"],
     "exclude": ["node_modules"],
     "compilerOptions": {
