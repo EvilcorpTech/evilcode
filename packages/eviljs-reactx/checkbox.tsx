@@ -22,7 +22,7 @@ export function Checkbox(props: CheckboxProps) {
             }
             disabled={disabled}
             onClick={enabled
-                ? (event) => onChange?.(checked === 'mixed' ? true : ! checked)
+                ? event => onChange?.(checked === 'mixed' ? true : ! checked)
                 : undefined
             }
         >
@@ -33,10 +33,10 @@ export function Checkbox(props: CheckboxProps) {
 
 // Types ///////////////////////////////////////////////////////////////////////
 
-export interface CheckboxProps extends Omit<React.ButtonHTMLAttributes<HTMLButtonElement>, 'onChange'>, CheckboxModel {
-    onChange?(value: boolean): void
+export interface CheckboxProps extends CheckboxModel, Omit<React.ButtonHTMLAttributes<HTMLButtonElement>, 'onChange'> {
+    onChange?: undefined | ((value: boolean) => void)
 }
 
 export interface CheckboxModel {
-    checked?: null | boolean | 'mixed'
+    checked?: undefined | null | boolean | 'mixed'
 }

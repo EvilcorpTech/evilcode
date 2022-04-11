@@ -86,7 +86,7 @@ export function idForShowcase(item: ShowcaseModel) {
 
 // Types ///////////////////////////////////////////////////////////////////////
 
-export interface ShowcaseProps extends BoxProps {
+export interface ShowcaseProps extends Omit<BoxProps, 'children'> {
     children: Array<ShowcaseModel>
 }
 
