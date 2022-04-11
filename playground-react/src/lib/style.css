@@ -56,6 +56,7 @@
 @import '@evilcss/std/reset/with-font-strong.css';
 @import '@evilcss/std/reset/with-list-style-none.css';
 @import '@evilcss/std/reset/with-user-select-none.css';
+@import '@evilcss/std/scrollbar.classes.css';
 @import '@evilcss/std/shadow.classes.css';
 @import '@evilcss/std/shadow.props.css';
 @import '@evilcss/std/shadow/material.classes.css';

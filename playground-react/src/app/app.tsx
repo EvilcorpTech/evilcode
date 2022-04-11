@@ -58,7 +58,7 @@ export function AppMain(props: AppMainProps) {
                         </div>
                     </CaseRoute>
                     <CaseRoute is={exact('/arg/' + Arg)}>
-                        {(id) =>
+                        {(...[id]) =>
                             <div className="std theme-light">
                                 <Header/>
                                 <h1>Route ID {id}</h1>

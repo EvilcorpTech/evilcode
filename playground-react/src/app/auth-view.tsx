@@ -20,7 +20,7 @@ export function AuthView(props: AuthViewProps) {
         signin: t`Enter`,
     }))
 
-    const formatError = useCallback(error => {
+    const formatError = useCallback((error: unknown) => {
         return msg.error
     }, [msg.error])
 

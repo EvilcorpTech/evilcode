@@ -18,3 +18,9 @@ root.render(
         <App container={container}/>
     </StrictMode>
 )
+
+// Hot Module Replacement (development mode)
+declare const module: {hot: {accept(): void}}
+if (module.hot) {
+    module.hot.accept()
+}
