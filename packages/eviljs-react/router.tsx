@@ -301,9 +301,7 @@ export function SwitchRoute(props: SwitchRouteProps) {
 }
 
 export function CaseRoute(props: CaseRouteProps) {
-    const {children} = props
-
-    return <Fragment>{children}</Fragment>
+    return null
 }
 
 /*
