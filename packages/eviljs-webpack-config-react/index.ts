@@ -8,8 +8,8 @@ import WebpackPluginMiniCssExtract from 'mini-css-extract-plugin'
 import {createRequire} from 'module'
 import Path from 'path' // @ts-ignore
 import WebpackPluginTypeScriptCheck from 'react-dev-utils/ForkTsCheckerWarningWebpackPlugin.js'
-import WebpackPluginInterpolateHtml from 'react-dev-utils/InterpolateHtmlPlugin.js'
-import WebpackPluginReactRefresh from '@pmmmwh/react-refresh-webpack-plugin'
+// import WebpackPluginInterpolateHtml from 'react-dev-utils/InterpolateHtmlPlugin.js'
+// import WebpackPluginReactRefresh from '@pmmmwh/react-refresh-webpack-plugin'
 import Webpack from 'webpack'
 import {BundleAnalyzerPlugin as WebpackPluginBundleAnalyzer} from 'webpack-bundle-analyzer'
 import {createBabelConfig} from './babel.config.js'
@@ -35,9 +35,9 @@ export const WebpackPlugins = {
     WebpackPluginDefine,
     WebpackPluginDuplicates,
     WebpackPluginHtml,
-    WebpackPluginInterpolateHtml,
+    // WebpackPluginInterpolateHtml,
     WebpackPluginMiniCssExtract,
-    WebpackPluginReactRefresh,
+    // WebpackPluginReactRefresh,
     WebpackPluginTypeScriptCheck,
 }
 
@@ -153,12 +153,12 @@ export function createWebpackConfig(options?: WebpackConfigOptions) {
                 __MODE__: JSON.stringify(mode),
                 ...define,
             }),
-            new WebpackPluginInterpolateHtml(WebpackPluginHtml, {
-                __BASE_PATH__: JSON.stringify(basePath),
-                __BUNDLE_NAME__: JSON.stringify(bundleName),
-                __MODE__: JSON.stringify(mode),
-                ...define,
-            }),
+            // new WebpackPluginInterpolateHtml(WebpackPluginHtml, {
+            //     __BASE_PATH__: JSON.stringify(basePath),
+            //     __BUNDLE_NAME__: JSON.stringify(bundleName),
+            //     __MODE__: JSON.stringify(mode),
+            //     ...define,
+            // }),
             new WebpackPluginMiniCssExtract({
                 filename: Path.join(bundleName, 'entry-[name].css'),
                 chunkFilename: Path.join(bundleName, 'chunk-[id].css'),
@@ -170,41 +170,41 @@ export function createWebpackConfig(options?: WebpackConfigOptions) {
             }),
             new WebpackPluginTypeScriptCheck({
                 // https://github.com/TypeStrong/fork-ts-checker-webpack-plugin
-                // async: isDevelopmentMode,
-                // typescript: {
-                //     // typescriptPath: ,
-                //     configOverwrite: {
-                //         compilerOptions: {
-                //             sourceMap: true,
-                //             skipLibCheck: true,
-                //             inlineSourceMap: false,
-                //             declarationMap: false,
-                //             noEmit: true,
-                //             incremental: true,
-                //         },
-                //     },
-                //     // context: paths.appPath,
+                async: isDevelopmentMode,
+                typescript: {
+                    // typescriptPath: ,
+                    configOverwrite: {
+                        compilerOptions: {
+                            declarationMap: false,
+                            incremental: true,
+                            inlineSourceMap: false,
+                            noEmit: true,
+                            skipLibCheck: true,
+                            sourceMap: false,
+                        },
+                    },
+                //     context: paths.appPath,
                 //     diagnosticOptions: {
                 //         syntactic: true,
                 //     },
                 //     mode: 'write-references',
-                //     // profile: true,
-                // },
-                // issue: {
-                //     include: [
-                //         {file: '.**/*.{ts,tsx}'},
-                //     ],
-                //     exclude: [
-                //         {file: '**/node_modules/**/*'},
-                //     ],
-                // },
+                //     profile: true,
+                },
+                issue: {
+                    include: [
+                        {file: 'src/**/*.{ts,tsx}'},
+                    ],
+                    // exclude: [
+                    //     {file: '**/node_modules/**/*'},
+                    // ],
+                },
                 // logger: {
                 //     infrastructure: 'silent',
                 // },
             }),
-            isDevelopmentMode && new WebpackPluginReactRefresh({
-                overlay: false,
-            }),
+            // isDevelopmentMode && new WebpackPluginReactRefresh({
+            //     overlay: true,
+            // }),
             isProductionMode && new WebpackPluginDuplicates({
                 emitErrors: false,
                 verbose: false,

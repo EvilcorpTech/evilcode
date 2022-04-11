@@ -7,7 +7,7 @@ import BabelPluginSyntaxDynamicImport from '@babel/plugin-syntax-dynamic-import'
 import BabelPluginTransformRuntime from '@babel/plugin-transform-runtime' // @ts-ignore
 import BabelPresetReact from '@babel/preset-react' // @ts-ignore
 import BabelPresetTypescript from '@babel/preset-typescript' // @ts-ignore
-import BabelReactRefresh from 'react-refresh/babel'
+// import BabelReactRefresh from 'react-refresh/babel'
 
 export const BabelPlugins = {
     BabelPluginProposalDecorators,
@@ -18,7 +18,7 @@ export const BabelPlugins = {
     BabelPluginTransformRuntime,
     BabelPresetReact,
     BabelPresetTypescript,
-    BabelReactRefresh,
+    // BabelReactRefresh,
 }
 
 export default createBabelConfig()
@@ -30,6 +30,7 @@ export function createBabelConfig(options?: BabelConfigOptions) {
     const isDevelopmentMode = ! isProductionMode
 
     return {
+        // sourceType: 'unambiguous',
         presets: [
             [BabelPresetReact, {
                 'runtime': 'automatic', // React 17.
@@ -42,7 +43,7 @@ export function createBabelConfig(options?: BabelConfigOptions) {
             }],
         ],
         plugins: [
-            isDevelopmentMode && BabelReactRefresh,
+            // isDevelopmentMode && BabelReactRefresh,
 
             BabelPluginTransformRuntime,
 
