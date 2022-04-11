@@ -151,12 +151,6 @@ export function createWebpackConfig(options?: WebpackConfigOptions) {
                 __MODE__: JSON.stringify(mode),
                 ...define,
             }),
-            // new WebpackPluginInterpolateHtml(WebpackPluginHtml, {
-            //     __BASE_PATH__: JSON.stringify(basePath),
-            //     __BUNDLE_NAME__: JSON.stringify(bundleName),
-            //     __MODE__: JSON.stringify(mode),
-            //     ...define,
-            // }),
             new WebpackPluginMiniCssExtract({
                 filename: Path.join(bundleName, 'entry-[name].css'),
                 chunkFilename: Path.join(bundleName, 'chunk-[id].css'),
@@ -290,6 +284,12 @@ export function createWebpackConfig(options?: WebpackConfigOptions) {
             ,
         },
     }
+}
+
+export function isBabelLoaderRule(rule: {loader?: string}) {
+    return true
+        && ('loader' in rule)
+        && rule.loader.includes('babel-loader')
 }
 
 // Types ///////////////////////////////////////////////////////////////////////
