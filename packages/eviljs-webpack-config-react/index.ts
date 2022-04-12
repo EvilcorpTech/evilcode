@@ -47,6 +47,11 @@ export function createWebpackConfig(options?: WebpackConfigOptions) {
     const isDebugMode = options?.debug === true
     const isProductionMode = mode === 'production'
     const isDevelopmentMode = ! isProductionMode
+    const libDir = options?.libDir ?? 'lib'
+    const srcDir = options?.srcDir ?? 'src'
+    const srcPrefix = options?.srcPrefix ?? '~'
+    const entry = options?.entry ?? Path.join(srcDir, 'main')
+    const entryHtml = options?.entryHtml ?? Path.join(srcDir, 'main.html')
     const basePath = options?.basePath || DefaultBasePath
     const bundleName = options?.bundleName || DefaultBundleName
     const runtime = options?.runtime || 'single' // Workers require 'multiple' runtime.
@@ -59,7 +64,7 @@ export function createWebpackConfig(options?: WebpackConfigOptions) {
 
     return {
         entry: {
-            main: Path.resolve(workDir, 'src/main'),
+            main: Path.resolve(workDir, entry),
         },
 
         output: {
@@ -78,10 +83,13 @@ export function createWebpackConfig(options?: WebpackConfigOptions) {
 
         resolve: {
             modules: [
-                Path.resolve(workDir, 'src'),
+                Path.resolve(workDir, srcDir),
+                Path.resolve(workDir, libDir),
                 'node_modules',
             ],
             alias: {
+                [srcPrefix]: Path.resolve(workDir, srcDir),
+
                 // 'react/jsx-runtime': 'react/jsx-runtime.js', // React 17.
 
                 ...preact && {
@@ -100,9 +108,10 @@ export function createWebpackConfig(options?: WebpackConfigOptions) {
                 {
                     test: /\.[jt]sx?$/,
                     loader: require.resolve('babel-loader'),
-                    exclude: [
-                        /[\\/]node_modules[\\/]preact/,
-                        /[\\/]node_modules[\\/]react/,
+                    include: [
+                        Path.resolve(workDir, srcDir),
+                        Path.resolve(workDir, libDir, '@eviljs'),
+                        /[\\/]node_modules[\\/]@eviljs[\\/]/,
                     ],
                     options: babelConfig,
                 },
@@ -139,7 +148,7 @@ export function createWebpackConfig(options?: WebpackConfigOptions) {
             }),
             new WebpackPluginCopy({
                 patterns: [
-                    {from: 'src/assets', globOptions: {ignore: ['**/.DS_Store']}},
+                    {from: Path.resolve(workDir, srcDir, 'assets'), globOptions: {ignore: ['**/.DS_Store']}},
                 ],
             }),
             new WebpackPluginDefine({
@@ -156,7 +165,7 @@ export function createWebpackConfig(options?: WebpackConfigOptions) {
                 chunkFilename: Path.join(bundleName, 'chunk-[id].css'),
             }),
             new WebpackPluginHtml({
-                template: 'src/main.html',
+                template: Path.resolve(workDir, entryHtml),
                 chunks : ['main'],
                 hash: true,
             }),
@@ -300,6 +309,11 @@ export interface WebpackConfigOptions {
     bundleName?: undefined | string
     debug?: undefined | boolean
     define?: undefined | Record<string, any>
+    entry?: undefined | string
+    entryHtml?: undefined | string
+    libDir?: undefined | string
+    srcDir?: undefined | string
+    srcPrefix?: undefined | string
     mode?: undefined | string
     postcssConfig?: undefined | {}
     preact?: undefined | boolean
