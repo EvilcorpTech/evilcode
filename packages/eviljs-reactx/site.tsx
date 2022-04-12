@@ -210,7 +210,7 @@ export function createDefaultRouter
 
         if (! routePath) {
             console.warn(
-                '@eviljs/react/site.createDefaultRouter(ctx, ~~routesModel~~):\n'
+                '@eviljs/reactx/site.createDefaultRouter(ctx, ~~routesModel~~):\n'
                 + `routesModel does not have the route key '${routeKey}'.`
             )
             return null
@@ -296,7 +296,7 @@ export function createDefaultWidget
 
     if (! widgetType) {
         console.warn(
-            '@eviljs/react/site.createDefaultWidget(ctx, ~~widgetModel~~, key):\n'
+            '@eviljs/reactx/site.createDefaultWidget(ctx, ~~widgetModel~~, key):\n'
             + `widgetModel does not have the type key '${widgetKey}'.`
         )
         return null
@@ -306,7 +306,7 @@ export function createDefaultWidget
 
     if (! Widget) {
         console.warn(
-            '@eviljs/react/site.createDefaultWidget(~~ctx~~, ~~widgetModel~~, key):\n'
+            '@eviljs/reactx/site.createDefaultWidget(~~ctx~~, ~~widgetModel~~, key):\n'
             + `ctx.widgets does not have a widget with type '${widgetType}'.`
         )
         return null
