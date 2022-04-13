@@ -1,13 +1,11 @@
-import {throwError, StdError} from '@eviljs/std/throw.js'
 import {isFunction, ValueOf} from '@eviljs/std/type.js'
-import {createContext, useContext, useMemo, useReducer} from 'react'
+import React, {createContext, useContext, useMemo, useReducer} from 'react'
 import {
     useRootStoreStorage as useCoreRootStoreStorage,
     StoreStorageOptions as CoreStoreStorageOptions,
 } from './store-storage.js'
 
-export const StoreV1Context = createContext<Store<{}, StoreActions<{}>>>(void undefined as any)
-export class InvalidAction extends StdError {}
+export const StoreV1Context = createContext<unknown>(undefined)
 export const StoreSetAction = 'set'
 export const StoreResetAction = 'reset'
 
@@ -81,7 +79,11 @@ export function useRootStore<S extends {}, A extends StoreActions<S>>(spec: Stor
         const handler = actions[action.type]
 
         if (! handler) {
-            return throwInvalidAction(action.type)
+            console.warn(
+                '@eviljs/react/store-v1:\n'
+                + `missing action '${action.type}'.`
+            )
+            return state
         }
 
         return handler(state, action.value);
@@ -103,7 +105,7 @@ export function useRootStore<S extends {}, A extends StoreActions<S>>(spec: Stor
 }
 
 export function useStore<S extends {}, A extends StoreActions<S>>() {
-    return useContext(StoreV1Context) as Store<S, A>
+    return useContext<Store<S, A>>(StoreV1Context as React.Context<Store<S, A>>)
 }
 
 export function useRootStoreStorage<S extends {}, L extends {} = S>(options?: StoreStorageOptions<S, L>) {
@@ -144,13 +146,6 @@ export function defaultOnMerge<S extends {}, L extends {} = S>(savedState: L, st
     // Shallow merge.
     // Saved state from LocalStorage overwrites current state.
     return {...state, ...savedState}
-}
-
-export function throwInvalidAction(action: string) {
-    const message =
-        '@eviljs/react/store-v1:\n'
-        + `missing action '${action}'.`
-    return throwError({type: InvalidAction, message})
 }
 
 // Types ///////////////////////////////////////////////////////////////////////

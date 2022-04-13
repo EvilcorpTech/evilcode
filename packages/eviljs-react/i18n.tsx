@@ -1,7 +1,7 @@
 import {createI18n, I18n as StdI18n, I18nMessages} from '@eviljs/std/i18n.js'
 import {createContext, useContext, useMemo, useState} from 'react'
 
-export const I18nContext = createContext<I18n>(void undefined as any)
+export const I18nContext = createContext<unknown>(undefined)
 
 I18nContext.displayName = 'I18nContext'
 
@@ -95,11 +95,14 @@ export function I18nProvider(props: I18nProviderProps) {
     return withI18n(props.children, props.i18n)
 }
 
-export function useI18n<I extends I18n>() {
-    return useContext(I18nContext) as I
+export function useI18n<I extends I18n = I18n>() {
+    return useContext<I>(I18nContext as React.Context<I>)
 }
 
-export function useI18nMsg<I extends I18n, T extends {}>(compute: I18nMsgsComputer<I, T>, deps?: Array<unknown>) {
+export function useI18nMsg<I extends I18n, T extends {}>(
+    compute: I18nMsgsComputer<I, T>,
+    deps?: undefined | Array<unknown>,
+) {
     const i18n = useI18n<I>()
     const {locale, fallbackLocale, messages} = i18n
 

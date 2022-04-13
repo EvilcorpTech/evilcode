@@ -3,7 +3,7 @@ import {createContext, useContext} from 'react'
 
 export {asBaseUrl, joinPath} from '@eviljs/web/url.js'
 
-export const FetchContext = createContext<Fetch>(void undefined as any)
+export const FetchContext = createContext<unknown>(undefined)
 
 FetchContext.displayName = 'FetchContext'
 
@@ -57,8 +57,8 @@ export function FetchProvider(props: FetchProviderProps) {
     return withFetch(props.children, props.fetch)
 }
 
-export function useFetch() {
-    return useContext(FetchContext)
+export function useFetch<T = Fetch>() {
+    return useContext<T>(FetchContext as React.Context<T>)
 }
 
 // Types ///////////////////////////////////////////////////////////////////////

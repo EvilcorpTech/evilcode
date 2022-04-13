@@ -8,8 +8,8 @@ import {createContext, CSSProperties, Fragment, useCallback, useContext, useEffe
 
 export {exact, All, Arg, End, Value, Path, PathOpt, PathGlob, Start} from '@eviljs/web/route.js'
 
-export const RouterContext = createContext<Router>(void undefined as any)
-export const RouteMatchesContext = createContext<RouteMatches>(void undefined as any)
+export const RouterContext = createContext<Router>(undefined as any)
+export const RouteMatchesContext = createContext<RouteMatches>(undefined as any)
 export const RouteDefaultActiveClass = 'route-active'
 
 RouterContext.displayName = 'RouterContext'

@@ -3,7 +3,7 @@ import {useMountedRef} from './hook.js'
 
 export {asBaseUrl, joinPath} from '@eviljs/web/url.js'
 
-export const QueryContext = createContext<any>(void undefined)
+export const QueryContext = createContext<unknown>(undefined)
 
 QueryContext.displayName = 'QueryContext'
 
@@ -16,7 +16,7 @@ QueryContext.displayName = 'QueryContext'
 *
 * render(<Main/>, document.body)
 */
-export function WithQuery<P extends {}>(Child: React.ComponentType<P>, query: any) {
+export function WithQuery<P extends {}>(Child: React.ComponentType<P>, query: unknown) {
     function QueryProviderProxy(props: P) {
         return withQuery(<Child {...props}/>, query)
     }
@@ -34,7 +34,7 @@ export function WithQuery<P extends {}>(Child: React.ComponentType<P>, query: an
 *     return withQuery(<Children/>, query)
 * }
 */
-export function withQuery(children: React.ReactNode, query: any) {
+export function withQuery(children: React.ReactNode, query: unknown) {
     return (
         <QueryContext.Provider value={query}>
             {children}
@@ -73,7 +73,7 @@ export function useQuery<Q, A extends Array<unknown>, R>(queryRunner: QueryRunne
     })
     const mountedRef = useMountedRef()
     const taskRef = useRef<null | QueryTask<R>>(null)
-    const query = useContext<Q>(QueryContext)
+    const query = useContext<Q>(QueryContext as React.Context<Q>)
 
     const fetch = useCallback(async (...args: A) => {
         if (taskRef.current) {
@@ -172,7 +172,7 @@ export function useQuery<Q, A extends Array<unknown>, R>(queryRunner: QueryRunne
 
 export interface QueryProviderProps {
     children: React.ReactNode
-    query: any
+    query: unknown
 }
 
 export interface QueryRunner<Q, A extends Array<unknown>, R> {

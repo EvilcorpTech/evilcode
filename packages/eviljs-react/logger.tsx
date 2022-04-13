@@ -1,7 +1,7 @@
 import {Logger} from '@eviljs/std/logger.js'
 import {createContext, useContext} from 'react'
 
-export const LoggerContext = createContext<Logger>(void undefined as any)
+export const LoggerContext = createContext<unknown>(undefined)
 
 LoggerContext.displayName = 'LoggerContext'
 
@@ -13,7 +13,7 @@ LoggerContext.displayName = 'LoggerContext'
 *
 * render(<Main/>, document.body)
 */
-export function WithLogger<P extends {}>(Child: React.ComponentType<P>, logger: Logger) {
+export function WithLogger<P extends {}>(Child: React.ComponentType<P>, logger: Logger<unknown>) {
     function LoggerProviderProxy(props: P) {
         return withLogger(<Child {...props}/>, logger)
     }
@@ -30,7 +30,7 @@ export function WithLogger<P extends {}>(Child: React.ComponentType<P>, logger: 
 *     return withLogger(<Children/>, logger)
 * }
 */
-export function withLogger(children: React.ReactNode, logger: Logger) {
+export function withLogger(children: React.ReactNode, logger: Logger<unknown>) {
     return (
         <LoggerContext.Provider value={logger}>
             {children}
@@ -55,13 +55,13 @@ export function LoggerProvider(props: LoggerProviderProps) {
     return withLogger(props.children, props.logger)
 }
 
-export function useLogger() {
-    return useContext(LoggerContext)
+export function useLogger<T = Logger<unknown>>() {
+    return useContext<T>(LoggerContext as React.Context<T>)
 }
 
 // Types ///////////////////////////////////////////////////////////////////////
 
 export interface LoggerProviderProps {
     children: React.ReactNode
-    logger: Logger
+    logger: Logger<unknown>
 }
