@@ -69,7 +69,7 @@ export function useSite
 }
 
 // Used only for TypeScript validation.
-export function asSiteSpec
+export function defineSiteSpec
     <
         RK extends string,
         AK extends string,
