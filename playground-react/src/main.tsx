@@ -1,11 +1,15 @@
+if (__WITH_PREACT__ === true && __MODE__ !== 'production') {
+    require('preact/debug')
+}
+
 import {createContainer} from '@eviljs/std/container'
 import {StrictMode} from 'react'
 import {createRoot} from 'react-dom/client'
-import {App} from './app/app'
-import {ContainerSpec} from './lib/container'
-import * as Context from './lib/context'
+import {ContainerSpec} from './container'
+import * as Context from './context'
+import {Root, RootContext} from './root'
 
-import './lib/style.css'
+import '~/style.css'
 
 console.table({...Context})
 
@@ -15,12 +19,13 @@ const root = createRoot(rootElement)
 
 root.render(
     <StrictMode>
-        <App container={container}/>
+        <RootContext container={container}>
+            <Root/>
+        </RootContext>
     </StrictMode>
 )
 
 // Hot Module Replacement (development mode)
-declare const module: {hot: {accept(): void}}
 if (module.hot) {
     module.hot.accept()
 }

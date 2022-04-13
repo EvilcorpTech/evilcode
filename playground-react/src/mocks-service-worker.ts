@@ -1,7 +1,7 @@
 import {createFetch} from '@eviljs/web/fetch'
 import {createFetchServiceWorker, mockFetchDelayed} from '@eviljs/web/fetch-mock'
-import {ApiUrl} from './lib/context'
-import {FetchMocksSpec} from './lib/mock'
+import {ApiUrl} from './context'
+import {FetchMocksSpec} from './mock'
 
 const fetch = mockFetchDelayed(
     createFetch({baseUrl: ApiUrl}),

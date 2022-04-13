@@ -1,6 +1,6 @@
 import {classes} from '@eviljs/react/classes'
-import {useI18nMsg} from 'lib/hooks/i18n'
-import {Header} from 'lib/widgets/header'
+import {useI18nMsg} from '~/hooks/i18n'
+import {Header} from '~/widgets/header'
 
 import './home-view.css'
 

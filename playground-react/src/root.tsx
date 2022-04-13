@@ -11,24 +11,24 @@ import {useRootStoreStorage, withStore} from '@eviljs/react/store'
 import {Showcase} from '@eviljs/reactx/showcase'
 import {pipe} from '@eviljs/std/pipe'
 import {Fragment} from 'react'
-import {Container} from 'lib/container'
-import {BasePath, RouterType} from 'lib/context'
-import {StoreStorageSpec} from 'lib/hooks/store'
-import * as Routes from 'lib/routes'
-import {AuthBarrier} from 'lib/widgets/auth-barrier'
-import {Header} from 'lib/widgets/header'
-import {NotFoundView} from './404-view'
-import {AdminView} from './admin-view'
-import {AuthView} from './auth-view'
-import {HomeView} from './home-view'
-import ShowcaseIndex from './showcase'
+import {NotFoundView} from '~/app/404-view'
+import {AdminView} from '~/app/admin-view'
+import {AuthView} from '~/app/auth-view'
+import {HomeView} from '~/app/home-view'
+import ShowcaseIndex from '~/app/showcase'
+import {Container} from '~/container'
+import {BasePath, RouterType} from '~/context'
+import {StoreStorageSpec} from '~/hooks/store'
+import * as Routes from '~/routes'
+import {AuthBarrier} from '~/widgets/auth-barrier'
+import {Header} from '~/widgets/header'
 
 import '@eviljs/reactx/showcase/theme-v1.css'
 
-export function App(props: AppProps) {
+export function RootContext(props: RootContextProps) {
     const {container} = props
 
-    return pipe(<AppMain/>)
+    return pipe(<Root/>)
     .to(it => withAuth(it, container.Fetch, container.Cookie))
     .to(it => withContainer(it, container))
     .to(it => withFetch(it, container.Fetch))
@@ -41,7 +41,7 @@ export function App(props: AppProps) {
     .end()
 }
 
-export function AppMain(props: AppMainProps) {
+export function Root(props: RootProps) {
     useRootStoreStorage(StoreStorageSpec)
 
     return (
@@ -83,10 +83,10 @@ export function AppMain(props: AppMainProps) {
 
 // Types ///////////////////////////////////////////////////////////////////////
 
-export interface AppProps {
+export interface RootContextProps {
+    children: React.ReactNode
     container: Container
 }
 
-export interface AppMainProps {
-    className?: string
+export interface RootProps {
 }

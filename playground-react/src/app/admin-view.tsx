@@ -2,8 +2,8 @@ import {useAuth} from '@eviljs/react/auth'
 import {classes} from '@eviljs/react/classes'
 import {Button} from '@eviljs/reactx/button'
 import {useCallback} from 'react'
-import {useI18nMsg} from 'lib/hooks/i18n'
-import {Header} from 'lib/widgets/header'
+import {useI18nMsg} from '~/hooks/i18n'
+import {Header} from '~/widgets/header'
 
 import './admin-view.css'
 
