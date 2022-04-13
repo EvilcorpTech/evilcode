@@ -1,5 +1,4 @@
 import {wait} from '@eviljs/std/async.js'
-import {StdError} from '@eviljs/std/throw.js'
 import {randomInt} from '@eviljs/std/random.js'
 import {
     asJsonOptions,
@@ -10,8 +9,6 @@ import {
     mergeOptions,
 } from './fetch.js'
 import {regexpFromPattern} from './route.js'
-
-export class MissingMock extends StdError {}
 
 export const NoMock = Symbol('NoMock')
 
@@ -46,6 +43,7 @@ export function mockFetch(fetch: Fetch, mocks: FetchMocks) {
             }
 
             const [method, path] = args
+
             console.debug(
                 `@eviljs/web/fetch-mock.request():\n`
                 + `missing mock for '${method.toUpperCase()} ${path}'.`
@@ -197,6 +195,6 @@ export interface FetchMockHandler {
 }
 
 export interface MockFetchDelayedOptions {
-    minDelay?: number
-    maxDelay?: number
+    minDelay?: undefined | number
+    maxDelay?: undefined | number
 }

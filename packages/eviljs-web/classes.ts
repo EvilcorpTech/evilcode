@@ -1,5 +1,4 @@
-import {throwInvalidArgument} from '@eviljs/std/throw.js'
-import {isArray, isString, isObject} from '@eviljs/std/type.js'
+import {isArray, isObject, isString} from '@eviljs/std/type.js'
 
 export function classes(...names: Array<Classes>) {
     const list: Array<string> = []
@@ -28,8 +27,8 @@ export function classes(...names: Array<Classes>) {
             continue
         }
 
-        return throwInvalidArgument(
-            '@eviljs/web/class.classes(~~names~~):\n'
+        console.error(
+            '@eviljs/web/classes.classes(~~names~~):\n'
             + `names must be a String | Object | Array, given "${item}".`
         )
     }
