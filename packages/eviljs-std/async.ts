@@ -9,15 +9,19 @@ export function wait(delay: number) {
     return promise
 }
 
-export async function play(timeline: AsyncTimeline): Promise<unknown> {
+export function play(timeline: AsyncTimeline): Promise<unknown> {
     if (isFunction(timeline)) {
-        return await timeline()
+        return timeline()
     }
     if (isArray(timeline)) {
-        return await Promise.all(timeline.map(play))
+        return Promise.all(
+            timeline.map(play),
+        )
     }
     if (isObject(timeline)) {
-        return await Promise.all(Object.values(timeline).map(play))
+        return Promise.all(
+            Object.values(timeline).map(play),
+        )
     }
 
     return throwInvalidArgument(

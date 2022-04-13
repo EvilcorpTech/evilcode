@@ -1,4 +1,15 @@
-import {assertFunctionOptional, assertObject, ensureArray, ensureBoolean, ensureFunction, ensureInteger, ensureNumber, ensureString, ensureStringOptional, throwAssertError} from './assert.js'
+import {
+    assertFunctionOptional,
+    assertObject,
+    ensureArray,
+    ensureBoolean,
+    ensureFunction,
+    ensureInteger,
+    ensureNumber,
+    ensureString,
+    ensureStringOptional,
+    throwAssertError,
+} from './assert.js'
 import {get} from './object.js'
 import {isArray, isFunction, isNil} from './type.js'
 
@@ -26,6 +37,9 @@ export function bool(ctx: Ctx, oneExp: Exp<Ctx, any>): boolean {
     return true
 }
 
+/**
+* @throws InvalidArgument
+*/
 export function and(ctx: Ctx, ...exps: Array<Exp<Ctx, boolean>>): boolean {
     if (exps.length === 0) {
         return throwAssertError('a Non Empty Array', exps)
@@ -33,6 +47,9 @@ export function and(ctx: Ctx, ...exps: Array<Exp<Ctx, boolean>>): boolean {
     return exps.every(itExp => ensureBoolean(evaluateExp(ctx, itExp)))
 }
 
+/**
+* @throws InvalidArgument
+*/
 export function or(ctx: Ctx, ...exps: Array<Exp<Ctx, boolean>>): boolean {
     if (exps.length === 0) {
         return throwAssertError('a Non Empty Array', exps)

@@ -3,24 +3,39 @@ import {isString} from './type.js'
 
 // Assertions //////////////////////////////////////////////////////////////////
 
+/**
+* @throws InvalidInput
+*/
 export function assertDateString(value: unknown, ctx?: any): asserts value is string {
     ensureDateString(value, ctx)
 }
 
+/**
+* @throws InvalidInput
+*/
 export function assertDateStringOptional(value: unknown, ctx?: any): asserts value is undefined | string {
     ensureDateStringOptional(value, ctx)
 }
 
+/**
+* @throws InvalidInput
+*/
 export function assertDateAsIsoUtcString(value: unknown, ctx?: any): asserts value is string {
     ensureDateAsIsoUtcString(value, ctx)
 }
 
+/**
+* @throws InvalidInput
+*/
 export function assertDateAsIsoUtcStringOptional(value: unknown, ctx?: any): asserts value is undefined | string {
     ensureDateAsIsoUtcStringOptional(value, ctx)
 }
 
 // Assurances //////////////////////////////////////////////////////////////////
 
+/**
+* @throws InvalidInput
+*/
 export function ensureDateString<T extends string>(value: T, ctx?: any): T
 export function ensureDateString(value: unknown, ctx?: any): string
 export function ensureDateString(value: unknown, ctx?: any) {
@@ -33,12 +48,18 @@ export function ensureDateString(value: unknown, ctx?: any) {
     return value
 }
 
+/**
+* @throws InvalidInput
+*/
 export function ensureDateStringOptional<T extends undefined | string>(value: T, ctx?: any): T
 export function ensureDateStringOptional(value: unknown, ctx?: any): undefined | string
 export function ensureDateStringOptional(value: unknown, ctx?: any) {
     return ensureOptionalWith(ensureDateString, value, ctx)
 }
 
+/**
+* @throws InvalidInput
+*/
 export function ensureDateAsIsoUtcString<T extends string>(value: T, ctx?: any): T
 export function ensureDateAsIsoUtcString(value: unknown, ctx?: any): string
 export function ensureDateAsIsoUtcString(value: unknown, ctx?: any) {
@@ -51,6 +72,9 @@ export function ensureDateAsIsoUtcString(value: unknown, ctx?: any) {
     return value
 }
 
+/**
+* @throws InvalidInput
+*/
 export function ensureDateAsIsoUtcStringOptional<T extends undefined | string>(value: T, ctx?: any): T
 export function ensureDateAsIsoUtcStringOptional(value: unknown, ctx?: any): undefined | string
 export function ensureDateAsIsoUtcStringOptional(value: unknown, ctx?: any) {

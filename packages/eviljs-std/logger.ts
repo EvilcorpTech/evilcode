@@ -1,153 +1,93 @@
-import {throwInvalidArgument} from './throw.js'
-import {ValueOf} from './type.js'
-
-export const Level = {
-    Debug: 1,
-    Info: 2,
-    Warn: 3,
-    Error: 4,
-} as const
-
-export const DefaultLevel = Level.Debug
-
-export function LoggerService(container: LoggerContainer) {
-    const {LoggerSpec: loggerSpec} = container
-    const {Context: context} = container
-
-    const spec = {
-        adapter: loggerSpec?.adapter,
-        level:
-            context?.LOGGER_LEVEL
-            ?? (process.env.LOGGER_LEVEL
-                ? Number(process.env.LOGGER_LEVEL) as Level
-                : void undefined
-            )
-            ?? loggerSpec?.level
-        ,
-    }
-
-    return createLogger(spec)
+export enum LogType {
+    Debug = 1,
+    Info = 2,
+    Warn = 3,
+    Error = 4,
 }
 
-export function createLogger(spec?: undefined | LoggerSpec) {
-    const self: LoggerProxy = {
-        adapter: spec?.adapter ?? console,
-        level: spec?.level ?? DefaultLevel,
-        Level,
+export const LogTypeDefault = LogType.Debug
 
-        log(...args) {
-            return logDefault(self, ...args)
+export function createLogger<R>(log: (level: LogType, ...args: Payload) => R) {
+    return {
+        Type: LogType,
+
+        log,
+
+        debug(...args: Payload) {
+            return log(LogType.Debug, ...args)
         },
-        debug(...args) {
-            return logDebug(self, ...args)
+        info(...args: Payload) {
+            return log(LogType.Info, ...args)
         },
-        info(...args) {
-            return logInfo(self, ...args)
+        warn(...args: Payload) {
+            return log(LogType.Warn, ...args)
         },
-        warn(...args) {
-            return logWarn(self, ...args)
-        },
-        error(...args) {
-            return logError(self, ...args)
+        error(...args: Payload) {
+            return log(LogType.Error, ...args)
         },
     }
-
-    return self
 }
 
-export function logDefault(logger: LoggerProxy, level: Level, ...args: Array<unknown>) {
-    switch (level) {
-        case Level.Debug:
-            return logger.debug(...args)
-        case Level.Info:
-            return logger.info(...args)
-        case Level.Warn:
-            return logger.warn(...args)
-        case Level.Error:
-            return logger.error(...args)
-        default:
-            return throwInvalidArgument(
-                '@eviljs/std/logger.log(logger, ~~level~~, ...args):\n'
-                + `level must be ${Object.values(Level).join(' | ')}, given "${level}".`
-            )
+export function createConsoleLog(options?: undefined | {
+    adapter?: undefined | Logger<void>
+    levelMin?: undefined | LogType
+}) {
+    const adapter = options?.adapter ?? console
+    const levelMin = options?.levelMin ?? LogTypeDefault
+
+    function log(type: LogType, ...args: Payload) {
+        return logLevelMinOn(adapter, levelMin, type, ...args)
     }
+
+    return log
 }
 
-export function logDebug(logger: LoggerProxy, ...args: Array<unknown>) {
-    if (logger.level > Level.Debug) {
-        return logger
-    }
-
-    logger.adapter.debug(...args)
-
-    return logger
+export function logLevelMinOn<R>(
+    adapter: Logger<R>,
+    levelMin: LogType,
+    type: LogType,
+    ...args: Payload
+): void | R {
+    return (type >= levelMin)
+        ? logOnAdapter(adapter, type, ...args)
+        : undefined
 }
 
-export function logInfo(logger: LoggerProxy, ...args: Array<unknown>) {
-    if (logger.level > Level.Info) {
-        return logger
+export function logOnAdapter<R>(
+    adapter: Logger<R>,
+    type: LogType,
+    ...args: Payload
+): R {
+    switch (type) {
+        case LogType.Debug:
+            return adapter.debug(...args)
+        break
+        case LogType.Info:
+            return adapter.info(...args)
+        break
+        case LogType.Warn:
+            return adapter.warn(...args)
+        break
+        case LogType.Error:
+            return adapter.error(...args)
+        break
     }
 
-    logger.adapter.info(...args)
-
-    return logger
-}
-
-export function logWarn(logger: LoggerProxy, ...args: Array<unknown>) {
-    if (logger.level > Level.Warn) {
-        return logger
-    }
-
-    logger.adapter.warn(...args)
-
-    return logger
-}
-
-export function logError(logger: LoggerProxy, ...args: Array<unknown>) {
-    if (logger.level > Level.Error) {
-        return logger
-    }
-
-    logger.adapter.error(...args)
-
-    return logger
+    return adapter.error(
+        '@eviljs/std/logger.logOnAdapter(adapter, ~~type~~, ...args):\n'
+        + `type must be ${Object.values(LogType).join(' | ')}, given "${type}".`
+    )
 }
 
 // Types ///////////////////////////////////////////////////////////////////////
 
-export interface LoggerContainer {
-    Context?: undefined | {
-        LOGGER_LEVEL: Level
-    }
-    LoggerSpec?: undefined | LoggerSpec
+export interface Logger<R> {
+    log(type: LogType, ...args: Payload): R
+    debug(...args: Payload): R
+    info(...args: Payload): R
+    warn(...args: Payload): R
+    error(...args: Payload): R
 }
 
-export interface LoggerStateless {
-    log(level: Level, ...args: Array<unknown>): void
-    debug(...args: Array<unknown>): void
-    info(...args: Array<unknown>): void
-    warn(...args: Array<unknown>): void
-    error(...args: Array<unknown>): void
-}
-
-export interface Logger extends LoggerStateless {
-    level: Level
-    Level: typeof Level
-}
-
-export interface LoggerProxy extends Logger {
-    adapter: LoggerStateless
-}
-
-export interface LoggerSpec {
-    adapter?: undefined | LoggerStateless
-    level?: undefined | Level
-}
-
-export type Level = ValueOf<typeof Level>
-
-declare var process: {
-    env: {
-        [key: string]: string | undefined
-    }
+export interface Payload extends Array<unknown> {
 }
