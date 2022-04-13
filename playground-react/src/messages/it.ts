@@ -1,8 +1,8 @@
 export default {
     'Home': 'Casa',
-    '@{n} items': ({n}: {n: number}) =>
-        n === 1
+    '@{n} items'(args: {n: number}) {
+        return args.n === 1
             ? '1 elemento'
-            : `${n} elementi`
-    ,
+            : `${args.n} elementi`
+    },
 }

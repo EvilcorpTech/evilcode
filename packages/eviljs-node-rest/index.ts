@@ -145,11 +145,11 @@ export function createKoaAppErrorHandler(spec?: undefined | RestSpec) {
 // Types ///////////////////////////////////////////////////////////////////////
 
 export interface RestContainer<C, M> {
-    Context?: {
+    Context?: undefined | {
         REST_ADDR?: undefined | string
         REST_PORT?: undefined | string | number
     }
-    Logger?: undefined | Logger
+    Logger?: undefined | Logger<unknown>
     RestSpec?: undefined | RestSpec<C, M>
 }
 
@@ -158,7 +158,7 @@ export interface RestSpec<C = any, M = any> {
     context?: undefined | C
     httpAddr?: undefined | string
     httpPort?: undefined | string | number
-    logger?: undefined | Logger
+    logger?: undefined | Logger<unknown>
     maxAge?: undefined | number
     middleware?: undefined | RestMiddleware<M>
     staticDir?: undefined | string

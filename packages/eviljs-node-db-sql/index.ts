@@ -188,20 +188,20 @@ export type Db<S extends DbServices = {}> = {
 } & S
 
 export interface DbContainer<S extends DbServices> {
-    Context?: {
+    Context?: undefined | {
         DB_HOST?: undefined | string
         DB_PORT?: undefined | string | number
         DB_USER?: undefined | string
         DB_PASS?: undefined | string
         DB_NAME?: undefined | string
     }
-    DbSpec?: DbSpec<S>
-    Logger?: Logger
+    DbSpec?: undefined | DbSpec<S>
+    Logger?: undefined | Logger<unknown>
 }
 
 export interface DbSpec<S extends DbServices> {
     host?: undefined | string
-    logger?: undefined | Logger
+    logger?: undefined | Logger<unknown>
     name?: undefined | string
     pass?: undefined | string
     port?: undefined | string | number

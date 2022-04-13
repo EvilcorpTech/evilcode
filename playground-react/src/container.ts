@@ -1,6 +1,6 @@
 import {Container as ContainerStd} from '@eviljs/std/container'
 import {createI18n} from '@eviljs/std/i18n'
-import {createLogger} from '@eviljs/std/logger'
+import {createConsoleLog, createLogger} from '@eviljs/std/logger'
 import {createCookie, maxAgeInDays} from '@eviljs/web/cookie'
 import {createFetch, Fetch} from '@eviljs/web/fetch'
 import {asBaseUrl} from '@eviljs/web/url'
@@ -33,7 +33,7 @@ export const ContainerSpec = {
             return createI18n(I18nSpec)
         },
         Logger(container: {}) {
-            return createLogger()
+            return createLogger(createConsoleLog())
         },
         Query(container: {Fetch: Fetch}) {
             return createQuery(container.Fetch)
