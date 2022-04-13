@@ -1,7 +1,7 @@
 import {useCallback, useLayoutEffect, useRef} from 'react'
 
 export function useTaskDelayed(delayMs: number, task: Function) {
-    const taskRef = useRef<null | number>()
+    const taskRef = useRef<null | ReturnType<typeof setTimeout>>()
 
     const cancel = useCallback(() => {
         if (! taskRef.current) {
@@ -17,8 +17,8 @@ export function useTaskDelayed(delayMs: number, task: Function) {
         taskRef.current = setTimeout(task, delayMs)
     }, [cancel, task])
 
-    // We use useLayoutEffect() to conform with React 17 hooks lifecycle.
     useLayoutEffect(() => {
+        // We use useLayoutEffect() to conform with React 17 hooks lifecycle.
         return cancel
     }, [cancel])
 
