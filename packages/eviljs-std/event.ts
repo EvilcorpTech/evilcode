@@ -2,7 +2,7 @@ export function debounce<A extends Array<unknown>>(task: Task<A>, delay: number)
     interface State {
         args: null | A
         callTime: null | number
-        timeoutId: null | number
+        timeoutId: null | ReturnType<typeof setTimeout>
     }
     const state: State = {
         args: null,
@@ -52,7 +52,7 @@ export function debounce<A extends Array<unknown>>(task: Task<A>, delay: number)
 export function throttle<A extends Array<unknown>>(task: Task<A>, delay: number) {
     interface State {
         args: null | A
-        timeoutId: null | number
+        timeoutId: null | ReturnType<typeof setTimeout>
     }
     const state: State = {
         args: null,
