@@ -1,3 +1,4 @@
+import {computeValue} from '@eviljs/std/fn.js'
 import {createHistory} from '@eviljs/std/undoredo.js'
 import {useCallback, useMemo, useState} from 'react'
 
@@ -16,9 +17,11 @@ export function useUndoRedo<S>(initState: S) {
         setState(history.redo())
     }, [history])
 
-    const onSave = useCallback((state: S) => {
-        setState(history.save(state))
-    }, [history])
+    const onSave = useCallback((nextState: React.SetStateAction<S>) => {
+        const computedState = computeValue(nextState, state)
+        history.save(computedState)
+        setState(computedState)
+    }, [history, state])
 
     const {redoStack, undoStack} = history
 
