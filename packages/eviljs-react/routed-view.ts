@@ -1,6 +1,5 @@
 import {createCssTransition, play} from '@eviljs/web/animation.js'
 import {useEffect, useMemo, useState} from 'react'
-import {useMountedGuard} from './hook.js'
 import {useRouterTransition} from './router.js'
 
 export function useRoutedViewLifecycle(routeRegexp: RegExp) {
@@ -45,7 +44,6 @@ export function useRoutedViewLifecycle(routeRegexp: RegExp) {
 * return <div style={style}>...</div>
 */
 export function useRoutedViewAnimation(routeRegexp: RegExp, enterOptional?: Animator, exitOptional?: Animator) {
-    const guardMounted = useMountedGuard()
     const [viewLifecycle, setViewLifecycle] = useRoutedViewLifecycle(routeRegexp)
     const enter = enterOptional ?? (() => Promise.resolve())
     const exit = exitOptional ?? (() => Promise.resolve())
@@ -62,22 +60,22 @@ export function useRoutedViewAnimation(routeRegexp: RegExp, enterOptional?: Anim
     useEffect(() => {
         switch (viewLifecycle) {
             case 'entering':
-                enter().then(guardMounted(() => {
+                enter().then(() => {
                     setViewLifecycle(state =>
                         state === 'entering'
                             ? 'entered'
                             : state
                     )
-                }))
+                })
             break
             case 'exiting':
-                exit().then(guardMounted(() => {
+                exit().then(() => {
                     setViewLifecycle(state =>
                         state === 'exiting'
                             ? 'exited'
                             : state
                     )
-                }))
+                })
             break
         }
     }, [viewLifecycle])

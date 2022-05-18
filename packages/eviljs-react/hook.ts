@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useLayoutEffect, useRef, useState} from 'react'
+import {useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState} from 'react'
 
 /*
 * Used to invoke a closure with updated scope.
@@ -26,6 +26,12 @@ export function useClosure<A extends Array<unknown>, R>(closure: (...args: A) =>
 
     return useCallback((...args: A) => {
         return closureRef.current(...args)
+    }, [])
+}
+
+export function useConstant<V>(value: V) {
+    return useMemo(() => {
+        return value
     }, [])
 }
 

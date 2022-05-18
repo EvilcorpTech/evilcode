@@ -1,29 +1,40 @@
 import {computeValue} from '@eviljs/std/fn.js'
 import {createHistory} from '@eviljs/std/undoredo.js'
-import {useCallback, useMemo, useState} from 'react'
+import {useCallback, useMemo} from 'react'
+import {useRender} from './hook.js'
 
-export function useUndoRedo<S>(initState: S) {
-    const [state, setState] = useState(initState)
+export function useUndoRedo<S>(initState: S | (() => S)) {
+    const render = useRender()
+
+    function withRenderEffect<A extends Array<unknown>>(fn: (...args: A) => S) {
+        function proxy(...args: A) {
+            const previousState = history.state
+            const currentState = fn(...args)
+
+            if (currentState !== previousState) {
+                render()
+            }
+
+            return currentState
+        }
+
+        return proxy
+    }
 
     const history = useMemo(() => {
-        return createHistory(initState)
+        return createHistory(computeValue(initState))
     }, [])
 
-    const onUndo = useCallback(() => {
-        setState(history.undo())
-    }, [history])
+    const onUndo = useCallback(withRenderEffect(history.undo), [history])
+    const onRedo = useCallback(withRenderEffect(history.redo), [history])
 
-    const onRedo = useCallback(() => {
-        setState(history.redo())
-    }, [history])
+    const onSave = useCallback(withRenderEffect((state: React.SetStateAction<S>) => {
+        const prevState = history.state
+        const nextState = computeValue(state, prevState)
+        return history.save(nextState)
+    }), [history])
 
-    const onSave = useCallback((nextState: React.SetStateAction<S>) => {
-        const computedState = computeValue(nextState, state)
-        history.save(computedState)
-        setState(computedState)
-    }, [history, state])
-
-    const {redoStack, undoStack} = history
+    const {state, redoStack, undoStack} = history
 
     return {state, redoStack, undoStack, onUndo, onRedo, onSave}
 }

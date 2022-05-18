@@ -12,15 +12,14 @@ import {Cookie} from '@eviljs/web/cookie.js'
 import {Fetch} from '@eviljs/web/fetch.js'
 import {throwInvalidResponse} from '@eviljs/web/throw.js'
 import {createContext, useCallback, useContext, useEffect, useMemo, useState} from 'react'
-import {useBusy} from './busy.js'
-import {useIfMounted, useMountedGuard} from './hook.js'
+import {useBusyLock} from './busy.js'
 
-export const AuthContext = createContext<Auth>(void undefined as any)
+export const AuthContext = createContext<unknown>(undefined)
 
 AuthContext.displayName = 'AuthContext'
 
 export const AuthTokenState = {
-    Init: null,
+    Init: undefined,
     Missing: 0,
     Validating: 1,
     Valid: 2,
@@ -40,7 +39,12 @@ export const AuthTokenState = {
 *
 * render(<Main/>, document.body)
 */
-export function WithAuth<P extends {}>(Child: React.ComponentType<P>, fetch: Fetch, cookie: Cookie, options?: AuthOptions) {
+export function WithAuth<P extends {}>(
+    Child: React.ComponentType<P>,
+    fetch: Fetch,
+    cookie: Cookie,
+    options?: undefined | AuthOptions,
+) {
     function AuthProviderProxy(props: P) {
         return withAuth(<Child {...props}/>, fetch, cookie, options)
     }
@@ -62,7 +66,12 @@ export function WithAuth<P extends {}>(Child: React.ComponentType<P>, fetch: Fet
 *     return withAuth(<Child/>, fetch, cookie, options)
 * }
 */
-export function withAuth(children: React.ReactNode, fetch: Fetch, cookie: Cookie, options?: AuthOptions) {
+export function withAuth(
+    children: React.ReactNode,
+    fetch: Fetch,
+    cookie: Cookie,
+    options?: undefined | AuthOptions,
+) {
     const auth = useRootAuth(fetch, cookie, options)
 
     return (
@@ -94,15 +103,13 @@ export function AuthProvider(props: AuthProviderProps) {
     return withAuth(props.children, props.fetch, props.cookie, props)
 }
 
-export function useRootAuth(fetch: Fetch, cookie: Cookie, options?: AuthOptions) {
+export function useRootAuth(fetch: Fetch, cookie: Cookie, options?: undefined | AuthOptions) {
     const authenticateOptions = options?.authenticate
     const validateOptions = options?.validate
     const invalidateOptions = options?.invalidate
     const [token, setToken] = useState<undefined | string>(() => cookie.get()) // Reading document.cookie is slow.
     const [tokenState, setTokenState] = useState<AuthTokenState>(AuthTokenState.Init)
-    const {busy, busyLock, busyRelease} = useBusy()
-    const ifMounted = useIfMounted()
-    const guardMounted = useMountedGuard()
+    const {busy, busyLock, busyRelease} = useBusyLock()
 
     useEffect(() => {
         if (! token) {
@@ -120,40 +127,45 @@ export function useRootAuth(fetch: Fetch, cookie: Cookie, options?: AuthOptions)
         busyLock()
 
         validate(fetch, token, validateOptions)
-        .then(guardMounted(isTokenValid => {
+        .then(isTokenValid => {
             setTokenState(isTokenValid
                 ? AuthTokenState.Valid
                 : AuthTokenState.Invalid
             )
-        }))
-        .finally(guardMounted(busyRelease))
+        })
+        .finally(busyRelease)
     }, [fetch, validateOptions, token])
 
+
+    /**
+    * @throws Error
+    **/
     const authenticateCredentials = useCallback(async (credentials: AuthCredentials) => {
         busyLock()
         try {
             const token = await authenticate(fetch, credentials, authenticateOptions)
 
-            ifMounted(() => {
-                cookie.set(token)
-                setToken(token)
-                setTokenState(AuthTokenState.Valid)
-            })
+            cookie.set(token)
+            setToken(token)
+            setTokenState(AuthTokenState.Valid)
 
             return token
         }
         finally {
-            ifMounted(busyRelease)
+            busyRelease()
         }
     }, [fetch, cookie, authenticateOptions])
 
+    /**
+    * @throws Error
+    **/
     const destroySession = useCallback(async () => {
         cookie.delete()
         setToken(undefined)
         setTokenState(AuthTokenState.Missing)
 
         if (! token) {
-            return true
+            return
         }
 
         busyLock()
@@ -161,21 +173,14 @@ export function useRootAuth(fetch: Fetch, cookie: Cookie, options?: AuthOptions)
             const ok = await invalidate(fetch, token, invalidateOptions)
 
             if (! ok) {
-                return throwInvalidResponse(
+                throwInvalidResponse(
                     `@eviljs/react/auth.useRootAuth().destroySession()`
                 )
             }
         }
-        catch (error) {
-            console.error(error)
-
-            return false
-        }
         finally {
-            ifMounted(busyRelease)
+            busyRelease()
         }
-
-        return true
     }, [fetch, cookie, invalidateOptions, token])
 
     const auth = useMemo(() => {
@@ -183,7 +188,7 @@ export function useRootAuth(fetch: Fetch, cookie: Cookie, options?: AuthOptions)
         return {
             token: isAuthenticated
                 ? token
-                : null
+                : undefined
             ,
             storedToken: token,
             tokenState,
@@ -198,7 +203,7 @@ export function useRootAuth(fetch: Fetch, cookie: Cookie, options?: AuthOptions)
 }
 
 export function useAuth() {
-    return useContext(AuthContext)
+    return useContext<Auth>(AuthContext as React.Context<Auth>)
 }
 
 // Types ///////////////////////////////////////////////////////////////////////
@@ -215,12 +220,6 @@ export interface AuthOptions {
     validate?: ValidateOptions
 }
 
-export interface Auth {
-    token: string | null | undefined
-    tokenState: AuthTokenState
-    pending: boolean
-    authenticate(credentials: AuthCredentials): Promise<string>
-    destroySession(): Promise<boolean>
-}
+export type Auth = ReturnType<typeof useRootAuth>
 
 export type AuthTokenState = ValueOf<typeof AuthTokenState>
