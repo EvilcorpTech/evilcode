@@ -1,4 +1,5 @@
 import {useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState} from 'react'
+import {useDebounce, useThrottle} from './event.js'
 
 /*
 * Used to invoke a closure with updated scope.
@@ -216,4 +217,22 @@ export function useRender() {
     }, [])
 
     return render
+}
+
+export function useStateDebounced<T>(delay: number, initialValue?: undefined): [undefined | T, React.Dispatch<React.SetStateAction<undefined | T>>]
+export function useStateDebounced<T>(delay: number, initialValue: T): [T, React.Dispatch<React.SetStateAction<T>>]
+export function useStateDebounced<T>(delay: number, initialValue?: undefined | T): [undefined | T, React.Dispatch<React.SetStateAction<undefined | T>>] {
+    const [value, setValue] = useState(initialValue)
+    const setValueDebounced = useDebounce(setValue, delay)
+
+    return [value, setValueDebounced]
+}
+
+export function useStateThrottled<T>(delay: number, initialValue?: undefined): [undefined | T, React.Dispatch<React.SetStateAction<undefined | T>>]
+export function useStateThrottled<T>(delay: number, initialValue: T): [T, React.Dispatch<React.SetStateAction<T>>]
+export function useStateThrottled<T>(delay: number, initialValue?: undefined | T): [undefined | T, React.Dispatch<React.SetStateAction<undefined | T>>] {
+    const [value, setValue] = useState(initialValue)
+    const setValueThrottled = useThrottle(setValue, delay)
+
+    return [value, setValueThrottled]
 }
