@@ -2,4 +2,6 @@
     font-family: var(--std-font-primary);
     font-size: var(--std-text-size3);
     font-weight: var(--std-text-weight);
+    line-height: var(--std-text-height);
+    letter-spacing: var(--std-text-spacing);
 }
