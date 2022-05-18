@@ -1,5 +1,7 @@
 import {isFunction} from './type.js'
 
+export {returnValue as identity} from './return.js'
+
 export function computeValue<T, A extends Array<unknown>>(
     value: ComputableValue<T, A>,
     ...args: A

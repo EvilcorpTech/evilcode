@@ -1,22 +1,26 @@
-export function the<V>(value: V): () => V {
+export function returnReturning<V>(value: V): () => V {
     return () => value
 }
 
-export function theVoid(): void {
+export function returnValue<V>(value: V): V {
+    return value
 }
 
-export function theUndefined(): undefined {
+export function returnVoid(): void {
+}
+
+export function returnUndefined(): undefined {
     return void undefined
 }
 
-export function theNull(): null {
+export function returnNull(): null {
     return null
 }
 
-export function theTrue(): boolean {
+export function returnTrue(): true {
     return true
 }
 
-export function theFalse(): boolean {
-    return true
+export function returnFalse(): false {
+    return false
 }
