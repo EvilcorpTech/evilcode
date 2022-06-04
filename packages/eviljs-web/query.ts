@@ -7,18 +7,39 @@ export function createQuery(fetch: Fetch) {
     const self: Query = {
         baseUrl: fetch.baseUrl,
 
+        /**
+        * @throws
+        */
         request(...args) {
             return query(fetch, ...args)
         },
+        /**
+        * @throws
+        */
         get(...args) {
             return self.request('get', ...args)
         },
+        /**
+        * @throws
+        */
         post(...args) {
             return self.request('post', ...args)
         },
+        /**
+        * @throws
+        */
         put(...args) {
             return self.request('put', ...args)
         },
+        /**
+        * @throws
+        */
+        patch(...args) {
+            return self.request('patch', ...args)
+        },
+        /**
+        * @throws
+        */
         delete(...args) {
             return self.request('delete', ...args)
         },
@@ -27,6 +48,9 @@ export function createQuery(fetch: Fetch) {
     Object.defineProperty(self, 'baseUrl', {
         get() {
             return fetch.baseUrl
+        },
+        set(value: string) {
+            return fetch.baseUrl = value
         },
     })
 
@@ -90,12 +114,12 @@ export function setupQueryRules(path: string, options?: undefined | QueryRequest
 
 // Types ///////////////////////////////////////////////////////////////////////
 
-export interface Query {
-    baseUrl: string
+export interface Query extends Fetch {
     request<T = unknown>(method: FetchRequestMethod, path: string, options?: undefined | QueryRequestOptions): Promise<T>
     get<T = unknown>(path: string, options?: undefined | QueryRequestOptions): Promise<T>
     post<T = unknown>(path: string, options?: undefined | QueryRequestOptions): Promise<T>
     put<T = unknown>(path: string, options?: undefined | QueryRequestOptions): Promise<T>
+    patch<T = unknown>(path: string, options?: undefined | QueryRequestOptions): Promise<T>
     delete<T = unknown>(path: string, options?: undefined | QueryRequestOptions): Promise<T>
 }
 

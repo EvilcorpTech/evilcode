@@ -25,6 +25,9 @@ export function createFetch(options?: undefined | FetchOptions) {
     const self: Fetch = {
         baseUrl: asBaseUrl(options?.baseUrl),
 
+        /**
+        * @throws
+        */
         request(method: FetchRequestMethod, path: string, options?: undefined | FetchRequestOptions) {
             const url = path.startsWith('/')
                 ? `${self.baseUrl}${path}`
@@ -33,18 +36,33 @@ export function createFetch(options?: undefined | FetchOptions) {
 
             return fetch(url, opts)
         },
+        /**
+        * @throws
+        */
         get(...args) {
             return self.request('get', ...args)
         },
+        /**
+        * @throws
+        */
         post(...args) {
             return self.request('post', ...args)
         },
+        /**
+        * @throws
+        */
         put(...args) {
             return self.request('put', ...args)
         },
+        /**
+        * @throws
+        */
         patch(...args) {
             return self.request('patch', ...args)
         },
+        /**
+        * @throws
+        */
         delete(...args) {
             return self.request('delete', ...args)
         },
