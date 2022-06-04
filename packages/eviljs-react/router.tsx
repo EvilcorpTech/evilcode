@@ -7,6 +7,7 @@ import {createRouter, serializeRouteToString, RouterOptions, RouterParams, Route
 import {createContext, CSSProperties, Fragment, useCallback, useContext, useEffect, useMemo, useRef, useState} from 'react'
 
 export {exact, All, Arg, End, Value, Path, PathOpt, PathGlob, Start} from '@eviljs/web/route.js'
+export type {RouterOptions} from '@eviljs/web/router.js'
 
 export const RouterContext = createContext<Router>(undefined as any)
 export const RouteMatchesContext = createContext<RouteMatches>(undefined as any)

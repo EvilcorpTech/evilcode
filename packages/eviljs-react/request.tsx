@@ -3,79 +3,76 @@ import {useMountedRef} from './hook.js'
 
 export {asBaseUrl, joinPath} from '@eviljs/web/url.js'
 
-export const QueryContext = createContext<unknown>(undefined)
+export const RequestContext = createContext<unknown>(undefined)
 
-QueryContext.displayName = 'QueryContext'
+RequestContext.displayName = 'RequestContext'
 
 /*
 * EXAMPLE
 *
-* const fetch = createFetch({baseUrl: '/api'})
-* const query = createQuery(fetch)
-* const Main = WithQuery(MyMain, query)
+* const adapter = createQuery(createFetch({baseUrl: '/api'}))
+* const Main = WithRequest(MyMain, adapter)
 *
 * render(<Main/>, document.body)
 */
-export function WithQuery<P extends {}>(Child: React.ComponentType<P>, query: unknown) {
-    function QueryProviderProxy(props: P) {
-        return withQuery(<Child {...props}/>, query)
+export function WithRequest<P extends {}>(Child: React.ComponentType<P>, context: unknown) {
+    function RequestProviderProxy(props: P) {
+        return withRequest(<Child {...props}/>, context)
     }
 
-    return QueryProviderProxy
+    return RequestProviderProxy
 }
 
 /*
 * EXAMPLE
 *
-* const fetch = createFetch({baseUrl: '/api'})
-* const query = createQuery(fetch)
+* const adapter = createRequest(createFetch({baseUrl: '/api'}))
 *
 * export function MyMain(props) {
-*     return withQuery(<Children/>, query)
+*     return withRequest(<Children/>, adapter)
 * }
 */
-export function withQuery(children: React.ReactNode, query: unknown) {
+export function withRequest(children: React.ReactNode, context: unknown) {
     return (
-        <QueryContext.Provider value={query}>
+        <RequestContext.Provider value={context}>
             {children}
-        </QueryContext.Provider>
+        </RequestContext.Provider>
     )
 }
 
 /*
 * EXAMPLE
 *
-* const fetch = createFetch({baseUrl: '/api'})
-* const query = createQuery(fetch)
+* const adapter = createRequest(createFetch({baseUrl: '/api'}))
 *
 * export function MyMain(props) {
 *     return (
-*         <QueryProvider query={query}>
+*         <RequestProvider value={adapter}>
 *             <MyApp/>
-*         </QueryProvider>
+*         </RequestProvider>
 *     )
 * }
 */
-export function QueryProvider(props: QueryProviderProps) {
-    return withQuery(props.children, props.query)
+export function RequestProvider(props: RequestProviderProps) {
+    return withRequest(props.children, props.value)
 }
 
-export function useQuery<Q, A extends Array<unknown>, R>(queryRunner: QueryRunner<Q, A, R>) {
-    interface UseQueryState {
+export function useRequest<C, A extends Array<unknown>, R>(runner: RequestRunner<C, A, R>) {
+    interface UseRequestState {
         pending: boolean
         response: undefined | R
         error: undefined | unknown
     }
-    const [state, setState] = useState<UseQueryState>({
+    const [state, setState] = useState<UseRequestState>({
         pending: false,
         response: undefined,
         error: undefined,
     })
     const mountedRef = useMountedRef()
-    const taskRef = useRef<null | QueryTask<R>>(null)
-    const query = useContext<Q>(QueryContext as React.Context<Q>)
+    const taskRef = useRef<null | RequestTask<R>>(null)
+    const context = useContext<C>(RequestContext as React.Context<C>)
 
-    const fetch = useCallback(async (...args: A) => {
+    const send = useCallback(async (...args: A) => {
         if (taskRef.current) {
             // We automatically cancel previous task.
             taskRef.current.cancelled = true
@@ -83,14 +80,14 @@ export function useQuery<Q, A extends Array<unknown>, R>(queryRunner: QueryRunne
 
         // We must retain current response and error states.
         // Whether the developer wants to clear them, he uses the reset() API
-        // before issuing a fetch() request.
+        // before issuing a send() request.
         setState(state => ({
             ...state,
             pending: true,
         }))
 
         taskRef.current = {
-            promise: queryRunner(query, ...args),
+            promise: runner(context, ...args),
             cancelled: false,
         }
 
@@ -132,7 +129,7 @@ export function useQuery<Q, A extends Array<unknown>, R>(queryRunner: QueryRunne
 
             return // Makes TypeScript happy.
         }
-    }, [queryRunner])
+    }, [runner])
 
     const cancel = useCallback(() => {
         if (taskRef.current) {
@@ -157,7 +154,7 @@ export function useQuery<Q, A extends Array<unknown>, R>(queryRunner: QueryRunne
     }, [])
 
     return {
-        fetch,
+        send,
         pending: state.pending,
         response: state.response,
         error: state.error,
@@ -170,16 +167,16 @@ export function useQuery<Q, A extends Array<unknown>, R>(queryRunner: QueryRunne
 
 // Types ///////////////////////////////////////////////////////////////////////
 
-export interface QueryProviderProps {
+export interface RequestProviderProps {
     children: React.ReactNode
-    query: unknown
+    value: unknown
 }
 
-export interface QueryRunner<Q, A extends Array<unknown>, R> {
-    (query: Q, ...args: A): Promise<R>
+export interface RequestRunner<C, A extends Array<unknown>, R> {
+    (context: C, ...args: A): Promise<R>
 }
 
-export interface QueryTask<T> {
+export interface RequestTask<T> {
     promise: Promise<T>
     cancelled: boolean
 }
