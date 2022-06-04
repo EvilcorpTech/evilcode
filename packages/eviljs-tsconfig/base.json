@@ -17,6 +17,7 @@
         "isolatedModules": true,
         "lib": ["esnext"],
         "module": "esnext",
+        "moduleDetection": "auto",
         "moduleResolution": "node",
         "noEmit": false,
         "noEmitHelpers": false,
