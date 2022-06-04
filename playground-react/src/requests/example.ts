@@ -2,7 +2,7 @@ import {Query} from '@eviljs/web/query'
 import {asAuthOptions} from '../kit/auth'
 import {DateString, IdString, UrlString} from '../models/types'
 
-export async function queryAccount(query: Query, token: string): Promise<AccountModel> {
+export async function readAccount(query: Query, token: string): Promise<AccountModel> {
     const options = asAuthOptions(token)
 
     const response = await query.get<AccountResponse>('/account', options)

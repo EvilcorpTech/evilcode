@@ -1,14 +1,14 @@
 import {loadSsrState} from '@eviljs/web/ssr'
 import {Version} from './context'
 
-export const StateVersion = Version.replaceAll('.', '-')
+export const StoreStateVersion = Version.replaceAll('.', '-')
 export const StoreSpec = {actions: {}, createState}
-export const StoreStateSsrId = 'AppState-' + StateVersion
+export const StoreStateSsrId = 'AppState-' + StoreStateVersion
 export const Storage: Storage = window.localStorage
 
-export function createState(): State {
+export function createState(): StoreState {
     const initialState = createInitialState()
-    const ssrState = loadSsrState<State>(StoreStateSsrId)
+    const ssrState = loadSsrState<StoreState>(StoreStateSsrId)
 
     if (ssrState) {
         console.debug('app:', 'store state restored from SsrStorage')
@@ -18,7 +18,7 @@ export function createState(): State {
     return initialState
 }
 
-export function createInitialState(): State {
+export function createInitialState(): StoreState {
     return {
         __cache__: {},
         theme: null,
@@ -26,7 +26,7 @@ export function createInitialState(): State {
     }
 }
 
-export function mergeState(state: State, savedState: State) {
+export function mergeState(state: StoreState, savedState: StoreState) {
     return {
         // We overwrite the base state...
         ...state,
@@ -36,7 +36,7 @@ export function mergeState(state: State, savedState: State) {
     }
 }
 
-export function filterStorageState(state: State) {
+export function filterStorageState(state: StoreState) {
     return {
         // Shallow clone.
         ...state,
@@ -46,14 +46,14 @@ export function filterStorageState(state: State) {
 
 // Types ///////////////////////////////////////////////////////////////////////
 
-export interface State {
-    __cache__: StateCache
+export interface StoreState {
+    __cache__: StoreStateCache
     theme: null | 'light' | 'dark'
     token: null | string
 }
 
-export type StateCache = {
-    [key in StateKey]?: boolean
+export type StoreStateCache = {
+    [key in StoreStateKey]?: boolean
 }
 
-export type StateKey = Exclude<keyof State, '__cache__'>
+export type StoreStateKey = Exclude<keyof StoreState, '__cache__'>

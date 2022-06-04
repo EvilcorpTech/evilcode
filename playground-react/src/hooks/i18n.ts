@@ -1,8 +1,10 @@
-import {I18n as EvilI18n} from '@eviljs/react/i18n'
+import {} from '@eviljs/react/i18n'
+import {I18n as EvilI18n, useI18n as useEvilI18n} from '@eviljs/react/i18n'
 import {I18nKeyOf, I18nLocaleOf} from '@eviljs/std/i18n'
 import {I18nSpec} from '../i18n'
 
-export {useI18n, useI18nMsg} from '@eviljs/react/i18n'
+export {useI18nMsg} from '@eviljs/react/i18n'
+export const useI18n = useEvilI18n<I18n>
 
 // Types ///////////////////////////////////////////////////////////////////////
 
