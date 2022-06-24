@@ -5,57 +5,40 @@ export const ObjectPathArrayOpenRegexp = /\[/g
 export const ObjectPathArrayCloseRegexp = /\]/g
 export const ObjectPathCache: Record<string, Array<string | number>> = {}
 
-export function map
-    <
-        K extends string | number,
-        V,
-        RK extends string | number,
-    >
-    (
-        object: Record<K, V>,
-        withFn: {key: MapObjectKeyFn<K, V, RK>, value?: never},
-    )
-    : Record<RK, V>
-export function map
-    <
-        K extends string | number,
-        V,
-        RV,
-    >
-    (
-        object: Record<K, V>,
-        withFn: {key?: never, value: MapObjectValueFn<V, K, RV>},
-    )
-    : Record<K, RV>
-export function map
-    <
-        K extends string | number,
-        V,
-        RK extends string | number,
-        RV,
-    >
-    (
-        object: Record<K, V>,
-        withFn: {key: MapObjectKeyFn<K, V, RK>, value: MapObjectValueFn<V, K, RV>},
-    )
-    : Record<RK, RV>
-export function map
-    <
-        K extends string | number,
-        V,
-        RK extends string | number,
-        RV,
-    >
-    (
-        object: Record<K, V>,
-        withFn: {key?: MapObjectKeyFn<K, V, RK>, value?: MapObjectValueFn<V, K, RV>},
-    )
-{
+export function isEmptyObject(obj: {}): boolean {
+    for (const it in obj) {
+        return false
+    }
+    return true
+}
+
+export function map<K extends string | number, V, RK extends string | number>(
+    object: Record<K, V>,
+    withFn: {key: MapObjectKeyFn<K, V, RK>, value?: never},
+): Record<RK, V>
+export function map<K extends string | number, V, RV>(
+    object: Record<K, V>,
+    withFn: {key?: never, value: MapObjectValueFn<V, K, RV>},
+): Record<K, RV>
+export function map<K extends string | number, V, RK extends string | number, RV>(
+    object: Record<K, V>,
+    withFn: {key: MapObjectKeyFn<K, V, RK>, value: MapObjectValueFn<V, K, RV>},
+): Record<RK, RV>
+export function map<K extends string | number, V, RK extends string | number, RV>(
+    object: Record<K, V>,
+    withFn: {key?: MapObjectKeyFn<K, V, RK>, value?: MapObjectValueFn<V, K, RV>},
+) {
     function mapper(it: [K, V]) {
         const [key, value] = it
         const tuple: [K | RK, V | RV] = [
-            withFn.key?.(key, value) ?? key,
-            withFn.value?.(value, key) ?? value,
+            withFn.key
+                ? withFn.key(key, value)
+                : key
+            ,
+            withFn.value
+                ? withFn.value(value, key)
+                : value
+            ,
         ]
 
         return tuple

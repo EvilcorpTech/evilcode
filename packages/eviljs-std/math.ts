@@ -2,6 +2,10 @@ export function clamp(min: number, value: number, max: number) {
     return Math.min(max, Math.max(min, value))
 }
 
+export function round(value: number, round: number) {
+    return Math.trunc(value / round) * round
+}
+
 export function sum(items: Array<number>, getter?: undefined): number;
 export function sum<I>(items: Array<I>, getter: ItemGetter<I>): number;
 export function sum<I>(items: Array<number> | Array<I>, getter?: undefined | ItemGetter<I>): number {

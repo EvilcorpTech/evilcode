@@ -137,6 +137,7 @@ export function asNumber(value: unknown): undefined | number {
     return result
 }
 
+
 export function asNumberInteger(value: number): number
 export function asNumberInteger(value: string): undefined | number
 export function asNumberInteger<T>(value: T): unknown extends T ? undefined | number : undefined
@@ -148,6 +149,17 @@ export function asNumberInteger(value: unknown): undefined | number {
     }
 
     return Math.trunc(result)
+}
+
+export function asDate(value: unknown): undefined | Date {
+    // Date.parse() is omnivorous, accepts everything. Everything not string is returned as NaN.
+    const result = Date.parse(value as string)
+
+    if (isNaN(result)) {
+        return
+    }
+
+    return new Date(result)
 }
 
 // Types ///////////////////////////////////////////////////////////////////////

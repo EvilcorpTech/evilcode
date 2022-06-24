@@ -21,3 +21,15 @@ export function mapWith<I>(mapItem: (it: I) => I) {
 export function filterDefined<I>(item: void | undefined | null | I): item is I {
     return ! isNil(item)
 }
+
+export function asMatrix<T>(list: Array<T>, size: number) {
+    return list.reduce((rows, key, index) => {
+        if ((index % size) === 0) {
+            rows.push([key])
+        }
+        else {
+            rows[rows.length - 1]?.push(key)
+        }
+        return rows
+    }, [] as Array<Array<T>>)
+}
