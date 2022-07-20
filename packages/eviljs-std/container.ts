@@ -58,8 +58,7 @@ export function createContainer<F extends ContainerFactories>(spec?: ContainerSp
 * registerService(container, 'MyService', container => MyService())
 * registerService(container, Symbol(), container => MyService())
 */
-export function registerService
-    <C extends Container>
+export function registerService<C extends Container>
     (container: C, serviceId: ServiceId, serviceFactory: ServiceFactory)
 {
     container[ContainerFactories][serviceId as string] = serviceFactory
@@ -125,7 +124,7 @@ export function makeService(container: Container, serviceId: ServiceId) {
 // Types ///////////////////////////////////////////////////////////////////////
 
 export interface ContainerSpec<F extends ContainerFactories> {
-    services?: F
+    services?: undefined | F
 }
 
 export type Container<F extends ContainerFactories = ContainerFactories> = {
@@ -144,5 +143,5 @@ export type ContainerServicesOf<F extends ContainerFactories> = {
 }
 
 export interface RequireServiceOptions {
-    type?: 'prototype'
+    type?: undefined | 'prototype'
 }

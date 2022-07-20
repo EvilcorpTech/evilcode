@@ -1,78 +1,87 @@
-import {Error, isError} from './error.js'
-import {tryCatch} from './try.js'
+import {identity} from './fn.js'
+import type {Io} from './monad.js'
 
 export {Error, isError} from './error.js'
 export type {Result} from './error.js'
-export {tryCatch} from './try.js'
+export * from './monad.js'
 
 /*
 * EXAMPLE
-*
-* import {ensureStringNotEmpty} from './assert.js'
-* import {theFalse, theNull} from './return.js'
-* const result = pipe({name: 'Super Mario', age: 21})
-* .to(it => it.age > 18 ? it : Error('TooYoung' as const))
-* .to(it => mapValueOf(it, it => it))
-* .to(it => mapErrorOf(it, it => it))
-* .to(it => mapResultOf(it, it => it, it => it))
-* .to(mapValue(it => it))
-* .to(mapError(it => it))
-* .to(mapResult(it => it, it => it))
-* .to(it => tryCatch(
-*     () => mapValueOf(it, it => it.name.toUpperCase()),
-*     error => Error('NotString' as const)
-* ))
-* .to(tryOr(
-*     mapValue(it => (ensureStringNotEmpty(it), it)),
-*     error => Error('EmptyString' as const),
-* ))
-* .to(it => {
-*     if (! isError(it)) return it
-*     switch (it.error) {
-*         case 'EmptyString':
-*         case 'NotString':
-*         case 'TooYoung': {
-*             return 'John Snow'
-*         }
-*     }
-* })
-* .to(it => `Hello, ${it}!`)
-* .end()
-* const result2 = pipe(result)
-* .to(it => Promise.resolve(it))
-* .to(then(it => it))
-* .to(then(
-*     it => it,
-*     error => Error('BadRequest' as const)
-* ))
-* .to(thenOr(
-*     it => it,
-*     error => Error('BadRequest' as const)
-* ))
-* .to(thenCatch(error => Error('BadRequest' as const)))
-* .to(then(mapValue(it => it)))
-* .to(then(mapError(it => 'Hello World!')))
-* .end()
+*/
+/*
+import {ensureStringNotEmpty} from './assert.js'
+import {Error} from './error.js'
+import {
+    mappingCatch,
+    mappingCatchError,
+    mappingEither,
+    mappingError,
+    mappingNone,
+    mappingPromise,
+    mappingResult,
+    mappingSome,
+    mappingThen,
+    mappingTrying,
+    then,
+} from './monad.js'
+
+const someResult = pipe(undefined as undefined | null | string)
+    .to(mappingNone(it => 'Mario'))
+    .to(mappingSome(it => ({name: `Super ${it}`, age: 21})))
+.end()
+
+const eitherResult = pipe(someResult)
+    .to(it => it.age > 18 ? it : Error('TooYoung' as const))
+    .to(mappingResult(identity))
+    .to(mappingError(identity))
+    .to(mappingEither(identity, identity))
+    .to(mappingTrying(
+        mappingResult(it => (ensureStringNotEmpty(it), it)),
+        error => Error('BadString' as const),
+    ))
+    .to(mappingError(it => {
+        switch (it.error) {
+            case 'BadString':
+            case 'TooYoung': {
+                return 'John Snow'
+            }
+        }
+    }))
+    .to(it => `Hello, ${it}!`)
+.end()
+
+const asyncResult = pipe(Promise.resolve(eitherResult))
+    .to(then(identity, Error))
+    .to(mappingThen(identity))
+    .to(mappingCatch(Error))
+    .to(mappingCatch(error => Error('BadRequest' as const)))
+    .to(mappingPromise(identity, Error))
+    .to(mappingCatchError()) // Same of mappingCatch(Error).
+    .to(mappingCatchError('BadRequest' as const))
+    .to(then(mappingResult(identity)))
+    .to(then(mappingError(it => 'Hello World!')))
+.end()
 */
 export function pipe<V1>(input: V1) {
-    const task: PipeTask = {type: 'MapValue', mapValue: () => input}
+    const stack: Array<PipeTask> = [identity]
 
     function compute(stack: Array<PipeTask>): unknown {
-        return computePipe(stack, {value: void undefined})
+        return computePipe(stack, input)
     }
 
-    return createPipe([task], compute) as Pipe<V1>
+    return createPipe(stack, compute) as Pipe<V1>
 }
 
 export function createPipe(
     stack: Array<PipeTask>,
-    compute: Fn<Array<PipeTask>, unknown>,
+    compute: Io<Array<PipeTask>, unknown>,
 ) {
     const self = {
-        __stack__: stack,
-        to(fn: Fn<unknown, unknown>) {
-            const task: PipeTask = {type: 'MapValue', mapValue: fn}
-            return createPipe([...stack, task], compute)
+        get __stack__() {
+            return stack
+        },
+        to(fn: Io<unknown, unknown>) {
+            return createPipe([...stack, fn], compute)
         },
         end() {
             return compute(stack)
@@ -89,109 +98,15 @@ export function computePipe(stack: Array<PipeTask>, input: unknown): unknown {
         return input
     }
 
-    switch (task.type) {
-        case 'MapValue': {
-            return computePipe(otherStack, task.mapValue(input))
-        }
-    }
-}
-
-export function mapResultOf<V1, V2, V3>(
-    input: V1,
-    onValue: Fn<Exclude<V1, Error<unknown>>, V2>,
-    onError: Fn<Extract<V1, Error<unknown>>, V3>,
-): V2 | V3
-{
-    return ! isError(input)
-        ? mapValueOf(input as Exclude<V1, Error<unknown>>, onValue) as V2
-        : mapErrorOf(input as Extract<V1, Error<unknown>>, onError) as V3
-}
-
-export function mapValueOf<V1, V2>(
-    input: V1,
-    fn: Fn<Exclude<V1, Error<unknown>>, V2>,
-): Extract<V1, Error<unknown>> | V2
-{
-    return ! isError(input)
-        ? fn(input as Exclude<V1, Error<unknown>>)
-        : input as Extract<V1, Error<unknown>>
-}
-
-function mapErrorOf<V1, V2>(
-    input: V1,
-    fn: Fn<Extract<V1, Error<unknown>>, V2>,
-): Exclude<V1, Error<unknown>> | V2
-{
-    return isError(input)
-        ? fn(input as Extract<V1, Error<unknown>>)
-        : input as Exclude<V1, Error<unknown>>
-}
-
-export function mapResult<V1, V2, V3>(
-    onValue: Fn<Exclude<V1, Error<unknown>>, V2>,
-    onError: Fn<Extract<V1, Error<unknown>>, V3>
-): Fn<V1, V2 | V3>
-{
-    return (input: V1) => mapResultOf(input, onValue, onError)
-}
-
-export function mapValue<V1, V2>(
-    fn: Fn<Exclude<V1, Error<unknown>>, V2>
-): Fn<V1, Extract<V1, Error<unknown>> | V2>
-{
-    return (input: V1) => mapValueOf(input, fn)
-}
-
-export function mapError<V1, V2>(
-    fn: Fn<Extract<V1, Error<unknown>>, V2>
-): Fn<V1, Exclude<V1, Error<unknown>> | V2>
-{
-    return (input: V1) => mapErrorOf(input, fn)
-}
-
-export function tryOr
-    <V1, V2, V3>
-    (fn: Fn<V1, V2>, onError: Fn<unknown, V3>): Fn<V1, V2 | V3>
-{
-    return (input: V1) => tryCatch(() => fn(input), onError)
-}
-
-export function then<V1, V2>(fn: Fn<V1, V2>, onError?: never): Fn<Promise<V1>, Promise<V2>>
-export function then<V1, V2, V3>(fn: Fn<V1, V2>, onError: Fn<unknown, V3>): Fn<Promise<V1>, Promise<V2 | V3>>
-export function then
-    <V1, V2, V3>
-    (fn: Fn<V1, V2>, onError?: Fn<unknown, V3>): Fn<Promise<V1>, Promise<V2 | V3>>
-{
-    return ! onError
-        ? (input: Promise<V1>) => input.then(fn)
-        : (input: Promise<V1>) => input.then(fn).catch(onError)
-}
-
-export function thenOr
-    <V1, V2, V3>
-    (fn: Fn<V1, V2>, onError?: Fn<unknown, V3>): Fn<Promise<V1>, Promise<V2 | V3>>
-{
-    return (input: Promise<V1>) => input.then(fn).catch(onError)
-}
-
-export function thenCatch
-    <V1, V2>
-    (fn: Fn<unknown, V2>): Fn<Promise<V1>, Promise<V1 | V2>>
-{
-    return (input: Promise<V1>) => input.catch(fn)
+    return computePipe(otherStack, task(input))
 }
 
 // Types ///////////////////////////////////////////////////////////////////////
 
 export interface Pipe<V1> {
     __stack__: Array<PipeTask>
-    to<V2>(fn: Fn<V1, V2>): Pipe<V2>
+    to<V2>(fn: Io<V1, V2>): Pipe<V2>
     end(): V1
 }
 
-export type PipeTask<R = unknown> =
-    | {type: 'MapValue', mapValue: Fn<unknown, R>}
-
-export interface Fn<I, O> {
-    (input: I): O
-}
+export type PipeTask = Io<unknown, unknown>

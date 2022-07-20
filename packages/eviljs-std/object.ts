@@ -12,25 +12,25 @@ export function isEmptyObject(obj: {}): boolean {
     return true
 }
 
-export function map<K extends string | number, V, RK extends string | number>(
+export function mapObject<K extends PropertyKey, V, RK extends PropertyKey>(
     object: Record<K, V>,
     withFn: {key: MapObjectKeyFn<K, V, RK>, value?: never},
 ): Record<RK, V>
-export function map<K extends string | number, V, RV>(
+export function mapObject<K extends PropertyKey, V, RV>(
     object: Record<K, V>,
     withFn: {key?: never, value: MapObjectValueFn<V, K, RV>},
 ): Record<K, RV>
-export function map<K extends string | number, V, RK extends string | number, RV>(
+export function mapObject<K extends PropertyKey, V, RK extends PropertyKey, RV>(
     object: Record<K, V>,
     withFn: {key: MapObjectKeyFn<K, V, RK>, value: MapObjectValueFn<V, K, RV>},
 ): Record<RK, RV>
-export function map<K extends string | number, V, RK extends string | number, RV>(
+export function mapObject<K extends PropertyKey, V, RK extends PropertyKey, RV>(
     object: Record<K, V>,
     withFn: {key?: MapObjectKeyFn<K, V, RK>, value?: MapObjectValueFn<V, K, RV>},
-) {
-    function mapper(it: [K, V]) {
+): Record<K | RK, V | RV> {
+    function mapper(it: [K, V]): [K | RK, V | RV] {
         const [key, value] = it
-        const tuple: [K | RK, V | RV] = [
+        return [
             withFn.key
                 ? withFn.key(key, value)
                 : key
@@ -40,13 +40,39 @@ export function map<K extends string | number, V, RK extends string | number, RV
                 : value
             ,
         ]
-
-        return tuple
     }
 
     return Object.fromEntries(
-        Object.entries(object).map(mapper as any)
-    )
+        (Object.entries(object) as Array<[K, V]>).map(mapper)
+    ) as Record<K | RK, V | RV>
+}
+
+export function mapObjectKey<K extends PropertyKey, V, RK extends PropertyKey>(
+    object: Record<K, V>,
+    withFn: MapObjectKeyFn<K, V, RK>,
+): Record<RK, V> {
+    function mapper(it: [K, V]): [RK, V] {
+        const [key, value] = it
+        return [withFn(key, value), value]
+    }
+
+    return Object.fromEntries(
+        (Object.entries(object) as Array<[K, V]>).map(mapper)
+    ) as Record<RK, V>
+}
+
+export function mapObjectValue<K extends PropertyKey, V, RV>(
+    object: Record<K, V>,
+    withFn: MapObjectValueFn<V, K, RV>,
+): Record<K, RV> {
+    function mapper(it: [K, V]): [K, RV] {
+        const [key, value] = it
+        return [key, withFn(value, key)]
+    }
+
+    return Object.fromEntries(
+        (Object.entries(object) as Array<[K, V]>).map(mapper)
+    ) as Record<K, RV>
 }
 
 export function withoutProps<O extends {}, P extends keyof O>(object: O, ...props: Array<P>) {

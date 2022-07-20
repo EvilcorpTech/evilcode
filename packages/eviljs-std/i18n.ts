@@ -153,6 +153,12 @@ export function regexpFromToken(token: string, symbol: string, cache: Record<str
     return cache[token]!
 }
 
+export function defineI18n<L extends string, L1 extends L, L2 extends L, K extends string>(
+    spec: I18nSpec<L, L1, L2, K>,
+): I18nSpec<L, L1, L2, K> {
+    return spec
+}
+
 export function defineMessages<L extends string, K extends string>(
     messages: I18nMessages<L, K>,
 ): I18nMessages<L, K> {
@@ -182,7 +188,7 @@ export interface I18nSpec<L extends string, L1 extends L, L2 extends L, K extend
 export type I18nMessages<
     L extends string = string,
     K extends string = string,
-> = Record<L, Record<K, undefined | string | MsgComputer>>
+> = Record<L, Partial<Record<K, undefined | string | MsgComputer>>>
 
 export interface MsgComputer {
     (...args: Array<any>): string

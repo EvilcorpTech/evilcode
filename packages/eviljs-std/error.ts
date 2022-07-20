@@ -19,5 +19,5 @@ export type Result<E extends Error<unknown>, V> = E | V
 
 export interface Error<E> {
     error: E
-    // [key: symbol]: true // FIXME in TypeScript 4.4.
+    [key: symbol]: true
 }

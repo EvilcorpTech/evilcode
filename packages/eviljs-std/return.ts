@@ -1,9 +1,5 @@
-export function returnReturning<V>(value: V): () => V {
-    return () => value
-}
-
-export function returnValue<V>(value: V): V {
-    return value
+export function returnInput<V>(input: V): V {
+    return input
 }
 
 export function returnVoid(): void {
@@ -23,4 +19,8 @@ export function returnTrue(): true {
 
 export function returnFalse(): false {
     return false
+}
+
+export function returningValue<V>(value: V): () => V {
+    return () => value
 }
