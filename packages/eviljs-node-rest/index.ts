@@ -1,4 +1,4 @@
-import {Logger} from '@eviljs/std/logger.js'
+import type {Logger} from '@eviljs/std/logger.js'
 import {isNumber, isObject} from '@eviljs/std/type.js'
 import Http from 'http'
 import Koa, {Context, Next} from 'koa'

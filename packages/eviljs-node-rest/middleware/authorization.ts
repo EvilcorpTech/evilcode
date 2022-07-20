@@ -1,5 +1,5 @@
 import {assertFunction, assertObject} from '@eviljs/std/assert.js'
-import {Context, Next, Request} from 'koa'
+import type {Context, Next, Request} from 'koa'
 
 export async function authorizationMiddleware(context: Context, next: Next, options?: AuthorizationOptions) {
     const {request, response, container} = context

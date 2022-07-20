@@ -1,5 +1,6 @@
 import {isArray, isFunction, isObject} from '@eviljs/std/type.js'
-import Router, { Middleware } from '@koa/router'
+import type Router from '@koa/router'
+import type {Middleware} from '@koa/router'
 import {throwInvalidArgument} from '@eviljs/std/throw.js'
 
 export function setupRouter(router: Router, ...routes: Array<Routes>) {
