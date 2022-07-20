@@ -1,7 +1,7 @@
-import {Account, AccountFromDataOptions} from './Account.js'
+import type {Account, AccountFromDataOptions} from './Account.js'
 import {assertStringNotEmpty} from '@eviljs/std/assert.js'
 import {compareWithSaltedHash} from '@eviljs/node/crypto.js'
-import {Db} from '../index.js'
+import type {Db} from '../index.js'
 import {getAccountByIdentifier} from './getAccountByIdentifier.js'
 
 /*

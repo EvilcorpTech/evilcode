@@ -1,6 +1,6 @@
 import {assertInteger, assertObjectOptional} from '@eviljs/std/assert.js'
 import {createToken} from '@eviljs/node/crypto.js'
-import {Db, WriteResult} from '../index.js'
+import type {Db, WriteResult} from '../index.js'
 import {Session} from './Session.js'
 
 /*

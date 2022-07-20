@@ -1,6 +1,6 @@
 import {Account} from './Account.js'
 import {assertStringNotEmpty} from '@eviljs/std/assert.js'
-import {Db, WriteResult} from '../index.js'
+import type {Db, WriteResult} from '../index.js'
 
 export async function deleteAccountByIdentifier(db: Db<DeleteAccountByIdentifierServices>, identifier: string) {
     assertStringNotEmpty(identifier, 'identifier')

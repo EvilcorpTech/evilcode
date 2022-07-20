@@ -1,5 +1,5 @@
 import {assertInteger} from '@eviljs/std/assert.js'
-import {Db, WriteResult} from '../index.js'
+import type {Db, WriteResult} from '../index.js'
 import {Session} from './Session.js'
 
 export async function deleteSessionsByAccountId(db: Db<DeleteSessionByAccountIdServices>, accountId: number) {

@@ -1,5 +1,5 @@
 import {assertInteger} from '@eviljs/std/assert.js'
-import {Db, ReadResult} from '../index.js'
+import type {Db, ReadResult} from '../index.js'
 import {Session} from './Session.js'
 
 export async function getSessionByAccountId(db: Db<GetSessionByAccountIdServices>, accountId: number) {

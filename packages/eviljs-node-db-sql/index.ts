@@ -1,5 +1,5 @@
 import {wait} from '@eviljs/std/async.js'
-import {Logger} from '@eviljs/std/logger.js'
+import type {Logger} from '@eviljs/std/logger.js'
 import MariaDB from 'mariadb'
 
 export const DbHost = 'localhost'

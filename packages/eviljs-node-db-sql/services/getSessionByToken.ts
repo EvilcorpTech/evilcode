@@ -1,5 +1,5 @@
 import {assertStringNotEmpty} from '@eviljs/std/assert.js'
-import {Db, ReadResult} from '../index.js'
+import type {Db, ReadResult} from '../index.js'
 import {Session} from './Session.js'
 
 export async function getSessionByToken(db: Db<GetSessionByTokenServices>, token: string) {

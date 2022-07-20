@@ -16,7 +16,7 @@
     "dependencies": {
         "@eviljs/node": "^1",
         "@eviljs/std": "^1",
-        "@types/node": ">=17",
+        "@types/node": ">=18",
         "mariadb": "^3",
         "tslib": "^2"
     },

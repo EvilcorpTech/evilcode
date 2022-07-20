@@ -1,8 +1,8 @@
 import {Account, AccountFromDataOptions} from './Account.js'
 import {assertNumber} from '@eviljs/std/assert.js'
-import {Db, ReadResult} from '../index.js'
-/*
+import type {Db, ReadResult} from '../index.js'
 
+/*
 * EXAMPLE
 *
 * // Secret Hash is omitted from the results by default...

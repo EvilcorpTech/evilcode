@@ -2,7 +2,7 @@ import {hashWithSalt} from '@eviljs/node/crypto.js'
 import {throwInvalidRequest} from '@eviljs/node/throw.js'
 import {assertObject, assertStringNotEmpty} from '@eviljs/std/assert.js'
 import {Account} from './Account.js'
-import {Db, ReadResult, WriteResult} from '../index.js'
+import type {Db, ReadResult, WriteResult} from '../index.js'
 
 /*
 * Creates an user account.
