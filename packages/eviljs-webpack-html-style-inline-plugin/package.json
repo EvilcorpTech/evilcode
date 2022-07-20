@@ -15,7 +15,7 @@
         "prepack": "npm run build"
     },
     "dependencies": {
-        "@types/node": ">=17",
+        "@types/node": ">=18",
         "schema-utils": "^4",
         "tslib": "^2"
     },

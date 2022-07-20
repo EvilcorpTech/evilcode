@@ -1,5 +1,6 @@
-import HtmlWebpackPlugin, {HtmlTagObject} from 'html-webpack-plugin'
-import {Compilation, Compiler} from 'webpack'
+import type HtmlWebpackPlugin from 'html-webpack-plugin'
+import type {HtmlTagObject} from 'html-webpack-plugin'
+import type {Compilation, Compiler} from 'webpack'
 
 type HtmlWebpackPluginClass = typeof HtmlWebpackPlugin
 
