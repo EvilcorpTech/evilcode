@@ -15,7 +15,7 @@
     "dependencies": {
         "@eviljs/std": "^1",
         "@types/bcryptjs": "^2",
-        "@types/node": ">=17",
+        "@types/node": ">=18",
         "bcryptjs": "^2",
         "tslib": "^2"
     },
