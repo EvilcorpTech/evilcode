@@ -5,6 +5,7 @@
         "esModuleInterop": false,
         "exactOptionalPropertyTypes": true,
         "forceConsistentCasingInFileNames": true,
+        "importsNotUsedAsValues": "error",
         "noEmitOnError": true,
         "noErrorTruncation": true,
         "noFallthroughCasesInSwitch": true,
