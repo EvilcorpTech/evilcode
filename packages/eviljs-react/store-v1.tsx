@@ -1,5 +1,5 @@
 import {isFunction, ValueOf} from '@eviljs/std/type.js'
-import React, {createContext, useContext, useMemo, useReducer} from 'react'
+import {createContext, useContext, useMemo, useReducer} from 'react'
 import {
     useRootStoreStorage as useCoreRootStoreStorage,
     StoreStorageOptions as CoreStoreStorageOptions,

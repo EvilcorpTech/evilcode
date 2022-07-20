@@ -1,4 +1,4 @@
-import {ValueOf} from '@eviljs/std/type.js'
+import type {ValueOf} from '@eviljs/std/type.js'
 import {
     authenticate,
     invalidate,
@@ -8,8 +8,8 @@ import {
     InvalidateOptions,
     ValidateOptions,
 } from '@eviljs/web/auth.js'
-import {Cookie} from '@eviljs/web/cookie.js'
-import {Fetch} from '@eviljs/web/fetch.js'
+import type {Cookie} from '@eviljs/web/cookie.js'
+import type {Fetch} from '@eviljs/web/fetch.js'
 import {throwInvalidResponse} from '@eviljs/web/throw.js'
 import {createContext, useCallback, useContext, useEffect, useMemo, useState} from 'react'
 import {useBusyLock} from './busy.js'

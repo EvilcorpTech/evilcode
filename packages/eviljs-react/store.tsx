@@ -4,7 +4,7 @@ import {createContext, useCallback, useContext, useLayoutEffect, useMemo, useRef
 import {useRender} from './hook.js'
 import {useRootStoreStorage as useCoreRootStoreStorage} from './store-storage.js'
 import {defaultOnMerge, StoreStorageOptions} from './store-v1.js'
-import {Store as StoreV2} from './store-v2.js'
+import type {Store as StoreV2} from './store-v2.js'
 
 export const StoreContext = createContext<StoreService<any>>(void undefined as any)
 

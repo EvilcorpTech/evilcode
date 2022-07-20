@@ -1,4 +1,4 @@
-import {Logger} from '@eviljs/std/logger.js'
+import type {Logger} from '@eviljs/std/logger.js'
 import {createContext, useContext} from 'react'
 
 export const LoggerContext = createContext<unknown>(undefined)
