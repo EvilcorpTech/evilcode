@@ -17,31 +17,31 @@ export function createQuery(fetch: Fetch) {
         * @throws
         */
         get(...args) {
-            return self.request('get', ...args)
+            return self.request(FetchRequestMethod.Get, ...args)
         },
         /**
         * @throws
         */
         post(...args) {
-            return self.request('post', ...args)
+            return self.request(FetchRequestMethod.Post, ...args)
         },
         /**
         * @throws
         */
         put(...args) {
-            return self.request('put', ...args)
+            return self.request(FetchRequestMethod.Put, ...args)
         },
         /**
         * @throws
         */
         patch(...args) {
-            return self.request('patch', ...args)
+            return self.request(FetchRequestMethod.Patch, ...args)
         },
         /**
         * @throws
         */
         delete(...args) {
-            return self.request('delete', ...args)
+            return self.request(FetchRequestMethod.Delete, ...args)
         },
     }
 

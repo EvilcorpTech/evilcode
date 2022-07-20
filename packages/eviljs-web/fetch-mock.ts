@@ -52,16 +52,16 @@ export function mockFetch(fetch: Fetch, mocks: FetchMocks) {
             return fetch.request(...args)
         },
         get(...args) {
-            return self.request('get', ...args)
+            return self.request(FetchRequestMethod.Get, ...args)
         },
         post(...args) {
-            return self.request('post', ...args)
+            return self.request(FetchRequestMethod.Post, ...args)
         },
         put(...args) {
-            return self.request('put', ...args)
+            return self.request(FetchRequestMethod.Put, ...args)
         },
         delete(...args) {
-            return self.request('delete', ...args)
+            return self.request(FetchRequestMethod.Delete, ...args)
         },
     }
 

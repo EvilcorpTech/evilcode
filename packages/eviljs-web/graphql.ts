@@ -1,24 +1,12 @@
-import {JsonType} from '@eviljs/web/fetch'
-import {Query, QueryRequestOptions} from '@eviljs/web/query'
+import {ContentType} from '@eviljs/web/fetch'
 
-export function createGraphql(fetch: Query) {
-    function send(query: string, variables?: undefined | {}) {
-        graphql(fetch, query, variables)
-    }
-
-    return send
-}
-
-export function graphql<R>(fetch: Query, query: string, variables?: undefined | {}) {
-    const options: QueryRequestOptions = {
+export function asGraphqlOptions(query: string, variables?: undefined | {}): RequestInit {
+    return {
+        method: 'POST',
         headers: {
-            'Content-Type': JsonType,
-            'Accept': JsonType,
+            'Content-Type': ContentType.Json,
+            'Accept': ContentType.Json,
         },
-        body: JSON.stringify({query, variables: variables ?? null}),
+        body: JSON.stringify({query, variables}),
     }
-    const promise = fetch.post<{data: R}>(fetch.baseUrl, options)
-        .then(response => response.data)
-
-    return promise
 }

@@ -2,11 +2,11 @@ import {isFunction, isObject} from '@eviljs/std/type.js'
 import {asJsonOptions, Fetch, FetchRequestMethod, mergeOptions, FetchRequestOptions} from './fetch.js'
 import {throwInvalidResponse} from './throw.js'
 
-export const DefaultUrl = '/auth'
-export const DefaultOptions: FetchRequestOptions = {}
+export const AuthDefaultUrl = '/auth'
+export const AuthDefaultOptions: FetchRequestOptions = {}
 
 export async function authenticate(fetch: Fetch, credentials: AuthCredentials, options?: AuthenticateOptions) {
-    const method = options?.method ?? 'post'
+    const method = options?.method ?? FetchRequestMethod.Post
     const url = createUrl(options?.url, credentials)
     const createRequestBody = options?.requestBody ?? defaultCreateRequestBody
     const extractResponseError = options?.responseError ?? defaultExtractResponseError
@@ -59,7 +59,7 @@ export async function authenticate(fetch: Fetch, credentials: AuthCredentials, o
 }
 
 export async function validate(fetch: Fetch, token: string, options?: ValidateOptions) {
-    const method = options?.method ?? 'get'
+    const method = options?.method ?? FetchRequestMethod.Get
     const url = createUrl(options?.url, token)
     const opts = createOptions(options?.options, token)
 
@@ -69,7 +69,7 @@ export async function validate(fetch: Fetch, token: string, options?: ValidateOp
 }
 
 export async function invalidate(fetch: Fetch, token: string, options?: InvalidateOptions) {
-    const method = options?.method ?? 'delete'
+    const method = options?.method ?? FetchRequestMethod.Delete
     const url = createUrl(options?.url, token)
     const opts = createOptions(options?.options, token)
 
@@ -87,13 +87,13 @@ export async function invalidate(fetch: Fetch, token: string, options?: Invalida
 export function createUrl<A extends Args>(url: undefined | FetchOptionGetter<A, string>, ...args: A) {
     return isFunction(url)
         ? url(...args)
-        : (url ?? DefaultUrl)
+        : (url ?? AuthDefaultUrl)
 }
 
 export function createOptions<A extends Args>(options: undefined | FetchOptionGetter<A, FetchRequestOptions>, ...args: A) {
     return isFunction(options)
         ? options(...args)
-        : (options ?? DefaultOptions)
+        : (options ?? AuthDefaultOptions)
 }
 
 export function defaultCreateRequestBody(credentials: AuthCredentials) {

@@ -1,25 +1,20 @@
-import {isArray, isNil, isObject, ValueOf} from '@eviljs/std/type.js'
+import {isArray, isNil, isObject} from '@eviljs/std/type.js'
 import {asBaseUrl} from './url.js'
 
-export const FetchRequestMethod = {
-    Get: 'get',
-    Post: 'post',
-    Put: 'put',
-    Patch: 'patch',
-    Delete: 'delete',
-} as const
+export enum FetchRequestMethod {
+    Get = 'get',
+    Post = 'post',
+    Put = 'put',
+    Patch = 'patch',
+    Delete = 'delete',
+}
 
-export const FormType = 'multipart/form-data'
-export const JsonType = 'application/json'
-export const TextType = 'text/plain'
-export const UrlType = 'application/x-www-form-urlencoded'
-
-export const ContentType = {
-    Form: FormType,
-    Json: JsonType,
-    Text: TextType,
-    Url: UrlType,
-} as const
+export enum ContentType {
+    Form = 'multipart/form-data',
+    Json = 'application/json',
+    Text = 'text/plain',
+    Url = 'application/x-www-form-urlencoded',
+}
 
 export function createFetch(options?: undefined | FetchOptions) {
     const self: Fetch = {
@@ -40,31 +35,31 @@ export function createFetch(options?: undefined | FetchOptions) {
         * @throws
         */
         get(...args) {
-            return self.request('get', ...args)
+            return self.request(FetchRequestMethod.Get, ...args)
         },
         /**
         * @throws
         */
         post(...args) {
-            return self.request('post', ...args)
+            return self.request(FetchRequestMethod.Post, ...args)
         },
         /**
         * @throws
         */
         put(...args) {
-            return self.request('put', ...args)
+            return self.request(FetchRequestMethod.Put, ...args)
         },
         /**
         * @throws
         */
         patch(...args) {
-            return self.request('patch', ...args)
+            return self.request(FetchRequestMethod.Patch, ...args)
         },
         /**
         * @throws
         */
         delete(...args) {
-            return self.request('delete', ...args)
+            return self.request(FetchRequestMethod.Delete, ...args)
         },
     }
 
@@ -124,7 +119,7 @@ export function mergeOptions(...optionsList: Array<FetchRequestOptions>): FetchR
 export function asJsonOptions(body: unknown): FetchRequestOptions {
     const options = {
         headers: {
-            'Content-Type': JsonType,
+            'Content-Type': ContentType.Json,
         },
         body: body
             ? JSON.stringify(body)
@@ -169,12 +164,7 @@ export interface FetchOptions {
     baseUrl?: undefined | string
 }
 
-export type FetchRequestMethod = ValueOf<typeof FetchRequestMethod>
-
-export interface FetchRequestOptions extends RequestInit {
-}
-
-export type ContentType = ValueOf<typeof ContentType>
+export interface FetchRequestOptions extends RequestInit {}
 
 declare global {
     interface Headers {
