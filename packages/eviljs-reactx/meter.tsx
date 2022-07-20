@@ -1,5 +1,4 @@
 import {classes} from '@eviljs/web/classes.js'
-import {CSSProperties} from 'react'
 
 import './meter.css'
 
@@ -10,7 +9,7 @@ export function Meter(props: MeterProps) {
         <div
             {...otherProps}
             className={classes('Meter-0aa2', className)}
-            style={{'--value': value} as CSSProperties}
+            style={{'--value': value} as React.CSSProperties}
         >
             <div className="markers-c0dd std-cover">
                 <div className="layer-33f0 bg"/>

@@ -1,6 +1,5 @@
 import {asArray} from '@eviljs/std/type.js'
 import {classes} from '@eviljs/web/classes.js'
-import {CSSProperties} from 'react'
 
 import './slider.css'
 
@@ -58,7 +57,7 @@ export function computeSlideStyle(args: {
     index: number
     selected: number
     direction: SliderDirection
-}): CSSProperties {
+}): React.CSSProperties {
     const {index, selected, direction} = args
 
     const [xDirection, yDirection] = (() => {

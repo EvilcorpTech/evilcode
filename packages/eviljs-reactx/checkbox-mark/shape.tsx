@@ -1,5 +1,5 @@
 import {classes} from '@eviljs/web/classes.js'
-import {CheckboxModel} from '../checkbox.js'
+import type {CheckboxModel} from '../checkbox.js'
 
 import './shape.css'
 
