@@ -1,4 +1,4 @@
-import {Container as ContainerStd} from '@eviljs/std/container'
+import type {Container as ContainerStd} from '@eviljs/std/container'
 import {createI18n} from '@eviljs/std/i18n'
 import {createConsoleLog, createLogger} from '@eviljs/std/logger'
 import {createCookie} from '@eviljs/web/cookie'

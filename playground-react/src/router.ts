@@ -1,4 +1,4 @@
-import {RouterOptions} from '@eviljs/web/router'
+import type {RouterOptions} from '@eviljs/web/router'
 import {BasePath, RouterType} from './context'
 
 export const RouterSpec: RouterOptions = {

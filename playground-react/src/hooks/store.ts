@@ -1,4 +1,4 @@
-import {StoreStorageOptions} from '@eviljs/react/store-v1'
+import type {StoreStorageOptions} from '@eviljs/react/store-v1'
 import {filterStorageState, mergeState, StoreState, StoreStateVersion} from '../store'
 
 export {type Store, useStore} from '@eviljs/react/store'
