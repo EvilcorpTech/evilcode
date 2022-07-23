@@ -29,11 +29,11 @@ export function useKey(key: Key, handler: KeyHandler, options?: UseKeyOptions) {
 
         el.addEventListener(event, onKey, phase)
 
-        function onUnmount() {
+        function onClean() {
             el.removeEventListener(event, onKey, phase)
         }
 
-        return onUnmount
+        return onClean
     }, [key, handler, options?.event, options?.phase])
 }
 

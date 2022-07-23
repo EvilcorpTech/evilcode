@@ -52,12 +52,12 @@ export function useDrag<O extends UseDragOptions<S, P>, S, P>(options?: undefine
         const unmountListeners = attachDragListeners(document.body, dragListeners)
         const startState = options?.onStart?.(event.nativeEvent)
 
-        function onUnmount() {
+        function onClean() {
             unmountListeners()
         }
 
         dragInfoRef.current.startState = startState
-        dragInfoRef.current.unmount = onUnmount
+        dragInfoRef.current.unmount = onClean
 
         setDragging(true)
     }, [options, onPointerMove, onPointerEnd, onPointerCancel])
@@ -71,11 +71,11 @@ export function useDrag<O extends UseDragOptions<S, P>, S, P>(options?: undefine
         // unmount effects must have all values in scope.
         const dragInfo = dragInfoRef.current
 
-        function onUnmount() {
+        function onClean() {
             dragInfo.unmount?.()
         }
 
-        return onUnmount
+        return onClean
     }, [])
 
     return {dragging, withDrag}

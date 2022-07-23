@@ -94,14 +94,14 @@ export function Portal(props: PortalProps) {
             [name]: el,
         }))
 
-        function onUnmount() {
+        function onClean() {
             setPortals(state => ({
                 ...state,
                 [name]: null,
             }))
         }
 
-        return onUnmount
+        return onClean
     }, [name, tag])
 
     return createElement(elTag, elProps)

@@ -15,10 +15,10 @@ export function useResizeObserver(
 
         observer.observe(containerEl)
 
-        function onUmount() {
+        function onClean() {
             observer.disconnect()
         }
 
-        return onUmount
+        return onClean
     }, [onResize])
 }
