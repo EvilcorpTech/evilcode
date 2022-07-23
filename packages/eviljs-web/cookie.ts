@@ -1,8 +1,10 @@
+import {filterDefined} from '@eviljs/std/array.js'
+import {mapSomeWith} from '@eviljs/std/monad.js'
 import {escapeRegexp} from '@eviljs/std/regexp.js'
 
 export const KeyRegExpCache: Record<string, RegExp> = {}
 
-export function createCookie(key: string, options?: CookieOptions) {
+export function createCookie(key: string, options?: undefined | CookieOptions) {
     const self: Cookie = {
         key,
         get() {
@@ -58,39 +60,36 @@ export function readCookie(key: string) {
     return
 }
 
-export function writeCookie(key: string, val: string, options?: CookieOptions) {
+export function writeCookie(key: string, val: string, options?: undefined | CookieOptions) {
     const path = options?.path
     const maxAge = options?.maxAge
     const expires = options?.expires
-    const parts = []
-
-    parts.push(`${key}=${val}`)
-
-    if (path) {
-        parts.push(`path=${path}`)
-    }
-
-    if (maxAge) {
-        parts.push(`max-age=${maxAge}`)
-    }
-
-    if (expires) {
-        parts.push(`expires=${expires}`)
-    }
+    const sameSite = options?.sameSite
+    const secure = options?.secure
+    const customParts = options?.custom
+    const parts = [
+        `${key}=${val}`,
+        mapSomeWith(path, path => `Path=${path}`),
+        mapSomeWith(maxAge, maxAge => `Max-Age=${maxAge}`),
+        mapSomeWith(expires, expires => `Expires=${expires}`),
+        mapSomeWith(sameSite, sameSite => `SameSite=${sameSite}`),
+        secure ? 'Secure' : undefined,
+        ...customParts ?? [],
+    ].filter(filterDefined)
 
     const cookie = parts.join('; ')
 
     document.cookie = cookie
 }
 
-export function deleteCookie(key: string, options?: CookieOptions) {
+export function deleteCookie(key: string, options?: undefined | CookieOptions) {
     const expires = 'Thu, 01 Jan 1970 00:00:01 GMT'
     const maxAge = 0
 
     writeCookie(key, '', {...options, maxAge, expires})
 }
 
-export function cleanCookies(options?: CookieOptions) {
+export function cleanCookies(options?: undefined | CookieOptions) {
     const list = document.cookie.split(';')
 
     for (const keyVal of list) {
@@ -118,7 +117,10 @@ export interface Cookie {
 }
 
 export interface CookieOptions {
-    path?: string
-    maxAge?: number
-    expires?: string
+    path?: undefined | string
+    maxAge?: undefined | number
+    expires?: undefined | string
+    sameSite?: undefined | string
+    secure?: undefined | boolean
+    custom?: Array<string>
 }
