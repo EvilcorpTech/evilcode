@@ -101,11 +101,11 @@ function Starter(props: {
             setCounter(state => state + 1)
         }, 100)
 
-        function onUmount() {
+        function onClean() {
             clearInterval(intervalId)
         }
 
-        return onUmount
+        return onClean
     }, [start])
 
     return (
