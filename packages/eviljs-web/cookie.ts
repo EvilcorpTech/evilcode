@@ -1,6 +1,6 @@
-import {filterDefined} from '@eviljs/std/array.js'
 import {mapSomeWith} from '@eviljs/std/monad.js'
 import {escapeRegexp} from '@eviljs/std/regexp.js'
+import {isNotNil} from '@eviljs/std/type.js'
 
 export const KeyRegExpCache: Record<string, RegExp> = {}
 
@@ -75,7 +75,7 @@ export function writeCookie(key: string, val: string, options?: undefined | Cook
         mapSomeWith(sameSite, sameSite => `SameSite=${sameSite}`),
         secure ? 'Secure' : undefined,
         ...customParts ?? [],
-    ].filter(filterDefined)
+    ].filter(isNotNil)
 
     const cookie = parts.join('; ')
 
