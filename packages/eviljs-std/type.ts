@@ -149,10 +149,10 @@ export function asNumber(value: unknown): undefined | number {
 }
 
 
-export function asNumberInteger(value: number): number
-export function asNumberInteger(value: string): undefined | number
-export function asNumberInteger<T>(value: T): unknown extends T ? undefined | number : undefined
-export function asNumberInteger(value: unknown): undefined | number {
+export function asInteger(value: number): number
+export function asInteger(value: string): undefined | number
+export function asInteger<T>(value: T): unknown extends T ? undefined | number : undefined
+export function asInteger(value: unknown): undefined | number {
     const result = Number(value)
 
     if (isNaN(result)) {
