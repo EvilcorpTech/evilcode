@@ -6,6 +6,7 @@ export const Tests = {
     function: isFunction,
     integer: isInteger,
     nil: isNil,
+    notNil: isNotNil,
     null: isNull,
     number: isNumber,
     object: isObject,
@@ -43,8 +44,24 @@ export function isDate(value: unknown): value is Date {
     return true
 }
 
-export function isDefined<T>(value: undefined | T): value is T {
+export function isDefined<T>(value: void | undefined | T): value is T {
     return ! isUndefined(value)
+}
+
+export function isUndefined(value: unknown): value is undefined {
+    return value === void undefined
+}
+
+export function isNil(value: unknown): value is Nil {
+    return isUndefined(value) || isNull(value)
+}
+
+export function isNotNil<I>(item: Nil | I): item is I {
+    return ! isNil(item)
+}
+
+export function isNull(value: unknown): value is null {
+    return value === null
 }
 
 export function isFunction(value: unknown): value is Function {
@@ -54,26 +71,25 @@ export function isFunction(value: unknown): value is Function {
     return true
 }
 
-export function isInteger(value: unknown): value is number {
-    return Number.isInteger(value as any)
-    // 0 is a valid number but evaluates to false.
-}
-
-export function isNil(value: unknown): value is Nil {
-    return isUndefined(value) || isNull(value)
-}
-
-export function isNull(value: unknown): value is null {
-    return value === null
-}
-
 export function isNumber(value: unknown): value is number {
     return typeof value === 'number' && ! isNaN(value)
     // We don't consider NaN a number.
 }
 
+export function isInteger(value: unknown): value is number {
+    return Number.isInteger(value as any)
+}
+
 export function isObject(value: unknown): value is Record<PropertyKey, unknown> {
-    if (! value || Object.getPrototypeOf(value).constructor !== Object) {
+    if (! value) {
+        return false
+    }
+    const proto = Object.getPrototypeOf(value)
+    if (! proto) {
+        // FIXME: TODO: how to handle Object.create(null)?
+        return false
+    }
+    if (proto.constructor !== Object) {
         return false
     }
     return true
@@ -95,11 +111,6 @@ export function isRegExp(value: unknown): value is RegExp {
 
 export function isString(value: unknown): value is string {
     return typeof value === 'string'
-    // '' is a valid string but evaluates to false.
-}
-
-export function isUndefined(value: unknown): value is undefined {
-    return value === void undefined
 }
 
 export function asArray<T>(item: T | Array<T> | [T] | readonly [T]): Array<T> {
@@ -164,7 +175,7 @@ export function asDate(value: unknown): undefined | Date {
 
 // Types ///////////////////////////////////////////////////////////////////////
 
-export type Nil = undefined | null
+export type Nil = void | undefined | null
 
 export type ValueOf<T> = T[keyof T]
 

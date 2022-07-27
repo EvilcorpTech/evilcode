@@ -1,5 +1,16 @@
 import {throwInvalidInput} from './throw.js'
-import {isArray, isBoolean, isDate, isFunction, isInteger, isNil, isNumber, isObject, isString, isUndefined} from './type.js'
+import {
+    isArray,
+    isBoolean,
+    isDate,
+    isFunction,
+    isInteger,
+    isNil,
+    isNumber,
+    isObject,
+    isString,
+    isUndefined,
+} from './type.js'
 
 /**
 * @throws InvalidInput
@@ -83,20 +94,6 @@ export function assertFunctionOptional(value: unknown, ctx?: any): asserts value
 /**
 * @throws InvalidInput
 */
-export function assertInteger(value: unknown, ctx?: any): asserts value is number {
-    ensureInteger(value, ctx)
-}
-
-/**
-* @throws InvalidInput
-*/
-export function assertIntegerOptional(value: unknown, ctx?: any): asserts value is undefined | number {
-    ensureIntegerOptional(value, ctx)
-}
-
-/**
-* @throws InvalidInput
-*/
 export function assertNumber(value: unknown, ctx?: any): asserts value is number {
     ensureNumber(value, ctx)
 }
@@ -106,6 +103,20 @@ export function assertNumber(value: unknown, ctx?: any): asserts value is number
 */
 export function assertNumberOptional(value: unknown, ctx?: any): asserts value is undefined | number {
     ensureNumberOptional(value, ctx)
+}
+
+/**
+* @throws InvalidInput
+*/
+export function assertInteger(value: unknown, ctx?: any): asserts value is number {
+    ensureInteger(value, ctx)
+}
+
+/**
+* @throws InvalidInput
+*/
+export function assertIntegerOptional(value: unknown, ctx?: any): asserts value is undefined | number {
+    ensureIntegerOptional(value, ctx)
 }
 
 /**
@@ -276,6 +287,28 @@ export function ensureFunctionOptional(value: unknown, ctx?: any) {
 /**
 * @throws InvalidInput
 */
+export function ensureNumber<T extends number>(value: T, ctx?: any): T
+export function ensureNumber(value: unknown, ctx?: any): number
+export function ensureNumber(value: unknown, ctx?: any) {
+    if (! isNumber(value)) {
+        return throwAssertError('a Number', value, ctx)
+    }
+
+    return value
+}
+
+/**
+* @throws InvalidInput
+*/
+export function ensureNumberOptional<T extends undefined | number>(value: T, ctx?: any): T
+export function ensureNumberOptional(value: unknown, ctx?: any): undefined | number
+export function ensureNumberOptional(value: unknown, ctx?: any) {
+    return ensureOptionalWith(ensureNumber, value, ctx)
+}
+
+/**
+* @throws InvalidInput
+*/
 export function ensureInteger<T extends number>(value: T, ctx?: any): T
 export function ensureInteger(value: unknown, ctx?: any): number
 export function ensureInteger(value: unknown, ctx?: any) {
@@ -295,28 +328,6 @@ export function ensureIntegerOptional<T extends undefined | number>(value: T, ct
 export function ensureIntegerOptional(value: unknown, ctx?: any): undefined | number
 export function ensureIntegerOptional(value: unknown, ctx?: any) {
     return ensureOptionalWith(ensureInteger, value, ctx)
-}
-
-/**
-* @throws InvalidInput
-*/
-export function ensureNumber<T extends number>(value: T, ctx?: any): T
-export function ensureNumber(value: unknown, ctx?: any): number
-export function ensureNumber(value: unknown, ctx?: any) {
-    if (! isNumber(value)) {
-        return throwAssertError('a Number', value, ctx)
-    }
-
-    return value
-}
-
-/**
-* @throws InvalidInput
-*/
-export function ensureNumberOptional<T extends undefined | number>(value: T, ctx?: any): T
-export function ensureNumberOptional(value: unknown, ctx?: any): undefined | number
-export function ensureNumberOptional(value: unknown, ctx?: any) {
-    return ensureOptionalWith(ensureNumber, value, ctx)
 }
 
 /**

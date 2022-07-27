@@ -1,4 +1,4 @@
-import {isNil} from './type.js'
+import {isNotNil} from './type.js'
 
 export function tryCatch<R>(fn: TryOrFn<R>, onError?: undefined, onEnd?: undefined | (() => void)): undefined | R
 export function tryCatch<R, F>(fn: TryOrFn<R>, onError: TryOnError<F>, onEnd?: undefined | (() => void)): R | F
@@ -49,9 +49,7 @@ export function tryMap<I, R>(
     const itemsWithNulls = items.map((it, idx) =>
         tryOrNull(() => fn(it, idx), onError)
     )
-    const itemsWithoutNulls = itemsWithNulls.filter(it => ! isNil(it)) as Array<R>
-
-    return itemsWithoutNulls
+    return itemsWithNulls.filter(isNotNil)
 }
 
 // Types ///////////////////////////////////////////////////////////////////////
