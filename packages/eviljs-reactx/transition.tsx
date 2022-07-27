@@ -1,6 +1,5 @@
 import {classes} from '@eviljs/react/classes.js'
-import {filterDefined} from '@eviljs/std/array.js'
-import {asArray, isArray, isString, Nil} from '@eviljs/std/type.js'
+import {asArray, isArray, isNotNil, isString, Nil} from '@eviljs/std/type.js'
 import {applyStyles} from '@eviljs/web/animation.js'
 import {
     Children,
@@ -428,14 +427,14 @@ export function createTasksTransaction(
 ): Array<Array<TransitionQueuedTask>> {
     ++state.transactionCounter
 
-    return tasks.filter(filterDefined)
+    return tasks.filter(isNotNil)
 }
 
 export function createTasksGroup(
     state: TransitionState,
     ...tasks: Array<undefined | TransitionQueuedTask>
 ): Array<TransitionQueuedTask> {
-    return tasks.filter(filterDefined)
+    return tasks.filter(isNotNil)
 }
 
 export function createTask(
