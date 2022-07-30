@@ -5,7 +5,6 @@ import {
     Children,
     cloneElement,
     createContext,
-    CSSProperties,
     Fragment,
     memo,
     useCallback,
@@ -69,7 +68,7 @@ const AnimatorMemo = memo(Animator)
 
 export function Animator(props: AnimatorProps) {
     const {task, onEnd} = props
-    const animatorRef = useRef<null | HTMLDivElement>(null)
+    const handleRef = useRef<null | HTMLTemplateElement>(null)
     const [animate, setAnimate] = useState<AnimatorState>({})
     const eventsRef = useRef(0)
     const isAnimating = animate[task.taskId] ?? false
@@ -101,7 +100,9 @@ export function Animator(props: AnimatorProps) {
     useLayoutEffect(() => {
         eventsRef.current = 0
 
-        if (! animatorRef.current) {
+        const animatorElement = findHandleTarget(handleRef.current)
+
+        if (! animatorElement) {
             return
         }
         if (isAnimating) {
@@ -114,7 +115,7 @@ export function Animator(props: AnimatorProps) {
             return
         }
 
-        applyStyles(animatorRef.current)
+        applyStyles(animatorElement as HTMLElement)
 
         // Initial styles and classes have been flushed. Time to fire the animation.
 
@@ -167,17 +168,15 @@ export function Animator(props: AnimatorProps) {
 
     return (
         <TransitionContext.Provider value={context}>
-            <div
-                {...listeners}
-                ref={animatorRef}
-                className={classes('Animator-cbb1', presenceClass)}
-                style={presenceStyles}
-            >
-                {cloneElement(child, {
-                    ...child.props,
-                    className: classes(child.props.className, presenceClass),
-                })}
-            </div>
+            {cloneElement(child, {
+                ...child.props,
+                className: classes(child.props.className, presenceClass),
+                style: {...child.props.styles, ...presenceStyles},
+                ...listeners,
+            })}
+            {task.action !== 'render' &&
+                <template ref={handleRef} style={{display: 'none'}}/>
+            }
         </TransitionContext.Provider>
     )
 }
@@ -828,22 +827,20 @@ export function presenceAnimationClasses(action: TransitionTaskAction, animating
     }
 }
 
-export function presenceAnimationStyles(action: TransitionTaskAction, animating: boolean): undefined | CSSProperties {
+export function presenceAnimationStyles(action: TransitionTaskAction, animating: boolean): undefined | React.CSSProperties {
     switch (action) {
         case 'mount':
             if (! animating) {
                 // The element has just been added to the DOM. We need to
                 // hide it during the 'enter-from' phase. It will be revealed
                 // during the 'enter-to' phase.
-                return {display: 'contents', visibility: 'hidden'}
-                // `opacity: 0` does not work with `display: 'contents'`.
-                // return {display: 'contents', opacity: 0}
+                return {visibility: 'hidden'}
+                // return {opacity: 0} // does not work with display: 'contents'.
                 // return {display: 'none'} // Causes a layout shift.
             }
         break
     }
-
-    return {display: 'contents'}
+    return
 }
 
 export function asOnlyChild(child: TransitionChildren | Array<TransitionChildren>): TransitionChildren {
@@ -889,6 +886,13 @@ export function areSameChildren(a?: Nil | TransitionElement, b?: Nil | Transitio
     const sameKey = a.key === b.key
 
     return sameType && sameKey
+}
+
+export function findHandleTarget(handleElement: undefined | null | HTMLElement) {
+    if (! handleElement) {
+        return
+    }
+    return handleElement.previousElementSibling ?? undefined
 }
 
 export function isValidAnimatorEvent(

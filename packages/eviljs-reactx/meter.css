@@ -4,8 +4,8 @@
 }
 
 .Meter-0aa2 {
-    width: var(--width, 8rem);
-    height: var(--height, 2rem);
+    width: var(--meter-width, 8rem);
+    height: var(--meter-height, 2rem);
 }
 
 .layer-33f0.bg,
@@ -14,8 +14,8 @@
     inset: 0;
 }
 .layer-33f0.bg {
-    background-color: var(--background-color, transparent);
-    opacity: var(--background-opacity, 1);
+    background-color: var(--meter-bg-color, transparent);
+    opacity: var(--meter-bg-opacity, 1);
 }
 .layer-33f0.fg {
     /*
@@ -39,9 +39,9 @@
     */
     background-image: linear-gradient(
         to right,
-        var(--color1, violet) 0%,
-        var(--color2, deepskyblue) 40%,
-        var(--color3, aquamarine) 80%
+        var(--meter-color1, violet) 0%,
+        var(--meter-color2, deepskyblue) 40%,
+        var(--meter-color3, aquamarine) 80%
     );
     clip-path: polygon(
         0% 0%,
