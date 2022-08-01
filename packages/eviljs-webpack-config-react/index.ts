@@ -56,11 +56,13 @@ export function createWebpackConfig(options?: WebpackConfigOptions) {
     const bundleName = options?.bundleName || DefaultBundleName
     const runtime = options?.runtime || 'single' // Workers require 'multiple' runtime.
     const define = options?.define ?? {}
-    const babelConfig = options?.babelConfig ?? createBabelConfig({workDir})
-    const postcssConfig = options?.postcssConfig ?? createPostcssConfig({workDir})
+    const babelOptions = options?.babelOptions ?? createBabelConfig({workDir})
+    const postcssOptions = options?.postcssOptions ?? createPostcssConfig({workDir})
     const preact = options?.preact ?? false
     const serverAddress = options?.serverAddress || DefaultServerAddress
     const serverPort = options?.serverPort || DefaultServerPort
+    const styles = options?.styles ?? 'bundle'
+    const stylesOptions = options?.stylesOptions ?? {}
 
     return {
         entry: {
@@ -100,7 +102,7 @@ export function createWebpackConfig(options?: WebpackConfigOptions) {
                 },
             },
             extensions: ['.js', '.jsx', '.ts', '.tsx'],
-            symlinks: true, // False breaks pnpm.
+            symlinks: true, // False breaks with PNPM.
         },
 
         module: {
@@ -113,24 +115,43 @@ export function createWebpackConfig(options?: WebpackConfigOptions) {
                         Path.resolve(workDir, libDir, '@eviljs'),
                         /[\\/]node_modules[\\/]@eviljs[\\/]/,
                     ],
-                    options: babelConfig,
+                    options: babelOptions,
                 },
                 {
                     test: /\.css$/,
                     use: [
-                        {
-                            loader: WebpackPluginMiniCssExtract.loader,
-                            options: {},
-                        },
+                        styles === 'extract'
+                            ? {
+                                loader: WebpackPluginMiniCssExtract.loader,
+                                options: {
+                                    ...stylesOptions,
+                                },
+                            }
+                            : {
+                                loader: require.resolve('style-loader'),
+                                options: {
+                                    injectType: 'styleTag',
+                                    insert: 'head',
+                                    attributes: {
+                                        'data-loader': 'style-loader',
+                                    },
+                                    esModule: true,
+                                    ...stylesOptions,
+                                },
+                            }
+                        ,
                         {
                             loader: require.resolve('css-loader'),
-                            options: {sourceMap: false, importLoaders: 1},
+                            options: {
+                                sourceMap: false,
+                                importLoaders: 1,
+                            },
                         },
                         {
                             loader: require.resolve('postcss-loader'),
                             options: {
                                 sourceMap: false,
-                                postcssOptions: postcssConfig,
+                                postcssOptions: postcssOptions,
                             },
                         },
                     ],
@@ -148,7 +169,10 @@ export function createWebpackConfig(options?: WebpackConfigOptions) {
             }),
             new WebpackPluginCopy({
                 patterns: [
-                    {from: Path.resolve(workDir, srcDir, 'assets'), globOptions: {ignore: ['**/.DS_Store']}},
+                    {
+                        from: Path.resolve(workDir, srcDir, 'assets'),
+                        globOptions: {ignore: ['**/.DS_Store']},
+                    },
                 ],
             }),
             new WebpackPluginDefine({
@@ -304,7 +328,7 @@ export function isBabelLoaderRule(rule: {loader?: string}) {
 // Types ///////////////////////////////////////////////////////////////////////
 
 export interface WebpackConfigOptions {
-    babelConfig?: undefined | {}
+    babelOptions?: undefined | {}
     basePath?: undefined | string
     bundleName?: undefined | string
     debug?: undefined | boolean
@@ -315,10 +339,12 @@ export interface WebpackConfigOptions {
     srcDir?: undefined | string
     srcPrefix?: undefined | string
     mode?: undefined | string
-    postcssConfig?: undefined | {}
+    postcssOptions?: undefined | {}
     preact?: undefined | boolean
     runtime?: undefined | boolean
     serverAddress?: undefined | string
     serverPort?: undefined | number
+    styles?: undefined | 'bundle' | 'extract'
+    stylesOptions?: undefined | {}
     workDir?: undefined | string
 }
