@@ -1,16 +1,16 @@
-export function saveSsrState(id: string, payload: any, options?: SsrOptions) {
+export function saveSsrState(id: string, payload: any, options?: undefined | SsrOptions) {
     if (! payload) {
         return
     }
 
-    const serializedPayload = JSON.stringify(payload)
     const inject = options?.inject ?? injectSsrStorageElement
     const ssrStorage = findSsrStorageElement(id) ?? inject(id)
+    const serializedPayload = JSON.stringify(payload)
 
     ssrStorage.textContent = serializedPayload
 }
 
-export function loadSsrState<S = unknown>(id: string, options?: SsrOptions) {
+export function loadSsrState<S = unknown>(id: string, options?: undefined | SsrOptions) {
     const ssrStorage = findSsrStorageElement(id)
     const serializedPayload = ssrStorage?.textContent?.trim()
 
