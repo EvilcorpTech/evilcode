@@ -62,7 +62,8 @@ export function useStateDeferred<V>(
     input: V,
     delay: number,
     hasPriority?: boolean | ((input: V) => boolean),
-) {
+): [V, (input: V) => void]
+ {
     const [output, setOutput] = useState(input)
     const timeoutIdRef = useRef<ReturnType<typeof setTimeout>>()
 
