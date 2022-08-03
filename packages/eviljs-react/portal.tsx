@@ -1,7 +1,7 @@
-import {createElement, createContext, memo, useContext, useEffect, useMemo, useRef, useState} from 'react'
+import {createContext, createElement, useContext, useEffect, useRef, useState} from 'react'
 import {createPortal} from 'react-dom'
 
-export const PortalContext = createContext<null | PortalElement>(null)
+export const PortalContext = createContext<[null | PortalElement, PortalMutator]>([null, () => void undefined])
 
 PortalContext.displayName = 'PortalContext'
 
@@ -39,32 +39,41 @@ export function PortalProvider(props: PortalProviderProps) {
 *     )
 * }
 */
-export function withPortal(render?: PortalProviderChild) {
-    const [portal, setPortal] = useState<null | PortalElement>(null)
-
-    function Portal(props: PortalProps) {
-        const {tag, ...otherProps} = props
-        const portalRef = useRef<null | PortalElement>(null)
-
-        const elTag = tag ?? 'div'
-        const elProps = {...otherProps, ref: portalRef}
-
-        useEffect(() => {
-            setPortal(portalRef.current)
-        })
-
-        return createElement(elTag, elProps)
-    }
-
-    const PortalMemo = useMemo(() => {
-        return memo(Portal)
-    }, [])
+export function withPortal(children: React.ReactNode) {
+    const portal = useState<null | PortalElement>(null)
 
     return (
         <PortalContext.Provider value={portal}>
-            {render?.(PortalMemo)}
+            {children}
         </PortalContext.Provider>
     )
+}
+
+/*
+* EXAMPLE
+*
+* export function MyMain(props) {
+*     return withPortal(Portal =>
+*         <Fragment>
+*             <Teleport>
+*                 <p>This code is teleported inside the Portal</p>
+*             </Teleport>
+*
+*             <Portal/>
+*         </Fragment>
+*     )
+* }
+*/
+export function Portal(props: PortalProps) {
+    const {tag, ...otherProps} = props
+    const portalRef = useRef<null | PortalElement>(null)
+    const [portal, setPortal] = useContext(PortalContext)
+
+    useEffect(() => {
+        setPortal(portalRef.current)
+    }, [tag])
+
+    return createElement(tag ?? 'div', {...otherProps, ref: portalRef})
 }
 
 /*
@@ -84,7 +93,7 @@ export function withPortal(render?: PortalProviderChild) {
 */
 export function Teleport(props: TeleportProps) {
     const {children} = props
-    const portal = useContext(PortalContext)
+    const [portal] = useContext(PortalContext)
 
     if (! portal) {
         return null
@@ -95,18 +104,15 @@ export function Teleport(props: TeleportProps) {
 
 // Types ///////////////////////////////////////////////////////////////////////
 
-export type PortalElement = HTMLElement | SVGElement
+export type PortalElement = HTMLElement
+export type PortalMutator = React.Dispatch<React.SetStateAction<null | PortalElement>>
 
 export interface PortalProviderProps {
-    children?: PortalProviderChild
-}
-
-export interface PortalProviderChild {
-    (portal: React.ComponentType<PortalProps>): React.ReactNode
+    children?: undefined | React.ReactNode
 }
 
 export interface PortalProps extends React.HTMLAttributes<PortalElement> {
-    tag?: keyof React.ReactDOM
+    tag?: undefined | keyof React.ReactHTML
     [key: string]: unknown
 }
 

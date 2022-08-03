@@ -1,7 +1,7 @@
 import {createElement, createContext, useContext, useEffect, useRef, useState} from 'react'
 import {createPortal} from 'react-dom'
 
-export const PortalsContext = createContext<[Portals, PortalMutator]>([{}, () => void null])
+export const PortalsContext = createContext<[Portals, PortalsMutator]>([{}, () => void undefined])
 
 PortalsContext.displayName = 'PortalsContext'
 
@@ -77,13 +77,11 @@ export function withPortals(children: React.ReactNode) {
 */
 export function Portal(props: PortalProps) {
     const {name, tag, ...otherProps} = props
-    const elRef = useRef<null | PortalElement>(null)
-    const [portals, setPortals] = usePortals()
-    const elTag = tag ?? 'div'
-    const elProps = {...otherProps, ref: elRef}
+    const portalRef = useRef<null | PortalElement>(null)
+    const [portals, setPortals] = useContext(PortalsContext)
 
     useEffect(() => {
-        const el = elRef.current
+        const el = portalRef.current
 
         if (! el) {
             return
@@ -104,7 +102,7 @@ export function Portal(props: PortalProps) {
         return onClean
     }, [name, tag])
 
-    return createElement(elTag, elProps)
+    return createElement(tag ?? 'div', {...otherProps, ref: portalRef})
 }
 
 /*
@@ -122,7 +120,7 @@ export function Portal(props: PortalProps) {
 */
 export function Teleport(props: TeleportProps) {
     const {to, children} = props
-    const [portals] = usePortals()
+    const [portals] = useContext(PortalsContext)
     const portal = portals[to]
 
     if (! portal) {
@@ -132,23 +130,19 @@ export function Teleport(props: TeleportProps) {
     return createPortal(children, portal)
 }
 
-export function usePortals() {
-    return useContext(PortalsContext)
-}
-
 // Types ///////////////////////////////////////////////////////////////////////
 
-export type Portals = Record<PortalId, PortalElement>
+export type PortalElement = HTMLElement
+export type Portals = Record<PortalId, null | PortalElement>
 export type PortalId = PropertyKey
-export type PortalElement = undefined | null | HTMLElement | SVGElement
-export type PortalMutator = React.Dispatch<React.SetStateAction<Portals>>
+export type PortalsMutator = React.Dispatch<React.SetStateAction<Portals>>
 
 export interface PortalsProviderProps {
-    children?: React.ReactNode
+    children?: undefined | React.ReactNode
 }
 
 export interface PortalProps extends React.HTMLAttributes<PortalElement> {
-    tag?: keyof React.ReactDOM
+    tag?: undefined | keyof React.ReactDOM
     name: PortalId
     [key: string]: unknown
 }
