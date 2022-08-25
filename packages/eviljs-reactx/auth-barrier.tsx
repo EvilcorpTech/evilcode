@@ -3,7 +3,7 @@ import {Fragment} from 'react'
 
 export function AuthBarrier(props: AuthBarrierProps) {
     const {children, progress, fallback} = props
-    const {tokenState} = useAuth()
+    const {tokenState} = useAuth()!
 
     // We use fragments for typing reasons.
     switch (tokenState) {

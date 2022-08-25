@@ -71,7 +71,7 @@ export function WidgetsView(props: WidgetsViewProps) {
                 <BusyButton
                     className="reveal dye"
                     busy={busy}
-                    spinner={<SpinnerV4 className="std-icon-text"/>}
+                    spinner={<SpinnerV4 className="std-icon-text" active={busy}/>}
                     onClick={() => setBusy(! busy)}
                 >
                     Reveal Busy Button
@@ -80,7 +80,7 @@ export function WidgetsView(props: WidgetsViewProps) {
                 <BusyButton
                     className="replace dye"
                     busy={busy}
-                    spinner={<SpinnerV4 className="std-icon-text"/>}
+                    spinner={<SpinnerV4 className="std-icon-text" active={busy}/>}
                     onClick={() => setBusy(! busy)}
                 >
                     Replace Busy Button

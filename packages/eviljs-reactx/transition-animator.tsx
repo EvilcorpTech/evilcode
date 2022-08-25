@@ -1,27 +1,29 @@
+import {Box, BoxProps} from '@eviljs/react/box.js'
 import {classes} from '@eviljs/react/classes.js'
 
-import './transition-animator.css'
-
-export const DefaultTransitionEffect = 'fade'
+export enum TransitionEffect {
+    Fade = 'std-transition-fade',
+    Leak = 'std-transition-leak',
+    None = 'std-transition-none',
+    SkidLeft = 'std-transition-skid-left',
+    Zoom = 'std-transition-zoom',
+}
 
 export function TransitionAnimator(props: TransitionAnimatorProps) {
     const {children, className, effect, ...otherProps} = props
 
     return (
-        <div
+        <Box
             {...otherProps}
-            className={classes('TransitionAnimator-c385', className, effect ?? DefaultTransitionEffect)}
+            className={classes('TransitionAnimator-c385', className, effect)}
         >
             {children}
-        </div>
+        </Box>
     )
 }
 
 // Types ///////////////////////////////////////////////////////////////////////
 
-export interface TransitionAnimatorProps extends React.HTMLAttributes<HTMLDivElement> {
-    children?: undefined | React.ReactNode
-    effect?: undefined | TransitionAnimatorEffect
+export interface TransitionAnimatorProps extends BoxProps {
+    effect: TransitionEffect
 }
-
-export type TransitionAnimatorEffect = 'none' | 'fade' | 'zoom' | 'leak' | 'skid-left'

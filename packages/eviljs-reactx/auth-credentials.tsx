@@ -7,7 +7,7 @@ import {Input} from './input/floating.js'
 
 export function useAuthCredentials() {
     const [credentials, setCredentials] = useState({identifier: '', secret: ''})
-    const {authenticate, pending} = useAuth()
+    const {authenticate, pending} = useAuth()!
     const [error, setError] = useState<null | unknown>(null)
 
     const onIdentifierChange = useCallback((identifier: string) => {

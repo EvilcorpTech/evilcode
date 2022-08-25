@@ -1,14 +1,14 @@
 import {useI18n} from '@eviljs/react/i18n.js'
-import {RouteArgs} from '@eviljs/react/route-args.js'
 import {Arg, CaseRoute, exact, SwitchRoute, withRouteMatches} from '@eviljs/react/router.js'
 import {createI18n, I18n} from '@eviljs/std/i18n.js'
 import {ElementOf, isArray, isObject, ValueOf} from '@eviljs/std/type.js'
-import {useMemo} from 'react'
+import {isValidElement, useMemo} from 'react'
+import {RouteArgs} from './route-args.js'
+import {TransitionAnimator, TransitionEffect} from './transition-animator.js'
 import {Transition, TransitionMode} from './transition.js'
-import {TransitionAnimator, TransitionAnimatorEffect} from './transition-animator.js'
 
-export type {RouteArgs, RouteArgsProps} from '@eviljs/react/route-args.js'
 export {createRouteMatches, exact, SwitchRoute, withRouteMatches} from '@eviljs/react/router.js'
+export type {RouteArgs, RouteArgsProps} from './route-args.js'
 export {TransitionAnimator} from './transition-animator.js'
 
 export const SiteRouteKey = 'path'
@@ -50,7 +50,7 @@ export function useSite
         ,
     )
 {
-    const i18n = useI18n()
+    const i18n = useI18n()!
 
     const site = useMemo(() => {
         if (! routes) {
@@ -267,11 +267,30 @@ export function createDefaultAnimator
     const exit = animatorModel?.exit ?? 1
     const transition = animatorModel?.transition
 
+    if (! isValidElement<{className?: string}>(widget)) {
+        return widget
+    }
+
     return (
         <Transition mode={mode} initial={initial} enter={enter} exit={exit} target="animator-d352">
-            <TransitionAnimator key={key} className="animator-d352" effect={transition}>
+            <TransitionAnimator
+                key={key}
+                className="animator-d352"
+                effect={transition ?? TransitionEffect.Fade}
+            >
                 {widget}
             </TransitionAnimator>
+
+            {/*
+            {cloneElement(widget, {
+                key,
+                className: classes(
+                    widget.props.className,
+                    'animator-d352',
+                    transition ?? TransitionEffect.Fade,
+                ),
+            })}
+            */}
         </Transition>
     )
 }
@@ -523,7 +542,7 @@ export interface SiteAnimatorModel {
     initial?: undefined | boolean
     enter?: undefined | number
     exit?: undefined | number
-    transition?: undefined | TransitionAnimatorEffect
+    transition?: undefined | TransitionEffect
 }
 
 export type SiteRouteKeyModel<RK extends string> = {

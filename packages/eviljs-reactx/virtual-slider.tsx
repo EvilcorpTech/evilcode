@@ -1,9 +1,9 @@
 import {classes} from '@eviljs/react/classes.js'
-import {useThrottle} from '@eviljs/react/event.js'
+import {useCallbackThrottled} from '@eviljs/react/event.js'
 import {mergeRefs} from '@eviljs/react/ref.js'
 import {useResizeObserver} from '@eviljs/react/resize-observer.js'
 import {isFunction} from '@eviljs/std/type.js'
-import {CSSProperties, forwardRef, useCallback, useLayoutEffect, useMemo, useRef, useState} from 'react'
+import {forwardRef, useCallback, useLayoutEffect, useMemo, useRef, useState} from 'react'
 
 import './virtual-slider.css'
 
@@ -33,7 +33,7 @@ export const SliderVirtual = forwardRef(function SliderVirtual<I>(
     }, [])
 
     useLayoutEffect(updateSize, []) // eslint-disable-line
-    useResizeObserver(containerRef, useThrottle(updateSize, 100))
+    useResizeObserver(containerRef, useCallbackThrottled(updateSize, 100))
 
     const render = useMemo(() => {
         if (! sizes) {
@@ -202,7 +202,7 @@ export function computeChildrenSlice<I>(args: {
     return list
 }
 
-export function styleOfContainer(): CSSProperties {
+export function styleOfContainer(): React.CSSProperties {
     return {
         justifyContent: 'center',
         justifyItems: 'center',
@@ -210,7 +210,7 @@ export function styleOfContainer(): CSSProperties {
     }
 }
 
-export function styleOfChild<I>(child: VirtualChild<I>): CSSProperties {
+export function styleOfChild<I>(child: VirtualChild<I>): React.CSSProperties {
     return {
         width: child.width,
         // height: child.height,

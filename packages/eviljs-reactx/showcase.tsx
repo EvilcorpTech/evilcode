@@ -7,7 +7,7 @@ export function Showcase(props: ShowcaseProps) {
     const {children, className, ...otherProps} = props
     const [selected, setSelected] = useState('')
     const [search, setSearch] = useState('')
-    const router = useRouter()
+    const router = useRouter()!
     const {replaceRoute, routeParams, routePath} = router
 
     useEffect(() => {

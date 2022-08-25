@@ -20,5 +20,5 @@ export function Spinner(props: SpinnerProps) {
 // Types ///////////////////////////////////////////////////////////////////////
 
 export interface SpinnerProps extends React.HTMLAttributes<HTMLElement> {
-    active?: boolean
+    active: boolean
 }

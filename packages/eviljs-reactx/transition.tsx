@@ -1,10 +1,10 @@
 import {classes} from '@eviljs/react/classes.js'
+import {defineContext} from '@eviljs/react/ctx.js'
 import {asArray, isArray, isNotNil, isString, Nil} from '@eviljs/std/type.js'
 import {applyStyles} from '@eviljs/web/animation.js'
 import {
     Children,
     cloneElement,
-    createContext,
     Fragment,
     memo,
     useCallback,
@@ -17,15 +17,13 @@ import {
 } from 'react'
 
 const NoItems: [] = []
+export let TransitionCounter = 0
 
-export const TransitionContext = createContext<TransitionContext>({} as any)
-TransitionContext.displayName = 'TransitionContext'
+export const TransitionContext = defineContext<TransitionContext>('TransitionContext')
 
 export function useTransitionLifecycle() {
     return useContext(TransitionContext)
 }
-
-export let TransitionCounter = 0
 
 export function Transition(props: TransitionProps) {
     const {children, exit, enter, target, initial, mode, onEntered, onExited, onEnd} = props
@@ -148,7 +146,7 @@ export function Animator(props: AnimatorProps) {
         }
     }, [task.taskId, task.target, task.events])
 
-    const listeners = useMemo(() => {
+    const listeners = useMemo((): undefined | AnimatorAnimatableEvents => {
         if (task.action === 'render') {
             // A render task does not have to wait any animation to complete.
             return
@@ -169,7 +167,6 @@ export function Animator(props: AnimatorProps) {
     return (
         <TransitionContext.Provider value={context}>
             {cloneElement(child, {
-                ...child.props,
                 className: classes(child.props.className, presenceClass),
                 style: {...child.props.styles, ...presenceStyles},
                 ...listeners,
@@ -1042,6 +1039,19 @@ export type TransitionEventTarget = Array<string>
 
 export interface TransitionKeyComputer {
     (keys: Array<string>): undefined | string
+}
+
+export interface AnimatorAnimatable extends AnimatorAnimatableProps, AnimatorAnimatableEvents {
+}
+
+export interface AnimatorAnimatableProps {
+    className?: undefined | string
+    style?: undefined | React.CSSProperties
+}
+
+export interface AnimatorAnimatableEvents {
+    onAnimationEnd?: undefined | ((event: React.AnimationEvent<HTMLElement>) => void)
+    onTransitionEnd?: undefined | ((event:  React.TransitionEvent<HTMLElement>) => void)
 }
 
 export type AnimatorCompletionEvent = React.AnimationEvent<HTMLElement> | React.TransitionEvent<HTMLElement>
