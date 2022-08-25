@@ -81,7 +81,7 @@ export function logOnAdapter<R>(
 
 // Types ///////////////////////////////////////////////////////////////////////
 
-export interface Logger<R> {
+export interface Logger<R = void> {
     log(type: LogType, ...args: Payload): R
     debug(...args: Payload): R
     info(...args: Payload): R

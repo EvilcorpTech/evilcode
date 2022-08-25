@@ -8,7 +8,7 @@ export function withoutNil<I>(list: Array<Nil | I>): Array<I> {
     return list.filter(isNotNil)
 }
 
-export function mapWith<I>(mapItem: (it: I) => I) {
+export function mapWith<I>(mapItem: (it: I, idx: number) => I) {
     function mapList(list: Array<I>) {
         return list.map(mapItem)
     }
@@ -16,7 +16,7 @@ export function mapWith<I>(mapItem: (it: I) => I) {
     return mapList
 }
 
-export function asMatrix<T>(list: Array<T>, size: number) {
+export function asMatrix<I>(list: Array<I>, size: number) {
     return list.reduce((rows, key, index) => {
         if ((index % size) === 0) {
             rows.push([key])
@@ -25,5 +25,24 @@ export function asMatrix<T>(list: Array<T>, size: number) {
             rows[rows.length - 1]?.push(key)
         }
         return rows
-    }, [] as Array<Array<T>>)
+    }, [] as Array<Array<I>>)
+}
+
+export function move<I>(list: Array<I>, from: number, to: number) {
+    const listClone = Array.from(list)
+    moveMutating(listClone, from, to)
+    return listClone
+}
+
+export function moveMutating<I>(list: Array<I>, from: number, to: number) {
+    if (from < 0) {
+        return
+    }
+    if (from >= list.length) {
+        return
+    }
+
+    const item = list[from]
+    list.splice(from, 1)
+    list.splice(to, 0, item!)
 }

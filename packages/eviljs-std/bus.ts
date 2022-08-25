@@ -71,7 +71,7 @@ export function unobserveEvent<P>(
 
 // Types ///////////////////////////////////////////////////////////////////////
 
-export interface Bus<B extends BusEvents> {
+export interface Bus<B extends BusEvents = BusGeneric> {
     observers: BusObserversOf<B>
     emit<E extends keyof B>(event: E, payload: B[E]): void
     observe<E extends keyof B>(event: E, observer: BusObserver<B[E]>): BusUnobserve
