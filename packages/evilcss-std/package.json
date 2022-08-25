@@ -1,6 +1,6 @@
 {
     "name": "@evilcss/std",
-    "version": "1.0.31",
+    "version": "1.0.32",
     "files": [
         "/LICENSE.txt",
         "/**/*.css",
