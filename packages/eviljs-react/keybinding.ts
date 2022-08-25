@@ -1,7 +1,7 @@
 import {asArray} from '@eviljs/std/type.js'
 import {useLayoutEffect} from 'react'
 
-export function useKey(key: Key, handler: KeyHandler, options?: UseKeyOptions) {
+export function useKey(key: Key, handler: KeyHandler, options?: undefined | UseKeyOptions) {
     useLayoutEffect(() => {
         const keys = asArray(key)
         const el: GlobalEventHandlers = options?.ref?.current ?? document

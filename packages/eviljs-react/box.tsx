@@ -1,5 +1,5 @@
 import {isDefined} from '@eviljs/std/type.js'
-import {createElement} from 'react'
+import {createElement, forwardRef} from 'react'
 
 /*
 * Renders an element with a dynamic tag.
@@ -10,11 +10,14 @@ import {createElement} from 'react'
 *     {children}
 * </Box>
 */
-export function Box<P extends BoxProps<T>, T>(props: P) {
-    const {tag = 'div', ...otherProps} = props
+export const Box = forwardRef(function Box<T>(
+    props: BoxProps<T>,
+    ref?: undefined | React.Ref<T>,
+) {
+    const {tag, ...otherProps} = props
 
-    return createElement(tag, otherProps as {})
-}
+    return createElement(tag ?? 'div', {...otherProps as {}, ref})
+})
 
 /*
 * Optionally renders an element with a dynamic tag.
@@ -33,24 +36,27 @@ export function Box<P extends BoxProps<T>, T>(props: P) {
 *     </OptionalBox>
 * }
 */
-export function OptionalBox<P extends OptionalBoxProps<T>, T>(props: P) {
+export const OptionalBox = forwardRef(function OptionalBox<T>(
+    props: OptionalBoxProps<T>,
+    ref?: undefined | React.Ref<T>,
+) {
     const {if: guard, ...otherProps} = props
 
     if (isDefined(guard) && ! guard) {
         return null
     }
 
-    return Box(otherProps)
-}
+    return Box({...otherProps, ref})
+})
 
 // Types ///////////////////////////////////////////////////////////////////////
 
 export interface BoxProps<T = Element> extends React.AllHTMLAttributes<T> {
-    tag?: undefined | string | Tag | React.ComponentType
+    tag?: undefined | string | Tag
 }
 
 export interface OptionalBoxProps<T = Element> extends BoxProps<T> {
-    if?: any
+    if?: undefined | any
 }
 
 export type Tag = keyof JSX.IntrinsicElements

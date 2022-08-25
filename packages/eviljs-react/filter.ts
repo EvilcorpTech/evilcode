@@ -1,4 +1,5 @@
 import {useCallback, useMemo, useState} from 'react'
+import type {StateSetter} from './state.js'
 
 const NoItems: [] = []
 
@@ -49,5 +50,5 @@ export interface FilterManager<I, F> {
     filter: F
     filteredItems: Array<I>
     itemIdxOf: (filteredItemIdx: number) => undefined | number
-    onChange: React.Dispatch<React.SetStateAction<F>>
+    onChange: StateSetter<F>
 }

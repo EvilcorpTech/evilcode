@@ -5,8 +5,8 @@ import {useRouter} from './router.js'
 export const BaseLocaleRegexp = /\/([a-zA-Z]{2})(?:\/|$)/
 
 export function useRouteLocale(localeRegexpOptional?: RegExp) {
-    const {locale, setLocale} = useI18n()
-    const {matchRoute} = useRouter()
+    const {locale, setLocale} = useI18n()!
+    const {matchRoute} = useRouter()!
 
     useEffect(() => {
         const localeRegexp = localeRegexpOptional ?? BaseLocaleRegexp

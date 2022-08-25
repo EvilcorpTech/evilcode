@@ -1,26 +1,76 @@
-import {Bus, BusGeneric, BusEvent, BusEvents, BusObserver, createBus} from '@eviljs/std/bus.js'
-import {createContext, useCallback, useContext, useLayoutEffect, useMemo} from 'react'
+import {Bus, BusEvent, BusObserver, createBus} from '@eviljs/std/bus.js'
+import {useCallback, useContext, useEffect, useMemo} from 'react'
+import {defineContext} from './ctx.js'
 
-export const BusContext = createContext<unknown>(undefined)
+export const BusContext = defineContext<Bus>('BusContext')
 
-BusContext.displayName = 'BusContext'
+/*
+* EXAMPLE
+*
+* const Main = WithBus(MyMain)
+*
+* render(<Main/>, document.body)
+*/
+export function WithBus<P extends {}>(Child: React.ComponentType<P>) {
+    function BusProviderProxy(props: P) {
+        return withBus(<Child {...props}/>)
+    }
 
-export function useBus<B extends BusEvents>() {
-    return useMemo(() => {
-        return createBus<B>()
+    return BusProviderProxy
+}
+
+/*
+* EXAMPLE
+*
+* return (
+*     <BusProvider>
+*         <MyApp/>
+*     </BusProvider>
+* )
+*/
+export function BusProvider(props: BusProviderProps) {
+    return withBus(props.children)
+}
+
+/*
+* EXAMPLE
+*
+* export function MyMain(props) {
+*     return withBus(
+*         <MyApp/>
+*     )
+* }
+*/
+export function withBus(children: React.ReactNode) {
+    const bus = useMemo(() => {
+        return createBus()
     }, [])
+
+    return (
+        <BusContext.Provider value={bus}>
+            {children}
+        </BusContext.Provider>
+    )
+}
+
+export function useBus<T extends undefined | Bus = undefined | Bus>() {
+    return useContext(BusContext) as T
 }
 
 export function useBusEvent<P>(
     event: BusEvent,
     observer: BusObserver<P>,
 ) {
-    const bus = useContext<Bus<BusGeneric>>(BusContext as React.Context<Bus<BusGeneric>>)
+    const bus = useBus()!
 
-    useLayoutEffect(() => {
+    useEffect(() => {
         const unobserve = bus.observe(event, observer as BusObserver)
 
-        return unobserve
+        function onClean() {
+            unobserve()
+        }
+
+        return onClean
     }, [bus, event, observer])
 
     const unobserve = useCallback(() => {
@@ -28,4 +78,10 @@ export function useBusEvent<P>(
     }, [bus, event, observer])
 
     return unobserve
+}
+
+// Types ///////////////////////////////////////////////////////////////////////
+
+export interface BusProviderProps {
+    children?: undefined | React.ReactNode
 }

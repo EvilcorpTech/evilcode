@@ -1,11 +1,12 @@
 import {isFunction, ValueOf} from '@eviljs/std/type.js'
-import {createContext, useContext, useMemo, useReducer} from 'react'
+import {useContext, useMemo, useReducer} from 'react'
+import {defineContext} from './ctx.js'
 import {
     useRootStoreStorage as useCoreRootStoreStorage,
     StoreStorageOptions as CoreStoreStorageOptions,
 } from './store-storage.js'
 
-export const StoreV1Context = createContext<unknown>(undefined)
+export const StoreV1Context = defineContext<Store<{}, StoreActions<{}>>>('StoreV1Context')
 export const StoreSetAction = 'set'
 export const StoreResetAction = 'reset'
 
@@ -13,8 +14,6 @@ export const StoreDefaultActions = {
     [StoreSetAction]: setAction,
     [StoreResetAction]: resetAction,
 }
-
-StoreV1Context.displayName = 'StoreV1Context'
 
 /*
 * EXAMPLE
@@ -105,10 +104,10 @@ export function useRootStore<S extends {}, A extends StoreActions<S>>(spec: Stor
 }
 
 export function useStore<S extends {}, A extends StoreActions<S>>() {
-    return useContext<Store<S, A>>(StoreV1Context as React.Context<Store<S, A>>)
+    return useContext(StoreV1Context) as Store<S, A>
 }
 
-export function useRootStoreStorage<S extends {}, L extends {} = S>(options?: StoreStorageOptions<S, L>) {
+export function useRootStoreStorage<S extends {}, L extends {} = S>(options?: undefined | StoreStorageOptions<S, L>) {
     const onLoad = options?.onLoad
     const onMerge = options?.onMerge
     const {state, commit} = useStore<S, StoreDefaultActions<S>>()
@@ -118,7 +117,7 @@ export function useRootStoreStorage<S extends {}, L extends {} = S>(options?: St
         onLoad(savedState) {
             onLoad?.(savedState)
             commit({type: 'reset', value(state) {
-                return onMerge?.(savedState, state) ?? defaultOnMerge(savedState, state)
+                return onMerge?.(savedState, state) ?? defaultMerge(savedState, state)
             }})
         },
     })
@@ -142,7 +141,7 @@ export function resetAction<S extends {}>(state: S, value: React.SetStateAction<
     )
 }
 
-export function defaultOnMerge<S extends {}, L extends {} = S>(savedState: L, state: S): S {
+export function defaultMerge<S extends {}, L extends {} = S>(savedState: L, state: S): S {
     // Shallow merge.
     // Saved state from LocalStorage overwrites current state.
     return {...state, ...savedState}
@@ -158,7 +157,7 @@ export interface StoreProviderProps<S extends {}, A extends StoreActions<S>> {
 export interface StoreSpec<S extends {}, A extends StoreActions<S>> {
     actions: A
     createState(): S
-    listener?: (action: StoreActionsOf<S, A>, oldState: S) => void
+    listener?: undefined | ((action: StoreActionsOf<S, A>, oldState: S) => void)
 }
 
 export interface Store<S extends {}, A extends StoreActions<S>> {

@@ -1,11 +1,9 @@
-import {createContext, useCallback, useContext, useRef, useState} from 'react'
-import {useMountedRef} from './hook.js'
+import {useCallback, useContext, useRef, useState} from 'react'
+import {defineContext} from './ctx.js'
 
 export {asBaseUrl, joinPath} from '@eviljs/web/url.js'
 
-export const RequestContext = createContext<unknown>(undefined)
-
-RequestContext.displayName = 'RequestContext'
+export const RequestContext = defineContext('RequestContext')
 
 /*
 * EXAMPLE
@@ -68,7 +66,6 @@ export function useRequest<C, A extends Array<unknown>, R>(runner: RequestRunner
         response: undefined,
         error: undefined,
     })
-    const mountedRef = useMountedRef()
     const taskRef = useRef<null | RequestTask<R>>(null)
     const context = useContext<C>(RequestContext as React.Context<C>)
 
@@ -96,9 +93,6 @@ export function useRequest<C, A extends Array<unknown>, R>(runner: RequestRunner
         try {
             const response = await task.promise
 
-            if (! mountedRef.current) {
-                return
-            }
             if (task.cancelled) {
                 return
             }
@@ -113,9 +107,6 @@ export function useRequest<C, A extends Array<unknown>, R>(runner: RequestRunner
             return response
         }
         catch (error) {
-            if (! mountedRef.current) {
-                return
-            }
             if (task.cancelled) {
                 return
             }
@@ -142,9 +133,11 @@ export function useRequest<C, A extends Array<unknown>, R>(runner: RequestRunner
     const resetResponse = useCallback(() => {
         setState(state => ({...state, response: undefined}))
     }, [])
+
     const resetError = useCallback(() => {
         setState(state => ({...state, error: undefined}))
     }, [])
+
     const reset = useCallback(() => {
         setState(state => ({
             ...state,

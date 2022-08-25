@@ -1,14 +1,13 @@
 import {computeValue} from '@eviljs/std/fn.js'
 import {isArray, isObject} from '@eviljs/std/type.js'
-import {createContext, useCallback, useContext, useLayoutEffect, useMemo, useRef} from 'react'
-import {useRender} from './hook.js'
+import {useCallback, useContext, useLayoutEffect, useMemo, useRef} from 'react'
+import {defineContext} from './ctx.js'
+import {useRender} from './lifecycle.js'
 import {useRootStoreStorage as useCoreRootStoreStorage} from './store-storage.js'
-import {defaultOnMerge, StoreStorageOptions} from './store-v1.js'
+import {defaultMerge, StoreStorageOptions} from './store-v1.js'
 import type {Store as StoreV2} from './store-v2.js'
 
-export const StoreContext = createContext<StoreService<any>>(void undefined as any)
-
-StoreContext.displayName = 'StoreContext'
+export const StoreContext = defineContext<StoreManager<StoreStateGeneric>>('StoreContext')
 
 /*
 * EXAMPLE
@@ -18,7 +17,7 @@ StoreContext.displayName = 'StoreContext'
 *
 * render(<Main/>, document.body)
 */
-export function WithStore<P extends {}, S>(Child: React.ComponentType<P>, spec: StoreSpec<S>) {
+export function WithStore<P extends {}>(Child: React.ComponentType<P>, spec: StoreSpec<StoreStateGeneric>) {
     function StoreProviderProxy(props: P) {
         return withStore(<Child {...props}/>, spec)
     }
@@ -35,7 +34,7 @@ export function WithStore<P extends {}, S>(Child: React.ComponentType<P>, spec: 
 *     return withStore(<Child/>, spec)
 * }
 */
-export function withStore<S>(children: React.ReactNode, spec: StoreSpec<S>) {
+export function withStore(children: React.ReactNode, spec: StoreSpec<StoreStateGeneric>) {
     const store = useRootStore(spec)
 
     return (
@@ -58,18 +57,18 @@ export function withStore<S>(children: React.ReactNode, spec: StoreSpec<S>) {
 *     )
 * }
 */
-export function StoreProvider<S>(props: StoreProviderProps<S>) {
+export function StoreProvider(props: StoreProviderProps<StoreStateGeneric>) {
     return withStore(props.children, props.spec)
 }
 
-export function useRootStore<S>(spec: StoreSpec<S>): StoreService<S> {
+export function useRootStore<S extends StoreStateGeneric>(spec: StoreSpec<S>): StoreManager<S> {
     const {createState} = spec
     const stateRef = useRef(createState())
     const storeObservers = useMemo(() =>
         new Map<string, Array<ChangeObserver>>()
     , [])
 
-    const mutate = useCallback((path: StatePath, value: React.SetStateAction<any>) => {
+    const mutate = useCallback((path: StatePath, value: React.SetStateAction<unknown>) => {
         const nextState = mutateState(stateRef.current, path, value)
         stateRef.current = nextState
 
@@ -130,28 +129,28 @@ export function useRootStore<S>(spec: StoreSpec<S>): StoreService<S> {
     return store
 }
 
-export function useStoreContext<S>() {
-    return useContext<StoreService<S>>(StoreContext)
+export function useStoreContext<S extends StoreStateGeneric>() {
+    return useContext(StoreContext) as StoreManager<S>
 }
 
 /*
 * EXAMPLE
 *
-* const [books, setBooks] = useStore(state => state.books)
-* const [selectedFoodIndex, setSelectedFoodIndex] = useStore(state => state.selectedFoodIndex)
-* const [selectedFood, setSelectedFood] = useStore(state => state.food[selectedFoodIndex], [selectedFoodIndex])
+* const [books, setBooks] = useStoreState(state => state.books)
+* const [selectedFoodIndex, setSelectedFoodIndex] = useStoreState(state => state.selectedFoodIndex)
+* const [selectedFood, setSelectedFood] = useStoreState(state => state.food[selectedFoodIndex], [selectedFoodIndex])
 */
-export function useStore<S, V>(optionalSelector: StoreSelector<S, V>, deps?: Array<unknown>): Store<V>
-export function useStore<S>(): Store<S>
-export function useStore<S, V>(optionalSelector?: StoreSelector<S, V>, deps?: Array<unknown>): Store<V> {
-    const selector = optionalSelector ?? (defaultSelector as StoreSelector<S, V>)
+export function useStoreState<S extends StoreStateGeneric, V>(selectorOptional: StoreSelector<S, V>, deps?: undefined | Array<unknown>): Store<V>
+export function useStoreState<S extends StoreStateGeneric>(): Store<S>
+export function useStoreState<S extends StoreStateGeneric, V>(selectorOptional?: undefined | StoreSelector<S, V>, deps?: undefined | Array<unknown>): Store<V> {
+    const selector = (selectorOptional ?? defaultSelector) as StoreSelector<StoreStateGeneric, unknown>
     const store = useStoreContext<S>()
     const state = store.stateRef.current
     const path = useMemo(() => selectPath(state, selector), deps ?? [])
     const render = useRender()
 
     const selectedState = useMemo((): V => {
-        return selectStateValue(state, path)
+        return selectStateValue(state, path) as V
     }, [state, path])
 
     useLayoutEffect(() => {
@@ -166,21 +165,21 @@ export function useStore<S, V>(optionalSelector?: StoreSelector<S, V>, deps?: Ar
     return [selectedState, setSelectedState]
 }
 
-export function useRootStoreStorage<S, L = S>(options?: StoreStorageOptions<S, L>) {
+export function useRootStoreStorage<S extends StoreStateGeneric, L extends StoreStateGeneric = S>(options?: StoreStorageOptions<S, L>) {
     const onLoad = options?.onLoad
     const onMerge = options?.onMerge
-    const [state, setState] = useStore<S>()
+    const [state, setState] = useStoreState<S>()
 
     useCoreRootStoreStorage<S, L>(state, {
         ...options,
         onLoad(savedState) {
             onLoad?.(savedState)
-            setState(state => onMerge?.(savedState, state) ?? defaultOnMerge(savedState, state))
+            setState(state => onMerge?.(savedState, state) ?? defaultMerge(savedState, state))
         },
     })
 }
 
-export function selectPath<S, V>(state: S, selector: StoreSelector<S, V>): StatePath {
+export function selectPath(state: StoreStateGeneric, selector: StoreSelector<StoreStateGeneric, unknown>): StatePath {
     const path: StatePath = []
 
     if (! isObject(state) && ! isArray(state)) {
@@ -199,7 +198,7 @@ export function selectPath<S, V>(state: S, selector: StoreSelector<S, V>): State
     return path
 }
 
-export function selectStateValue<S>(state: S, path: StatePath) {
+export function selectStateValue<S>(state: S, path: StatePath): unknown {
     let selectedState: any = state
 
     for (const it of path) {
@@ -213,14 +212,14 @@ export function defaultSelector<S>(state: S): S {
     return state
 }
 
-export function mutateState<S = {}>(
+export function mutateState<S extends StoreStateGeneric = StoreStateGeneric>(
     state: S,
     path: StatePath,
-    value: React.SetStateAction<S>
+    value: React.SetStateAction<unknown>
 ): S {
     if (path.length === 0) {
         // We are mutating the state root.
-        return computeValue(value, state)
+        return computeValue(value, state) as S
     }
 
     const nextState = cloneShallow(state)
@@ -264,7 +263,7 @@ export function mutateState<S = {}>(
     return nextState
 }
 
-export function createStateProxy<O extends {}>(state: O, onGet: (key: PropertyKey) => void) {
+export function createStateProxy<O extends StoreStateGeneric | Array<unknown>>(state: O, onGet: (key: PropertyKey) => void) {
     const proxy = new Proxy(state, {
         get(obj, prop, proxy): unknown {
             if (! (prop in obj)) {
@@ -344,7 +343,7 @@ export interface StoreSpec<S> {
     createState(): S
 }
 
-export interface StoreService<S> {
+export interface StoreManager<S extends StoreStateGeneric> {
     stateRef: React.MutableRefObject<S>
     state(): S
     observe(path: StatePath, observer: ChangeObserver): Unobserve
@@ -354,12 +353,12 @@ export interface StoreService<S> {
 export interface Store<S> extends StoreV2<S> {
 }
 
-export interface StoreSelector<S, V> {
+export interface StoreSelector<S extends StoreStateGeneric, V> {
     (state: S): V
 }
 
-export interface StatePath extends Array<PropertyKey> {
-}
+export type StoreStateGeneric = {} | Array<unknown>
+export type StatePath = Array<PropertyKey>
 
 export interface ChangeObserver {
     (): void

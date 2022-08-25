@@ -1,20 +1,18 @@
 import {ComputableValue, computeValue} from '@eviljs/std/fn.js'
 import {escapeRegexp} from '@eviljs/std/regexp.js'
 import {asArray, isPromise, Nil} from '@eviljs/std/type.js'
-import {classes} from './classes.js'
 import {compilePattern, exact, regexpFromPattern} from '@eviljs/web/route.js'
 import {createRouter, serializeRouteToString, RouterOptions, RouterParams, RouterRouteParams} from '@eviljs/web/router.js'
-import {createContext, CSSProperties, Fragment, useCallback, useContext, useEffect, useMemo, useRef, useState} from 'react'
+import {Fragment, useCallback, useContext, useEffect, useMemo, useRef, useState} from 'react'
+import {classes} from './classes.js'
+import {defineContext} from './ctx.js'
 
 export {exact, All, Arg, End, Value, Path, PathOpt, PathGlob, Start} from '@eviljs/web/route.js'
 export type {RouterOptions} from '@eviljs/web/router.js'
 
-export const RouterContext = createContext<Router>(undefined as any)
-export const RouteMatchesContext = createContext<RouteMatches>(undefined as any)
+export const RouterContext = defineContext<Router>('RouterContext')
+export const RouteMatchesContext = defineContext<RouteMatches>('RouteMatchContext')
 export const RouteDefaultActiveClass = 'route-active'
-
-RouterContext.displayName = 'RouterContext'
-RouteMatchesContext.displayName = 'RouteMatchContext'
 
 /*
 * EXAMPLE
@@ -224,7 +222,7 @@ export function useRouteMatches() {
 }
 
 export function useRouterTransition() {
-    const {routePath: toRoute} = useRouter()
+    const {routePath: toRoute} = useRouter()!
     const prevRouteRef = useRef(toRoute)
 
     useEffect(() => {
@@ -267,7 +265,7 @@ export function useRouterTransition() {
 */
 export function SwitchRoute(props: SwitchRouteProps) {
     const {children, default: fallback} = props
-    const {matchRoute} = useRouter()
+    const {matchRoute} = useRouter()!
 
     const [matchingChild, matchingRouteArgs] = useMemo(() => {
         if (! children)  {
@@ -283,12 +281,12 @@ export function SwitchRoute(props: SwitchRouteProps) {
             }
 
             return [child.props.children, cleanRouteMatches(matchingRouteArgs)] as (
-                [RouteMatchChildren, Array<string>]
+                [RouteMatchChildren, RouteMatches]
             )
         }
 
         if (fallback) {
-            return [fallback, []] as [SwitchRouteProps['default'], Array<string>]
+            return [fallback, []] as [SwitchRouteProps['default'], RouteMatches]
         }
 
         return []
@@ -296,7 +294,7 @@ export function SwitchRoute(props: SwitchRouteProps) {
 
     return (
         <Fragment>
-            {computeValue(matchingChild, ...matchingRouteArgs)}
+            {computeValue(matchingChild, ...(matchingRouteArgs ?? []))}
         </Fragment>
     )
 }
@@ -331,7 +329,7 @@ export function CaseRoute(props: CaseRouteProps) {
 */
 export function WhenRoute(props: WhenRouteProps) {
     const {children, is} = props
-    const {matchRoute} = useRouter()
+    const {matchRoute} = useRouter()!
 
     const routeMatches = useMemo(() => {
         const pathRegexp = regexpFromPattern(is)
@@ -375,7 +373,7 @@ export function Route(props: RouteProps) {
         to,
         ...otherProps
     } = props
-    const {link, replaceRoute, routeTo, testRoute} = useRouter()
+    const {link, replaceRoute, routeTo, testRoute} = useRouter()!
 
     const onClick = useCallback((event: React.MouseEvent) => {
         event.preventDefault()
@@ -481,7 +479,7 @@ export function Link(props: LinkProps) {
 
 export function Redirect(props: RedirectProps) {
     const {to, params, state, replace} = props
-    const {replaceRoute, routeTo} = useRouter()
+    const {replaceRoute, routeTo} = useRouter()!
     const shouldReplace = replace ?? true
 
     useEffect(() => {
@@ -576,10 +574,9 @@ export type RouteMatchChildren =
     | React.ReactNode
     | ((...routeMatches: RouteMatches) => React.ReactNode)
 
-export interface RouteMatches extends Array<string> {
-}
+export type RouteMatches = Array<string>
 
 export interface RouteChildrenProps {
     className?: undefined | string
-    style?: undefined | CSSProperties
+    style?: undefined | React.CSSProperties
 }

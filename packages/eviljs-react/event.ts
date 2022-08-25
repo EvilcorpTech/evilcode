@@ -1,104 +1,95 @@
 import {debounce, Task, throttle} from '@eviljs/std/event.js'
 import {computeValue} from '@eviljs/std/fn.js'
-import {useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState} from 'react'
+import {useEffect, useMemo, useState} from 'react'
+import type {StateInit, StateSetter} from './state.js'
 
 export {debounce, throttle, type Task} from '@eviljs/std/event.js'
 
-export function useDebounce<A extends Array<unknown>>(task: Task<A>, delay: number) {
-    const taskDebounced = useMemo(() => {
-        return debounce(task, delay)
-    }, [task, delay])
+export function useCallbackDebounced<A extends Array<unknown>>(callback: Task<A>, delay: number) {
+    const callbackDebounced = useMemo(() => {
+        return debounce(callback, delay)
+    }, [callback, delay])
 
-    useLayoutEffect(() => {
+    useEffect(() => {
         function onClean() {
-            taskDebounced.cancel()
+            callbackDebounced.cancel()
         }
 
         return onClean
-    }, [taskDebounced])
+    }, [callbackDebounced])
 
-    return taskDebounced
+    return callbackDebounced
 }
 
-export function useThrottle<A extends Array<unknown>>(task: Task<A>, delay: number) {
-    const taskThrottled = useMemo(() => {
-        return throttle(task, delay)
-    }, [task, delay])
+export function useCallbackThrottled<A extends Array<unknown>>(callback: Task<A>, delay: number) {
+    const callbackThrottled = useMemo(() => {
+        return throttle(callback, delay)
+    }, [callback, delay])
 
-    useLayoutEffect(() => {
+    useEffect(() => {
         function onClean() {
-            taskThrottled.cancel()
+            callbackThrottled.cancel()
         }
 
         return onClean
-    }, [taskThrottled])
+    }, [callbackThrottled])
 
-    return taskThrottled
+    return callbackThrottled
 }
-
-
-export function useStateDebounced<T>(initialValue: undefined, delay: number): [undefined | T, React.Dispatch<React.SetStateAction<undefined | T>>]
-export function useStateDebounced<T>(initialValue: T, delay: number): [T, React.Dispatch<React.SetStateAction<T>>]
-export function useStateDebounced<T>(initialValue: undefined | T, delay: number): [undefined | T, React.Dispatch<React.SetStateAction<undefined | T>>] {
+export function useStateDebounced<T>(initialValue: undefined, delay: number): [undefined | T, StateSetter<undefined | T>]
+export function useStateDebounced<T>(initialValue: StateInit<T>, delay: number): [T, StateSetter<T>]
+export function useStateDebounced<T>(initialValue: undefined | T, delay: number): [undefined | T, StateSetter<undefined | T>] {
     const [value, setValue] = useState(initialValue)
-    const setValueDebounced = useDebounce(setValue, delay)
+    const setValueDebounced = useCallbackDebounced(setValue, delay)
 
     return [value, setValueDebounced]
 }
 
-export function useStateThrottled<T>(initialValue: undefined, delay: number): [undefined | T, React.Dispatch<React.SetStateAction<undefined | T>>]
-export function useStateThrottled<T>(initialValue: T, delay: number): [T, React.Dispatch<React.SetStateAction<T>>]
-export function useStateThrottled<T>(initialValue: undefined | T, delay: number): [undefined | T, React.Dispatch<React.SetStateAction<undefined | T>>] {
+export function useStateThrottled<T>(initialValue: undefined, delay: number): [undefined | T, StateSetter<undefined | T>]
+export function useStateThrottled<T>(initialValue: StateInit<T>, delay: number): [T, StateSetter<T>]
+export function useStateThrottled<T>(initialValue: undefined | StateInit<T>, delay: number): [undefined | T, StateSetter<undefined | T>] {
     const [value, setValue] = useState(initialValue)
-    const setValueThrottled = useThrottle(setValue, delay)
+    const setValueThrottled = useCallbackThrottled(setValue, delay)
 
     return [value, setValueThrottled]
 }
 
 /*
-* Defers changes, but it can give immediate priority to some specific values.
+* Debounces changes, but it can give immediate priority to some specific values.
+*
+* EXAMPLE
+*
+* const busyStable = usePipeDebounced(busyUnstable, 500, busy === true)
 */
-export function useStateDeferred<V>(
+export function usePipeDebounced<V>(
     input: V,
     delay: number,
-    hasPriority?: boolean | ((input: V) => boolean),
-): [V, (input: V) => void]
+    isDebounced?: undefined | boolean | ((state: V) => boolean),
+): V
  {
     const [output, setOutput] = useState(input)
-    const timeoutIdRef = useRef<ReturnType<typeof setTimeout>>()
-
-    const setOutputDeferred = useCallback((input: V) => {
-        if (timeoutIdRef.current) {
-            clearTimeout(timeoutIdRef.current)
-        }
-
-        timeoutIdRef.current = undefined
-
-        const valueHasPriority = computeValue(hasPriority, input) ?? false
-
-        if (valueHasPriority) {
-            setOutput(input)
-        }
-        else {
-            const timeoutId = setTimeout(() => setOutput(input), delay)
-
-            timeoutIdRef.current = timeoutId
-        }
-    }, [delay, hasPriority])
+    const debounceInput = computeValue(isDebounced, input) ?? true
 
     useEffect(() => {
-        setOutputDeferred(input)
-
-        const timeoutId = timeoutIdRef.current // Supports React >= 17 cleanup strategy.
+        const timeoutId = setTimeout(() => {
+            setOutput(input)
+        }, delay)
 
         function onClean() {
-            if (timeoutId) {
-                clearTimeout(timeoutId)
-            }
+            clearTimeout(timeoutId)
         }
 
         return onClean
     }, [input])
 
-    return [output, setOutputDeferred]
+    if (! debounceInput && input !== output) {
+        // We derive the state, forcing a re-render.
+        setOutput(input)
+    }
+
+    if (! debounceInput) {
+        return input
+    }
+
+    return output
 }

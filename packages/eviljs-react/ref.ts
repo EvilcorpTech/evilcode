@@ -18,3 +18,7 @@ export function mergeRefs(...refs: Array<undefined | Ref>) {
 // Types ///////////////////////////////////////////////////////////////////////
 
 export type Ref = React.Ref<any> | React.MutableRefObject<any>
+
+export interface RefProp<V = Element> {
+    onRef?: undefined | React.Ref<V>
+}

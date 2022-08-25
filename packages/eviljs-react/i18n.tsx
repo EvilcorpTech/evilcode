@@ -1,9 +1,8 @@
-import {createI18n, I18n as StdI18n, I18nMessages} from '@eviljs/std/i18n.js'
-import {createContext, useContext, useMemo, useState} from 'react'
+import {createI18n, I18n, I18nMessages} from '@eviljs/std/i18n.js'
+import {useContext, useMemo, useState} from 'react'
+import {defineContext} from './ctx.js'
 
-export const I18nContext = createContext<unknown>(undefined)
-
-I18nContext.displayName = 'I18nContext'
+export const I18nContext = defineContext<I18nManager>('I18nContext')
 
 /*
 * EXAMPLE
@@ -14,7 +13,7 @@ I18nContext.displayName = 'I18nContext'
 *
 * render(<Main/>, document.body)
 */
-export function WithI18n<P extends {}>(Child: React.ComponentType<P>, spec: I18n) {
+export function WithI18n<P extends {}>(Child: React.ComponentType<P>, spec: I18nManager) {
     function I18nProviderProxy(props: P) {
         return withI18n(<Child {...props}/>, spec)
     }
@@ -32,13 +31,13 @@ export function WithI18n<P extends {}>(Child: React.ComponentType<P>, spec: I18n
 *     return withI18n(<Children/>, i18n)
 * }
 */
-export function withI18n(children: React.ReactNode, spec: StdI18n) {
+export function withI18n(children: React.ReactNode, spec: I18n) {
     const [locale, setLocale] = useState(spec.locale)
     const [fallbackLocale, setFallbackLocale] = useState(spec.fallbackLocale)
     const [messages, setMessages] = useState(spec.messages)
 
     const i18n = useMemo(() => {
-        const self: I18n = {
+        const self: I18nManager = {
             ...createI18n({
                 locale: locale,
                 fallbackLocale: fallbackLocale,
@@ -95,15 +94,15 @@ export function I18nProvider(props: I18nProviderProps) {
     return withI18n(props.children, props.i18n)
 }
 
-export function useI18n<I extends I18n = I18n>() {
-    return useContext<I>(I18nContext as React.Context<I>)
+export function useI18n<T extends undefined | I18nManager = undefined | I18nManager>() {
+    return useContext(I18nContext) as T
 }
 
-export function useI18nMsg<I extends I18n, T extends {}>(
+export function useI18nMsg<I extends I18nManager, T extends {}>(
     compute: I18nMsgsComputer<I, T>,
     deps?: undefined | Array<unknown>,
 ) {
-    const i18n = useI18n<I>()
+    const i18n = useI18n() as I
     const {locale, fallbackLocale, messages} = i18n
 
     const i18nMsg = useMemo(() => {
@@ -120,14 +119,14 @@ export function useI18nMsg<I extends I18n, T extends {}>(
 
 export interface I18nProviderProps {
     children: React.ReactNode
-    i18n: I18n
+    i18n: I18nManager
 }
 
-export interface I18nMsgsComputer<I extends I18n, T extends {}> {
+export interface I18nMsgsComputer<I extends I18nManager, T extends {}> {
     (i18n: I): T
 }
 
-export interface I18n<L extends string = string, K extends string = string> extends StdI18n<L, K>, I18nSetters<L, K> {
+export interface I18nManager<L extends string = string, K extends string = string> extends I18n<L, K>, I18nSetters<L, K> {
 }
 
 export interface I18nSetters<L extends string = string, K extends string = string> {

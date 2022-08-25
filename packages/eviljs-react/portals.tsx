@@ -1,9 +1,10 @@
-import {createElement, createContext, useContext, useEffect, useRef, useState} from 'react'
+import {createElement, useContext, useEffect, useRef, useState} from 'react'
 import {createPortal} from 'react-dom'
+import type {Tag} from './box.js'
+import {defineContext} from './ctx.js'
+import type {StateManager} from './state.js'
 
-export const PortalsContext = createContext<[Portals, PortalsMutator]>([{}, () => void undefined])
-
-PortalsContext.displayName = 'PortalsContext'
+export const PortalsContext = defineContext<StateManager<Portals>>('PortalsContext')
 
 /*
 * EXAMPLE
@@ -78,7 +79,7 @@ export function withPortals(children: React.ReactNode) {
 export function Portal(props: PortalProps) {
     const {name, tag, ...otherProps} = props
     const portalRef = useRef<null | PortalElement>(null)
-    const [portals, setPortals] = useContext(PortalsContext)
+    const [portals, setPortals] = useContext(PortalsContext)!
 
     useEffect(() => {
         const el = portalRef.current
@@ -120,7 +121,7 @@ export function Portal(props: PortalProps) {
 */
 export function Teleport(props: TeleportProps) {
     const {to, children} = props
-    const [portals] = useContext(PortalsContext)
+    const [portals] = useContext(PortalsContext)!
     const portal = portals[to]
 
     if (! portal) {
@@ -135,14 +136,13 @@ export function Teleport(props: TeleportProps) {
 export type PortalElement = HTMLElement
 export type Portals = Record<PortalId, null | PortalElement>
 export type PortalId = PropertyKey
-export type PortalsMutator = React.Dispatch<React.SetStateAction<Portals>>
 
 export interface PortalsProviderProps {
     children?: undefined | React.ReactNode
 }
 
 export interface PortalProps extends React.HTMLAttributes<PortalElement> {
-    tag?: undefined | keyof React.ReactDOM
+    tag?: undefined | Tag
     name: PortalId
     [key: string]: unknown
 }

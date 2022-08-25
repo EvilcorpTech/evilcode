@@ -1,10 +1,10 @@
-import {createContext, useContext, useState} from 'react'
+import {useContext, useState} from 'react'
+import {defineContext} from './ctx.js'
+import type {StateManager} from './state.js'
 import {useRootStoreStorage as useCoreRootStoreStorage} from './store-storage.js'
-import {defaultOnMerge, StoreStorageOptions} from './store-v1.js'
+import {defaultMerge, StoreStorageOptions} from './store-v1.js'
 
-export const StoreV2Context = createContext<Store<any>>(void undefined as any)
-
-StoreV2Context.displayName = 'StoreV2Context'
+export const StoreV2Context = defineContext<Store<{}>>('StoreV2Context')
 
 /*
 * EXAMPLE
@@ -14,7 +14,7 @@ StoreV2Context.displayName = 'StoreV2Context'
 *
 * render(<Main/>, document.body)
 */
-export function WithStore<P extends {}, S>(Child: React.ComponentType<P>, spec: StoreSpec<S>) {
+export function WithStore<P extends {}>(Child: React.ComponentType<P>, spec: StoreSpec<{}>) {
     function StoreV2ProviderProxy(props: P) {
         return withStore(<Child {...props}/>, spec)
     }
@@ -31,7 +31,7 @@ export function WithStore<P extends {}, S>(Child: React.ComponentType<P>, spec: 
 *     return withStore(<Child/>, spec)
 * }
 */
-export function withStore<S>(children: React.ReactNode, spec: StoreSpec<S>) {
+export function withStore(children: React.ReactNode, spec: StoreSpec<{}>) {
     const store = useRootStore(spec)
 
     return (
@@ -54,18 +54,18 @@ export function withStore<S>(children: React.ReactNode, spec: StoreSpec<S>) {
 *     )
 * }
 */
-export function StoreProvider<S>(props: StoreProviderProps<S>) {
+export function StoreProvider(props: StoreProviderProps<{}>) {
     return withStore(props.children, props.spec)
 }
 
-export function useRootStore<S>(spec: StoreSpec<S>): Store<S> {
+export function useRootStore<S extends {}>(spec: StoreSpec<S>): Store<S> {
     const {createState} = spec
 
     return useState(createState)
 }
 
-export function useStore<S>() {
-    return useContext(StoreV2Context) as Store<S>
+export function useStore<S extends {}>() {
+    return useContext(StoreV2Context) as unknown as Store<S>
 }
 
 export function useRootStoreStorage<S extends {}, L extends {} = S>(options?: StoreStorageOptions<S, L>) {
@@ -77,7 +77,7 @@ export function useRootStoreStorage<S extends {}, L extends {} = S>(options?: St
         ...options,
         onLoad(savedState) {
             onLoad?.(savedState)
-            setState(state => onMerge?.(savedState, state) ?? defaultOnMerge(savedState, state))
+            setState(state => onMerge?.(savedState, state) ?? defaultMerge(savedState, state))
         },
     })
 }
@@ -89,8 +89,8 @@ export interface StoreProviderProps<S> {
     spec: StoreSpec<S>
 }
 
-export interface StoreSpec<S> {
+export interface StoreSpec<S extends {}> {
     createState(): S
 }
 
-export type Store<S> = [S, React.Dispatch<React.SetStateAction<S>>]
+export type Store<S extends {}> = StateManager<S>

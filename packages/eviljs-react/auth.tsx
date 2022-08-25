@@ -1,30 +1,28 @@
-import type {ValueOf} from '@eviljs/std/type.js'
 import {
-    authenticate,
-    invalidate,
-    validate,
     AuthCredentials,
+    authenticate,
     AuthenticateOptions,
+    invalidate,
     InvalidateOptions,
+    validate,
     ValidateOptions,
 } from '@eviljs/web/auth.js'
 import type {Cookie} from '@eviljs/web/cookie.js'
 import type {Fetch} from '@eviljs/web/fetch.js'
 import {throwInvalidResponse} from '@eviljs/web/throw.js'
-import {createContext, useCallback, useContext, useEffect, useMemo, useState} from 'react'
+import {useCallback, useContext, useEffect, useMemo, useState} from 'react'
 import {useBusyLock} from './busy.js'
+import {defineContext} from './ctx.js'
 
-export const AuthContext = createContext<unknown>(undefined)
+export const AuthContext = defineContext<Auth>('AuthContext')
 
-AuthContext.displayName = 'AuthContext'
-
-export const AuthTokenState = {
-    Init: undefined,
-    Missing: 0,
-    Validating: 1,
-    Valid: 2,
-    Invalid: -1,
-} as const
+export enum AuthTokenState {
+    Init = 'Initial',
+    Missing = 'Missing',
+    Validating = 'Validating',
+    Valid = 'Valid',
+    Invalid = 'Invalid',
+}
 
 /*
 * EXAMPLE
@@ -108,7 +106,7 @@ export function useRootAuth(fetch: Fetch, cookie: Cookie, options?: undefined | 
     const validateOptions = options?.validate
     const invalidateOptions = options?.invalidate
     const [token, setToken] = useState<undefined | string>(() => cookie.get()) // Reading document.cookie is slow.
-    const [tokenState, setTokenState] = useState<AuthTokenState>(AuthTokenState.Init)
+    const [tokenState, setTokenState] = useState(AuthTokenState.Init)
     const {busy, busyLock, busyRelease} = useBusyLock()
 
     useEffect(() => {
@@ -185,6 +183,7 @@ export function useRootAuth(fetch: Fetch, cookie: Cookie, options?: undefined | 
 
     const auth = useMemo(() => {
         const isAuthenticated = tokenState === AuthTokenState.Valid
+
         return {
             token: isAuthenticated
                 ? token
@@ -203,7 +202,7 @@ export function useRootAuth(fetch: Fetch, cookie: Cookie, options?: undefined | 
 }
 
 export function useAuth() {
-    return useContext<Auth>(AuthContext as React.Context<Auth>)
+    return useContext(AuthContext)
 }
 
 // Types ///////////////////////////////////////////////////////////////////////
@@ -215,11 +214,9 @@ export interface AuthProviderProps extends AuthOptions {
 }
 
 export interface AuthOptions {
-    authenticate?: AuthenticateOptions
-    invalidate?: InvalidateOptions
-    validate?: ValidateOptions
+    authenticate?: undefined | AuthenticateOptions
+    invalidate?: undefined | InvalidateOptions
+    validate?: undefined | ValidateOptions
 }
 
 export type Auth = ReturnType<typeof useRootAuth>
-
-export type AuthTokenState = ValueOf<typeof AuthTokenState>

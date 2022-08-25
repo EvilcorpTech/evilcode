@@ -1,9 +1,8 @@
 import type {Container} from '@eviljs/std/container.js'
-import {createContext, useContext} from 'react'
+import {useContext} from 'react'
+import {defineContext} from './ctx.js'
 
-export const ContainerContext = createContext<unknown>(undefined)
-
-ContainerContext.displayName = 'ContainerContext'
+export const ContainerContext = defineContext<Container>('ContainerContext')
 
 /*
 * EXAMPLE
@@ -58,8 +57,8 @@ export function ContainerProvider(props: ContainerProviderProps) {
     return withContainer(props.children, props.container)
 }
 
-export function useContainer<T = Container>() {
-    return useContext<T>(ContainerContext as React.Context<T>)
+export function useContainer<T extends undefined | Container = undefined | Container>() {
+    return useContext(ContainerContext) as T
 }
 
 // Types ///////////////////////////////////////////////////////////////////////
