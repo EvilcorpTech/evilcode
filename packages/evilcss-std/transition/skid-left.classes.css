@@ -1,0 +1,24 @@
+.std-transition-skid-left.exit-from {
+    opacity: 1;
+    transform: translateX(0px);
+}
+.std-transition-skid-left.exit-to {
+    opacity: 0;
+    transform: translateX(-100%);
+    transition:
+        opacity var(--exit-duration, var(--std-duration2)),
+        transform var(--exit-duration, var(--std-duration2))
+    ;
+}
+.std-transition-skid-left.enter-from {
+    opacity: 0;
+    transform: translateX(100%);
+}
+.std-transition-skid-left.enter-to {
+    opacity: 1;
+    transform: translateX(0%);
+    transition:
+        opacity var(--enter-duration, var(--std-duration4)),
+        transform var(--enter-duration, var(--std-duration4))
+    ;
+}

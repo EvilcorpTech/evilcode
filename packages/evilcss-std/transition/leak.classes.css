@@ -1,0 +1,24 @@
+.std-transition-leak.exit-from {
+    opacity: 1;
+    transform: translateY(0px);
+}
+.std-transition-leak.exit-to {
+    opacity: 0;
+    transform: translateY(100%);
+    transition:
+        opacity var(--exit-duration, var(--std-duration2)),
+        transform var(--exit-duration, var(--std-duration2))
+    ;
+}
+.std-transition-leak.enter-from {
+    opacity: 0;
+    transform: translateY(-100%);
+}
+.std-transition-leak.enter-to {
+    opacity: 1;
+    transform: translateY(0%);
+    transition:
+        opacity var(--enter-duration, var(--std-duration4)),
+        transform var(--enter-duration, var(--std-duration4))
+    ;
+}

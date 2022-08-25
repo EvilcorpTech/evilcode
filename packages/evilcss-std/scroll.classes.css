@@ -1,0 +1,16 @@
+.std-scroll {
+    overflow-x: auto;
+    overflow-y: auto;
+}
+.std-scroll-x {
+    overflow-x: auto;
+    overflow-y: hidden;
+}
+.std-scroll-y {
+    overflow-x: hidden;
+    overflow-y: auto;
+}
+
+.std-scroll-contain {
+    overscroll-behavior: contain;
+}
