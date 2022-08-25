@@ -9,7 +9,25 @@
 @import '@evilcss/std/button/plain.css';
 @import '@evilcss/std/color-icon.props.css';
 @import '@evilcss/std/color/action.props.css';
-@import '@evilcss/std/color/material.props.css';
+@import '@evilcss/std/color/material/amber.props.css';
+@import '@evilcss/std/color/material/blue-light.props.css';
+@import '@evilcss/std/color/material/blue.props.css';
+@import '@evilcss/std/color/material/brown.props.css';
+@import '@evilcss/std/color/material/cyan.props.css';
+@import '@evilcss/std/color/material/green-light.props.css';
+@import '@evilcss/std/color/material/green.props.css';
+@import '@evilcss/std/color/material/grey-blue.props.css';
+@import '@evilcss/std/color/material/grey.props.css';
+@import '@evilcss/std/color/material/indigo.props.css';
+@import '@evilcss/std/color/material/lime.props.css';
+@import '@evilcss/std/color/material/orange-deep.props.css';
+@import '@evilcss/std/color/material/orange.props.css';
+@import '@evilcss/std/color/material/pink.props.css';
+@import '@evilcss/std/color/material/purple-deep.props.css';
+@import '@evilcss/std/color/material/purple.props.css';
+@import '@evilcss/std/color/material/red.props.css';
+@import '@evilcss/std/color/material/teal.props.css';
+@import '@evilcss/std/color/material/yellow.props.css';
 @import '@evilcss/std/color/primary.classes.css';
 @import '@evilcss/std/color/primary.props.css';
 @import '@evilcss/std/color/secondary.classes.css';
@@ -56,6 +74,7 @@
 @import '@evilcss/std/reset/with-font-strong.css';
 @import '@evilcss/std/reset/with-list-style-none.css';
 @import '@evilcss/std/reset/with-user-select-none.css';
+@import '@evilcss/std/scroll.classes.css';
 @import '@evilcss/std/scrollbar.classes.css';
 @import '@evilcss/std/shadow.classes.css';
 @import '@evilcss/std/shadow.props.css';
@@ -77,8 +96,18 @@
 @import '@evilcss/std/text-weight-scale/default.props.css';
 @import '@evilcss/std/text-weight.classes.css';
 @import '@evilcss/std/text.classes.css';
+@import '@evilcss/std/transition/fade.classes.css';
+@import '@evilcss/std/transition/leak.classes.css';
+@import '@evilcss/std/transition/none.classes.css';
+@import '@evilcss/std/transition/skid-left.classes.css';
+@import '@evilcss/std/transition/zoom.classes.css';
 @import '@evilcss/std/viewport.classes.css';
 @import '@evilcss/std/viewport.props.css';
+
+@import '@eviljs/reactx/checkbox-mark/shape.css';
+@import '@eviljs/reactx/input/floating-theme.css';
+@import '@eviljs/reactx/range/theme.css';
+@import '@eviljs/reactx/transition-animator/layer.css';
 
 /*
 #App {

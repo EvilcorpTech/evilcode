@@ -9,8 +9,8 @@ import './auth-view.css'
 
 export function AuthView(props: AuthViewProps) {
     const {className, ...otherProps} = props
-    const {tokenState} = useAuth()
-    const {routeParams} = useRouter()
+    const {tokenState} = useAuth()!
+    const {routeParams} = useRouter()!
     const redirectPath = routeParams.redirect ?? '/'
 
     const msg = useI18nMsg(({ t }) => ({

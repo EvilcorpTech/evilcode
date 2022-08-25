@@ -1,9 +1,9 @@
 import {defineShowcase} from '@eviljs/reactx/showcase'
 import {Transition} from '@eviljs/reactx/transition'
-import {TransitionAnimator} from '@eviljs/reactx/transition-animator'
+import {TransitionAnimator, TransitionEffect} from '@eviljs/reactx/transition-animator'
 import {CSSProperties, useEffect, useState} from 'react'
 
-export default defineShowcase('Transition', (props) => {
+export default defineShowcase('Transition', props => {
     return (
         <div className="std-flex align-start wrap gap5">
             <Starter>
@@ -12,7 +12,7 @@ export default defineShowcase('Transition', (props) => {
                         <TransitionAnimator
                             key={String(start)}
                             className="animator-0cbf"
-                            effect="fade"
+                            effect={TransitionEffect.Fade}
                         >
                             <h6 className="std-uppercase">
                                 out-in enter+exit initial
@@ -36,7 +36,7 @@ export default defineShowcase('Transition', (props) => {
                         <TransitionAnimator
                             key={String(start)}
                             className="animator-0cbf"
-                            effect="fade"
+                            effect={TransitionEffect.Fade}
                         >
                             <h6 className="std-uppercase">
                                 in-out enter+exit initial
@@ -60,7 +60,7 @@ export default defineShowcase('Transition', (props) => {
                         <TransitionAnimator
                             key={String(start)}
                             className="animator-0cbf std-layer"
-                            effect="fade"
+                            effect={TransitionEffect.Fade}
                         >
                             <h6 className="std-uppercase">
                                 cross enter+exit initial

@@ -1,4 +1,4 @@
-import type {Container as ContainerStd} from '@eviljs/std/container'
+import type {Container as StdContainer} from '@eviljs/std/container'
 import {createI18n} from '@eviljs/std/i18n'
 import {createConsoleLog, createLogger} from '@eviljs/std/logger'
 import {createCookie} from '@eviljs/web/cookie'
@@ -40,4 +40,4 @@ export const ContainerSpec = {
 
 // Types ///////////////////////////////////////////////////////////////////////
 
-export type Container = ContainerStd<typeof ContainerSpec.services>
+export type Container = StdContainer<typeof ContainerSpec.services>

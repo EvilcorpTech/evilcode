@@ -9,7 +9,7 @@ import './admin-view.css'
 
 export function AdminView(props: AdminViewProps) {
     const {className, ...otherProps} = props
-    const {destroySession} = useAuth()
+    const {destroySession} = useAuth()!
 
 
     const msg = useI18nMsg(({ t }) => {
