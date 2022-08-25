@@ -1,4 +1,4 @@
-export function saveSsrState(id: string, payload: any, options?: undefined | SsrOptions) {
+export function saveSsrState(id: string, payload: unknown, options?: undefined | SsrOptions) {
     if (! payload) {
         return
     }
@@ -39,5 +39,5 @@ export function injectSsrStorageElement(id: string) {
 // Types ///////////////////////////////////////////////////////////////////////
 
 export interface SsrOptions {
-    inject?(id: string): Element
+    inject?: undefined | ((id: string) => Element)
 }
