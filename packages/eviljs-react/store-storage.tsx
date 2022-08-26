@@ -111,7 +111,7 @@ export function loadJsonFromStorage(storage: Storage, key: string) {
 
 // Types ///////////////////////////////////////////////////////////////////////
 
-export interface StoreStorageOptions<S extends {}, L extends {}> {
+export interface StoreStorageOptions<S, L> {
     debounce?: undefined | number
     stateVersion?: undefined | number | string
     storage?: undefined | Storage

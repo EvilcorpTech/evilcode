@@ -3,11 +3,11 @@ import {isArray, isObject} from '@eviljs/std/type.js'
 import {useCallback, useContext, useLayoutEffect, useMemo, useRef} from 'react'
 import {defineContext} from './ctx.js'
 import {useRender} from './lifecycle.js'
+import type {StateManager} from './state.js'
 import {useRootStoreStorage as useCoreRootStoreStorage} from './store-storage.js'
 import {defaultMerge, StoreStorageOptions} from './store-v1.js'
-import type {Store as StoreV2} from './store-v2.js'
 
-export const StoreContext = defineContext<StoreManager<StoreStateGeneric>>('StoreContext')
+export const StoreContext = defineContext<Store<StoreStateGeneric>>('StoreContext')
 
 /*
 * EXAMPLE
@@ -61,7 +61,7 @@ export function StoreProvider(props: StoreProviderProps<StoreStateGeneric>) {
     return withStore(props.children, props.spec)
 }
 
-export function useRootStore<S extends StoreStateGeneric>(spec: StoreSpec<S>): StoreManager<S> {
+export function useRootStore<S extends StoreStateGeneric>(spec: StoreSpec<S>): Store<S> {
     const {createState} = spec
     const stateRef = useRef(createState())
     const storeObservers = useMemo(() =>
@@ -130,7 +130,7 @@ export function useRootStore<S extends StoreStateGeneric>(spec: StoreSpec<S>): S
 }
 
 export function useStoreContext<S extends StoreStateGeneric>() {
-    return useContext(StoreContext) as StoreManager<S>
+    return useContext(StoreContext) as Store<S>
 }
 
 /*
@@ -140,9 +140,9 @@ export function useStoreContext<S extends StoreStateGeneric>() {
 * const [selectedFoodIndex, setSelectedFoodIndex] = useStoreState(state => state.selectedFoodIndex)
 * const [selectedFood, setSelectedFood] = useStoreState(state => state.food[selectedFoodIndex], [selectedFoodIndex])
 */
-export function useStoreState<S extends StoreStateGeneric, V>(selectorOptional: StoreSelector<S, V>, deps?: undefined | Array<unknown>): Store<V>
-export function useStoreState<S extends StoreStateGeneric>(): Store<S>
-export function useStoreState<S extends StoreStateGeneric, V>(selectorOptional?: undefined | StoreSelector<S, V>, deps?: undefined | Array<unknown>): Store<V> {
+export function useStoreState<S extends StoreStateGeneric, V>(selectorOptional: StoreSelector<S, V>, deps?: undefined | Array<unknown>): StateManager<V>
+export function useStoreState<S extends StoreStateGeneric>(): StateManager<S>
+export function useStoreState<S extends StoreStateGeneric, V>(selectorOptional?: undefined | StoreSelector<S, V>, deps?: undefined | Array<unknown>): StateManager<V> {
     const selector = (selectorOptional ?? defaultSelector) as StoreSelector<StoreStateGeneric, unknown>
     const store = useStoreContext<S>()
     const state = store.stateRef.current
@@ -334,31 +334,28 @@ export function asPathId(path: StatePath) {
 
 // Types ///////////////////////////////////////////////////////////////////////
 
-export interface StoreProviderProps<S> {
+export interface StoreProviderProps<S extends StoreStateGeneric> {
     children: React.ReactNode
     spec: StoreSpec<S>
 }
 
-export interface StoreSpec<S> {
+export interface StoreSpec<S extends StoreStateGeneric> {
     createState(): S
 }
 
-export interface StoreManager<S extends StoreStateGeneric> {
+export interface Store<S extends StoreStateGeneric> {
     stateRef: React.MutableRefObject<S>
     state(): S
     observe(path: StatePath, observer: ChangeObserver): Unobserve
     mutate<V>(path: StatePath, value: React.SetStateAction<V>): void
 }
 
-export interface Store<S> extends StoreV2<S> {
-}
+export type StoreStateGeneric = {} | Array<unknown>
+export type StatePath = Array<PropertyKey>
 
 export interface StoreSelector<S extends StoreStateGeneric, V> {
     (state: S): V
 }
-
-export type StoreStateGeneric = {} | Array<unknown>
-export type StatePath = Array<PropertyKey>
 
 export interface ChangeObserver {
     (): void

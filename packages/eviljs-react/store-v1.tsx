@@ -6,7 +6,7 @@ import {
     StoreStorageOptions as CoreStoreStorageOptions,
 } from './store-storage.js'
 
-export const StoreV1Context = defineContext<Store<{}, StoreActions<{}>>>('StoreV1Context')
+export const StoreV1Context = defineContext<Store<StoreStateGeneric, StoreActions<StoreStateGeneric>>>('StoreV1Context')
 export const StoreSetAction = 'set'
 export const StoreResetAction = 'reset'
 
@@ -23,7 +23,7 @@ export const StoreDefaultActions = {
 *
 * render(<Main/>, document.body)
 */
-export function WithStore<P extends {}, S extends {}, A extends StoreActions<S>>(Child: React.ComponentType<P>, spec: StoreSpec<S, A>) {
+export function WithStore<P extends {}, S extends StoreStateGeneric, A extends StoreActions<S>>(Child: React.ComponentType<P>, spec: StoreSpec<S, A>) {
     function StoreV1ProviderProxy(props: P) {
         return withStore(<Child {...props}/>, spec)
     }
@@ -40,7 +40,7 @@ export function WithStore<P extends {}, S extends {}, A extends StoreActions<S>>
 *     return withStore(<Child/>, spec)
 * }
 */
-export function withStore<S extends {}, A extends StoreActions<S>>(children: React.ReactNode, spec: StoreSpec<S, A>) {
+export function withStore<S extends StoreStateGeneric, A extends StoreActions<S>>(children: React.ReactNode, spec: StoreSpec<S, A>) {
     const store = useRootStore(spec)
 
     return (
@@ -63,11 +63,11 @@ export function withStore<S extends {}, A extends StoreActions<S>>(children: Rea
 *     )
 * }
 */
-export function StoreProvider<S extends {}, A extends StoreActions<S>>(props: StoreProviderProps<S, A>) {
+export function StoreProvider<S extends StoreStateGeneric, A extends StoreActions<S>>(props: StoreProviderProps<S, A>) {
     return withStore(props.children, props.spec)
 }
 
-export function useRootStore<S extends {}, A extends StoreActions<S>>(spec: StoreSpec<S, A>) {
+export function useRootStore<S extends StoreStateGeneric, A extends StoreActions<S>>(spec: StoreSpec<S, A>) {
     const {createState} = spec
     const actions = {
         ...StoreDefaultActions,
@@ -103,11 +103,11 @@ export function useRootStore<S extends {}, A extends StoreActions<S>>(spec: Stor
     return store as Store<S, A>
 }
 
-export function useStore<S extends {}, A extends StoreActions<S>>() {
+export function useStore<S extends StoreStateGeneric, A extends StoreActions<S>>() {
     return useContext(StoreV1Context) as Store<S, A>
 }
 
-export function useRootStoreStorage<S extends {}, L extends {} = S>(options?: undefined | StoreStorageOptions<S, L>) {
+export function useRootStoreStorage<S extends StoreStateGeneric, L extends StoreStateGeneric = S>(options?: undefined | StoreStorageOptions<S, L>) {
     const onLoad = options?.onLoad
     const onMerge = options?.onMerge
     const {state, commit} = useStore<S, StoreDefaultActions<S>>()
@@ -123,7 +123,7 @@ export function useRootStoreStorage<S extends {}, L extends {} = S>(options?: un
     })
 }
 
-export function setAction<S extends {}>(state: S, value: StoreSetStateAction<S>): S {
+export function setAction<S extends StoreStateGeneric>(state: S, value: StoreSetStateAction<S>): S {
     return {
         ...state, // Old state.
         ...isFunction(value)
@@ -133,7 +133,7 @@ export function setAction<S extends {}>(state: S, value: StoreSetStateAction<S>)
     }
 }
 
-export function resetAction<S extends {}>(state: S, value: React.SetStateAction<S>): S {
+export function resetAction<S extends StoreStateGeneric>(state: S, value: React.SetStateAction<S>): S {
     return (
         isFunction(value)
             ? value(state) // New computed state.
@@ -141,7 +141,7 @@ export function resetAction<S extends {}>(state: S, value: React.SetStateAction<
     )
 }
 
-export function defaultMerge<S extends {}, L extends {} = S>(savedState: L, state: S): S {
+export function defaultMerge<S extends StoreStateGeneric, L extends StoreStateGeneric = S>(savedState: L, state: S): S {
     // Shallow merge.
     // Saved state from LocalStorage overwrites current state.
     return {...state, ...savedState}
@@ -149,18 +149,18 @@ export function defaultMerge<S extends {}, L extends {} = S>(savedState: L, stat
 
 // Types ///////////////////////////////////////////////////////////////////////
 
-export interface StoreProviderProps<S extends {}, A extends StoreActions<S>> {
+export interface StoreProviderProps<S extends StoreStateGeneric, A extends StoreActions<S>> {
     children: React.ReactNode
     spec: StoreSpec<S, A>
 }
 
-export interface StoreSpec<S extends {}, A extends StoreActions<S>> {
+export interface StoreSpec<S extends StoreStateGeneric, A extends StoreActions<S>> {
     actions: A
     createState(): S
     listener?: undefined | ((action: StoreActionsOf<S, A>, oldState: S) => void)
 }
 
-export interface Store<S extends {}, A extends StoreActions<S>> {
+export interface Store<S extends StoreStateGeneric, A extends StoreActions<S>> {
     state: S
     commit: React.Dispatch<
         | StoreActionsOf<S, StoreDefaultActions<S>>
@@ -168,7 +168,9 @@ export interface Store<S extends {}, A extends StoreActions<S>> {
     >
 }
 
-export interface StoreActions<S extends {}> {
+export type StoreStateGeneric = {}
+
+export interface StoreActions<S extends StoreStateGeneric> {
     [key: string]: React.Reducer<S, any>
 }
 
@@ -177,24 +179,24 @@ export interface StoreAction<V> {
     value: V
 }
 
-export type StoreSetStateAction<S extends {}> = Partial<S> | ((prevState: S) => Partial<S>)
+export type StoreSetStateAction<S extends StoreStateGeneric> = Partial<S> | ((prevState: S) => Partial<S>)
 
-export type StoreDefaultActions<S extends {}> = {
+export type StoreDefaultActions<S extends StoreStateGeneric> = {
     [StoreSetAction](state: S, value: StoreSetStateAction<S>): S
     [StoreResetAction](state: S, value: React.SetStateAction<S>): S
 }
 
-export type StoreActionsOf<S extends {}, A extends StoreActions<S>> = ValueOf<{
+export type StoreActionsOf<S extends StoreStateGeneric, A extends StoreActions<S>> = ValueOf<{
     [key in keyof A]: {
         type: key
         value: Parameters<A[key]>[1]
     }
 }>
 
-export interface StoreStorageOptions<S extends {}, L extends {} = S> extends Partial<CoreStoreStorageOptions<S, L>> {
+export interface StoreStorageOptions<S extends StoreStateGeneric, L extends StoreStateGeneric = S> extends Partial<CoreStoreStorageOptions<S, L>> {
     onMerge?: undefined | StoreStorageOnLoad<S, L>
 }
 
-export interface StoreStorageOnLoad<S extends {}, L extends {} = S> {
+export interface StoreStorageOnLoad<S extends StoreStateGeneric, L extends StoreStateGeneric = S> {
     (savedState: L, state: S): S
 }
