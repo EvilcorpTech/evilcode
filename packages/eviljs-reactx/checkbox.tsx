@@ -26,7 +26,9 @@ export function Checkbox(props: CheckboxProps) {
                 : undefined
             }
         >
-            {isValidElement(children) && cloneElement(children, {checked})}
+            {isValidElement<any>(children) &&
+                cloneElement(children, {checked})
+            }
         </button>
     )
 }
