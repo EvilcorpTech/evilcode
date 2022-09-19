@@ -175,7 +175,7 @@ export function asDate(value: unknown): undefined | Date {
 
 // Types ///////////////////////////////////////////////////////////////////////
 
-export type Nil = void | undefined | null
+export type Nil = undefined | null
 
 export type ValueOf<T> = T[keyof T]
 

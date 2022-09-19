@@ -8,7 +8,7 @@ export function withoutNil<I>(list: Array<Nil | I>): Array<I> {
     return list.filter(isNotNil)
 }
 
-export function mapWith<I>(mapItem: (it: I, idx: number) => I) {
+export function mapWith<I, R>(mapItem: (it: I, idx: number) => R) {
     function mapList(list: Array<I>) {
         return list.map(mapItem)
     }
