@@ -43,7 +43,7 @@
         "inspectpack": "^4",
         "mini-css-extract-plugin": "^2",
         "postcss": "^8",
-        "postcss-import": "^14",
+        "postcss-import": "^15",
         "postcss-inset": "^1",
         "postcss-loader": "^7",
         "postcss-preset-env": "^7",
