@@ -26,10 +26,10 @@ export function applyStyles(...elements: Array<HTMLElement>) {
     }
 }
 
-export function playCssTransition
-    <T extends HTMLElement, S1 = void, S2 = void>
-    (target: T, hooks: AnimationCssHooks<T, S1, S2>)
-{
+export function playCssTransition<T extends HTMLElement, S1 = void, S2 = void>(
+    target: T,
+    hooks: AnimationCssHooks<T, S1, S2>,
+) {
     const setupReturn = hooks.setup?.(target)
 
     if (hooks.setup) {
@@ -54,10 +54,10 @@ export function playCssTransition
     return promise
 }
 
-export function createCssTransition
-    <S1, S2, T extends HTMLElement>
-    (target: T, hooks: AnimationCssHooks<T, S1, S2>)
-{
+export function createCssTransition<S1, S2, T extends HTMLElement>(
+    target: T,
+    hooks: AnimationCssHooks<T, S1, S2>,
+) {
     function play() {
         return playCssTransition(target, hooks)
     }
@@ -115,7 +115,7 @@ export function createSpringAnimation(options: SpringAnimationOptions) {
     return play
 }
 
-export function createSpringScaleAnimation(finalScale: number, initialScale = 1, options?: Partial<SpringAnimationOptions>) {
+export function createSpringScaleAnimation(finalScale: number, initialScale = 1, options?: undefined | Partial<SpringAnimationOptions>) {
     const animationDistance = options?.distance ?? SpringScaleDistance
     const scaleDistance = distanceBetween(initialScale, finalScale)
     const scaleDirection = directionOf(initialScale, finalScale)
@@ -202,23 +202,23 @@ export function scheduleAnimationTask(task: Function) {
 // Types ///////////////////////////////////////////////////////////////////////
 
 export interface AnimationCssHooks<T extends HTMLElement, S1, S2 = S1> {
-    setup?(target: T): S1
-    play(target: T, state: S1): S2
-    clean?(target: T, state: S2): void
+    setup?: undefined | ((target: T) => S1)
+    play: (target: T, state: S1) => S2
+    clean?: undefined | ((target: T, state: S2) => void)
 }
 
 export interface SpringOptions {
-    damping?: number
-    distance?: number
-    mass?: number
-    precision?: number
-    stiffness?: number
+    damping?: undefined | number
+    distance?: undefined | number
+    mass?: undefined | number
+    precision?: undefined | number
+    stiffness?: undefined | number
 }
 
 export interface SpringAnimationOptions extends SpringOptions {
-    snapping?: number
-    onTick(position: number, tick: number): void
-    onEnd?(): void
-    onCancel?(): void
-    onFinally?(): void
+    snapping?: undefined | number
+    onTick: (position: number, tick: number) => void
+    onEnd?: undefined | (() => void)
+    onCancel?: undefined | (() => void)
+    onFinally?: undefined | (() => void)
 }

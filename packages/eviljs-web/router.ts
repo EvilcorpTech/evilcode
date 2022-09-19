@@ -2,7 +2,7 @@ import {encodeParams, defaultEncodeParamValue} from '@eviljs/std/query.js'
 import {isString} from '@eviljs/std/type.js'
 import {asBaseUrl} from './url.js'
 
-export function createRouter<S>(observer: RouterObserver, options?: RouterOptions): Router<S> {
+export function createRouter<S>(observer: RouterObserver, options?: undefined | RouterOptions): Router<S> {
     const type = options?.type ?? 'hash'
 
     switch (type) {
@@ -15,7 +15,7 @@ export function createRouter<S>(observer: RouterObserver, options?: RouterOption
     }
 }
 
-export function createHashRouter<S>(observer: RouterObserver, options?: RouterBaseOptions): Router<S> {
+export function createHashRouter<S>(observer: RouterObserver, options?: undefined | RouterBaseOptions): Router<S> {
     const self = {
         start() {
             window.addEventListener('hashchange', onRouteChange)
@@ -34,7 +34,7 @@ export function createHashRouter<S>(observer: RouterObserver, options?: RouterBa
 
             return {path, params, state}
         },
-        routeTo(path: string, params?: RouterParams, state?: S) {
+        routeTo(path: string, params?: undefined | RouterParams, state?: undefined | S) {
             const serializedRoute = self.link(path, params)
 
             // Algorithm 1:
@@ -44,12 +44,12 @@ export function createHashRouter<S>(observer: RouterObserver, options?: RouterBa
             // window.location.hash = serializedRoute
             // self.start()
         },
-        replaceRoute(path: string, params?: RouterParams, state?: S) {
+        replaceRoute(path: string, params?: undefined | RouterParams, state?: undefined | S) {
             const serializedRoute = self.link(path, params)
 
             history.replaceState(state, '', serializedRoute)
         },
-        link(path: string, params?: RouterParams) {
+        link(path: string, params?: undefined | RouterParams) {
             return '#' + serializeRouteToString(path, params)
         },
     }
@@ -63,7 +63,7 @@ export function createHashRouter<S>(observer: RouterObserver, options?: RouterBa
     return self
 }
 
-export function createPathRouter<S>(observer: RouterObserver, options?: RouterBaseOptions): Router<S> {
+export function createPathRouter<S>(observer: RouterObserver, options?: undefined | RouterBaseOptions): Router<S> {
     const basePath = asBaseUrl(options?.basePath)
 
     const self = {
@@ -83,17 +83,17 @@ export function createPathRouter<S>(observer: RouterObserver, options?: RouterBa
 
             return {path, params, state}
         },
-        routeTo(path: string, params?: RouterParams, state?: S) {
+        routeTo(path: string, params?: undefined | RouterParams, state?: undefined | S) {
             const serializedRoute = self.link(path, params)
 
             history.pushState(state, '', serializedRoute)
         },
-        replaceRoute(path: string, params?: RouterParams, state?: S) {
+        replaceRoute(path: string, params?: undefined | RouterParams, state?: undefined | S) {
             const serializedRoute = self.link(path, params)
 
             history.replaceState(state, '', serializedRoute)
         },
-        link(path: string, params?: RouterParams) {
+        link(path: string, params?: undefined | RouterParams) {
             return serializeRouteToString(basePath + path, params)
         },
     }
@@ -107,7 +107,7 @@ export function createPathRouter<S>(observer: RouterObserver, options?: RouterBa
     return self
 }
 
-export function createMemoryRouter<S>(observer: RouterObserver, options?: RouterBaseOptions): Router<S> {
+export function createMemoryRouter<S>(observer: RouterObserver, options?: undefined | RouterBaseOptions): Router<S> {
     let routePath = options?.initMemory ?? '/'
     let routeSearch = ''
     let routeState: S | null | undefined = null
@@ -122,15 +122,15 @@ export function createMemoryRouter<S>(observer: RouterObserver, options?: Router
 
             return {path, params, state}
         },
-        routeTo(path: string, params?: RouterParams, state?: S) {
+        routeTo(path: string, params?: undefined | RouterParams, state?: undefined | S) {
             routePath = path
             routeSearch = encodeParams(params)
             routeState = state
         },
-        replaceRoute(path: string, params?: RouterParams, state?: S) {
+        replaceRoute(path: string, params?: undefined | RouterParams, state?: undefined | S) {
             self.routeTo(path, params, state)
         },
-        link(path: string, params?: RouterParams) {
+        link(path: string, params?: undefined | RouterParams) {
             return serializeRouteToString(path, params)
         },
     }
@@ -138,7 +138,7 @@ export function createMemoryRouter<S>(observer: RouterObserver, options?: Router
     return self
 }
 
-export function serializeRouteToString(path: string, params?: RouterParams) {
+export function serializeRouteToString(path: string, params?: undefined | RouterParams) {
     const encodedParams = encodeParams(params, {encodeValue: defaultRouteEncodeParamValue})
     const serializedParams = encodedParams
         ? '?' + encodedParams
@@ -193,9 +193,9 @@ export interface Router<S = any> {
     route: {path: string, params: RouterRouteParams, state: S | null | undefined}
     start(): void
     stop(): void
-    routeTo(path: string, params?: RouterParams, state?: S): void
-    replaceRoute(path: string, params?: RouterParams, state?: S): void
-    link(path: string, params?: RouterParams): string
+    routeTo(path: string, params?: undefined | RouterParams, state?: undefined | S): void
+    replaceRoute(path: string, params?: undefined | RouterParams, state?: undefined | S): void
+    link(path: string, params?: undefined | RouterParams): string
 }
 
 export interface RouterObserver<S = any> {
@@ -203,12 +203,12 @@ export interface RouterObserver<S = any> {
 }
 
 export interface RouterBaseOptions {
-    basePath?: string
-    initMemory?: string
+    basePath?: undefined | string
+    initMemory?: undefined | string
 }
 
 export interface RouterOptions extends RouterBaseOptions {
-    type?: 'hash' | 'path' | 'memory'
+    type?: undefined | 'hash' | 'path' | 'memory'
 }
 
 export type RouterParams =

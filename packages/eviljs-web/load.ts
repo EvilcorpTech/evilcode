@@ -1,4 +1,4 @@
-export function loadScript(url: string, options?: LoadScriptOptions): Promise<HTMLScriptElement> {
+export function loadScript(url: string, options?: undefined | LoadScriptOptions): Promise<HTMLScriptElement> {
     const root = options?.root ?? document.head
     const clean = options?.clean ?? false
     const scriptSelector = `script[src="${url}"]`
