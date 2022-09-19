@@ -3,7 +3,7 @@ import {escapeRegexp} from '@eviljs/std/regexp.js'
 import {asArray, isPromise, Nil} from '@eviljs/std/type.js'
 import {compilePattern, exact, regexpFromPattern} from '@eviljs/web/route.js'
 import {createRouter, serializeRouteToString, RouterOptions, RouterParams, RouterRouteParams} from '@eviljs/web/router.js'
-import {Fragment, useCallback, useContext, useEffect, useMemo, useRef, useState} from 'react'
+import {forwardRef, Fragment, useCallback, useContext, useEffect, useMemo, useRef, useState} from 'react'
 import {classes} from './classes.js'
 import {defineContext} from './ctx.js'
 
@@ -358,14 +358,16 @@ export function WhenRoute(props: WhenRouteProps) {
 *     <button>Click</button>
 * </Route>`
 */
-export function Route(props: RouteProps) {
+export const Route = forwardRef(function Route(
+    props: RouteProps,
+    ref?: undefined | React.Ref<HTMLAnchorElement>,
+) {
     const {
         activeClass,
         activeProps,
         activeWhenExact,
         children,
         className,
-        elRef,
         if: guard,
         params,
         replace,
@@ -430,7 +432,7 @@ export function Route(props: RouteProps) {
         <a
             onClick={onClick} // It should be possible to change the onClick behavior.
             {...otherProps}
-            ref={elRef}
+            ref={ref}
             className={classes(className, {
                 [activeClasses]: isActive,
             })}
@@ -442,7 +444,7 @@ export function Route(props: RouteProps) {
             {children}
         </a>
     )
-}
+})
 
 export function Link(props: LinkProps) {
     const {children, className, to, params, state, ...otherProps} = props
@@ -546,7 +548,6 @@ export interface RouteProps extends React.AnchorHTMLAttributes<HTMLAnchorElement
     activeProps?: undefined | {className?: undefined | string}
     activeWhenExact?: undefined | boolean
     children?: undefined | React.ReactNode
-    elRef?: undefined | React.Ref<HTMLAnchorElement>
     if?: undefined | ComputableValue<RouteGuardResult>
     params?: undefined | RouterParams
     replace?: undefined | boolean

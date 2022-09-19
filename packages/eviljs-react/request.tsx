@@ -1,3 +1,4 @@
+import {isDefined} from '@eviljs/std/type.js'
 import {useCallback, useContext, useRef, useState} from 'react'
 import {defineContext} from './ctx.js'
 
@@ -55,7 +56,7 @@ export function RequestProvider(props: RequestProviderProps) {
     return withRequest(props.children, props.value)
 }
 
-export function useRequest<C, A extends Array<unknown>, R>(runner: RequestRunner<C, A, R>) {
+export function useRequest<C, A extends Array<unknown>, R>(runner: RequestRunner<C, A, R>): RequestManager<A, R> {
     interface UseRequestState {
         pending: boolean
         response: undefined | R
@@ -158,6 +159,15 @@ export function useRequest<C, A extends Array<unknown>, R>(runner: RequestRunner
     }
 }
 
+export function useRequestsStatus(requests: Record<string, {pending: boolean, error: unknown}>) {
+    const pending = Object.values(requests).some(it => it.pending)
+    const errors = Object.values(requests).map(it => it.error).filter(isDefined)
+    const error = errors[0]
+    const hasError = isDefined(error)
+
+    return {error, errors, hasError, pending}
+}
+
 // Types ///////////////////////////////////////////////////////////////////////
 
 export interface RequestProviderProps {
@@ -172,4 +182,15 @@ export interface RequestRunner<C, A extends Array<unknown>, R> {
 export interface RequestTask<T> {
     promise: Promise<T>
     cancelled: boolean
+}
+
+export interface RequestManager<A extends Array<unknown>, R> {
+    pending: boolean
+    response: undefined | R
+    error: unknown
+    send: (...args: A) => Promise<undefined | R>
+    reset: () => void
+    resetError: () => void
+    resetResponse: () => void
+    cancel: () => void
 }

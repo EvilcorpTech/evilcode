@@ -2,17 +2,21 @@ import {useCallback, useEffect} from 'react'
 
 export function usePictureInPicture(
     videoRef: React.RefObject<HTMLVideoElement>,
-    options?: {
-        onEnter?(): void
-        onExit?(): void
-        onError?(): void
+    options?: undefined | {
+        onEnter?: undefined | (() => void)
+        onExit?: undefined | (() => void)
+        onError?: undefined | (() => void)
     },
 ) {
     const {onEnter, onError, onExit} = options ?? {}
 
     useEffect(() => {
-        ;onEnter && videoRef.current?.addEventListener('enterpictureinpicture', onEnter, false)
-        ;onExit && videoRef.current?.addEventListener('leavepictureinpicture', onExit, false)
+        if (onEnter) {
+            videoRef.current?.addEventListener('enterpictureinpicture', onEnter, false)
+        }
+        if (onExit) {
+            videoRef.current?.addEventListener('leavepictureinpicture', onExit, false)
+        }
     }, [onEnter, onExit])
 
     const enter = useCallback(() => {
