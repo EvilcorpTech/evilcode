@@ -1,3 +1,4 @@
+import {asBooleanString} from '@eviljs/web/aria.js'
 import {classes} from '@eviljs/web/classes.js'
 
 export function Switch(props: SwitchProps) {
@@ -11,7 +12,7 @@ export function Switch(props: SwitchProps) {
             className={classes('Switch-5a04 std-button flex std-switch', className)}
             type="button"
             role="switch"
-            aria-checked={checked ? 'true' : 'false'}
+            aria-checked={asBooleanString(checked ?? false)}
             disabled={disabled}
             onClick={enabled
                 ? () => onChange?.(! checked)

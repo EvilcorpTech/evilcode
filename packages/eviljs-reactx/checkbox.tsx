@@ -1,3 +1,4 @@
+import {asBooleanString} from '@eviljs/web/aria.js'
 import {classes} from '@eviljs/web/classes.js'
 import {cloneElement, isValidElement} from 'react'
 
@@ -16,9 +17,7 @@ export function Checkbox(props: CheckboxProps) {
             aria-checked={
                 checked === 'mixed'
                     ? 'mixed'
-                : checked
-                    ? 'true'
-                : 'false'
+                : asBooleanString(checked ?? false)
             }
             disabled={disabled}
             onClick={enabled
