@@ -17,13 +17,35 @@ export const SpringScaleDistance = SpringDistance
 export const SpringScaleMass = SpringMass
 export const SpringScaleStiffness = SpringStiffness
 
-export function applyStyles(...elements: Array<HTMLElement>) {
+export function flushStyles(...elements: Array<HTMLElement>) {
     for (const element of elements) {
         // Forces styles computation.
         // Void prevents Chrome from skipping the evaluation of the expression.
         void element.offsetTop
         void element.offsetLeft
     }
+}
+
+export function requestStylesFlush(...elements: Array<HTMLElement>): PromiseCancellable<void> {
+    let taskId: undefined | ReturnType<typeof requestAnimationFrame>
+
+    const promise = new Promise<void>((resolve, reject) => {
+        taskId = requestAnimationFrame(() => {
+            flushStyles(...elements)
+            resolve()
+        })
+    })
+
+    const promiseCancellable = promise as PromiseCancellable<void>
+
+    promiseCancellable.cancel = function cancel() {
+        if (taskId) {
+            cancelAnimationFrame(taskId)
+        }
+        promiseCancellable.cancelled = true
+    }
+
+    return promiseCancellable
 }
 
 export function playCssTransition<T extends HTMLElement, S1 = void, S2 = void>(
@@ -33,7 +55,7 @@ export function playCssTransition<T extends HTMLElement, S1 = void, S2 = void>(
     const setupReturn = hooks.setup?.(target)
 
     if (hooks.setup) {
-        applyStyles(target)
+        flushStyles(target)
     }
 
     const promise = new Promise<void>((resolve, reject) => {
