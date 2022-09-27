@@ -1,7 +1,7 @@
 import {classes} from '@eviljs/react/classes.js'
 import {defineContext} from '@eviljs/react/ctx.js'
 import {asArray, isArray, isNotNil, isString, Nil} from '@eviljs/std/type.js'
-import {applyStyles} from '@eviljs/web/animation.js'
+import {requestStylesFlush} from '@eviljs/web/animation.js'
 import {
     Children,
     cloneElement,
@@ -9,6 +9,7 @@ import {
     memo,
     useCallback,
     useContext,
+    useEffect,
     useLayoutEffect,
     useMemo,
     useReducer,
@@ -17,37 +18,42 @@ import {
 } from 'react'
 
 const NoItems: [] = []
-export let TransitionCounter = 0
 
 export const TransitionContext = defineContext<TransitionContext>('TransitionContext')
+
+export const TransitionTimeoutDefault = 1_500
 
 export function useTransitionLifecycle() {
     return useContext(TransitionContext)
 }
 
 export function Transition(props: TransitionProps) {
-    const {children, exit, enter, target, initial, mode, onEntered, onExited, onEnd} = props
+    const {
+        children,
+        className, classPrefix,
+        enter, exit, target, timeout,
+        initial, mode,
+        onEnd, onEntered, onExited,
+    } = props
     const [state, dispatch] = useReducer(reduceTransitionState, undefined, createTransitionState)
 
     if (children !== state.children) {
         // We derive the state from the props.
         dispatch({
-            type: 'Updated',
-            children, target,
-            exit, enter,
+            type: 'ChildrenChanged',
+            children,
             initial, mode,
             onEntered, onExited, onEnd,
         })
     }
 
-    const onTaskEnd = useCallback((taskId: number) => {
-        dispatch({type: 'TaskCompleted', taskId})
-        dispatch({type: 'ConsumeQueue'})
+    const onTaskEnd = useCallback((task: TransitionTaskSelected) => {
+        dispatch({type: 'TaskCompleted', taskId: task.taskId})
     }, [])
 
     useLayoutEffect(() => {
-        dispatch({type: 'ConsumeQueue'})
-    }, [state.tasks])
+        dispatch({type: 'TasksChanged'})
+    }, [state.tasks, state.queue])
 
     return (
         <Fragment>
@@ -55,6 +61,8 @@ export function Transition(props: TransitionProps) {
                 <AnimatorMemo
                     key={it.key}
                     task={it}
+                    className={className} classPrefix={classPrefix}
+                    enter={enter} exit={exit} target={target} timeout={timeout}
                     onEnd={onTaskEnd}
                 />
             )}
@@ -65,73 +73,45 @@ export function Transition(props: TransitionProps) {
 const AnimatorMemo = memo(Animator)
 
 export function Animator(props: AnimatorProps) {
-    const {task, onEnd} = props
+    const {className, classPrefix, target, timeout, task, onEnd} = props
     const handleRef = useRef<null | HTMLTemplateElement>(null)
     const [animate, setAnimate] = useState<AnimatorState>({})
     const eventsRef = useRef(0)
-    const isAnimating = animate[task.taskId] ?? false
-    const lifecycle = computeAnimatorLifecycle({
-        action: task.action,
-        kind: task.kind,
-        animating: isAnimating,
-    })
+    const taskAnimating = animate[task.taskId] ?? false
+    const lifecycle = computeAnimatorLifecycle(task.action, task.kind, taskAnimating)
 
-    if (task.action !== 'render' && task.events === 0) {
-        console.warn(
-            '@eviljs/reactx/transition.Animator:\n'
-            + 'a mount/unmount task with 0 events has been provided.'
-        )
-    }
-    if (task.action === 'render' && task.events !== 0) {
-        console.warn(
-            '@eviljs/reactx/transition.Animator:\n'
-            + 'a render task with more than 0 events has been provided.'
-        )
-    }
-    if (task.action === 'render' && ! task.completed) {
-        console.warn(
-            '@eviljs/reactx/transition.Animator:\n'
-            + 'a render task not completed has been provided.'
-        )
-    }
-
-    useLayoutEffect(() => {
-        eventsRef.current = 0
-
-        const animatorElement = findHandleTarget(handleRef.current)
-
-        if (! animatorElement) {
-            return
+    const taskEvents = (() => {
+        switch (task.kind) {
+            case 'enter':
+                return Math.max(0, props.enter ?? 1)
+            case 'exit':
+                return Math.max(0, props.exit ?? 1)
         }
-        if (isAnimating) {
-            // We must force the flush/apply of pending styles and classes
-            // only during the initial phase.
-            return
-        }
-        if (task.action === 'render') {
-            // A render task has no animation and no styles to apply.
-            return
-        }
+        return 0
+    })()
 
-        applyStyles(animatorElement as HTMLElement)
+    const onTaskEnd = useCallback(() => {
+        task.observers?.onEntered?.()
+        task.observers?.onExited?.()
+        task.observers?.onEnd?.()
+        task.observers = undefined // We dispose the observers, avoiding duplicate calls.
 
-        // Initial styles and classes have been flushed. Time to fire the animation.
-
-        setAnimate({
-            [task.taskId]: true,
-        })
-    }, [task.taskId])
+        onEnd?.(task)
+    }, [
+        task.taskId,
+        task.observers?.onEntered,
+        task.observers?.onExited,
+        task.observers?.onEnd,
+        onEnd,
+    ])
 
     const onAnimated = useCallback((event: AnimatorCompletionEvent) => {
-        if (! task.target) {
-            console.warn(
-                '@eviljs/reactx/transition.Animator:\n'
-                + 'missing animation event target.',
-            )
+        if (eventsRef.current >= taskEvents) {
+            // The task completed. We skip additional notifications.
             return
         }
 
-        const validEvent = isValidAnimatorEvent(event, task.target)
+        const validEvent = isValidAnimatorEvent(event, target)
 
         if (! validEvent) {
             return
@@ -139,16 +119,16 @@ export function Animator(props: AnimatorProps) {
 
         eventsRef.current += 1
 
-        const taskCompleted = eventsRef.current >= task.events
-
-        if (taskCompleted) {
-            onEnd?.(task.taskId)
+        if (eventsRef.current < taskEvents) {
+            return
         }
-    }, [task.taskId, task.target, task.events])
+
+        onTaskEnd()
+    }, [target, taskEvents, onTaskEnd])
 
     const listeners = useMemo((): undefined | AnimatorAnimatableEvents => {
         if (task.action === 'render') {
-            // A render task does not have to wait any animation to complete.
+            // A render task has no animation. We can skip it.
             return
         }
 
@@ -156,16 +136,73 @@ export function Animator(props: AnimatorProps) {
         const onTransitionEnd = onAnimated
 
         return {onAnimationEnd, onTransitionEnd}
-    }, [task.action])
+    }, [task.action, onAnimated])
 
-    const context = useMemo(() => lifecycle, [lifecycle.action, lifecycle.phase])
+    const contextValue = useMemo(() => {
+        return lifecycle
+    }, [lifecycle.action, lifecycle.phase])
+
+    useEffect(() => {
+        eventsRef.current = 0
+
+        if (task.action === 'render') {
+            // A render task has no animation and no styles to apply.
+            return
+        }
+
+        const animatorElement = findHandleTarget(handleRef.current)
+
+        if (! animatorElement) {
+            return
+        }
+        if (taskAnimating) {
+            // We must force the flush of pending styles and classes
+            // only during the initial phase (when not animating).
+            return
+        }
+
+        requestStylesFlush(animatorElement as HTMLElement).then(() => {
+            // Initial styles and classes have been flushed. Time to fire the animation.
+
+            setAnimate({
+                [task.taskId]: true,
+            })
+        })
+    }, [task.taskId])
+
+    useEffect(() => {
+        if (task.action === 'render') {
+            // A render task has no animation to wait for.
+            return
+        }
+        if (! taskAnimating) {
+            return
+        }
+
+        const timeoutId = setTimeout(() => {
+            console.warn(
+                '@eviljs/reactx/transition.Animator:\n'
+                + `transition timeout detected during '${task.action}'.`
+            )
+
+            onTaskEnd()
+        }, timeout ?? TransitionTimeoutDefault)
+
+        function onClean() {
+            clearTimeout(timeoutId)
+        }
+
+        return onClean
+    }, [task.action, taskAnimating, onTaskEnd])
 
     const child = Children.only(task.child)
-    const presenceClass = presenceAnimationClasses(task.action, isAnimating)
-    const presenceStyles = presenceAnimationStyles(task.action, isAnimating)
+    const presenceClass = undefined
+        ?? className?.(task.action, task.kind, taskAnimating)
+        ?? presenceAnimationClasses(task.action, task.kind, taskAnimating, classPrefix)
+    const presenceStyles = presenceAnimationStyles(task.action, task.kind, taskAnimating)
 
     return (
-        <TransitionContext.Provider value={context}>
+        <TransitionContext.Provider value={contextValue}>
             {cloneElement(child, {
                 className: classes(child.props.className, presenceClass),
                 style: {...child.props.styles, ...presenceStyles},
@@ -180,7 +217,7 @@ export function Animator(props: AnimatorProps) {
 
 export function createTransitionState(): TransitionState {
     return {
-        transitionCounter: ++TransitionCounter,
+        transitionCounter: 0,
         transactionCounter: 0,
         taskCounter: 0,
         children: null,
@@ -195,152 +232,158 @@ export function reduceTransitionState(
     event: TransitionEvent,
 ): TransitionState {
     switch (event.type) {
-        case 'Updated': {
-            // Component rendered. Let's see what to do with the updated children.
-            const tasksAndQueue = reduceTransitionStateUpdate(state, {
+        case 'ChildrenChanged': {
+            // Children prop changed. Let's see what to do with the updated children.
+            return reduceTransitionChildrenChange(state, {
                 children: event.children,
                 observers: {
                     onEntered: event.onEntered,
                     onExited: event.onExited,
                     onEnd: event.onEnd,
                 },
-                exit: Math.max(0, event.exit ?? 0),
-                enter: Math.max(0, event.enter ?? 0),
-                target: asArray(event.target ?? NoItems),
                 mode: event.mode ?? 'cross',
                 initial: event.initial ?? false,
             })
-
-            return {
-                ...consumeTransitionStateQueue({...state, ...tasksAndQueue}),
-                children: event.children,
-                initial: false,
-            }
         }
 
         case 'TaskCompleted': {
-            const task = state.tasks.find(it => it.taskId === event.taskId)
+            return reduceTransitionQueue({
+                ...state,
+                tasks: state.tasks.map(it => {
+                    if (it.taskId !== event.taskId) {
+                        return it
+                    }
 
-            if (! task) {
-                // The task is no more in the tasks group. It has been replaced
-                // by a new task group from the queue. This is a late
-                // notification of React, we must ignore it.
-                return state
-            }
+                    if (it.action === 'render') {
+                        console.warn(
+                            '@eviljs/reactx/transition.reduceTransitionState(TaskCompleted):\n'
+                            + 'render tasks should not be notified of completion.'
+                        )
+                    }
 
-            if (task.action === 'render') {
-                console.warn(
-                    '@eviljs/reactx/transition.reduceTransitionState:\n'
-                    + 'render tasks should not be notified of completion.'
-                )
-                return state
-            }
-
-            // This mutation must not be reactive. It avoids useless renders.
-            task.completed = true
-
-            return state
+                    return {...it, completed: true}
+                }),
+            })
         }
 
-        case 'ConsumeQueue': {
-            if (! areTasksCompleted(state.tasks)) {
-                // Tasks group is in progress.
-                return state
-            }
-
-            // Tasks group is completed.
-            const enterTask = state.tasks.find(it => it.kind === 'entered')
-            const exitTask = state.tasks.find(it => it.kind === 'exited')
-
-            enterTask?.observers?.onEntered?.()
-            exitTask?.observers?.onExited?.()
-            enterTask?.observers?.onEnd?.()
-            exitTask?.observers?.onEnd?.()
-
-            // Observers have been called. We dispose them, avoiding duplicate calls.
-            if (enterTask) {
-                enterTask.observers = undefined
-            }
-            if (exitTask) {
-                exitTask.observers = undefined
-            }
-
-            return consumeTransitionStateQueue(state)
+        case 'TasksChanged': {
+            return reduceTransitionQueue(state)
         }
     }
 
     return state
 }
 
-export function reduceTransitionStateUpdate(state: TransitionState, args: {
+export function reduceTransitionChildrenAfter(state: TransitionState, children: TransitionChildren): TransitionState {
+    return {...state, initial: false, children}
+}
+
+export function reduceTransitionChildrenChange(state: TransitionState, args: {
     children: TransitionChildren,
     observers: TransitionObservers,
-    exit: number,
-    enter: number,
-    target: TransitionEventTarget,
     mode: TransitionMode,
     initial: boolean,
-}): {tasks: TransitionState['tasks'], queue: TransitionState['queue']} {
-    const {
-        children: newChildren,
-        observers,
-        enter,
-        exit,
-        target,
-        mode,
-        initial,
-    } = args
-    const oldChildren = state.children
+}): TransitionState {
+    const {observers, mode, initial} = args
     const initialRender = state.initial
+    const newChildren = args.children
+    const oldChildren = state.children
     const oldChild = asOnlyChild(oldChildren)
     const newChild = asOnlyChild(newChildren)
+    const oldChildValid = isValidChild(oldChild)
+    const newChildValid = isValidChild(newChild)
+    const reduceUpdate = reduceTransitionChildrenAfter
 
-    if (! isValidChild(oldChild) && ! isValidChild(newChild)) {
-        // We have nothing to do.
-        return state
+    if (! oldChildValid && ! newChildValid) {
+        // We have no animation to do.
+        return reduceUpdate(state, newChildren)
     }
 
-    if (! isValidChild(oldChild) && isValidChild(newChild)) {
+    if (! oldChildValid && newChildValid) {
         // The child has been passed; we must mount it.
-        const {tasks} = state
-        const nextQueue = createMountTasks({state, child: newChild, observers, events: enter, target, initial, initialRender})
-        const queue = [...state.queue, ...nextQueue]
-        return {tasks, queue}
+        const queuedTasks = createMountTasks({state, child: newChild, observers, initial, initialRender})
+        const queue = [...state.queue, ...queuedTasks]
+        return reduceUpdate({...state, queue}, newChildren)
     }
 
-    if (isValidChild(oldChild) && ! isValidChild(newChild)) {
+    if (oldChildValid && ! newChildValid) {
         // The child has been removed; we must unmount it.
-        const {tasks} = state
-        const nextQueue = createUnmountTasks({state, child: oldChild, observers, events: exit, target})
-        const queue = [...state.queue, ...nextQueue]
-        return {tasks, queue}
+        const queuedTasks = createUnmountTasks({state, child: oldChild, observers})
+        const queue = [...state.queue, ...queuedTasks]
+        return reduceUpdate({...state, queue}, newChildren)
     }
 
-    if (isValidChild(oldChild) && isValidChild(newChild) && ! areSameChildren(oldChild, newChild)) {
+    if (oldChildValid && newChildValid && ! areSameChildren(oldChild, newChild)) {
         // The child has exchanged; we must unmount previous one and mount the new one.
-        const {tasks} = state
-        const nextQueue = createExchangeTasks({state, mode, oldChild, newChild, observers, enter, exit, target})
-        const queue = [...state.queue, ...nextQueue]
-        return {tasks, queue}
+        const queuedTasks = createExchangeTasks({state, mode, oldChild, newChild, observers})
+        const queue = [...state.queue, ...queuedTasks]
+        return reduceUpdate({...state, queue}, newChildren)
     }
 
-    if (isValidChild(oldChild) && isValidChild(newChild) && areSameChildren(oldChild, newChild)) {
+    if (oldChildValid && newChildValid && areSameChildren(oldChild, newChild)) {
         // The child has been update; we must propagate the update.
-        const {tasks, queue} = state
-        return updateTransitionTasks({tasks, queue, child: newChild, observers})
+        return reduceUpdate(reduceTransitionChildUpdate(state, {child: newChild, observers}), newChildren)
     }
 
     console.warn(
-        '@eviljs/reactx/transition.reduceTransitionStateUpdate:\n'
-        + 'unrecognized children case.',
-        oldChild,
-        newChild,
+        '@eviljs/reactx/transition.reduceTransitionChildrenChange:\n'
+        + 'unrecognized children condition.',
+        oldChild, newChild,
     )
 
-    return state
+    return reduceUpdate(state, newChildren)
 }
 
-export function consumeTransitionStateQueue(state: TransitionState): TransitionState {
+export function reduceTransitionChildUpdate(state: TransitionState, args: {
+    child: TransitionElement
+    observers: TransitionObservers
+}): TransitionState {
+    const {child} = args
+
+    let taskFound = false
+
+    function updateTask<I extends TransitionTaskSelected | TransitionTaskQueued>(it: I): I {
+        taskFound = true
+
+        return {
+            ...it,
+            child,
+            observers: it.observers
+                ? filterTaskObservers(it.action, args.observers) // Observers have not been disposed. We can update.
+                : undefined // Observers have been disposed. We can't update.
+            ,
+        }
+    }
+
+    const nextState: TransitionState = {
+        ...state,
+        children: child,
+        tasks: state.tasks.map(task =>
+            areSameChildren(child, task.child)
+                ? updateTask(task)
+                : task
+        ),
+        queue: state.queue.map(tasksGroup =>
+            tasksGroup.map(task =>
+                areSameChildren(child, task.child)
+                    ? updateTask(task)
+                    : task
+            )
+        ),
+    }
+
+    if (! taskFound) {
+        console.warn(
+            '@eviljs/reactx/transition.reduceTransitionChildUpdate:\n'
+            + 'updatable task not found.'
+        )
+        return {...state, children: child}
+    }
+
+    return nextState
+}
+
+export function reduceTransitionQueue(state: TransitionState): TransitionState {
     if (! areTasksCompleted(state.tasks)) {
         // Task is in progress. We can't consume.
         return state
@@ -355,72 +398,29 @@ export function consumeTransitionStateQueue(state: TransitionState): TransitionS
     }
 
     const previousKeys = state.tasks.map(it => it.key)
-    const tasks: Array<TransitionSelectedTask> = nextTasks.map(it => ({
-        ...it,
-        key: undefined
-            ?? it.key?.(previousKeys) // We use the task computed key, if any.
-            ?? String(it.taskId) // As fallback, we use a unique key.
-        ,
-        completed: it.action === 'render'
-            ? true
-            : false
-        ,
-    }))
+    const tasks = nextTasks.map(it => createSelectedTask(it, previousKeys))
 
     return {...state, tasks, queue}
 }
 
-export function updateTransitionTasks(args: {
-    tasks: TransitionState['tasks']
-    queue: TransitionState['queue']
-    child: TransitionElement
-    observers: TransitionObservers
-}): {tasks: TransitionState['tasks'], queue: TransitionState['queue']} {
-    const {tasks, queue, child, observers} = args
-
-    let taskFound = false
-
-    function updateTask<I extends TransitionUpdatableTask>(it: I): I {
-        taskFound = true
-
-        return {
-            ...it,
-            child,
-            observers: it.observers
-                ? observers
-                : undefined
-            ,
-        }
+export function createSelectedTask(task: TransitionTaskQueued, keys: Array<string>): TransitionTaskSelected {
+    return {
+        ...task,
+        key: undefined
+            ?? task.key?.(keys) // We use the task computed key, if any.
+            ?? String(task.taskId) // As fallback, we use a unique key.
+        ,
+        completed: task.action === 'render'
+            ? true
+            : false
+        ,
     }
-
-    const nextTasks = tasks.map(task =>
-        areSameChildren(child, task.child)
-            ? updateTask(task)
-            : task
-    )
-
-    const nextQueue = queue.map(tasksGroup =>
-        tasksGroup.map(task =>
-            areSameChildren(child, task.child)
-                ? updateTask(task)
-                : task
-        )
-    )
-
-    if (! taskFound) {
-        console.warn(
-            '@eviljs/reactx/transition.updateTransitionTasks:\n'
-            + 'updatable task not found.'
-        )
-    }
-
-    return {tasks: nextTasks, queue: nextQueue}
 }
 
 export function createTasksTransaction(
     state: TransitionState,
-    ...tasks: Array<undefined | Array<TransitionQueuedTask>>
-): Array<Array<TransitionQueuedTask>> {
+    ...tasks: Array<undefined | Array<TransitionTaskQueued>>
+): Array<Array<TransitionTaskQueued>> {
     ++state.transactionCounter
 
     return tasks.filter(isNotNil)
@@ -428,20 +428,15 @@ export function createTasksTransaction(
 
 export function createTasksGroup(
     state: TransitionState,
-    ...tasks: Array<undefined | TransitionQueuedTask>
-): Array<TransitionQueuedTask> {
+    ...tasks: Array<undefined | TransitionTaskQueued>
+): Array<TransitionTaskQueued> {
     return tasks.filter(isNotNil)
 }
 
 export function createTask(
     state: TransitionState,
     task: TransitionTaskSpec,
-): undefined | TransitionQueuedTask {
-    if (task.action !== 'render' && task.events === 0) {
-        // mount/unmount tasks with 0 events must be skipped.
-        return
-    }
-
+): undefined | TransitionTaskQueued {
     ++state.taskCounter
 
     const transitionId = state.transitionCounter
@@ -454,22 +449,8 @@ export function createTask(
         taskId,
         action: task.action,
         child: task.child,
-        events: task.action === 'render'
-            ? 0
-            : task.events
-        ,
-        target: task.action === 'render'
-            ? []
-            : task.target
-        ,
-        kind: task.action === 'render'
-            ? task.kind
-            : undefined
-        ,
-        observers: task.action === 'render'
-            ? task.observers
-            : undefined
-        ,
+        kind: task.kind,
+        observers: filterTaskObservers(task.action, task.observers),
         key: task.key,
     }
 }
@@ -477,25 +458,15 @@ export function createTask(
 export function createMountTasks(args: {
     state: TransitionState
     child: TransitionElement
-    events: number
-    target: TransitionEventTarget
     observers: TransitionObservers
     initial: boolean
     initialRender: boolean
-}): TransitionQueue {
-    const {
-        state,
-        child,
-        observers,
-        events,
-        target,
-        initial,
-        initialRender,
-    } = args
+}): TransitionTasksQueue {
+    const {state, child, observers, initial, initialRender} = args
 
-    const animated = false
-        || (initialRender && initial) // On first render, it is animated only if requested.
-        || ! initialRender // After the initial render, it is always animated.
+    const animated = initialRender
+        ? initial // On initial render, it is animated only if requested.
+        : true // After the initial render, it is always animated.
 
     return createTasksTransaction(state,
         animated
@@ -503,8 +474,8 @@ export function createMountTasks(args: {
                 createTask(state, {
                     action: 'mount',
                     child,
-                    events,
-                    target,
+                    kind: 'enter',
+                    observers,
                     key: undefined,
                 }),
             )
@@ -514,8 +485,8 @@ export function createMountTasks(args: {
             createTask(state, {
                 action: 'render',
                 child,
-                kind: 'entered',
-                observers,
+                kind: 'enter',
+                observers: undefined,
                 key: keys => keys[0],
             }),
         ),
@@ -525,25 +496,17 @@ export function createMountTasks(args: {
 export function createUnmountTasks(args: {
     state: TransitionState
     child: TransitionElement
-    events: number
-    target: TransitionEventTarget
     observers: TransitionObservers
-}): TransitionQueue {
-    const {
-        state,
-        child,
-        observers,
-        events,
-        target,
-    } = args
+}): TransitionTasksQueue {
+    const {state, child, observers} = args
 
     return createTasksTransaction(state,
         createTasksGroup(state,
             createTask(state, {
                 action: 'unmount',
                 child,
-                events,
-                target,
+                kind: 'exit',
+                observers,
                 key: keys => keys[0],
             }),
         ),
@@ -551,9 +514,9 @@ export function createUnmountTasks(args: {
             createTask(state, {
                 action: 'render',
                 child: <Fragment/>,
-                kind: 'exited',
-                observers,
-                key: keys => keys[0],
+                kind: 'exit',
+                observers: undefined,
+                key: undefined,
             }),
         ),
     )
@@ -564,11 +527,8 @@ export function createExchangeTasks(args: {
     mode: TransitionMode
     oldChild: TransitionElement
     newChild: TransitionElement
-    exit: number
-    enter: number
-    target: TransitionEventTarget
     observers: TransitionObservers
-}): TransitionQueue {
+}): TransitionTasksQueue {
     const {mode, ...otherArgs} = args
 
     switch (mode) {
@@ -589,51 +549,38 @@ export function createCrossTasks(args: {
     oldChild: TransitionElement
     newChild: TransitionElement
     observers: TransitionObservers
-    exit: number
-    enter: number
-    target: TransitionEventTarget
-}): TransitionQueue {
+}): TransitionTasksQueue {
     const {
         state,
         oldChild,
         newChild,
         observers,
-        exit,
-        enter,
-        target,
     } = args
 
     return createTasksTransaction(state,
         createTasksGroup(state,
             // Parallel unmount and mount.
             createTask(state, {
-                action: 'mount',
-                child: newChild,
-                events: enter,
-                target,
-                key: undefined,
-            }),
-            createTask(state, {
                 action: 'unmount',
                 child: oldChild,
-                events: exit,
-                target,
+                kind: 'exit',
+                observers,
                 key: keys => keys[0],
+            }),
+            createTask(state, {
+                action: 'mount',
+                child: newChild,
+                kind: 'enter',
+                observers,
+                key: undefined,
             }),
         ),
         createTasksGroup(state,
             createTask(state, {
                 action: 'render',
                 child: newChild,
-                kind: 'entered',
-                observers,
-                key: keys => keys[0]!,
-            }),
-            createTask(state, {
-                action: 'render',
-                child: <Fragment/>,
-                kind: 'exited',
-                observers,
+                kind: 'enter',
+                observers: undefined,
                 key: keys => keys[1]!,
             }),
         ),
@@ -644,36 +591,16 @@ export function createOutInTasks(args: {
     state: TransitionState
     oldChild: TransitionElement
     newChild: TransitionElement
-    exit: number
-    enter: number
-    target: TransitionEventTarget
     observers: TransitionObservers
-}): TransitionQueue {
-    const {
-        state,
-        oldChild,
-        newChild,
-        observers,
-        exit,
-        enter,
-        target,
-    } = args
+}): TransitionTasksQueue {
+    const {state, oldChild, newChild, observers} = args
 
     return createTasksTransaction(state,
         createTasksGroup(state,
             createTask(state, {
                 action: 'unmount',
                 child: oldChild,
-                events: exit,
-                target,
-                key: keys => keys[0],
-            }),
-        ),
-        createTasksGroup(state,
-            createTask(state, {
-                action: 'render',
-                child: <Fragment/>,
-                kind: 'exited',
+                kind: 'exit',
                 observers,
                 key: keys => keys[0],
             }),
@@ -682,18 +609,18 @@ export function createOutInTasks(args: {
             createTask(state, {
                 action: 'mount',
                 child: newChild,
-                events: enter,
-                target,
-                key: keys => keys[0],
+                kind: 'enter',
+                observers,
+                key: undefined,
             }),
         ),
         createTasksGroup(state,
             createTask(state, {
                 action: 'render',
                 child: newChild,
-                kind: 'entered',
-                observers,
-                key: keys => keys[0],
+                kind: 'enter',
+                observers: undefined,
+                key: keys => keys[1],
             }),
         ),
     )
@@ -703,53 +630,42 @@ export function createInOutTasks(args: {
     state: TransitionState
     oldChild: TransitionElement
     newChild: TransitionElement
-    exit: number
-    enter: number
-    target: TransitionEventTarget
     observers: TransitionObservers
-}): TransitionQueue {
-    const {
-        state,
-        oldChild,
-        newChild,
-        observers,
-        exit,
-        enter,
-        target,
-    } = args
+}): TransitionTasksQueue {
+    const {state, oldChild, newChild, observers} = args
 
     ++state.transactionCounter
 
     return createTasksTransaction(state,
         createTasksGroup(state,
             createTask(state, {
-                action: 'mount',
-                child: newChild,
-                events: enter,
-                target,
-                key: undefined,
-            }),
-            createTask(state, {
                 action: 'render',
                 child: oldChild,
-                kind: 'exit',
+                kind: 'enter',
                 observers: undefined,
                 key: keys => keys[0],
+            }),
+            createTask(state, {
+                action: 'mount',
+                child: newChild,
+                kind: 'enter',
+                observers,
+                key: undefined,
             }),
         ),
         createTasksGroup(state,
             createTask(state, {
-                action: 'render',
-                child: newChild,
-                kind: 'entered',
+                action: 'unmount',
+                child: oldChild,
+                kind: 'exit',
                 observers,
                 key: keys => keys[0],
             }),
             createTask(state, {
-                action: 'unmount',
-                child: oldChild,
-                events: exit,
-                target,
+                action: 'render',
+                child: newChild,
+                kind: 'enter',
+                observers: undefined,
                 key: keys => keys[1],
             }),
         ),
@@ -757,43 +673,45 @@ export function createInOutTasks(args: {
             createTask(state, {
                 action: 'render',
                 child: newChild,
-                kind: 'entered',
+                kind: 'enter',
                 observers: undefined,
-                key: keys => keys[0],
-            }),
-            createTask(state, {
-                action: 'render',
-                child: <Fragment/>,
-                kind: 'exited',
-                observers,
                 key: keys => keys[1],
             }),
         ),
     )
 }
 
-export function computeAnimatorLifecycle(args: {
-    action: TransitionTaskAction
-    kind: undefined | TransitionTaskKind
-    animating: boolean
-}): TransitionContext {
-    const {action, kind, animating} = args
-
+export function filterTaskObservers(action: TransitionTaskAction, observers: undefined | TransitionObservers) {
     switch (action) {
         case 'mount':
-            return animating
-                ? {action: 'mount', phase: 'entering'}
-                : {action: 'mount', phase: 'enter'}
+            return {
+                onEntered: observers?.onEntered,
+                onEnd: observers?.onEnd,
+            }
         case 'unmount':
-            return animating
-                ? {action: 'unmount', phase: 'exiting'}
-                : {action: 'unmount', phase: 'exit'}
+            return {
+                onExited: observers?.onExited,
+                onEnd: observers?.onEnd,
+            }
+        case 'render':
+            return
+    }
+}
+
+export function computeAnimatorLifecycle(
+    action: TransitionTaskAction,
+    kind: TransitionTaskKind,
+    animating: boolean,
+): TransitionContext {
+    switch (action) {
+        case 'mount':
+            return {action: 'mount', phase: animating ? 'entering' : 'entered'}
+        case 'unmount':
+            return {action: 'unmount', phase: animating ? 'exiting' : 'exited'}
         case 'render':
             switch (kind) {
-                case 'enter': return {action: 'mount', phase: 'enter'}
-                case 'entered': return {action: 'mount', phase: 'entered'}
-                case 'exit': return {action: 'unmount', phase: 'exit'}
-                case 'exited': return {action: 'unmount', phase: 'exited'}
+                case 'enter': return {action: 'mount', phase: 'entered'}
+                case 'exit': return {action: 'unmount', phase: 'exited'}
             }
     }
 
@@ -804,27 +722,40 @@ export function computeAnimatorLifecycle(args: {
     return {} as never
 }
 
-export function presenceAnimationClasses(action: TransitionTaskAction, animating: boolean) {
-    if (action === 'render') {
-        return
-    }
-
+export function presenceAnimationClasses(
+    action: TransitionTaskAction,
+    kind: TransitionTaskKind,
+    animating: boolean,
+    prefix?: undefined | string
+) {
     const name = (() => {
         switch (action) {
             case 'unmount':
                 return 'exit'
             case 'mount':
                 return 'enter'
+            case 'render':
+                return
+            break
         }
+        return
     })()
 
+    if (! name) {
+        return {}
+    }
+
     return {
-        [`${name}-from`]: ! animating,
-        [`${name}-to`]: animating,
+        [`${prefix ?? ''}${name}-from`]: ! animating,
+        [`${prefix ?? ''}${name}-to`]: animating,
     }
 }
 
-export function presenceAnimationStyles(action: TransitionTaskAction, animating: boolean): undefined | React.CSSProperties {
+export function presenceAnimationStyles(
+    action: TransitionTaskAction,
+    kind: TransitionTaskKind,
+    animating: boolean,
+): undefined | React.CSSProperties {
     switch (action) {
         case 'mount':
             if (! animating) {
@@ -896,52 +827,60 @@ export function isValidAnimatorEvent(
     event: AnimatorCompletionEvent,
     target: TransitionEventTarget,
 ) {
-    if (target.length === 0) {
+    const targets = asArray(target ?? NoItems)
+
+    if (targets.length === 0) {
         return true
     }
 
-    const eventTarget = event.target as HTMLElement
+    const eventTarget = event.target as Partial<HTMLElement>
 
-    for (const it of target) {
+    for (const it of targets) {
         if (eventTarget.id === it) {
             return true
         }
-        if (eventTarget.classList.contains(it)) {
+        if (eventTarget.classList?.contains(it)) {
             return true
         }
     }
     return false
 }
 
-export function areTasksCompleted(tasks: Array<TransitionSelectedTask>) {
+export function areTasksCompleted(tasks: TransitionTasksGroupSelected) {
     // Render tasks are implicitly completed. Mount/unmount tasks must complete.
     return tasks.every(it => it.completed)
 }
 
 // Types ///////////////////////////////////////////////////////////////////////
 
-export interface TransitionProps extends TransitionObservers {
+export interface TransitionProps extends TransitionObservers, TransitionConfig {
     children?: undefined | TransitionChildren
-    enter?: undefined | number
-    exit?: undefined | number
     initial?: undefined | boolean
     mode?: undefined | TransitionMode
-    target?: undefined | string | TransitionEventTarget
 }
 
-export interface AnimatorProps {
-    task: TransitionSelectedTask
-    onEnd(taskId: number): void
+export interface AnimatorProps extends TransitionConfig {
+    task: TransitionTaskSelected
+    onEnd(task: TransitionTaskSelected): void
+}
+
+export interface TransitionConfig {
+    className?: undefined | ((action: TransitionTaskAction, kind: TransitionTaskKind, animating: boolean) => string)
+    classPrefix?: undefined | string
+    enter?: undefined | number
+    exit?: undefined | number
+    target?: undefined | TransitionEventTarget
+    timeout?: undefined | number
 }
 
 export type TransitionContext =
     | {
         action: 'mount'
-        phase: 'enter' | 'entering' | 'entered'
+        phase: 'entering' | 'entered'
     }
     | {
         action: 'unmount'
-        phase: 'exit' | 'exiting' | 'exited'
+        phase: 'exiting' | 'exited'
     }
 
 export interface TransitionState {
@@ -950,19 +889,16 @@ export interface TransitionState {
     taskCounter: number
     children: TransitionChildren
     initial: boolean
-    queue: TransitionQueue
-    tasks: Array<TransitionSelectedTask>
+    queue: TransitionTasksQueue
+    tasks: TransitionTasksGroupSelected
 }
 
 export type TransitionEvent =
     | {
-        type: 'Updated'
+        type: 'ChildrenChanged'
         children: undefined | TransitionChildren
-        enter: undefined | number
-        exit: undefined | number
         initial: undefined | boolean
         mode: undefined | TransitionMode
-        target: undefined | string | TransitionEventTarget
         onEntered: undefined | (() => void)
         onExited: undefined | (() => void)
         onEnd: undefined | (() => void)
@@ -972,14 +908,13 @@ export type TransitionEvent =
         taskId: number
     }
     | {
-        type: 'ConsumeQueue'
+        type: 'TasksChanged'
     }
 
 export type AnimatorState = Record<number, undefined | true>
 
 export type TransitionMode = 'cross' | 'out-in' | 'in-out'
 export type TransitionChildren = undefined | null | boolean | React.ReactChild | React.ReactPortal
-export type TransitionQueue = Array<Array<TransitionQueuedTask>>
 
 export interface TransitionObservers {
     onEntered?: undefined | (() => void)
@@ -988,25 +923,21 @@ export interface TransitionObservers {
 }
 
 export type TransitionTaskAction = 'mount' | 'unmount' | 'render'
-export type TransitionTaskKind = 'enter' | 'entered' | 'exit' | 'exited'
+export type TransitionTaskKind = 'enter' | 'exit'
 
 export type TransitionTaskSpec =
     | {
         action: 'mount' | 'unmount'
         child: TransitionElement
-        events: number
-        target: TransitionEventTarget
-        kind?: never
-        observers?: never
+        kind: TransitionTaskKind
+        observers: undefined | TransitionObservers
         key: undefined | TransitionKeyComputer
     }
     | {
         action: 'render'
         child: TransitionElement
-        events?: never
-        target?: never
         kind: TransitionTaskKind
-        observers: undefined | TransitionObservers
+        observers: undefined
         key: undefined | TransitionKeyComputer
     }
 
@@ -1014,28 +945,21 @@ export interface TransitionTask<K> {
     transitionId: number
     transactionId: number
     taskId: number
-    action: 'mount' | 'unmount' | 'render'
+    action: TransitionTaskAction
     child: TransitionElement
-    events: number
-    target: TransitionEventTarget
-    kind: undefined | TransitionTaskKind
+    kind: TransitionTaskKind
     observers: undefined | TransitionObservers
     key: K
 }
 
-export type TransitionQueuedTask = TransitionTask<undefined | TransitionKeyComputer>
-export type TransitionSelectedTask = TransitionTask<string> & {
-    completed: boolean
-}
-
-export type TransitionUpdatableTask = {
-    transactionId: number
-    child: TransitionElement
-    observers?: undefined | TransitionObservers
-}
+export type TransitionTaskQueued = TransitionTask<undefined | TransitionKeyComputer>
+export type TransitionTaskSelected = TransitionTask<string> & {completed: boolean}
+export type TransitionTasksGroupQueued = Array<TransitionTaskQueued>
+export type TransitionTasksGroupSelected = Array<TransitionTaskSelected>
+export type TransitionTasksQueue = Array<TransitionTasksGroupQueued>
 
 export type TransitionElement = JSX.Element
-export type TransitionEventTarget = Array<string>
+export type TransitionEventTarget = undefined | string | Array<string>
 
 export interface TransitionKeyComputer {
     (keys: Array<string>): undefined | string
