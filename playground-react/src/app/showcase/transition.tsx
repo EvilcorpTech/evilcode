@@ -8,7 +8,7 @@ export default defineShowcase('Transition', props => {
         <div className="std-flex align-start wrap gap5">
             <Starter>
                 {(start, counter) =>
-                    <Transition initial mode="out-in" enter={1} exit={1} target="animator-0cbf">
+                    <Transition initial mode="out-in" target="animator-0cbf">
                         <TransitionAnimator
                             key={String(start)}
                             className="animator-0cbf"
@@ -32,7 +32,7 @@ export default defineShowcase('Transition', props => {
 
             <Starter>
                 {(start, counter) =>
-                    <Transition initial mode="in-out" enter={1} exit={1} target="animator-0cbf">
+                    <Transition initial mode="in-out" target="animator-0cbf">
                         <TransitionAnimator
                             key={String(start)}
                             className="animator-0cbf"
@@ -54,9 +54,9 @@ export default defineShowcase('Transition', props => {
                 }
             </Starter>
 
-            <Starter style={{width: 400, height: 100}}>
+            <Starter style={{width: 400, height: 200}}>
                 {(start, counter) =>
-                    <Transition initial mode="cross" enter={1} exit={1} target="animator-0cbf">
+                    <Transition initial mode="cross" target="animator-0cbf">
                         <TransitionAnimator
                             key={String(start)}
                             className="animator-0cbf std-layer"
@@ -95,8 +95,6 @@ function Starter(props: {
             return
         }
 
-        setCounter(0)
-
         const intervalId = setInterval(() => {
             setCounter(state => state + 1)
         }, 100)
@@ -118,7 +116,6 @@ function Starter(props: {
             </button>
 
             <div
-                className="std-layer-root"
                 style={{
                     padding: 'var(--std-gutter4)',
                     color: start ? 'red' : 'blue',
@@ -127,7 +124,9 @@ function Starter(props: {
                     ...style,
                 }}
             >
-                {children(start, counter)}
+                <div className="std-layer-root">
+                    {children(start, counter)}
+                </div>
             </div>
         </div>
     )
