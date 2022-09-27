@@ -261,22 +261,24 @@ export function createDefaultAnimator
     const {animationKey} = ctx
     const animatorModel = widgetModel[animationKey] as undefined | SiteAnimatorKeyModel<AK>[AK]
     const widget = ctx.createWidget(widgetModel)
-    const mode = animatorModel?.mode
-    const initial = animatorModel?.initial ?? true
-    const enter = animatorModel?.enter ?? 1
-    const exit = animatorModel?.exit ?? 1
-    const transition = animatorModel?.transition
 
     if (! isValidElement<{className?: string}>(widget)) {
         return widget
     }
 
     return (
-        <Transition mode={mode} initial={initial} enter={enter} exit={exit} target="animator-d352">
+        <Transition
+            mode={animatorModel?.mode}
+            initial={animatorModel?.initial ?? true}
+            enter={animatorModel?.enter}
+            exit={animatorModel?.exit}
+            timeout={animatorModel?.timeout}
+            target="animator-d352"
+        >
             <TransitionAnimator
                 key={key}
                 className="animator-d352"
-                effect={transition ?? TransitionEffect.Fade}
+                effect={animatorModel?.transition ?? TransitionEffect.Fade}
             >
                 {widget}
             </TransitionAnimator>
@@ -542,6 +544,7 @@ export interface SiteAnimatorModel {
     initial?: undefined | boolean
     enter?: undefined | number
     exit?: undefined | number
+    timeout?: undefined | number
     transition?: undefined | TransitionEffect
 }
 
