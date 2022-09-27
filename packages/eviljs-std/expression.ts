@@ -101,10 +101,10 @@ export function list<I>(ctx: Ctx, ...args: Array<Exp<Ctx, I>>): Array<I> {
     return args.map(it => evaluateExp(ctx, it))
 }
 
-export function arg(ctx: CtxWithArgs, idExp: Exp<Ctx, number>, idxExp?: Exp<Ctx, number>): unknown {
-    const id = ensureInteger(evaluateExp(ctx, idExp))
-    const idx = idxExp ? ensureInteger(evaluateExp(ctx, idExp)) : 0
-    return ctx.args[idx]?.[id]
+export function arg(ctx: CtxWithArgs, idExp: Exp<Ctx, number>, scopeIdxExp?: Exp<Ctx, number>): unknown {
+    const idx = ensureInteger(evaluateExp(ctx, idExp))
+    const scopeIdx = scopeIdxExp ? ensureInteger(evaluateExp(ctx, scopeIdxExp)) : 0
+    return ctx.args[scopeIdx]?.[idx]
 }
 
 export function find<I>(ctx: Ctx | CtxWithArgs, listExp: Exp<Ctx, Array<I>>, testExp: Exp<CtxWithArgs, boolean>): undefined | I {
@@ -120,7 +120,7 @@ export function find<I>(ctx: Ctx | CtxWithArgs, listExp: Exp<Ctx, Array<I>>, tes
     return item
 }
 
-export function has<I>(ctx: Ctx | CtxWithArgs, listExp: Exp<Ctx, Array<I>>, testExp: Exp<CtxWithArgs, boolean>): boolean {
+export function has(ctx: Ctx | CtxWithArgs, listExp: Exp<Ctx, Array<unknown>>, testExp: Exp<CtxWithArgs, boolean>): boolean {
     return bool(ctx, find(ctx, listExp, testExp))
 }
 
