@@ -1,11 +1,11 @@
 import {classes} from '@eviljs/react/classes.js'
 import {defineContext} from '@eviljs/react/ctx.js'
-import {asArray, isArray, isNotNil, isString, Nil} from '@eviljs/std/type.js'
+import {asArray, isNotNil, isUndefined} from '@eviljs/std/type.js'
 import {requestStylesFlush} from '@eviljs/web/animation.js'
 import {
-    Children,
     cloneElement,
     Fragment,
+    isValidElement,
     memo,
     useCallback,
     useContext,
@@ -17,9 +17,9 @@ import {
 } from 'react'
 
 const NoItems: [] = []
+const DisplayNoneStyle: React.CSSProperties = {display: 'none'}
 
 export const TransitionContext = defineContext<TransitionContext>('TransitionContext')
-
 export const TransitionTimeoutDefault = 1_500
 
 export function useTransitionLifecycle() {
@@ -135,11 +135,19 @@ export function Animator(props: AnimatorProps) {
         }
 
         onTaskEnd()
-    }, [target, taskEvents, onTaskEnd])
+    }, [taskEvents, target, onTaskEnd])
 
-    const listeners = useMemo((): undefined | AnimatorAnimatableEvents => {
+    const contextValue = useMemo(() => {
+        return computeAnimatorContext(task.action, taskLifecycle)
+    }, [task.action, taskLifecycle])
+
+    const childListeners = useMemo((): undefined | AnimatorAnimatableEvents => {
         if (task.action === 'render') {
             // A render task has no animation. We can skip it.
+            return
+        }
+        if (taskEvents === 0) {
+            // A task without events has no animation. We can skip it.
             return
         }
 
@@ -147,22 +155,32 @@ export function Animator(props: AnimatorProps) {
         const onTransitionEnd = onAnimated
 
         return {onAnimationEnd, onTransitionEnd}
-    }, [task.action, onAnimated])
+    }, [task.action, taskEvents, onAnimated])
 
-    const contextValue = useMemo(() => {
-        return computeAnimatorContext(task.action, taskLifecycle)
-    }, [task.action, taskLifecycle])
+    const childClass = useMemo(() => {
+        const animatorClass = undefined
+            ?? className?.(task.action, taskLifecycle)
+            ?? computeAnimatorClasses(task.action, taskLifecycle, classPrefix)
+
+        return classes(task.child.props.className, animatorClass)
+    }, [task.action, taskLifecycle, task.child.props.className, className, classPrefix])
+
+    const childStyle = useMemo(() => {
+        const animatorStyle = computeAnimatorStyles(task.action, taskLifecycle)
+
+        return {...task.child.props.styles, ...animatorStyle}
+    }, [task.action, taskLifecycle, task.child.props.styles])
 
     useEffect(() => {
         eventsRef.current = 0
 
-        if (taskEvents === 0) {
-            // A task without events has no animation and no styles to apply.
+        if (task.action === 'render') {
+            // A render task has no animation and no style to apply.
             onTaskEnd()
             return
         }
-        if (task.action === 'render') {
-            // A render task has no animation and no styles to apply.
+        if (taskEvents === 0) {
+            // A task without events has no animation and no style to apply.
             onTaskEnd()
             return
         }
@@ -170,7 +188,7 @@ export function Animator(props: AnimatorProps) {
         // We must force the flush of pending styles and classes
         // only when not animating (the initial phase).
 
-        const animatorElement = findHandleTarget(handleRef.current)
+        const animatorElement = findAnimatorElement(handleRef.current)
 
         if (! animatorElement) {
             return
@@ -189,10 +207,13 @@ export function Animator(props: AnimatorProps) {
         }
 
         const timeoutId = setTimeout(() => {
-            console.warn(
-                '@eviljs/reactx/transition.Animator:\n'
-                + `transition timeout detected during '${task.action}'.`
-            )
+            if (isUndefined(timeout)) {
+                // No timeout was provided, which means that it was not expected.
+                console.warn(
+                    '@eviljs/reactx/transition.Animator:\n'
+                    + `transition timeout detected during '${task.action}'.`
+                )
+            }
 
             onTaskEnd()
         }, timeout ?? TransitionTimeoutDefault)
@@ -204,23 +225,18 @@ export function Animator(props: AnimatorProps) {
         return onClean
     }, [taskLifecycle, onTaskEnd])
 
-    const child = Children.only(task.child)
-    const presenceClass = undefined
-        ?? className?.(task.action, taskLifecycle)
-        ?? presenceAnimationClasses(task.action, taskLifecycle, classPrefix)
-    const presenceStyles = presenceAnimationStyles(task.action, taskLifecycle)
+    const needsHandle = true
+        && taskLifecycle === 'initial'  // A mount/unmount needs the handle only during initial phase.
+        && task.action !== 'render'     // A render task does not need the handle, because it does not animate.
+
+    // DEBUG LOG POINT: task.taskId, task.action, taskLifecycle, childClass, childStyle, contextValue
 
     return (
         <TransitionContext.Provider value={contextValue}>
-            {cloneElement(child, {
-                className: classes(child.props.className, presenceClass),
-                style: {...child.props.styles, ...presenceStyles},
-                ...listeners,
-            })}
-            {taskLifecycle === 'initial' && task.action !== 'render' &&
-                // 1) render task does not need the handle, because it does not animate
-                // 2) mount/unmount task does need the handle only during initial phase
-                <template ref={handleRef} style={{display: 'none'}}/>
+            {cloneElement(task.child, {className: childClass, style: childStyle, ...childListeners})}
+
+            {needsHandle &&
+                <template ref={handleRef} style={DisplayNoneStyle}/>
             }
         </TransitionContext.Provider>
     )
@@ -228,7 +244,6 @@ export function Animator(props: AnimatorProps) {
 
 export function createTransitionState(): TransitionState {
     return {
-        transitionCounter: 0,
         transactionCounter: 0,
         taskCounter: 0,
         children: null,
@@ -286,8 +301,8 @@ export function reduceTransitionChildrenChange(state: TransitionState, args: {
     const initialRender = state.initial
     const newChildren = args.children
     const oldChildren = state.children
-    const oldChild = asOnlyChild(oldChildren)
-    const newChild = asOnlyChild(newChildren)
+    const oldChild = asValidChild(oldChildren)
+    const newChild = asValidChild(newChildren)
     const oldChildValid = isValidChild(oldChild)
     const newChildValid = isValidChild(newChild)
 
@@ -324,7 +339,7 @@ export function reduceTransitionChildrenChange(state: TransitionState, args: {
 
     console.warn(
         '@eviljs/reactx/transition.reduceTransitionChildrenChange:\n'
-        + 'unrecognized children condition.',
+        + 'unexpected children condition.',
         oldChild, newChild,
     )
 
@@ -372,7 +387,7 @@ export function reduceTransitionChildUpdate(state: TransitionState, args: {
     if (! taskFound) {
         console.warn(
             '@eviljs/reactx/transition.reduceTransitionChildUpdate:\n'
-            + 'updatable task not found.'
+            + 'the candidate task for the update was not found.'
         )
         return {...state, children: child}
     }
@@ -381,7 +396,7 @@ export function reduceTransitionChildUpdate(state: TransitionState, args: {
 }
 
 export function reduceTransitionTaskCompletion(state: TransitionState, taskId: TransitionTaskId): TransitionState {
-    const tasks = state.tasks.map(it =>
+    const tasks = state.tasks.map((it): typeof it =>
         it.taskId === taskId
             ? {...it, completed: true}
             : it
@@ -448,12 +463,10 @@ export function createTask(
 ): undefined | TransitionTaskQueued {
     ++state.taskCounter
 
-    const transitionId = state.transitionCounter
     const transactionId = state.transactionCounter
     const taskId = state.taskCounter
 
     return {
-        transitionId,
         transactionId,
         taskId,
         action: task.action,
@@ -702,7 +715,7 @@ export function computeAnimatorContext(
     return {} as never
 }
 
-export function presenceAnimationClasses(
+export function computeAnimatorClasses(
     action: TransitionTaskAction,
     lifecycle: AnimatorTaskLifecycle,
     prefix?: undefined | string
@@ -735,7 +748,7 @@ export function presenceAnimationClasses(
     })
 }
 
-export function presenceAnimationStyles(
+export function computeAnimatorStyles(
     action: TransitionTaskAction,
     lifecycle: AnimatorTaskLifecycle,
 ): undefined | React.CSSProperties {
@@ -761,38 +774,18 @@ export function presenceAnimationStyles(
     return
 }
 
-export function asOnlyChild(child: TransitionChildren | Array<TransitionChildren>): TransitionChildren {
-    if (! isArray(child)) {
-        return child
+export function asValidChild(child: TransitionChildren): undefined | TransitionElement {
+    if (! isValidChild(child)) {
+        return
     }
-
-    if (child.length !== 1) {
-        console.warn(
-            '@eviljs/reactx/transition.asOnlyChild(~~child~~):\n'
-            + `child can be Nil | boolean | object or an array with one element, given '${child.length}'.`
-        )
-    }
-
-    const onlyChild = child[0]
-
-    return asOnlyChild(onlyChild)
+    return child
 }
 
 export function isValidChild(children: TransitionChildren): children is TransitionElement {
-    switch (children) {
-        case true:
-        case false:
-        case null:
-        case void undefined:
-            return false
-    }
-    if (isString(children)) {
-        return false
-    }
-    return true
+    return isValidElement(children)
 }
 
-export function areSameChildren(a?: Nil | TransitionElement, b?: Nil | TransitionElement) {
+export function areSameChildren(a?: undefined | TransitionElement, b?: undefined | TransitionElement) {
     if (! a && ! b) {
         return true
     }
@@ -806,7 +799,7 @@ export function areSameChildren(a?: Nil | TransitionElement, b?: Nil | Transitio
     return sameType && sameKey
 }
 
-export function findHandleTarget(handleElement: undefined | null | HTMLElement) {
+export function findAnimatorElement(handleElement: undefined | null | HTMLElement) {
     if (! handleElement) {
         return
     }
@@ -820,6 +813,7 @@ export function isValidAnimatorEvent(
     const targets = asArray(target ?? NoItems)
 
     if (targets.length === 0) {
+        // No target was provided. Any event must be considered valid.
         return true
     }
 
@@ -863,47 +857,10 @@ export interface TransitionConfig {
     timeout?: undefined | number
 }
 
-export type TransitionContext =
-    | {
-        action: 'mount'
-        phase: 'entering' | 'entered'
-    }
-    | {
-        action: 'unmount'
-        phase: 'exiting' | 'exited'
-    }
-
-export interface TransitionState {
-    transitionCounter: number
-    transactionCounter: number
-    taskCounter: number
-    children: TransitionChildren
-    initial: boolean
-    queue: TransitionTasksQueue
-    tasks: TransitionTasksGroupSelected
-}
-
-export type TransitionEvent =
-    | {
-        type: 'ChildrenChanged'
-        children: undefined | TransitionChildren
-        initial: undefined | boolean
-        mode: undefined | TransitionMode
-        onEntered: undefined | (() => void)
-        onExited: undefined | (() => void)
-        onEnd: undefined | (() => void)
-    }
-    | {
-        type: 'TaskCompleted'
-        taskId: TransitionTaskId
-    }
-    | {
-        type: 'QueueChanged'
-    }
-
+export type TransitionChildren = undefined | null | boolean | number | string | TransitionElement
+export type TransitionElement = JSX.Element | React.ReactElement<AnimatorAnimatable, React.JSXElementConstructor<AnimatorAnimatable>>
+export type TransitionEventTarget = undefined | string | Array<string>
 export type TransitionMode = 'cross' | 'out-in' | 'in-out'
-export type TransitionChildren = undefined | null | boolean | React.ReactChild | React.ReactPortal
-export type AnimatorTaskLifecycle = 'initial' | 'animating' | 'animated'
 
 export interface TransitionObservers {
     onEntered?: undefined | (() => void)
@@ -911,39 +868,9 @@ export interface TransitionObservers {
     onEnd?: undefined | (() => void)
 }
 
-export type TransitionTaskAction = 'mount' | 'unmount' | 'render'
-export type TransitionTaskRenderKind = 'enter' | 'exit'
-
-export interface TransitionTaskSpec {
-    action: 'mount' | 'unmount' | 'render'
-    child: TransitionElement
-    observers: undefined | TransitionObservers
-    key: undefined | TransitionKeyComputer
-}
-
-export interface TransitionTask<K> {
-    transitionId: number
-    transactionId: number
-    taskId: TransitionTaskId
-    action: TransitionTaskAction
-    child: TransitionElement
-    observers: undefined | TransitionObservers
-    key: K
-}
-
-export type TransitionTaskId = number
-export type TransitionTaskQueued = TransitionTask<undefined | TransitionKeyComputer>
-export type TransitionTaskSelected = TransitionTask<string> & {completed: boolean}
-export type TransitionTasksGroupQueued = Array<TransitionTaskQueued>
-export type TransitionTasksGroupSelected = Array<TransitionTaskSelected>
-export type TransitionTasksQueue = Array<TransitionTasksGroupQueued>
-
-export type TransitionElement = JSX.Element
-export type TransitionEventTarget = undefined | string | Array<string>
-
-export interface TransitionKeyComputer {
-    (keys: Array<string>): undefined | string
-}
+export type TransitionContext =
+    | {action: 'mount', phase: 'entering' | 'entered'}
+    | {action: 'unmount', phase: 'exiting' | 'exited'}
 
 export interface AnimatorAnimatable extends AnimatorAnimatableProps, AnimatorAnimatableEvents {
 }
@@ -959,3 +886,55 @@ export interface AnimatorAnimatableEvents {
 }
 
 export type AnimatorCompletionEvent = React.AnimationEvent<HTMLElement> | React.TransitionEvent<HTMLElement>
+
+export interface TransitionState {
+    transactionCounter: number
+    taskCounter: number
+    children: undefined | TransitionChildren
+    initial: boolean
+    queue: TransitionTasksQueue
+    tasks: TransitionTasksGroupSelected
+}
+
+export type TransitionEvent =
+    | {
+        type: 'ChildrenChanged'
+        children: undefined | TransitionChildren
+        initial: undefined | boolean
+        mode: undefined | TransitionMode
+        onEntered: undefined | (() => void)
+        onExited: undefined | (() => void)
+        onEnd: undefined | (() => void)
+    }
+    | {type: 'TaskCompleted', taskId: TransitionTaskId}
+    | {type: 'QueueChanged'}
+
+export type TransitionTaskAction = 'mount' | 'unmount' | 'render'
+export type AnimatorTaskLifecycle = 'initial' | 'animating' | 'animated'
+
+export interface TransitionTaskSpec {
+    action: 'mount' | 'unmount' | 'render'
+    child: TransitionElement
+    observers: undefined | TransitionObservers
+    key: undefined | TransitionKeyComputer
+}
+
+export interface TransitionTask<K> {
+    transactionId: number
+    taskId: TransitionTaskId
+    action: TransitionTaskAction
+    child: TransitionElement
+    observers: undefined | TransitionObservers
+    key: K
+}
+
+export type TransitionTaskId = number
+export type TransitionTaskQueued = TransitionTask<undefined | TransitionKeyComputer>
+export type TransitionTaskSelected = TransitionTask<string> & {completed: boolean}
+export type TransitionTasksGroupQueued = Array<TransitionTaskQueued>
+export type TransitionTasksGroupSelected = Array<TransitionTaskSelected>
+export type TransitionTasksQueue = Array<TransitionTasksGroupQueued>
+
+export interface TransitionKeyComputer {
+    (keys: Array<string>): undefined | string
+}
