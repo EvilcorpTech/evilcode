@@ -1,12 +1,12 @@
 import {defineShowcase} from '@eviljs/reactx/showcase'
 import {Transition} from '@eviljs/reactx/transition'
 import {TransitionAnimator, TransitionEffect} from '@eviljs/reactx/transition-animator'
-import {CSSProperties, useEffect, useState} from 'react'
+import {useEffect, useState} from 'react'
 
 export default defineShowcase('Transition', props => {
     return (
         <div className="std-flex align-start wrap gap5">
-            <Starter>
+            <Starter interval={1_000}>
                 {(start, counter) =>
                     <Transition initial mode="out-in" target="animator-0cbf">
                         <TransitionAnimator
@@ -20,7 +20,11 @@ export default defineShowcase('Transition', props => {
 
                             <br/>
 
-                            {String(start)}
+                            {start ? 'New' : 'Initial'}
+
+                            <br/>
+
+                            {`key: ${String(start)}`}
 
                             <br/>
 
@@ -30,7 +34,7 @@ export default defineShowcase('Transition', props => {
                 }
             </Starter>
 
-            <Starter>
+            <Starter interval={1_000}>
                 {(start, counter) =>
                     <Transition initial mode="in-out" target="animator-0cbf">
                         <TransitionAnimator
@@ -44,7 +48,11 @@ export default defineShowcase('Transition', props => {
 
                             <br/>
 
-                            {String(start)}
+                            {start ? 'New' : 'Initial'}
+
+                            <br/>
+
+                            {`key: ${String(start)}`}
 
                             <br/>
 
@@ -54,7 +62,7 @@ export default defineShowcase('Transition', props => {
                 }
             </Starter>
 
-            <Starter style={{width: 400, height: 200}}>
+            <Starter interval={1_000} style={{width: 400, height: 200}}>
                 {(start, counter) =>
                     <Transition initial mode="cross" target="animator-0cbf">
                         <TransitionAnimator
@@ -68,7 +76,11 @@ export default defineShowcase('Transition', props => {
 
                             <br/>
 
-                            {String(start)}
+                            {start ? 'New' : 'Initial'}
+
+                            <br/>
+
+                            {`key: ${String(start)}`}
 
                             <br/>
 
@@ -84,9 +96,10 @@ export default defineShowcase('Transition', props => {
 
 function Starter(props: {
     children: (state: boolean, counter: number) => React.ReactNode
-    style?: CSSProperties
+    interval?: undefined | number
+    style?: undefined | React.CSSProperties
 }) {
-    const {children, style} = props
+    const {children, style, interval} = props
     const [start, setStart] = useState(false)
     const [counter, setCounter] = useState(0)
 
@@ -97,14 +110,14 @@ function Starter(props: {
 
         const intervalId = setInterval(() => {
             setCounter(state => state + 1)
-        }, 100)
+        }, interval ?? 100)
 
         function onClean() {
             clearInterval(intervalId)
         }
 
         return onClean
-    }, [start])
+    }, [start, interval])
 
     return (
         <div className="std-flex column align-center gap5">
@@ -118,8 +131,7 @@ function Starter(props: {
             <div
                 style={{
                     padding: 'var(--std-gutter4)',
-                    color: start ? 'red' : 'blue',
-                    border: '3px solid ' + (start ? 'red' : 'blue'),
+                    border: '3px solid ' + (start ? 'blue' : 'currentColor'),
                     borderRadius: 'var(--std-radius1)',
                     ...style,
                 }}
