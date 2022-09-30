@@ -1,7 +1,7 @@
 .DS_Store
 /build/
-/lib/@types
 /private
 node_modules
 package-lock.json
+pnpm-lock.yaml
 tsconfig.tsbuildinfo

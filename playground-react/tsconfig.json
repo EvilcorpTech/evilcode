@@ -4,8 +4,7 @@
     "compilerOptions": {
         "baseUrl": "./src",
         "paths": {
-            "~/*": ["./*"],
-            "*": ["../lib/*"],
+            "~/*": ["./*"]
         },
         "tsBuildInfoFile": "./node_modules/.cache/tsbuildinfo",
     },

@@ -1,28 +1,44 @@
 {
-    "version": "1.0.0",
     "type": "module",
+    "scripts": {
+        "init": "npx pnpm@latest install",
+        "upgrade": "npx npm-upgrade@latest && npm run init",
+        "dev": "vite",
+        "build": "vite build",
+        "preview": "vite preview",
+        "check": "npm run check-ts && npm run check-circular",
+        "check-ts": "npx tsc --noEmit",
+        "check-circular": "npx madge@latest --ts-config ./tsconfig.json --circular ./src/main.tsx"
+    },
     "dependencies": {
-        "@eviljs/tsconfig": "^1",
-        "@eviljs/webpack-config-react": "^1",
-        "@types/prop-types": "^15",
-        "@types/react": "^18",
-        "@types/react-dom": "^18",
-        "typescript": "^4.8",
-        "webpack": "^5",
-        "webpack-cli": "^4",
-        "webpack-dev-server": "^4"
+        "@evilcss/std": "1",
+        "@evilcss/ui": "1",
+        "@eviljs/react": "1",
+        "@eviljs/reactx": "1",
+        "@eviljs/std": "1",
+        "@eviljs/web": "1",
+        "@eviljs/webx": "1",
+        "prop-types": "15",
+        "react": "18",
+        "react-dom": "18"
+    },
+    "devDependencies": {
+        "@eviljs/tsconfig": "1",
+        "@types/node": "*",
+        "@types/prop-types": "15",
+        "@types/react": "18",
+        "@types/react-dom": "18",
+        "@vitejs/plugin-react": "2",
+        "postcss": "8",
+        "postcss-preset-env": "7",
+        "rollup-plugin-visualizer": "5",
+        "tslib": "2",
+        "typescript": "4.8",
+        "vite": "3",
+        "vite-plugin-checker": "*"
     },
     "engines": {
-        "node": ">= 14",
+        "node": ">= 16",
         "npm": ">= 7"
-    },
-    "scripts": {
-        "init": "npm install --global-style",
-        "init-lib": "npm --prefix lib run init",
-        "upgrade": "npx npm-upgrade && npm run init && npm update --global-style",
-        "upgrade-lib": "npm --prefix lib run upgrade",
-        "dev": "NODE_ENV=${NODE_ENV:-development} webpack-dev-server --progress",
-        "check": "tsc --noEmit",
-        "build": "NODE_ENV=production BASE_PATH=${BASE_PATH:-/} ROUTER_TYPE=${ROUTER_TYPE:-path} PREACT=${PREACT:-yes} webpack-cli --mode production"
     }
 }
