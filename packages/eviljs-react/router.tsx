@@ -3,7 +3,7 @@ import {escapeRegexp} from '@eviljs/std/regexp.js'
 import {asArray, isPromise, Nil} from '@eviljs/std/type.js'
 import {compilePattern, exact, regexpFromPattern} from '@eviljs/web/route.js'
 import {createRouter, serializeRouteToString, RouterOptions, RouterParams, RouterRouteParams} from '@eviljs/web/router.js'
-import {forwardRef, Fragment, useCallback, useContext, useEffect, useMemo, useRef, useState} from 'react'
+import {forwardRef, useCallback, useContext, useEffect, useMemo, useRef, useState} from 'react'
 import {classes} from './classes.js'
 import {defineContext} from './ctx.js'
 
@@ -292,11 +292,7 @@ export function SwitchRoute(props: SwitchRouteProps) {
         return []
     }, [children, matchRoute])
 
-    return (
-        <Fragment>
-            {computeValue(matchingChild, ...(matchingRouteArgs ?? []))}
-        </Fragment>
-    )
+    return <>{computeValue(matchingChild, ...(matchingRouteArgs ?? []))}</>
 }
 
 export function CaseRoute(props: CaseRouteProps) {
@@ -338,11 +334,7 @@ export function WhenRoute(props: WhenRouteProps) {
         return cleanRouteMatches(routeMatches)
     }, [is, matchRoute])
 
-    return (
-        <Fragment>
-            {computeValue(children, ...routeMatches)}
-        </Fragment>
-    )
+    return <>{computeValue(children, ...routeMatches)}</>
 }
 
 /*
@@ -485,9 +477,16 @@ export function Redirect(props: RedirectProps) {
     const shouldReplace = replace ?? true
 
     useEffect(() => {
-        shouldReplace
-            ? replaceRoute(to, params, state)
-            : routeTo(to, params, state)
+        if (! to) {
+            return
+        }
+
+        if (shouldReplace) {
+            replaceRoute(to, params, state)
+        }
+        else {
+            routeTo(to, params, state)
+        }
     })
 
     return null
@@ -504,7 +503,7 @@ export function cleanRouteMatches(routeMatches: null | RegExpMatchArray) {
 // Types ///////////////////////////////////////////////////////////////////////
 
 export interface RouterProviderProps {
-    children: React.ReactNode
+    children: undefined | React.ReactNode
     options: RouterOptions
 }
 
@@ -543,30 +542,27 @@ export interface WhenRouteProps {
     is: string | RegExp
 }
 
-export interface RouteProps extends React.AnchorHTMLAttributes<HTMLAnchorElement> {
+export interface RouteProps extends RoutingProps, React.AnchorHTMLAttributes<HTMLAnchorElement> {
     activeClass?: undefined | string
     activeProps?: undefined | {className?: undefined | string}
     activeWhenExact?: undefined | boolean
     children?: undefined | React.ReactNode
     if?: undefined | ComputableValue<RouteGuardResult>
-    params?: undefined | RouterParams
     replace?: undefined | boolean
-    state?: undefined | any
-    to?: undefined | string
 }
 
-export interface LinkProps extends React.AnchorHTMLAttributes<HTMLAnchorElement> {
-    children: React.ReactNode
-    params?: undefined | RouterParams
-    state?: undefined | any
-    to?: undefined | string
+export interface LinkProps extends RoutingProps, React.AnchorHTMLAttributes<HTMLAnchorElement> {
+    children: undefined | React.ReactNode
 }
 
-export interface RedirectProps {
-    params?: undefined | RouterParams
+export interface RedirectProps extends RoutingProps {
     replace?: undefined | boolean
+}
+
+export interface RoutingProps {
+    params?: undefined | RouterParams
     state?: undefined | any
-    to: string
+    to: undefined | string
 }
 
 export type RouteGuardResult = undefined | boolean | Promise<boolean>

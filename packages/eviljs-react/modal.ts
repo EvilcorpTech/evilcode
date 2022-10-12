@@ -1,6 +1,6 @@
-import {useEffect} from 'react'
-
 import '@evilcss/std/modal.classes.css'
+
+import {useEffect} from 'react'
 
 export function useScrollLockAuto() {
     useEffect(() => {

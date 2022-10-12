@@ -65,13 +65,13 @@ export function useRootStore<S extends StoreStateGeneric>(spec: StoreSpec<S>): S
 }
 
 export function useStore<S extends StoreStateGeneric>() {
-    return useContext(StoreV2Context) as unknown as Store<S>
+    return useContext(StoreV2Context) as unknown as undefined | Store<S>
 }
 
 export function useRootStoreStorage<S extends StoreStateGeneric, L extends StoreStateGeneric = S>(options?: StoreStorageOptions<S, L>) {
     const onLoad = options?.onLoad
     const onMerge = options?.onMerge
-    const [state, setState] = useStore<S>()
+    const [state, setState] = useStore<S>()!
 
     useCoreRootStoreStorage<S, L>(state, {
         ...options,

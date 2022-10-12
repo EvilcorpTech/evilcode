@@ -1,6 +1,7 @@
 import {createI18n, I18n, I18nMessages} from '@eviljs/std/i18n.js'
 import {useContext, useMemo, useState} from 'react'
 import {defineContext} from './ctx.js'
+import type {StateSetter} from './state.js'
 
 export const I18nContext = defineContext<I18nManager>('I18nContext')
 
@@ -94,15 +95,15 @@ export function I18nProvider(props: I18nProviderProps) {
     return withI18n(props.children, props.i18n)
 }
 
-export function useI18n<T extends undefined | I18nManager = undefined | I18nManager>() {
-    return useContext(I18nContext) as T
+export function useI18n<L extends string = string, K extends string = string>() {
+    return useContext(I18nContext) as undefined | I18nManager<L, K>
 }
 
-export function useI18nMsg<I extends I18nManager, T extends {}>(
-    compute: I18nMsgsComputer<I, T>,
+export function useI18nMsg<T extends {}, L extends string = string, K extends string = string>(
+    compute: I18nMsgsComputer<I18nManager<L, K>, T>,
     deps?: undefined | Array<unknown>,
 ) {
-    const i18n = useI18n() as I
+    const i18n = useI18n()! as I18nManager<L, K>
     const {locale, fallbackLocale, messages} = i18n
 
     const i18nMsg = useMemo(() => {
@@ -122,7 +123,7 @@ export interface I18nProviderProps {
     i18n: I18nManager
 }
 
-export interface I18nMsgsComputer<I extends I18nManager, T extends {}> {
+export interface I18nMsgsComputer<I, T extends {}> {
     (i18n: I): T
 }
 
@@ -130,7 +131,7 @@ export interface I18nManager<L extends string = string, K extends string = strin
 }
 
 export interface I18nSetters<L extends string = string, K extends string = string> {
-    setLocale(value: L): void
-    setFallbackLocale(value: L): void
-    setMessages(value: I18nMessages<L, K>): void
+    setLocale: StateSetter<L>
+    setFallbackLocale: StateSetter<L>
+    setMessages: StateSetter<I18nMessages<L, K>>
 }

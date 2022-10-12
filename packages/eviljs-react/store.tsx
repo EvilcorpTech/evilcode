@@ -130,7 +130,7 @@ export function useRootStore<S extends StoreStateGeneric>(spec: StoreSpec<S>): S
 }
 
 export function useStoreContext<S extends StoreStateGeneric>() {
-    return useContext(StoreContext) as Store<S>
+    return useContext(StoreContext) as undefined | Store<S>
 }
 
 /*
@@ -144,7 +144,7 @@ export function useStoreState<S extends StoreStateGeneric, V>(selectorOptional: 
 export function useStoreState<S extends StoreStateGeneric>(): StateManager<S>
 export function useStoreState<S extends StoreStateGeneric, V>(selectorOptional?: undefined | StoreSelector<S, V>, deps?: undefined | Array<unknown>): StateManager<V> {
     const selector = (selectorOptional ?? defaultSelector) as StoreSelector<StoreStateGeneric, unknown>
-    const store = useStoreContext<S>()
+    const store = useStoreContext<S>()!
     const state = store.stateRef.current
     const path = useMemo(() => selectPath(state, selector), deps ?? [])
     const render = useRender()

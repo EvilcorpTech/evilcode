@@ -105,7 +105,7 @@ export function useRootAuth(fetch: Fetch, cookie: Cookie, options?: undefined | 
     const authenticateOptions = options?.authenticate
     const validateOptions = options?.validate
     const invalidateOptions = options?.invalidate
-    const [token, setToken] = useState<undefined | string>(() => cookie.get()) // Reading document.cookie is slow.
+    const [token, setToken] = useState(() => cookie.get()) // Reading document.cookie is slow.
     const [tokenState, setTokenState] = useState(AuthTokenState.Init)
     const {busy, busyLock, busyRelease} = useBusyLock()
 
