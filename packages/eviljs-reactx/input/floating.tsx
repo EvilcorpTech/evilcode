@@ -1,7 +1,7 @@
+import './floating.css'
+
 import {classes} from '@eviljs/web/classes.js'
 import {useLayoutEffect, useMemo, useRef, useState} from 'react'
-
-import './floating.css'
 
 export function Input(props: InputProps) {
     const {className, type, label, placeholder, value, autoComplete, autoFocus, tabIndex, onChange, ...otherProps} = props

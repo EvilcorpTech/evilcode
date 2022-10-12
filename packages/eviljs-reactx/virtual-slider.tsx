@@ -1,11 +1,11 @@
+import './virtual-slider.css'
+
 import {classes} from '@eviljs/react/classes.js'
 import {useCallbackThrottled} from '@eviljs/react/event.js'
 import {mergeRefs} from '@eviljs/react/ref.js'
 import {useResizeObserver} from '@eviljs/react/resize-observer.js'
 import {isFunction} from '@eviljs/std/type.js'
 import {forwardRef, useCallback, useLayoutEffect, useMemo, useRef, useState} from 'react'
-
-import './virtual-slider.css'
 
 export const SliderVirtual = forwardRef(function SliderVirtual<I>(
     props: SliderVirtualProps<I>,

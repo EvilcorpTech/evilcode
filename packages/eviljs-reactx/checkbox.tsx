@@ -1,8 +1,8 @@
+import './checkbox.css'
+
 import {asBooleanString} from '@eviljs/web/aria.js'
 import {classes} from '@eviljs/web/classes.js'
 import {cloneElement, isValidElement} from 'react'
-
-import './checkbox.css'
 
 export function Checkbox(props: CheckboxProps) {
     const {className, children, checked, disabled, onChange, ...otherProps} = props

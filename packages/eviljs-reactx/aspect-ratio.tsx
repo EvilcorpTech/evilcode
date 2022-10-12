@@ -1,7 +1,7 @@
+import './aspect-ratio.css'
+
 import {Box, BoxProps} from '@eviljs/react/box.js'
 import {classes} from '@eviljs/react/classes.js'
-
-import './aspect-ratio.css'
 
 export function AspectRatio(props: AspectRatioProps) {
     const {children, className, width, height, style, ...otherProps} = props

@@ -1,11 +1,11 @@
+import './range.css'
+
+import {asDragPointerEvent, DragEvent, DragPointerEvent, useDrag} from '@eviljs/react/drag.js'
 import {clamp} from '@eviljs/std/math.js'
 import {distanceBetween} from '@eviljs/std/scale.js'
 import {isNil} from '@eviljs/std/type.js'
-import {useDrag, asDragPointerEvent, DragEvent, DragPointerEvent} from '@eviljs/react/drag.js'
 import {classes} from '@eviljs/web/classes.js'
-import {useCallback, useEffect, useMemo, useRef, useState, Fragment} from 'react'
-
-import './range.css'
+import {useCallback, useEffect, useMemo, useRef, useState} from 'react'
 
 export function Range(props: RangeProps) {
     const {
@@ -101,7 +101,7 @@ export function Range(props: RangeProps) {
                         }
                     }}
                 >
-                    {startHandle || <Fragment>&#124;&#124;</Fragment>}
+                    {startHandle || <>&#124;&#124;</>}
                 </button>
             </div>
 
@@ -164,7 +164,7 @@ export function Range(props: RangeProps) {
                         }
                     }}
                 >
-                    {endHandle || <Fragment>&#124;&#124;</Fragment>}
+                    {endHandle || <>&#124;&#124;</>}
                 </button>
                 <span className="track-7bf1 end">
                     {endLine}

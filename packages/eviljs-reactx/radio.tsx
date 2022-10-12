@@ -1,7 +1,7 @@
+import './radio.css'
+
 import {classes} from '@eviljs/web/classes.js'
 import {useMemo} from 'react'
-
-import './radio.css'
 
 export let GroupId = 0
 

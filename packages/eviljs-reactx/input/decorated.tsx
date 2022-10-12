@@ -1,8 +1,8 @@
-import {classes} from '@eviljs/web/classes.js'
-import {useRef, useState, Fragment} from 'react'
-import {Button} from '../button.js'
-
 import './decorated.css'
+
+import {classes} from '@eviljs/web/classes.js'
+import {useRef, useState} from 'react'
+import {Button} from '../button.js'
 
 export function InputLabel(props: InputLabelProps) {
     const {children, className, labelClass, title, ...otherProps} = props
@@ -67,21 +67,20 @@ export function SecretInput(props: SecretInputProps) {
             {...otherProps}
             type={visible ? 'text' : 'password'}
             className={classes('SecretInput-b91c', className)}
-            decorate={(input) =>
-                <Fragment>
-                    {decorate?.(input) ?? input}
-                    <Button
-                        className="button-2bdf"
-                        tabIndex={-1}
-                        onClick={() => setVisible(! visible)}
-                    >
-                        {visible
-                            ? hideIcon
-                            : showIcon
-                        }
-                    </Button>
-                </Fragment>
-            }
+            decorate={input => <>
+                {decorate?.(input) ?? input}
+
+                <Button
+                    className="button-2bdf"
+                    tabIndex={-1}
+                    onClick={() => setVisible(! visible)}
+                >
+                    {visible
+                        ? hideIcon
+                        : showIcon
+                    }
+                </Button>
+            </>}
         />
     )
 }
@@ -96,13 +95,11 @@ export function decorateEnd(children: React.ReactNode) {
 
 export function decorateSides(sides: {start?: React.ReactNode, end?: React.ReactNode}) {
     function decorator(element: React.ReactNode) {
-        return (
-            <Fragment>
-                {sides?.start}
-                {element}
-                {sides?.end}
-            </Fragment>
-        )
+        return <>
+            {sides?.start}
+            {element}
+            {sides?.end}
+        </>
     }
 
     return decorator

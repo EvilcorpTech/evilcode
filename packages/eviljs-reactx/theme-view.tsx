@@ -1,10 +1,10 @@
+import './theme-view.css'
+
 import {hslFromRgb, rgbFromHexString, rgbFromHsl, rgbToHexString, Hsl} from '@eviljs/std/color.js'
 import {times} from '@eviljs/std/iter.js'
 import {classes} from '@eviljs/web/classes.js'
 import {CSSProperties, Fragment, useEffect, useRef, useState} from 'react'
 import {ExampleIcon as Icon} from './icon-example/v2.js'
-
-import './theme-view.css'
 
 export function ThemeView(props: ThemeViewProps) {
     const {className, head, children, ...otherProps} = props

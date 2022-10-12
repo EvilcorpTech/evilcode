@@ -1,7 +1,7 @@
+import './sign.css'
+
 import {classes} from '@eviljs/web/classes.js'
 import type {CheckboxModel} from '../checkbox.js'
-
-import './sign.css'
 
 export function CheckboxMark(props: CheckboxMarkProps) {
     const {checked, className, checkedIcon, mixedIcon, ...otherProps} = props

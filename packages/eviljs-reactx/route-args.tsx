@@ -1,7 +1,7 @@
 import {useRouteMatches, useRouter} from '@eviljs/react/router.js'
 import {isArray, isFunction} from '@eviljs/std/type.js'
 import {regexpFromPattern} from '@eviljs/web/route.js'
-import {Children, cloneElement, Fragment, useMemo} from 'react'
+import {Children, cloneElement, useMemo} from 'react'
 
 export function RouteArgs(props: RouteArgsProps) {
     const {route, fromProp, guard, children, ...otherProps} = props
@@ -26,7 +26,7 @@ export function RouteArgs(props: RouteArgsProps) {
         // Skips mapping if current route does not match the pattern.
         // Useful when rendering a component being unmounted, inside a transition.
         // We use a fragment for typing reasons.
-        return <Fragment>{children}</Fragment>
+        return <>{children}</>
     }
 
     const args = fromProp
@@ -58,11 +58,11 @@ export function RouteArgs(props: RouteArgsProps) {
 
     return (
         // We use a fragment for typing reasons.
-        <Fragment>
+        <>
             {Children.map(children, it =>
                 cloneElement(it, routedProps)
             )}
-        </Fragment>
+        </>
     )
 }
 

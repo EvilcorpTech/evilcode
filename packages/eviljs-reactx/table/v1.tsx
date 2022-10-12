@@ -1,8 +1,8 @@
+import './v1.css'
+
 import {classes} from '@eviljs/react/classes.js'
 import {asArray} from '@eviljs/std/type.js'
 import {ComponentProps, forwardRef, isValidElement} from 'react'
-
-import './v1.css'
 
 /*
 * EXAMPLE

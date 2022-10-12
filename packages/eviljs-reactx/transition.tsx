@@ -51,7 +51,7 @@ export function Transition(props: TransitionProps) {
     }, [])
 
     return (
-        <Fragment>
+        <>
             {state.tasks.map((it, idx) =>
                 <AnimatorMemo
                     key={it.key}
@@ -61,7 +61,7 @@ export function Transition(props: TransitionProps) {
                     onEnd={onTaskEnd}
                 />
             )}
-        </Fragment>
+        </>
     )
 }
 
@@ -97,6 +97,12 @@ export function Animator(props: AnimatorProps) {
         }
         return 0
     })()
+
+    if (taskEvents === 0 && taskLifecycle !== 'animated') {
+        // We derive the state. In this way an unmount action with 0 events
+        // is reflected immediately (without re-layout, re-paint and flashing).
+        setTaskLifecycle('animated')
+    }
 
     const onTaskEnd = useCallback(() => {
         setTaskLifecycle('animated')

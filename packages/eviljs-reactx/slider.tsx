@@ -1,7 +1,7 @@
+import './slider.css'
+
 import {asArray} from '@eviljs/std/type.js'
 import {classes} from '@eviljs/web/classes.js'
-
-import './slider.css'
 
 export enum SliderDirection {
     Row = 'row',

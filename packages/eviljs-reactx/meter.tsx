@@ -1,6 +1,6 @@
-import {classes} from '@eviljs/web/classes.js'
-
 import './meter.css'
+
+import {classes} from '@eviljs/web/classes.js'
 
 export function Meter(props: MeterProps) {
     const {className, value, ...otherProps} = props

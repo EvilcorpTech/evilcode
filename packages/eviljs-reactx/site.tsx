@@ -425,7 +425,7 @@ export interface Site
     routerType: RT
     routeArgsProp: string
     routePlaceholders: {[key: string]: string}
-    routerDefault?: undefined | JSX.Element
+    routerDefault?: undefined | React.ReactNode
     createRouter(
         routesModel: SiteRoutesModel<RK, AK, WK, NK, W>,
     ): SiteElement

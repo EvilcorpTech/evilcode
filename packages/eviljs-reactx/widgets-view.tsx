@@ -1,33 +1,32 @@
-import {times} from '@eviljs/std/iter.js'
-import {classes} from '@eviljs/web/classes.js'
-import {Fragment, useState} from 'react'
-import {Accordion, AccordionList} from './accordion.js'
-import {Button} from './button.js'
-import {ArmoredButton} from './button-armored.js'
-import {BusyButton} from './button-busy.js'
-import {Checkbox} from './checkbox.js'
-import {CheckboxMark as CheckboxMarkV1} from './checkbox-mark/shape.js'
-import {CheckboxMark as CheckboxMarkV2} from './checkbox-mark/sign.js'
-import {Input as InputV2, SecretInput as SecretInputV2, InputLabel as InputLabelV2} from './input/decorated.js'
-import {Input as InputV1} from './input/floating.js'
-import {RadioGroup} from './radio.js'
-import {RangeNumeric, Range} from './range.js'
-import {Slider, Slide} from './slider.js'
-import {Spinner as SpinnerV1} from './spinner/v1.js'
-import {Spinner as SpinnerV2} from './spinner/v2.js'
-import {Spinner as SpinnerV3} from './spinner/v3.js'
-import {Spinner as SpinnerV4} from './spinner/v4.js'
-import {Switch} from './switch.js'
-import {Tooltip} from './tooltip.js'
-
 import './button-armored.css'
 import './button-busy/replace.css'
 import './button-busy/reveal.css'
 import './input/decorated-theme.css'
 import './input/floating-theme.css'
 import './range/theme.css'
-
 import './widgets-view.css'
+
+import {times} from '@eviljs/std/iter.js'
+import {classes} from '@eviljs/web/classes.js'
+import {useState} from 'react'
+import {Accordion, AccordionList} from './accordion.js'
+import {ArmoredButton} from './button-armored.js'
+import {BusyButton} from './button-busy.js'
+import {Button} from './button.js'
+import {CheckboxMark as CheckboxMarkV1} from './checkbox-mark/shape.js'
+import {CheckboxMark as CheckboxMarkV2} from './checkbox-mark/sign.js'
+import {Checkbox} from './checkbox.js'
+import {Input as InputV2, InputLabel as InputLabelV2, SecretInput as SecretInputV2} from './input/decorated.js'
+import {Input as InputV1} from './input/floating.js'
+import {RadioGroup} from './radio.js'
+import {Range, RangeNumeric} from './range.js'
+import {Slide, Slider} from './slider.js'
+import {Spinner as SpinnerV1} from './spinner/v1.js'
+import {Spinner as SpinnerV2} from './spinner/v2.js'
+import {Spinner as SpinnerV3} from './spinner/v3.js'
+import {Spinner as SpinnerV4} from './spinner/v4.js'
+import {Switch} from './switch.js'
+import {Tooltip} from './tooltip.js'
 
 export function WidgetsView(props: WidgetsViewProps) {
     const {className} = props
@@ -88,7 +87,7 @@ export function WidgetsView(props: WidgetsViewProps) {
 
                 <ArmoredButton>
                     {({armor, close}) =>
-                        <Fragment>
+                        <>
                             <Button
                                 className="armor plain halo"
                                 onClick={armor}
@@ -109,7 +108,7 @@ export function WidgetsView(props: WidgetsViewProps) {
                             >
                                 Confirm
                             </Button>
-                        </Fragment>
+                        </>
                     }
                 </ArmoredButton>
             </div>

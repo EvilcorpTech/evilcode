@@ -1,10 +1,10 @@
+import './accordion.css'
+
 import {Box, BoxProps} from '@eviljs/react/box.js'
 import {asArray} from '@eviljs/std/type.js'
 import {flushStyles} from '@eviljs/web/animation.js'
 import {classes} from '@eviljs/web/classes.js'
 import {Children, isValidElement, useCallback, useEffect, useRef, useState} from 'react'
-
-import './accordion.css'
 
 export function AccordionList(props: AccordionListProps) {
     const {className, children, initial, maxOpen, onChange, ...otherProps} = props

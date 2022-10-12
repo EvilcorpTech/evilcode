@@ -1,6 +1,6 @@
-import {classes} from '@eviljs/web/classes.js'
-
 import './v4.css'
+
+import {classes} from '@eviljs/web/classes.js'
 
 export function Spinner(props: SpinnerProps) {
     const {active, className, ...otherProps} = props
