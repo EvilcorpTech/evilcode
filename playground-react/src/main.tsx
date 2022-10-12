@@ -28,7 +28,7 @@ function attachRootElement(): Element {
     }
 
     const rootElement = document.createElement('div')
-    rootElement.classList.add('Root')
+    rootElement.classList.add('Root', 'std')
     document.body.prepend(rootElement)
     return rootElement
 }
