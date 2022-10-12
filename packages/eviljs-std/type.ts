@@ -177,25 +177,29 @@ export function asDate(value: unknown): undefined | Date {
 
 export type Nil = undefined | null
 
-export type ValueOf<T> = T[keyof T]
-
 export type Defined<O> = {
     [P in keyof O]-?: Exclude<O[P], undefined>
 }
+
+export type PartialDeep<T> =
+    T extends object
+        ? {[P in keyof T]?: PartialDeep<T[P]>}
+        : T
+
+export type ValueOf<T> = T[keyof T]
 
 export type ElementOf<A extends Array<unknown>> =
     A extends Array<infer T>
         ? T
         : never
 
-export type PromiseOf<T extends Promise<unknown>> =
-    T extends Promise<infer R>
-        ? R
-        : never
+export type UnionOf<T extends Array<unknown>> = T[number]
 
-export type UnionFrom<T extends Array<unknown>> = T[number]
-
-export type PartialDeep<T> =
-    T extends object
-        ? {[P in keyof T]?: PartialDeep<T[P]>}
-        : T
+export type Unsafe<T> =
+    T extends undefined | null | boolean | number | string | symbol
+        ? undefined | null | T
+    : T extends Array<infer I>
+        ? undefined | null | Array<Unsafe<I>>
+    : T extends object
+        ? {[key in keyof T]?: undefined | null | Unsafe<T[key]>}
+    : unknown
