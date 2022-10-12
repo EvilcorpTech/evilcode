@@ -1,3 +1,4 @@
+import {computeValue} from '@eviljs/std/fn.js'
 import {isFunction, isObject} from '@eviljs/std/type.js'
 import {asJsonOptions, Fetch, FetchRequestMethod, mergeOptions, FetchRequestOptions} from './fetch.js'
 import {throwInvalidResponse} from './throw.js'
@@ -5,7 +6,7 @@ import {throwInvalidResponse} from './throw.js'
 export const AuthDefaultUrl = '/auth'
 export const AuthDefaultOptions: FetchRequestOptions = {}
 
-export async function authenticate(fetch: Fetch, credentials: AuthCredentials, options?: AuthenticateOptions) {
+export async function authenticate(fetch: Fetch, credentials: AuthCredentials, options?: undefined | AuthenticateOptions) {
     const method = options?.method ?? FetchRequestMethod.Post
     const url = createUrl(options?.url, credentials)
     const createRequestBody = options?.requestBody ?? defaultCreateRequestBody
@@ -84,13 +85,11 @@ export async function invalidate(fetch: Fetch, token: string, options?: Invalida
     return response.ok
 }
 
-export function createUrl<A extends Args>(url: undefined | FetchOptionGetter<A, string>, ...args: A) {
-    return isFunction(url)
-        ? url(...args)
-        : (url ?? AuthDefaultUrl)
+export function createUrl<A extends Array<unknown>>(url: undefined | FetchOptionGetter<A, string>, ...args: A) {
+    return computeValue(url, ...args) ?? AuthDefaultUrl
 }
 
-export function createOptions<A extends Args>(options: undefined | FetchOptionGetter<A, FetchRequestOptions>, ...args: A) {
+export function createOptions<A extends Array<unknown>>(options: undefined | FetchOptionGetter<A, FetchRequestOptions>, ...args: A) {
     return isFunction(options)
         ? options(...args)
         : (options ?? AuthDefaultOptions)
@@ -132,19 +131,16 @@ export function invalidResponseContentReason() {
 
 // Types ///////////////////////////////////////////////////////////////////////
 
-export interface Args extends Array<unknown> {
-}
-
-export interface FetchOptions<A extends Args> {
-    url?: FetchOptionGetter<A, string>
-    method?: FetchRequestMethod
-    options?: FetchOptionGetter<A, FetchRequestOptions>
+export interface FetchOptions<A extends Array<unknown>> {
+    url?: undefined | FetchOptionGetter<A, string>
+    method?: undefined | FetchRequestMethod
+    options?: undefined | FetchOptionGetter<A, FetchRequestOptions>
 }
 
 export interface AuthenticateOptions extends FetchOptions<[AuthCredentials]> {
-    requestBody?(credentials: AuthCredentials): any
-    responseError?(body: any): string | undefined
-    responseToken?(body: any): string | undefined
+    requestBody?: undefined | ((credentials: AuthCredentials) => unknown)
+    responseError?: undefined | ((body: unknown) => string | undefined)
+    responseToken?: undefined | ((body: unknown) => string | undefined)
 }
 
 export interface ValidateOptions extends FetchOptions<[string]> {
@@ -159,10 +155,10 @@ export interface AuthCredentials {
 }
 
 export interface AuthCredentialsResponse {
-    error?: string
-    token?: string
+    error?: undefined | string
+    token?: undefined | string
 }
 
-export type FetchOptionGetter<A extends Args, R> =
+export type FetchOptionGetter<A extends Array<unknown>, R> =
     | R
     | ((...args: A) => R)
