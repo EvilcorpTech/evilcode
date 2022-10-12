@@ -9,6 +9,6 @@
 .std {
     color: var(--theme-fg, var(--std-color-fg1));
 }
-.std.bg {
+.std.with-bg {
     background-color: var(--theme-bg, var(--std-color-bg1));
 }
