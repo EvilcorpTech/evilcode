@@ -1,7 +1,7 @@
 import {isArray, isString} from './type.js'
 
 export function safeArray(value: unknown) {
-        return isArray(value) ? value : []
+    return isArray(value) ? value : []
 }
 
 export function safeString(value: unknown) {

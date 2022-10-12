@@ -197,9 +197,9 @@ export type UnionOf<T extends Array<unknown>> = T[number]
 
 export type Unsafe<T> =
     T extends undefined | null | boolean | number | string | symbol
-        ? undefined | null | T
+        ? Nil | T
     : T extends Array<infer I>
-        ? undefined | null | Array<Unsafe<I>>
+        ? Nil | Array<Unsafe<I>>
     : T extends object
-        ? {[key in keyof T]?: undefined | null | Unsafe<T[key]>}
+        ? Nil | {[key in keyof T]?: Nil | Unsafe<T[key]>}
     : unknown
