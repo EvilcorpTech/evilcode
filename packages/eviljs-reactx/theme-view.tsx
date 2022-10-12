@@ -3,7 +3,7 @@ import './theme-view.css'
 import {hslFromRgb, rgbFromHexString, rgbFromHsl, rgbToHexString, Hsl} from '@eviljs/std/color.js'
 import {times} from '@eviljs/std/iter.js'
 import {classes} from '@eviljs/web/classes.js'
-import {CSSProperties, Fragment, useEffect, useRef, useState} from 'react'
+import {Fragment, useEffect, useRef, useState} from 'react'
 import {ExampleIcon as Icon} from './icon-example/v2.js'
 
 export function ThemeView(props: ThemeViewProps) {
@@ -15,7 +15,7 @@ export function ThemeView(props: ThemeViewProps) {
     return (
         <div
             {...otherProps}
-            className={classes('ThemeView-t2eb', `std theme-${theme} bg`, className)}
+            className={classes('ThemeView-t2eb', `std theme-${theme} with-bg`, className)}
             style={{
                 '--std-color-primary-h': primaryAccent[0] * 360 + 'deg',
                 '--std-color-primary-s': primaryAccent[1] * 100 + '%',
@@ -23,7 +23,7 @@ export function ThemeView(props: ThemeViewProps) {
                 '--std-color-secondary-h': secondaryAccent[0] * 360 + 'deg',
                 '--std-color-secondary-s': secondaryAccent[1] * 100 + '%',
                 '--std-color-secondary-l': secondaryAccent[2] * 100 + '%',
-            } as CSSProperties}
+            } as React.CSSProperties}
         >
             {head}
 

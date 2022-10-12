@@ -98,7 +98,7 @@ export function Animator(props: AnimatorProps) {
         return 0
     })()
 
-    if (taskEvents === 0 && taskLifecycle !== 'animated') {
+    if (taskEvents === 0 && taskLifecycle !== 'animated' && task.action !== 'render') {
         // We derive the state. In this way an unmount action with 0 events
         // is reflected immediately (without re-layout, re-paint and flashing).
         setTaskLifecycle('animated')
