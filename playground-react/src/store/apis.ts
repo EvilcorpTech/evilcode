@@ -1,10 +1,24 @@
+import type {StoreStorageOptions} from '@eviljs/react/store-v1'
 import {loadSsrState} from '@eviljs/web/ssr'
-import {Version} from './context'
+import {Version} from '~/env/apis'
 
 export const StoreStateVersion = Version.replaceAll('.', '-')
 export const StoreSpec = {actions: {}, createState}
 export const StoreStateSsrId = 'AppState-' + StoreStateVersion
 export const Storage: Storage = window.localStorage
+
+export const StoreStorageSpec: StoreStorageOptions<StoreState, StoreState> = {
+    stateVersion: StoreStateVersion,
+    debounce: 5000,
+    onLoad() {
+        console.debug('app:', 'store state restored from LocalStorage')
+    },
+    onMerge(savedState, state) {
+        return mergeState(state, savedState)
+    },
+    onSave: filterStorageState,
+}
+
 
 export function createState(): StoreState {
     const initialState = createInitialState()

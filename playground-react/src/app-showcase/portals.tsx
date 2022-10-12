@@ -1,7 +1,7 @@
+import './portals.css'
+
 import {Portal, Teleport} from '@eviljs/react/portals'
 import {defineShowcase} from '@eviljs/reactx/showcase'
-
-import './portals.css'
 
 export default defineShowcase('Portals', (props) =>
     <div>

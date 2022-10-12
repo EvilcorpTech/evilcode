@@ -1,10 +1,10 @@
-import {defineIcon, Fragment} from '@eviljs/react/icon'
+import {defineIcon} from '@eviljs/react/icon'
 
 export const ExampleIcon = defineIcon({
     name: 'ExampleIcon',
     className: 'std-icon',
     viewBox: '0 0 512 512',
-    children: <Fragment>
+    children: <>
         <path
             fill="none"
             strokeWidth="var(--stroke-width, 2)"
@@ -18,5 +18,5 @@ export const ExampleIcon = defineIcon({
             strokeLinejoin="round"
             d="M17.5 17.5L13.875 13.875"
         />
-    </Fragment>,
+    </>,
 })

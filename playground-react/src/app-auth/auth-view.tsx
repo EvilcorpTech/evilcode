@@ -1,11 +1,12 @@
-import {useAuth, AuthTokenState} from '@eviljs/react/auth'
+import './auth-view.css'
+
+import {AuthTokenState, useAuth} from '@eviljs/react/auth'
 import {classes} from '@eviljs/react/classes'
-import {useRouter, Redirect} from '@eviljs/react/router'
+import {Redirect, useRouter} from '@eviljs/react/router'
 import {AuthCredentials} from '@eviljs/reactx/auth-credentials'
 import {useCallback} from 'react'
-import {useI18nMsg} from '~/hooks/i18n'
-
-import './auth-view.css'
+import {useI18nMsg} from '~/i18n/hooks'
+import {Theme, themeClassOf} from '~/theme/apis'
 
 export function AuthView(props: AuthViewProps) {
     const {className, ...otherProps} = props
@@ -31,7 +32,7 @@ export function AuthView(props: AuthViewProps) {
     return (
         <div
             {...otherProps}
-            className={classes('AuthView-b622 std theme-light std-extend-v std-flex column stack', className)}
+            className={classes('AuthView-b622 std-extend-v std-flex column stack', themeClassOf(Theme.Light), className)}
         >
             <AuthCredentials
                 className="credentials-b2be"

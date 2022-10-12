@@ -1,12 +1,12 @@
+import '~/style/index.css'
+
 import {createContainer} from '@eviljs/std/container'
 import {createRoot} from 'react-dom/client'
-import {ContainerSpec} from './container'
-import * as Context from './context'
-import {Root, RootContext} from './root'
+import {ContainerSpec} from '~/container/apis'
+import * as Env from '~/env/apis'
+import {Root, RootContext} from '~/root/root'
 
-import '~/styles.css'
-
-console.table({...Context})
+console.table({...Env})
 
 const container = createContainer(ContainerSpec)
 const rootElement = attachRootElement()

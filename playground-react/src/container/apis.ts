@@ -6,10 +6,10 @@ import {createFetch} from '@eviljs/web/fetch'
 import {asBaseUrl} from '@eviljs/web/url'
 import {mockFetchDelayed} from '@eviljs/web/fetch-mock'
 import {createQuery} from '@eviljs/web/query'
-import {ApiUrl, BasePath, BundleName} from './context'
-import {CookieSpec} from './cookie'
-import {I18nSpec} from './i18n'
-import {FetchMocksSpec} from './mock'
+import {ApiUrl, BasePath, BundleName} from '~/env/apis'
+import {CookieSpec} from '~/cookie/apis'
+import {I18nSpec} from '~/i18n/apis'
+import {FetchMocksSpec} from '~/mock/apis'
 
 export const ContainerSpec = {
     services: {

@@ -1,4 +1,4 @@
-import type {DateString, IdString, UrlString} from '../models/types'
+import type {DateString, IdString, UrlString} from '~/type/apis'
 
 export interface ReadAccountResponse {
     id: IdString

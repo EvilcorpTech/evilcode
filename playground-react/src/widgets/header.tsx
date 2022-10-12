@@ -1,9 +1,9 @@
+import './header.css'
+
 import {classes} from '@eviljs/react/classes'
 import {Route} from '@eviljs/react/router'
-import {StoreState, useStoreState} from '../hooks/store'
-import * as Routes from '../routes'
-
-import './header.css'
+import {StoreState, useStoreState} from '~/store/hooks'
+import * as Routes from '~/route/apis'
 
 const Menu = [
     {to: Routes.RootRoute.path(), message: 'Home'},

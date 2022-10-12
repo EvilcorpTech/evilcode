@@ -1,16 +1,16 @@
+import './admin-view.css'
+
 import {useAuth} from '@eviljs/react/auth'
 import {classes} from '@eviljs/react/classes'
 import {Button} from '@eviljs/reactx/button'
 import {useCallback} from 'react'
-import {useI18nMsg} from '~/hooks/i18n'
+import {useI18nMsg} from '~/i18n/hooks'
+import {Theme, themeClassOf} from '~/theme/apis'
 import {Header} from '~/widgets/header'
-
-import './admin-view.css'
 
 export function AdminView(props: AdminViewProps) {
     const {className, ...otherProps} = props
     const {destroySession} = useAuth()!
-
 
     const msg = useI18nMsg(({ t }) => {
         return {
@@ -25,7 +25,7 @@ export function AdminView(props: AdminViewProps) {
     return (
         <div
             {...otherProps}
-            className={classes('AdminView-a22c std theme-light', className)}
+            className={classes('AdminView-a22c', themeClassOf(Theme.Light), className)}
         >
             <Header/>
 
@@ -45,5 +45,5 @@ export function AdminView(props: AdminViewProps) {
 
 // Types ///////////////////////////////////////////////////////////////////////
 
-export interface AdminViewProps extends React.HTMLAttributes<HTMLDivElement> {
+export interface AdminViewProps extends React.HTMLAttributes<HTMLElement> {
 }
