@@ -1,4 +1,7 @@
 .Input-cc0a {
+    display: flex;
+    align-items: center;
+    gap: var(--input-gutter, var(--std-gutter4));
     border:
         var(--input-border-size, 2px)
         var(--input-border-style, solid)
@@ -29,13 +32,6 @@
 }
 .input-2d2b:focus {
     outline: none;
-}
-
-.Input-cc0a > *:first-child:not(input) {
-    margin-right: var(--input-gutter, var(--std-gutter4));
-}
-.Input-cc0a > *:last-child:not(input) {
-    margin-left: var(--input-gutter, var(--std-gutter4));
 }
 
 /* SecretInput ****************************************************************/

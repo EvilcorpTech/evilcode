@@ -29,7 +29,7 @@ export function Input(props: InputProps) {
 
     return (
         <div
-            className={classes('Input-cc0a std-flex align-center', className)}
+            className={classes('Input-cc0a', className)}
             onClick={() => inputRef.current?.focus()}
         >
             {render(
