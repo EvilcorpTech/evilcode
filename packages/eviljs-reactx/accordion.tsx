@@ -1,6 +1,6 @@
 import './accordion.css'
 
-import {Box, BoxProps} from '@eviljs/react/box.js'
+import {Box, type BoxProps} from '@eviljs/react/box.js'
 import {asArray} from '@eviljs/std/type.js'
 import {flushStyles} from '@eviljs/web/animation.js'
 import {classes} from '@eviljs/web/classes.js'

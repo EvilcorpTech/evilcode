@@ -1,5 +1,6 @@
 import './decorated.css'
 
+import {identity} from '@eviljs/std/fn.js'
 import {classes} from '@eviljs/web/classes.js'
 import {useRef, useState} from 'react'
 import {Button} from '../button.js'
@@ -22,22 +23,20 @@ export function InputLabel(props: InputLabelProps) {
 }
 
 export function Input(props: InputProps) {
-    const {className, decorate, disabled, inputClass, ...otherProps} = props
-    const elRef = useRef<HTMLInputElement>(null)
-
-    const render = decorate
-        ? decorate
-        : (input: React.ReactNode) => input
+    const {className, decorate, disabled, inputClass, onChange, ...otherProps} = props
+    const inputRef = useRef<HTMLInputElement>(null)
+    const render = decorate ?? identity
 
     return (
         <div
             className={classes('Input-cc0a std-flex align-center', className)}
-            onClick={() => elRef.current?.focus()}
+            onClick={() => inputRef.current?.focus()}
         >
             {render(
                 <input
+                    onChange={event => onChange?.(event.currentTarget.value)}
                     {...otherProps}
-                    ref={elRef}
+                    ref={inputRef}
                     className={classes('input-2d2b', inputClass)}
                     disabled={disabled}
                 />
@@ -59,7 +58,7 @@ export function TextInput(props: TextInputProps) {
 }
 
 export function SecretInput(props: SecretInputProps) {
-    const {className, decorate, hideIcon, showIcon, ...otherProps} = props
+    const {buttonClass, buttonStyle, className, decorate, hideIcon, showIcon, ...otherProps} = props
     const [visible, setVisible] = useState(false)
 
     return (
@@ -71,8 +70,9 @@ export function SecretInput(props: SecretInputProps) {
                 {decorate?.(input) ?? input}
 
                 <Button
-                    className="button-2bdf"
+                    className={classes('button-2bdf', buttonClass)}
                     tabIndex={-1}
+                    style={buttonStyle}
                     onClick={() => setVisible(! visible)}
                 >
                     {visible
@@ -112,15 +112,18 @@ export interface InputLabelProps extends Omit<React.HTMLAttributes<HTMLDivElemen
     labelClass?: string
 }
 
-export interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
-    decorate?(input: React.ReactNode): React.ReactNode
-    inputClass?: string
+export interface InputProps extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'onChange'> {
+    decorate?: undefined | ((input: React.ReactNode) => React.ReactNode)
+    inputClass?: undefined | string
+    onChange?: undefined | ((event: string) => void)
 }
 
 export interface TextInputProps extends InputProps {
 }
 
 export interface SecretInputProps extends InputProps {
+    buttonClass?: undefined | string
+    buttonStyle?: undefined | React.CSSProperties
     showIcon: React.ReactNode
     hideIcon: React.ReactNode
 }

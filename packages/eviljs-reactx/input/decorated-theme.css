@@ -1,37 +1,41 @@
 .Input-cc0a {
-    border: 2px solid hsl(0deg 0% var(--std-fg-l) / .07);
-    border-radius: var(--std-radius1);
-    padding: var(--gutter, var(--std-gutter2));
+    border:
+        var(--input-border-size, 2px)
+        var(--input-border-style, solid)
+        var(--input-border-color, hsl(0deg 0% var(--std-fg-l) / var(--input-border-opacity, .07)))
+    ;
+    border-radius: var(--input-border-radius, var(--std-radius1));
+    padding: var(--input-padding, var(--std-gutter2));
     transition: all var(--std-duration3);
 }
 .Input-cc0a:hover:not(:focus-within) {
-    border-color: hsl(0deg 0% var(--std-fg-l) / .5);
+    border-color: var(--input-border-color--hover, hsl(0deg 0% var(--std-fg-l) / var(--input-border-opacity--hover, .15)));
 }
 .Input-cc0a:focus-within {
-    color: var(--accent, var(--std-color-primary-accent));
-    border-color: currentColor;
+    color: var(--input-accent, var(--std-color-primary-accent));
+    border-color: var(--input-border-accent, currentColor);
 }
 
 .input-2d2b {
     flex-grow: 1;
-    font-size: var(--std-text-body2-size);
-    font-weight: var(--std-text-weight1);
+    font-size: var(--input-text-size, var(--std-text-body2-size));
+    font-weight: var(--input-text-weight,  var(--std-text-weight1));
     color: inherit;
     background-color: transparent;
 }
 .input-2d2b::placeholder {
-    font-weight: var(--std-text-weight);
-    opacity: 1;
+    font-weight: var(--input-placeholder-text-weight, var(--std-text-weight));
+    opacity: var(--input-placeholder-opacity, 1);
 }
 .input-2d2b:focus {
     outline: none;
 }
 
 .Input-cc0a > *:first-child:not(input) {
-    margin-right: var(--gutter, var(--std-gutter4));
+    margin-right: var(--input-gutter, var(--std-gutter4));
 }
 .Input-cc0a > *:last-child:not(input) {
-    margin-left: var(--gutter, var(--std-gutter4));
+    margin-left: var(--input-gutter, var(--std-gutter4));
 }
 
 /* SecretInput ****************************************************************/
@@ -56,5 +60,5 @@
     margin-bottom: var(--std-gutter1);
 }
 .InputLabel-5738:focus-within .label-b082 {
-    color: var(--accent, var(--std-color-primary-accent));
+    color: var(--input-accent, var(--std-color-primary-accent));
 }

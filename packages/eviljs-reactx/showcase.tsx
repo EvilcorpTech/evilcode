@@ -1,4 +1,4 @@
-import {Box, BoxProps} from '@eviljs/react/box.js'
+import {Box, type BoxProps} from '@eviljs/react/box.js'
 import {Route, useRouter} from '@eviljs/react/router.js'
 import {classes} from '@eviljs/web/classes.js'
 import {createElement, useEffect, useMemo, useState} from 'react'

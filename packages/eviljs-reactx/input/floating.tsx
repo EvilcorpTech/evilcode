@@ -65,7 +65,7 @@ export function Input(props: InputProps) {
                 placeholder={placeholder}
                 onFocus={() => setFocus(true)}
                 onBlur={() => setFocus(false)}
-                onChange={event => onChange?.(event.target.value)}
+                onChange={event => onChange?.(event.currentTarget.value)}
             />
         </div>
     )

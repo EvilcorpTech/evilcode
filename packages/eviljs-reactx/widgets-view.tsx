@@ -177,10 +177,10 @@ export function WidgetsView(props: WidgetsViewProps) {
                 <InputV1 placeholder="Placeholder..." value={input} onChange={setInput}/>
                 <InputV1 label="Placeholder..." value={input} onChange={setInput}/>
 
-                <InputV2 placeholder="Placeholder..." value={input} onChange={(event) => setInput(event.target.value)}/>
+                <InputV2 placeholder="Placeholder..." value={input} onChange={setInput}/>
                 <SecretInputV2 placeholder="Placeholder..." hideIcon="H" showIcon="S" defaultValue="123456789"/>
                 <InputLabelV2 title="Label">
-                    <InputV2 placeholder="Placeholder..." value={input} onChange={(event) => setInput(event.target.value)}/>
+                    <InputV2 placeholder="Placeholder..." value={input} onChange={setInput}/>
                 </InputLabelV2>
             </div>
 
