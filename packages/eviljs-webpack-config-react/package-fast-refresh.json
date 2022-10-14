@@ -1,6 +1,0 @@
-{
-    "dependencies": {
-        "@pmmmwh/react-refresh-webpack-plugin": "^0",
-        "react-refresh": "^0"
-    }
-}

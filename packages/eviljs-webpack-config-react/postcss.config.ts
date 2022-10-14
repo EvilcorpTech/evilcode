@@ -1,4 +1,3 @@
-// @ts-ignore
 import PostcssPluginInset from 'postcss-inset'
 import PostcssPluginPresetEnv from 'postcss-preset-env'
 
@@ -19,8 +18,7 @@ export function createPostcssConfig(options?: PostcssConfigOptions) {
         plugins: [
             PostcssPluginInset(),
             PostcssPluginPresetEnv({
-                // @ts-ignore
-                stage: false,
+                stage: false as any,
                 autoprefixer: true,
                 ...pluginPresetEnvOptions,
                 features: {
