@@ -1,17 +1,17 @@
 .std {
-    --std-text-size-factor: 2;
     --std-text-size-base: 12px;
-    --std-text-size1: calc(var(--std-text-size-base) + 0px * var(--std-text-size-factor));
-    --std-text-size2: calc(var(--std-text-size1) + 1px * var(--std-text-size-factor));
-    --std-text-size3: calc(var(--std-text-size2) + 1px * var(--std-text-size-factor));
-    --std-text-size4: calc(var(--std-text-size3) + 2px * var(--std-text-size-factor));
-    --std-text-size5: calc(var(--std-text-size4) + 2px * var(--std-text-size-factor));
-    --std-text-size6: calc(var(--std-text-size5) + 3px * var(--std-text-size-factor));
-    --std-text-size7: calc(var(--std-text-size6) + 4px * var(--std-text-size-factor));
-    --std-text-size8: calc(var(--std-text-size7) + 4px * var(--std-text-size-factor));
-    --std-text-size9: calc(var(--std-text-size8) + 4px * var(--std-text-size-factor));
-    --std-text-size10: calc(var(--std-text-size9) + 5px * var(--std-text-size-factor));
-    --std-text-size11: calc(var(--std-text-size10) + 5px * var(--std-text-size-factor));
-    --std-text-size12: calc(var(--std-text-size11) + 8px * var(--std-text-size-factor));
-    --std-text-size13: calc(var(--std-text-size12) + 8px * var(--std-text-size-factor));
+    --std-text-size-factor: 2px;
+    --std-text-size1: var(--std-text-size-base);
+    --std-text-size2: calc(var(--std-text-size1) + 1 * var(--std-text-size-factor));
+    --std-text-size3: calc(var(--std-text-size2) + 1 * var(--std-text-size-factor));
+    --std-text-size4: calc(var(--std-text-size3) + 2 * var(--std-text-size-factor));
+    --std-text-size5: calc(var(--std-text-size4) + 2 * var(--std-text-size-factor));
+    --std-text-size6: calc(var(--std-text-size5) + 3 * var(--std-text-size-factor));
+    --std-text-size7: calc(var(--std-text-size6) + 4 * var(--std-text-size-factor));
+    --std-text-size8: calc(var(--std-text-size7) + 4 * var(--std-text-size-factor));
+    --std-text-size9: calc(var(--std-text-size8) + 4 * var(--std-text-size-factor));
+    --std-text-size10: calc(var(--std-text-size9) + 5 * var(--std-text-size-factor));
+    --std-text-size11: calc(var(--std-text-size10) + 5 * var(--std-text-size-factor));
+    --std-text-size12: calc(var(--std-text-size11) + 8 * var(--std-text-size-factor));
+    --std-text-size13: calc(var(--std-text-size12) + 8 * var(--std-text-size-factor));
 }

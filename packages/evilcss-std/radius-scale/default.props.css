@@ -1,9 +1,9 @@
 .std {
-    --std-radius-factor: 4;
     /* Values must be integer, for a pixel perfect result. */
     --std-radius-base: 4px;
-    --std-radius1: calc(var(--std-radius-base) + 0px * var(--std-radius-factor));
-    --std-radius2: calc(var(--std-radius1) + 1px * var(--std-radius-factor));
-    --std-radius3: calc(var(--std-radius2) + 2px * var(--std-radius-factor));
-    --std-radius4: calc(var(--std-radius3) + 3px * var(--std-radius-factor));
+    --std-radius-factor: 4px;
+    --std-radius1: var(--std-radius-base);
+    --std-radius2: calc(var(--std-radius1) + 1 * var(--std-radius-factor));
+    --std-radius3: calc(var(--std-radius2) + 2 * var(--std-radius-factor));
+    --std-radius4: calc(var(--std-radius3) + 3 * var(--std-radius-factor));
 }

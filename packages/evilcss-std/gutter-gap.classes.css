@@ -1,10 +1,32 @@
-.std-flex.gap1, .std-grid.gap1 { gap: var(--std-gutter1); }
-.std-flex.gap2, .std-grid.gap2 { gap: var(--std-gutter2); }
-.std-flex.gap3, .std-grid.gap3 { gap: var(--std-gutter3); }
-.std-flex.gap4, .std-grid.gap4 { gap: var(--std-gutter4); }
-.std-flex.gap5, .std-grid.gap5 { gap: var(--std-gutter5); }
-.std-flex.gap6, .std-grid.gap6 { gap: var(--std-gutter6); }
-.std-flex.gap7, .std-grid.gap7 { gap: var(--std-gutter7); }
-.std-flex.gap8, .std-grid.gap8 { gap: var(--std-gutter8); }
-.std-flex.gap9, .std-grid.gap9 { gap: var(--std-gutter9); }
-.std-flex.gap10, .std-grid.gap10 { gap: var(--std-gutter10); }
+.std-gap1 { gap: var(--std-gutter1); }
+.std-gap2 { gap: var(--std-gutter2); }
+.std-gap3 { gap: var(--std-gutter3); }
+.std-gap4 { gap: var(--std-gutter4); }
+.std-gap5 { gap: var(--std-gutter5); }
+.std-gap6 { gap: var(--std-gutter6); }
+.std-gap7 { gap: var(--std-gutter7); }
+.std-gap8 { gap: var(--std-gutter8); }
+.std-gap9 { gap: var(--std-gutter9); }
+.std-gap10 { gap: var(--std-gutter10); }
+
+.std-gap-row1 { row-gap: var(--std-gutter1); }
+.std-gap-row2 { row-gap: var(--std-gutter2); }
+.std-gap-row3 { row-gap: var(--std-gutter3); }
+.std-gap-row4 { row-gap: var(--std-gutter4); }
+.std-gap-row5 { row-gap: var(--std-gutter5); }
+.std-gap-row6 { row-gap: var(--std-gutter6); }
+.std-gap-row7 { row-gap: var(--std-gutter7); }
+.std-gap-row8 { row-gap: var(--std-gutter8); }
+.std-gap-row9 { row-gap: var(--std-gutter9); }
+.std-gap-row10 { row-gap: var(--std-gutter10); }
+
+.std-gap-column1 { column-gap: var(--std-gutter1); }
+.std-gap-column2 { column-gap: var(--std-gutter2); }
+.std-gap-column3 { column-gap: var(--std-gutter3); }
+.std-gap-column4 { column-gap: var(--std-gutter4); }
+.std-gap-column5 { column-gap: var(--std-gutter5); }
+.std-gap-column6 { column-gap: var(--std-gutter6); }
+.std-gap-column7 { column-gap: var(--std-gutter7); }
+.std-gap-column8 { column-gap: var(--std-gutter8); }
+.std-gap-column9 { column-gap: var(--std-gutter9); }
+.std-gap-column10 { column-gap: var(--std-gutter10); }

@@ -1,0 +1,10 @@
+.std-grid.gap1 { gap: var(--std-gutter1); }
+.std-grid.gap2 { gap: var(--std-gutter2); }
+.std-grid.gap3 { gap: var(--std-gutter3); }
+.std-grid.gap4 { gap: var(--std-gutter4); }
+.std-grid.gap5 { gap: var(--std-gutter5); }
+.std-grid.gap6 { gap: var(--std-gutter6); }
+.std-grid.gap7 { gap: var(--std-gutter7); }
+.std-grid.gap8 { gap: var(--std-gutter8); }
+.std-grid.gap9 { gap: var(--std-gutter9); }
+.std-grid.gap10 { gap: var(--std-gutter10); }

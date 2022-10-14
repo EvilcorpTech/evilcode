@@ -1,0 +1,5 @@
+.std-text-space-2 { --text-space: var(--std-text-space-2); letter-spacing: var(--text-space); }
+.std-text-space-1 { --text-space: var(--std-text-space-1); letter-spacing: var(--text-space); }
+.std-text-space { --text-space: var(--std-text-space); letter-spacing: var(--text-space); }
+.std-text-space1 { --text-space: var(--std-text-space1); letter-spacing: var(--text-space); }
+.std-text-space2 { --text-space: var(--std-text-space2); letter-spacing: var(--text-space); }

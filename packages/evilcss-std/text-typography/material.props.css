@@ -50,20 +50,20 @@
     --std-text-display2-height: var(--std-text-height);
     --std-text-display1-height: var(--std-text-height);
 
-    --std-text-small-spacing: var(--std-text-spacing);
-    --std-text-body2-spacing: var(--std-text-spacing);
-    --std-text-body1-spacing: var(--std-text-spacing);
-    --std-text-button-spacing: var(--std-text-spacing);
-    --std-text-caption-spacing: var(--std-text-spacing);
-    --std-text-overline-spacing: var(--std-text-spacing);
-    --std-text-subtitle2-spacing: var(--std-text-spacing);
-    --std-text-subtitle1-spacing: var(--std-text-spacing);
-    --std-text-h6-spacing: var(--std-text-spacing);
-    --std-text-h5-spacing: var(--std-text-spacing);
-    --std-text-h4-spacing: var(--std-text-spacing);
-    --std-text-h3-spacing: var(--std-text-spacing);
-    --std-text-h2-spacing: var(--std-text-spacing);
-    --std-text-h1-spacing: var(--std-text-spacing);
-    --std-text-display2-spacing: var(--std-text-spacing);
-    --std-text-display1-spacing: var(--std-text-spacing);
+    --std-text-small-space: var(--std-text-space);
+    --std-text-body2-space: var(--std-text-space);
+    --std-text-body1-space: var(--std-text-space);
+    --std-text-button-space: var(--std-text-space);
+    --std-text-caption-space: var(--std-text-space);
+    --std-text-overline-space: var(--std-text-space);
+    --std-text-subtitle2-space: var(--std-text-space);
+    --std-text-subtitle1-space: var(--std-text-space);
+    --std-text-h6-space: var(--std-text-space);
+    --std-text-h5-space: var(--std-text-space);
+    --std-text-h4-space: var(--std-text-space);
+    --std-text-h3-space: var(--std-text-space);
+    --std-text-h2-space: var(--std-text-space);
+    --std-text-h1-space: var(--std-text-space);
+    --std-text-display2-space: var(--std-text-space);
+    --std-text-display1-space: var(--std-text-space);
 }

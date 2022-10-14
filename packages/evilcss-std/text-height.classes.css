@@ -1,0 +1,6 @@
+.std-text-height-min { --text-height: 1; line-height: var(--text-height); }
+.std-text-height-2 { --text-height: var(--std-text-height-2); line-height: var(--text-height); }
+.std-text-height-1 { --text-height: var(--std-text-height-1); line-height: var(--text-height); }
+.std-text-height { --text-height: var(--std-text-height); line-height: var(--text-height); }
+.std-text-height1 { --text-height: var(--std-text-height1); line-height: var(--text-height); }
+.std-text-height2 { --text-height: var(--std-text-height2); line-height: var(--text-height); }

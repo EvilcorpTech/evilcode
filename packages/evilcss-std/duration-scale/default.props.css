@@ -1,9 +1,9 @@
 .std {
-    --std-duration-factor: .1;
     --std-duration-base: .1s;
-    --std-duration1: calc(var(--std-duration-base) + 0s * var(--std-duration-factor));
-    --std-duration2: calc(var(--std-duration1) + 1s * var(--std-duration-factor));
-    --std-duration3: calc(var(--std-duration2) + 1s * var(--std-duration-factor));
-    --std-duration4: calc(var(--std-duration3) + 2s * var(--std-duration-factor));
-    --std-duration5: calc(var(--std-duration4) + 2s * var(--std-duration-factor));
+    --std-duration-factor: .1s;
+    --std-duration1: var(--std-duration-base);
+    --std-duration2: calc(var(--std-duration1) + 1 * var(--std-duration-factor));
+    --std-duration3: calc(var(--std-duration2) + 1 * var(--std-duration-factor));
+    --std-duration4: calc(var(--std-duration3) + 2 * var(--std-duration-factor));
+    --std-duration5: calc(var(--std-duration4) + 2 * var(--std-duration-factor));
 }
