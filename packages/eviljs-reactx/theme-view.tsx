@@ -36,9 +36,11 @@ export function ThemeView(props: ThemeViewProps) {
             <i className="std-space-v s5"/>
 
             <div className="grid-1c73 std-flex center wrap">
+                <Gutters/>
                 <Colors/>
                 <Typography/>
-                <Gutters/>
+                <TextHeight/>
+                <TextSpace/>
                 <Icons/>
                 <Contrast/>
                 <Radiuses/>
@@ -338,9 +340,42 @@ export function Typography() {
     )
 }
 
+export function TextHeight() {
+    return (
+        <div className="std-flex center gap3">
+            {['-min', '-2', '-1', '', '1', '2'].map(it =>
+                <Fragment key={it}>
+                    <p className={`std-text-height${it}`} style={{maxWidth: '14em'}}>
+                        Text height <b>{it}</b>
+                        <br/>
+                        Lorem ipsum is simply dummy text of the printing and typesetting industry.
+                        Loren Ipsum has been the industries standard dummy text ever since the 1500s,
+                        when an unknown printer took a galley of type and scrambled it to make a type
+                        specimen book.
+                    </p>
+                </Fragment>
+            )}
+        </div>
+    )
+}
+
+export function TextSpace() {
+    return (
+        <div className="std-flex column center gap3">
+            {['-2', '-1', '', '1', '2'].map((it, idx) =>
+                <Fragment key={it}>
+                    <label className={`std-text-space${it} std-text-size${7 - idx}`}>
+                        Letter Spacing Example <b>{it}</b>
+                    </label>
+                </Fragment>
+            )}
+        </div>
+    )
+}
+
 export function Gutters() {
     return (
-        <div className="std-flex center column">
+        <div className="std-flex column center">
             {times(10).map(it =>
                 <Fragment key={it}>
                     <label className="gutter-t1d3 std-flex column">

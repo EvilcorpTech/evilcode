@@ -6,8 +6,8 @@
     align-items: center;
 }
 
-.grid-1c73 > * {
-    margin: var(--std-gutter6);
+.grid-1c73 {
+    gap: var(--std-gutter10);
 }
 
 .ThemeView-t2eb label {
