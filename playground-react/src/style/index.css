@@ -37,6 +37,7 @@
 @import '@evilcss/std/color/theme.classes.css';
 @import '@evilcss/std/debug.classes.css';
 @import '@evilcss/std/duration-scale/default.props.css';
+@import '@evilcss/std/flex-break.classes.css';
 @import '@evilcss/std/flex-gap.classes.css';
 @import '@evilcss/std/flex-space.classes.css';
 @import '@evilcss/std/flex-stack.classes.css';
