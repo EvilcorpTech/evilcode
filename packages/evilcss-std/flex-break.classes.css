@@ -1,0 +1,11 @@
+.std-flex-break {
+    display: inherit;
+    justify-content: inherit;
+    align-items: inherit;
+    align-content: inherit;
+    flex-wrap: inherit;
+    gap: inherit;
+}
+.std-flex-break.wrap {
+    flex-wrap: wrap;
+}
