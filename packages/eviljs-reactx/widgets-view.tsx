@@ -10,6 +10,7 @@ import {times} from '@eviljs/std/iter.js'
 import {classes} from '@eviljs/web/classes.js'
 import {useState} from 'react'
 import {Accordion, AccordionList} from './accordion.js'
+import {NotificationBadge} from './badge/notification-badge.js'
 import {ArmoredButton} from './button-armored.js'
 import {BusyButton} from './button-busy.js'
 import {Button} from './button.js'
@@ -41,27 +42,12 @@ export function WidgetsView(props: WidgetsViewProps) {
     return (
         <div
             {...props}
-            className={classes('WidgetsView-a252 std-flex center wrap', className)}
+            className={classes('WidgetsView-a252 std-flex wrap', className)}
         >
-            <div className="section-0234">
-                <h6 className="title-74a6">Accordion</h6>
-
-                <AccordionList maxOpen={2}>
-                    {[{name: 'Pizza'}, {name: 'Pasta'}, {name: 'Patate'}].map((it, idx) =>
-                        <Accordion
-                            key={idx}
-                            head={it.name}
-                        >
-                            <div className="std-viewport s std-text-body2 std-text-weight-1">
-                                {Lorem}
-                            </div>
-                        </Accordion>
-                    )}
-                </AccordionList>
-            </div>
-
             <div className="section-0234 column">
-                <h6 className="title-74a6">Buttons</h6>
+                <h6 className="title-74a6">
+                    Buttons
+                </h6>
 
                 <Button className="dye">
                     Don't Click Me
@@ -185,6 +171,34 @@ export function WidgetsView(props: WidgetsViewProps) {
             </div>
 
             <div className="section-0234">
+                <h6 className="title-74a6">Badges</h6>
+
+                Messages: <NotificationBadge value="199+" style={{color: 'white', backgroundColor: 'Crimson'}}/>
+            </div>
+
+            <div className="section-0234">
+                <h6 className="title-74a6">Spinners</h6>
+
+                <Button className="plain" onClick={event => setSpinner(! spinner)}>
+                    {spinner ? 'Stop' : 'Start'}
+                </Button>
+
+                <SpinnerV1 className="std-color-secondary-accent" active={spinner}/>
+                <SpinnerV3 className="std-color-secondary-accent" active={spinner}/>
+                <SpinnerV4 className="std-color-secondary-accent" active={spinner}/>
+                <SpinnerV2 className="std-color-secondary-accent" active={spinner}/>
+            </div>
+
+            <div className="section-0234">
+                <h6 className="title-74a6">Tooltip</h6>
+
+                <Tooltip content="Hello World!" position="right-center">
+                    <Button className="flat">Right Center</Button>
+                </Tooltip>
+            </div>
+
+
+            <div className="section-0234">
                 <h6 className="title-74a6">Slider</h6>
 
                 <Button className="plain" onClick={(event) => setSlide(Math.max(0, slide - 1))}>
@@ -210,24 +224,20 @@ export function WidgetsView(props: WidgetsViewProps) {
             </div>
 
             <div className="section-0234">
-                <h6 className="title-74a6">Spinners</h6>
+                <h6 className="title-74a6">Accordion</h6>
 
-                <Button className="plain" onClick={(event) => setSpinner(! spinner)}>
-                    Toggle
-                </Button>
-
-                <SpinnerV1 className="std-color-secondary-accent" active={spinner}/>
-                <SpinnerV3 className="std-color-secondary-accent" active={spinner}/>
-                <SpinnerV4 className="std-color-secondary-accent" active={spinner}/>
-                <SpinnerV2 className="std-color-secondary-accent" active={spinner}/>
-            </div>
-
-            <div className="section-0234">
-                <h6 className="title-74a6">Tooltip</h6>
-
-                <Tooltip content="Hello World!" position="right-center">
-                    <Button className="flat">Right Center</Button>
-                </Tooltip>
+                <AccordionList maxOpen={2}>
+                    {[{name: 'Pizza'}, {name: 'Pasta'}, {name: 'Patate'}].map((it, idx) =>
+                        <Accordion
+                            key={idx}
+                            head={it.name}
+                        >
+                            <div className="std-viewport s std-text-body2 std-text-weight-1">
+                                {Lorem}
+                            </div>
+                        </Accordion>
+                    )}
+                </AccordionList>
             </div>
         </div>
     )

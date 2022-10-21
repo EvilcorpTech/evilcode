@@ -1,0 +1,16 @@
+.NotificationBadge-3046 {
+    --counter-size: var(--std-text-descender0);
+    padding: .5em;
+    border-radius: 1em;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+}
+
+.value-3db7 {
+    min-width: var(--counter-size);
+    height: var(--counter-size);
+    line-height: var(--std-text-descender-line, 1);
+    font-weight: var(--std-text-weight2);
+}
