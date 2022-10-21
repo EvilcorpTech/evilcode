@@ -1,0 +1,5 @@
+.std-text-descender0 {
+    --text-height: var(--std-text-descender-line, 1);
+    height: var(--std-text-descender0);
+    line-height: var(--text-height);
+}
