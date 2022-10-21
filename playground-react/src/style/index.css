@@ -85,6 +85,8 @@
 @import '@evilcss/std/shadow/material.props.css';
 @import '@evilcss/std/switch.classes.css';
 @import '@evilcss/std/text-align.classes.css';
+@import '@evilcss/std/text-descender.classes.css';
+@import '@evilcss/std/text-descender.props.css';
 @import '@evilcss/std/text-font.classes.css';
 @import '@evilcss/std/text-font/roboto.css';
 @import '@evilcss/std/text-height-scale/default.props.css';
@@ -131,6 +133,9 @@
     --std-color-secondary-h: 0deg;
     --std-color-secondary-s: 55%;
     --std-color-secondary-l: 50%;
+
+    --std-text-descender-size: .25;
+    --std-text-descender-line: .8;
 }
 
 .page-title {
