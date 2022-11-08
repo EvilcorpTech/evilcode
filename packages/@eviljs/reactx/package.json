@@ -1,0 +1,55 @@
+{
+    "name": "@eviljs/reactx",
+    "version": "1.0.44",
+    "type": "module",
+    "files": [
+        "/LICENSE.txt",
+        "/**/*.js",
+        "/**/*.ts",
+        "/**/*.tsx",
+        "/**/*.css"
+    ],
+    "scripts": {
+        "build": "tsc --listEmittedFiles",
+        "preversion": "npm run build",
+        "prepack": "npm run build"
+    },
+    "dependencies": {
+        "@evilcss/std": "^1",
+        "@eviljs/react": "^1",
+        "@eviljs/std": "^1",
+        "@eviljs/web": "^1",
+        "@eviljs/webx": "^1",
+        "@types/prop-types": "^15",
+        "@types/react": "^18",
+        "@types/react-dom": "^18",
+        "prop-types": "^15",
+        "tslib": "^2"
+    },
+    "peerDependencies": {
+        "@evilcss/std": "^1",
+        "@evilcss/ui": "^1",
+        "react": "^17 || ^18",
+        "react-dom": "^17 || ^18"
+    },
+    "devDependencies": {
+        "typescript": "^4.8"
+    },
+    "author": "Daniele Orlando",
+    "license": "BSD-2-Clause",
+    "description": "Awesome React UI Widgets",
+    "keywords": [
+        "React",
+        "UI",
+        "Widgets",
+        "TypeScript"
+    ],
+    "homepage": "https://github.com/EvilcorpTech/evilcode",
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/EvilcorpTech/evilcode.git"
+    },
+    "bugs": {
+        "url": "https://github.com/EvilcorpTech/evilcode/issues"
+    }
+}

@@ -1,0 +1,7 @@
+{
+    "extends": "../eviljs-tsconfig/base.json",
+    "include": ["./**/*.ts"],
+    "exclude": ["node_modules"],
+    "compilerOptions": {
+    },
+}

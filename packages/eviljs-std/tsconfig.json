@@ -1,7 +1,0 @@
-{
-    "extends": "@eviljs/tsconfig/web.json",
-    "include": ["./**/*.ts"],
-    "exclude": ["node_modules"],
-    "compilerOptions": {
-    },
-}
