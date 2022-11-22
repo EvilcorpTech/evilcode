@@ -1,4 +1,4 @@
-import {QueryRulesHeader} from '@eviljs/std/query.js'
+import {QueryRulesHeader} from '@eviljs/web/query.js'
 import type {Context, Next} from 'koa'
 
 export function queryMiddleware(context: Context, next: Next) {
