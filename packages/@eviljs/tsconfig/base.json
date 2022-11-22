@@ -18,7 +18,7 @@
         "lib": ["esnext"],
         "module": "esnext",
         "moduleDetection": "auto",
-        "moduleResolution": "node",
+        "moduleResolution": "nodenext",
         "noEmit": false,
         "noEmitHelpers": false,
         "preserveSymlinks": true,
