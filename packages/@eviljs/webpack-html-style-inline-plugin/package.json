@@ -9,23 +9,22 @@
     ],
     "main": "./index.js",
     "scripts": {
-        "dev": "npm run build -- --watch",
         "build": "tsc --listEmittedFiles",
         "preversion": "npm run build",
         "prepack": "npm run build"
     },
     "dependencies": {
-        "@types/node": ">=18",
-        "schema-utils": "^4",
-        "tslib": "^2"
+        "@types/node": "18",
+        "schema-utils": "4",
+        "tslib": "2"
     },
     "peerDependencies": {
-        "html-webpack-plugin": "^5",
-        "tapable": "^2",
-        "webpack": "^5"
+        "html-webpack-plugin": "5",
+        "tapable": "2",
+        "webpack": "5"
     },
     "devDependencies": {
-        "typescript": "^4.8"
+        "typescript": "^4.9"
     },
     "author": "Daniele Orlando",
     "license": "BSD-2-Clause",
