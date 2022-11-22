@@ -16,9 +16,11 @@ export const Tests = {
     undefined: isUndefined,
 }
 
-export function kindOf<T extends keyof typeof Tests>(value: unknown, ...tests: Array<T>) {
+export function kindOf<T extends keyof typeof Tests>(value: unknown, ...tests: Array<T>): undefined | T {
     for (const kind of tests) {
-        if (Tests[kind](value)) {
+        const test = Tests[kind] as ((value: unknown) => boolean)
+
+        if (test(value)) {
             return kind
         }
     }
@@ -64,6 +66,7 @@ export function isNull(value: unknown): value is null {
     return value === null
 }
 
+export function isFunction<O, A extends Array<unknown>, R>(value: O | ((...args: A) => R)): value is ((...args: A) => R)
 export function isFunction(value: unknown): value is Function {
     if (! value || typeof value !== 'function') {
         return false
@@ -190,7 +193,7 @@ export type Required<T> = {
 }
 
 export type Nullish<T> =
-    T extends undefined | null | boolean | number | string | symbol
+    T extends Nil | boolean | number | string | symbol
         ? Nil | T
     : T extends Array<infer I>
         ? Nil | Array<Nullish<I>>

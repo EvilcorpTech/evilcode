@@ -139,7 +139,7 @@ export function format
     for (const token in dict) {
         const value = dict[token]
         const tokenRegexp = regexpFromToken(token, i18n.symbol, i18n.__regexpCache__)
-        string = string.replace(tokenRegexp, String(value))
+        string = string.replaceAll(tokenRegexp, String(value))
     }
 
     return string

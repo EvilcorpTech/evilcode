@@ -1,6 +1,8 @@
 import {assertStringNotEmpty, ensureOptionalWith, throwAssertError} from './assert.js'
 import {isString} from './type.js'
 
+export {cloneDate} from './clone.js'
+
 // Assertions //////////////////////////////////////////////////////////////////
 
 /**
@@ -181,12 +183,6 @@ export function second(date: Date) {
 
 export function ms(date: Date) {
     return date.getMilliseconds()
-}
-
-// Tools ///////////////////////////////////////////////////////////////////////
-
-export function cloneDate(date: Date) {
-    return new Date(date.getTime())
 }
 
 // Types ///////////////////////////////////////////////////////////////////////
