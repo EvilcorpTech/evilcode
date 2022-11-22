@@ -25,10 +25,10 @@ export function Range(props: RangeProps) {
         start: useRef<HTMLDivElement>(null),
         end: useRef<HTMLDivElement>(null),
         center: useRef<HTMLButtonElement>(null),
-        onChange: useRef<null | RangeObserver>(null),
-        onChanged: useRef<null | RangeObserver>(null),
+        onChange: useRef<RangeObserver>(),
+        onChanged: useRef<RangeObserver>(),
     }
-    const [dragRange, setDragRange] = useState<null | Range>(null)
+    const [dragRange, setDragRange] = useState<Range>()
     const dragStartOptions = useMemo(() => createDragOptions(refs, 'start'), [])
     const dragEndOptions = useMemo(() => createDragOptions(refs, 'end'), [])
     const dragCenterOptions = useMemo(() => createDragOptions(refs, 'center'), [])
@@ -42,7 +42,7 @@ export function Range(props: RangeProps) {
             onChange?.(range)
         }
         function onEnd(range: Range) {
-            setDragRange(null)
+            setDragRange(undefined)
             onChanged?.(range)
         }
 
@@ -376,28 +376,28 @@ export function computeTimeRange(min: Date, max: Date, range: Range) {
 // Types ///////////////////////////////////////////////////////////////////////
 
 export interface RangeProps extends Omit<React.HTMLAttributes<HTMLDivElement>, 'onChange'> {
-    start: undefined | null | number
-    end: undefined | null | number
-    startHandle?: React.ReactNode
-    startLine?: React.ReactNode
-    endHandle?: React.ReactNode
-    endLine?: React.ReactNode
-    onChange?: RangeObserver
-    onChanged?: RangeObserver
+    start: undefined | number
+    end: undefined | number
+    startHandle?: undefined | React.ReactNode
+    startLine?: undefined | React.ReactNode
+    endHandle?: undefined | React.ReactNode
+    endLine?: undefined | React.ReactNode
+    onChange?: undefined | RangeObserver
+    onChanged?: undefined | RangeObserver
 }
 
 export interface RangeNumericProps extends RangeProps {
-    min: undefined | null | number
-    max: undefined | null | number
+    min: undefined | number
+    max: undefined | number
 }
 
 export interface RangeTimeProps extends Omit<RangeProps, 'start' | 'end' | 'onChange' | 'onChanged'> {
-    start: undefined | null | Date
-    end: undefined | null | Date
-    min: undefined | null | Date
-    max: undefined | null | Date
-    onChange?: RangeObserver<Date>
-    onChanged?: RangeObserver<Date>
+    start: undefined | Date
+    end: undefined | Date
+    min: undefined | Date
+    max: undefined | Date
+    onChange?: undefined | RangeObserver<Date>
+    onChanged?: undefined | RangeObserver<Date>
 }
 
 export interface RangeRefs {
@@ -405,8 +405,8 @@ export interface RangeRefs {
     start: React.RefObject<HTMLDivElement>
     end: React.RefObject<HTMLDivElement>
     center: React.RefObject<HTMLButtonElement>
-    onChange: React.RefObject<RangeObserver>
-    onChanged: React.RefObject<RangeObserver>
+    onChange: React.RefObject<undefined | RangeObserver>
+    onChanged: React.RefObject<undefined | RangeObserver>
 }
 
 export interface RangeRects {

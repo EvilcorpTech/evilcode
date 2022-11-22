@@ -1,4 +1,4 @@
-import {useRouteMatches, useRouter} from '@eviljs/react/router.js'
+import {useRouteArgs, useRouter} from '@eviljs/react/router.js'
 import {isArray, isFunction} from '@eviljs/std/type.js'
 import {regexpFromPattern} from '@eviljs/web/route.js'
 import {Children, cloneElement, useMemo} from 'react'
@@ -6,7 +6,7 @@ import {Children, cloneElement, useMemo} from 'react'
 export function RouteArgs(props: RouteArgsProps) {
     const {route, fromProp, guard, children, ...otherProps} = props
     const {testRoute} = useRouter()!
-    const matches = useRouteMatches()
+    const matches = useRouteArgs()
 
     const routeIsValid = useMemo(() => {
         if (! guard) {

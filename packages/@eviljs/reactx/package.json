@@ -15,25 +15,25 @@
         "prepack": "npm run build"
     },
     "dependencies": {
-        "@evilcss/std": "^1",
-        "@eviljs/react": "^1",
-        "@eviljs/std": "^1",
-        "@eviljs/web": "^1",
-        "@eviljs/webx": "^1",
-        "@types/prop-types": "^15",
-        "@types/react": "^18",
-        "@types/react-dom": "^18",
-        "prop-types": "^15",
-        "tslib": "^2"
+        "@evilcss/std": "1",
+        "@eviljs/react": "1",
+        "@eviljs/std": "1",
+        "@eviljs/web": "1",
+        "@eviljs/webx": "1",
+        "@types/prop-types": "15",
+        "@types/react": "18",
+        "@types/react-dom": "18",
+        "prop-types": "15",
+        "tslib": "2"
     },
     "peerDependencies": {
-        "@evilcss/std": "^1",
-        "@evilcss/ui": "^1",
-        "react": "^17 || ^18",
-        "react-dom": "^17 || ^18"
+        "@evilcss/std": "1",
+        "@evilcss/ui": "1",
+        "react": "17 || 18",
+        "react-dom": "17 || 18"
     },
     "devDependencies": {
-        "typescript": "^4.8"
+        "typescript": "^4.9"
     },
     "author": "Daniele Orlando",
     "license": "BSD-2-Clause",

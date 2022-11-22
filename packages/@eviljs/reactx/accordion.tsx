@@ -223,16 +223,16 @@ export function AccordionItem(props: AccordionItemProps) {
 
 export interface AccordionListProps extends Omit<React.HTMLAttributes<HTMLUListElement>, 'onChange'> {
     children?: undefined | null | React.ReactElement<AccordionProps> | Array<React.ReactElement<AccordionProps>>
-    initial?: Array<number>
-    maxOpen?: number
-    onChange?: (list: Array<number>) => void
+    initial?: undefined | Array<number>
+    maxOpen?: undefined | number
+    onChange?: undefined | ((list: Array<number>) => void)
 }
 
 export interface AccordionProps extends BoxProps {
     head: React.ReactNode
-    buttonProps?: React.ButtonHTMLAttributes<HTMLButtonElement> & {ref: React.Ref<HTMLButtonElement>}
-    contentProps?: React.HTMLAttributes<HTMLDivElement>
-    onToggle?: (state: boolean) => void
+    buttonProps?: undefined | React.ButtonHTMLAttributes<HTMLButtonElement> & {ref: React.Ref<HTMLButtonElement>}
+    contentProps?: undefined | React.HTMLAttributes<HTMLDivElement>
+    onToggle?: undefined | ((state: boolean) => void)
 }
 
 export interface AccordionItemProps extends AccordionProps {
