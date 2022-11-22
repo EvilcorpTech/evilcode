@@ -101,6 +101,9 @@ export function createWebpackConfig(options?: WebpackConfigOptions) {
                     'react': 'preact/compat',
                 },
             },
+            extensionAlias: {
+                '.js': ['.js', '.ts', '.tsx'],
+            },
             extensions: ['.js', '.jsx', '.ts', '.tsx'],
             symlinks: true, // False breaks with PNPM.
         },
