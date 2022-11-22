@@ -1,12 +1,12 @@
 import {wait} from '@eviljs/std/async.js'
 import {randomInt} from '@eviljs/std/random.js'
 import {
-    asJsonOptions,
+    withJsonOptions,
     createFetch,
     Fetch,
-    FetchRequestMethod,
+    HttpMethod,
     FetchRequestOptions,
-    mergeOptions,
+    mergeFetchOptions,
 } from './fetch.js'
 import {regexpFromPattern} from './route.js'
 
@@ -52,16 +52,16 @@ export function mockFetch(fetch: Fetch, mocks: FetchMocks) {
             return fetch.request(...args)
         },
         get(...args) {
-            return self.request(FetchRequestMethod.Get, ...args)
+            return self.request(HttpMethod.Get, ...args)
         },
         post(...args) {
-            return self.request(FetchRequestMethod.Post, ...args)
+            return self.request(HttpMethod.Post, ...args)
         },
         put(...args) {
-            return self.request(FetchRequestMethod.Put, ...args)
+            return self.request(HttpMethod.Put, ...args)
         },
         delete(...args) {
-            return self.request(FetchRequestMethod.Delete, ...args)
+            return self.request(HttpMethod.Delete, ...args)
         },
     }
 
@@ -89,11 +89,11 @@ export function mockFetchDelayed(fetch: Fetch, mocks: FetchMocks, options?: Mock
 
 export function mockResponse(
     mocks: FetchMocks,
-    type: FetchRequestMethod,
+    type: HttpMethod,
     path: string,
     options?: FetchRequestOptions,
 ) {
-    const typeMocks = mocks[type.toLowerCase() as FetchRequestMethod]
+    const typeMocks = mocks[type.toLowerCase() as HttpMethod]
 
     if (! typeMocks) {
         return NoMock
@@ -114,8 +114,8 @@ export function mockResponse(
 }
 
 export function jsonResponse(data: unknown, options?: ResponseInit) {
-    const jsonOptions = asJsonOptions(data)
-    const responseOptions = mergeOptions(options ?? {}, jsonOptions)
+    const jsonOptions = withJsonOptions(data)
+    const responseOptions = mergeFetchOptions(options ?? {}, jsonOptions)
     const body = responseOptions.body
     delete responseOptions.body
     const response = new Response(body, responseOptions)
@@ -165,7 +165,7 @@ export function createFetchServiceWorker(self: ServiceWorkerGlobalScope, fetch: 
             return
         }
 
-        const method = request.method as FetchRequestMethod
+        const method = request.method as HttpMethod
         const url = requestUrl.href.replace(fetchUrlInfo.href, '')
 
         log(method, url)
@@ -187,11 +187,11 @@ export function asFetchMock(mocks: FetchMocks) {
 // Types ///////////////////////////////////////////////////////////////////////
 
 export type FetchMocks = {
-    [key in FetchRequestMethod]?: Array<[string, FetchMockHandler]>
+    [key in HttpMethod]?: Array<[string, FetchMockHandler]>
 }
 
 export interface FetchMockHandler {
-    (type: FetchRequestMethod, path: string, options?: FetchRequestOptions): Response
+    (type: HttpMethod, path: string, options?: FetchRequestOptions): Response
 }
 
 export interface MockFetchDelayedOptions {

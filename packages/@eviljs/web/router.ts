@@ -1,22 +1,9 @@
-import {encodeParams, defaultEncodeParamValue} from '@eviljs/std/query.js'
-import {isString} from '@eviljs/std/type.js'
+import {isString, type Nil} from '@eviljs/std/type.js'
+import {encodeQueryParamValue, encodeQueryParams} from './query.js'
 import {asBaseUrl} from './url.js'
 
-export function createRouter<S>(observer: RouterObserver, options?: undefined | RouterOptions): Router<S> {
-    const type = options?.type ?? 'hash'
-
-    switch (type) {
-        case 'hash':
-            return createHashRouter(observer, options)
-        case 'path':
-            return createPathRouter(observer, options)
-        case 'memory':
-            return createMemoryRouter(observer, options)
-    }
-}
-
-export function createHashRouter<S>(observer: RouterObserver, options?: undefined | RouterBaseOptions): Router<S> {
-    const self = {
+export function createHashRouter<S>(observer: RouterObserver, options?: undefined | RouterOptions): Router<S> {
+    const self: Router<S> = {
         start() {
             window.addEventListener('hashchange', onRouteChange)
         },
@@ -63,10 +50,10 @@ export function createHashRouter<S>(observer: RouterObserver, options?: undefine
     return self
 }
 
-export function createPathRouter<S>(observer: RouterObserver, options?: undefined | RouterBaseOptions): Router<S> {
+export function createPathRouter<S>(observer: RouterObserver, options?: undefined | RouterOptions): Router<S> {
     const basePath = asBaseUrl(options?.basePath)
 
-    const self = {
+    const self: Router<S> = {
         start() {
             window.addEventListener('popstate', onRouteChange)
         },
@@ -107,12 +94,12 @@ export function createPathRouter<S>(observer: RouterObserver, options?: undefine
     return self
 }
 
-export function createMemoryRouter<S>(observer: RouterObserver, options?: undefined | RouterBaseOptions): Router<S> {
+export function createMemoryRouter<S>(observer: RouterObserver, options?: undefined | RouterMemoryOptions): Router<S> {
     let routePath = options?.initMemory ?? '/'
     let routeSearch = ''
-    let routeState: S | null | undefined = null
+    let routeState: undefined | S = undefined
 
-    const self = {
+    const self: Router<S> = {
         start() {},
         stop() {},
         get route() {
@@ -124,7 +111,7 @@ export function createMemoryRouter<S>(observer: RouterObserver, options?: undefi
         },
         routeTo(path: string, params?: undefined | RouterParams, state?: undefined | S) {
             routePath = path
-            routeSearch = encodeParams(params)
+            routeSearch = encodeQueryParams(params)
             routeState = state
         },
         replaceRoute(path: string, params?: undefined | RouterParams, state?: undefined | S) {
@@ -139,7 +126,7 @@ export function createMemoryRouter<S>(observer: RouterObserver, options?: undefi
 }
 
 export function serializeRouteToString(path: string, params?: undefined | RouterParams) {
-    const encodedParams = encodeParams(params, {encodeValue: defaultRouteEncodeParamValue})
+    const encodedParams = encodeQueryParams(params, {encodeValue: defaultRouteEncodeParamValue})
     const serializedParams = encodedParams
         ? '?' + encodedParams
         : ''
@@ -184,13 +171,17 @@ export function defaultRouteEncodeParamValue(value: unknown) {
         // `#?redirect=%2Fsome%2Fpath`.
         return value
     }
-    return defaultEncodeParamValue(value)
+    return encodeQueryParamValue(value)
 }
 
 // Types ///////////////////////////////////////////////////////////////////////
 
 export interface Router<S = any> {
-    route: {path: string, params: RouterRouteParams, state: S | null | undefined}
+    route: {
+        path: string,
+        params: RouterRouteParams,
+        state: undefined | S,
+    }
     start(): void
     stop(): void
     routeTo(path: string, params?: undefined | RouterParams, state?: undefined | S): void
@@ -202,22 +193,26 @@ export interface RouterObserver<S = any> {
     (route: string, params: RouterRouteParams, state: S): void
 }
 
-export interface RouterBaseOptions {
+export interface RouterOptions {
     basePath?: undefined | string
+}
+
+export interface RouterMemoryOptions extends RouterOptions {
     initMemory?: undefined | string
 }
 
-export interface RouterOptions extends RouterBaseOptions {
-    type?: undefined | 'hash' | 'path' | 'memory'
-}
+export type RouterRouteParams = Record<string | number, null | string>
 
 export type RouterParams =
     | string
     | RouterParamsDict
     | Array<string | RouterParamsDict>
 
-export interface RouterParamsDict extends Record<string | number, undefined | null | boolean | number | string> {
-}
-
-export interface RouterRouteParams extends Record<string | number, null | string> {
-}
+export interface RouterParamsDict extends
+    Record<string | number,
+        | Nil
+        | boolean
+        | number
+        | string
+    >
+{}

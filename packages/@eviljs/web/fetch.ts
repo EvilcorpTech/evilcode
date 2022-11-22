@@ -1,12 +1,12 @@
 import {isArray, isNil, isObject} from '@eviljs/std/type.js'
 import {asBaseUrl} from './url.js'
 
-export enum FetchRequestMethod {
+export enum HttpMethod {
+    Delete = 'delete',
     Get = 'get',
+    Patch = 'patch',
     Post = 'post',
     Put = 'put',
-    Patch = 'patch',
-    Delete = 'delete',
 }
 
 export enum ContentType {
@@ -23,11 +23,11 @@ export function createFetch(options?: undefined | FetchOptions) {
         /**
         * @throws
         */
-        request(method: FetchRequestMethod, path: string, options?: undefined | FetchRequestOptions) {
+        request(method: HttpMethod, path: string, options?: undefined | FetchRequestOptions) {
             const url = path.startsWith('/')
                 ? `${self.baseUrl}${path}`
                 : path
-            const opts = mergeOptions(options ?? {}, {method})
+            const opts = mergeFetchOptions(options ?? {}, {method})
 
             return fetch(url, opts)
         },
@@ -35,89 +35,84 @@ export function createFetch(options?: undefined | FetchOptions) {
         * @throws
         */
         get(...args) {
-            return self.request(FetchRequestMethod.Get, ...args)
+            return self.request(HttpMethod.Get, ...args)
         },
         /**
         * @throws
         */
         post(...args) {
-            return self.request(FetchRequestMethod.Post, ...args)
+            return self.request(HttpMethod.Post, ...args)
         },
         /**
         * @throws
         */
         put(...args) {
-            return self.request(FetchRequestMethod.Put, ...args)
+            return self.request(HttpMethod.Put, ...args)
         },
         /**
         * @throws
         */
         patch(...args) {
-            return self.request(FetchRequestMethod.Patch, ...args)
+            return self.request(HttpMethod.Patch, ...args)
         },
         /**
         * @throws
         */
         delete(...args) {
-            return self.request(FetchRequestMethod.Delete, ...args)
+            return self.request(HttpMethod.Delete, ...args)
         },
     }
 
     return self
 }
 
-export function mergeOptions(...optionsList: Array<FetchRequestOptions>): FetchRequestOptions {
-    type Options = Omit<FetchRequestOptions, 'headers'> & {headers: Record<string, string>}
-    const options: Options = {
-        headers: {},
-    }
+export function mergeFetchOptions(...optionsList: Array<FetchRequestOptions>): FetchRequestOptions {
+    const mergedOptions: FetchRequestOptions = {}
+    const mergedOptionsHeaders: Record<string, string> = {}
 
-    for (const optionsSource of optionsList) {
-        for (const prop in optionsSource) {
-            const optionName = prop as keyof FetchRequestOptions
+    for (const options of optionsList) {
+        for (const key in options) {
+            const optionName = key as keyof typeof options
 
             switch (optionName) {
                 case 'headers':
-                    if (optionsSource.headers instanceof Headers) {
-                        for (const it of optionsSource.headers.entries()) {
+                    if (options.headers instanceof Headers) {
+                        for (const it of options.headers.entries()) {
                             const [key, value] = it
-                            options.headers[key] = value
+                            mergedOptionsHeaders[key] = value
                         }
                     }
-                    else if (isArray(optionsSource.headers)) {
-                        for (const it of optionsSource.headers) {
+                    else if (isArray(options.headers)) {
+                        for (const it of options.headers) {
                             const [key, value] = it as [string, string]
-                            options.headers[key] = value
+                            mergedOptionsHeaders[key] = value
                         }
                     }
-                    else if (isObject(optionsSource.headers)) {
-                        options.headers = {
-                            ...options.headers,
-                            ...optionsSource.headers,
-                        }
+                    else if (isObject(options.headers)) {
+                        Object.assign(mergedOptionsHeaders, options.headers)
                     }
-                    else if (isNil(optionsSource.headers)) {
+                    else if (isNil(options.headers)) {
                     }
                     else {
                         const message =
-                            '@eviljs/web/fetch.mergeOptions(...optionsList):\n'
-                            + `headers must be Object | Array | Headers, given "${optionsSource.headers}".`
+                            '@eviljs/web/fetch.mergeFetchOptions(...optionsList):\n'
+                            + `headers must be Object | Array | Headers, given "${options.headers}".`
                         console.warn(message)
                     }
                 break
 
                 default:
-                    options[optionName] = optionsSource[optionName] as any
+                    mergedOptions[optionName] = options[optionName] as any
                 break
             }
         }
     }
 
-    return options
+    return {...mergedOptions, headers: mergedOptionsHeaders}
 }
 
-export function asJsonOptions(body: unknown): FetchRequestOptions {
-    const options = {
+export function withJsonOptions(body: unknown): FetchRequestOptions {
+    return {
         headers: {
             'Content-Type': ContentType.Json,
         },
@@ -126,8 +121,6 @@ export function asJsonOptions(body: unknown): FetchRequestOptions {
             : null
         ,
     }
-
-    return options
 }
 
 export function formatResponse(response: Response) {
@@ -152,7 +145,7 @@ export function formatResponse(response: Response) {
 
 export interface Fetch {
     baseUrl: string
-    request(method: FetchRequestMethod, path: string, options?: undefined | FetchRequestOptions): ReturnType<typeof fetch>
+    request(method: HttpMethod, path: string, options?: undefined | FetchRequestOptions): ReturnType<typeof fetch>
     get(path: string, options?: undefined | FetchRequestOptions): ReturnType<typeof fetch>
     post(path: string, options?: undefined | FetchRequestOptions): ReturnType<typeof fetch>
     put(path: string, options?: undefined | FetchRequestOptions): ReturnType<typeof fetch>

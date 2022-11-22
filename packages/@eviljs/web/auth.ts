@@ -1,21 +1,21 @@
 import {computeValue} from '@eviljs/std/fn.js'
 import {isFunction, isObject} from '@eviljs/std/type.js'
-import {asJsonOptions, Fetch, FetchRequestMethod, mergeOptions, FetchRequestOptions} from './fetch.js'
+import {withJsonOptions, Fetch, HttpMethod, mergeFetchOptions, FetchRequestOptions} from './fetch.js'
 import {throwInvalidResponse} from './throw.js'
 
 export const AuthDefaultUrl = '/auth'
 export const AuthDefaultOptions: FetchRequestOptions = {}
 
 export async function authenticate(fetch: Fetch, credentials: AuthCredentials, options?: undefined | AuthenticateOptions) {
-    const method = options?.method ?? FetchRequestMethod.Post
+    const method = options?.method ?? HttpMethod.Post
     const url = createUrl(options?.url, credentials)
     const createRequestBody = options?.requestBody ?? defaultCreateRequestBody
     const extractResponseError = options?.responseError ?? defaultExtractResponseError
     const extractResponseToken = options?.responseToken ?? defaultExtractResponseToken
     const body = createRequestBody(credentials)
     const baseOpts = createOptions(options?.options, credentials)
-    const bodyOpts = asJsonOptions(body)
-    const opts = mergeOptions(baseOpts, bodyOpts)
+    const bodyOpts = withJsonOptions(body)
+    const opts = mergeFetchOptions(baseOpts, bodyOpts)
 
     const response = await fetch.request(method, url, opts)
 
@@ -59,8 +59,8 @@ export async function authenticate(fetch: Fetch, credentials: AuthCredentials, o
     )
 }
 
-export async function validate(fetch: Fetch, token: string, options?: ValidateOptions) {
-    const method = options?.method ?? FetchRequestMethod.Get
+export async function validate(fetch: Fetch, token: string, options?: undefined | ValidateOptions) {
+    const method = options?.method ?? HttpMethod.Get
     const url = createUrl(options?.url, token)
     const opts = createOptions(options?.options, token)
 
@@ -69,8 +69,8 @@ export async function validate(fetch: Fetch, token: string, options?: ValidateOp
     return response.ok
 }
 
-export async function invalidate(fetch: Fetch, token: string, options?: InvalidateOptions) {
-    const method = options?.method ?? FetchRequestMethod.Delete
+export async function invalidate(fetch: Fetch, token: string, options?: undefined | InvalidateOptions) {
+    const method = options?.method ?? HttpMethod.Delete
     const url = createUrl(options?.url, token)
     const opts = createOptions(options?.options, token)
 
@@ -89,7 +89,10 @@ export function createUrl<A extends Array<unknown>>(url: undefined | FetchOption
     return computeValue(url, ...args) ?? AuthDefaultUrl
 }
 
-export function createOptions<A extends Array<unknown>>(options: undefined | FetchOptionGetter<A, FetchRequestOptions>, ...args: A) {
+export function createOptions<A extends Array<unknown>>(
+    options: undefined | FetchOptionGetter<A, FetchRequestOptions>,
+    ...args: A
+) {
     return isFunction(options)
         ? options(...args)
         : (options ?? AuthDefaultOptions)
@@ -133,7 +136,7 @@ export function invalidResponseContentReason() {
 
 export interface FetchOptions<A extends Array<unknown>> {
     url?: undefined | FetchOptionGetter<A, string>
-    method?: undefined | FetchRequestMethod
+    method?: undefined | HttpMethod
     options?: undefined | FetchOptionGetter<A, FetchRequestOptions>
 }
 

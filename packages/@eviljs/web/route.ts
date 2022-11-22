@@ -30,13 +30,12 @@ export const PatternRegExpCache: Record<string, RegExp> = {}
 *     (path: string) => path.split('/').slice(2),
 * )
 */
-export function createRoute<E extends Args, D>(
-    patternStr: string | RegExp,
-    path: (...args: E) => string,
-    params: (path: string) => D,
-): Route<E, D>
-{
-    const pattern = compilePattern(patternStr)
+export function createRoute<A extends Args>(
+    patternString: string | RegExp,
+    path: (...args: A) => string,
+    params: (path: string) => Array<string>,
+): Route<A, Array<string>> {
+    const pattern = compilePattern(patternString)
 
     return {pattern, path, params}
 }
@@ -50,20 +49,19 @@ export function createRoute<E extends Args, D>(
 * bookRoute.path(123, 'Harry-Potter') === '/book/123/Harry-Potter'
 * bookRoute.params('/book/123/Harry-Potter') === ['123', 'Harry-Potter']
 */
-export function createSimpleRoute(originalPattern: string): Route<Array<string | number>, Array<string>> {
-    const patternString = cleanPattern(originalPattern)
-    const patternExact = exact(patternString)
-    const patternRegexp = regexpFromPattern(patternExact)
+export function createSimpleRoute<
+    A extends Array<string | number> = Array<string | number>
+>(patternStringRaw: string): Route<A, Array<string>> {
+    const patternString = cleanPattern(patternStringRaw)
+    const pattern = regexpFromPattern(exact(patternString))
 
-    function path(...args: Array<string | number>) {
+    function path(...args: A) {
         return computeRoutePath(patternString, ...args)
     }
 
     function params(path: string) {
-        return computeRouteParams(patternRegexp, path)
+        return computeRouteParams(pattern, path)
     }
-
-    const pattern = patternRegexp
 
     return {pattern, path, params}
 }
@@ -132,10 +130,10 @@ export function exact(pattern: string) {
 
 // Types ///////////////////////////////////////////////////////////////////////
 
-export interface Route<E extends Args, D> {
+export interface Route<A extends Args, M extends Args> {
     pattern: RegExp
-    path(...args: E): string
-    params(path: string): D
+    path(...args: A): string
+    params(path: string): M
 }
 
 type Args = Array<unknown>
