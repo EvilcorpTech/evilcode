@@ -9,21 +9,6 @@ export const PortalsContext = defineContext<StateManager<Portals>>('PortalsConte
 /*
 * EXAMPLE
 *
-* const Main = WithPortals(MyMain)
-*
-* render(<Main/>, document.body)
-*/
-export function WithPortals<P extends {}>(Child: React.ComponentType<P>) {
-    function PortalsProviderProxy(props: P) {
-        return withPortals(<Child {...props}/>)
-    }
-
-    return PortalsProviderProxy
-}
-
-/*
-* EXAMPLE
-*
 * return (
 *     <PortalsProvider>
 *         <Portal name="main"/>
@@ -35,30 +20,9 @@ export function WithPortals<P extends {}>(Child: React.ComponentType<P>) {
 * )
 */
 export function PortalsProvider(props: PortalsProviderProps) {
-    return withPortals(props.children)
-}
-
-/*
-* EXAMPLE
-*
-* export function MyMain(props) {
-*     return withPortals(
-*         <Fragment>
-*             <Portal name="main"/>
-*
-*             <Teleport to="main">
-*                 <p>This code is teleported inside the Portal</p>
-*             </Teleport>
-*         </Fragment>
-*     )
-* }
-*/
-export function withPortals(children: React.ReactNode) {
-    const portals = useState<Portals>({})
-
     return (
-        <PortalsContext.Provider value={portals}>
-            {children}
+        <PortalsContext.Provider value={useRootPortals()}>
+            {props.children}
         </PortalsContext.Provider>
     )
 }
@@ -129,6 +93,10 @@ export function Teleport(props: TeleportProps) {
     }
 
     return createPortal(children, portal)
+}
+
+export function useRootPortals() {
+    return useState<Portals>({})
 }
 
 // Types ///////////////////////////////////////////////////////////////////////

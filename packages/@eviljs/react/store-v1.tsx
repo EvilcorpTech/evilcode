@@ -12,41 +12,6 @@ export let StoreActionUid = 0
 * EXAMPLE
 *
 * const spec = {createState, actions}
-* const Main = WithStore(MyMain, spec)
-*
-* render(<Main/>, document.body)
-*/
-export function WithStore<P extends {}, S extends StoreStateGeneric, A>(Child: React.ComponentType<P>, spec: StoreSpec<S, A>) {
-    function StoreV1ProviderProxy(props: P) {
-        return withStore(<Child {...props}/>, spec)
-    }
-
-    return StoreV1ProviderProxy
-}
-
-/*
-* EXAMPLE
-*
-* const spec = {createState, actions}
-*
-* export function MyMain(props) {
-*     return withStore(<Child/>, spec)
-* }
-*/
-export function withStore<S extends StoreStateGeneric, A>(children: React.ReactNode, spec: StoreSpec<S, A>) {
-    const store = useRootStore(spec)
-
-    return (
-        <StoreV1Context.Provider value={store}>
-            {children}
-        </StoreV1Context.Provider>
-    )
-}
-
-/*
-* EXAMPLE
-*
-* const spec = {createState, actions}
 *
 * export function MyMain(props) {
 *     return (
@@ -57,7 +22,13 @@ export function withStore<S extends StoreStateGeneric, A>(children: React.ReactN
 * }
 */
 export function StoreProvider<S extends StoreStateGeneric, A>(props: StoreProviderProps<S, A>) {
-    return withStore(props.children, props.spec)
+    const {children, ...spec} = props
+
+    return (
+        <StoreV1Context.Provider value={useRootStore(spec)}>
+            {children}
+        </StoreV1Context.Provider>
+    )
 }
 
 export function useRootStore<S extends StoreStateGeneric, A>(spec: StoreSpec<S, A>) {
@@ -113,9 +84,8 @@ export function withId(name: string) {
 
 // Types ///////////////////////////////////////////////////////////////////////
 
-export interface StoreProviderProps<S extends StoreStateGeneric, A> {
-    children: React.ReactNode
-    spec: StoreSpec<S, A>
+export interface StoreProviderProps<S extends StoreStateGeneric, A> extends StoreSpec<S, A> {
+    children: undefined | React.ReactNode
 }
 
 export interface StoreSpec<S extends StoreStateGeneric, A> {

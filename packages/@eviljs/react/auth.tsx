@@ -29,61 +29,6 @@ export enum AuthTokenState {
 *
 * const fetch = createFetch({baseUrl: '/api'})
 * const cookie = createCookie()
-* const authenticate = {method, url} // Optional.
-* const validate = {method, url} // Optional.
-* const invalidate = {method, url} // Optional.
-* const options = {authenticate, validate, invalidate}
-* const Main = WithAuth(MyMain, fetch, cookie, options)
-*
-* render(<Main/>, document.body)
-*/
-export function WithAuth<P extends {}>(
-    Child: React.ComponentType<P>,
-    fetch: Fetch,
-    cookie: Cookie,
-    options?: undefined | AuthOptions,
-) {
-    function AuthProviderProxy(props: P) {
-        return withAuth(<Child {...props}/>, fetch, cookie, options)
-    }
-
-    return AuthProviderProxy
-}
-
-/*
-* EXAMPLE
-*
-* const fetch = createFetch({baseUrl: '/api'})
-* const cookie = createCookie()
-* const authenticate = {method, url}
-* const validate = {method, url}
-* const invalidate = {method, url}
-* const options = {authenticate, validate, invalidate}
-*
-* export function MyMain(props) {
-*     return withAuth(<Child/>, fetch, cookie, options)
-* }
-*/
-export function withAuth(
-    children: React.ReactNode,
-    fetch: Fetch,
-    cookie: Cookie,
-    options?: undefined | AuthOptions,
-) {
-    const auth = useRootAuth(fetch, cookie, options)
-
-    return (
-        <AuthContext.Provider value={auth}>
-            {children}
-        </AuthContext.Provider>
-    )
-}
-
-/*
-* EXAMPLE
-*
-* const fetch = createFetch({baseUrl: '/api'})
-* const cookie = createCookie()
 * const authenticate = {method, url}
 * const validate = {method, url}
 * const invalidate = {method, url}
@@ -98,7 +43,13 @@ export function withAuth(
 * }
 */
 export function AuthProvider(props: AuthProviderProps) {
-    return withAuth(props.children, props.fetch, props.cookie, props)
+    const {children, cookie, fetch, ...options} = props
+
+    return (
+        <AuthContext.Provider value={useRootAuth(fetch, cookie, options)}>
+            {children}
+        </AuthContext.Provider>
+    )
 }
 
 export function useRootAuth(fetch: Fetch, cookie: Cookie, options?: undefined | AuthOptions) {
@@ -208,7 +159,7 @@ export function useAuth() {
 // Types ///////////////////////////////////////////////////////////////////////
 
 export interface AuthProviderProps extends AuthOptions {
-    children: React.ReactNode
+    children: undefined | React.ReactNode
     cookie: Cookie
     fetch: Fetch
 }

@@ -1,4 +1,5 @@
-import {computeValue} from '@eviljs/std/fn.js'
+import {cloneShallow} from '@eviljs/std/clone.js'
+import {computeValue, type Fn} from '@eviljs/std/fn.js'
 import {isArray, isObject} from '@eviljs/std/type.js'
 import {useCallback, useContext, useLayoutEffect, useMemo, useRef} from 'react'
 import {defineContext} from './ctx.js'
@@ -10,107 +11,83 @@ export const StoreContext = defineContext<Store<StoreStateGeneric>>('StoreContex
 /*
 * EXAMPLE
 *
-* const spec = {createState}
-* const Main = WithStore(MyMain, spec)
-*
-* render(<Main/>, document.body)
-*/
-export function WithStore<P extends {}>(Child: React.ComponentType<P>, spec: StoreSpec<StoreStateGeneric>) {
-    function StoreProviderProxy(props: P) {
-        return withStore(<Child {...props}/>, spec)
-    }
-
-    return StoreProviderProxy
-}
-
-/*
-* EXAMPLE
-*
-* const spec = {createState}
-*
-* export function MyMain(props) {
-*     return withStore(<Child/>, spec)
-* }
-*/
-export function withStore(children: React.ReactNode, spec: StoreSpec<StoreStateGeneric>) {
-    const store = useRootStore(spec)
-
-    return (
-        <StoreContext.Provider value={store}>
-            {children}
-        </StoreContext.Provider>
-    )
-}
-
-/*
-* EXAMPLE
-*
-* const spec = {createState}
-*
 * export function MyMain(props) {
 *     return (
-*         <StoreProvider spec={spec}>
+*         <StoreProvider createState={createState}>
 *             <MyApp/>
 *         </StoreProvider>
 *     )
 * }
 */
 export function StoreProvider(props: StoreProviderProps<StoreStateGeneric>) {
-    return withStore(props.children, props.spec)
+    const {children, ...spec} = props
+
+    return (
+        <StoreContext.Provider value={useRootStore(spec)}>
+            {children}
+        </StoreContext.Provider>
+    )
 }
 
 export function useRootStore<S extends StoreStateGeneric>(spec: StoreSpec<S>): Store<S> {
-    const {createState} = spec
+    const {createState, onChange} = spec
     const stateRef = useRef(createState())
     const storeObservers = useMemo(() =>
         new Map<string, Array<ChangeObserver>>()
     , [])
 
     const mutate = useCallback((path: StatePath, value: React.SetStateAction<unknown>) => {
-        const nextState = mutateState(stateRef.current, path, value)
-        stateRef.current = nextState
+        const pathKey = asPathKey(path)
+        const oldState = stateRef.current
 
-        const pathId = asPathId(path)
-        const observers = storeObservers.get(pathId)
+        stateRef.current = mutateState(stateRef.current, path, value)
 
-        if (! observers) {
-            const message =
+        onChange?.({
+            path,
+            pathKey,
+            value: selectStateValue(stateRef.current, path),
+            valueOld: selectStateValue(oldState, path),
+            state: stateRef.current,
+            stateOld: oldState,
+        })
+
+        const keyObservers = storeObservers.get(pathKey)
+
+        if (! keyObservers) {
+            console.warn(
                 '@eviljs/react/store:\n'
-                + `missing observers for '${JSON.stringify(path)}'.`
-            console.warn(message)
+                + `missing observers for '${pathKey}'.`
+            )
             return
         }
 
-        for (const it of observers) {
+        for (const it of keyObservers) {
             it()
         }
     }, [])
 
     const observe = useCallback((path: StatePath, observer: ChangeObserver) => {
-        const pathId = asPathId(path)
-
-        // Optimization.
-        // We use Map.get(), instead of Map.has() + Map.get().
-        const keyObservers = storeObservers.get(pathId) ?? (() => {
-            const observers: Array<ChangeObserver> = []
-            storeObservers.set(pathId, observers)
-            return observers
-        })()
-
-        keyObservers.push(observer)
+        forEachPath(path, pathSegment => {
+            const pathKey = asPathKey(pathSegment)
+            addToMapList(storeObservers, pathKey, observer)
+        })
 
         function stop() {
-            const idx = keyObservers.indexOf(observer)
+            forEachPath(path, pathSegment => {
+                const pathKey = asPathKey(pathSegment)
+                const keyObservers = storeObservers.get(pathKey)
+                const idx = keyObservers?.indexOf(observer) ?? -1
 
-            if (idx < 0) {
-                const message =
-                    '@eviljs/react/store:\n'
-                    + `observer vanished. Was listening on '${JSON.stringify(path)}'.`
-                console.warn(message)
-                return
-            }
+                if (idx < 0) {
+                    console.warn(
+                        '@eviljs/react/store:\n'
+                        + `observer vanished. Was listening on '${JSON.stringify(path)}'.`
+                    )
+                    return
+                }
 
-            keyObservers.splice(idx, 1)
+                keyObservers?.splice(idx, 1)
+            })
         }
 
         return stop
@@ -135,36 +112,36 @@ export function useStoreContext<S extends StoreStateGeneric>() {
 * EXAMPLE
 *
 * const [books, setBooks] = useStoreState(state => state.books)
-* const [selectedFoodIndex, setSelectedFoodIndex] = useStoreState(state => state.selectedFoodIndex)
-* const [selectedFood, setSelectedFood] = useStoreState(state => state.food[selectedFoodIndex], [selectedFoodIndex])
+* const [selectedFood, setSelectedFood] = useStoreState(state => state.food[selectedFoodIndex])
 */
-export function useStoreState<S extends StoreStateGeneric, V>(selectorOptional: StoreSelector<S, V>, deps?: undefined | Array<unknown>): StateManager<V>
+export function useStoreState<S extends StoreStateGeneric, V>(selectorOptional: StoreSelector<S, V>): StateManager<V>
 export function useStoreState<S extends StoreStateGeneric>(): StateManager<S>
-export function useStoreState<S extends StoreStateGeneric, V>(selectorOptional?: undefined | StoreSelector<S, V>, deps?: undefined | Array<unknown>): StateManager<V> {
+export function useStoreState<S extends StoreStateGeneric, V>(selectorOptional?: undefined | StoreSelector<S, V>): StateManager<V> {
     const selector = (selectorOptional ?? defaultSelector) as StoreSelector<StoreStateGeneric, unknown>
     const store = useStoreContext<S>()!
     const state = store.stateRef.current
-    const path = useMemo(() => selectPath(state, selector), deps ?? [])
+    const path = selectStatePath(state, selector)
+    const pathKey = asPathKey(path)
     const render = useRender()
 
     const selectedState = useMemo((): V => {
         return selectStateValue(state, path) as V
-    }, [state, path])
+    }, [state, pathKey])
 
     useLayoutEffect(() => {
         const stopObserving = store.observe(path, render)
         return stopObserving
-    }, [path])
+    }, [pathKey])
 
     const setSelectedState = useCallback((value: React.SetStateAction<V>) => {
         store.mutate(path, value)
-    }, [path])
+    }, [pathKey])
 
     return [selectedState, setSelectedState]
 }
 
-export function selectPath(state: StoreStateGeneric, selector: StoreSelector<StoreStateGeneric, unknown>): StatePath {
-    const path: StatePath = []
+export function selectStatePath(state: StoreStateGeneric, selector: StoreSelector<StoreStateGeneric, unknown>): StatePath {
+    const path: StatePath = ['/']
 
     if (! isObject(state) && ! isArray(state)) {
         // A number or a string.
@@ -185,7 +162,8 @@ export function selectPath(state: StoreStateGeneric, selector: StoreSelector<Sto
 export function selectStateValue<S>(state: S, path: StatePath): unknown {
     let selectedState: any = state
 
-    for (const it of path) {
+    // First path item is '/', the root state.
+    for (const it of path.slice(1)) {
         selectedState = selectedState[it]
     }
 
@@ -199,75 +177,81 @@ export function defaultSelector<S>(state: S): S {
 export function mutateState<S extends StoreStateGeneric = StoreStateGeneric>(
     state: S,
     path: StatePath,
-    value: React.SetStateAction<unknown>
+    nextValue: React.SetStateAction<unknown>
 ): S {
-    if (path.length === 0) {
+    if (path.length === 1) {
         // We are mutating the state root.
-        return computeValue(value, state) as S
+        return computeValue(nextValue, state) as S
     }
 
-    const nextState = cloneShallow(state)
+    const nextState: any = cloneShallow(state)
 
-    let stateHead: any = nextState
-    let pathIndex = -1
-
-    while (++pathIndex < path.length) {
-        if (! stateHead) {
-            const message =
-                '@eviljs/react/store:\n'
-                + `mutated state vanished from '${JSON.stringify(path)}'.`
-            console.warn(message)
-            break
+    walkState(state, path, (state, key, currentValue, info) => {
+        if (key === '/') {
+            return
         }
 
-        const stateKey = path[pathIndex]!
-
-        if (! (stateKey in stateHead)) {
-            const message =
-                '@eviljs/react/store:\n'
-                + `mutated state path vanished from '${JSON.stringify(path)}'.`
-            console.warn(message)
-            break
-        }
-
-        const prevValue = stateHead[stateKey]
-
-        if (pathIndex === path.length - 1) {
-            // We reached the end of the path. Time to compute the state value.
-            stateHead[stateKey] = computeValue(value, prevValue)
-        }
-        else {
+        nextState[key] = ! info.leaf
             // We are traversing the path. We shallow clone all structures on this path.
-            stateHead[stateKey] = cloneShallow(prevValue)
-        }
-        // We move the state head pointer.
-        stateHead = stateHead[stateKey]
-    }
+            ? cloneShallow(currentValue)
+            // We reached the end of the path. Time to compute the state value.
+            : computeValue(nextValue, currentValue)
+    })
 
     return nextState
+}
+
+export function walkState(
+    state: any,
+    path: StatePath,
+    onNode: (state: any, key: PropertyKey, value: any, info: {leaf: boolean}) => void,
+) {
+    let stateHead: any = state
+    let pathIndex = 0
+
+    while (pathIndex < path.length) {
+        const key = path[pathIndex]!
+        const value = key === '/'
+            ? stateHead
+            : stateHead[key]
+        const leaf = pathIndex === path.length - 1
+
+        onNode(stateHead, key, value, {leaf})
+
+        pathIndex += 1 // We move the pointers.
+
+        // onNode() can mutate in place, so this operations must be done after the onNode() completion.
+        stateHead = key === '/'
+            ? stateHead
+            : stateHead[key]
+
+        if (! stateHead) {
+            console.warn(
+                '@eviljs/react/store.walkState():\n'
+                + `state vanished from path '${JSON.stringify(path)}'.`
+            )
+            break
+        }
+    }
 }
 
 export function createStateProxy<O extends StoreStateGeneric | Array<unknown>>(state: O, onGet: (key: PropertyKey) => void) {
     const proxy = new Proxy(state, {
         get(obj, prop, proxy): unknown {
+            onGet(prop)
+
             if (! (prop in obj)) {
-                const message =
-                    '@eviljs/react/store:\n'
-                    + `missing property '${String(prop)}'.`
-                console.warn(message)
                 return
             }
-            if (! hasOwnProperty(obj, prop)) {
-                const message =
-                    '@eviljs/react/store:\n'
-                    + `accessing inherited property '${String(prop)}'.`
-                console.warn(message)
-                return
-            }
+            // if (! hasOwnProperty(obj, prop)) {
+            //     console.warn(
+            //         '@eviljs/react/store:\n'
+            //         + `accessing inherited property '${String(prop)}'.`
+            //     )
+            //     return
+            // }
 
             const value = (obj as Record<PropertyKey, any>)[prop]
-
-            onGet(prop)
 
             if (isObject(value) || isArray(value)) {
                 return createStateProxy(value, onGet)
@@ -275,56 +259,45 @@ export function createStateProxy<O extends StoreStateGeneric | Array<unknown>>(s
 
             return value
         },
-        // construct() {},
-        // has() {},
-        // set(obj, prop, val, proxy) {},
-        // deleteProperty() {},
-        // apply() {},
-        // ownKeys() {},
-        // defineProperty() {},
-        // getOwnPropertyDescriptor() {},
-        // getPrototypeOf() {},
-        // setPrototypeOf() {},
-        // isExtensible() {},
-        // preventExtensions() {},
     })
 
     return proxy
 }
 
-export const objectHasOwnProperty = Object.prototype.hasOwnProperty
-
-export function hasOwnProperty(obj: {}, prop: PropertyKey) {
-    return objectHasOwnProperty.call(obj, prop)
+export function asPathKey(path: StatePath) {
+    return '/' + path.slice(1).map(it => String(it).replaceAll('/', '_')).join('/')
 }
 
-export function cloneShallow<T>(value: T): T {
-    if (isArray(value)) {
-        return [...value] as unknown as T
+export function forEachPath(path: StatePath, fn: Fn<[StatePath], unknown>) {
+    for (let idx = 0, pathSize = path.length; idx < pathSize; ++idx) {
+        const pathSegment = path.slice(0, idx + 1)
+        fn(pathSegment)
     }
-    if (isObject(value)) {
-        return {...value} as unknown as T
-    }
-    return value
 }
 
-export function asPathId(path: StatePath) {
-    let id = '/'
-    for (const it of path) {
-        id += String(it) + '/'
-    }
-    return id
+export function addToMapList<K extends PropertyKey, I>(map: Map<K, Array<I>>, key: K, item: I): Array<I> {
+    // Optimization.
+    // We use Map.get(), instead of Map.has() + Map.get().
+    const items = map.get(key) ?? (() => {
+        const items: Array<I> = []
+        map.set(key, items)
+        return items
+    })()
+
+    items.push(item)
+
+    return items
 }
 
 // Types ///////////////////////////////////////////////////////////////////////
 
-export interface StoreProviderProps<S extends StoreStateGeneric> {
-    children: React.ReactNode
-    spec: StoreSpec<S>
+export interface StoreProviderProps<S extends StoreStateGeneric> extends StoreSpec<S> {
+    children: undefined | React.ReactNode
 }
 
 export interface StoreSpec<S extends StoreStateGeneric> {
     createState(): S
+    onChange?: undefined | ((args: OnChangeEventArgs) => void)
 }
 
 export interface Store<S extends StoreStateGeneric> {
@@ -347,4 +320,13 @@ export interface ChangeObserver {
 
 export interface Unobserve {
     (): void
+}
+
+export interface OnChangeEventArgs<S extends StoreStateGeneric = StoreStateGeneric> {
+    state: S,
+    stateOld: S
+    path: StatePath,
+    pathKey: string,
+    value: any,
+    valueOld: any,
 }

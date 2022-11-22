@@ -31,6 +31,6 @@ export function HookProvider<V>(props: HookProviderProps<V>) {
 // Types ///////////////////////////////////////////////////////////////////////
 
 export interface HookProviderProps<V> {
-    hook: () => V
-    children: (value: V) => void | undefined | React.ReactNode
+    hook(): V
+    children(value: V): undefined | React.ReactNode
 }

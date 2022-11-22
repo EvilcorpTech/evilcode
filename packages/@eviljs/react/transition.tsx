@@ -1,5 +1,5 @@
-import {asArray, isNotNil, isUndefined} from '@eviljs/std/type.js'
-import {requestStylesFlush} from '@eviljs/web/animation.js'
+import {asArray, isNotNil, isString, isUndefined} from '@eviljs/std/type.js'
+import {flushStyles} from '@eviljs/web/animation.js'
 import {
     cloneElement,
     Fragment,
@@ -8,6 +8,7 @@ import {
     useCallback,
     useContext,
     useEffect,
+    useLayoutEffect,
     useMemo,
     useReducer,
     useRef,
@@ -16,7 +17,6 @@ import {
 import {classes} from './classes.js'
 import {defineContext} from './ctx.js'
 
-const NoItems: [] = []
 const DisplayNoneStyle: React.CSSProperties = {display: 'none'}
 
 export const TransitionContext = defineContext<TransitionContext>('TransitionContext')
@@ -46,8 +46,12 @@ export function Transition(props: TransitionProps) {
         })
     }
 
-    const onTaskEnd = useCallback((task: TransitionTaskSelected) => {
-        dispatch({type: 'TaskCompleted', taskId: task.taskId})
+    const onTaskEnd = useCallback((taskId: TransitionTaskId, observers: undefined | TransitionObservers) => {
+        observers?.onEntered?.()
+        observers?.onExited?.()
+        observers?.onEnd?.()
+
+        dispatch({type: 'TaskCompleted', taskId})
     }, [])
 
     return (
@@ -55,7 +59,10 @@ export function Transition(props: TransitionProps) {
             {state.tasks.map((it, idx) =>
                 <AnimatorMemo
                     key={it.key}
-                    task={it}
+                    taskAction={it.action}
+                    taskChild={it.child}
+                    taskId={it.taskId}
+                    taskObservers={it.observers}
                     className={className} classPrefix={classPrefix}
                     enter={enter} exit={exit} target={target} timeout={timeout}
                     onEnd={onTaskEnd}
@@ -68,7 +75,17 @@ export function Transition(props: TransitionProps) {
 const AnimatorMemo = memo(Animator)
 
 export function Animator(props: AnimatorProps) {
-    const {className, classPrefix, target, timeout, task, onEnd} = props
+    const {
+        className,
+        classPrefix,
+        target,
+        timeout,
+        taskAction,
+        taskChild,
+        taskId,
+        taskObservers,
+        onEnd,
+    } = props
     const handleRef = useRef<null | HTMLTemplateElement>(null)
     const eventsRef = useRef(0)
     const [tasksLifecycle, setTasksLifecycle] = useState<State>({})
@@ -79,14 +96,18 @@ export function Animator(props: AnimatorProps) {
     // task state is reset immediately when the taskId changes. Otherwise, using
     // an useEffect/useLayoutEffect, we would have an old/stale state on first render,
     // resulting in wrong context value, wrong classes and wrong styles.
-    const taskLifecycle = tasksLifecycle[task.taskId] ?? 'initial'
+    const taskLifecycle = tasksLifecycle[taskId] ?? (
+        taskAction === 'render'
+            ? 'animated' // Optimization: A render task must transition directly to the animated state, avoiding useless renders.
+            : 'initial'
+    )
 
-    const setTaskLifecycle = useCallback((state: AnimatorTaskLifecycle) => {
-        setTasksLifecycle({[task.taskId]: state})
-    }, [task.taskId])
+    const setTaskLifecycle = useCallback((taskId: TransitionTaskId, state: AnimatorTaskLifecycle) => {
+        setTasksLifecycle({[taskId]: state})
+    }, [])
 
     const taskEvents = (() => {
-        switch (task.action) {
+        switch (taskAction) {
             case 'mount':
                 return Math.max(0, props.enter ?? 1)
             case 'unmount':
@@ -98,29 +119,14 @@ export function Animator(props: AnimatorProps) {
         return 0
     })()
 
-    if (taskEvents === 0 && taskLifecycle !== 'animated' && task.action !== 'render') {
-        // We derive the state. In this way an unmount action with 0 events
+    if (true
+        && taskLifecycle !== 'animated'
+        && taskEvents === 0
+    ) {
+        // We derive the state. In this way a mount/unmount action with 0 events
         // is reflected immediately (without re-layout, re-paint and flashing).
-        setTaskLifecycle('animated')
+        setTaskLifecycle(taskId, 'animated')
     }
-
-    const onTaskEnd = useCallback(() => {
-        setTaskLifecycle('animated')
-
-        task.observers?.onEntered?.()
-        task.observers?.onExited?.()
-        task.observers?.onEnd?.()
-        task.observers = undefined // We dispose the observers, avoiding duplicate calls.
-
-        onEnd?.(task)
-    }, [
-        setTaskLifecycle,
-        task,
-        task.observers?.onEntered,
-        task.observers?.onExited,
-        task.observers?.onEnd,
-        onEnd,
-    ])
 
     const onAnimated = useCallback((event: AnimatorCompletionEvent) => {
         if (eventsRef.current >= taskEvents) {
@@ -128,7 +134,9 @@ export function Animator(props: AnimatorProps) {
             return
         }
 
-        const validEvent = isValidAnimatorEvent(event, target)
+        // In case no target is provided, we use the child root (host element) by default.
+        const eventFilter = target ?? findAnimatorElement(handleRef.current)
+        const validEvent = isValidAnimatorEvent(event, eventFilter)
 
         if (! validEvent) {
             return
@@ -140,71 +148,84 @@ export function Animator(props: AnimatorProps) {
             return
         }
 
-        onTaskEnd()
-    }, [taskEvents, target, onTaskEnd])
+        setTaskLifecycle(taskId, 'animated')
+    }, [taskId])
 
     const contextValue = useMemo(() => {
-        return computeAnimatorContext(task.action, taskLifecycle)
-    }, [task.action, taskLifecycle])
+        return computeAnimatorContext(taskAction, taskLifecycle)
+    }, [taskAction, taskLifecycle])
 
     const childListeners = useMemo((): undefined | AnimatorAnimatableEvents => {
-        if (task.action === 'render') {
-            // A render task has no animation. We can skip it.
-            return
-        }
         if (taskEvents === 0) {
             // A task without events has no animation. We can skip it.
             return
         }
+        if (taskAction === 'render') {
+            // A render task has no animation. We can skip it.
+            return
+        }
 
-        const onAnimationEnd = onAnimated
-        const onTransitionEnd = onAnimated
-
-        return {onAnimationEnd, onTransitionEnd}
-    }, [task.action, taskEvents, onAnimated])
+        return {
+            onAnimationEnd: onAnimated,
+            onTransitionEnd: onAnimated,
+        }
+    }, [taskEvents, taskAction, onAnimated])
 
     const childClass = useMemo(() => {
         const animatorClass = undefined
-            ?? className?.(task.action, taskLifecycle)
-            ?? computeAnimatorClasses(task.action, taskLifecycle, classPrefix)
+            ?? className?.(taskAction, taskLifecycle)
+            ?? computeAnimatorClasses(taskAction, taskLifecycle, classPrefix)
 
-        return classes(task.child.props.className, animatorClass)
-    }, [task.action, taskLifecycle, task.child.props.className, className, classPrefix])
+        return classes(taskChild.props.className, animatorClass)
+    }, [taskAction, taskLifecycle, taskChild.props.className, className, classPrefix])
 
     const childStyle = useMemo(() => {
-        const animatorStyle = computeAnimatorStyles(task.action, taskLifecycle)
+        const animatorStyle = computeAnimatorStyles(taskAction, taskLifecycle)
 
-        return {...task.child.props.styles, ...animatorStyle}
-    }, [task.action, taskLifecycle, task.child.props.styles])
+        return {...taskChild.props.styles, ...animatorStyle}
+    }, [taskAction, taskLifecycle, taskChild.props.styles])
 
-    useEffect(() => {
+    useLayoutEffect(() => {
         eventsRef.current = 0
 
-        if (task.action === 'render') {
-            // A render task has no animation and no style to apply.
-            onTaskEnd()
-            return
-        }
         if (taskEvents === 0) {
             // A task without events has no animation and no style to apply.
-            onTaskEnd()
             return
         }
-
-        // We must force the flush of pending styles and classes
-        // only when not animating (the initial phase).
+        if (taskAction === 'render') {
+            // A render task has no animation and no style to apply.
+            return
+        }
+        if (taskLifecycle !== 'initial') {
+            // Styles and classes must be flushed only during the initial phase (when not animating).
+            return
+        }
 
         const animatorElement = findAnimatorElement(handleRef.current)
 
         if (! animatorElement) {
+            // We can't find an element to animate. It can happen with suspended
+            // components. We transition to the animated (final) state.
+            setTaskLifecycle(taskId, 'animated')
             return
         }
 
-        requestStylesFlush(animatorElement as HTMLElement).then(() => {
-            // Initial styles and classes have been flushed. Time to fire the animation.
-            setTaskLifecycle('animating')
-        })
-    }, [task.taskId])
+        flushStyles(animatorElement as HTMLElement) // 1) Initial styles and classes have been flushed.
+        setTaskLifecycle(taskId, 'animating')  // 2) Time to fire the animation.
+    }, [taskId/*, taskAction, taskLifecycle */])
+
+    useEffect(() => {
+        const taskEnded = false
+            || taskEvents === 0
+            || taskAction === 'render'
+            || taskLifecycle === 'animated'
+
+        if (! taskEnded) {
+            return
+        }
+
+        onEnd(taskId, taskObservers)
+    }, [taskEvents, taskAction, taskLifecycle])
 
     useEffect(() => {
         if (taskLifecycle !== 'animating') {
@@ -217,11 +238,11 @@ export function Animator(props: AnimatorProps) {
                 // No timeout was provided, which means that it was not expected.
                 console.warn(
                     '@eviljs/react/transition.Animator:\n'
-                    + `transition timeout detected during '${task.action}'.`
+                    + `transition timeout detected during '${taskAction}'.`
                 )
             }
 
-            onTaskEnd()
+            setTaskLifecycle(taskId, 'animated')
         }, timeout ?? TransitionTimeoutDefault)
 
         function onClean() {
@@ -229,17 +250,17 @@ export function Animator(props: AnimatorProps) {
         }
 
         return onClean
-    }, [taskLifecycle, onTaskEnd])
+    }, [taskLifecycle/*, taskId */])
 
     const needsHandle = true
-        && taskLifecycle === 'initial'  // A mount/unmount needs the handle only during initial phase.
-        && task.action !== 'render'     // A render task does not need the handle, because it does not animate.
+        && taskLifecycle !== 'animated' // A completed mount/unmount does not need the handle.
+        && taskAction !== 'render'      // A render task does not need the handle (because it does not animate).
 
-    // DEBUG LOG POINT: task.taskId, task.action, taskLifecycle, childClass, childStyle, contextValue
+    // DEBUG LOG POINT: taskId, taskAction, taskLifecycle, childClass, childStyle, contextValue
 
     return (
         <TransitionContext.Provider value={contextValue}>
-            {cloneElement(task.child, {className: childClass, style: childStyle, ...childListeners})}
+            {cloneElement(taskChild, {className: childClass, style: childStyle, ...childListeners})}
 
             {needsHandle &&
                 <template ref={handleRef} style={DisplayNoneStyle}/>
@@ -402,13 +423,25 @@ export function reduceTransitionChildUpdate(state: TransitionState, args: {
 }
 
 export function reduceTransitionTaskCompletion(state: TransitionState, taskId: TransitionTaskId): TransitionState {
-    const tasks = state.tasks.map((it): typeof it =>
-        it.taskId === taskId
-            ? {...it, completed: true}
-            : it
-    )
+    let stateChanged = false
 
-    return {...state, tasks}
+    const tasks = state.tasks.map((it): typeof it => {
+        if (it.taskId !== taskId) {
+            return it
+        }
+        if (it.completed) {
+            // Render tasks are completed by default.
+            // Optimization: we don' mutate an already completed task, avoiding useless renders.
+            return it
+        }
+
+        stateChanged = true
+        return {...it, completed: true}
+    })
+
+    return stateChanged // Optimization: avoids useless renders.
+        ? {...state, tasks}
+        : state
 }
 
 export function reduceTransitionQueue(state: TransitionState): TransitionState {
@@ -443,7 +476,10 @@ export function createSelectedTask(task: TransitionTaskQueued, keys: Array<strin
             ?? task.key?.(keys) // We use the task computed key, if any.
             ?? String(task.taskId) // As fallback, we use a unique key.
         ,
-        completed: false,
+        completed: task.action === 'render'
+            ? true // A render task is implicitly completed.
+            : false // A mount/unmount task must be completed.
+        ,
     }
 }
 
@@ -805,31 +841,36 @@ export function areSameChildren(a?: undefined | TransitionElement, b?: undefined
     return sameType && sameKey
 }
 
-export function findAnimatorElement(handleElement: undefined | null | HTMLElement) {
-    if (! handleElement) {
-        return
-    }
-    return handleElement.previousElementSibling ?? undefined
+export function findAnimatorElement(handleElement: null | HTMLElement) {
+    return handleElement?.previousElementSibling ?? undefined
 }
 
 export function isValidAnimatorEvent(
     event: AnimatorCompletionEvent,
-    target: TransitionEventTarget,
+    target: undefined | TransitionEventTarget,
 ) {
-    const targets = asArray(target ?? NoItems)
+    // Note: in case no target is provided, any event must be considered valid.
+
+    if (! target) {
+        return true
+    }
+
+    const targets = asArray(target)
 
     if (targets.length === 0) {
-        // No target was provided. Any event must be considered valid.
         return true
     }
 
     const eventTarget = event.target as Partial<HTMLElement>
 
     for (const it of targets) {
-        if (eventTarget.id === it) {
+        if (it instanceof Element && eventTarget === it) {
             return true
         }
-        if (eventTarget.classList?.contains(it)) {
+        if (isString(it) && eventTarget.id === it) {
+            return true
+        }
+        if (isString(it) && eventTarget.classList?.contains(it)) {
             return true
         }
     }
@@ -850,8 +891,11 @@ export interface TransitionProps extends TransitionObservers, TransitionConfig {
 }
 
 export interface AnimatorProps extends TransitionConfig {
-    task: TransitionTaskSelected
-    onEnd(task: TransitionTaskSelected): void
+    taskAction: TransitionTaskAction
+    taskChild: TransitionElement
+    taskId: TransitionTaskId
+    taskObservers: undefined | TransitionObservers
+    onEnd(taskId: TransitionTaskId, observers: undefined | TransitionObservers): void
 }
 
 export interface TransitionConfig {
@@ -865,7 +909,7 @@ export interface TransitionConfig {
 
 export type TransitionChildren = undefined | null | boolean | number | string | TransitionElement
 export type TransitionElement = JSX.Element | React.ReactElement<AnimatorAnimatable, React.JSXElementConstructor<AnimatorAnimatable>>
-export type TransitionEventTarget = undefined | string | Array<string>
+export type TransitionEventTarget = string | Element | Array<string | Element>
 export type TransitionMode = 'cross' | 'out-in' | 'in-out'
 
 export interface TransitionObservers {

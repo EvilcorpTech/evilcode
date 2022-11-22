@@ -8,41 +8,6 @@ export const StoreV2Context = defineContext<Store<StoreStateGeneric>>('StoreV2Co
 /*
 * EXAMPLE
 *
-* const spec = {createState, actions}
-* const Main = WithStore(MyMain, spec)
-*
-* render(<Main/>, document.body)
-*/
-export function WithStore<P extends {}>(Child: React.ComponentType<P>, spec: StoreSpec<StoreStateGeneric>) {
-    function StoreV2ProviderProxy(props: P) {
-        return withStore(<Child {...props}/>, spec)
-    }
-
-    return StoreV2ProviderProxy
-}
-
-/*
-* EXAMPLE
-*
-* const spec = {createState, actions}
-*
-* export function MyMain(props) {
-*     return withStore(<Child/>, spec)
-* }
-*/
-export function withStore(children: React.ReactNode, spec: StoreSpec<StoreStateGeneric>) {
-    const store = useRootStore(spec)
-
-    return (
-        <StoreV2Context.Provider value={store}>
-            {children}
-        </StoreV2Context.Provider>
-    )
-}
-
-/*
-* EXAMPLE
-*
 * const spec = {createState}
 *
 * export function MyMain(props) {
@@ -54,7 +19,13 @@ export function withStore(children: React.ReactNode, spec: StoreSpec<StoreStateG
 * }
 */
 export function StoreProvider(props: StoreProviderProps<StoreStateGeneric>) {
-    return withStore(props.children, props.spec)
+    const {children, ...spec} = props
+
+    return (
+        <StoreV2Context.Provider value={useRootStore(spec)}>
+            {children}
+        </StoreV2Context.Provider>
+    )
 }
 
 export function useRootStore<S extends StoreStateGeneric>(spec: StoreSpec<S>): Store<S> {
@@ -69,9 +40,8 @@ export function useStore<S extends StoreStateGeneric>() {
 
 // Types ///////////////////////////////////////////////////////////////////////
 
-export interface StoreProviderProps<S extends StoreStateGeneric> {
-    children: React.ReactNode
-    spec: StoreSpec<S>
+export interface StoreProviderProps<S extends StoreStateGeneric> extends StoreSpec<S> {
+    children: undefined | React.ReactNode
 }
 
 export interface StoreSpec<S extends StoreStateGeneric> {

@@ -9,61 +9,30 @@ export const ContainerContext = defineContext<Container>('ContainerContext')
 *
 * const spec = {services}
 * const container = createContainer(spec)
-* const Main = WithContainer(MyMain, container)
-*
-* render(<Main/>, document.body)
-*/
-export function WithContainer<P extends {}>(Child: React.ComponentType<P>, container: Container) {
-    function ContainerProviderProxy(props: P) {
-        return withContainer(<Child {...props}/>, container)
-    }
-
-    return ContainerProviderProxy
-}
-
-/*
-* EXAMPLE
-*
-* const spec = {services}
-* const container = createContainer(spec)
-*
-* export function MyMain(props) {
-*     return withContainer(<Child/>, container)
-* }
-*/
-export function withContainer(children: React.ReactNode, container: Container) {
-    return (
-        <ContainerContext.Provider value={container}>
-            {children}
-        </ContainerContext.Provider>
-    )
-}
-
-/*
-* EXAMPLE
-*
-* const spec = {services}
-* const container = createContainer(spec)
 *
 * export function MyMain(props) {
 *     return (
-*         <ContainerProvider container={container}>
+*         <ContainerProvider value={container}>
 *             <MyApp/>
 *         </ContainerProvider>
 *     )
 * }
 */
 export function ContainerProvider(props: ContainerProviderProps) {
-    return withContainer(props.children, props.container)
+    return (
+        <ContainerContext.Provider value={props.value}>
+            {props.children}
+        </ContainerContext.Provider>
+    )
 }
 
-export function useContainer<T extends undefined | Container = undefined | Container>() {
-    return useContext(ContainerContext) as T
+export function useContainer<T extends Container = Container>() {
+    return useContext(ContainerContext) as undefined | T
 }
 
 // Types ///////////////////////////////////////////////////////////////////////
 
 export interface ContainerProviderProps {
-    children: React.ReactNode
-    container: Container
+    children: undefined | React.ReactNode
+    value: Container
 }

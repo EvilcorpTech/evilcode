@@ -1,4 +1,4 @@
-import {createI18n, I18n, I18nMessages} from '@eviljs/std/i18n.js'
+import {createI18n, type I18n, type I18nMessages, type I18nSpec} from '@eviljs/std/i18n.js'
 import {useContext, useMemo, useState} from 'react'
 import {defineContext} from './ctx.js'
 import type {StateSetter} from './state.js'
@@ -8,31 +8,25 @@ export const I18nContext = defineContext<I18nManager>('I18nContext')
 /*
 * EXAMPLE
 *
-* const spec = {locale, fallbackLocale, messages}
-* const i18n = createI18n(spec)
-* const Main = WithI18n(MyMain, i18n)
-*
-* render(<Main/>, document.body)
-*/
-export function WithI18n<P extends {}>(Child: React.ComponentType<P>, spec: I18nManager) {
-    function I18nProviderProxy(props: P) {
-        return withI18n(<Child {...props}/>, spec)
-    }
-
-    return I18nProviderProxy
-}
-
-/*
-* EXAMPLE
-*
-* const spec = {locale, fallbackLocale, messages}
-* const i18n = createI18n(spec)
-*
 * export function MyMain(props) {
-*     return withI18n(<Children/>, i18n)
+*     return (
+*         <I18nProvider locale={locale} fallbackLocale={fallbackLocale} messages={messages}>
+*             <MyApp/>
+*         </I18nProvider>
+*     )
 * }
 */
-export function withI18n(children: React.ReactNode, spec: I18n) {
+export function I18nProvider(props: I18nProviderProps) {
+    const {children, ...spec} = props
+
+    return (
+        <I18nContext.Provider value={useRootI18n(spec)}>
+            {children}
+        </I18nContext.Provider>
+    )
+}
+
+export function useRootI18n(spec: I18nSpec<string, string, string, string>) {
     const [locale, setLocale] = useState(spec.locale)
     const [fallbackLocale, setFallbackLocale] = useState(spec.fallbackLocale)
     const [messages, setMessages] = useState(spec.messages)
@@ -40,9 +34,10 @@ export function withI18n(children: React.ReactNode, spec: I18n) {
     const i18n = useMemo(() => {
         const self: I18nManager = {
             ...createI18n({
-                locale: locale,
-                fallbackLocale: fallbackLocale,
-                messages: messages,
+                ...spec,
+                locale,
+                fallbackLocale,
+                messages,
             }),
             get locale() {
                 return locale
@@ -70,29 +65,7 @@ export function withI18n(children: React.ReactNode, spec: I18n) {
         return self
     }, [locale, fallbackLocale, messages])
 
-    return (
-        <I18nContext.Provider value={i18n}>
-            {children}
-        </I18nContext.Provider>
-    )
-}
-
-/*
-* EXAMPLE
-*
-* const spec = {locale, fallbackLocale, messages}
-* const i18n = createI18n(spec)
-*
-* export function MyMain(props) {
-*     return (
-*         <I18nProvider i18n={i18n}>
-*             <MyApp/>
-*         </I18nProvider>
-*     )
-* }
-*/
-export function I18nProvider(props: I18nProviderProps) {
-    return withI18n(props.children, props.i18n)
+    return i18n
 }
 
 export function useI18n<L extends string = string, K extends string = string>() {
@@ -118,16 +91,18 @@ export function useI18nMsg<T extends {}, L extends string = string, K extends st
 
 // Types ///////////////////////////////////////////////////////////////////////
 
-export interface I18nProviderProps {
-    children: React.ReactNode
-    i18n: I18nManager
+export interface I18nProviderProps extends I18nSpec<string, string, string, string> {
+    children: undefined | React.ReactNode
 }
 
 export interface I18nMsgsComputer<I, T extends {}> {
     (i18n: I): T
 }
 
-export interface I18nManager<L extends string = string, K extends string = string> extends I18n<L, K>, I18nSetters<L, K> {
+export interface I18nManager<L extends string = string, K extends string = string> extends
+    I18n<L, K>,
+    I18nSetters<L, K>
+{
 }
 
 export interface I18nSetters<L extends string = string, K extends string = string> {

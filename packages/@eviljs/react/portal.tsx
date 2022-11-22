@@ -6,46 +6,10 @@ import type {StateManager} from './state.js'
 
 export const PortalContext = defineContext<StateManager<null | PortalElement>>('PortalContext')
 
-/*
-* EXAMPLE
-*
-* return (
-*     <PortalProvider children={Portal =>
-*         <Fragment>
-*             <Teleport>
-*                 <p>This code is teleported inside the Portal</p>
-*             </Teleport>
-*
-*             <Portal tag="section"/>
-*         </Fragment>
-*     }/>
-* )
-*/
 export function PortalProvider(props: PortalProviderProps) {
-    return withPortal(props.children)
-}
-
-/*
-* EXAMPLE
-*
-* export function MyMain(props) {
-*     return withPortal(Portal =>
-*         <Fragment>
-*             <Teleport>
-*                 <p>This code is teleported inside the Portal</p>
-*             </Teleport>
-*
-*             <Portal/>
-*         </Fragment>
-*     )
-* }
-*/
-export function withPortal(children: React.ReactNode) {
-    const portal = useState<null | PortalElement>(null)
-
     return (
-        <PortalContext.Provider value={portal}>
-            {children}
+        <PortalContext.Provider value={useRootPortal()}>
+            {props.children}
         </PortalContext.Provider>
     )
 }
@@ -103,12 +67,16 @@ export function Teleport(props: TeleportProps) {
     return createPortal(children, portal)
 }
 
+export function useRootPortal() {
+    return useState<null | PortalElement>(null)
+}
+
 // Types ///////////////////////////////////////////////////////////////////////
 
 export type PortalElement = HTMLElement
 
 export interface PortalProviderProps {
-    children?: undefined | React.ReactNode
+    children: undefined | React.ReactNode
 }
 
 export interface PortalProps extends React.HTMLAttributes<PortalElement> {

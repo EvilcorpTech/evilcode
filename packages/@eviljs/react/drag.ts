@@ -1,3 +1,4 @@
+import type {Nil} from '@eviljs/std/type.js'
 import {
     attachDragListeners,
     initMoveState,
@@ -147,9 +148,9 @@ export function useResize(targetRef: DragElementRef<DragResizeElement>, options?
 export type DragElementRef<T extends Element> = React.RefObject<T>
 
 export interface UseDragInfo<S, P> {
-    startState?: undefined | null | S
+    startState?: Nil | S
     progressState?: undefined | P
-    unmount?: undefined | null | (() => void)
+    unmount?: Nil | (() => void)
 }
 
 export interface UseDragOptions<S, P> extends DragOptions {

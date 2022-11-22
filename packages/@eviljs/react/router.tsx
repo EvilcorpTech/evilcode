@@ -1,109 +1,19 @@
-import {ComputableValue, computeValue} from '@eviljs/std/fn.js'
+import {computeValue, type Fn, type ValueComputable} from '@eviljs/std/fn.js'
 import {escapeRegexp} from '@eviljs/std/regexp.js'
-import {asArray, isPromise, Nil} from '@eviljs/std/type.js'
-import {compilePattern, exact, regexpFromPattern} from '@eviljs/web/route.js'
-import {createRouter, serializeRouteToString, RouterOptions, RouterParams, RouterRouteParams} from '@eviljs/web/router.js'
-import {forwardRef, useCallback, useContext, useEffect, useMemo, useRef, useState} from 'react'
+import {isPromise} from '@eviljs/std/type.js'
+import {exact, regexpFromPattern} from '@eviljs/web/route.js'
+import {serializeRouteToString, type Router as RouterManager, type RouterObserver, type RouterParams, type RouterRouteParams} from '@eviljs/web/router.js'
+import {Children, forwardRef, isValidElement, useCallback, useContext, useEffect, useMemo, useRef, useState} from 'react'
 import {classes} from './classes.js'
 import {defineContext} from './ctx.js'
 
-export {exact, All, Arg, End, Value, Path, PathOpt, PathGlob, Start} from '@eviljs/web/route.js'
-export type {RouterOptions} from '@eviljs/web/router.js'
+export {All, Arg, End, exact, Path, PathGlob, PathOpt, Start, Value} from '@eviljs/web/route.js'
+export {createHashRouter, createMemoryRouter, createPathRouter} from '@eviljs/web/router.js'
+export type {RouterMemoryOptions, RouterObserver, RouterOptions} from '@eviljs/web/router.js'
 
 export const RouterContext = defineContext<Router>('RouterContext')
-export const RouteMatchesContext = defineContext<RouteMatches>('RouteMatchContext')
+export const RouteArgsContext = defineContext<RouteArgs>('RouteArgsContext')
 export const RouteDefaultActiveClass = 'route-active'
-
-/*
-* EXAMPLE
-*
-* const options = {type, basePath}
-* const Main = WithRouter(MyMain, options)
-*
-* render(<Main/>, document.body)
-*/
-export function WithRouter<P extends {}>(Child: React.ComponentType<P>) {
-    function RouterProviderProxy(props: P) {
-        return withRouter(<Child {...props}/>)
-    }
-
-    return RouterProviderProxy
-}
-
-/*
-* EXAMPLE
-*
-* const options = {type, basePath}
-*
-* export function MyMain(props) {
-*     return withRouter(<Child/>, options)
-* }
-*/
-export function withRouter(children: React.ReactNode, options?: undefined | RouterOptions) {
-    const router = useRootRouter(options)
-
-    return (
-        <RouterContext.Provider value={router}>
-            {children}
-        </RouterContext.Provider>
-    )
-}
-
-/*
-* EXAMPLE
-*
-* <WhenRoute is={`^/book/${Arg}/${Arg}`}>
-*     {(arg1, arg2) =>
-*         withRouteMatches([arg1, arg2], <MyComponent/>)
-*     }
-* </WhenRoute>
-*
-* <SwitchRoute default={<NotFoundView/>}>
-* {[
-*     {is: `^/book/${Arg}/${Arg}`, then: (arg1, arg2) => (
-*         withRouteMatches([arg1, arg2], <MyComponent/>)
-*     )},
-* ]}
-* </SwitchRoute>
-*/
-export function withRouteMatches(routeMatches: RouteMatches, children?: undefined | React.ReactNode) {
-    return (
-        <RouteMatchesContext.Provider value={routeMatches}>
-            {children}
-        </RouteMatchesContext.Provider>
-    )
-}
-
-/*
-* EXAMPLE
-*
-* const MyComponentMatcher = createRouteMatches(<MyComponent/>)
-*
-* function App() {
-*     return (
-*         <WhenRoute is={`^/book/${Arg}/${Arg}`}>
-*             <MyComponentMatcher/>
-*         </WhenRoute>
-*     )
-* }
-*
-* function App() {
-*     return (
-*         <SwitchRoute default={<NotFoundView/>}>
-*         {[
-*             {is: `^/book/${Arg}/${Arg}`, then: <MyComponentMatcher/>},
-*         ]}
-*         </SwitchRoute>
-*     )
-* }
-*/
-export function createRouteMatches(children?: undefined | React.ReactNode) {
-    function routeMatchesProxy(...routeMatches: RouteMatches) {
-        return withRouteMatches(routeMatches, children)
-    }
-
-    return routeMatchesProxy
-}
 
 /*
 * EXAMPLE
@@ -115,126 +25,13 @@ export function createRouteMatches(children?: undefined | React.ReactNode) {
 * </RouterProvider>
 */
 export function RouterProvider(props: RouterProviderProps) {
-    return withRouter(props.children, props.options)
-}
+    const {children, createRouter} = props
 
-/*
-* EXAMPLE
-*
-* <WhenRoute is={`^/book/${Arg}/${Arg}`}>
-*     {(arg1, arg2) =>
-*         <RouteMatchProvider matches={[arg1, arg2]}>
-*             <MyComponent/>
-*         </RouteMatchProvider>
-*     }
-* </WhenRoute>
-*
-* <SwitchRoute default={<NotFoundView/>}>
-* {[
-*     {is: `^/book/${Arg}/${Arg}`, then: (arg1, arg2) => (
-*         <RouteMatchProvider value={[arg1, arg2]}>
-*             <MyComponent/>
-*         </RouteMatchProvider>
-*     )},
-* ]}
-* </SwitchRoute>
-*/
-export function RouteMatchProvider(props: RouteMatchProviderProps) {
-    return withRouteMatches(props.value, props.children)
-}
-
-export function useRootRouter(options?: undefined | RouterOptions) {
-    const globalRouter = useMemo(() => {
-        return createRouter(onRouteChange, options)
-    }, [])
-    const [route, setRoute] = useState(() => globalRouter.route)
-
-    const testRoute = useCallback((pattern: RegExp) => {
-        return pattern.test(route.path)
-    }, [route.path])
-
-    const matchRoute = useCallback((pattern: RegExp) => {
-        return route.path.match(pattern)
-    }, [route.path])
-
-    const routeTo = useCallback((path: string, params?: undefined | RouterParams, state?: undefined | any) => {
-        globalRouter.routeTo(path, params, state)
-        setRoute(globalRouter.route)
-    }, [globalRouter])
-
-    const replaceRoute = useCallback((path: string, params?: undefined | RouterParams, state?: undefined | any) => {
-        globalRouter.replaceRoute(path, params, state)
-        setRoute(globalRouter.route)
-    }, [globalRouter])
-
-    useEffect(() => {
-        globalRouter.start()
-
-        function onClean() {
-            globalRouter.stop()
-        }
-
-        return onClean
-    }, [globalRouter])
-
-    const router = useMemo(() => {
-        const routePath = route.path
-        const routeParams = route.params
-        const routeState = route.state
-        const {link, start, stop} = globalRouter
-
-        return {
-            routePath,
-            routeParams,
-            routeState,
-            routeTo,
-            replaceRoute,
-            testRoute,
-            matchRoute,
-            link,
-            start,
-            stop,
-        }
-    }, [
-        globalRouter,
-        route.path,
-        route.params,
-        route.state,
-        routeTo,
-        replaceRoute,
-        testRoute,
-        matchRoute,
-    ])
-
-    function onRouteChange(path: string, params: RouterRouteParams, state: any) {
-        setRoute({path, params, state})
-    }
-
-    return router
-}
-
-export function useRouter() {
-    return useContext(RouterContext)
-}
-
-export function useRouteMatches() {
-    return useContext(RouteMatchesContext)
-}
-
-export function useRouterTransition() {
-    const {routePath: toRoute} = useRouter()!
-    const prevRouteRef = useRef(toRoute)
-
-    useEffect(() => {
-        prevRouteRef.current = toRoute
-    }, [toRoute])
-
-    const transition = useMemo(() => {
-        const fromRoute = prevRouteRef.current
-        return {fromRoute, toRoute}
-    }, [toRoute])
-
-    return transition
+    return (
+        <RouterContext.Provider value={useRootRouter(createRouter)}>
+            {children}
+        </RouterContext.Provider>
+    )
 }
 
 /*
@@ -253,13 +50,13 @@ export function useRouterTransition() {
 *         <h1>/book exact</h1>
 *     </CaseRoute>
 *     <CaseRoute is={'^/book'}>
-*          <h1>/book*</h1>
+*         <h1>/book*</h1>
 *     </CaseRoute>
 *     <CaseRoute is={'^/$'}>
-*          <h1>/ exact</h1>
+*         <h1>/ exact</h1>
 *     </CaseRoute>
 *     <CaseRoute is={'^/'}>
-*          <h1>/*</h1>
+*         <h1>/*</h1>
 *     </CaseRoute>
 * </SwitchRoute>
 */
@@ -267,32 +64,32 @@ export function SwitchRoute(props: SwitchRouteProps) {
     const {children, default: fallback} = props
     const {matchRoute} = useRouter()!
 
-    const [matchingChild, matchingRouteArgs] = useMemo(() => {
-        if (! children)  {
-            return []
-        }
+    interface RouteMatch {child: undefined | RouteMatchChildren, args: RouteArgs}
 
-        for (const child of asArray(children)) {
-            const pathRegexp = compilePattern(child.props.is)
-            const matchingRouteArgs = matchRoute(pathRegexp)
+    const match = useMemo((): RouteMatch => {
+        const childrenList = Children.toArray(children).filter(isCaseRouteElement)
 
-            if (! matchingRouteArgs) {
+        for (const child of childrenList) {
+            const routeMatches = matchRoute(child.props.is)
+
+            if (! routeMatches) {
                 continue
             }
 
-            return [child.props.children, cleanRouteMatches(matchingRouteArgs)] as (
-                [RouteMatchChildren, RouteMatches]
-            )
+            return {
+                child: child.props.children,
+                args: routeMatches.slice(1), // Without whole match.
+            }
         }
 
-        if (fallback) {
-            return [fallback, []] as [SwitchRouteProps['default'], RouteMatches]
-        }
-
-        return []
+        return {child: fallback, args: []}
     }, [children, matchRoute])
 
-    return <>{computeValue(matchingChild, ...(matchingRouteArgs ?? []))}</>
+    return (
+        <RouteArgsContext.Provider value={match.args}>
+            {computeValue(match.child, ...match.args)}
+        </RouteArgsContext.Provider>
+    )
 }
 
 export function CaseRoute(props: CaseRouteProps) {
@@ -327,14 +124,25 @@ export function WhenRoute(props: WhenRouteProps) {
     const {children, is} = props
     const {matchRoute} = useRouter()!
 
-    const routeMatches = useMemo(() => {
-        const pathRegexp = regexpFromPattern(is)
-        const routeMatches = matchRoute(pathRegexp)
+    const routeArgs = useMemo((): undefined | RouteArgs => {
+        const routeMatches = matchRoute(is)
 
-        return cleanRouteMatches(routeMatches)
+        if (! routeMatches) {
+            return
+        }
+
+        return routeMatches.slice(1) // Without whole match.
     }, [is, matchRoute])
 
-    return <>{computeValue(children, ...routeMatches)}</>
+    if (! routeArgs) {
+        return null
+    }
+
+    return (
+        <RouteArgsContext.Provider value={routeArgs}>
+            {computeValue(children, ...routeArgs)}
+        </RouteArgsContext.Provider>
+    )
 }
 
 /*
@@ -410,9 +218,8 @@ export const Route = forwardRef(function Route(
         const path = activeWhenExact
             ? exact(escapedTo)
             : escapedTo
-        const pathRegexp = regexpFromPattern(path)
 
-        return testRoute(pathRegexp)
+        return testRoute(path)
     }, [to, testRoute])
 
     const activeClasses = false
@@ -442,32 +249,32 @@ export function Link(props: LinkProps) {
     const {children, className, to, params, state, ...otherProps} = props
     const isRoute = to?.startsWith('/')
 
-    if (isRoute) {
+    if (! isRoute) {
         return (
-            <Route
+            <a
+                target="_blank"
                 {...otherProps}
-                className={classes('Link-b705 route', className)}
-                to={to}
-                params={params}
-                state={state}
+                className={classes('Link-b705 link', className)}
+                href={to
+                    ? serializeRouteToString(to, params)
+                    : undefined
+                }
             >
                 {children}
-            </Route>
+            </a>
         )
     }
 
     return (
-        <a
-            target="_blank"
+        <Route
             {...otherProps}
-            className={classes('Link-b705 link', className)}
-            href={to
-                ? serializeRouteToString(to, params)
-                : undefined
-            }
+            className={classes('Link-b705 route', className)}
+            to={to}
+            params={params}
+            state={state}
         >
             {children}
-        </a>
+        </Route>
     )
 }
 
@@ -492,53 +299,135 @@ export function Redirect(props: RedirectProps) {
     return null
 }
 
-export function cleanRouteMatches(routeMatches: null | RegExpMatchArray) {
-    if (! routeMatches) {
-        return []
-    }
+export function useRootRouter<S>(routerFactory: RouterFactory<S>): Router<S> {
+    const routerManager = useMemo(() => {
+        function onRouteChange(path: string, params: RouterRouteParams, state: any) {
+            setRoute({path, params, state})
+        }
 
-    return routeMatches.slice(1) // Without the whole match.
+        return routerFactory(onRouteChange)
+    }, [routerFactory])
+
+    const [route, setRoute] = useState(() => routerManager.route)
+
+    useEffect(() => {
+        routerManager.start()
+
+        function onClean() {
+            routerManager.stop()
+        }
+
+        return onClean
+    }, [routerManager])
+
+    const router = useMemo((): Router<S> => {
+        return {
+            routePath: route.path,
+            routeParams: route.params,
+            routeState: route.state,
+            routeTo(path, params, state) {
+                routerManager.routeTo(path, params, state)
+                setRoute(routerManager.route)
+            },
+            replaceRoute(path, params, state) {
+                routerManager.replaceRoute(path, params, state)
+                setRoute(routerManager.route)
+            },
+            testRoute(pattern) {
+                return regexpFromPattern(pattern).test(route.path)
+            },
+            matchRoute(pattern) {
+                return route.path.match(regexpFromPattern(pattern))
+            },
+            link: routerManager.link,
+            start: routerManager.start,
+            stop: routerManager.stop,
+        }
+    }, [
+        routerManager,
+        route.path,
+        route.params,
+        route.state,
+    ])
+
+    return router
+}
+
+export function useRouter() {
+    return useContext(RouterContext)
+}
+
+export function useRouteArgs() {
+    return useContext(RouteArgsContext)
+}
+
+export function useRouterTransition() {
+    const {routePath: toRoute} = useRouter()!
+    const prevRouteRef = useRef(toRoute)
+
+    useEffect(() => {
+        prevRouteRef.current = toRoute
+    }, [toRoute])
+
+    const transition = useMemo(() => {
+        const fromRoute = prevRouteRef.current
+        return {fromRoute, toRoute}
+    }, [toRoute])
+
+    return transition
+}
+
+function isCaseRouteElement(element: unknown): element is React.ReactElement<CaseRouteProps, typeof CaseRoute> {
+    if (! isValidElement(element)) {
+        return false
+    }
+    if (element.type !== CaseRoute) {
+        return false
+    }
+    return true
 }
 
 // Types ///////////////////////////////////////////////////////////////////////
 
 export interface RouterProviderProps {
     children: undefined | React.ReactNode
-    options: RouterOptions
+    createRouter: RouterFactory
 }
 
-export interface RouteMatchProviderProps {
-    children?: React.ReactNode
-    value: Array<string>
+export interface RouteArgsProviderProps {
+    children: undefined | React.ReactNode
+    value: RouteArgs
 }
 
-export interface Router<S = any> {
+export interface RouterFactory<S = any> {
+    (observer: RouterObserver<S>): RouterManager<S>
+}
+
+export interface Router<S = unknown> {
     routePath: string
     routeParams: RouterRouteParams
-    routeState: Nil | S
-    routeTo(path: string, params?: undefined | RouterParams, state?: Nil | S): void
-    replaceRoute(path: string, params?: undefined | RouterParams, state?: Nil | S): void
-    testRoute(pattern: RegExp): boolean
-    matchRoute(pattern: RegExp): null | RegExpMatchArray
+    routeState: undefined | S
+    routeTo(path: string, params?: undefined | RouterParams, state?: undefined | S): void
+    replaceRoute(path: string, params?: undefined | RouterParams, state?: undefined | S): void
+    testRoute(pattern: string | RegExp): boolean
+    matchRoute(pattern: string | RegExp): null | RegExpMatchArray
     link(path: string, params?: undefined | RouterParams): string
     start(): void
     stop(): void
 }
 
 export interface SwitchRouteProps {
-    children?: undefined
-        | React.ReactElement<CaseRouteProps, typeof CaseRoute>
-        | Array<React.ReactElement<CaseRouteProps, typeof CaseRoute>>
+    children: undefined | React.ReactNode
     default?: undefined | React.ReactNode
 }
 
 export interface CaseRouteProps {
-    children?: undefined | RouteMatchChildren
+    children: undefined | RouteMatchChildren
     is: string | RegExp
 }
 
 export interface WhenRouteProps {
-    children?: undefined | RouteMatchChildren
+    children: undefined | RouteMatchChildren
     is: string | RegExp
 }
 
@@ -546,8 +435,8 @@ export interface RouteProps extends RoutingProps, React.AnchorHTMLAttributes<HTM
     activeClass?: undefined | string
     activeProps?: undefined | {className?: undefined | string}
     activeWhenExact?: undefined | boolean
-    children?: undefined | React.ReactNode
-    if?: undefined | ComputableValue<RouteGuardResult>
+    children: undefined | React.ReactNode
+    if?: undefined | ValueComputable<RouteGuardResult>
     replace?: undefined | boolean
 }
 
@@ -565,15 +454,15 @@ export interface RoutingProps {
     to: undefined | string
 }
 
-export type RouteGuardResult = undefined | boolean | Promise<boolean>
-
 export type RouteMatchChildren =
     | React.ReactNode
-    | ((...routeMatches: RouteMatches) => React.ReactNode)
+    | Fn<RouteArgs, React.ReactNode>
 
-export type RouteMatches = Array<string>
+export type RouteArgs = Array<undefined | string>
 
-export interface RouteChildrenProps {
-    className?: undefined | string
-    style?: undefined | React.CSSProperties
+export type RouteGuardResult = undefined | boolean | Promise<boolean>
+
+export interface RouteMatch {
+    child: undefined | RouteMatchChildren
+    args: RouteArgs
 }
