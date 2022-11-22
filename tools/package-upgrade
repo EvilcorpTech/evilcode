@@ -1,9 +1,9 @@
-#!/usr/bin/env bash
+#!/usr/bin/env sh
 
 # Upgrades the dependencies of the packages.
 #
 # EXAMPLE
-# ./package-upgrade ./packages/evil*
+# ./package-upgrade ./packages/@eviljs/*
 
 set -e # errexit
 set -u # nounset
@@ -14,18 +14,18 @@ Dir="$(cd "$(dirname "$0")/.." && pwd)"
 : ${NpmUpgradeArgs:=}
 
 for pkg; do
-        if test ! -e "$pkg/package.json"; then
-                echo "skipping invalid package '$pkg'."
-                continue
-        fi
+    if test ! -e "$pkg/package.json"; then
+        echo "skipping invalid package '$pkg'."
+        continue
+    fi
 
-        (
-                case "$pkg" in
-                        /*) cd "$pkg";;
-                        *) cd "$PWD/$pkg";;
-                esac
+    (
+        case "$pkg" in
+            /*) cd "$pkg";;
+            *) cd "$PWD/$pkg";;
+        esac
 
-                set -- $NpmUpgradeArgs
-                $NpmUpgrade "$@"
-        )
+        set -- $NpmUpgradeArgs
+        $NpmUpgrade "$@"
+    )
 done

@@ -1,9 +1,9 @@
-#!/usr/bin/env bash
+#!/usr/bin/env sh
 
 # Commits changes, bumps up package version and publishes it.
 #
 # EXAMPLE
-# PublishVersion=minor ./package-publish-commit ./packages/evil*
+# PublishVersion=minor ./package-publish-commit ./packages/@eviljs/*
 
 set -e # errexit
 set -u # nounset
@@ -11,24 +11,24 @@ set -u # nounset
 Dir="$(cd "$(dirname "$0")/.." && pwd)"
 
 : ${Git:=git}
+: ${Npm:=npm}
 
 for pkg; do
-        if test ! -e "$pkg/package.json"; then
-                echo "skipping invalid package '$pkg'."
-                continue
-        fi
+    if test ! -e "$pkg/package.json"; then
+        echo "skipping invalid package '$pkg'."
+        continue
+    fi
 
-        pkg_name=$(basename "$pkg")
+    pkg_name=$(npm --prefix "$pkg" pkg get name | tr -d '"')
 
-        "$Dir/tools/package-build" "$pkg"
+    $Npm --prefix "$pkg" run --if-present build
+    $Git -C "$pkg" add --all .
+    $Git -C "$pkg" commit --edit --message "($pkg_name) "
 
-        $Git -C "$pkg" add --all .
-        $Git -C "$pkg" commit --edit --message "($pkg_name) MESSAGE"
+    "$Dir/tools/package-publish" "$pkg"
 
-        "$Dir/tools/package-publish" "$pkg"
+    pkg_version=$(npm --prefix "$pkg" pkg get version | tr -d '"')
 
-        pkg_version=$(npm --prefix "$pkg" pkg get version | tr -d '"')
-
-        $Git -C "$pkg" add --all .
-        $Git -C "$pkg" commit --message "($pkg_name) v$pkg_version"
+    $Git -C "$pkg" add --all .
+    $Git -C "$pkg" commit --message "($pkg_name) v$pkg_version"
 done

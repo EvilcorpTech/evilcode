@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/usr/bin/env sh
 
 set -e # errexit
 set -u # nounset
@@ -13,22 +13,22 @@ Dir="$(cd "$(dirname "$0")/.." && pwd)"
 : ${Git:=git}
 
 clean() {
-        local pkg="$1"
+    local pkg="$1"
 
-        # rm -fv "$pkg/tsconfig.tsbuildinfo" || true
-        # rm -fv "$pkg/package-lock.json" || true
-        # if test -e "$pkg/node_modules"; then
-        #         echo "$pkg/node_modules"
-        #         rm -rf "$pkg/node_modules" || true
-        # fi
-        $Git clean -X -d --force "$pkg"
+    # rm -fv "$pkg/tsconfig.tsbuildinfo" || true
+    # rm -fv "$pkg/package-lock.json" || true
+    # if test -e "$pkg/node_modules"; then
+    #     echo "$pkg/node_modules"
+    #     rm -rf "$pkg/node_modules" || true
+    # fi
+    $Git clean -X -d --force "$pkg"
 }
 
 for pkg; do
-        if test ! -e "$pkg"; then
-                echo "skipping invalid package '$pkg'."
-                continue
-        fi
+    if test ! -e "$pkg"; then
+        echo "skipping invalid package '$pkg'."
+        continue
+    fi
 
-        clean "$pkg"
+    clean "$pkg"
 done

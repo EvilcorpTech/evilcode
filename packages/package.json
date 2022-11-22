@@ -1,0 +1,12 @@
+{
+    "scripts": {
+        "init": "npx pnpm@latest install"
+    },
+    "devDependencies": {
+        "nx": "15"
+    },
+    "engines": {
+        "node": ">= 18",
+        "npm": ">= 9"
+    }
+}
