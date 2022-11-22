@@ -6,7 +6,7 @@
         "/**/*.css"
     ],
     "peerDependencies": {
-        "@evilcss/std": "^1"
+        "@evilcss/std": "1"
     },
     "author": "Daniele Orlando",
     "license": "BSD-2-Clause",
