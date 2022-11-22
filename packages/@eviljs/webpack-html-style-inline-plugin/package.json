@@ -1,6 +1,6 @@
 {
     "name": "@eviljs/webpack-html-style-inline-plugin",
-    "version": "0.1.5",
+    "version": "0.2.0",
     "type": "commonjs",
     "files": [
         "/LICENSE.txt",
