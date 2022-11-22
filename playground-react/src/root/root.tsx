@@ -1,15 +1,15 @@
 import '@eviljs/reactx/showcase/theme-v1.css'
 
-import {withAuth} from '@eviljs/react/auth'
+import {AuthProvider} from '@eviljs/react/auth'
 import {classes} from '@eviljs/react/classes'
-import {withContainer} from '@eviljs/react/container'
-import {withI18n} from '@eviljs/react/i18n'
-import {withLogger} from '@eviljs/react/logger'
-import {Portal, withPortal} from '@eviljs/react/portal'
-import {withPortals} from '@eviljs/react/portals'
-import {withRequest} from '@eviljs/react/request'
-import {Arg, CaseRoute, exact, SwitchRoute, withRouter} from '@eviljs/react/router'
-import {useRootStoreStorage, withStore} from '@eviljs/react/store'
+import {ContainerProvider} from '@eviljs/react/container'
+import {I18nProvider} from '@eviljs/react/i18n'
+import {LoggerProvider} from '@eviljs/react/logger'
+import {Portal, PortalProvider} from '@eviljs/react/portal'
+import {PortalsProvider} from '@eviljs/react/portals'
+import {RequestProvider} from '@eviljs/react/request'
+import {Arg, CaseRoute, exact, RouterProvider, SwitchRoute} from '@eviljs/react/router'
+import {StoreProvider} from '@eviljs/react/store'
 import {Showcase} from '@eviljs/reactx/showcase'
 import {pipe} from '@eviljs/std/pipe'
 import {NotFoundView} from '~/app-404/404-view'
@@ -18,31 +18,34 @@ import {AuthView} from '~/app-auth/auth-view'
 import {HomeView} from '~/app-home/home-view'
 import ShowcaseIndex from '~/app-showcase'
 import type {Container} from '~/container/apis'
+import {I18nSpec} from '~/i18n/apis'
 import * as Routes from '~/route/apis'
-import {RouterSpec} from '~/router/router'
-import {StoreSpec, StoreStorageSpec} from '~/store/apis'
+import {createRouter} from '~/router/router'
+import {StoreSpec} from '~/store/apis'
+import {useRootStoreStorage} from '~/store/hooks'
 import {Theme, themeClassOf} from '~/theme/apis'
 import {AuthBarrier} from '~/widgets/auth-barrier'
 import {Header} from '~/widgets/header'
 
-export function RootContext(props: RootContextProps) {
-    const {container} = props
+export function Root(props: RootProps) {
+    const {children, container} = props
+    const {Cookie, Fetch, Logger, Query} = container
 
-    return pipe(<Root/>)
-        .to(it => withAuth(it, container.Fetch, container.Cookie))
-        .to(it => withContainer(it, container))
-        .to(it => withI18n(it, container.I18n))
-        .to(it => withLogger(it, container.Logger))
-        .to(it => withPortal(it))
-        .to(it => withPortals(it))
-        .to(it => withRequest(it, container.Fetch))
-        .to(it => withRouter(it, RouterSpec))
-        .to(it => withStore(it, StoreSpec))
+    return pipe(children)
+        .to(it => AuthProvider({children: it, fetch: Fetch, cookie: Cookie}))
+        .to(it => ContainerProvider({children: it, value: container}))
+        .to(it => I18nProvider({children: it, ...I18nSpec}))
+        .to(it => LoggerProvider({children: it, value: Logger}))
+        .to(it => PortalProvider({children: it}))
+        .to(it => PortalsProvider({children: it}))
+        .to(it => RequestProvider({children: it, value: Query}))
+        .to(it => RouterProvider({children: it, createRouter}))
+        .to(it => StoreProvider({children: it, ...StoreSpec}))
     .end()
 }
 
-export function Root(props: RootProps) {
-    useRootStoreStorage(StoreStorageSpec)
+export function App(props: AppProps) {
+    useRootStoreStorage()
 
     return <>
         <SwitchRoute default={<NotFoundView/>}>
@@ -79,10 +82,10 @@ export function Root(props: RootProps) {
 
 // Types ///////////////////////////////////////////////////////////////////////
 
-export interface RootContextProps {
+export interface RootProps {
     children: React.ReactNode
     container: Container
 }
 
-export interface RootProps {
+export interface AppProps {
 }

@@ -1,14 +1,12 @@
 import type {Container as StdContainer} from '@eviljs/std/container'
-import {createI18n} from '@eviljs/std/i18n'
 import {createConsoleLog, createLogger} from '@eviljs/std/logger'
 import {createCookie} from '@eviljs/web/cookie'
-import {createFetch} from '@eviljs/web/fetch'
-import {asBaseUrl} from '@eviljs/web/url'
+import {createFetch, Fetch} from '@eviljs/web/fetch'
 import {mockFetchDelayed} from '@eviljs/web/fetch-mock'
 import {createQuery} from '@eviljs/web/query'
-import {ApiUrl, BasePath, BundleName} from '~/env/apis'
+import {asBaseUrl} from '@eviljs/web/url'
 import {CookieSpec} from '~/cookie/apis'
-import {I18nSpec} from '~/i18n/apis'
+import {ApiUrl, BasePath, BundleName} from '~/env/apis'
 import {FetchMocksSpec} from '~/mock/apis'
 
 export const ContainerSpec = {
@@ -29,11 +27,11 @@ export const ContainerSpec = {
             return mockFetchDelayed(fetch, FetchMocksSpec, {minDelay: 500, maxDelay: 1000})
 
         },
-        I18n(container: {}) {
-            return createI18n(I18nSpec)
-        },
         Logger(container: {}) {
             return createLogger(createConsoleLog())
+        },
+        Query(container: {Fetch: Fetch}) {
+            return createQuery(container.Fetch)
         },
     },
 }

@@ -4,7 +4,7 @@ import {createContainer} from '@eviljs/std/container'
 import {createRoot} from 'react-dom/client'
 import {ContainerSpec} from '~/container/apis'
 import * as Env from '~/env/apis'
-import {Root, RootContext} from '~/root/root'
+import {App, Root} from '~/root/root'
 
 console.table({...Env})
 
@@ -13,9 +13,9 @@ const rootElement = attachRootElement()
 const root = createRoot(rootElement)
 
 root.render(
-    <RootContext container={container}>
-        <Root/>
-    </RootContext>
+    <Root container={container}>
+        <App/>
+    </Root>
 )
 
 function attachRootElement(): Element {

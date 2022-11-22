@@ -111,10 +111,10 @@
 @import '@evilcss/std/viewport.classes.css';
 @import '@evilcss/std/viewport.props.css';
 
+@import '@eviljs/react/transition-animator/layer.css';
 @import '@eviljs/reactx/checkbox-mark/shape.css';
 @import '@eviljs/reactx/input/floating-theme.css';
 @import '@eviljs/reactx/range/theme.css';
-@import '@eviljs/reactx/transition-animator/layer.css';
 
 /*
 .Root {

@@ -24,7 +24,7 @@
     },
     "devDependencies": {
         "@eviljs/tsconfig": "1",
-        "@types/node": "*",
+        "@types/node": "18",
         "@types/prop-types": "15",
         "@types/react": "18",
         "@types/react-dom": "18",
@@ -33,9 +33,21 @@
         "postcss-preset-env": "7",
         "rollup-plugin-visualizer": "5",
         "tslib": "2",
-        "typescript": "4.8",
+        "typescript": "^4.9",
         "vite": "3",
-        "vite-plugin-checker": "*"
+        "vite-plugin-checker": "0"
+    },
+    "pnpm": {
+        "overrides": {
+            "@evilcss/std": "link:../packages/@evilcss/std",
+            "@evilcss/ui": "link:../packages/@evilcss/ui",
+            "@eviljs/react": "link:../packages/@eviljs/react",
+            "@eviljs/reactx": "link:../packages/@eviljs/reactx",
+            "@eviljs/std": "link:../packages/@eviljs/std",
+            "@eviljs/tsconfig": "link:../packages/@eviljs/tsconfig",
+            "@eviljs/web": "link:../packages/@eviljs/web",
+            "@eviljs/webx": "link:../packages/@eviljs/webx"
+        }
     },
     "engines": {
         "node": ">= 16",

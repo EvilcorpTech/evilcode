@@ -1,7 +1,8 @@
-import {asJsonOptions, mergeOptions} from '@eviljs/web/fetch'
+import {withJsonOptions} from '@eviljs/web/fetch'
 import type {QueryRequestOptions} from '@eviljs/web/query'
+import {mergeQueryOptions} from '@eviljs/web/query'
 
-export function asAuthOptions(token: string): QueryRequestOptions {
+export function withAuthOptions(token: string): QueryRequestOptions {
     return {
         headers: {
             Authorization: `Bearer ${token}`,
@@ -9,15 +10,15 @@ export function asAuthOptions(token: string): QueryRequestOptions {
     }
 }
 
-export function asPayloadOptions(options: PayloadOptions) {
+export function withPayloadOptions(options: PayloadOptions) {
     const {authToken, jsonBody} = options
 
     const optionsList = [
-        authToken ? asAuthOptions(authToken) : null,
-        jsonBody ? asJsonOptions(jsonBody) : null,
+        authToken ? withAuthOptions(authToken) : null,
+        jsonBody ? withJsonOptions(jsonBody) : null,
     ].filter(Boolean) as Array<QueryRequestOptions>
 
-    return mergeOptions(...optionsList)
+    return mergeQueryOptions(...optionsList)
 }
 
 // Types ///////////////////////////////////////////////////////////////////////
