@@ -1,4 +1,4 @@
-import '@evilcss/std/modal.classes.css'
+// See `@evilcss/std/modal.classes.css`.
 
 import {useEffect} from 'react'
 
