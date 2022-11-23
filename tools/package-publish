@@ -15,7 +15,7 @@ Dir="$(cd "$(dirname "$0")/.." && pwd)"
 : ${NpmVersionArgs:=--no-git-tag-version}
 : ${NpmPublishCmd:=publish}
 : ${NpmPublishArgs:=--access public}
-: ${PublishVersion:=minor}
+: ${PublishVersion:=patch}
 
 for pkg; do
     if test ! -e "$pkg/package.json"; then
