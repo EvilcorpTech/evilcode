@@ -16,5 +16,5 @@ export function Button(props: ButtonProps) {
 // Types ///////////////////////////////////////////////////////////////////////
 
 export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
-    children?: React.ReactNode
+    children?: undefined | React.ReactNode
 }
