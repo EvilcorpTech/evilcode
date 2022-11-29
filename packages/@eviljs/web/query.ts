@@ -1,5 +1,6 @@
 import {throwInvalidArgument} from '@eviljs/std/throw.js'
-import {isArray, isObject, isString, kindOf, type Nil} from '@eviljs/std/type.js'
+import type {Nil} from '@eviljs/std/type.js'
+import {isArray, isObject, isString, kindOf} from '@eviljs/std/type.js'
 import {Fetch, FetchRequestOptions, formatResponse, HttpMethod, mergeFetchOptions} from './fetch.js'
 
 export {throwInvalidResponse} from './throw.js'

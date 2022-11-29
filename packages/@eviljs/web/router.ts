@@ -1,5 +1,6 @@
-import {isString, type Nil} from '@eviljs/std/type.js'
-import {encodeQueryParamValue, encodeQueryParams} from './query.js'
+import type {Nil} from '@eviljs/std/type.js'
+import {isString} from '@eviljs/std/type.js'
+import {encodeQueryParams, encodeQueryParamValue} from './query.js'
 import {asBaseUrl} from './url.js'
 
 export function createHashRouter<S>(observer: RouterObserver, options?: undefined | RouterOptions): Router<S> {

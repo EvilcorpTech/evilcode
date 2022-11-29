@@ -1,6 +1,6 @@
 import {computeValue} from '@eviljs/std/fn.js'
 import {isFunction, isObject} from '@eviljs/std/type.js'
-import {withJsonOptions, Fetch, HttpMethod, mergeFetchOptions, FetchRequestOptions} from './fetch.js'
+import {withRequestJson, Fetch, HttpMethod, mergeFetchOptions, FetchRequestOptions} from './fetch.js'
 import {throwInvalidResponse} from './throw.js'
 
 export const AuthDefaultUrl = '/auth'
@@ -14,7 +14,7 @@ export async function authenticate(fetch: Fetch, credentials: AuthCredentials, o
     const extractResponseToken = options?.responseToken ?? defaultExtractResponseToken
     const body = createRequestBody(credentials)
     const baseOpts = createOptions(options?.options, credentials)
-    const bodyOpts = withJsonOptions(body)
+    const bodyOpts = withRequestJson(body)
     const opts = mergeFetchOptions(baseOpts, bodyOpts)
 
     const response = await fetch.request(method, url, opts)

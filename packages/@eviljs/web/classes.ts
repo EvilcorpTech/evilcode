@@ -1,4 +1,5 @@
-import {isArray, isObject, isString, type Nil} from '@eviljs/std/type.js'
+import type {Nil} from '@eviljs/std/type.js'
+import {isArray, isObject, isString} from '@eviljs/std/type.js'
 
 export function classes(...names: Array<Classes>) {
     const list: Array<string> = []

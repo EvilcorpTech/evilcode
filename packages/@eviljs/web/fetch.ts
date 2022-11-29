@@ -111,7 +111,7 @@ export function mergeFetchOptions(...optionsList: Array<FetchRequestOptions>): F
     return {...mergedOptions, headers: mergedOptionsHeaders}
 }
 
-export function withJsonOptions(body: unknown): FetchRequestOptions {
+export function withRequestJson(body: unknown): FetchRequestOptions {
     return {
         headers: {
             'Content-Type': ContentType.Json,

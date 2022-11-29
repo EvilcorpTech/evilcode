@@ -1,7 +1,7 @@
 import {wait} from '@eviljs/std/async.js'
 import {randomInt} from '@eviljs/std/random.js'
 import {
-    withJsonOptions,
+    withRequestJson,
     createFetch,
     Fetch,
     HttpMethod,
@@ -114,7 +114,7 @@ export function mockResponse(
 }
 
 export function jsonResponse(data: unknown, options?: ResponseInit) {
-    const jsonOptions = withJsonOptions(data)
+    const jsonOptions = withRequestJson(data)
     const responseOptions = mergeFetchOptions(options ?? {}, jsonOptions)
     const body = responseOptions.body
     delete responseOptions.body
