@@ -139,9 +139,13 @@ export function asBooleanLike(value: unknown): undefined | boolean {
 }
 
 export function asNumber(value: number): number
-export function asNumber(value: string): undefined | number
-export function asNumber<T>(value: T): unknown extends T ? undefined | number : undefined
+export function asNumber(value: unknown): undefined | number
 export function asNumber(value: unknown): undefined | number {
+    if (! isNumber(value)) {
+        // null and arrays are parsed by Number as 0.
+        return
+    }
+
     const result = Number(value)
 
     if (isNaN(result)) {
@@ -153,16 +157,15 @@ export function asNumber(value: unknown): undefined | number {
 
 
 export function asInteger(value: number): number
-export function asInteger(value: string): undefined | number
-export function asInteger<T>(value: T): unknown extends T ? undefined | number : undefined
+export function asInteger(value: unknown): undefined | number
 export function asInteger(value: unknown): undefined | number {
-    const result = Number(value)
+    const numberMaybe = asNumber(value)
 
-    if (isNaN(result)) {
+    if (isNil(numberMaybe)) {
         return
     }
 
-    return Math.trunc(result)
+    return Math.trunc(numberMaybe)
 }
 
 export function asDate(value: unknown): undefined | Date {

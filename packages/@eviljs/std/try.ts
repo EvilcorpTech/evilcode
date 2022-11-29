@@ -1,4 +1,5 @@
-import {isNotNil, type Nil} from './type.js'
+import type {Nil} from './type.js'
+import {isNotNil} from './type.js'
 
 export function tryCatch<R>(fn: TryOrFn<R>, onError?: undefined, onEnd?: undefined | (() => void)): undefined | R
 export function tryCatch<R, F>(fn: TryOrFn<R>, onError: TryOnError<F>, onEnd?: undefined | (() => void)): R | F
