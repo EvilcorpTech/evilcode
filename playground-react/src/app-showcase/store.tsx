@@ -1,5 +1,6 @@
 import {defineShowcase} from '@eviljs/reactx/showcase'
-import {useStoreState, type StoreState} from '~/store/hooks'
+import type {StoreState} from '~/store/hooks'
+import {useStoreState} from '~/store/hooks'
 import {Theme} from '~/theme/apis'
 
 export default defineShowcase('Store', (props) => {
