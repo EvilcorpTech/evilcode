@@ -1,4 +1,5 @@
-import {createI18n, type I18n, type I18nMessages, type I18nSpec} from '@eviljs/std/i18n.js'
+import type {I18n, I18nMessages, I18nSpec} from '@eviljs/std/i18n.js'
+import {createI18n} from '@eviljs/std/i18n.js'
 import {useContext, useMemo, useState} from 'react'
 import {defineContext} from './ctx.js'
 import type {StateSetter} from './state.js'

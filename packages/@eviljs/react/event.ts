@@ -3,7 +3,8 @@ import {computeValue} from '@eviljs/std/fn.js'
 import {useEffect, useMemo, useState} from 'react'
 import type {StateInit, StateSetter} from './state.js'
 
-export {debounce, throttle, type Task} from '@eviljs/std/event.js'
+export {debounce, throttle} from '@eviljs/std/event.js'
+export type {Task} from '@eviljs/std/event.js'
 
 export function useCallbackDebounced<A extends Array<unknown>>(callback: Task<A>, delay: number) {
     const callbackDebounced = useMemo(() => {

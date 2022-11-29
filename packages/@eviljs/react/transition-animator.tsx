@@ -1,4 +1,5 @@
-import {Box, type BoxProps} from './box.js'
+import type {BoxProps} from './box.js'
+import {Box} from './box.js'
 import {classes} from './classes.js'
 
 export enum TransitionEffect {
