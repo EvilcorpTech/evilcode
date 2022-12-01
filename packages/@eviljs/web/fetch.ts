@@ -1,3 +1,4 @@
+import {throwInvalidArgument} from '@eviljs/std/throw.js'
 import {isArray, isNil, isObject} from '@eviljs/std/type.js'
 import {asBaseUrl} from './url.js'
 
@@ -16,13 +17,10 @@ export enum ContentType {
     Url = 'application/x-www-form-urlencoded',
 }
 
-export function createFetch(options?: undefined | FetchOptions) {
+export function createFetch(options?: undefined | FetchOptions): Fetch {
     const self: Fetch = {
         baseUrl: asBaseUrl(options?.baseUrl),
 
-        /**
-        * @throws
-        */
         request(method: HttpMethod, path: string, options?: undefined | FetchRequestOptions) {
             const url = path.startsWith('/')
                 ? `${self.baseUrl}${path}`
@@ -31,33 +29,18 @@ export function createFetch(options?: undefined | FetchOptions) {
 
             return fetch(url, opts)
         },
-        /**
-        * @throws
-        */
         get(...args) {
             return self.request(HttpMethod.Get, ...args)
         },
-        /**
-        * @throws
-        */
         post(...args) {
             return self.request(HttpMethod.Post, ...args)
         },
-        /**
-        * @throws
-        */
         put(...args) {
             return self.request(HttpMethod.Put, ...args)
         },
-        /**
-        * @throws
-        */
         patch(...args) {
             return self.request(HttpMethod.Patch, ...args)
         },
-        /**
-        * @throws
-        */
         delete(...args) {
             return self.request(HttpMethod.Delete, ...args)
         },
@@ -66,6 +49,9 @@ export function createFetch(options?: undefined | FetchOptions) {
     return self
 }
 
+/**
+* @throws InvalidArgument
+**/
 export function mergeFetchOptions(...optionsList: Array<FetchRequestOptions>): FetchRequestOptions {
     const mergedOptions: FetchRequestOptions = {}
     const mergedOptionsHeaders: Record<string, string> = {}
@@ -94,10 +80,10 @@ export function mergeFetchOptions(...optionsList: Array<FetchRequestOptions>): F
                     else if (isNil(options.headers)) {
                     }
                     else {
-                        const message =
+                        return throwInvalidArgument(
                             '@eviljs/web/fetch.mergeFetchOptions(...optionsList):\n'
                             + `headers must be Object | Array | Headers, given "${options.headers}".`
-                        console.warn(message)
+                        )
                     }
                 break
 
@@ -109,6 +95,31 @@ export function mergeFetchOptions(...optionsList: Array<FetchRequestOptions>): F
     }
 
     return {...mergedOptions, headers: mergedOptionsHeaders}
+}
+
+export function unpackResponse(response: Response): Promise<string | FormData | URLSearchParams | unknown> {
+    const type = response.headers.get('Content-Type')?.toLowerCase()
+
+    if (! type) {
+        return response.text()
+    }
+    if (type.startsWith(ContentType.Json)) {
+        return response.json() as Promise<unknown>
+    }
+    if (type.startsWith(ContentType.Form)) {
+        return response.formData()
+    }
+    if (type.startsWith(ContentType.Url)) {
+        return response.text().then(it => new URLSearchParams(it))
+    }
+    return response.text()
+}
+
+/**
+* @throws InvalidArgument
+**/
+export function withRequestHeaders(...headersList: Array<HeadersInit>): FetchRequestOptions {
+    return mergeFetchOptions(...headersList.map(it => ({headers: it})))
 }
 
 export function withRequestJson(body: unknown): FetchRequestOptions {
@@ -123,34 +134,22 @@ export function withRequestJson(body: unknown): FetchRequestOptions {
     }
 }
 
-export function formatResponse(response: Response) {
-    const type = response.headers.get('Content-Type')?.toLowerCase()
-
-    if (! type) {
-        return response.text()
-    }
-    if (type.startsWith(ContentType.Json)) {
-        return response.json()
-    }
-    if (type.startsWith(ContentType.Form)) {
-        return response.formData()
-    }
-    if (type.startsWith(ContentType.Url)) {
-        return response.text().then(it => new URLSearchParams(it))
-    }
-    return response.text()
-}
-
 // Types ///////////////////////////////////////////////////////////////////////
 
-export interface Fetch {
+export interface Fetch extends FetchAttributes, FetchMethods {
+}
+
+export interface FetchAttributes {
     baseUrl: string
-    request(method: HttpMethod, path: string, options?: undefined | FetchRequestOptions): ReturnType<typeof fetch>
-    get(path: string, options?: undefined | FetchRequestOptions): ReturnType<typeof fetch>
-    post(path: string, options?: undefined | FetchRequestOptions): ReturnType<typeof fetch>
-    put(path: string, options?: undefined | FetchRequestOptions): ReturnType<typeof fetch>
-    patch(path: string, options?: undefined | FetchRequestOptions): ReturnType<typeof fetch>
-    delete(path: string, options?: undefined | FetchRequestOptions): ReturnType<typeof fetch>
+}
+
+export interface FetchMethods {
+    request(method: HttpMethod, path: string, options?: undefined | FetchRequestOptions): Promise<Response>
+    get(path: string, options?: undefined | FetchRequestOptions): Promise<Response>
+    post(path: string, options?: undefined | FetchRequestOptions): Promise<Response>
+    put(path: string, options?: undefined | FetchRequestOptions): Promise<Response>
+    patch(path: string, options?: undefined | FetchRequestOptions): Promise<Response>
+    delete(path: string, options?: undefined | FetchRequestOptions): Promise<Response>
 }
 
 export interface FetchOptions {

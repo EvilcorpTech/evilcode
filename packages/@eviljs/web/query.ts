@@ -1,49 +1,36 @@
 import {throwInvalidArgument} from '@eviljs/std/throw.js'
 import type {Nil} from '@eviljs/std/type.js'
-import {isArray, isObject, isString, kindOf} from '@eviljs/std/type.js'
-import {Fetch, FetchRequestOptions, formatResponse, HttpMethod, mergeFetchOptions} from './fetch.js'
+import {isArray, isNotNil, isObject, isString, kindOf} from '@eviljs/std/type.js'
+import type {Fetch, FetchAttributes, FetchRequestOptions} from './fetch.js'
+import {unpackResponse, HttpMethod, mergeFetchOptions} from './fetch.js'
 
 export {throwInvalidResponse} from './throw.js'
 
 export const QueryRulesHeader = 'X-Query'
 
-export function createQuery(fetch: Fetch) {
+export function createQuery(fetch: Fetch): Query {
     const self: Query = {
         baseUrl: fetch.baseUrl,
 
-        /**
-        * @throws
-        */
         request(...args) {
             return query(fetch, ...args)
         },
-        /**
-        * @throws
-        */
         get(...args) {
             return self.request(HttpMethod.Get, ...args)
         },
-        /**
-        * @throws
-        */
+
         post(...args) {
             return self.request(HttpMethod.Post, ...args)
         },
-        /**
-        * @throws
-        */
+
         put(...args) {
             return self.request(HttpMethod.Put, ...args)
         },
-        /**
-        * @throws
-        */
+
         patch(...args) {
             return self.request(HttpMethod.Patch, ...args)
         },
-        /**
-        * @throws
-        */
+
         delete(...args) {
             return self.request(HttpMethod.Delete, ...args)
         },
@@ -61,25 +48,36 @@ export function createQuery(fetch: Fetch) {
     return self
 }
 
-export async function query(fetch: Fetch, method: QueryRequestMethod, path: string, options?: undefined | QueryRequestOptions) {
-    const requestArgs = [path, options] as const
-    const requestArgsWithParams = setupQueryParams(...requestArgs)
+/**
+* @throws InvalidArgument | QueryError
+**/
+export async function query<T = unknown>(
+    fetch: Fetch,
+    method: QueryRequestMethod,
+    path: string,
+    queryOptions?: undefined | QueryRequestOptions,
+): Promise<T> {
+    const [requestPath, requestOptions] = setupQuery(path, queryOptions)
 
-    const response = await fetch.request(method, ...requestArgsWithParams)
-    const content = await formatResponse(response)
+    const response = await fetch.request(method, requestPath, requestOptions)
+    const content = await unpackResponse(response)
 
     if (! response.ok) {
         throw [response.status, content] as QueryError
     }
 
-    return content
+    return content as T
 }
 
-export function setupQueryParams(path: string, options?: undefined | QueryRequestOptions) {
-    const paramsString = encodeQueryParams(options?.params)
+/**
+* @throws InvalidArgument
+**/
+export function setupQuery(path: string, options?: undefined | QueryRequestOptions): [string, FetchRequestOptions] {
+    const {params, ...otherOptions} = options ?? {}
+    const paramsString = encodeQueryParams(params)
 
     if (! paramsString) {
-        return [path, options] as const
+        return [path, otherOptions]
     }
 
     const sep = path.includes('?')
@@ -87,16 +85,19 @@ export function setupQueryParams(path: string, options?: undefined | QueryReques
         : '?'
     const pathWithParams = path + sep + paramsString
 
-    return [pathWithParams, options] as const
+    return [pathWithParams, otherOptions]
 }
 
+/**
+* @throws InvalidArgument
+**/
 export function encodeQueryParams(params: Nil | QueryParams, options?: undefined | QueryEncodeParamsOptions): string {
     if (! params) {
         return ''
     }
     if (isString(params)) {
         // A plain string is an escape hatch and must be considered already encoded.
-        // We must not encodeURIComponent() it.
+        // We must not use encodeURIComponent() on it.
         return params
     }
     if (isObject(params)) {
@@ -113,55 +114,67 @@ export function encodeQueryParams(params: Nil | QueryParams, options?: undefined
     )
 }
 
+/**
+* @throws InvalidArgument
+**/
 export function encodeQueryParamsObject(params: QueryParamsDict, options?: undefined | QueryEncodeParamsOptions) {
-    const encodeName = options?.encodeName ?? encodeQueryParamName
+    const encodeKey = options?.encodeKey ?? encodeQueryParamKey
     const encodeValue = options?.encodeValue ?? encodeQueryParamValue
     const joinParam = options?.joinParam ?? joinQueryParam
     const joinParts = options?.joinParts ?? joinQueryParamsParts
 
-    const paramsParts = Object.keys(params).map(name => {
-        const value = params[name]
-        const encodedName = encodeName(name)
-        const type = kindOf(value, 'undefined', 'null')
+    const paramsParts = Object.entries(params).map(([key, value]) => {
+        const valueType = kindOf(value, 'undefined', 'null')
 
-        switch (type) {
+        switch (valueType) {
             case 'undefined':
-                return ''
+                // A key with an undefined value is removed.
+                return
             case 'null':
-                return encodedName
+                // A key with a null value is encoded without a value.
+                return encodeKey(key)
             default:
-                return joinParam(encodedName, encodeValue(value))
+                return joinParam(encodeKey(key), encodeValue(value))
         }
-    })
+    }).filter(isNotNil)
+
     const encodedParams = joinParts(paramsParts)
 
     return encodedParams
 }
 
+/**
+* @throws InvalidArgument
+**/
 export function encodeQueryParamsArray(params: QueryParamsList, options?: undefined | QueryEncodeParamsOptions) {
-    const encodeName = options?.encodeName ?? encodeQueryParamName
+    const encodeKey = options?.encodeKey ?? encodeQueryParamKey
     const joinParts = options?.joinParts ?? joinQueryParamsParts
 
-    const paramsParts = params.map(name => {
-        const type = kindOf(name, 'undefined', 'null', 'array', 'object')
+    const paramsParts = params.map(param => {
+        const paramType = kindOf(param, 'undefined', 'null', 'boolean', 'array', 'object')
 
-        switch (type) {
+        switch (paramType) {
             case 'undefined':
             case 'null':
-                return ''
+            case 'boolean':
+                return
             case 'array':
             case 'object':
-                return encodeQueryParams(name as QueryParamsList | QueryParamsDict, options)
+                return encodeQueryParams(param as QueryParamsList | QueryParamsDict, options)
             default:
-                return encodeName(name)
+                return encodeKey(param)
         }
-    })
+    }).filter(isNotNil)
+
     const encodedParams = joinParts(paramsParts)
 
     return encodedParams
 }
 
-export function encodeQueryParamName(name: unknown) {
+/**
+* @throws InvalidArgument
+**/
+export function encodeQueryParamKey(name: unknown): string {
     const type = kindOf(name, 'string', 'number')
 
     switch (type) {
@@ -178,15 +191,20 @@ export function encodeQueryParamName(name: unknown) {
     }
 }
 
-export function encodeQueryParamValue(value: unknown) {
-    const type = kindOf(value, 'string', 'number', 'boolean', 'array', 'object')
+/**
+* @throws InvalidArgument
+**/
+export function encodeQueryParamValue(value: unknown): string {
+    const type = kindOf(value, 'null', 'boolean', 'number', 'string', 'array', 'object')
 
     switch (type) {
+        case 'null':
+            return ''
+        case 'boolean':
+        case 'number':
+            return String(value)
         case 'string':
             return encodeURIComponent(value as string)
-        case 'number':
-        case 'boolean':
-            return String(value)
         case 'array':
         case 'object':
             return encodeURIComponent(JSON.stringify(value))
@@ -208,6 +226,9 @@ export function joinQueryParamsParts(parts: Array<string>) {
     return parts.filter(Boolean).join('&')
 }
 
+/**
+* @throws InvalidArgument
+**/
 export function mergeQueryOptions(...optionsList: Array<QueryRequestOptions>): QueryRequestOptions {
     const fetchOptionsList = optionsList.map(({params, ...fetchOptions}) => fetchOptions)
     const mergedOptions = mergeFetchOptions(...fetchOptionsList)
@@ -230,7 +251,11 @@ export function mergeQueryOptions(...optionsList: Array<QueryRequestOptions>): Q
     return {...mergedOptions, params: mergedOptionsParams}
 }
 
-export function withQueryOptions(rules: QueryRules): QueryRequestOptions {
+export function withRequestParams(...params: Array<QueryParams>): QueryRequestOptions {
+    return {params}
+}
+
+export function withRequestQuery(rules: QueryRules): QueryRequestOptions {
     return {
         headers: {
             [QueryRulesHeader]: JSON.stringify(rules),
@@ -261,6 +286,9 @@ export function withQueryOptions(rules: QueryRules): QueryRequestOptions {
 * //     'user.friends': [0, -1],
 * // }
 */
+/**
+* @throws InvalidArgument
+**/
 // export function flattenQueryRules(
 //     rules: QueryRules,
 //     parent?: undefined | number | string,
@@ -315,7 +343,7 @@ export function withQueryOptions(rules: QueryRules): QueryRequestOptions {
 
 // Types ///////////////////////////////////////////////////////////////////////
 
-export interface Query extends Fetch {
+export interface Query extends FetchAttributes {
     request<T = unknown>(method: HttpMethod, path: string, options?: undefined | QueryRequestOptions): Promise<T>
     get<T = unknown>(path: string, options?: undefined | QueryRequestOptions): Promise<T>
     post<T = unknown>(path: string, options?: undefined | QueryRequestOptions): Promise<T>
@@ -362,7 +390,7 @@ export interface QueryParamsList extends
 export type QueryRules = QueryParams
 
 export interface QueryEncodeParamsOptions {
-    encodeName?: undefined | ((name: unknown) => string)
+    encodeKey?: undefined | ((name: unknown) => string)
     encodeValue?: undefined | ((value: unknown) => string)
     joinParam?: undefined | ((name: string, value: string) => string)
     joinParts?: undefined | ((parts: Array<string>) => string)

@@ -1,219 +1,295 @@
-import type {Nil} from '@eviljs/std/type.js'
 import {isString} from '@eviljs/std/type.js'
-import {encodeQueryParams, encodeQueryParamValue} from './query.js'
+import type {QueryParams, QueryParamsDict, QueryParamsList} from './query.js'
+import {encodeQueryParamKey, encodeQueryParams, encodeQueryParamValue} from './query.js'
 import {asBaseUrl} from './url.js'
 
-export function createHashRouter<S>(observer: RouterObserver, options?: undefined | RouterOptions): Router<S> {
-    const self: Router<S> = {
-        start() {
-            window.addEventListener('hashchange', onRouteChange)
-        },
-        stop() {
-            window.removeEventListener('hashchange', onRouteChange)
-        },
-        get route() {
-            const {hash} = window.location
-            const [dirtyPath, dirtyParams] = hash
-                .substring(1) // Without the initial '#'.
-                .split('?')
-            const path = dirtyPath || '/' // The empty string is casted to the root path.
-            const params = deserializeRouteParamsFromString(dirtyParams)
-            const {state} = history
+const RouterRouteParamsEmpty: RouterRouteParams = {}
 
-            return {path, params, state}
-        },
-        routeTo(path: string, params?: undefined | RouterParams, state?: undefined | S) {
-            const serializedRoute = self.link(path, params)
-
-            // Algorithm 1:
-            history.pushState(state, '', serializedRoute)
-            // Algorithm 2 (legacy):
-            // self.stop()
-            // window.location.hash = serializedRoute
-            // self.start()
-        },
-        replaceRoute(path: string, params?: undefined | RouterParams, state?: undefined | S) {
-            const serializedRoute = self.link(path, params)
-
-            history.replaceState(state, '', serializedRoute)
-        },
-        link(path: string, params?: undefined | RouterParams) {
-            return '#' + serializeRouteToString(path, params)
-        },
-    }
-
-    function onRouteChange() {
-        const {path, params, state} = self.route
-
-        observer(path, params, state)
-    }
-
-    return self
-}
-
-export function createPathRouter<S>(observer: RouterObserver, options?: undefined | RouterOptions): Router<S> {
+export function createPathRouter<S = unknown>(observer: RouterObserver, options?: undefined | RouterOptions): Router<S> {
     const basePath = asBaseUrl(options?.basePath)
 
+    function onRouteChange() {
+        self.route = decodePathRoute(basePath)
+
+        observer(self.route)
+    }
+
     const self: Router<S> = {
+        route: decodePathRoute(basePath),
+
         start() {
+            self.route = decodePathRoute(basePath)
+
             window.addEventListener('popstate', onRouteChange)
         },
         stop() {
             window.removeEventListener('popstate', onRouteChange)
         },
-        get route() {
-            const {pathname, search} = window.location
-            const path = pathname.replace(basePath, '')
-            const params = deserializeRouteParamsFromString(
-                search.substring(1) // Without the initial '?'.
+        changeRoute(routeChange) {
+            self.route = mergeRouteChange(self.route, routeChange)
+
+            const routeString = self.createLink(
+                routeChange.path ?? self.route.path,
+                routeChange.params,
             )
-            const {state} = history
 
-            return {path, params, state}
+            // The History mutation does not trigger the PopState event.
+            if (routeChange.replace) {
+                history.replaceState(routeChange.state, '', routeString)
+            }
+            else {
+                history.pushState(routeChange.state, '', routeString)
+            }
         },
-        routeTo(path: string, params?: undefined | RouterParams, state?: undefined | S) {
-            const serializedRoute = self.link(path, params)
-
-            history.pushState(state, '', serializedRoute)
+        createLink(path: string, params?: undefined | RouterRouteChangeParams) {
+            return encodeRoute(basePath + path, params)
         },
-        replaceRoute(path: string, params?: undefined | RouterParams, state?: undefined | S) {
-            const serializedRoute = self.link(path, params)
-
-            history.replaceState(state, '', serializedRoute)
-        },
-        link(path: string, params?: undefined | RouterParams) {
-            return serializeRouteToString(basePath + path, params)
-        },
-    }
-
-    function onRouteChange() {
-        const {path, params, state} = self.route
-
-        observer(path, params, state)
     }
 
     return self
 }
 
-export function createMemoryRouter<S>(observer: RouterObserver, options?: undefined | RouterMemoryOptions): Router<S> {
-    let routePath = options?.initMemory ?? '/'
-    let routeSearch = ''
-    let routeState: undefined | S = undefined
+export function createHashRouter<S = unknown>(observer: RouterObserver, options?: undefined | RouterOptions): Router<S> {
+    function onRouteChange() {
+        self.route = decodeHashRoute()
+
+        observer(self.route)
+    }
 
     const self: Router<S> = {
-        start() {},
-        stop() {},
-        get route() {
-            const path = routePath
-            const params = deserializeRouteParamsFromString(routeSearch)
-            const state = routeState
+        route: decodeHashRoute(),
 
-            return {path, params, state}
+        start() {
+            self.route = decodeHashRoute()
+
+            window.addEventListener('hashchange', onRouteChange)
         },
-        routeTo(path: string, params?: undefined | RouterParams, state?: undefined | S) {
-            routePath = path
-            routeSearch = encodeQueryParams(params)
-            routeState = state
+        stop() {
+            window.removeEventListener('hashchange', onRouteChange)
         },
-        replaceRoute(path: string, params?: undefined | RouterParams, state?: undefined | S) {
-            self.routeTo(path, params, state)
+        changeRoute(routeChange) {
+            self.route = mergeRouteChange(self.route, routeChange)
+
+            const routeString = self.createLink(
+                routeChange.path ?? self.route.path,
+                routeChange.params,
+            )
+
+            // The History mutation does not trigger the HashChange event.
+            if (routeChange.replace) {
+                history.replaceState(routeChange.state, '', routeString)
+            }
+            else {
+                // Algorithm 1:
+                // BEGIN
+                history.pushState(routeChange.state, '', routeString)
+                // END
+
+                // // Algorithm 2 (legacy):
+                // // BEGIN
+                // self.stop()
+                // window.location.hash = routeString
+                // self.start()
+                // // END
+            }
         },
-        link(path: string, params?: undefined | RouterParams) {
-            return serializeRouteToString(path, params)
+        createLink(path: string, params?: undefined | RouterRouteChangeParams) {
+            return '#' + encodeRoute(path, params)
         },
     }
 
     return self
 }
 
-export function serializeRouteToString(path: string, params?: undefined | RouterParams) {
-    const encodedParams = encodeQueryParams(params, {encodeValue: defaultRouteEncodeParamValue})
-    const serializedParams = encodedParams
-        ? '?' + encodedParams
-        : ''
-    const serializedRoute = path + serializedParams
-
-    return serializedRoute
-}
-
-export function deserializeRouteParamsFromString(paramsString: string | undefined) {
-    const params: Record<string, string | null> = {}
-
-    if (! paramsString) {
-        return params
+export function createMemoryRouter<S = unknown>(observer: RouterObserver, options?: undefined | RouterMemoryOptions<S>): Router<S> {
+    const self: Router<S> = {
+        route: {
+            path: options?.initialPath ?? '/',
+            params: options?.initialParams ?? RouterRouteParamsEmpty,
+            state: options?.initialState ?? undefined,
+        },
+        start() {},
+        stop() {},
+        changeRoute(routeChange) {
+            self.route = mergeRouteChange(self.route, routeChange)
+        },
+        createLink(path: string, params?: undefined | RouterRouteChangeParams) {
+            return encodeRoute(path, params)
+        },
     }
 
+    return self
+}
+
+export function mergeRouteChange<S>(route: RouterRoute<S>, routeChange: RouterRouteChange<S>): RouterRoute<S> {
+    return {
+        path: routeChange.path ?? route.path,
+        params: flattenRouteParams(routeChange.params) ?? RouterRouteParamsEmpty,
+        state: routeChange.state,
+        // Params and State, if not provided, must be initialized.
+    }
+}
+
+export function decodePathRoute<S>(basePath: string): RouterRoute<S> {
+    const {pathname, search} = window.location
+    const path = pathname.replace(basePath, '')
+    const params = decodeRouteParams(
+        search.substring(1) // Without the initial '?'.
+    )
+    const {state} = history
+
+    return {path, params, state}
+}
+
+export function decodeHashRoute<S>(): RouterRoute<S> {
+    const {hash} = window.location
+    const [pathOptional, paramsString] = hash
+        .substring(1) // Without the initial '#'.
+        .split('?')
+    const path = pathOptional || '/' // The empty string is casted to the root path.
+    const params = decodeRouteParams(paramsString)
+    const {state} = history
+
+    return {path, params, state}
+}
+
+export function decodeRouteParams(paramsString: string | undefined): RouterRouteParams {
+    if (! paramsString) {
+        return RouterRouteParamsEmpty
+    }
+
+    const params: RouterRouteParams = {}
     const parts = paramsString.split('&')
 
     for (const part of parts) {
-        const [encodedKey, encodedValue] = part.split('=')
-        // We need to decode because the
-        // The key can be any string and the value can be an Array or an Object
-        // serialized as JSON and encoded as URI component.
-        // We need to decode them, and the developer will take care of parsing
-        // the JSON of the value in that case.
-        const key = decodeURIComponent(encodedKey!)
-        const value = encodedValue
-            ? decodeURIComponent(encodedValue)
-            // An undefined value is casted to null to indicate its presence but without a value.
-            : null
+        const [keyEncoded, valueEncoded] = part.split('=')
+        // We need to decode because:
+        // - the key can be ANY string
+        // - the value can be ANY string (even an Array/Object serialized as string).
+        const key = keyEncoded ? decodeURIComponent(keyEncoded) : keyEncoded
+        const value = valueEncoded ? decodeURIComponent(valueEncoded) : valueEncoded
 
-        params[key] = value
+        params[key!] = value ?? ''
     }
 
     return params
 }
 
-export function defaultRouteEncodeParamValue(value: unknown) {
-    if (isString(value)) {
-        // We don't encode params values of type string, so the Browser url bar shows
-        // `#?redirect=/some/path`
+/**
+* @throws InvalidArgument
+**/
+export function encodeRoute(path: string, params?: undefined | RouterRouteChangeParams): string {
+    const paramsString = encodeQueryParams(params, {
+        encodeKey: encodeRouteParamKey,
+        encodeValue: encodeRouteParamValue,
+    })
+    const separator = paramsString ? '?' : ''
+    const routeString = path + separator + paramsString
+
+    return routeString
+}
+
+/**
+* @throws InvalidArgument
+**/
+export function encodeRouteParamKey(key: unknown): string {
+    if (isString(key)) {
+        // We don't encode route params keys of type string.
+        // Encoding is an opt-in feature of the developer.
+        // In this way the Browser url bar shows
+        // `?book:id`
         // instead of
-        // `#?redirect=%2Fsome%2Fpath`.
+        // `?book%3Aid`.
+        return key
+    }
+    return encodeQueryParamKey(key)
+}
+
+/**
+* @throws InvalidArgument
+**/
+export function encodeRouteParamValue(value: unknown): string {
+    if (isString(value)) {
+        // We don't encode route params values of type string.
+        // Encoding is an opt-in feature of the developer.
+        // In this way the Browser url bar shows
+        // `?redirect=/some/path`
+        // instead of
+        // `?redirect=%2Fsome%2Fpath`.
         return value
     }
     return encodeQueryParamValue(value)
 }
 
-// Types ///////////////////////////////////////////////////////////////////////
-
-export interface Router<S = any> {
-    route: {
-        path: string,
-        params: RouterRouteParams,
-        state: undefined | S,
-    }
-    start(): void
-    stop(): void
-    routeTo(path: string, params?: undefined | RouterParams, state?: undefined | S): void
-    replaceRoute(path: string, params?: undefined | RouterParams, state?: undefined | S): void
-    link(path: string, params?: undefined | RouterParams): string
+/**
+* @throws InvalidArgument
+**/
+export function flattenRouteParams(routeParams: RouterRouteChangeParams): RouterRouteParams
+export function flattenRouteParams(routeParams: undefined | RouterRouteChangeParams): undefined | RouterRouteParams
+export function flattenRouteParams(routeParams: undefined | RouterRouteChangeParams): undefined | RouterRouteParams {
+    return routeParams
+        ? decodeRouteParams(encodeQueryParams(routeParams))
+        : undefined
 }
 
-export interface RouterObserver<S = any> {
-    (route: string, params: RouterRouteParams, state: S): void
+// Types ///////////////////////////////////////////////////////////////////////
+
+export interface Router<S = unknown> {
+    route: RouterRoute<S>
+    start(): void
+    stop(): void
+    /**
+    * @throws InvalidArgument
+    **/
+    changeRoute(change: RouterRouteChange<S>): void
+    /**
+    * @throws InvalidArgument
+    **/
+    createLink(path: string, params?: undefined | RouterRouteChangeParams): string
+}
+
+export interface RouterRoute<S = unknown> {
+    readonly path: string
+    readonly params: RouterRouteParams
+    readonly state: undefined | S
+}
+
+export interface RouterObserver<S = unknown> {
+    (route: RouterRoute<S>): void
 }
 
 export interface RouterOptions {
     basePath?: undefined | string
 }
 
-export interface RouterMemoryOptions extends RouterOptions {
-    initMemory?: undefined | string
+export interface RouterMemoryOptions<S = unknown> extends RouterOptions {
+    initialPath?: undefined | string
+    initialParams?: undefined | RouterRouteParams
+    initialState?: undefined | S
 }
 
-export type RouterRouteParams = Record<string | number, null | string>
+export type RouterRouteParams = Record<string | number, string>
 
-export type RouterParams =
-    | string
-    | RouterParamsDict
-    | Array<string | RouterParamsDict>
+export interface RouterRouteChange<S = unknown> {
+    path?: undefined | string
+    params?: undefined | RouterRouteChangeParams
+    state?: undefined | undefined | S
+    replace?: undefined | boolean
+}
 
-export interface RouterParamsDict extends
-    Record<string | number,
-        | Nil
-        | boolean
-        | number
-        | string
-    >
-{}
+export type RouterRouteChangeParams = QueryParams
+export type RouterRouteChangeParamsDict = QueryParamsDict
+export type RouterRouteChangeParamsList = QueryParamsList
+
+// export type RouterRouteChangeParams =
+//     | string
+//     | RouterRouteChangeParamsDict
+//     | RouterRouteChangeParamsList
+//
+// export type RouterRouteChangeParamsDict = Record<string | number,
+//     | Nil
+//     | boolean
+//     | number
+//     | string
+// >
+// export type RouterRouteChangeParamsList = Array<string | RouterRouteChangeParamsDict>
