@@ -28,7 +28,10 @@ export function kindOf<T extends keyof typeof Tests>(value: unknown, ...tests: A
 }
 
 export function isArray(value: unknown): value is Array<unknown> {
-    if (! value || ! Array.isArray(value)) {
+    if (! value) {
+        return false
+    }
+    if (! Array.isArray(value)) {
         return false
     }
     return true
@@ -40,10 +43,9 @@ export function isBoolean(value: unknown): value is boolean {
 }
 
 export function isDate(value: unknown): value is Date {
-    if (! value || ! (value instanceof Date)) {
-        return false
-    }
-    return true
+    return value
+        ? (value instanceof Date)
+        : false
 }
 
 export function isDefined<T>(value: void | undefined | T): value is T {
@@ -68,15 +70,18 @@ export function isNull(value: unknown): value is null {
 
 export function isFunction<O, A extends Array<unknown>, R>(value: O | ((...args: A) => R)): value is ((...args: A) => R)
 export function isFunction(value: unknown): value is Function {
-    if (! value || typeof value !== 'function') {
+    if (! value) {
+        return false
+    }
+    if (typeof value !== 'function') {
         return false
     }
     return true
 }
 
 export function isNumber(value: unknown): value is number {
-    return typeof value === 'number' && ! isNaN(value)
     // We don't consider NaN a number.
+    return typeof value === 'number' && ! isNaN(value)
 }
 
 export function isInteger(value: unknown): value is number {
@@ -87,7 +92,9 @@ export function isObject(value: unknown): value is Record<PropertyKey, unknown> 
     if (! value) {
         return false
     }
+
     const proto = Object.getPrototypeOf(value)
+
     if (! proto) {
         // FIXME: TODO: how to handle Object.create(null)?
         return false
@@ -99,17 +106,15 @@ export function isObject(value: unknown): value is Record<PropertyKey, unknown> 
 }
 
 export function isPromise(value: unknown): value is Promise<unknown> {
-    if (! value || ! (value instanceof Promise)) {
-        return false
-    }
-    return true
+    return value
+        ? (value instanceof Promise)
+        : false
 }
 
 export function isRegExp(value: unknown): value is RegExp {
-    if (! value || ! (value instanceof RegExp)) {
-        return false
-    }
-    return true
+    return value
+        ? (value instanceof RegExp)
+        : false
 }
 
 export function isString(value: unknown): value is string {
@@ -141,8 +146,13 @@ export function asBooleanLike(value: unknown): undefined | boolean {
 export function asNumber(value: number): number
 export function asNumber(value: unknown): undefined | number
 export function asNumber(value: unknown): undefined | number {
-    if (! isNumber(value)) {
-        // null and arrays are parsed by Number as 0.
+    if (isNumber(value)) {
+        return value
+    }
+    if (! isString(value)) {
+        // Only strings should be parsed:
+        // - null and Arrays would be parsed as 0
+        // - Symbols would throws an error
         return
     }
 
@@ -151,7 +161,6 @@ export function asNumber(value: unknown): undefined | number {
     if (isNaN(result)) {
         return
     }
-
     return result
 }
 
@@ -159,24 +168,32 @@ export function asNumber(value: unknown): undefined | number {
 export function asInteger(value: number): number
 export function asInteger(value: unknown): undefined | number
 export function asInteger(value: unknown): undefined | number {
-    const numberMaybe = asNumber(value)
+    const numberOptional = asNumber(value)
 
-    if (isNil(numberMaybe)) {
+    if (isUndefined(numberOptional)) {
         return
     }
 
-    return Math.trunc(numberMaybe)
+    return Math.trunc(numberOptional)
 }
 
 export function asDate(value: unknown): undefined | Date {
-    // Date.parse() is omnivorous, accepts everything. Everything not string is returned as NaN.
-    const result = Date.parse(value as string)
-
-    if (isNaN(result)) {
+    if (! value) {
+        return
+    }
+    if (isDate(value)) {
+        return value
+    }
+    if (isNumber(value)) {
+        return new Date(value)
+    }
+    if (! isString(value)) {
         return
     }
 
-    return new Date(result)
+    // Date.parse() is omnivorous:
+    // it accepts everything, and everything not string is returned as NaN.
+    return asDate(Date.parse(value))
 }
 
 // Types ///////////////////////////////////////////////////////////////////////
