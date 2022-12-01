@@ -8,21 +8,20 @@ export function Showcase(props: ShowcaseProps) {
     const {children, className, ...otherProps} = props
     const [selected, setSelected] = useState('')
     const [search, setSearch] = useState('')
-    const router = useRouter()!
-    const {replaceRoute, routeParams, routePath} = router
+    const {changeRoute, route} = useRouter()!
 
     useEffect(() => {
         const defaultShowcase = children[0]
         const defaultId = defaultShowcase
-            ? idForShowcase(defaultShowcase)
+            ? idOfShowcase(defaultShowcase)
             : ''
 
-        setSelected(routeParams.id ?? defaultId)
-    }, [routeParams.id])
+        setSelected(route.params.id ?? defaultId)
+    }, [route.params.id])
 
     useEffect(() => {
-        setSearch(routeParams.search ?? '')
-    }, [routeParams.search])
+        setSearch(route.params.search ?? '')
+    }, [route.params.search])
 
     const items = useMemo(() => {
         const matchingItems = children.filter(it =>
@@ -31,7 +30,7 @@ export function Showcase(props: ShowcaseProps) {
         return matchingItems
     }, [search])
 
-    const selectedItem = children.find(it => idForShowcase(it) === selected)
+    const selectedItem = children.find(it => idOfShowcase(it) === selected)
         ?? children[0]
     const selectedComponent = selectedItem?.[1]
 
@@ -46,9 +45,12 @@ export function Showcase(props: ShowcaseProps) {
                     value={search}
                     placeholder="Search something..."
                     onChange={event =>
-                        replaceRoute(routePath, {
-                            ...routeParams,
-                            search: event.target.value ?? '',
+                        changeRoute({
+                            params: {
+                                ...route.params,
+                                search: event.target.value ?? '',
+                            },
+                            replace: true,
                         })
                     }
                 />
@@ -59,10 +61,10 @@ export function Showcase(props: ShowcaseProps) {
                     <Route
                         key={idx}
                         className={classes('item-988a', {
-                            selected: idForShowcase(it) === selected,
+                            selected: idOfShowcase(it) === selected,
                         })}
-                        to={routePath}
-                        params={{...routeParams, id: idForShowcase(it)}}
+                        to={route.path}
+                        params={{...route.params, id: idOfShowcase(it)}}
                     >
                         {it[0]}
                     </Route>
@@ -80,7 +82,7 @@ export function defineShowcase(title: string, component: React.ComponentType): S
     return [title, component]
 }
 
-export function idForShowcase(item: ShowcaseModel) {
+export function idOfShowcase(item: ShowcaseModel) {
     const [title] = item
     return title
 }
