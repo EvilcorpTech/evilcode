@@ -85,10 +85,6 @@ export function useRootAuth(fetch: Fetch, cookie: Cookie, options?: undefined | 
         .finally(busyRelease)
     }, [fetch, validateOptions, token])
 
-
-    /**
-    * @throws Error
-    **/
     const authenticateCredentials = useCallback(async (credentials: AuthCredentials) => {
         busyLock()
         try {
@@ -105,9 +101,6 @@ export function useRootAuth(fetch: Fetch, cookie: Cookie, options?: undefined | 
         }
     }, [fetch, cookie, authenticateOptions])
 
-    /**
-    * @throws Error
-    **/
     const destroySession = useCallback(async () => {
         cookie.delete()
         setToken(undefined)
@@ -140,7 +133,7 @@ export function useRootAuth(fetch: Fetch, cookie: Cookie, options?: undefined | 
                 ? token
                 : undefined
             ,
-            storedToken: token,
+            savedToken: token,
             tokenState,
             isAuthenticated,
             pending: busy > 0,

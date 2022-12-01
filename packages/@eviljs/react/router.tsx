@@ -3,8 +3,8 @@ import {computeValue} from '@eviljs/std/fn.js'
 import {escapeRegexp} from '@eviljs/std/regexp.js'
 import {isPromise} from '@eviljs/std/type.js'
 import {exact, regexpFromPattern} from '@eviljs/web/route.js'
-import type {Router as RouterManager, RouterObserver, RouterParams, RouterRouteParams} from '@eviljs/web/router.js'
-import {serializeRouteToString} from '@eviljs/web/router.js'
+import type {Router as RouterManager, RouterObserver, RouterRoute, RouterRouteChange, RouterRouteChangeParams, RouterRouteParams} from '@eviljs/web/router.js'
+import {encodeRoute} from '@eviljs/web/router.js'
 import {Children, forwardRef, isValidElement, useCallback, useContext, useEffect, useMemo, useRef, useState} from 'react'
 import {classes} from './classes.js'
 import {defineContext} from './ctx.js'
@@ -159,6 +159,9 @@ export function WhenRoute(props: WhenRouteProps) {
 * <Route to="/book/123" if={() => Promise.resolve(formSaved)}>
 *     <button>Click</button>
 * </Route>`
+* <Route params={{...route.params, id: 123}}>
+*     <button>Click</button>
+* </Route>`
 */
 export const Route = forwardRef(function Route(
     props: RouteProps,
@@ -172,31 +175,25 @@ export const Route = forwardRef(function Route(
         className,
         if: guard,
         params,
-        replace,
+        replace: replaceOptional,
         state,
-        to,
+        to: path,
         ...otherProps
     } = props
-    const {link, replaceRoute, routeTo, testRoute} = useRouter()!
+    const {changeRoute, link, testRoute} = useRouter()!
 
     const onClick = useCallback((event: React.MouseEvent) => {
         event.preventDefault()
 
         function tryRouting(result: undefined | boolean) {
-            if (! to) {
-                return
-            }
-
             if (result === false) {
                 // Routing is blocked only in case of false return value.
                 return
             }
 
-            const action = replace
-                ? replaceRoute
-                : routeTo
+            const replace = replaceOptional ?? false
 
-            action(to, params, state)
+            changeRoute({path, params, state, replace})
         }
 
         const guardResult = computeValue(guard)
@@ -209,20 +206,20 @@ export const Route = forwardRef(function Route(
             // Sync behavior.
             tryRouting(guardResult)
         }
-    }, [routeTo, to, params, state, guard, replace])
+    }, [changeRoute, path, params, state, replaceOptional, guard])
 
     const isActive = useMemo(() => {
-        if (! to) {
+        if (! path) {
             return false
         }
 
-        const escapedTo = escapeRegexp(to)
-        const path = activeWhenExact
-            ? exact(escapedTo)
-            : escapedTo
+        const pathEscaped = escapeRegexp(path)
+        const pathExact = activeWhenExact
+            ? exact(pathEscaped)
+            : pathEscaped
 
-        return testRoute(path)
-    }, [to, testRoute])
+        return testRoute(pathExact)
+    }, [path, testRoute])
 
     const activeClasses = false
         || activeClass
@@ -237,10 +234,7 @@ export const Route = forwardRef(function Route(
             className={classes(className, {
                 [activeClasses]: isActive,
             })}
-            href={to
-                ? link(to, params)
-                : undefined
-            }
+            href={link(path ?? '', params)}
         >
             {children}
         </a>
@@ -248,8 +242,8 @@ export const Route = forwardRef(function Route(
 })
 
 export function Link(props: LinkProps) {
-    const {children, className, to, params, state, ...otherProps} = props
-    const isRoute = to?.startsWith('/')
+    const {children, className, params, replace, state, to: path, ...otherProps} = props
+    const isRoute = path?.startsWith('/') ?? true
 
     if (! isRoute) {
         return (
@@ -257,10 +251,7 @@ export function Link(props: LinkProps) {
                 target="_blank"
                 {...otherProps}
                 className={classes('Link-b705 link', className)}
-                href={to
-                    ? serializeRouteToString(to, params)
-                    : undefined
-                }
+                href={encodeRoute(path ?? '', params)}
             >
                 {children}
             </a>
@@ -271,9 +262,10 @@ export function Link(props: LinkProps) {
         <Route
             {...otherProps}
             className={classes('Link-b705 route', className)}
-            to={to}
+            to={path}
             params={params}
             state={state}
+            replace={replace}
         >
             {children}
         </Route>
@@ -281,39 +273,34 @@ export function Link(props: LinkProps) {
 }
 
 export function Redirect(props: RedirectProps) {
-    const {to, params, state, replace} = props
-    const {replaceRoute, routeTo} = useRouter()!
-    const shouldReplace = replace ?? true
+    const {children, params, replace: replaceOptional, state, to: path} = props
+    const {changeRoute} = useRouter()!
+    const replace = replaceOptional ?? true
 
     useEffect(() => {
-        if (! to) {
+        if (! path && ! params) {
             return
         }
 
-        if (shouldReplace) {
-            replaceRoute(to, params, state)
-        }
-        else {
-            routeTo(to, params, state)
-        }
+        changeRoute({path, params, state, replace})
     })
 
-    return null
+    return <>{children}</>
 }
 
-export function useRootRouter<S>(routerFactory: RouterFactory<S>): Router<S> {
+export function useRootRouter<S = unknown>(routerFactory: RouterFactory<S>): Router<S> {
+    const [route, setRoute] = useState(() => {
+        return routerFactory(() => {}).route
+    })
+
     const routerManager = useMemo(() => {
-        function onRouteChange(path: string, params: RouterRouteParams, state: any) {
-            setRoute({path, params, state})
-        }
-
-        return routerFactory(onRouteChange)
+        return routerFactory(setRoute)
     }, [routerFactory])
-
-    const [route, setRoute] = useState(() => routerManager.route)
 
     useEffect(() => {
         routerManager.start()
+
+        setRoute(routerManager.route)
 
         function onClean() {
             routerManager.stop()
@@ -322,26 +309,30 @@ export function useRootRouter<S>(routerFactory: RouterFactory<S>): Router<S> {
         return onClean
     }, [routerManager])
 
+    const changeRoute = useCallback((args: RouterRouteChangeComputable<S>) => {
+        const {params, ...otherArgs} = args
+        const paramsComputed = computeValue(params, routerManager.route.params)
+
+        routerManager.changeRoute({...otherArgs, params: paramsComputed})
+
+        setRoute(routerManager.route)
+    }, [routerManager])
+
+    const testRoute = useCallback((pattern: string | RegExp) => {
+        return regexpFromPattern(pattern).test(route.path)
+    }, [route.path])
+
+    const matchRoute = useCallback((pattern: string | RegExp) => {
+        return route.path.match(regexpFromPattern(pattern))
+    }, [route.path])
+
     const router = useMemo((): Router<S> => {
         return {
-            routePath: route.path,
-            routeParams: route.params,
-            routeState: route.state,
-            routeTo(path, params, state) {
-                routerManager.routeTo(path, params, state)
-                setRoute(routerManager.route)
-            },
-            replaceRoute(path, params, state) {
-                routerManager.replaceRoute(path, params, state)
-                setRoute(routerManager.route)
-            },
-            testRoute(pattern) {
-                return regexpFromPattern(pattern).test(route.path)
-            },
-            matchRoute(pattern) {
-                return route.path.match(regexpFromPattern(pattern))
-            },
-            link: routerManager.link,
+            route,
+            changeRoute,
+            testRoute,
+            matchRoute,
+            link: routerManager.createLink,
             start: routerManager.start,
             stop: routerManager.stop,
         }
@@ -350,6 +341,9 @@ export function useRootRouter<S>(routerFactory: RouterFactory<S>): Router<S> {
         route.path,
         route.params,
         route.state,
+        changeRoute,
+        testRoute,
+        matchRoute,
     ])
 
     return router
@@ -364,7 +358,8 @@ export function useRouteArgs() {
 }
 
 export function useRouterTransition() {
-    const {routePath: toRoute} = useRouter()!
+    const {route} = useRouter()!
+    const toRoute = route.path
     const prevRouteRef = useRef(toRoute)
 
     useEffect(() => {
@@ -406,14 +401,11 @@ export interface RouterFactory<S = any> {
 }
 
 export interface Router<S = unknown> {
-    routePath: string
-    routeParams: RouterRouteParams
-    routeState: undefined | S
-    routeTo(path: string, params?: undefined | RouterParams, state?: undefined | S): void
-    replaceRoute(path: string, params?: undefined | RouterParams, state?: undefined | S): void
+    route: RouterRoute<S>
+    changeRoute(args: RouterRouteChangeComputable<S>): void
     testRoute(pattern: string | RegExp): boolean
     matchRoute(pattern: string | RegExp): null | RegExpMatchArray
-    link(path: string, params?: undefined | RouterParams): string
+    link(path: string, params?: undefined | RouterRouteChangeParams): string
     start(): void
     stop(): void
 }
@@ -439,7 +431,6 @@ export interface RouteProps extends RoutingProps, React.AnchorHTMLAttributes<HTM
     activeWhenExact?: undefined | boolean
     children: undefined | React.ReactNode
     if?: undefined | ValueComputable<RouteGuardResult>
-    replace?: undefined | boolean
 }
 
 export interface LinkProps extends RoutingProps, React.AnchorHTMLAttributes<HTMLAnchorElement> {
@@ -447,13 +438,18 @@ export interface LinkProps extends RoutingProps, React.AnchorHTMLAttributes<HTML
 }
 
 export interface RedirectProps extends RoutingProps {
-    replace?: undefined | boolean
+    children?: undefined | React.ReactNode
 }
 
-export interface RoutingProps {
-    params?: undefined | RouterParams
-    state?: undefined | any
-    to: undefined | string
+export interface RoutingProps extends Omit<RouterRouteChange, 'path'> {
+    to?: undefined | RouterRouteChange['path']
+}
+
+export interface RouterRouteChangeComputable<S = unknown> extends Omit<RouterRouteChange<S>, 'params'> {
+    params?:
+        | undefined
+        | RouterRouteChangeParams
+        | ((params: RouterRouteParams) => RouterRouteChangeParams)
 }
 
 export type RouteMatchChildren =
