@@ -1,16 +1,11 @@
 import {isNotNil} from '@eviljs/std/type'
 import type {FetchRequestOptions} from '@eviljs/web/fetch'
-import {withRequestJson} from '@eviljs/web/fetch'
-import type {QueryParams, QueryRequestOptions} from '@eviljs/web/query'
+import {withRequestHeaders, withRequestJson} from '@eviljs/web/fetch'
 import {mergeQueryOptions} from '@eviljs/web/query'
 
-export {withRequestJson} from '@eviljs/web/fetch'
-export {mergeQueryOptions} from '@eviljs/web/query'
+export {mergeFetchOptions, withRequestHeaders, withRequestJson} from '@eviljs/web/fetch'
+export {mergeQueryOptions, withRequestParams} from '@eviljs/web/query'
 export type {Query, QueryRequestOptions} from '@eviljs/web/query'
-
-export function withRequestHeaders(...headersList: Array<NonNullable<QueryRequestOptions['headers']>>): FetchRequestOptions {
-    return mergeQueryOptions(...headersList.map(it => ({headers: it})))
-}
 
 export function withRequestAuth(token: string): FetchRequestOptions {
     return withRequestHeaders({
@@ -33,10 +28,6 @@ export function withRequestPayload(options: PayloadOptions): FetchRequestOptions
     ].filter(isNotNil)
 
     return mergeQueryOptions(...optionsList)
-}
-
-export function withQueryParams(params: QueryParams): QueryRequestOptions {
-    return {params}
 }
 
 // Types ///////////////////////////////////////////////////////////////////////
