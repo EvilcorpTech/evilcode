@@ -75,8 +75,7 @@ export function useRootAuth(fetch: Fetch, cookie: Cookie, options?: undefined | 
         setTokenState(AuthTokenState.Validating)
         busyLock()
 
-        validate(fetch, token, validateOptions)
-        .then(isTokenValid => {
+        validate(fetch, token, validateOptions).then(isTokenValid => {
             setTokenState(isTokenValid
                 ? AuthTokenState.Valid
                 : AuthTokenState.Invalid
@@ -129,10 +128,7 @@ export function useRootAuth(fetch: Fetch, cookie: Cookie, options?: undefined | 
         const isAuthenticated = tokenState === AuthTokenState.Valid
 
         return {
-            token: isAuthenticated
-                ? token
-                : undefined
-            ,
+            token: isAuthenticated ? token : undefined,
             savedToken: token,
             tokenState,
             isAuthenticated,
