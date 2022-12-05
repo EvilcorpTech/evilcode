@@ -1,4 +1,5 @@
 import HtmlSandbox from './html-sandbox'
+import Pipe from './pipe'
 import Portals from './portals'
 import Store from './store'
 import Theme from './theme'
@@ -14,4 +15,5 @@ export default [
     Transition,
     UndoRedo,
     HtmlSandbox,
+    Pipe,
 ]
