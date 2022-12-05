@@ -1,4 +1,6 @@
 import type {Fn} from '@eviljs/std/fn.js'
+import type {Either} from '@eviljs/std/result.js'
+import {Error} from '@eviljs/std/result.js'
 import {isDefined} from '@eviljs/std/type.js'
 import {useCallback, useRef, useState} from 'react'
 
@@ -65,7 +67,7 @@ export function useAsyncIo<A extends Array<unknown>, R>(asyncTask: Fn<A, Promise
                 error,
             }))
 
-            return // Makes TypeScript happy.
+            return Error(error)
         }
     }, [asyncTask])
 
@@ -128,11 +130,11 @@ export interface AsyncIoState<R> {
 }
 
 export interface AsyncIoManager<A extends Array<unknown>, R> extends AsyncIoState<R> {
-    call: (...args: A) => Promise<undefined | R>
+    call: (...args: A) => Promise<undefined | Either<R>>
+    cancel: () => void
     reset: () => void
     resetError: () => void
     resetResponse: () => void
-    cancel: () => void
 }
 
 export interface PromiseCancellable<T> {

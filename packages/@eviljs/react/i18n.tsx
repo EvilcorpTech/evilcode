@@ -4,6 +4,7 @@ import {useContext, useMemo, useState} from 'react'
 import {defineContext} from './ctx.js'
 import type {StateSetter} from './state.js'
 
+export type {MsgValues} from '@eviljs/std/i18n.js'
 export const I18nContext = defineContext<I18nManager>('I18nContext')
 
 /*

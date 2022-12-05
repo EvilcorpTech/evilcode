@@ -1,3 +1,4 @@
+import {filterResult} from '@eviljs/std/result.js'
 import {useCallback, useContext} from 'react'
 import {defineContext} from './ctx.js'
 import type {AsyncIoManager} from './io.js'
@@ -29,16 +30,20 @@ export function RequestProvider(props: RequestProviderProps) {
     )
 }
 
-export function useRequest<C, A extends Array<unknown>, R>(runner: RequestRunner<C, A, R>): RequestManager<A, R> {
+export function useRequest<C, A extends Array<unknown>, R>(asyncTask: RequestIo<C, A, R>): RequestManager<A, R> {
     const context = useContext<C>(RequestContext as React.Context<C>)
 
     const asyncIo = useCallback((...args: A): Promise<R> => {
-        return runner(context, ...args)
-    }, [runner])
+        return asyncTask(context, ...args)
+    }, [asyncTask])
 
-    const {call, output, ...ioManager} = useAsyncIo(asyncIo)
+    const {output, ...ioManager} = useAsyncIo(asyncIo)
 
-    return {...ioManager, send: call, response: output}
+    const send = useCallback((...args: A) => {
+        return ioManager.call(...args).then(filterResult)
+    }, [asyncIo.call])
+
+    return {...ioManager, send, response: output}
 }
 
 // Types ///////////////////////////////////////////////////////////////////////
@@ -48,11 +53,11 @@ export interface RequestProviderProps {
     value: unknown
 }
 
-export interface RequestManager<A extends Array<unknown>, R> extends Omit<AsyncIoManager<A, R>, 'call' | 'output'> {
-    send: AsyncIoManager<A, R>['call']
+export interface RequestManager<A extends Array<unknown>, R> extends Omit<AsyncIoManager<A, R>, 'output'> {
     response: AsyncIoManager<A, R>['output']
+    send(...args: A): Promise<undefined | R>
 }
 
-export interface RequestRunner<C, A extends Array<unknown>, R> {
+export interface RequestIo<C, A extends Array<unknown>, R> {
     (context: C, ...args: A): Promise<R>
 }
