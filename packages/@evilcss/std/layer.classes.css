@@ -1,5 +1,6 @@
 .std-layer-root {
     position: relative;
+    isolation: isolate;
 }
 
 .std-layer {

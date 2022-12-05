@@ -1,0 +1,9 @@
+q, blockquote { quotes: none; }
+
+q:before,
+q:after,
+blockquote:before,
+blockquote:after {
+    content: '';
+    content: none;
+}

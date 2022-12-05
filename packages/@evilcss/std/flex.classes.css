@@ -21,6 +21,7 @@
 .std-flex.align-start { align-items: flex-start; }
 .std-flex.align-center { align-items: center; }
 .std-flex.align-end { align-items: flex-end; }
+.std-flex.align-baseline { align-items: baseline; }
 
 .std-flex.aligned-stretch { align-content: stretch; }
 .std-flex.aligned-start { align-content: flex-start; }

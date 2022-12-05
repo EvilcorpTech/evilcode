@@ -3,3 +3,4 @@
 .std-shrink { flex-shrink: 1; }
 .std-shrink0 { flex-shrink: 0; }
 .std-basis0 { flex-basis: 0; }
+.std-basis100 { flex-basis: 100%; }

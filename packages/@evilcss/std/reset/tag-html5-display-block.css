@@ -8,8 +8,6 @@ header,
 hgroup,
 menu,
 nav,
-ol,
-section,
-ul {
+section {
     display: block;
 }

@@ -2,4 +2,8 @@ button {
     font-family: inherit;
     color: inherit;
     background: none;
+    user-select: none;
+}
+button:hover {
+    cursor: pointer;
 }

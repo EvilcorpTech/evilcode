@@ -1,0 +1,11 @@
+a {
+    display: inline-block;
+}
+a,
+a:hover {
+    cursor: pointer;
+    text-decoration: none;
+}
+a:visited {
+    color: inherit;
+}

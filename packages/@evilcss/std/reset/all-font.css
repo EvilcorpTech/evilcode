@@ -1,9 +1,7 @@
-*,
-*::after,
-*::before {
-    font-family: inherit;
+*, *::after, *::before {
+    font: inherit;
+    /* font-family: inherit; */
     /* font-size: inherit; */
     /* font-weight: inherit; */
     /* font-style: inherit; */
-    /* color: inherit; */
 }

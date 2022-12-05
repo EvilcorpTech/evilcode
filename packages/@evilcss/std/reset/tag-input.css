@@ -1,0 +1,8 @@
+input {
+    font-family: inherit;
+    color: inherit;
+    background: none;
+}
+input::-webkit-input-placeholder {
+    font-family: inherit;
+}
