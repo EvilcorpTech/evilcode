@@ -1,3 +1,5 @@
+import {isUndefined} from './type.js'
+
 export function clamp(min: number, value: number, max: number) {
     return Math.min(max, Math.max(min, value))
 }
@@ -36,7 +38,7 @@ export function minMax<I>(items: Array<number> | Array<I>, getter?: undefined | 
         max = Math.max(value, max ?? value)
     }
 
-    if (! min || ! max) {
+    if (isUndefined(min) || isUndefined(max)) {
         return [undefined, undefined]
     }
 
