@@ -1,6 +1,5 @@
 import {defineShowcase} from '@eviljs/reactx/showcase'
 import {ensureStringNotEmpty} from '@eviljs/std/assert'
-import {Error} from '@eviljs/std/error'
 import {identity} from '@eviljs/std/fn'
 import {
     mapCatch,
@@ -17,6 +16,7 @@ import {
     then,
 } from '@eviljs/std/monad'
 import {pipe} from '@eviljs/std/pipe'
+import {Error} from '@eviljs/std/result'
 
 const someResult = pipe(undefined as undefined | null | string)
     .to(mapNone(it => 'Mario'))

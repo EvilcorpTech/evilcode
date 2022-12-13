@@ -26,7 +26,7 @@ export default defineShowcase('Portals', (props) =>
         </Teleport>
 
         <main className="main-b3bf">
-            <div className="card-8a91 std-color-bg2 std-shadow z4">
+            <div className="card-8a91 std-background-bg2 std-shadow4">
                 <Teleport to="title">
                     Portals Example
                 </Teleport>

@@ -1,10 +1,10 @@
-import {useStoreState} from '@eviljs/react/store'
+import {useStoreState} from '@eviljs/react/store-v3'
 import {useRootStoreStorage as useStdRootStoreStorage} from '@eviljs/react/store-storage'
 import type {StoreState} from './apis'
 import {filterStorageState, mergeStorageState, StoreStateVersion} from './apis'
 
-export {useStoreState} from '@eviljs/react/store'
-export type {Store} from '@eviljs/react/store'
+export {useStoreState} from '@eviljs/react/store-v3'
+export type {Store} from '@eviljs/react/store-v3'
 export type {StoreState} from './apis'
 
 export function useRootStoreStorage() {

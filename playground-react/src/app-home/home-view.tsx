@@ -2,7 +2,6 @@ import './home-view.css'
 
 import {classes} from '@eviljs/react/classes'
 import {useI18nMsg} from '~/i18n/hooks'
-import {Theme, themeClassOf} from '~/theme/apis'
 import {Header} from '~/widgets/header'
 
 export function HomeView(props: HomeViewProps) {
@@ -17,7 +16,7 @@ export function HomeView(props: HomeViewProps) {
     return (
         <div
             {...otherProps}
-            className={classes('HomeView-0d51', themeClassOf(Theme.Light), className)}
+            className={classes('HomeView-0d51', className)}
         >
             <Header/>
 

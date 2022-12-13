@@ -64,6 +64,7 @@
 @import '@evilcss/std/reset/all-font.css';
 @import '@evilcss/std/reset/attr-hidden.css';
 @import '@evilcss/std/reset/attr-invisible.css';
+@import '@evilcss/std/reset/root-accent-color.css';
 @import '@evilcss/std/reset/root-color-scheme.css';
 @import '@evilcss/std/reset/root-font-rendering.css';
 @import '@evilcss/std/reset/root-font-size.css';
@@ -82,8 +83,6 @@
 @import '@evilcss/std/reset/tag-textarea.css';
 @import '@evilcss/std/scroll.classes.css';
 @import '@evilcss/std/scrollbar.classes.css';
-@import '@evilcss/std/shadow.classes.css';
-@import '@evilcss/std/shadow.props.css';
 @import '@evilcss/std/shadow/material.classes.css';
 @import '@evilcss/std/shadow/material.props.css';
 @import '@evilcss/std/switch.classes.css';

@@ -1,7 +1,6 @@
 import '@eviljs/reactx/showcase/theme-v1.css'
 
 import {AuthProvider} from '@eviljs/react/auth'
-import {classes} from '@eviljs/react/classes'
 import {ContainerProvider} from '@eviljs/react/container'
 import {I18nProvider} from '@eviljs/react/i18n'
 import {LoggerProvider} from '@eviljs/react/logger'
@@ -9,7 +8,7 @@ import {Portal, PortalProvider} from '@eviljs/react/portal'
 import {PortalsProvider} from '@eviljs/react/portals'
 import {RequestProvider} from '@eviljs/react/request'
 import {Arg, CaseRoute, exact, RouterProvider, SwitchRoute} from '@eviljs/react/router'
-import {StoreProvider} from '@eviljs/react/store'
+import {StoreProvider} from '@eviljs/react/store-v3'
 import {Showcase} from '@eviljs/reactx/showcase'
 import {pipe} from '@eviljs/std/pipe'
 import {NotFoundView} from '~/app-404/404-view'
@@ -23,7 +22,7 @@ import * as Routes from '~/route/apis'
 import {createRouter} from '~/router/router'
 import {StoreSpec} from '~/store/apis'
 import {useRootStoreStorage} from '~/store/hooks'
-import {Theme, themeClassOf} from '~/theme/apis'
+import {useColorSchemePreference} from '~/theme/hooks'
 import {AuthBarrier} from '~/widgets/auth-barrier'
 import {Header} from '~/widgets/header'
 
@@ -46,6 +45,7 @@ export function Root(props: RootProps) {
 
 export function App(props: AppProps) {
     useRootStoreStorage()
+    useColorSchemePreference()
 
     return <>
         <SwitchRoute default={<NotFoundView/>}>
@@ -53,14 +53,14 @@ export function App(props: AppProps) {
                 <HomeView/>
             </CaseRoute>
             <CaseRoute is={Routes.ShowcaseRoute.pattern}>
-                <div className={classes(themeClassOf(Theme.Light))}>
+                <div>
                     <Header/>
                     <Showcase>{ShowcaseIndex}</Showcase>
                 </div>
             </CaseRoute>
             <CaseRoute is={exact('/arg/' + Arg)}>
                 {(...[id]) =>
-                    <div className={classes(themeClassOf(Theme.Light))}>
+                    <div>
                         <Header/>
                         <h1>Route ID {id}</h1>
                     </div>

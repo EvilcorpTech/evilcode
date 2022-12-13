@@ -5,7 +5,6 @@ import {classes} from '@eviljs/react/classes'
 import {Button} from '@eviljs/reactx/button'
 import {useCallback} from 'react'
 import {useI18nMsg} from '~/i18n/hooks'
-import {Theme, themeClassOf} from '~/theme/apis'
 import {Header} from '~/widgets/header'
 
 export function AdminView(props: AdminViewProps) {
@@ -25,7 +24,7 @@ export function AdminView(props: AdminViewProps) {
     return (
         <div
             {...otherProps}
-            className={classes('AdminView-a22c', themeClassOf(Theme.Light), className)}
+            className={classes('AdminView-a22c', className)}
         >
             <Header/>
 

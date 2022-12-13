@@ -1,8 +1,7 @@
-import type {OnChangeEventArgs, StoreSpec as StdStoreSpec} from '@eviljs/react/store'
-import {Version} from '~/env/apis'
+import type {OnChangeEventArgs, StoreSpec as StdStoreSpec} from '@eviljs/react/store-v3'
 import type {Theme} from '~/theme/apis'
 
-export const StoreStateVersion = Version.replaceAll('.', '-')
+export const StoreStateVersion = 1
 export const StoreSpec: StdStoreSpec<StoreState> = {createState, onChange}
 export const StoreStateSsrId = 'AppState-' + StoreStateVersion
 export const Storage: Storage = window.localStorage
