@@ -273,7 +273,7 @@ export function createTransitionState(): TransitionState {
     return {
         transactionCounter: 0,
         taskCounter: 0,
-        children: null,
+        children: undefined,
         initial: true,
         queue: [],
         tasks: [],
