@@ -93,7 +93,7 @@ export function AuthCredentials(props: AuthCredentialsProps) {
             <Button
                 className={classes('button-fcb2 dye', {
                     busy: pending,
-                    'std-shadow z8': validCredentials,
+                    'std-shadow8': validCredentials,
                 })}
                 type="submit"
                 disabled={pending || ! validCredentials}

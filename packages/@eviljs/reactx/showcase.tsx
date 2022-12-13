@@ -39,7 +39,7 @@ export function Showcase(props: ShowcaseProps) {
             {...otherProps}
             className={classes('Showcase-d1c8', className)}
         >
-            <nav className="navigation-70eb std-shadow z2">
+            <nav className="navigation-70eb std-shadow2">
                 <input
                     className="input-0caa std-text-body2"
                     value={search}

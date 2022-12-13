@@ -15,7 +15,7 @@ export function ThemeView(props: ThemeViewProps) {
     return (
         <div
             {...otherProps}
-            className={classes('ThemeView-t2eb', `std theme-${theme} with-bg`, className)}
+            className={classes('ThemeView-t2eb', `std theme-${theme} std-background-theme`, className)}
             style={{
                 '--std-color-primary-h': primaryAccent[0] * 360 + 'deg',
                 '--std-color-primary-s': primaryAccent[1] * 100 + '%',
@@ -393,25 +393,25 @@ export function Contrast() {
     return (
         <div className="std-flex column center align-center">
             <div className="std-flex wrap">
-                <label className="contrast-td08 std-color-bg1">
+                <label className="contrast-td08 std-background-bg1">
                     <div className="std-color-fg1 std-text-weight1">Bg 1</div>
                     <div className="std-color-fg1">Fg 1</div>
                     <div className="std-color-fg2">Fg 2</div>
                     <div className="std-color-fg3">Fg 3</div>
                 </label>
-                <label className="contrast-td08 std-color-bg2">
+                <label className="contrast-td08 std-background-bg2">
                     <div className="std-color-fg1 std-text-weight1">Bg 2</div>
                     <div className="std-color-fg1">Fg 1</div>
                     <div className="std-color-fg2">Fg 2</div>
                     <div className="std-color-fg3">Fg 3</div>
                 </label>
-                <label className="contrast-td08 std-color-bg3">
+                <label className="contrast-td08 std-background-bg3">
                     <div className="std-color-fg1 std-text-weight1">Bg 3</div>
                     <div className="std-color-fg1">Fg 1</div>
                     <div className="std-color-fg2">Fg 2</div>
                     <div className="std-color-fg3">Fg 3</div>
                 </label>
-                <label className="contrast-td08 std-color-bg4">
+                <label className="contrast-td08 std-background-bg4">
                     <div className="std-color-fg1 std-text-weight1">Bg 4</div>
                     <div className="std-color-fg1">Fg 1</div>
                     <div className="std-color-fg2">Fg 2</div>
@@ -422,25 +422,25 @@ export function Contrast() {
             <i className="std-space-v s4"/>
 
             <div className="std-flex wrap">
-                <label className="contrast-td08 std-color-primary-bg1">
+                <label className="contrast-td08 std-background-primary-bg1">
                     <div className="std-color-fg1 std-text-weight1">Primary Bg 1</div>
                     <div className="std-color-primary-fg1">Primary Fg 1</div>
                     <div className="std-color-primary-fg2">Primary Fg 2</div>
                     <div className="std-color-primary-fg3">Primary Fg 3</div>
                 </label>
-                <label className="contrast-td08 std-color-primary-bg2">
+                <label className="contrast-td08 std-background-primary-bg2">
                     <div className="std-color-fg1 std-text-weight1">Primary Bg 2</div>
                     <div className="std-color-primary-fg1">Primary Fg 1</div>
                     <div className="std-color-primary-fg2">Primary Fg 2</div>
                     <div className="std-color-primary-fg3">Primary Fg 3</div>
                 </label>
-                <label className="contrast-td08 std-color-primary-bg3">
+                <label className="contrast-td08 std-background-primary-bg3">
                     <div className="std-color-fg1 std-text-weight1">Primary Bg 3</div>
                     <div className="std-color-primary-fg1">Primary Fg 1</div>
                     <div className="std-color-primary-fg2">Primary Fg 2</div>
                     <div className="std-color-primary-fg3">Primary Fg 3</div>
                 </label>
-                <label className="contrast-td08 std-color-primary-bg4">
+                <label className="contrast-td08 std-background-primary-bg4">
                     <div className="std-color-fg1 std-text-weight1">Primary Bg 4</div>
                     <div className="std-color-primary-fg1">Primary Fg 1</div>
                     <div className="std-color-primary-fg2">Primary Fg 2</div>
@@ -451,25 +451,25 @@ export function Contrast() {
             <i className="std-space-v s4"/>
 
             <div className="std-flex wrap">
-                <label className="contrast-td08 std-color-secondary-bg1">
+                <label className="contrast-td08 std-background-secondary-bg1">
                     <div className="std-color-fg1 std-text-weight1">Secondary Bg 1</div>
                     <div className="std-color-secondary-fg1">Secondary Fg 1</div>
                     <div className="std-color-secondary-fg2">Secondary Fg 2</div>
                     <div className="std-color-secondary-fg3">Secondary Fg 3</div>
                 </label>
-                <label className="contrast-td08 std-color-secondary-bg2">
+                <label className="contrast-td08 std-background-secondary-bg2">
                     <div className="std-color-fg1 std-text-weight1">Secondary Bg 2</div>
                     <div className="std-color-secondary-fg1">Secondary Fg 1</div>
                     <div className="std-color-secondary-fg2">Secondary Fg 2</div>
                     <div className="std-color-secondary-fg3">Secondary Fg 3</div>
                 </label>
-                <label className="contrast-td08 std-color-secondary-bg3">
+                <label className="contrast-td08 std-background-secondary-bg3">
                     <div className="std-color-fg1 std-text-weight1">Secondary Bg 3</div>
                     <div className="std-color-secondary-fg1">Secondary Fg 1</div>
                     <div className="std-color-secondary-fg2">Secondary Fg 2</div>
                     <div className="std-color-secondary-fg3">Secondary Fg 3</div>
                 </label>
-                <label className="contrast-td08 std-color-secondary-bg4">
+                <label className="contrast-td08 std-background-secondary-bg4">
                     <div className="std-color-fg1 std-text-weight1">Secondary Bg 4</div>
                     <div className="std-color-secondary-fg1">Secondary Fg 1</div>
                     <div className="std-color-secondary-fg2">Secondary Fg 2</div>
@@ -550,11 +550,11 @@ export function Radiuses() {
 export function Shadows() {
     return (
         <div className="std-flex center align-center wrap std-viewport m">
-            <label className="shadow-t9a2 std-shadow soft">Soft</label>
+            <label className="shadow-t9a2 std-shadow-soft">Soft</label>
             {times(12).map(idx => (
                 <label
                     key={idx}
-                    className={`shadow-t9a2 std-shadow z${idx}`}
+                    className={`shadow-t9a2 std-shadow${idx}`}
                 >
                     {idx}
                 </label>
@@ -562,7 +562,7 @@ export function Shadows() {
             {times(25).map((nil, idx) => idx).slice(12).map(idx => (
                 <label
                     key={idx}
-                    className={`shadow-t9a2 std-shadow primary-accent z${idx}`}
+                    className={`shadow-t9a2 std-shadow${idx} std-shadow-primary`}
                 >
                     {idx}
                 </label>
@@ -576,7 +576,7 @@ export function readThemeColor(type: string): Hsl {
     const hProp = window.getComputedStyle(el).getPropertyValue(`--${type}-h`)
     const sProp = window.getComputedStyle(el).getPropertyValue(`--${type}-s`)
     const lProp = window.getComputedStyle(el).getPropertyValue(`--${type}-l`)
-    const h = Number(hProp) / 360
+    const h = Number(hProp.replace('deg', '')) / 360
     const s = Number(sProp.replace('%', '')) / 100
     const l = Number(lProp.replace('%', '')) / 100
     return [h, s, l]
