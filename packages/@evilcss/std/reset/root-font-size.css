@@ -1,4 +1,4 @@
-html {
+:root, html {
     font-size: 100%;
     -webkit-text-size-adjust: 100%; /* Prevents Safari iOS from resizing fonts on device rotation. */
 }

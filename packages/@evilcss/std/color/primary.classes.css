@@ -20,7 +20,8 @@
 .std-color-primary-fg1 { color: var(--std-color-primary-fg1); }
 .std-color-primary-fg2 { color: var(--std-color-primary-fg2); }
 .std-color-primary-fg3 { color: var(--std-color-primary-fg3); }
-.std-color-primary-bg1 { background-color: var(--std-color-primary-bg1); }
-.std-color-primary-bg2 { background-color: var(--std-color-primary-bg2); }
-.std-color-primary-bg3 { background-color: var(--std-color-primary-bg3); }
-.std-color-primary-bg4 { background-color: var(--std-color-primary-bg4); }
+
+.std-background-primary-bg1 { background-color: var(--std-color-primary-bg1); }
+.std-background-primary-bg2 { background-color: var(--std-color-primary-bg2); }
+.std-background-primary-bg3 { background-color: var(--std-color-primary-bg3); }
+.std-background-primary-bg4 { background-color: var(--std-color-primary-bg4); }
