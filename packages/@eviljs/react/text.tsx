@@ -14,7 +14,7 @@ export const Text = memo(function Text(props: TextProps) {
             return
         }
         return translate(children, args)
-    }, [children, args])
+    }, [translate, children, args])
 
     if (! children || ! message) {
         return <>{children}</>
