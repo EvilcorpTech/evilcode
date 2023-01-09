@@ -1,4 +1,5 @@
 .std-debug,
-.std-debug.deep * {
+.std-debug.deep *,
+.std-debug.children > * {
     outline: var(--debug-size, 1px) solid var(--debug-color, red);
 }

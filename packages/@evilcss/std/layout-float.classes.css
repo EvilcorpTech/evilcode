@@ -1,0 +1,5 @@
+.std-float-clear::after {
+    content: '';
+    display: block;
+    clear: both;
+ }
