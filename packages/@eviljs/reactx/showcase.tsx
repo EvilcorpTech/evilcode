@@ -16,12 +16,12 @@ export function Showcase(props: ShowcaseProps) {
             ? idOfShowcase(defaultShowcase)
             : ''
 
-        setSelected(route.params.id ?? defaultId)
-    }, [route.params.id])
+        setSelected(route.params?.id ?? defaultId)
+    }, [route.params?.id])
 
     useEffect(() => {
-        setSearch(route.params.search ?? '')
-    }, [route.params.search])
+        setSearch(route.params?.search ?? '')
+    }, [route.params?.search])
 
     const items = useMemo(() => {
         const matchingItems = children.filter(it =>
