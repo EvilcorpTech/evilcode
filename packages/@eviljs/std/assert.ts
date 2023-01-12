@@ -1,13 +1,16 @@
 import {throwInvalidInput} from './throw.js'
+import type {Nil} from './type.js'
 import {
     isArray,
     isBoolean,
     isDate,
+    isDefined,
     isFunction,
     isInteger,
     isNil,
     isNumber,
     isObject,
+    isSome,
     isString,
     isUndefined,
 } from './type.js'
@@ -61,6 +64,13 @@ export function assertDate(value: unknown, ctx?: any): asserts value is Date {
 */
 export function assertDateOptional(value: unknown, ctx?: any): asserts value is undefined | Date {
     ensureDateOptional(value, ctx)
+}
+
+/**
+* @throws InvalidInput
+*/
+export function assertDefined(value: unknown, ctx?: any): asserts value is null | {} {
+    ensureDefined(value, ctx)
 }
 
 /**
@@ -131,6 +141,13 @@ export function assertObject(value: unknown, ctx?: any): asserts value is Record
 */
 export function assertObjectOptional(value: unknown, ctx?: any): asserts value is undefined | Record<PropertyKey, any> {
     ensureObjectOptional(value, ctx)
+}
+
+/**
+* @throws InvalidInput
+*/
+export function assertSome(value: unknown, ctx?: any): asserts value is {} {
+    ensureSome(value, ctx)
 }
 
 /**
@@ -234,6 +251,19 @@ export function ensureDateOptional<T extends undefined | Date>(value: T, ctx?: a
 export function ensureDateOptional(value: unknown, ctx?: any): undefined | Date
 export function ensureDateOptional(value: unknown, ctx?: any) {
     return ensureOptionalWith(ensureDate, value, ctx)
+}
+
+/**
+* @throws InvalidInput
+*/
+export function ensureDefined(value: undefined, ctx?: any): never
+export function ensureDefined<T>(value: undefined | T, ctx?: any): T
+export function ensureDefined<T>(value: undefined | T, ctx?: any): T {
+    if (! isDefined(value)) {
+        return throwAssertError('defined', value, ctx)
+    }
+
+    return value
 }
 
 /**
@@ -355,6 +385,19 @@ export function ensureObjectOptional(value: unknown, ctx?: any) {
 /**
 * @throws InvalidInput
 */
+export function ensureSome(value: Nil, ctx?: any): never
+export function ensureSome<T>(value: Nil | T, ctx?: any): T
+export function ensureSome<T>(value: Nil | T, ctx?: any): T {
+    if (! isSome(value)) {
+        return throwAssertError('not undefined and not null', value, ctx)
+    }
+
+    return value
+}
+
+/**
+* @throws InvalidInput
+*/
 export function ensureString<T extends string>(value: T, ctx?: any): T
 export function ensureString(value: unknown, ctx?: any): string
 export function ensureString(value: unknown, ctx?: any) {
@@ -399,10 +442,8 @@ export function ensureStringNotEmptyOptional(value: unknown, ctx?: any) {
 /**
 * @throws InvalidInput
 */
-export function ensureUndefined<T extends undefined>(value: T, ctx?: any): T
-export function ensureUndefined(value: unknown, ctx?: any): undefined
-export function ensureUndefined(value: unknown, ctx?: any) {
-    if (value !== void undefined) {
+export function ensureUndefined(value: unknown, ctx?: any): undefined {
+    if (! isUndefined(value)) {
         return throwAssertError('undefined', value, ctx)
     }
 

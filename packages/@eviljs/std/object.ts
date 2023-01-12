@@ -12,7 +12,7 @@ export function isEmptyObject(obj: object): boolean {
     return true
 }
 
-export function areSameObjectsShallow(a: object, b: object): boolean {
+export function areSameObjectsShallow<T extends object>(a: T, b: T): boolean {
     if (a === b) {
         return true
     }

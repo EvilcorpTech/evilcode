@@ -1,11 +1,12 @@
-import {isNotNil, Nil} from './type.js'
+import type {Nil} from './type.js'
+import {isSome} from './type.js'
 
 export function lastOf<I>(list: Array<I>): undefined | I {
     return list[list.length - 1]
 }
 
 export function withoutNil<I>(list: Array<Nil | I>): Array<I> {
-    return list.filter(isNotNil)
+    return list.filter(isSome)
 }
 
 export function mapWith<I, R>(mapItem: (it: I, idx: number) => R) {

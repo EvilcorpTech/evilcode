@@ -6,12 +6,12 @@ export const Tests = {
     function: isFunction,
     integer: isInteger,
     nil: isNil,
-    notNil: isNotNil,
     null: isNull,
     number: isNumber,
     object: isObject,
     promise: isPromise,
     regexp: isRegExp,
+    some: isSome,
     string: isString,
     undefined: isUndefined,
 }
@@ -25,6 +25,28 @@ export function kindOf<T extends keyof typeof Tests>(value: unknown, ...tests: A
         }
     }
     return
+}
+
+// Tests ///////////////////////////////////////////////////////////////////////
+
+export function isDefined<T>(value: void | undefined | T): value is T {
+    return ! isUndefined(value)
+}
+
+export function isNil(value: unknown): value is Nil {
+    return isUndefined(value) || isNull(value)
+}
+
+export function isNull(value: unknown): value is null {
+    return value === null
+}
+
+export function isSome<I>(item: Nil | I): item is I {
+    return ! isNil(item)
+}
+
+export function isUndefined(value: unknown): value is undefined {
+    return value === void undefined
 }
 
 export function isArray(value: unknown): value is Array<unknown> {
@@ -46,26 +68,6 @@ export function isDate(value: unknown): value is Date {
     return value
         ? (value instanceof Date)
         : false
-}
-
-export function isDefined<T>(value: void | undefined | T): value is T {
-    return ! isUndefined(value)
-}
-
-export function isUndefined(value: unknown): value is undefined {
-    return value === void undefined
-}
-
-export function isNil(value: unknown): value is Nil {
-    return isUndefined(value) || isNull(value)
-}
-
-export function isNotNil<I>(item: Nil | I): item is I {
-    return ! isNil(item)
-}
-
-export function isNull(value: unknown): value is null {
-    return value === null
 }
 
 export function isFunction<O, A extends Array<unknown>, R>(value: O | ((...args: A) => R)): value is ((...args: A) => R)
@@ -121,6 +123,8 @@ export function isString(value: unknown): value is string {
     return typeof value === 'string'
 }
 
+// Casts ///////////////////////////////////////////////////////////////////////
+
 export function asArray<T>(item: T | Array<T> | [T] | readonly [T]): Array<T> {
     return isArray(item)
         ? item
@@ -141,6 +145,25 @@ export function asBooleanLike(value: unknown): undefined | boolean {
             return false
     }
     return
+}
+
+export function asDate(value: unknown): undefined | Date {
+    if (! value) {
+        return
+    }
+    if (isDate(value)) {
+        return value
+    }
+    if (isNumber(value)) {
+        return new Date(value)
+    }
+    if (! isString(value)) {
+        return
+    }
+
+    // Date.parse() is omnivorous:
+    // it accepts everything, and everything not string is returned as NaN.
+    return asDate(Date.parse(value))
 }
 
 export function asNumber(value: number): number
@@ -177,28 +200,10 @@ export function asInteger(value: unknown): undefined | number {
     return Math.trunc(numberOptional)
 }
 
-export function asDate(value: unknown): undefined | Date {
-    if (! value) {
-        return
-    }
-    if (isDate(value)) {
-        return value
-    }
-    if (isNumber(value)) {
-        return new Date(value)
-    }
-    if (! isString(value)) {
-        return
-    }
-
-    // Date.parse() is omnivorous:
-    // it accepts everything, and everything not string is returned as NaN.
-    return asDate(Date.parse(value))
-}
-
 // Types ///////////////////////////////////////////////////////////////////////
 
 export type Nil = undefined | null
+export type Some<T> = NonNullable<T>
 
 export type Partial<T> = {
     [K in keyof T]?: undefined | T[K]

@@ -7,8 +7,8 @@ export enum LogType {
 
 export const LogTypeDefault = LogType.Debug
 
-export function createLogger<R>(log: (level: LogType, ...args: Payload) => R) {
-    return {
+export function createLogger<R>(log: (level: LogType, ...args: Payload) => R): Logger<R> & LoggerAttrs {
+    const self: Logger<R> & LoggerAttrs = {
         Type: LogType,
 
         log,
@@ -26,6 +26,8 @@ export function createLogger<R>(log: (level: LogType, ...args: Payload) => R) {
             return log(LogType.Error, ...args)
         },
     }
+
+    return self
 }
 
 export function createConsoleLog(options?: undefined | {
@@ -87,6 +89,10 @@ export interface Logger<R = void> {
     info(...args: Payload): R
     warn(...args: Payload): R
     error(...args: Payload): R
+}
+
+export interface LoggerAttrs {
+    Type: typeof LogType
 }
 
 export interface Payload extends Array<unknown> {
