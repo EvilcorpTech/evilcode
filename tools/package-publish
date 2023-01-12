@@ -14,7 +14,7 @@ Dir="$(cd "$(dirname "$0")/.." && pwd)"
 : ${NpmVersionCmd:=version}
 : ${NpmVersionArgs:=--no-git-tag-version}
 : ${NpmPublishCmd:=publish}
-: ${NpmPublishArgs:=--access public}
+: ${NpmPublishArgs:=--access public --auth-type legacy}
 : ${PublishVersion:=patch}
 
 for pkg; do
