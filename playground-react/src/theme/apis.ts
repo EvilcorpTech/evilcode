@@ -1,6 +1,6 @@
 export enum Theme {
-    Light = 'light',
     Dark = 'dark',
+    Light = 'light',
 }
 
 export function themeClassOf(theme: Theme) {

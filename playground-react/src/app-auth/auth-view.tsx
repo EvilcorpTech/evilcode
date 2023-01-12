@@ -11,7 +11,7 @@ export function AuthView(props: AuthViewProps) {
     const {className, ...otherProps} = props
     const {tokenState} = useAuth()!
     const {route} = useRouter()!
-    const redirectPath = route.params.redirect ?? '/'
+    const redirectPath = route.params?.redirect ?? '/'
 
     const msg = useI18nMsg(({ t }) => ({
         error: t`Wrong Email or Password`,

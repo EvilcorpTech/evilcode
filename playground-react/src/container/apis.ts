@@ -10,32 +10,30 @@ import {ApiUrl, BasePath, BundleName} from '~/env/apis'
 import {FetchMocksSpec} from '~/mock/apis'
 
 export const ContainerSpec = {
-    services: {
-        Cookie(container: {}) {
-            return createCookie('token', CookieSpec)
-        },
-        Fetch(container: {}) {
-            const fetch = createQuery(createFetch({baseUrl: ApiUrl}))
+    Cookie(container: {}) {
+        return createCookie('token', CookieSpec)
+    },
+    Fetch(container: {}) {
+        const fetch = createFetch({baseUrl: ApiUrl})
 
-            // SERVICE WORKER //////////////////////////////////////////////////
-            const serviceWorkerPath = [asBaseUrl(BasePath), BundleName, 'entry-mocks-service-worker.js']
-            const serviceWorkerUrl = serviceWorkerPath.filter(Boolean).join('/')
-            // navigator.serviceWorker.register(serviceWorkerUrl)
-            // return fetch
+        // SERVICE WORKER //////////////////////////////////////////////////
+        const serviceWorkerPath = [asBaseUrl(BasePath), BundleName, 'entry-mocks-service-worker.js']
+        const serviceWorkerUrl = serviceWorkerPath.filter(Boolean).join('/')
+        // navigator.serviceWorker.register(serviceWorkerUrl)
+        // return fetch
 
-            // MOCK ////////////////////////////////////////////////////////////
-            return mockFetchDelayed(fetch, FetchMocksSpec, {minDelay: 500, maxDelay: 1000})
+        // MOCK ////////////////////////////////////////////////////////////
+        return mockFetchDelayed(fetch, FetchMocksSpec, {minDelay: 500, maxDelay: 1000})
 
-        },
-        Logger(container: {}) {
-            return createLogger(createConsoleLog())
-        },
-        Query(container: {Fetch: Fetch}) {
-            return createQuery(container.Fetch)
-        },
+    },
+    Logger(container: {}) {
+        return createLogger(createConsoleLog())
+    },
+    Query(container: {Fetch: Fetch}) {
+        return createQuery(container.Fetch)
     },
 }
 
 // Types ///////////////////////////////////////////////////////////////////////
 
-export type Container = StdContainer<typeof ContainerSpec.services>
+export type Container = StdContainer<typeof ContainerSpec>

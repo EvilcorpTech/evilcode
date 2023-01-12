@@ -1,4 +1,4 @@
-import {isNotNil} from '@eviljs/std/type'
+import {isSome} from '@eviljs/std/type'
 import type {FetchRequestOptions} from '@eviljs/web/fetch'
 import {withRequestHeaders, withRequestJson} from '@eviljs/web/fetch'
 import {mergeQueryOptions} from '@eviljs/web/query'
@@ -25,7 +25,7 @@ export function withRequestPayload(options: PayloadOptions): FetchRequestOptions
     const optionsList = [
         authToken ? withRequestAuth(authToken) : undefined,
         jsonBody ? withRequestJson(jsonBody) : undefined,
-    ].filter(isNotNil)
+    ].filter(isSome)
 
     return mergeQueryOptions(...optionsList)
 }
