@@ -1,4 +1,4 @@
-import {asArray, isNotNil, isString, isUndefined} from '@eviljs/std/type.js'
+import {asArray, isSome, isString, isUndefined} from '@eviljs/std/type.js'
 import {flushStyles} from '@eviljs/web/animation.js'
 import {
     cloneElement,
@@ -12,7 +12,7 @@ import {
     useMemo,
     useReducer,
     useRef,
-    useState,
+    useState
 } from 'react'
 import {classes} from './classes.js'
 import {defineContext} from './ctx.js'
@@ -489,14 +489,14 @@ export function createTasksTransaction(
 ): Array<Array<TransitionTaskQueued>> {
     ++state.transactionCounter
 
-    return tasks.filter(isNotNil)
+    return tasks.filter(isSome)
 }
 
 export function createTasksGroup(
     state: TransitionState,
     ...tasks: Array<undefined | TransitionTaskQueued>
 ): Array<TransitionTaskQueued> {
-    return tasks.filter(isNotNil)
+    return tasks.filter(isSome)
 }
 
 export function createTask(

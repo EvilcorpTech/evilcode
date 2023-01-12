@@ -4,7 +4,7 @@ import {escapeRegexp} from '@eviljs/std/regexp.js'
 import {isPromise} from '@eviljs/std/type.js'
 import {exact, regexpFromPattern} from '@eviljs/web/route.js'
 import type {Router as RouterManager, RouterObserver, RouterRoute, RouterRouteChange, RouterRouteChangeParams, RouterRouteParams} from '@eviljs/web/router.js'
-import {encodeRoute} from '@eviljs/web/router.js'
+import {encodeLink} from '@eviljs/web/router.js'
 import {Children, forwardRef, isValidElement, useCallback, useContext, useEffect, useMemo, useRef, useState} from 'react'
 import {classes} from './classes.js'
 import {defineContext} from './ctx.js'
@@ -16,6 +16,7 @@ export type {RouterMemoryOptions, RouterObserver, RouterOptions} from '@eviljs/w
 export const RouterContext = defineContext<Router>('RouterContext')
 export const RouteArgsContext = defineContext<RouteArgs>('RouteArgsContext')
 export const RouteDefaultActiveClass = 'route-active'
+export const LinkSchemaRegexp = /^([0-9a-zA-Z]+):/ // "http://" "https://" "mailto:" "tel:"
 
 /*
 * EXAMPLE
@@ -177,7 +178,7 @@ export const Route = forwardRef(function Route(
         params,
         replace: replaceOptional,
         state,
-        to: path,
+        to,
         ...otherProps
     } = props
     const {changeRoute, link, testRoute} = useRouter()!
@@ -193,7 +194,7 @@ export const Route = forwardRef(function Route(
 
             const replace = replaceOptional ?? false
 
-            changeRoute({path, params, state, replace})
+            changeRoute({path: to, params, state, replace})
         }
 
         const guardResult = computeValue(guard)
@@ -206,20 +207,20 @@ export const Route = forwardRef(function Route(
             // Sync behavior.
             tryRouting(guardResult)
         }
-    }, [changeRoute, path, params, state, replaceOptional, guard])
+    }, [changeRoute, to, params, state, replaceOptional, guard])
 
     const isActive = useMemo(() => {
-        if (! path) {
+        if (! to) {
             return false
         }
 
-        const pathEscaped = escapeRegexp(path)
+        const pathEscaped = escapeRegexp(to)
         const pathExact = activeWhenExact
             ? exact(pathEscaped)
             : pathEscaped
 
         return testRoute(pathExact)
-    }, [path, testRoute])
+    }, [to, testRoute])
 
     const activeClasses = false
         || activeClass
@@ -234,7 +235,7 @@ export const Route = forwardRef(function Route(
             className={classes(className, {
                 [activeClasses]: isActive,
             })}
-            href={link(path ?? '', params)}
+            href={to ? link(to, params) : undefined}
         >
             {children}
         </a>
@@ -242,16 +243,18 @@ export const Route = forwardRef(function Route(
 })
 
 export function Link(props: LinkProps) {
-    const {children, className, params, replace, state, to: path, ...otherProps} = props
-    const isRoute = path?.startsWith('/') ?? true
+    const {children, className, params, replace, state, to, ...otherProps} = props
+    const isLink = false
+        || Boolean(to?.startsWith('//'))
+        || Boolean(to && LinkSchemaRegexp.test(to))
 
-    if (! isRoute) {
+    if (to && isLink) {
         return (
             <a
                 target="_blank"
                 {...otherProps}
                 className={classes('Link-b705 link', className)}
-                href={encodeRoute(path ?? '', params)}
+                href={encodeLink(to, params)}
             >
                 {children}
             </a>
@@ -262,7 +265,7 @@ export function Link(props: LinkProps) {
         <Route
             {...otherProps}
             className={classes('Link-b705 route', className)}
-            to={path}
+            to={to}
             params={params}
             state={state}
             replace={replace}
