@@ -1,8 +1,8 @@
 import {throwInvalidArgument} from '@eviljs/std/throw.js'
 import type {Nil} from '@eviljs/std/type.js'
-import {isArray, isNotNil, isObject, isString, kindOf} from '@eviljs/std/type.js'
+import {isArray, isObject, isSome, isString, kindOf} from '@eviljs/std/type.js'
 import type {Fetch, FetchAttributes, FetchRequestOptions} from './fetch.js'
-import {unpackResponse, HttpMethod, mergeFetchOptions} from './fetch.js'
+import {HttpMethod, mergeFetchOptions, unpackResponse} from './fetch.js'
 
 export {throwInvalidResponse} from './throw.js'
 
@@ -136,7 +136,7 @@ export function encodeQueryParamsObject(params: QueryParamsDict, options?: undef
             default:
                 return joinParam(encodeKey(key), encodeValue(value))
         }
-    }).filter(isNotNil)
+    }).filter(isSome)
 
     const encodedParams = joinParts(paramsParts)
 
@@ -164,7 +164,7 @@ export function encodeQueryParamsArray(params: QueryParamsList, options?: undefi
             default:
                 return encodeKey(param)
         }
-    }).filter(isNotNil)
+    }).filter(isSome)
 
     const encodedParams = joinParts(paramsParts)
 

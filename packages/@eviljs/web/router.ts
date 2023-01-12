@@ -3,8 +3,6 @@ import type {QueryParams, QueryParamsDict, QueryParamsList} from './query.js'
 import {encodeQueryParamKey, encodeQueryParams, encodeQueryParamValue} from './query.js'
 import {asBaseUrl} from './url.js'
 
-const RouterRouteParamsEmpty: RouterRouteParams = {}
-
 export function createPathRouter<S = unknown>(observer: RouterObserver, options?: undefined | RouterOptions): Router<S> {
     const basePath = asBaseUrl(options?.basePath)
 
@@ -26,23 +24,26 @@ export function createPathRouter<S = unknown>(observer: RouterObserver, options?
             window.removeEventListener('popstate', onRouteChange)
         },
         changeRoute(routeChange) {
-            self.route = mergeRouteChange(self.route, routeChange)
+            const nextRoute = mergeRouteChange(self.route, routeChange)
 
-            const routeString = self.createLink(
-                routeChange.path ?? self.route.path,
-                routeChange.params,
-            )
+            if (areSameRoutes(self.route, nextRoute)) {
+                return
+            }
+
+            self.route = nextRoute
+
+            const routeString = self.createLink(self.route.path, self.route.params)
 
             // The History mutation does not trigger the PopState event.
             if (routeChange.replace) {
-                history.replaceState(routeChange.state, '', routeString)
+                history.replaceState(self.route.state, '', routeString)
             }
             else {
-                history.pushState(routeChange.state, '', routeString)
+                history.pushState(self.route.state, '', routeString)
             }
         },
         createLink(path: string, params?: undefined | RouterRouteChangeParams) {
-            return encodeRoute(basePath + path, params)
+            return encodeLink(basePath + path, params)
         },
     }
 
@@ -68,21 +69,24 @@ export function createHashRouter<S = unknown>(observer: RouterObserver, options?
             window.removeEventListener('hashchange', onRouteChange)
         },
         changeRoute(routeChange) {
-            self.route = mergeRouteChange(self.route, routeChange)
+            const nextRoute = mergeRouteChange(self.route, routeChange)
 
-            const routeString = self.createLink(
-                routeChange.path ?? self.route.path,
-                routeChange.params,
-            )
+            if (areSameRoutes(self.route, nextRoute)) {
+                return
+            }
+
+            self.route = nextRoute
+
+            const routeString = self.createLink(self.route.path, self.route.params)
 
             // The History mutation does not trigger the HashChange event.
             if (routeChange.replace) {
-                history.replaceState(routeChange.state, '', routeString)
+                history.replaceState(self.route.state, '', routeString)
             }
             else {
                 // Algorithm 1:
                 // BEGIN
-                history.pushState(routeChange.state, '', routeString)
+                history.pushState(self.route.state, '', routeString)
                 // END
 
                 // // Algorithm 2 (legacy):
@@ -94,7 +98,7 @@ export function createHashRouter<S = unknown>(observer: RouterObserver, options?
             }
         },
         createLink(path: string, params?: undefined | RouterRouteChangeParams) {
-            return '#' + encodeRoute(path, params)
+            return '#' + encodeLink(path, params)
         },
     }
 
@@ -105,28 +109,49 @@ export function createMemoryRouter<S = unknown>(observer: RouterObserver, option
     const self: Router<S> = {
         route: {
             path: options?.initialPath ?? '/',
-            params: options?.initialParams ?? RouterRouteParamsEmpty,
-            state: options?.initialState ?? undefined,
+            params: options?.initialParams,
+            state: options?.initialState,
         },
         start() {},
         stop() {},
         changeRoute(routeChange) {
-            self.route = mergeRouteChange(self.route, routeChange)
+            const nextRoute = mergeRouteChange(self.route, routeChange)
+
+            if (areSameRoutes(self.route, nextRoute)) {
+                return
+            }
+
+            self.route = nextRoute
         },
         createLink(path: string, params?: undefined | RouterRouteChangeParams) {
-            return encodeRoute(path, params)
+            return encodeLink(path, params)
         },
     }
 
     return self
 }
 
+export function areSameRoutes<S>(firstRoute: RouterRoute<S>, secondRoute: RouterRoute<S>): boolean {
+    const samePath = firstRoute.path === secondRoute.path
+    const sameParams = encodeQueryParams(firstRoute.params) === encodeQueryParams(secondRoute.params)
+    const sameState = firstRoute.state === secondRoute.state
+    return samePath && sameParams && sameState
+}
+
 export function mergeRouteChange<S>(route: RouterRoute<S>, routeChange: RouterRouteChange<S>): RouterRoute<S> {
+    const [changePath, changePathParamsString] = routeChange.path?.split('?') ?? []
+    const changePathParams = decodeRouteParams(changePathParamsString)
+    const changeParams = flattenRouteParams(routeChange.params)
+
     return {
-        path: routeChange.path ?? route.path,
-        params: flattenRouteParams(routeChange.params) ?? RouterRouteParamsEmpty,
+        path: changePath || route.path, // changePath can be an empty string.
+        // Params and State, if not provided, must be initialized to undefined.
+        params: changePathParams && changeParams
+            // changeParams has precedence over (overwrites) changePathParams.
+            ? {...changePathParams, ...changeParams} // Merge.
+            : (changeParams ?? changePathParams) // First one defined "wins".
+        ,
         state: routeChange.state,
-        // Params and State, if not provided, must be initialized.
     }
 }
 
@@ -153,9 +178,10 @@ export function decodeHashRoute<S>(): RouterRoute<S> {
     return {path, params, state}
 }
 
-export function decodeRouteParams(paramsString: string | undefined): RouterRouteParams {
+export function decodeRouteParams(paramsString: undefined | string): undefined | RouterRouteParams {
     if (! paramsString) {
-        return RouterRouteParamsEmpty
+        // Undefined or empty string must return undefined.
+        return
     }
 
     const params: RouterRouteParams = {}
@@ -178,15 +204,28 @@ export function decodeRouteParams(paramsString: string | undefined): RouterRoute
 /**
 * @throws InvalidArgument
 **/
+export function encodeLink(url: string, params?: undefined | RouterRouteChangeParams): string {
+    const [urlPath, urlParams] = url.split('?')
+    const paramsString = encodeRouteParams(params)
+    const allParams = [urlParams, paramsString].filter(Boolean).join('&')
+    const linkEncoded = joinPathParams(urlPath ?? '', allParams)
+    return linkEncoded
+}
+
+/**
+* @throws InvalidArgument
+**/
 export function encodeRoute(path: string, params?: undefined | RouterRouteChangeParams): string {
-    const paramsString = encodeQueryParams(params, {
+    const paramsString = encodeRouteParams(params)
+    const routeEncoded = joinPathParams(path, paramsString)
+    return routeEncoded
+}
+
+export function encodeRouteParams(params: undefined | RouterRouteChangeParams): string {
+    return encodeQueryParams(params, {
         encodeKey: encodeRouteParamKey,
         encodeValue: encodeRouteParamValue,
     })
-    const separator = paramsString ? '?' : ''
-    const routeString = path + separator + paramsString
-
-    return routeString
 }
 
 /**
@@ -228,8 +267,16 @@ export function flattenRouteParams(routeParams: RouterRouteChangeParams): Router
 export function flattenRouteParams(routeParams: undefined | RouterRouteChangeParams): undefined | RouterRouteParams
 export function flattenRouteParams(routeParams: undefined | RouterRouteChangeParams): undefined | RouterRouteParams {
     return routeParams
-        ? decodeRouteParams(encodeQueryParams(routeParams))
+        ? decodeRouteParams(
+            encodeQueryParams(routeParams) || undefined // Casts '' to undefined.
+        )
         : undefined
+}
+
+export function joinPathParams(path: string, params: undefined | string): string {
+    const separator = params ? '?' : ''
+    const url = path + separator + params
+    return url
 }
 
 // Types ///////////////////////////////////////////////////////////////////////
@@ -250,7 +297,7 @@ export interface Router<S = unknown> {
 
 export interface RouterRoute<S = unknown> {
     readonly path: string
-    readonly params: RouterRouteParams
+    readonly params: undefined | RouterRouteParams
     readonly state: undefined | S
 }
 
@@ -268,7 +315,7 @@ export interface RouterMemoryOptions<S = unknown> extends RouterOptions {
     initialState?: undefined | S
 }
 
-export type RouterRouteParams = Record<string | number, string>
+export type RouterRouteParams = undefined | Record<string | number, string>
 
 export interface RouterRouteChange<S = unknown> {
     path?: undefined | string
@@ -277,7 +324,7 @@ export interface RouterRouteChange<S = unknown> {
     replace?: undefined | boolean
 }
 
-export type RouterRouteChangeParams = QueryParams
+export type RouterRouteChangeParams = RouterRouteParams | QueryParams
 export type RouterRouteChangeParamsDict = QueryParamsDict
 export type RouterRouteChangeParamsList = QueryParamsList
 
