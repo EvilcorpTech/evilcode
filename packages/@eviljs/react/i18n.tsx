@@ -33,14 +33,14 @@ export function useRootI18n(spec: I18nSpec<string, string, string, string>) {
     const [fallbackLocale, setFallbackLocale] = useState(spec.fallbackLocale)
     const [messages, setMessages] = useState(spec.messages)
 
-    const i18n = useMemo(() => {
-        const self: I18nManager = {
-            ...createI18n({
-                ...spec,
-                locale,
-                fallbackLocale,
-                messages,
-            }),
+    const i18n = useMemo((): I18nManager => {
+        const manager = createI18n({...spec, locale, fallbackLocale, messages})
+
+        return {
+            symbol: manager.symbol,
+            format: manager.format,
+            t: manager.t,
+            translate: manager.translate,
             get locale() {
                 return locale
             },
@@ -63,8 +63,6 @@ export function useRootI18n(spec: I18nSpec<string, string, string, string>) {
             },
             setMessages,
         }
-
-        return self
     }, [locale, fallbackLocale, messages])
 
     return i18n
@@ -102,7 +100,7 @@ export interface I18nMsgsComputer<I, T extends {}> {
 }
 
 export interface I18nManager<L extends string = string, K extends string = string> extends
-    I18n<L, K>,
+    Omit<I18n<L, K>, '__regexpCache__'>,
     I18nSetters<L, K>
 {
 }
