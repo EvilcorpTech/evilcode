@@ -1,0 +1,48 @@
+{
+    "name": "@eviljs/solid",
+    "version": "1.0.0",
+    "type": "module",
+    "files": [
+        "/LICENSE.txt",
+        "/**/*.js",
+        "/**/*.ts",
+        "/**/*.tsx",
+        "/**/*.css"
+    ],
+    "scripts": {
+        "build": "babel . --out-dir . --extensions '.ts,.tsx' --ignore '**/*.d.ts','node_modules/**/*' && tsc --listEmittedFiles",
+        "preversion": "npm run build",
+        "prepack": "npm run build"
+    },
+    "dependencies": {
+        "@eviljs/std": "1",
+        "@eviljs/web": "1",
+        "tslib": "2"
+    },
+    "peerDependencies": {
+        "solid-js": "^1.6"
+    },
+    "devDependencies": {
+        "@babel/cli": "7",
+        "@babel/core": "7",
+        "@babel/preset-typescript": "7",
+        "babel-preset-solid": "1",
+        "typescript": "^4.9"
+    },
+    "author": "Daniele Orlando",
+    "license": "BSD-2-Clause",
+    "description": "Awesome Solid",
+    "keywords": [
+        "Solid",
+        "TypeScript",
+        "CSS"
+    ],
+    "homepage": "https://github.com/EvilcorpTech/evilcode",
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/EvilcorpTech/evilcode.git"
+    },
+    "bugs": {
+        "url": "https://github.com/EvilcorpTech/evilcode/issues"
+    }
+}

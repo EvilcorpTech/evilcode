@@ -1,0 +1,10 @@
+{
+    "extends": "../../@eviljs/tsconfig/web.json",
+    "include": ["./**/*.ts", "./**/*.tsx"],
+    "exclude": ["node_modules"],
+    "compilerOptions": {
+        "emitDeclarationOnly": true,
+        "jsx": "preserve",
+        "jsxImportSource": "solid-js"
+    },
+}
