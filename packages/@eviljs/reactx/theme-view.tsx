@@ -343,7 +343,7 @@ export function Typography() {
 export function TextHeight() {
     return (
         <div className="std-flex center gap3">
-            {['-min', '-2', '-1', '', '1', '2'].map(it =>
+            {['0', '-2', '-1', '', '1', '2'].map(it =>
                 <Fragment key={it}>
                     <p className={`std-text-height${it}`} style={{maxWidth: '14em'}}>
                         Text height <b>{it}</b>
@@ -364,7 +364,7 @@ export function TextSpace() {
         <div className="std-flex column center gap3">
             {['-2', '-1', '', '1', '2'].map((it, idx) =>
                 <Fragment key={it}>
-                    <label className={`std-text-space${it} std-text-size${7 - idx}`}>
+                    <label className={`std-text-space${it} std-text-size5`}>
                         Letter Spacing Example <b>{it}</b>
                     </label>
                 </Fragment>
