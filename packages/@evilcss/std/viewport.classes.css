@@ -8,3 +8,4 @@
 .std-viewport.s { max-width: var(--std-viewport-s); }
 .std-viewport.m { max-width: var(--std-viewport-m); }
 .std-viewport.l { max-width: var(--std-viewport-l); }
+.std-viewport.xl { max-width: var(--std-viewport-xl); }

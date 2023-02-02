@@ -1,9 +1,9 @@
 .std {
     --std-text-space-base: 0em;
-    --std-text-space-factor: .01em;
-    --std-text-space-2: calc(var(--std-text-space-1) - 1.5 * var(--std-text-space-factor));
+    --std-text-space-factor: .015em;
+    --std-text-space-2: calc(var(--std-text-space-1) - 2 * var(--std-text-space-factor));
     --std-text-space-1: calc(var(--std-text-space) - 1 * var(--std-text-space-factor));
     --std-text-space: calc(var(--std-text-space-base) + 0 * var(--std-text-space-factor));
     --std-text-space1: calc(var(--std-text-space) + 1 * var(--std-text-space-factor));
-    --std-text-space2: calc(var(--std-text-space1) + 1.5 * var(--std-text-space-factor));
+    --std-text-space2: calc(var(--std-text-space1) + 2 * var(--std-text-space-factor));
 }

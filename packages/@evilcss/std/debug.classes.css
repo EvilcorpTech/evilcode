@@ -1,5 +1,6 @@
 .std-debug,
 .std-debug.deep *,
 .std-debug.children > * {
-    outline: var(--debug-size, 1px) solid var(--debug-color, red);
+    outline: var(--debug-outline-size, 1px) solid var(--debug-outline-color, DeepPink);
+    background-color: hsl(var(--debug-bg-h, 328deg) var(--debug-bg-s, 100%) var(--debug-bg-l, 50%) / var(--debug-bg-a, 0.05));
 }

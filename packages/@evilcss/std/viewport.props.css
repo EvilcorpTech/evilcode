@@ -1,5 +1,6 @@
 .std {
     --std-viewport-s: 800px;
-    --std-viewport-m: calc(var(--std-viewport-s) + (var(--std-viewport-s) / 2));
-    --std-viewport-l: calc(var(--std-viewport-m) + (var(--std-viewport-m) / 2));
+    --std-viewport-m: calc(var(--std-viewport-s) * 1.5);
+    --std-viewport-l: calc(var(--std-viewport-m) * 1.5);
+    --std-viewport-xl: calc(var(--std-viewport-l) * 1.5);
 }
