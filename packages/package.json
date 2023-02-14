@@ -1,6 +1,7 @@
 {
     "scripts": {
-        "init": "npx pnpm@latest install"
+        "init": "npx pnpm@latest install",
+        "build": "nx run-many --target build"
     },
     "devDependencies": {
         "nx": "15"
