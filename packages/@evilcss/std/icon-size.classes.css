@@ -1,12 +1,20 @@
-.std-icon {
+.std-icon,
+.std-icon-text,
+.std-icon-cover,
+.std-icon1,
+.std-icon2,
+.std-icon3,
+.std-icon4,
+.std-icon5,
+.std-icon6,
+.std-icon7,
+.std-icon8,
+.std-icon9,
+.std-icon10 {
     display: inline-block;
-    font-size: var(--icon-size);
-    min-width: var(--icon-size);
     width: var(--icon-size);
-    max-width: var(--icon-size);
-    min-height: var(--icon-size);
     height: var(--icon-size);
-    max-height: var(--icon-size);
+    font-size: var(--icon-size);
 }
 
 .std-icon-text { --icon-size: 1em; }
@@ -21,3 +29,10 @@
 .std-icon8 { --icon-size: var(--std-icon8); }
 .std-icon9 { --icon-size: var(--std-icon9); }
 .std-icon10 { --icon-size: var(--std-icon10); }
+
+.std-rigid-icon {
+    min-width: var(--icon-size);
+    max-width: var(--icon-size);
+    min-height: var(--icon-size);
+    max-height: var(--icon-size);
+}
