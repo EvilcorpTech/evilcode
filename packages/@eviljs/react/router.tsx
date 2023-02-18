@@ -181,7 +181,7 @@ export const Route = forwardRef(function Route(
         to,
         ...otherProps
     } = props
-    const {changeRoute, link, testRoute} = useRouter()!
+    const {changeRoute, link, route, testRoute} = useRouter()!
 
     const onClick = useCallback((event: React.MouseEvent) => {
         event.preventDefault()
@@ -235,7 +235,7 @@ export const Route = forwardRef(function Route(
             className={classes(className, {
                 [activeClasses]: isActive,
             })}
-            href={to ? link(to, params) : undefined}
+            href={link(to ?? route.path, params)}
         >
             {children}
         </a>
