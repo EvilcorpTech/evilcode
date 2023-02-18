@@ -1,14 +1,24 @@
+.std {
+    --std-color-dark-fg1: hsl(0deg 0% 95%);
+    --std-color-dark-fg2: hsl(0deg 0% 74%);
+    --std-color-dark-fg3: hsl(0deg 0% 53%);
+    --std-color-dark-bg1: hsl(0deg 15% 9%);
+    --std-color-dark-bg2: hsl(0deg 15% 11%);
+    --std-color-dark-bg3: hsl(0deg 15% 13%);
+    --std-color-dark-bg4: hsl(0deg 15% 15%);
+}
+
 .std.theme-dark {
     --std-fg-l: 100%;
     --std-fg-ll: -1;
     --std-bg-l: 0%;
     --std-bg-ll: 1;
 
-    --std-color-fg1: hsl(0deg 0% 95%);
-    --std-color-fg2: hsl(0deg 0% 74%);
-    --std-color-fg3: hsl(0deg 0% 53%);
-    --std-color-bg1: hsl(0deg 15% 9%);
-    --std-color-bg2: hsl(0deg 15% 11%);
-    --std-color-bg3: hsl(0deg 15% 13%);
-    --std-color-bg4: hsl(0deg 15% 15%);
+    --std-color-fg1: var(--std-color-dark-fg1);
+    --std-color-fg2: var(--std-color-dark-fg2);
+    --std-color-fg3: var(--std-color-dark-fg3);
+    --std-color-bg1: var(--std-color-dark-bg1);
+    --std-color-bg2: var(--std-color-dark-bg2);
+    --std-color-bg3: var(--std-color-dark-bg3);
+    --std-color-bg4: var(--std-color-dark-bg4);
 }
