@@ -1,7 +1,0 @@
-.std {
-    --std-color-action: var(--std-color-primary-accent);
-    --std-color-info: var(--std-color-primary-accent);
-    --std-color-success: hsl(123deg 43% 39%); /* --std-color-green8 */
-    --std-color-warning: hsl(45deg 100% 51%); /* --std-color-amber6 */
-    --std-color-error: hsl(14deg 100% 57%); /* --std-color-deeporange6 */
-}
