@@ -1,4 +1,4 @@
-export function dispatchMachineEvent<S extends {}, E>(
+export function dispatchMachineEvent<S extends object, E>(
     prevState: S,
     event: E,
     handler: MachineEventHandler<S, E>,
@@ -24,7 +24,7 @@ export function dispatchMachineEvent<S extends {}, E>(
         : prevState
 }
 
-export function createMachineStateObserver<S extends {}>(state: S, observer?: MachineStateObserver<S>): S {
+export function createMachineStateObserver<S extends object>(state: S, observer?: MachineStateObserver<S>): S {
     const proxy = new Proxy(state, {
         get(state: any, prop) {
             return state[prop]
@@ -45,12 +45,12 @@ export function createMachineStateObserver<S extends {}>(state: S, observer?: Ma
 
 // Types ///////////////////////////////////////////////////////////////////////
 
-export type MachineEventHandler<S extends {}, E> = (
+export type MachineEventHandler<S extends object, E> = (
     state: S,
     event: E,
 ) => void
 
-export type MachineStateObserver<S extends {}> = (
+export type MachineStateObserver<S extends object> = (
     state: S,
     prop: string | number | symbol,
     value: any,

@@ -10,7 +10,7 @@ import {
     ensureStringOptional,
     throwAssertError,
 } from './assert.js'
-import {get} from './object.js'
+import {getObjectPath} from './object.js'
 import {isArray, isFunction, isNil} from './type.js'
 
 export function evaluateExp<C extends Ctx, R>(ctx: C, exp: Exp<C, R>) {
@@ -148,7 +148,7 @@ export function lookup(ctx: CtxWithResolver, pathExp: Exp<Ctx, string>) {
         return resolver($, path)
     }
     // There is not a resolver for the path. We use the getter.
-    return get($, path)
+    return getObjectPath($, path)
 }
 
 // Evaluation Tree /////////////////////////////////////////////////////////////

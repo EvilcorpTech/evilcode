@@ -210,7 +210,7 @@ export type Partial<T> = {
 }
 
 export type PartialDeep<T> = {
-    [P in keyof T]?: undefined | PartialDeep<T[P]>
+    [K in keyof T]?: undefined | (T[K] extends object ? PartialDeep<T[K]> : T[K])
 }
 
 export type Required<T> = {

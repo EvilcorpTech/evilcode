@@ -363,7 +363,7 @@ export function ensureIntegerOptional(value: unknown, ctx?: any) {
 /**
 * @throws InvalidInput
 */
-export function ensureObject<T extends {} | Record<PropertyKey, unknown>>(value: T, ctx?: any): T
+export function ensureObject<T extends object | Record<PropertyKey, unknown>>(value: T, ctx?: any): T
 export function ensureObject(value: unknown, ctx?: any): Record<PropertyKey, unknown>
 export function ensureObject(value: unknown, ctx?: any) {
     if (! isObject(value)) {

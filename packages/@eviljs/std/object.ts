@@ -1,4 +1,3 @@
-import {assertObject} from './assert.js'
 import {isArray, isDefined, isObject, isUndefined} from './type.js'
 
 export const ObjectPathArrayOpenRegexp = /\[/g
@@ -92,9 +91,7 @@ export function mapObjectValue<K extends PropertyKey, V, RV>(
     ) as Record<K, RV>
 }
 
-export function withoutProps<O extends {}, P extends keyof O>(object: O, ...props: Array<P>) {
-    assertObject(object, 'object')
-
+export function withoutProps<O extends object, P extends keyof O>(object: O, ...props: Array<P>) {
     const obj = {...object}
 
     for (const prop of props) {
@@ -104,9 +101,7 @@ export function withoutProps<O extends {}, P extends keyof O>(object: O, ...prop
     return obj as Omit<O, P>
 }
 
-export function withoutUndefinedProps<O extends {}>(object: O) {
-    assertObject(object, 'object')
-
+export function withoutPropsUndefined<O extends object>(object: O) {
     const obj = {...object}
 
     for (const prop in obj) {
@@ -118,22 +113,22 @@ export function withoutUndefinedProps<O extends {}>(object: O) {
     return obj
 }
 
-export function asObjectWithDefinedValue<K extends PropertyKey, V>(
+export function objectFromEntry<K extends PropertyKey, V>(
     key: K,
     value: undefined | V,
-): {} | {[key in K]: V}
+): object | {[key in K]: V}
 {
     return isDefined(value)
         ? {[key]: value}
         : {}
 }
 
-export function get(obj: GetObject, path: GetPath) {
+export function getObjectPath(root: ObjectRoot, path: ObjectPath) {
     const parts = isArray(path)
         ? path
-        : fromPathToParts(path)
+        : fromObjectPathToParts(path)
 
-    let node = obj as unknown
+    let node = root as unknown
 
     for (const part of parts) {
         if (! isObject(node) && ! isArray(node)) {
@@ -145,7 +140,7 @@ export function get(obj: GetObject, path: GetPath) {
     return node
 }
 
-export function fromPathToParts(path: string) {
+export function fromObjectPathToParts(path: string) {
     if (! ObjectPathCache[path]) {
         ObjectPathCache[path] = path
             .replace(ObjectPathArrayOpenRegexp, '.#')
@@ -169,5 +164,5 @@ export interface MapObjectValueFn<V, K, R> {
     (value: V, key: K): R
 }
 
-export type GetObject = Record<PropertyKey, unknown> | Array<unknown>
-export type GetPath = string | Array<string | number>
+export type ObjectRoot = Record<PropertyKey, unknown> | Array<unknown>
+export type ObjectPath = string | Array<string | number>

@@ -1,10 +1,14 @@
+export const CollatorOptionsDefault: Intl.CollatorOptions = {
+    numeric: true, // '1' < '2' < '10'.
+}
+
 export function sortingOn<I, R extends undefined | number | string>(
     getItemValue: (item: I) => R,
-    collatorOptional?: undefined | Intl.Collator,
+    collatorOptional?: undefined | Intl.Collator | Intl.CollatorOptions,
 ) {
-    const collator = collatorOptional ?? new Intl.Collator(undefined, {
-        numeric: true, // '1' < '2' < '10'.
-    })
+    const collator = collatorOptional instanceof Intl.Collator
+        ? collatorOptional
+        : new Intl.Collator(undefined, {...CollatorOptionsDefault, ...collatorOptional})
 
     function onSort(a: I, b: I) {
         return collator.compare(

@@ -10,6 +10,14 @@ export function cloneShallow<T>(value: T): T {
     return value
 }
 
+export function cloneDeep<T>(value: T): T {
+    return structuredClone(value)
+}
+
+export function cloneDeepSerializable<T>(value: T): T {
+    return JSON.parse(JSON.stringify(value))
+}
+
 export function cloneDate(date: Date) {
     return new Date(date.getTime())
 }
