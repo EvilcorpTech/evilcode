@@ -1,0 +1,13 @@
+.std {
+    --std-color-dark-fg1: hsl(0deg 0% 95%);
+    --std-color-dark-fg2: hsl(0deg 0% 74%);
+    --std-color-dark-fg3: hsl(0deg 0% 53%);
+}
+.std.theme-dark {
+    --std-color-fg1: var(--std-color-dark-fg1);
+    --std-color-fg2: var(--std-color-dark-fg2);
+    --std-color-fg3: var(--std-color-dark-fg3);
+
+    --std-fg-l: 100%;
+    --std-fg-ll: -1;
+}

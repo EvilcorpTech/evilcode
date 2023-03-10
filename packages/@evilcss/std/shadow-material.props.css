@@ -8,7 +8,6 @@
     --std-shadow-penumbra: hsl(0deg 0% 0% / var(--std-shadow-penumbra-opacity));
     --std-shadow-ambient: hsl(0deg 0% 0% / var(--std-shadow-ambient-opacity));
 
-    --std-shadow-soft: var(--std-shadow-umbra) 0 1px 3px 0, var(--std-shadow-penumbra) 0 0 0, var(--std-shadow-ambient) 0 0 0;
     --std-shadow0: var(--std-shadow-umbra) 0 0 0, var(--std-shadow-penumbra) 0 0 0, var(--std-shadow-ambient) 0 0 0;
     --std-shadow1: var(--std-shadow-umbra) 0 1px 3px, var(--std-shadow-penumbra) 0 1px 1px, var(--std-shadow-ambient) 0 2px 1px -1px;
     --std-shadow2: var(--std-shadow-umbra) 0 1px 5px, var(--std-shadow-penumbra) 0 2px 2px, var(--std-shadow-ambient) 0 3px 1px -2px;

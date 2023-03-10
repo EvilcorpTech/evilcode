@@ -1,38 +1,10 @@
-.std-icon,
-.std-icon-text,
-.std-icon-cover,
-.std-icon1,
-.std-icon2,
-.std-icon3,
-.std-icon4,
-.std-icon5,
-.std-icon6,
-.std-icon7,
-.std-icon8,
-.std-icon9,
-.std-icon10 {
-    display: inline-block;
-    width: var(--icon-size);
-    height: var(--icon-size);
-    font-size: var(--icon-size);
-}
-
-.std-icon-text { --icon-size: 1em; }
-.std-icon-cover { --icon-size: 100%; }
-.std-icon1 { --icon-size: var(--std-icon1); }
-.std-icon2 { --icon-size: var(--std-icon2); }
-.std-icon3 { --icon-size: var(--std-icon3); }
-.std-icon4 { --icon-size: var(--std-icon4); }
-.std-icon5 { --icon-size: var(--std-icon5); }
-.std-icon6 { --icon-size: var(--std-icon6); }
-.std-icon7 { --icon-size: var(--std-icon7); }
-.std-icon8 { --icon-size: var(--std-icon8); }
-.std-icon9 { --icon-size: var(--std-icon9); }
-.std-icon10 { --icon-size: var(--std-icon10); }
-
-.std-rigid-icon {
-    min-width: var(--icon-size);
-    max-width: var(--icon-size);
-    min-height: var(--icon-size);
-    max-height: var(--icon-size);
-}
+.std-icon.s1 { --icon-size: var(--std-icon1); }
+.std-icon.s2 { --icon-size: var(--std-icon2); }
+.std-icon.s3 { --icon-size: var(--std-icon3); }
+.std-icon.s4 { --icon-size: var(--std-icon4); }
+.std-icon.s5 { --icon-size: var(--std-icon5); }
+.std-icon.s6 { --icon-size: var(--std-icon6); }
+.std-icon.s7 { --icon-size: var(--std-icon7); }
+.std-icon.s8 { --icon-size: var(--std-icon8); }
+.std-icon.s9 { --icon-size: var(--std-icon9); }
+.std-icon.s10 { --icon-size: var(--std-icon10); }
