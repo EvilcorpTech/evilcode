@@ -74,7 +74,6 @@
 .contrast-td08 {
     width: 14rem;
     min-height: 100px;
-    margin-left: calc(-1 * var(--std-gutter4));
     display: flex;
     justify-content: center;
     align-items: center;

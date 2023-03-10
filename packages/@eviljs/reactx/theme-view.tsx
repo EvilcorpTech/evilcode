@@ -15,7 +15,7 @@ export function ThemeView(props: ThemeViewProps) {
     return (
         <div
             {...otherProps}
-            className={classes('ThemeView-t2eb', `std theme-${theme} std-background-theme`, className)}
+            className={classes('ThemeView-t2eb', `std theme-${theme} std-background-theme std-viewport xl`, className)}
             style={{
                 '--std-color-primary-h': primaryAccent[0] * 360 + 'deg',
                 '--std-color-primary-s': primaryAccent[1] * 100 + '%',
@@ -391,90 +391,118 @@ export function Gutters() {
 
 export function Contrast() {
     return (
-        <div className="std-flex column center align-center">
-            <div className="std-flex wrap">
-                <label className="contrast-td08 std-background-bg1">
-                    <div className="std-color-fg1 std-text-weight1">Bg 1</div>
-                    <div className="std-color-fg1">Fg 1</div>
-                    <div className="std-color-fg2">Fg 2</div>
-                    <div className="std-color-fg3">Fg 3</div>
-                </label>
-                <label className="contrast-td08 std-background-bg2">
-                    <div className="std-color-fg1 std-text-weight1">Bg 2</div>
-                    <div className="std-color-fg1">Fg 1</div>
-                    <div className="std-color-fg2">Fg 2</div>
-                    <div className="std-color-fg3">Fg 3</div>
-                </label>
-                <label className="contrast-td08 std-background-bg3">
-                    <div className="std-color-fg1 std-text-weight1">Bg 3</div>
-                    <div className="std-color-fg1">Fg 1</div>
-                    <div className="std-color-fg2">Fg 2</div>
-                    <div className="std-color-fg3">Fg 3</div>
-                </label>
-                <label className="contrast-td08 std-background-bg4">
-                    <div className="std-color-fg1 std-text-weight1">Bg 4</div>
-                    <div className="std-color-fg1">Fg 1</div>
-                    <div className="std-color-fg2">Fg 2</div>
-                    <div className="std-color-fg3">Fg 3</div>
-                </label>
+        <div
+            className="layout-1e33 std-flex gap6"
+            style={{
+                padding: 'var(--std-gutter5)',
+                backgroundColor: 'floralwhite',
+            }}
+        >
+            <div
+                className="std-flex gap4"
+                style={{
+                    padding: 'var(--std-gutter5)',
+                    backgroundColor: 'hsl(0deg 0% var(--std-bg-l))',
+                } as React.CSSProperties}
+            >
+                {[0, 1, 2].map(it =>
+                    <div
+                        key={it}
+                        className="std-flex column gap4"
+                        style={{
+                            '--std-color-bg-z': it,
+                        } as React.CSSProperties}
+                    >
+                        <h6>Bg Z {it}</h6>
+
+                        <label className="contrast-td08 std-background-bg1">
+                            <div className="std-color-fg1 std-text-weight1">Bg 1</div>
+                            <div className="std-color-fg1">Fg 1</div>
+                            <div className="std-color-fg2">Fg 2</div>
+                            <div className="std-color-fg3">Fg 3</div>
+                        </label>
+                        <label className="contrast-td08 std-background-bg2">
+                            <div className="std-color-fg1 std-text-weight1">Bg 2</div>
+                            <div className="std-color-fg1">Fg 1</div>
+                            <div className="std-color-fg2">Fg 2</div>
+                            <div className="std-color-fg3">Fg 3</div>
+                        </label>
+                        <label className="contrast-td08 std-background-bg3">
+                            <div className="std-color-fg1 std-text-weight1">Bg 3</div>
+                            <div className="std-color-fg1">Fg 1</div>
+                            <div className="std-color-fg2">Fg 2</div>
+                            <div className="std-color-fg3">Fg 3</div>
+                        </label>
+                        <label className="contrast-td08 std-background-bg4">
+                            <div className="std-color-fg1 std-text-weight1">Bg 4</div>
+                            <div className="std-color-fg1">Fg 1</div>
+                            <div className="std-color-fg2">Fg 2</div>
+                            <div className="std-color-fg3">Fg 3</div>
+                        </label>
+                    </div>
+                )}
             </div>
 
-            <i className="std-space-v s4"/>
+            <div
+                className="std-grow std-flex gap4"
+                style={{
+                    padding: 'var(--std-gutter5)',
+                    backgroundColor: 'hsl(0deg 0% var(--std-bg-l))',
+                } as React.CSSProperties}
+            >
+                <div className="std-flex column gap4">
+                    <label className="contrast-td08 std-background-bg1">
+                        <div className="std-color-fg1 std-text-weight1">Bg 1</div>
+                        <div className="std-color-primary-fg1">Primary Fg 1</div>
+                        <div className="std-color-primary-fg2">Primary Fg 2</div>
+                        <div className="std-color-primary-fg3">Primary Fg 3</div>
+                    </label>
+                    <label className="contrast-td08 std-background-bg2">
+                        <div className="std-color-fg1 std-text-weight1">Bg 2</div>
+                        <div className="std-color-primary-fg1">Primary Fg 1</div>
+                        <div className="std-color-primary-fg2">Primary Fg 2</div>
+                        <div className="std-color-primary-fg3">Primary Fg 3</div>
+                    </label>
+                    <label className="contrast-td08 std-background-bg3">
+                        <div className="std-color-fg1 std-text-weight1">Bg 3</div>
+                        <div className="std-color-primary-fg1">Primary Fg 1</div>
+                        <div className="std-color-primary-fg2">Primary Fg 2</div>
+                        <div className="std-color-primary-fg3">Primary Fg 3</div>
+                    </label>
+                    <label className="contrast-td08 std-background-bg4">
+                        <div className="std-color-fg1 std-text-weight1">Bg 4</div>
+                        <div className="std-color-primary-fg1">Primary Fg 1</div>
+                        <div className="std-color-primary-fg2">Primary Fg 2</div>
+                        <div className="std-color-primary-fg3">Primary Fg 3</div>
+                    </label>
+                </div>
 
-            <div className="std-flex wrap">
-                <label className="contrast-td08 std-background-primary-bg1">
-                    <div className="std-color-fg1 std-text-weight1">Primary Bg 1</div>
-                    <div className="std-color-primary-fg1">Primary Fg 1</div>
-                    <div className="std-color-primary-fg2">Primary Fg 2</div>
-                    <div className="std-color-primary-fg3">Primary Fg 3</div>
-                </label>
-                <label className="contrast-td08 std-background-primary-bg2">
-                    <div className="std-color-fg1 std-text-weight1">Primary Bg 2</div>
-                    <div className="std-color-primary-fg1">Primary Fg 1</div>
-                    <div className="std-color-primary-fg2">Primary Fg 2</div>
-                    <div className="std-color-primary-fg3">Primary Fg 3</div>
-                </label>
-                <label className="contrast-td08 std-background-primary-bg3">
-                    <div className="std-color-fg1 std-text-weight1">Primary Bg 3</div>
-                    <div className="std-color-primary-fg1">Primary Fg 1</div>
-                    <div className="std-color-primary-fg2">Primary Fg 2</div>
-                    <div className="std-color-primary-fg3">Primary Fg 3</div>
-                </label>
-                <label className="contrast-td08 std-background-primary-bg4">
-                    <div className="std-color-fg1 std-text-weight1">Primary Bg 4</div>
-                    <div className="std-color-primary-fg1">Primary Fg 1</div>
-                    <div className="std-color-primary-fg2">Primary Fg 2</div>
-                    <div className="std-color-primary-fg3">Primary Fg 3</div>
-                </label>
-            </div>
-
-            <i className="std-space-v s4"/>
-
-            <div className="std-flex wrap">
-                <label className="contrast-td08 std-background-secondary-bg1">
-                    <div className="std-color-fg1 std-text-weight1">Secondary Bg 1</div>
-                    <div className="std-color-secondary-fg1">Secondary Fg 1</div>
-                    <div className="std-color-secondary-fg2">Secondary Fg 2</div>
-                    <div className="std-color-secondary-fg3">Secondary Fg 3</div>
-                </label>
-                <label className="contrast-td08 std-background-secondary-bg2">
-                    <div className="std-color-fg1 std-text-weight1">Secondary Bg 2</div>
-                    <div className="std-color-secondary-fg1">Secondary Fg 1</div>
-                    <div className="std-color-secondary-fg2">Secondary Fg 2</div>
-                    <div className="std-color-secondary-fg3">Secondary Fg 3</div>
-                </label>
-                <label className="contrast-td08 std-background-secondary-bg3">
-                    <div className="std-color-fg1 std-text-weight1">Secondary Bg 3</div>
-                    <div className="std-color-secondary-fg1">Secondary Fg 1</div>
-                    <div className="std-color-secondary-fg2">Secondary Fg 2</div>
-                    <div className="std-color-secondary-fg3">Secondary Fg 3</div>
-                </label>
-                <label className="contrast-td08 std-background-secondary-bg4">
-                    <div className="std-color-fg1 std-text-weight1">Secondary Bg 4</div>
-                    <div className="std-color-secondary-fg1">Secondary Fg 1</div>
-                    <div className="std-color-secondary-fg2">Secondary Fg 2</div>
-                    <div className="std-color-secondary-fg3">Secondary Fg 3</div>
-                </label>
+                <div className="std-flex column gap4">
+                    <label className="contrast-td08 std-background-bg1">
+                        <div className="std-color-fg1 std-text-weight1">Bg 1</div>
+                        <div className="std-color-secondary-fg1">Secondary Fg 1</div>
+                        <div className="std-color-secondary-fg2">Secondary Fg 2</div>
+                        <div className="std-color-secondary-fg3">Secondary Fg 3</div>
+                    </label>
+                    <label className="contrast-td08 std-background-bg2">
+                        <div className="std-color-fg1 std-text-weight1">Bg 2</div>
+                        <div className="std-color-secondary-fg1">Secondary Fg 1</div>
+                        <div className="std-color-secondary-fg2">Secondary Fg 2</div>
+                        <div className="std-color-secondary-fg3">Secondary Fg 3</div>
+                    </label>
+                    <label className="contrast-td08 std-background-bg3">
+                        <div className="std-color-fg1 std-text-weight1">Bg 3</div>
+                        <div className="std-color-secondary-fg1">Secondary Fg 1</div>
+                        <div className="std-color-secondary-fg2">Secondary Fg 2</div>
+                        <div className="std-color-secondary-fg3">Secondary Fg 3</div>
+                    </label>
+                    <label className="contrast-td08 std-background-bg4">
+                        <div className="std-color-fg1 std-text-weight1">Bg 4</div>
+                        <div className="std-color-secondary-fg1">Secondary Fg 1</div>
+                        <div className="std-color-secondary-fg2">Secondary Fg 2</div>
+                        <div className="std-color-secondary-fg3">Secondary Fg 3</div>
+                    </label>
+                </div>
             </div>
         </div>
     )
@@ -523,7 +551,7 @@ export function Icons() {
         <div className="std-flex row center align-end aligned-center wrap">
             {times(10).map(it =>
                 <div key={it} className="icon-e43c">
-                    <Icon className={`std-icon${it + 1}`}/>
+                    <Icon className={`std-icon s${it + 1}`}/>
                     <div className="std-space-h s3"/>
                     <label>{it + 1}</label>
                 </div>

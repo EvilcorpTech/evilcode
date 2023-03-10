@@ -103,15 +103,16 @@ export function WidgetsView(props: WidgetsViewProps) {
                 <h6 className="title-74a6">Controls</h6>
 
                 <Switch
-                    className="std-knob std-icon2"
+                    className="std-knob"
                     checked={checkbox}
                     onChange={setCheckbox}
+                    style={{fontSize: 'var(--std-icon2'}}
                 />
 
                 <Switch
-                    className="std-icon4"
                     checked={checkbox}
                     onChange={setCheckbox}
+                    style={{fontSize: 'var(--std-icon4'}}
                 >
                     <CheckboxMarkV1
                         className="std-knob round std-icon-text"
@@ -123,20 +124,20 @@ export function WidgetsView(props: WidgetsViewProps) {
                     <CheckboxMarkV2/>
                 </Checkbox>
                 <Checkbox checked={checkbox} onChange={setCheckbox}>
-                    <CheckboxMarkV2 className="std-icon1"/>
+                    <CheckboxMarkV2 className="std-icon s1"/>
                 </Checkbox>
                 <Checkbox className="round" checked={checkbox} onChange={setCheckbox}>
-                    <CheckboxMarkV2 className="std-icon2"/>
+                    <CheckboxMarkV2 className="std-icon s1"/>
                 </Checkbox>
 
-                <Checkbox checked={true} disabled>
-                    <CheckboxMarkV1 className="std-icon3"/>
+                <Checkbox checked disabled>
+                    <CheckboxMarkV1 className="std-icon s1"/>
                 </Checkbox>
                 <Checkbox checked={checkbox} onChange={setCheckbox}>
-                    <CheckboxMarkV1 className="std-icon4"/>
+                    <CheckboxMarkV1 className="std-icon s1"/>
                 </Checkbox>
                 <Checkbox className="round" checked={checkbox} onChange={setCheckbox}>
-                    <CheckboxMarkV1 className="std-icon-5"/>
+                    <CheckboxMarkV1 className="std-icon s1"/>
                 </Checkbox>
 
                 <RadioGroup
