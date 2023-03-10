@@ -11,7 +11,7 @@ import {isUndefined, ValueOf} from '@eviljs/std/type.js'
 * const {columns, placeholders, values} = asTuple(model, cols)
 * const query = `INSERT INTO ${table} (${columns}) VALUES (${placeholders})`
 */
-export function asTuple<O extends {}>(data: O, cols: Array<keyof O>) {
+export function asTuple<O extends object>(data: O, cols: Array<keyof O>) {
     const columns: Array<keyof O> = []
     const placeholders: Array<'?'> = []
     const values: Array<ValueOf<O>> = []
@@ -41,7 +41,7 @@ export function asTuple<O extends {}>(data: O, cols: Array<keyof O>) {
 * const cols = ['name', 'phone', 'email']
 * const [query, values] = insert(table, model, cols)
 */
-export function insert<O extends {}>(table: string, data: O, cols: Array<keyof O>, options?: InsertOptions) {
+export function insert<O extends object>(table: string, data: O, cols: Array<keyof O>, options?: InsertOptions) {
     const quote = options?.quote ?? '`'
     const {columns, placeholders, values} = asTuple(data, cols)
 
