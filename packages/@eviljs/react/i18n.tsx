@@ -72,7 +72,7 @@ export function useI18n<L extends string = string, K extends string = string>() 
     return useContext(I18nContext) as undefined | I18nManager<L, K>
 }
 
-export function useI18nMsg<T extends {}, L extends string = string, K extends string = string>(
+export function useI18nMsg<T extends object, L extends string = string, K extends string = string>(
     compute: I18nMsgsComputer<I18nManager<L, K>, T>,
     deps?: undefined | Array<unknown>,
 ) {
@@ -95,7 +95,7 @@ export interface I18nProviderProps extends I18nSpec<string, string, string, stri
     children: undefined | React.ReactNode
 }
 
-export interface I18nMsgsComputer<I, T extends {}> {
+export interface I18nMsgsComputer<I, T extends object> {
     (i18n: I): T
 }
 

@@ -13,7 +13,7 @@ import {useCallback, useState} from 'react'
 *     )
 * }
 */
-export function useStateObject<S extends {}>(initialState: StateInit<S>): [...StateManager<S>, StatePatcher<S>] {
+export function useStateObject<S extends object>(initialState: StateInit<S>): [...StateManager<S>, StatePatcher<S>] {
     const [state, setState] = useState(initialState)
     const patchState = useMergeState(setState)
 
@@ -34,7 +34,7 @@ export function useStateObject<S extends {}>(initialState: StateInit<S>): [...St
 *     )
 * }
 */
-export function useMergeState<S extends {}>(setState: StateSetter<S>) {
+export function useMergeState<S extends object>(setState: StateSetter<S>) {
     const patchState = useCallback((statePatch: Partial<S>) => {
         setState(merging(statePatch))
     }, [setState])
@@ -55,7 +55,7 @@ export function useMergeState<S extends {}>(setState: StateSetter<S>) {
 *     )
 * }
 */
-export function merging<S extends {}>(statePatch: Partial<S>) {
+export function merging<S extends object>(statePatch: Partial<S>) {
     function setState(state: S) {
         return {...state, ...statePatch}
     }
@@ -67,5 +67,5 @@ export function merging<S extends {}>(statePatch: Partial<S>) {
 
 export type StateInit<T> = T | (() => T)
 export type StateSetter<T> = React.Dispatch<React.SetStateAction<T>>
-export type StatePatcher<S extends {}> = (statePatch: Partial<S>) => void
+export type StatePatcher<S extends object> = (statePatch: Partial<S>) => void
 export type StateManager<T> = [T, StateSetter<T>]

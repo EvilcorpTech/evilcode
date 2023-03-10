@@ -7,21 +7,6 @@ export const BusContext = defineContext<Bus>('BusContext')
 /*
 * EXAMPLE
 *
-* const Main = WithBus(MyMain)
-*
-* render(<Main/>, document.body)
-*/
-export function WithBus<P extends {}>(Child: React.ComponentType<P>) {
-    function BusProviderProxy(props: P) {
-        return withBus(<Child {...props}/>)
-    }
-
-    return BusProviderProxy
-}
-
-/*
-* EXAMPLE
-*
 * return (
 *     <BusProvider>
 *         <MyApp/>
@@ -29,19 +14,8 @@ export function WithBus<P extends {}>(Child: React.ComponentType<P>) {
 * )
 */
 export function BusProvider(props: BusProviderProps) {
-    return withBus(props.children)
-}
+    const {children} = props
 
-/*
-* EXAMPLE
-*
-* export function MyMain(props) {
-*     return withBus(
-*         <MyApp/>
-*     )
-* }
-*/
-export function withBus(children: React.ReactNode) {
     const bus = useMemo(() => {
         return createBus()
     }, [])
