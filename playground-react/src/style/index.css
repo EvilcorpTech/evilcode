@@ -10,7 +10,6 @@
 @import '@evilcss/std/color-accent-primary.props.css';
 @import '@evilcss/std/color-accent-secondary.classes.css';
 @import '@evilcss/std/color-accent-secondary.props.css';
-@import '@evilcss/std/color-action.props.css';
 @import '@evilcss/std/color-bg-dark.props.css';
 @import '@evilcss/std/color-bg-light.props.css';
 @import '@evilcss/std/color-bg.classes.css';
@@ -37,6 +36,7 @@
 @import '@evilcss/std/color-material/red.props.css';
 @import '@evilcss/std/color-material/teal.props.css';
 @import '@evilcss/std/color-material/yellow.props.css';
+@import '@evilcss/std/color-state.props.css';
 @import '@evilcss/std/color-theme.classes.css';
 @import '@evilcss/std/duration.props.css';
 @import '@evilcss/std/icon-color.classes.css';
