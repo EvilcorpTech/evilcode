@@ -2,7 +2,7 @@
     --std-color-info-h: var(--std-color-primary-h);
     --std-color-info-s: var(--std-color-primary-s);
     --std-color-info-l: var(--std-color-primary-l);
-    --std-color-info: hsl(var(--std-color-error-h) var(--std-color-error-s) var(--std-color-error-l));
+    --std-color-info: hsl(var(--std-color-primary-h) var(--std-color-primary-s) var(--std-color-primary-l));
 
     /* --std-color-green8 */
     --std-color-success-h: 123deg;
