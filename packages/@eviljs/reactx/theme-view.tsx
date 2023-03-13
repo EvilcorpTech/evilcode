@@ -408,7 +408,7 @@ export function Contrast() {
                 {[0, 1, 2].map(it =>
                     <div
                         key={it}
-                        className="std-flex column gap4"
+                        className="std-flex column gap4 std-background-z"
                         style={{
                             '--std-color-bg-z': it,
                         } as React.CSSProperties}

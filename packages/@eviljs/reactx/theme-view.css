@@ -74,9 +74,6 @@
 .contrast-td08 {
     width: 14rem;
     min-height: 100px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
     border: var(--std-gutter1) solid transparent;
     padding: var(--std-gutter3);
     border-radius: var(--std-radius3);
