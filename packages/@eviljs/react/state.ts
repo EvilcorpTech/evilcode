@@ -66,6 +66,7 @@ export function merging<S extends object>(statePatch: Partial<S>) {
 // Types ///////////////////////////////////////////////////////////////////////
 
 export type StateInit<T> = T | (() => T)
-export type StateSetter<T> = React.Dispatch<React.SetStateAction<T>>
+export type StateSetter<T> = React.Dispatch<StateSetterArg<T>>
+export type StateSetterArg<T> = React.SetStateAction<T>
 export type StatePatcher<S extends object> = (statePatch: Partial<S>) => void
 export type StateManager<T> = [T, StateSetter<T>]

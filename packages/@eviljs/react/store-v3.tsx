@@ -5,7 +5,8 @@ import {isArray, isObject} from '@eviljs/std/type.js'
 import {useCallback, useContext, useLayoutEffect, useMemo, useRef} from 'react'
 import {defineContext} from './ctx.js'
 import {useRender} from './lifecycle.js'
-import type {StateManager} from './state.js'
+import type {StateManager, StateSetterArg} from './state.js'
+import type {StoreStateGeneric} from './store-v1.js'
 
 export const StoreContext = defineContext<Store<StoreStateGeneric>>('StoreContext')
 
@@ -37,7 +38,7 @@ export function useRootStore<S extends StoreStateGeneric>(spec: StoreSpec<S>): S
         new Map<string, Array<ChangeObserver>>()
     , [])
 
-    const mutate = useCallback((path: StatePath, value: React.SetStateAction<unknown>) => {
+    const mutate = useCallback((path: StatePath, value: StateSetterArg<unknown>) => {
         const pathKey = asPathKey(path)
         const oldState = stateRef.current
 
@@ -56,7 +57,7 @@ export function useRootStore<S extends StoreStateGeneric>(spec: StoreSpec<S>): S
 
         if (! keyObservers) {
             console.warn(
-                '@eviljs/react/store:\n'
+                '@eviljs/react/store-v3:\n'
                 + `missing observers for '${pathKey}'.`
             )
             return
@@ -81,7 +82,7 @@ export function useRootStore<S extends StoreStateGeneric>(spec: StoreSpec<S>): S
 
                 if (idx < 0) {
                     console.warn(
-                        '@eviljs/react/store:\n'
+                        '@eviljs/react/store-v3:\n'
                         + `observer vanished. Was listening on '${JSON.stringify(path)}'.`
                     )
                     return
@@ -134,7 +135,7 @@ export function useStoreState<S extends StoreStateGeneric, V>(selectorOptional?:
         return stopObserving
     }, [pathKey])
 
-    const setSelectedState = useCallback((value: React.SetStateAction<V>) => {
+    const setSelectedState = useCallback((value: StateSetterArg<V>) => {
         store.mutate(path, value)
     }, [pathKey])
 
@@ -178,7 +179,7 @@ export function defaultSelector<S>(state: S): S {
 export function mutateState<S extends StoreStateGeneric = StoreStateGeneric>(
     state: S,
     path: StatePath,
-    nextValue: React.SetStateAction<unknown>
+    nextValue: StateSetterArg<unknown>
 ): S {
     if (path.length === 1) {
         // We are mutating the state root.
@@ -228,7 +229,7 @@ export function walkState(
 
         if (! stateHead) {
             console.warn(
-                '@eviljs/react/store.walkState():\n'
+                '@eviljs/react/store-v3.walkState():\n'
                 + `state vanished from path '${JSON.stringify(path)}'.`
             )
             break
@@ -236,7 +237,7 @@ export function walkState(
     }
 }
 
-export function createStateProxy<O extends StoreStateGeneric | Array<unknown>>(state: O, onGet: (key: PropertyKey) => void) {
+export function createStateProxy<S extends StoreStateGeneric>(state: S, onGet: (key: PropertyKey) => void) {
     const proxy = new Proxy(state, {
         get(obj, prop, proxy): unknown {
             onGet(prop)
@@ -246,7 +247,7 @@ export function createStateProxy<O extends StoreStateGeneric | Array<unknown>>(s
             }
             // if (! hasOwnProperty(obj, prop)) {
             //     console.warn(
-            //         '@eviljs/react/store:\n'
+            //         '@eviljs/react/store-v3:\n'
             //         + `accessing inherited property '${String(prop)}'.`
             //     )
             //     return
@@ -254,11 +255,9 @@ export function createStateProxy<O extends StoreStateGeneric | Array<unknown>>(s
 
             const value = (obj as Record<PropertyKey, any>)[prop]
 
-            if (isObject(value) || isArray(value)) {
-                return createStateProxy(value, onGet)
-            }
-
-            return value
+            return isObject(value) || isArray(value)
+                ? createStateProxy(value, onGet)
+                : value
         },
     })
 
@@ -305,10 +304,9 @@ export interface Store<S extends StoreStateGeneric> {
     stateRef: React.MutableRefObject<S>
     state(): S
     observe(path: StatePath, observer: ChangeObserver): Unobserve
-    mutate<V>(path: StatePath, value: React.SetStateAction<V>): void
+    mutate<V>(path: StatePath, value: StateSetterArg<V>): void
 }
 
-export type StoreStateGeneric = {} | Array<unknown>
 export type StatePath = Array<PropertyKey>
 
 export interface StoreSelector<S extends StoreStateGeneric, V> {

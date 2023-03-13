@@ -1,17 +1,14 @@
-import {computeValue} from '@eviljs/std/fn.js'
-import {areSameObjectsShallow} from '@eviljs/std/object.js'
-import type {Partial} from '@eviljs/std/type.js'
-import {useCallback, useContext, useMemo, useReducer} from 'react'
+import type {ReducerState} from '@eviljs/std/redux.js'
+import {useContext, useState} from 'react'
 import {defineContext} from './ctx.js'
+import type {StateManager} from './state.js'
 
-export const StoreV1Context = defineContext<Store<StoreStateGeneric, any>>('StoreV1Context')
-
-export let StoreActionUid = 0
+export const StoreContext = defineContext<Store<StoreStateGeneric>>('StoreContext')
 
 /*
 * EXAMPLE
 *
-* const spec = {createState, actions}
+* const spec = {createState}
 *
 * export function MyMain(props) {
 *     return (
@@ -21,96 +18,36 @@ export let StoreActionUid = 0
 *     )
 * }
 */
-export function StoreProvider<S extends StoreStateGeneric, A>(props: StoreProviderProps<S, A>) {
+export function StoreProvider(props: StoreProviderProps<StoreStateGeneric>) {
     const {children, ...spec} = props
 
     return (
-        <StoreV1Context.Provider value={useRootStore(spec)}>
+        <StoreContext.Provider value={useRootStore(spec)}>
             {children}
-        </StoreV1Context.Provider>
+        </StoreContext.Provider>
     )
 }
 
-export function useRootStore<S extends StoreStateGeneric, A>(spec: StoreSpec<S, A>) {
-    const {createState, reduce, onDispatch} = spec
-    const [state, commit] = useReducer(reduce, null, createState)
+export function useRootStore<S extends StoreStateGeneric>(spec: StoreSpec<S>): Store<S> {
+    const {createState} = spec
 
-    const dispatch = useCallback((action: A) => {
-        onDispatch?.(action)
-
-        commit(action)
-    }, [commit, onDispatch])
-
-    const store = useMemo((): Store<S, A> => {
-        return [state, dispatch]
-    }, [state, dispatch])
-
-    return store
+    return useState(createState)
 }
 
-export function useStore<S extends StoreStateGeneric, A>() {
-    return useContext(StoreV1Context) as undefined | Store<S, A>
-}
-
-export function patchState<S extends StoreStateGeneric>(state: S, statePatch: StoreStatePatch<S>): S {
-    const nextState = computeValue(statePatch, state)
-
-    return areSameObjectsShallow(state, nextState)
-        ? state
-        : {...state, ...nextState}
-}
-
-export function defineAction<K extends PropertyKey, S extends StoreStateGeneric, A extends Array<unknown>>(
-    id: K,
-    reducer: (state: S, ...args: A) => S,
-): StoreActionDefinition<K, S, A>
-{
-    return {
-        id,
-        action(...args: A) {
-            return {type: id, args}
-        },
-        reducer(state: S, action: {} | StoreAction<K, A>) {
-            return action && ('type' in action) && action.type === id
-                ? reducer(state, ...action.args)
-                : state
-        },
-    }
-}
-
-export function withId(name: string) {
-    return `#${++StoreActionUid} ${name}`
+export function useStore<S extends StoreStateGeneric>() {
+    return useContext(StoreContext) as unknown as undefined | Store<S>
 }
 
 // Types ///////////////////////////////////////////////////////////////////////
 
-export interface StoreProviderProps<S extends StoreStateGeneric, A> extends StoreSpec<S, A> {
+export interface StoreProviderProps<S extends StoreStateGeneric> extends StoreSpec<S> {
     children: undefined | React.ReactNode
 }
 
-export interface StoreSpec<S extends StoreStateGeneric, A> {
+export interface StoreSpec<S extends StoreStateGeneric> {
     createState(): S
-    reduce(state: S, action: A): S
-    onDispatch?: undefined | ((action: A) => void)
 }
 
-export type Store<S extends StoreStateGeneric, A> = [S, React.Dispatch<A>]
+export type Store<S extends StoreStateGeneric> = StateManager<S>
 
-export type StoreStateGeneric = {}
-
-export interface StoreAction<K extends PropertyKey, A extends Array<unknown>> {
-    type: K
-    args: A
-}
-
-export interface StoreActionDefinition<K extends PropertyKey, S extends StoreStateGeneric, A extends Array<unknown>> {
-    id: K
-    action(...args: A): StoreAction<K, A>
-    reducer(state: S, action: unknown): S
-}
-
-// export type StoreActionsOf<S extends StoreStateGeneric, A> = ValueOf<{
-//     [key in keyof A]: StoreActionWithArg<key, Parameters<A[key]>[1]>
-// }>
-
-export type StoreStatePatch<S extends StoreStateGeneric> = Partial<S> | ((prevState: S) => Partial<S>)
+export type StoreStateGeneric = ReducerState
