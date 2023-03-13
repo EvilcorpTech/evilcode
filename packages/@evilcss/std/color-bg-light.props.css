@@ -1,20 +1,21 @@
 .std,
-.std * /* Needed for inheriting --std-color-bg-z. */
+.std-background-z /* Needed for inheriting --std-color-bg-z. */
 {
     --std-color-light-bg-l-base: 100%;
     --std-color-light-bg-l-factor: 2%;
+    --std-color-light-bg-z-factor: 1%;
     --std-color-light-bg1-h: var(--std-color-light-bg-h, 0deg);
     --std-color-light-bg1-s: var(--std-color-light-bg-s, 0%);
-    --std-color-light-bg1-l: calc(var(--std-color-light-bg-l-base) - var(--std-color-bg-z, 0) * var(--std-color-light-bg-l-factor));
+    --std-color-light-bg1-l: calc(var(--std-color-light-bg-l-base) - var(--std-color-bg-z, 0) * var(--std-color-light-bg-z-factor));
     --std-color-light-bg2-h: var(--std-color-light-bg-h, 0deg);
     --std-color-light-bg2-s: var(--std-color-light-bg-s, 0%);
-    --std-color-light-bg2-l: calc(var(--std-color-light-bg1-l) - calc(1 + var(--std-color-bg-z, 0)) * var(--std-color-light-bg-l-factor));
+    --std-color-light-bg2-l: calc(var(--std-color-light-bg1-l) - var(--std-color-light-bg-l-factor));
     --std-color-light-bg3-h: var(--std-color-light-bg-h, 0deg);
     --std-color-light-bg3-s: var(--std-color-light-bg-s, 0%);
-    --std-color-light-bg3-l: calc(var(--std-color-light-bg2-l) - calc(1 + var(--std-color-bg-z, 0)) * var(--std-color-light-bg-l-factor));
+    --std-color-light-bg3-l: calc(var(--std-color-light-bg2-l) - var(--std-color-light-bg-l-factor));
     --std-color-light-bg4-h: var(--std-color-light-bg-h, 0deg);
     --std-color-light-bg4-s: var(--std-color-light-bg-s, 0%);
-    --std-color-light-bg4-l: calc(var(--std-color-light-bg3-l) - calc(1 + var(--std-color-bg-z, 0)) * var(--std-color-light-bg-l-factor));
+    --std-color-light-bg4-l: calc(var(--std-color-light-bg3-l) - var(--std-color-light-bg-l-factor));
 
     --std-color-light-bg1: hsl(var(--std-color-light-bg1-h) var(--std-color-light-bg1-s) var(--std-color-light-bg1-l));
     --std-color-light-bg2: hsl(var(--std-color-light-bg2-h) var(--std-color-light-bg2-s) var(--std-color-light-bg2-l));
@@ -22,9 +23,8 @@
     --std-color-light-bg4: hsl(var(--std-color-light-bg4-h) var(--std-color-light-bg4-s) var(--std-color-light-bg4-l));
 }
 .std.theme-light,
-.std.theme-light *, /* Needed for inheriting --std-color-bg-z. */
-.std.theme-dark .std.theme-light, /* Needed for nesting a theme light in a theme dark. */
-.std.theme-dark .std.theme-light * /* Needed for inheriting --std-color-bg-z. */
+.std.theme-light .std-background-z, /* Needed for inheriting --std-color-bg-z. */
+.std.theme-dark .std.theme-light .std-background-z /* Needed for inheriting --std-color-bg-z when nesting a theme light in a theme dark. */
 {
     --std-color-bg1: var(--std-color-light-bg1);
     --std-color-bg2: var(--std-color-light-bg2);
