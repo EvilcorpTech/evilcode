@@ -1,8 +1,11 @@
+import type {Io} from './fn.js'
 import type {ErrorOf, ResultOf} from './result.js'
 import {Error, isError} from './result.js'
 import {tryCatch} from './try.js'
 import type {Nil} from './type.js'
 import {isNil} from './type.js'
+
+export type {Io} from './fn.js'
 
 export const MonadTag = '#__kind__$' // We can't use a Symbol or Class, because it must be serializable.
 
@@ -182,10 +185,4 @@ export function mapCatchError<V1, V2>(
 ): Io<Promise<V1>, Promise<V1 | Error<V2>>>
 {
     return (input: Promise<V1>) => input.catch(it => Error(error ?? it))
-}
-
-// Types ///////////////////////////////////////////////////////////////////////
-
-export interface Io<I, O> {
-    (input: I): O
 }
