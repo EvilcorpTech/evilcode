@@ -16,7 +16,6 @@
     "dependencies": {
         "@eviljs/node": "1",
         "@eviljs/std": "1",
-        "@eviljs/web": "1",
         "@koa/multer": "3",
         "@koa/router": "12",
         "@types/bcryptjs": "2",
@@ -45,7 +44,7 @@
         "tslib": "2"
     },
     "devDependencies": {
-        "typescript": "^4.9"
+        "typescript": "^5.0"
     },
     "author": "Daniele Orlando",
     "license": "BSD-2-Clause",

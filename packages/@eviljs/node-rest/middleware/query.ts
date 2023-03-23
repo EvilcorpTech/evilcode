@@ -1,5 +1,6 @@
-import {QueryRulesHeader} from '@eviljs/web/query.js'
 import type {Context, Next} from 'koa'
+
+export const QueryRulesHeader = 'X-Query'
 
 export function queryMiddleware(context: Context, next: Next) {
     const {request} = context
