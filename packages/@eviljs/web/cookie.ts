@@ -1,4 +1,4 @@
-import {mapSomeWith} from '@eviljs/std/monad.js'
+import {mapSome} from '@eviljs/std/monad.js'
 import {escapeRegexp} from '@eviljs/std/regexp.js'
 import {isSome} from '@eviljs/std/type.js'
 
@@ -69,10 +69,10 @@ export function writeCookie(key: string, val: string, options?: undefined | Cook
     const customParts = options?.custom
     const parts = [
         `${key}=${val}`,
-        mapSomeWith(path, path => `Path=${path}`),
-        mapSomeWith(maxAge, maxAge => `Max-Age=${maxAge}`),
-        mapSomeWith(expires, expires => `Expires=${expires}`),
-        mapSomeWith(sameSite, sameSite => `SameSite=${sameSite}`),
+        mapSome(path, path => `Path=${path}`),
+        mapSome(maxAge, maxAge => `Max-Age=${maxAge}`),
+        mapSome(expires, expires => `Expires=${expires}`),
+        mapSome(sameSite, sameSite => `SameSite=${sameSite}`),
         secure ? 'Secure' : undefined,
         ...customParts ?? [],
     ].filter(isSome)

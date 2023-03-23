@@ -1,13 +1,7 @@
 import {wait} from '@eviljs/std/async.js'
 import {randomInt} from '@eviljs/std/random.js'
-import {
-    withRequestJson,
-    createFetch,
-    Fetch,
-    HttpMethod,
-    FetchRequestOptions,
-    mergeFetchOptions,
-} from './fetch.js'
+import type {Fetch, FetchRequestOptions} from './fetch.js'
+import {HttpMethod, createFetch, mergeFetchOptions, withRequestJson} from './fetch.js'
 import {regexpFromPattern} from './route.js'
 
 export const NoMock = Symbol('NoMock')

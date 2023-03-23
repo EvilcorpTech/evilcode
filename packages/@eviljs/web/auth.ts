@@ -1,6 +1,7 @@
 import {computeValue} from '@eviljs/std/fn.js'
 import {isFunction, isObject} from '@eviljs/std/type.js'
-import {withRequestJson, Fetch, HttpMethod, mergeFetchOptions, FetchRequestOptions} from './fetch.js'
+import type {Fetch, FetchRequestOptions} from './fetch.js'
+import {HttpMethod, mergeFetchOptions, withRequestJson} from './fetch.js'
 import {throwInvalidResponse} from './throw.js'
 
 export const AuthDefaultUrl = '/auth'
