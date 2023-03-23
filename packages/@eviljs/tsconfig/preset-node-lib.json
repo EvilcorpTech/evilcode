@@ -1,0 +1,9 @@
+{
+    "extends": [
+        "./is-strict.json",
+        "./is-module.json",
+        "./is-lib.json"
+    ],
+    "compilerOptions": {
+    }
+}

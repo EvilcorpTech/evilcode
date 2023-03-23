@@ -1,0 +1,12 @@
+{
+    "extends": [
+        "./is-strict.json",
+        "./is-module.json",
+        "./is-web.json",
+        "./is-app.json",
+        "./is-solid.json",
+        "./is-vite.json"
+    ],
+    "compilerOptions": {
+    }
+}

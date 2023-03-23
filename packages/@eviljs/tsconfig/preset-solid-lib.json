@@ -1,0 +1,12 @@
+{
+    "extends": [
+        "./is-strict.json",
+        "./is-module.json",
+        "./is-web.json",
+        "./is-lib.json",
+        "./is-solid.json"
+    ],
+    "compilerOptions": {
+        "emitDeclarationOnly": true
+    }
+}

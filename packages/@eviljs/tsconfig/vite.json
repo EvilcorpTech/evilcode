@@ -1,9 +1,0 @@
-{
-    "extends": "./web.json",
-    "compilerOptions": {
-        "incremental": true,
-        "moduleResolution": "node",
-        "sourceMap": true,
-        "types": ["vite/client"]
-    }
-}

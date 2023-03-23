@@ -1,11 +1,11 @@
 {
     "compilerOptions": {
+        "allowJs": false,
         "allowUnreachableCode": false,
         "alwaysStrict": true,
         "esModuleInterop": false,
         "exactOptionalPropertyTypes": true,
         "forceConsistentCasingInFileNames": true,
-        "importsNotUsedAsValues": "error",
         "noEmitOnError": true,
         "noErrorTruncation": true,
         "noImplicitAny": true,
@@ -20,6 +20,7 @@
         "strictFunctionTypes": true,
         "strictNullChecks": true,
         "strictPropertyInitialization": true,
-        "useUnknownInCatchVariables": true
+        "useUnknownInCatchVariables": true,
+        "verbatimModuleSyntax": true
     }
 }

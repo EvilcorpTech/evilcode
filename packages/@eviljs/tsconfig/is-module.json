@@ -1,0 +1,13 @@
+{
+    "compilerOptions": {
+        "allowSyntheticDefaultImports": true,
+        "downlevelIteration": false,
+        "esModuleInterop": true,
+        "isolatedModules": true,
+        "lib": ["esnext"],
+        "module": "esnext",
+        "moduleDetection": "auto",
+        "moduleResolution": "nodenext",
+        "target": "esnext"
+    }
+}

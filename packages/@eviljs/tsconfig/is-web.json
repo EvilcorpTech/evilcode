@@ -1,5 +1,4 @@
 {
-    "extends": "./base.json",
     "compilerOptions": {
         "lib": ["esnext", "dom", "dom.iterable", "webworker"]
     }

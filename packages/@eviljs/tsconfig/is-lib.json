@@ -1,0 +1,16 @@
+{
+    "compileOnSave": true,
+    "compilerOptions": {
+        "declaration": true,
+        "importHelpers": true,
+        "incremental": true,
+        "inlineSourceMap": false,
+        "inlineSources": false,
+        "moduleResolution": "nodenext",
+        "noEmit": false,
+        "noEmitHelpers": false,
+        "resolveJsonModule": true,
+        "skipLibCheck": true,
+        "sourceMap": false
+    }
+}

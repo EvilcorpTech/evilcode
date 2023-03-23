@@ -5,9 +5,6 @@
         "/LICENSE.txt",
         "/**/*.json"
     ],
-    "peerDependencies": {
-        "typescript": "^4.9"
-    },
     "author": "Daniele Orlando",
     "license": "BSD-2-Clause",
     "description": "TypeScript tsconfig presets",
