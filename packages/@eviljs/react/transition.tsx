@@ -116,7 +116,6 @@ export function Animator(props: AnimatorProps) {
                 // A render task has no animation and no animation event.
                 return 0
         }
-        return 0
     })()
 
     if (true
@@ -314,8 +313,6 @@ export function reduceTransitionState(
             return reduceTransitionQueue(state)
         }
     }
-
-    return state
 }
 
 export function reduceTransitionChildrenChange(state: TransitionState, args: {
@@ -749,12 +746,6 @@ export function computeAnimatorContext(
         case 'render':
             return {action: 'mount', phase: 'entered'}
     }
-
-    console.warn(
-        '@eviljs/react/transition.computeAnimatorLifecycle:\n'
-        + 'unrecognized lifecycle.'
-    )
-    return {} as never
 }
 
 export function computeAnimatorClasses(
@@ -775,9 +766,7 @@ export function computeAnimatorClasses(
                 return 'enter'
             case 'render':
                 return
-            break
         }
-        return
     })()
 
     if (! name) {

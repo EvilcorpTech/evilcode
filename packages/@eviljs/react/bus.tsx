@@ -1,4 +1,5 @@
-import {Bus, BusEvent, BusObserver, createBus} from '@eviljs/std/bus.js'
+import type {Bus, BusEvent, BusObserver} from '@eviljs/std/bus.js'
+import {createBus} from '@eviljs/std/bus.js'
 import {useCallback, useContext, useEffect, useMemo} from 'react'
 import {defineContext} from './ctx.js'
 

@@ -1,12 +1,5 @@
-import {
-    AuthCredentials,
-    authenticate,
-    AuthenticateOptions,
-    invalidate,
-    InvalidateOptions,
-    validate,
-    ValidateOptions,
-} from '@eviljs/web/auth.js'
+import type {AuthCredentials, AuthenticateOptions, InvalidateOptions, ValidateOptions} from '@eviljs/web/auth.js'
+import {authenticate, invalidate, validate} from '@eviljs/web/auth.js'
 import type {Cookie} from '@eviljs/web/cookie.js'
 import type {Fetch} from '@eviljs/web/fetch.js'
 import {throwInvalidResponse} from '@eviljs/web/throw.js'
