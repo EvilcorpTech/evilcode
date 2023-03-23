@@ -1,6 +1,7 @@
 import './theme-view.css'
 
-import {hslFromRgb, rgbFromHexString, rgbFromHsl, rgbToHexString, Hsl} from '@eviljs/std/color.js'
+import type {Hsl} from '@eviljs/std/color.js'
+import {hslFromRgb, rgbFromHexString, rgbFromHsl, rgbToHexString} from '@eviljs/std/color.js'
 import {times} from '@eviljs/std/iter.js'
 import {classes} from '@eviljs/web/classes.js'
 import {Fragment, useEffect, useRef, useState} from 'react'
@@ -408,10 +409,7 @@ export function Contrast() {
                 {[0, 1, 2].map(it =>
                     <div
                         key={it}
-                        className="std-flex column gap4 std-background-z"
-                        style={{
-                            '--std-color-bg-z': it,
-                        } as React.CSSProperties}
+                        className={classes('std-flex column gap4 std-background-z', `z${it}`)}
                     >
                         <h6>Bg Z {it}</h6>
 

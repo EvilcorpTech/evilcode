@@ -1,6 +1,7 @@
 import './range.css'
 
-import {asDragPointerEvent, DragEvent, DragPointerEvent, useDrag} from '@eviljs/react/drag.js'
+import type {DragEvent, DragPointerEvent} from '@eviljs/react/drag.js'
+import {asDragPointerEvent, useDrag} from '@eviljs/react/drag.js'
 import {clamp} from '@eviljs/std/math.js'
 import {distanceBetween} from '@eviljs/std/scale.js'
 import {isNil} from '@eviljs/std/type.js'
