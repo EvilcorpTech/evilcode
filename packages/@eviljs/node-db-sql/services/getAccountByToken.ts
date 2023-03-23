@@ -1,6 +1,7 @@
-import {Account, AccountFromDataOptions} from './Account.js'
 import {assertStringNotEmpty} from '@eviljs/std/assert.js'
 import type {Db, ReadResult} from '../index.js'
+import type {AccountFromDataOptions} from './Account.js'
+import {Account} from './Account.js'
 import {Session} from './Session.js'
 /*
 * EXAMPLE

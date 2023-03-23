@@ -1,4 +1,5 @@
-import {isUndefined, ValueOf} from '@eviljs/std/type.js'
+import type {ValueOf} from '@eviljs/std/type.js'
+import {isUndefined} from '@eviljs/std/type.js'
 
 /*
 * Generates a series of tuples that can be used for persisting an object
