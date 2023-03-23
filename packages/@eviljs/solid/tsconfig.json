@@ -1,10 +1,7 @@
 {
-    "extends": "../../@eviljs/tsconfig/web.json",
+    "extends": "../../@eviljs/tsconfig/preset-solid-lib.json",
     "include": ["./**/*.ts", "./**/*.tsx"],
     "exclude": ["node_modules"],
     "compilerOptions": {
-        "emitDeclarationOnly": true,
-        "jsx": "preserve",
-        "jsxImportSource": "solid-js"
     },
 }
