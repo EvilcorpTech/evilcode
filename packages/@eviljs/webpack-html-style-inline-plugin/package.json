@@ -24,7 +24,7 @@
         "webpack": "5"
     },
     "devDependencies": {
-        "typescript": "^4.9"
+        "typescript": "^5.0"
     },
     "author": "Daniele Orlando",
     "license": "BSD-2-Clause",
