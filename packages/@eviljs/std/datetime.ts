@@ -1,7 +1,24 @@
+import {isBetween} from './math.js'
 import {assertStringNotEmpty, ensureOptionalWith, throwAssertError} from './assert.js'
 import {isString} from './type.js'
 
 export {cloneDate} from './clone.js'
+
+export function isDateBetween(from: undefined | Date, date: Date, to: undefined | Date) {
+    if (! from && ! to) {
+        return true
+    }
+    if (from && to) {
+        return isBetween(from.getTime(), date.getTime(), to.getTime())
+    }
+    if (from) {
+        return from.getTime() <= date.getTime()
+    }
+    if (to) {
+        return to.getTime() >= date.getTime()
+    }
+    return false
+}
 
 // Assertions //////////////////////////////////////////////////////////////////
 

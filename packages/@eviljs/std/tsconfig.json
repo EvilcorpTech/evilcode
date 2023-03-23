@@ -1,5 +1,5 @@
 {
-    "extends": "../../@eviljs/tsconfig/web.json",
+    "extends": "../../@eviljs/tsconfig/preset-web-lib.json",
     "include": ["./**/*.ts"],
     "exclude": ["node_modules"],
     "compilerOptions": {

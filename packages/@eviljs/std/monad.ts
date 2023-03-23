@@ -11,21 +11,21 @@ export const MonadTag = '#__kind__$' // We can't use a Symbol or Class, because 
 
 // Optional ////////////////////////////////////////////////////////////////////
 
-export function mapSome<V1, V2>(
+export function mappingSome<V1, V2>(
     onSome: Io<NonNullable<V1>, V2>
 ): Io<V1, Extract<V1, Nil> | V2>
 {
-    return (input: V1) => mapSomeWith(input, onSome)
+    return (input: V1) => mapSome(input, onSome)
 }
 
-export function mapNone<V1, V2>(
+export function mappingNone<V1, V2>(
     onNone: Io<Nil, V2>
 ): Io<V1, Exclude<V1, Nil> | V2>
 {
-    return (input: V1) => mapNoneWith(input, onNone)
+    return (input: V1) => mapNone(input, onNone)
 }
 
-export function mapSomeWith<V1, V2>(
+export function mapSome<V1, V2>(
     input: V1,
     onSome: Io<NonNullable<V1>, V2>
 ): Extract<V1, Nil> | V2
@@ -35,7 +35,7 @@ export function mapSomeWith<V1, V2>(
         : input as Extract<V1, Nil>
 }
 
-export function mapNoneWith<V1, V2>(
+export function mapNone<V1, V2>(
     input: V1,
     onNone: Io<Nil, V2>
 ): Exclude<V1, Nil> | V2
@@ -45,49 +45,85 @@ export function mapNoneWith<V1, V2>(
         : input as Exclude<V1, Nil>
 }
 
+// Boolean Expression //////////////////////////////////////////////////////////
+
+export function mappingTrue(
+    onTrue: Io<boolean, boolean>
+): Io<boolean, boolean>
+{
+    return input => mapTrue(input, onTrue)
+}
+
+export function mappingFalse(
+    onFalse: Io<boolean, boolean>
+): Io<boolean, boolean>
+{
+    return input => mapFalse(input, onFalse)
+}
+
+export function mapTrue(
+    input: boolean,
+    onTrue: Io<boolean, boolean>
+): boolean
+{
+    return input
+        ? onTrue(input)
+        : input
+}
+
+export function mapFalse(
+    input: boolean,
+    onFalse: Io<boolean, boolean>
+): boolean
+{
+    return ! input
+        ? onFalse(input)
+        : input
+}
+
 // Either: Result | Error //////////////////////////////////////////////////////
 
-export function mapEither<V1, V2, V3>(
+export function mappingEither<V1, V2, V3>(
     onResult: Io<ResultOf<V1>, V2>,
     onError: Io<ErrorOf<V1>, V3>
 ): Io<V1, V2 | V3>
 {
-    return (input: V1) => mapEitherWith(input, onResult, onError)
+    return (input: V1) => mapEither(input, onResult, onError)
 }
 
-export function mapResult<V1, V2>(
+export function mappingResult<V1, V2>(
     onResult: Io<ResultOf<V1>, V2>
 ): Io<V1, ErrorOf<V1> | V2>
 {
-    return (input: V1) => mapResultWith(input, onResult)
+    return (input: V1) => mapResult(input, onResult)
 }
 
-export function mapError<V1, V2>(
+export function mappingError<V1, V2>(
     onError: Io<ErrorOf<V1>, V2>
 ): Io<V1, ResultOf<V1> | V2>
 {
-    return (input: V1) => mapErrorWith(input, onError)
+    return (input: V1) => mapError(input, onError)
 }
 
-export function mapErrorValue<V1, V2>(
+export function mappingErrorValue<V1, V2>(
     onError: Io<ErrorOf<V1>['error'], V2>
 ): Io<V1, ResultOf<V1> | V2>
 {
-    return (input: V1) => mapErrorValueWith(input, onError)
+    return (input: V1) => mapErrorValue(input, onError)
 }
 
-export function mapEitherWith<V1, V2, V3>(
+export function mapEither<V1, V2, V3>(
     input: V1,
     onResult: Io<ResultOf<V1>, V2>,
     onError: Io<ErrorOf<V1>, V3>,
 ): V2 | V3
 {
     return ! isError(input)
-        ? mapResultWith(input as ResultOf<V1>, onResult) as V2
-        : mapErrorWith(input as ErrorOf<V1>, onError) as V3
+        ? mapResult(input as ResultOf<V1>, onResult) as V2
+        : mapError(input as ErrorOf<V1>, onError) as V3
 }
 
-export function mapResultWith<V1, V2>(
+export function mapResult<V1, V2>(
     input: V1,
     onResult: Io<ResultOf<V1>, V2>,
 ): ErrorOf<V1> | V2
@@ -97,7 +133,7 @@ export function mapResultWith<V1, V2>(
         : input as ErrorOf<V1>
 }
 
-export function mapErrorWith<V1, V2>(
+export function mapError<V1, V2>(
     input: V1,
     onError: Io<ErrorOf<V1>, V2>,
 ): ResultOf<V1> | V2
@@ -107,7 +143,7 @@ export function mapErrorWith<V1, V2>(
         : input as ResultOf<V1>
 }
 
-export function mapErrorValueWith<V1, V2>(
+export function mapErrorValue<V1, V2>(
     input: V1,
     onError: Io<ErrorOf<V1>['error'], V2>,
 ): ResultOf<V1> | V2
@@ -119,7 +155,7 @@ export function mapErrorValueWith<V1, V2>(
 
 // Exception ///////////////////////////////////////////////////////////////////
 
-export function mapTrying<V1, V2, V3>(
+export function mappingTry<V1, V2, V3>(
     onTry: Io<V1, V2>,
     onCatch: Io<unknown, V3>,
 ): Io<V1, V2 | V3>
@@ -147,7 +183,7 @@ export function then<V1, V2, V3>(
 /*
 * The safest API, requiring to handle the error.
 */
-export function mapPromise<V1, V2, V3>(
+export function mappingPromise<V1, V2, V3>(
     onThen: Io<V1, V2>,
     onCatch: Io<unknown, V3>,
 ): Io<Promise<V1>, Promise<V2 | V3>>
@@ -158,7 +194,7 @@ export function mapPromise<V1, V2, V3>(
 /*
 * Utility API, mapping only the fulfillment.
 */
-export function mapThen<V1, V2>(
+export function mappingThen<V1, V2>(
     onThen: Io<V1, V2>,
 ): Io<Promise<V1>, Promise<V2>>
 {
@@ -168,7 +204,7 @@ export function mapThen<V1, V2>(
 /*
 * Utility API, mapping only the rejection.
 */
-export function mapCatch<V1, V2>(
+export function mappingCatch<V1, V2>(
     onCatch: Io<unknown, V2>,
 ): Io<Promise<V1>, Promise<V1 | V2>>
 {
@@ -176,13 +212,13 @@ export function mapCatch<V1, V2>(
 }
 
 /*
-* Shortcut API. Same of mapCatch(Error).
+* Shortcut API. Same of mappingCatch(Error).
 */
-export function mapCatchError<V1>(error?: Nil | never): Io<Promise<V1>, Promise<V1 | Error<unknown>>>
-export function mapCatchError<V1, V2>(error: V2): Io<Promise<V1>, Promise<V1 | Error<V2>>>
-export function mapCatchError<V1, V2>(
-    error?: V2,
+export function mappingCatchError<V1>(error?: Nil | never): Io<Promise<V1>, Promise<V1 | Error<unknown>>>
+export function mappingCatchError<V1, V2>(error: V2): Io<Promise<V1>, Promise<V1 | Error<V2>>>
+export function mappingCatchError<V1, V2>(
+    errorOptional?: V2,
 ): Io<Promise<V1>, Promise<V1 | Error<V2>>>
 {
-    return (input: Promise<V1>) => input.catch(it => Error(error ?? it))
+    return (input: Promise<V1>) => input.catch(error => Error(errorOptional ?? error))
 }

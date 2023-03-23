@@ -60,19 +60,15 @@ export function logOnAdapter<R>(
     type: LogType,
     ...args: Payload
 ): R {
-    switch (type) {
+    switch (type as undefined | typeof type) {
         case LogType.Debug:
             return adapter.debug(...args)
-        break
         case LogType.Info:
             return adapter.info(...args)
-        break
         case LogType.Warn:
             return adapter.warn(...args)
-        break
         case LogType.Error:
             return adapter.error(...args)
-        break
     }
 
     return adapter.error(
