@@ -2,3 +2,9 @@
 .std-background-bg2 { background-color: var(--std-color-bg2); }
 .std-background-bg3 { background-color: var(--std-color-bg3); }
 .std-background-bg4 { background-color: var(--std-color-bg4); }
+
+.std-background-z.z0 { --std-color-bg-z: 0; }
+.std-background-z.z1 { --std-color-bg-z: 1; }
+.std-background-z.z2 { --std-color-bg-z: 2; }
+.std-background-z.z3 { --std-color-bg-z: 3; }
+.std-background-z.z4 { --std-color-bg-z: 4; }
