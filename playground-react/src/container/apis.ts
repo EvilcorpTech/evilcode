@@ -1,12 +1,13 @@
 import type {Container as StdContainer} from '@eviljs/std/container'
 import {createConsoleLog, createLogger} from '@eviljs/std/logger'
 import {createCookie} from '@eviljs/web/cookie'
-import {createFetch, Fetch} from '@eviljs/web/fetch'
+import type {Fetch} from '@eviljs/web/fetch'
+import {createFetch} from '@eviljs/web/fetch'
 import {mockFetchDelayed} from '@eviljs/web/fetch-mock'
 import {createQuery} from '@eviljs/web/query'
 import {asBaseUrl} from '@eviljs/web/url'
 import {CookieSpec} from '~/cookie/apis'
-import {ApiUrl, BasePath, BundleName} from '~/env/apis'
+import {ApiUrl, BasePath} from '~/env/apis'
 import {FetchMocksSpec} from '~/mock/apis'
 
 export const ContainerSpec = {
@@ -17,7 +18,7 @@ export const ContainerSpec = {
         const fetch = createFetch({baseUrl: ApiUrl})
 
         // SERVICE WORKER //////////////////////////////////////////////////
-        const serviceWorkerPath = [asBaseUrl(BasePath), BundleName, 'entry-mocks-service-worker.js']
+        const serviceWorkerPath = [asBaseUrl(BasePath), 'entry-mocks-service-worker.js']
         const serviceWorkerUrl = serviceWorkerPath.filter(Boolean).join('/')
         // navigator.serviceWorker.register(serviceWorkerUrl)
         // return fetch

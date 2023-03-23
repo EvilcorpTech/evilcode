@@ -1,0 +1,18 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "tsc",
+            "type": "shell",
+            "command": "npm",
+            "args": ["--prefix", "dev", "run", "check"],
+            "presentation": {
+                "reveal": "never",
+                "echo": false,
+                "focus": false,
+                "panel": "dedicated"
+            },
+            "problemMatcher": "$tsc-watch",
+        },
+    ],
+}

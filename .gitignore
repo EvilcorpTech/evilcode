@@ -1,7 +1,7 @@
-.vscode
 *.code-workspace
-*.d.ts
-*.js
+/.vscode
+/packages/@evil*/**/*.d.ts
+/packages/@evil*/**/*.js
 node_modules
 package-lock.json
 pnpm-lock.yaml

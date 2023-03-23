@@ -1,14 +1,13 @@
 {
     "type": "module",
     "scripts": {
-        "init": "npx pnpm@latest install",
-        "upgrade": "npx npm-upgrade@latest && npm run init",
-        "dev": "vite",
-        "build": "vite build",
-        "preview": "vite preview",
-        "check": "npm run check-ts && npm run check-circular",
-        "check-ts": "npx tsc --noEmit",
-        "check-circular": "npx madge@latest --ts-config ./tsconfig.json --circular ./src/main.tsx"
+        "init": "npx pnpm@latest install && npm --prefix dev run init",
+        "upgrade": "npx npm-upgrade@latest && npm --prefix dev run upgrade && npm run init",
+        "check": "npm --prefix dev run check",
+        "build": "npm --prefix dev run build",
+        "dev": "npm --prefix dev run start",
+        "preview": "npm --prefix dev run preview",
+        "serve": "npm --prefix dev run serve"
     },
     "dependencies": {
         "@evilcss/std": "1",
@@ -18,24 +17,15 @@
         "@eviljs/std": "1",
         "@eviljs/web": "1",
         "@eviljs/webx": "1",
-        "prop-types": "15",
-        "react": "18",
-        "react-dom": "18"
+        "@types/prop-types": "15.7.5",
+        "@types/react": "18.0.28",
+        "@types/react-dom": "18.0.11",
+        "prop-types": "15.8.1",
+        "react": "18.2.0",
+        "react-dom": "18.2.0"
     },
     "devDependencies": {
-        "@eviljs/tsconfig": "1",
-        "@types/node": "18",
-        "@types/prop-types": "15",
-        "@types/react": "18",
-        "@types/react-dom": "18",
-        "@vitejs/plugin-react": "3",
-        "postcss": "8",
-        "postcss-preset-env": "8",
-        "rollup-plugin-visualizer": "5",
-        "tslib": "2",
-        "typescript": "^4.9",
-        "vite": "4",
-        "vite-plugin-checker": "0"
+        "@eviljs/tsconfig": "1"
     },
     "pnpm": {
         "overrides": {

@@ -1,6 +1,7 @@
 // import {times} from '@eviljs/std/iter'
 // import {randomInt, randomItem, randomItems, randomTimes} from '@eviljs/std/random'
-import {FetchMocks, jsonResponse} from '@eviljs/web/fetch-mock'
+import type {FetchMocks} from '@eviljs/web/fetch-mock'
+import {jsonResponse} from '@eviljs/web/fetch-mock'
 import {exact} from '@eviljs/web/route'
 
 export const FetchMocksSpec: FetchMocks = {

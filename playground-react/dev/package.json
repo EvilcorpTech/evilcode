@@ -1,0 +1,31 @@
+{
+    "type": "module",
+    "scripts": {
+        "init": "npx pnpm@latest install",
+        "upgrade": "npx npm-upgrade@latest && npm run init",
+        "check": "npm run check-ts && npm run check-circular",
+        "check-ts": "tsc --noEmit --project ..",
+        "check-circular": "npx madge@latest --ts-config ../tsconfig.json --circular ../src/main.tsx",
+        "build": "vite build --mode ${MODE:-production}",
+        "start": "vite serve --mode ${MODE:-development}",
+        "preview": "vite preview",
+        "serve": "npx http-server@latest ../build -a 0.0.0.0 -p 8000"
+    },
+    "dependencies": {
+        "@types/node": "18.15.5",
+        "@vitejs/plugin-react": "3.1.0",
+        "postcss": "8.4.21",
+        "postcss-import": "15.1.0",
+        "postcss-preset-env": "8.0.1",
+        "rollup-plugin-visualizer": "5",
+        "tslib": "2.5.0",
+        "typescript": "5.0.2",
+        "vite": "4.2.1",
+        "vite-plugin-checker": "0.5.6",
+        "vite-plugin-ejs": "1.6.4"
+    },
+    "engines": {
+        "node": ">= 14",
+        "npm": ">= 7"
+    }
+}

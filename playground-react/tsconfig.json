@@ -1,9 +1,8 @@
 {
-    "extends": "../packages/@eviljs/tsconfig/react.json",
+    "extends": "../packages/@eviljs/tsconfig/preset-react-app.json",
     "include": ["./src/**/*.ts", "./src/**/*.tsx"],
     "compilerOptions": {
         "baseUrl": "./src",
-        "moduleResolution": "node",
         "paths": {
             "~/*": ["./*"]
         },
