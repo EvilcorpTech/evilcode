@@ -1,4 +1,5 @@
-export enum ResourceFlag {
+export enum ResourceLifecycle {
+    Initial = 0,
     Required = 1<<0,
     Expired = 1<<1,
     Loading = 1<<2,
@@ -6,7 +7,7 @@ export enum ResourceFlag {
     Failed = 1<<4,
 }
 
-export function asResourceState(mask: undefined | ResourceFlag): ResourceState {
+export function asResourceView(mask: undefined | ResourceLifecycle): ResourceLifecycleView {
     return {
         required: isResourceRequired(mask),
         expired: isResourceExpired(mask),
@@ -16,59 +17,77 @@ export function asResourceState(mask: undefined | ResourceFlag): ResourceState {
     }
 }
 
-export function isResourceRequired(mask: undefined | ResourceFlag): boolean {
-    return Boolean((mask ?? 0) & ResourceFlag.Required)
+export function isResourceRequired(maskOptional: undefined | ResourceLifecycle): boolean {
+    const mask = maskOptional ?? ResourceLifecycle.Initial
+    return Boolean(mask & ResourceLifecycle.Required)
 }
 
-export function isResourceExpired(mask: undefined | ResourceFlag): boolean {
-    return Boolean((mask ?? 0) & ResourceFlag.Expired)
+export function isResourceExpired(maskOptional: undefined | ResourceLifecycle): boolean {
+    const mask = maskOptional ?? ResourceLifecycle.Initial
+    return Boolean(mask & ResourceLifecycle.Expired)
 }
 
-export function isResourceLoading(mask: undefined | ResourceFlag): boolean {
-    return Boolean((mask ?? 0) & ResourceFlag.Loading)
+export function isResourceLoading(maskOptional: undefined | ResourceLifecycle): boolean {
+    const mask = maskOptional ?? ResourceLifecycle.Initial
+    return Boolean(mask & ResourceLifecycle.Loading)
 }
 
-export function isResourceLoaded(mask: undefined | ResourceFlag): boolean {
-    return Boolean((mask ?? 0) & ResourceFlag.Loaded)
+export function isResourceLoaded(maskOptional: undefined | ResourceLifecycle): boolean {
+    const mask = maskOptional ?? ResourceLifecycle.Initial
+    return Boolean(mask & ResourceLifecycle.Loaded)
 }
 
-export function isResourceFailed(mask: undefined | ResourceFlag): boolean {
-    return Boolean((mask ?? 0) & ResourceFlag.Failed)
+export function isResourceFailed(maskOptional: undefined | ResourceLifecycle): boolean {
+    const mask = maskOptional ?? ResourceLifecycle.Initial
+    return Boolean(mask & ResourceLifecycle.Failed)
 }
 
-export function withResourceRequired(mask: undefined | ResourceFlag): ResourceFlag {
-    return (mask ?? 0) | ResourceFlag.Required
+export function withResourceRequired(maskOptional: undefined | ResourceLifecycle): ResourceLifecycle {
+    const mask = maskOptional ?? ResourceLifecycle.Initial
+    return mask
+        | ResourceLifecycle.Required
 }
 
-export function withResourceLoading(mask: undefined | ResourceFlag): ResourceFlag {
-    return (mask ?? 0)
-        | ResourceFlag.Loading
+export function withResourceLoading(maskOptional: undefined | ResourceLifecycle): ResourceLifecycle {
+    const mask = maskOptional ?? ResourceLifecycle.Initial
+    return mask
         // & ~ResourceControl.Loaded // A resource should remain loaded while loading.
         // & ~ResourceControl.Failed // A resource should remain failed while loading.
+        | ResourceLifecycle.Loading
 }
 
-export function withResourceLoaded(mask: undefined | ResourceFlag): ResourceFlag {
-    return (mask ?? 0)
-        | ResourceFlag.Loaded
-        & ~ResourceFlag.Loading
-        & ~ResourceFlag.Failed
-        & ~ResourceFlag.Expired
+export function withResourceLoaded(maskOptional: undefined | ResourceLifecycle): ResourceLifecycle {
+    const mask = maskOptional ?? ResourceLifecycle.Initial
+    return mask
+        & ~ResourceLifecycle.Loading
+        & ~ResourceLifecycle.Failed
+        & ~ResourceLifecycle.Expired
+        | ResourceLifecycle.Loaded
 }
 
-export function withResourceFailed(mask: undefined | ResourceFlag): ResourceFlag {
-    return (mask ?? 0)
-        | ResourceFlag.Failed
-        & ~ResourceFlag.Loading
+export function withResourceFailed(maskOptional: undefined | ResourceLifecycle): ResourceLifecycle {
+    const mask = maskOptional ?? ResourceLifecycle.Initial
+    return mask
+        & ~ResourceLifecycle.Loading
         // & ~ResourceControl.Loaded // A resource should remain loaded after a failure.
+        | ResourceLifecycle.Failed
 }
 
-export function withResourceExpired(mask: undefined | ResourceFlag): ResourceFlag {
-    return (mask ?? 0) | ResourceFlag.Expired
+export function withResourceCanceled(maskOptional: undefined | ResourceLifecycle): ResourceLifecycle {
+    const mask = maskOptional ?? ResourceLifecycle.Initial
+    return mask
+        & ~ResourceLifecycle.Loading
+}
+
+export function withResourceExpired(maskOptional: undefined | ResourceLifecycle): ResourceLifecycle {
+    const mask = maskOptional ?? ResourceLifecycle.Initial
+    return mask
+        | ResourceLifecycle.Expired
 }
 
 // Types ///////////////////////////////////////////////////////////////////////
 
-export interface ResourceState {
+export interface ResourceLifecycleView {
     required: boolean
     expired: boolean
     loading: boolean

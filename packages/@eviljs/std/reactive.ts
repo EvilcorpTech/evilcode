@@ -1,35 +1,42 @@
-import type {CancelTask} from './eventloop.js'
+import {createAccessor, type AccessorSync} from './accessor.js'
+import {areEqualIdentity} from './equal.js'
 import {scheduleMicroTask} from './eventloop.js'
+import type {TaskVoid} from './fn.js'
 
 export function makeReactive<T>(initialValue: T, options?: undefined | ReactiveValueOptions<T>): ReactiveValue<T> {
     let value = initialValue
-    let cancelNotification: undefined | CancelTask = undefined
+    let cancelNotification: undefined | TaskVoid = undefined
     const observers: Set<ReactiveValueObserver<T>> = new Set()
     const areEqual = options?.equals ?? areEqualIdentity
 
-    return {
-        get value(): T {
-            return value
-        },
-        set value(newValue: T) {
-            if (areEqual(value, newValue)) {
-                return
+    function read(): T {
+        return value
+    }
+
+    function write(newValue: T): T {
+        if (areEqual(value, newValue)) {
+            return newValue
+        }
+
+        value = newValue
+
+        // Notifies once multiple mutations in the same micro task.
+        cancelNotification?.()
+
+        // We schedule a micro task so that if the observer triggers a value mutation,
+        // the reentrant mutation is notified after current one is notified.
+        cancelNotification = scheduleMicroTask(() => {
+            for (const it of observers) {
+                it(newValue)
             }
+        })
 
-            value = newValue
+        return newValue
+    }
 
-            // Notifies once multiple mutations in the same micro task.
-            cancelNotification?.()
-
-            // We schedule a micro task so that if the observer triggers a value mutation,
-            // the reentrant mutation is notified after current one is notified.
-            cancelNotification = scheduleMicroTask(() => {
-                for (const it of observers) {
-                    it(newValue)
-                }
-            })
-        },
-        subscribe(observer: ReactiveValueObserver<T>): UnobserveReactiveValue {
+    return {
+        ...createAccessor(read, write),
+        subscribe(observer: ReactiveValueObserver<T>): TaskVoid {
             observers.add(observer)
 
             observer(value)
@@ -43,15 +50,10 @@ export function makeReactive<T>(initialValue: T, options?: undefined | ReactiveV
     }
 }
 
-export function areEqualIdentity<T>(oldValue: T, newValue: T) {
-    return oldValue === newValue
-}
-
 // Types ///////////////////////////////////////////////////////////////////////
 
-export interface ReactiveValue<T> {
-    value: T
-    subscribe(observer: ReactiveValueObserver<T>): UnobserveReactiveValue
+export interface ReactiveValue<T> extends AccessorSync<T> {
+    subscribe(observer: ReactiveValueObserver<T>): TaskVoid
 }
 
 export interface ReactiveValueOptions<T> {
@@ -60,9 +62,6 @@ export interface ReactiveValueOptions<T> {
 
 export interface ReactiveValueObserver<T> {
     (value: T): void
-}
-
-export interface UnobserveReactiveValue extends CancelTask {
 }
 
 export interface ReactiveValueComparator<T> {

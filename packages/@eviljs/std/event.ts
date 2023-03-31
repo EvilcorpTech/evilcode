@@ -1,4 +1,6 @@
-export function debounce<A extends Array<unknown>>(task: Task<A>, delay: number) {
+import type {Fn, FnArgs} from './fn.js'
+
+export function debounce<A extends Array<unknown>>(task: EventTask<A>, delay: number) {
     interface State {
         args: null | A
         callTime: null | number
@@ -49,7 +51,7 @@ export function debounce<A extends Array<unknown>>(task: Task<A>, delay: number)
     return call
 }
 
-export function throttle<A extends Array<unknown>>(task: Task<A>, delay: number) {
+export function throttle<A extends Array<unknown>>(task: EventTask<A>, delay: number) {
     interface State {
         args: null | A
         timeoutId: null | ReturnType<typeof setTimeout>
@@ -90,6 +92,4 @@ export function throttle<A extends Array<unknown>>(task: Task<A>, delay: number)
 
 // Types ///////////////////////////////////////////////////////////////////////
 
-export interface Task<A extends Array<unknown>> {
-    (...args: A): void
-}
+export type EventTask<A extends FnArgs> = Fn<A, void>

@@ -1,4 +1,6 @@
-export function scheduleMicroTask(task: Task) {
+import type {TaskVoid} from './fn.js'
+
+export function scheduleMicroTask(task: TaskVoid): TaskVoid {
     let canceled = false
 
     Promise.resolve().then(() => {
@@ -14,7 +16,7 @@ export function scheduleMicroTask(task: Task) {
     return cancel
 }
 
-export function scheduleMacroTask(task: Task) {
+export function scheduleMacroTask(task: TaskVoid): TaskVoid {
     const timeoutId = setTimeout(task, 0)
 
     function cancel() {
@@ -22,14 +24,4 @@ export function scheduleMacroTask(task: Task) {
     }
 
     return cancel
-}
-
-// Types ///////////////////////////////////////////////////////////////////////
-
-export interface Task {
-    (): void
-}
-
-export interface CancelTask {
-    (): void
 }

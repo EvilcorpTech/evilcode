@@ -145,7 +145,7 @@ export function format
     return string
 }
 
-export function regexpFromToken(token: string, symbol: string, cache: Record<string, RegExp>) {
+export function regexpFromToken(token: string, symbol: string, cache: Record<string, RegExp>): RegExp {
     if (! cache[token]) {
         cache[token] = new RegExp(`[${symbol}]{\\s*${escapeRegexp(token)}\\s*}`, 'g')
     }

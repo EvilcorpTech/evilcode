@@ -13,18 +13,14 @@ export function computeValue<T, A extends Array<unknown>>(value: ValueComputable
 
 // Types ///////////////////////////////////////////////////////////////////////
 
-export interface Fn<A extends FnArgs, R> {
-    (...args: A): R
-}
-
 export type FnArgs = Array<unknown>
 
-export interface Io<I = unknown, O = unknown> {
-    (input: I): O
-}
+export type Task<R = void> = () => R
+export type TaskVoid = () => void
+export type AsyncTask<R = void> = () => Promise<R>
 
-export interface AsyncIo<I, O> {
-    (input: I): Promise<O>
-}
+export type Fn<A extends FnArgs, R> = (...args: A) => R
+export type Io<I = unknown, O = unknown> = (input: I) => O
+export type AsyncIo<I, O> = (input: I) => Promise<O>
 
 export type ValueComputable<T, A extends FnArgs = []> = T | Fn<A, T>

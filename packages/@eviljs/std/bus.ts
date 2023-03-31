@@ -1,48 +1,61 @@
-export const AnyBusEvent = '*'
+import {scheduleMacroTask} from './eventloop.js'
+import type {TaskVoid} from './fn.js'
 
-export function createBus<B extends BusEvents = BusGeneric>() {
-    const self: Bus<B> = {
-        observers: {} as BusObserversOf<B>,
+export const EventRegExpCache: Record<BusEvent, RegExp> = {}
+
+export function createBus() {
+    const self: Bus = {
+        observers: new Map(),
+
+        emit(event, payload) {
+            return emitEvent(self.observers, event, payload)
+        },
 
         observe(event, observer) {
-            return observeEvent(self.observers, event as string, observer)
+            return observeEvent(self.observers, event, observer)
         },
 
         unobserve(event, observer) {
-            return unobserveEvent(self.observers, event as string, observer)
-        },
-
-        emit(event, payload) {
-            return emitEvent(self.observers, event as string, payload)
+            return unobserveEvent(self.observers, event, observer)
         },
     }
 
     return self
 }
 
-export function emitEvent<P>(
-    observers: BusObserversGeneric,
-    event: BusEvent,
-    payload: P,
-) {
-    const eventObservers = [
-        ...(observers[event] ?? []),
-        ...(observers[AnyBusEvent] ?? []),
-    ]
+export function emitEvent(observers: BusEventObservers, event: BusEvent, payload: unknown): void {
+    const eventObservers: Array<[Array<BusEventObserver>, RegExpMatchArray]> = []
 
-    for (const observer of eventObservers) {
-        observer(payload, event)
+    for (const entry of observers.entries()) {
+        const [observedEvent, observers] = entry
+        const matches = event.match(observedEvent)
+
+        if (! matches) {
+            continue
+        }
+
+        eventObservers.push([observers, matches])
     }
+
+    if (eventObservers.length === 0) {
+        return
+    }
+
+    scheduleMacroTask(() => {
+        for (const entry of eventObservers) {
+            const [observersGroup, matches] = entry
+
+            for (const observer of observersGroup) {
+                observer(event, matches, payload)
+            }
+        }
+    })
 }
 
-export function observeEvent<P>(
-    observers: BusObserversGeneric,
-    event: BusEvent,
-    observer: BusObserver<P>,
-) {
-    const eventObservers = observers[event] ?? (() => {
-        const eventObservers: Array<BusObserver<any>> = []
-        observers[event] = eventObservers
+export function observeEvent(observers: BusEventObservers, event: BusEvent, observer: BusEventObserver): TaskVoid {
+    const eventObservers = observers.get(event) ?? (() => {
+        const eventObservers: Array<BusEventObserver> = []
+        observers.set(event, eventObservers)
         return eventObservers
     })()
 
@@ -55,43 +68,42 @@ export function observeEvent<P>(
     return unobserve
 }
 
-export function unobserveEvent<P>(
-    observers: BusObserversGeneric,
-    event: BusEvent,
-    observer: BusObserver<P>,
-) {
-    const eventObservers = observers[event]
+export function unobserveEvent(observers: BusEventObservers, event: BusEvent, observer: BusEventObserver): void {
+    const eventObservers = observers.get(event)
 
     if (! eventObservers) {
         return
     }
 
-    observers[event] = eventObservers.filter(it => it !== observer)
+    const observerIndex = eventObservers.indexOf(observer)
+
+    if (observerIndex < 0) {
+        return
+    }
+
+    eventObservers.splice(observerIndex, 1)
+}
+
+export function regexpFromEvent(event: BusEvent): RegExp {
+    if (! EventRegExpCache[event]) {
+        EventRegExpCache[event] = new RegExp(event)
+    }
+
+    return EventRegExpCache[event]!
 }
 
 // Types ///////////////////////////////////////////////////////////////////////
 
-export interface Bus<B extends BusEvents = BusGeneric> {
-    observers: BusObserversOf<B>
-    emit<E extends keyof B>(event: E, payload: B[E]): void
-    observe<E extends keyof B>(event: E, observer: BusObserver<B[E]>): BusUnobserve
-    unobserve<E extends keyof B>(event: E, observer: BusObserver<B[E]>): void
+export interface Bus {
+    observers: BusEventObservers
+    emit(event: BusEvent, payload?: unknown): void
+    observe(event: BusEvent, observer: BusEventObserver): TaskVoid
+    unobserve(event: BusEvent, observer: BusEventObserver): void
 }
-
-export type BusGeneric = Record<string, unknown>
 
 export type BusEvent = string
-export type BusEvents = {}
+export type BusEventObservers = Map<BusEvent, Array<BusEventObserver>>
 
-export type BusObserversOf<B extends BusEvents> = {
-    [K in keyof B]: Array<BusObserver<B[K]>>
-}
-export type BusObserversGeneric = Record<BusEvent, undefined | Array<BusObserver<any>>>
-
-export interface BusObserver<P = unknown> {
-    (payload: P, key: BusEvent): void
-}
-
-export interface BusUnobserve {
-    (): void
+export interface BusEventObserver {
+    (event: BusEvent, matches: RegExpMatchArray, payload: unknown): void
 }
