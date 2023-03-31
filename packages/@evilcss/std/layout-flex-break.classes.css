@@ -1,5 +1,6 @@
 .std-flex-break {
     display: inherit;
+    flex-direction: inherit;
     justify-content: inherit;
     align-items: inherit;
     align-content: inherit;
