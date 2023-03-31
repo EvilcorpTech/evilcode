@@ -49,6 +49,6 @@ export function resolveFilteredItemIdx<I>(
 export interface FilterManager<I, F> {
     filter: F
     filteredItems: Array<I>
-    itemIdxOf: (filteredItemIdx: number) => undefined | number
+    itemIdxOf(filteredItemIdx: number): undefined | number
     onChange: StateSetter<F>
 }

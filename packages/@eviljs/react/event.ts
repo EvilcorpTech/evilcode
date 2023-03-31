@@ -1,13 +1,14 @@
-import type {Task} from '@eviljs/std/event.js'
+import type {EventTask} from '@eviljs/std/event.js'
 import {debounce, throttle} from '@eviljs/std/event.js'
+import type {FnArgs} from '@eviljs/std/fn.js'
 import {computeValue} from '@eviljs/std/fn.js'
 import {useEffect, useMemo, useState} from 'react'
 import type {StateInit, StateSetter} from './state.js'
 
 export {debounce, throttle} from '@eviljs/std/event.js'
-export type {Task} from '@eviljs/std/event.js'
+export type {EventTask} from '@eviljs/std/event.js'
 
-export function useCallbackDebounced<A extends Array<unknown>>(callback: Task<A>, delay: number) {
+export function useCallbackDebounced<A extends FnArgs>(callback: EventTask<A>, delay: number) {
     const callbackDebounced = useMemo(() => {
         return debounce(callback, delay)
     }, [callback, delay])
@@ -23,7 +24,7 @@ export function useCallbackDebounced<A extends Array<unknown>>(callback: Task<A>
     return callbackDebounced
 }
 
-export function useCallbackThrottled<A extends Array<unknown>>(callback: Task<A>, delay: number) {
+export function useCallbackThrottled<A extends FnArgs>(callback: EventTask<A>, delay: number) {
     const callbackThrottled = useMemo(() => {
         return throttle(callback, delay)
     }, [callback, delay])
@@ -61,9 +62,9 @@ export function useStateThrottled<T>(initialValue: undefined | StateInit<T>, del
 *
 * EXAMPLE
 *
-* const busyStable = usePipeDebounced(busyUnstable, 500, busy === true)
+* const busyStable = useValueDebounced(busyUnstable, 500, busy === true)
 */
-export function usePipeDebounced<V>(
+export function useValueDebounced<V>(
     input: V,
     delay: number,
     isDebounced?: undefined | boolean | ((state: V) => boolean),

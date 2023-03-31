@@ -1,5 +1,6 @@
-import type {Bus, BusEvent, BusObserver} from '@eviljs/std/bus.js'
+import type {Bus, BusEvent, BusEventObserver} from '@eviljs/std/bus.js'
 import {createBus} from '@eviljs/std/bus.js'
+import type {TaskVoid} from '@eviljs/std/fn.js'
 import {useCallback, useContext, useEffect, useMemo} from 'react'
 import {defineContext} from './ctx.js'
 
@@ -32,14 +33,11 @@ export function useBus<T extends undefined | Bus = undefined | Bus>() {
     return useContext(BusContext) as T
 }
 
-export function useBusEvent<P>(
-    event: BusEvent,
-    observer: BusObserver<P>,
-) {
+export function useBusEvent(event: BusEvent, observer: BusEventObserver): TaskVoid {
     const bus = useBus()!
 
     useEffect(() => {
-        const unobserve = bus.observe(event, observer as BusObserver)
+        const unobserve = bus.observe(event, observer)
 
         function onClean() {
             unobserve()
@@ -49,7 +47,7 @@ export function useBusEvent<P>(
     }, [bus, event, observer])
 
     const unobserve = useCallback(() => {
-        bus.unobserve(event, observer as BusObserver)
+        bus.unobserve(event, observer)
     }, [bus, event, observer])
 
     return unobserve

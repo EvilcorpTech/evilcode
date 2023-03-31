@@ -1,4 +1,6 @@
 import type {Fn} from '@eviljs/std/fn.js'
+import type {ResourceLifecycleView} from '@eviljs/std/resource.js'
+import {ResourceLifecycle, asResourceView, withResourceCanceled, withResourceFailed, withResourceLoaded, withResourceLoading, withResourceRequired} from '@eviljs/std/resource.js'
 import type {Either} from '@eviljs/std/result.js'
 import {Error} from '@eviljs/std/result.js'
 import {isDefined} from '@eviljs/std/type.js'
@@ -6,9 +8,7 @@ import {useCallback, useRef, useState} from 'react'
 
 export function useAsyncIo<A extends Array<unknown>, R>(asyncTask: Fn<A, Promise<R>>): AsyncIoManager<A, R> {
     const [state, setState] = useState<AsyncIoState<R>>({
-        pending: false,
-        fulfilled: false,
-        rejected: false,
+        lifecycle: ResourceLifecycle.Initial,
         output: undefined,
         error: undefined,
     })
@@ -25,9 +25,8 @@ export function useAsyncIo<A extends Array<unknown>, R>(asyncTask: Fn<A, Promise
         // before issuing a call() request.
         setState((state): AsyncIoState<R> => ({
             ...state,
-            pending: true,
-            fulfilled: false,
-            rejected: false,
+            // {pending: true, fulfilled: false, rejected: false}
+            lifecycle: withResourceRequired(withResourceLoading(state.lifecycle)),
         }))
 
         taskRef.current = {
@@ -46,8 +45,8 @@ export function useAsyncIo<A extends Array<unknown>, R>(asyncTask: Fn<A, Promise
 
             setState((state): AsyncIoState<R> => ({
                 ...state,
-                pending: false,
-                fulfilled: true,
+                // {pending: false, fulfilled: true}
+                lifecycle: withResourceLoaded(state.lifecycle),
                 output,
                 error: undefined,
             }))
@@ -61,8 +60,8 @@ export function useAsyncIo<A extends Array<unknown>, R>(asyncTask: Fn<A, Promise
 
             setState((state): AsyncIoState<R> => ({
                 ...state,
-                pending: false,
-                rejected: true,
+                // {pending: false, rejected: true}
+                lifecycle: withResourceFailed(state.lifecycle),
                 output: undefined,
                 error,
             }))
@@ -78,7 +77,8 @@ export function useAsyncIo<A extends Array<unknown>, R>(asyncTask: Fn<A, Promise
 
         setState((state): AsyncIoState<R> => ({
             ...state,
-            pending: false,
+            // {pending: false}
+            lifecycle: withResourceCanceled(state.lifecycle),
         }))
     }, [])
 
@@ -99,37 +99,55 @@ export function useAsyncIo<A extends Array<unknown>, R>(asyncTask: Fn<A, Promise
     const reset = useCallback(() => {
         setState((state): AsyncIoState<R> => ({
             // ...state,
-            pending: false,
-            fulfilled: false,
-            rejected: false,
+            // {pending: false, fulfilled: false, rejected: false}
+            lifecycle: ResourceLifecycle.Initial,
             output: undefined,
             error: undefined,
         }))
     }, [])
 
-    return {...state, call, cancel, reset, resetError, resetResponse}
+    const lifecycleView = asResourceView(state.lifecycle)
+
+    return {
+        ...state,
+        lifecycleView,
+        pending: lifecycleView.loading,
+        fulfilled: lifecycleView.loaded,
+        rejected: lifecycleView.failed,
+        call,
+        cancel,
+        reset,
+        resetError,
+        resetResponse,
+    }
 }
 
-export function useAsyncIoStates(asyncIosStates: Record<string, Pick<AsyncIoState<unknown>, 'pending' | 'error'>>) {
+export function useAsyncIoStates(asyncIosStates: Record<string, AsyncIoStateView<unknown>>) {
     const pending = Object.values(asyncIosStates).some(it => it.pending)
+    const rejected = Object.values(asyncIosStates).some(it => it.rejected)
     const errors = Object.values(asyncIosStates).map(it => it.error).filter(isDefined)
     const error = errors[0]
     const hasError = isDefined(error)
 
-    return {error, errors, hasError, pending}
+    return {error, errors, hasError, pending, rejected}
 }
 
 // Types ///////////////////////////////////////////////////////////////////////
 
 export interface AsyncIoState<R> {
-    pending: boolean
-    fulfilled: boolean
-    rejected: boolean
+    lifecycle: ResourceLifecycle
     output: undefined | R
     error: undefined | unknown
 }
 
-export interface AsyncIoManager<A extends Array<unknown>, R> extends AsyncIoState<R> {
+export interface AsyncIoStateView<R> extends AsyncIoState<R> {
+    lifecycleView: ResourceLifecycleView
+    pending: boolean
+    fulfilled: boolean
+    rejected: boolean
+}
+
+export interface AsyncIoManager<A extends Array<unknown>, R> extends AsyncIoStateView<R> {
     call: (...args: A) => Promise<undefined | Either<R>>
     cancel: () => void
     reset: () => void

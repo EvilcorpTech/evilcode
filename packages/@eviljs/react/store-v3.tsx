@@ -1,5 +1,5 @@
 import {cloneShallow} from '@eviljs/std/clone.js'
-import type {Fn} from '@eviljs/std/fn.js'
+import type {Fn, TaskVoid} from '@eviljs/std/fn.js'
 import {computeValue} from '@eviljs/std/fn.js'
 import {isArray, isObject} from '@eviljs/std/type.js'
 import {useCallback, useContext, useLayoutEffect, useMemo, useRef} from 'react'
@@ -35,7 +35,7 @@ export function useRootStore<S extends StoreStateGeneric>(spec: StoreSpec<S>): S
     const {createState, onChange} = spec
     const stateRef = useRef(createState())
     const storeObservers = useMemo(() =>
-        new Map<string, Array<ChangeObserver>>()
+        new Map<string, Array<TaskVoid>>()
     , [])
 
     const mutate = useCallback((path: StatePath, value: StateSetterArg<unknown>) => {
@@ -68,7 +68,7 @@ export function useRootStore<S extends StoreStateGeneric>(spec: StoreSpec<S>): S
         }
     }, [])
 
-    const observe = useCallback((path: StatePath, observer: ChangeObserver) => {
+    const observe = useCallback((path: StatePath, observer: TaskVoid) => {
         forEachPath(path, pathSegment => {
             const pathKey = asPathKey(pathSegment)
             addToMapList(storeObservers, pathKey, observer)
@@ -303,7 +303,7 @@ export interface StoreSpec<S extends StoreStateGeneric> {
 export interface Store<S extends StoreStateGeneric> {
     stateRef: React.MutableRefObject<S>
     state(): S
-    observe(path: StatePath, observer: ChangeObserver): Unobserve
+    observe(path: StatePath, observer: TaskVoid): TaskVoid
     mutate<V>(path: StatePath, value: StateSetterArg<V>): void
 }
 
@@ -311,14 +311,6 @@ export type StatePath = Array<PropertyKey>
 
 export interface StoreSelector<S extends StoreStateGeneric, V> {
     (state: S): V
-}
-
-export interface ChangeObserver {
-    (): void
-}
-
-export interface Unobserve {
-    (): void
 }
 
 export interface OnChangeEventArgs<S extends StoreStateGeneric = StoreStateGeneric> {
