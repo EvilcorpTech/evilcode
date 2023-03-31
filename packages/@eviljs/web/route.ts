@@ -112,7 +112,7 @@ export function cleanPattern(pattern: string) {
         .replace(EmptyRegexp, '/')
 }
 
-export function regexpFromPattern(pattern: string | RegExp) {
+export function regexpFromPattern(pattern: string | RegExp): RegExp {
     if (isRegExp(pattern)) {
         return pattern
     }
