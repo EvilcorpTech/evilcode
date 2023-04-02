@@ -31,6 +31,6 @@
     --std-color-bg3: var(--std-color-light-bg3);
     --std-color-bg4: var(--std-color-light-bg4);
 
-    --std-bg-l: 100%;
-    --std-bg-ll: -1;
+    --std-bg-l: 100%; /* Can be used with clamp() to obtain the desired lightness. */
+    --std-bg-ll: -1; /* Can be used with calc() to obtain the desired lightness. */
 }

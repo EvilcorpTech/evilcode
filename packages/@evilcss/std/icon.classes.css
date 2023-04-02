@@ -1,18 +1,15 @@
 .std-icon {
     display: inline-block;
-    width: var(--icon-size);
-    height: var(--icon-size);
+    width: var(--icon-size, 1em);
+    height: var(--icon-size, 1em);
 
     /* Stops growing or shrinking inside a flex container (stiff icon). */
-    min-width: var(--icon-size);
-    max-width: var(--icon-size);
-    min-height: var(--icon-size);
-    max-height: var(--icon-size);
+    min-width: var(--icon-size, 1em);
+    max-width: var(--icon-size, 1em);
+    min-height: var(--icon-size, 1em);
+    max-height: var(--icon-size, 1em);
 
     /* Compatibility with Unicode characters. */
-    font-size: var(--icon-size);
-    line-height: var(--icon-size);
+    font-size: var(--icon-size, 1em);
+    line-height: var(--icon-size, 1em);
 }
-
-.std-icon.text { --icon-size: 1em; }
-.std-icon.cover { --icon-size: 100%; }
