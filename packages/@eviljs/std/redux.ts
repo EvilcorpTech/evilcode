@@ -1,3 +1,5 @@
+import type {FnArgs} from './fn.js'
+
 export let ReducerUid = 0
 
 export function withId(name: string) {
@@ -42,7 +44,7 @@ export function composeReducers<
 
 export type ReducerState = object
 export type ReducerId = number | string
-export type ReducerArgs = Array<unknown>
+export type ReducerArgs = FnArgs
 
 export interface ReducerActionDefinition<S extends ReducerState, K extends ReducerId, A extends ReducerArgs> {
     id: K
@@ -71,7 +73,7 @@ export type CompositeReducerOf<T extends Array<[ReducerId, ReducerTarget<Reducer
     (...args: ReducersArgsOf<T>) => ReducerStateOf<T>
 
 export type ReducerStateOf<T extends Array<[ReducerId, ReducerTarget<ReducerState, ReducerArgs>]>> =
-    T extends [ReducerId, ReducerTarget<infer S, ReducerArgs>]
+    T extends Array<[ReducerId, ReducerTarget<infer S, ReducerArgs>]>
         ? S
         : ReducerState
 
@@ -82,12 +84,10 @@ export type ReducersArgsOf<T extends Array<[ReducerId, ReducerTarget<ReducerStat
 
 export type ReducerArgsOf<T extends [ReducerId, ReducerTarget]> =
     T extends [infer K, ReducerTarget<infer S, infer A>]
-        ? string extends K
-            ? [ReducerState, ReducerId, ...Array<unknown>]
-            : [S, K, ...A]
-        : [ReducerState, ReducerId, ...Array<unknown>]
+        ? [S, K, ...A]
+        : [ReducerState, ReducerId, ...FnArgs]
 
 export type ReducerActionsOf<R extends ((state: any, ...args: any) => ReducerState)> =
     R extends ((state: ReducerState, ...args: infer A) => ReducerState)
         ? A
-        : [ReducerId, ReducerArgs]
+        : [ReducerId, ...ReducerArgs]
