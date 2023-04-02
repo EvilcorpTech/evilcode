@@ -37,13 +37,13 @@ export function useRequest<C, A extends Array<unknown>, R>(asyncTask: RequestIo<
         return asyncTask(context, ...args)
     }, [asyncTask])
 
-    const {output, ...ioManager} = useAsyncIo(asyncIo)
+    const ioManager = useAsyncIo(asyncIo)
 
     const send = useCallback((...args: A) => {
         return ioManager.call(...args).then(filterResult)
     }, [asyncIo.call])
 
-    return {...ioManager, send, response: output}
+    return {...ioManager, send, response: ioManager.output}
 }
 
 // Types ///////////////////////////////////////////////////////////////////////
@@ -53,7 +53,7 @@ export interface RequestProviderProps {
     value: unknown
 }
 
-export interface RequestManager<A extends Array<unknown>, R> extends Omit<AsyncIoManager<A, R>, 'output'> {
+export interface RequestManager<A extends Array<unknown>, R> extends AsyncIoManager<A, R> {
     response: AsyncIoManager<A, R>['output']
     send(...args: A): Promise<undefined | R>
 }

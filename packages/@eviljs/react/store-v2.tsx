@@ -1,7 +1,7 @@
 import {computeValue} from '@eviljs/std/fn.js'
 import {areSameObjectsShallow} from '@eviljs/std/object.js'
 import type {Reducer, ReducerAction, ReducerActionsOf, ReducerArgs, ReducerId} from '@eviljs/std/redux.js'
-import type {Partial} from '@eviljs/std/type.js'
+import {isArray, type Partial} from '@eviljs/std/type.js'
 import {useCallback, useContext, useMemo, useRef, useState} from 'react'
 import {defineContext} from './ctx.js'
 import type {StoreStateGeneric} from './store-v1.js'
@@ -39,7 +39,18 @@ export function useRootStore<S extends StoreStateGeneric, A extends ReducerActio
     const [state, setState] = useState(createState)
     const stateRef = useRef(state)
 
-    const dispatch = useCallback((id: ReducerId, ...args: ReducerArgs): S => {
+    const dispatch = useCallback((...polymorphicArgs: StoreDispatchPolymorphicArgs): S => {
+        const [id, ...args] = (() => {
+            const [idOrAction] = polymorphicArgs
+
+            if (isArray(idOrAction)) {
+                const [id, ...args] = idOrAction
+                return [id, ...args] as ReducerAction
+            }
+
+            return polymorphicArgs as ReducerAction
+        })()
+
         onDispatch?.(id, args)
 
         const oldState = stateRef.current
@@ -59,7 +70,7 @@ export function useRootStore<S extends StoreStateGeneric, A extends ReducerActio
     return store
 }
 
-export function useStore<S extends StoreStateGeneric, R extends Reducer<S>>() {
+export function useStore<S extends StoreStateGeneric = StoreStateGeneric, R extends Reducer<S> = Reducer<S>>() {
     return useContext(StoreContext) as undefined | Store<S, ReducerActionsOf<R>>
 }
 
@@ -86,7 +97,12 @@ export interface StoreSpec<S extends StoreStateGeneric, A extends ReducerAction>
 export type Store<S extends StoreStateGeneric = StoreStateGeneric, A extends ReducerAction = ReducerAction> = [S, StoreDispatch<S, A>]
 
 export interface StoreDispatch<S extends StoreStateGeneric, A extends ReducerAction = ReducerAction> {
+    (action: A): S
     (...args: A): S
 }
+
+export type StoreDispatchPolymorphicArgs =
+    | ReducerAction
+    | [ReducerAction]
 
 export type StoreStatePatch<S extends StoreStateGeneric> = Partial<S> | ((prevState: S) => Partial<S>)
