@@ -549,7 +549,7 @@ export function Icons() {
         <div className="std-flex row center align-end aligned-center wrap">
             {times(10).map(it =>
                 <div key={it} className="icon-e43c">
-                    <Icon className={`std-icon s${it + 1}`}/>
+                    <Icon className={classes('std-icon', `std-icon${it + 1}`)}/>
                     <div className="std-space-h s3"/>
                     <label>{it + 1}</label>
                 </div>
