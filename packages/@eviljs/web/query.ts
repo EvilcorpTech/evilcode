@@ -365,27 +365,18 @@ export type QueryParams =
     | QueryParamsDict
     | QueryParamsList
 
-export interface QueryParamsDict extends
-    Record<string | number,
-        | Nil
-        | boolean
-        | number
-        | string
-        | QueryParamsDict
-        | QueryParamsList
-    >
-{}
+export interface QueryParamsDict extends Record<QueryParamsDictKey, QueryParamsDictValue> {}
 
-export interface QueryParamsList extends
-    Array<
-        | Nil
-        | boolean
-        | number
-        | string
-        | QueryParamsDict
-        | QueryParamsList
-    >
-{}
+export type QueryParamsDictKey = number | string
+export type QueryParamsDictValue =
+    | Nil
+    | boolean
+    | number
+    | string
+    | QueryParamsDict
+    | QueryParamsList
+
+export interface QueryParamsList extends Array<QueryParamsDictValue> {}
 
 export type QueryRules = QueryParams
 
