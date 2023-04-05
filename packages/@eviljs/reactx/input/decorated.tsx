@@ -85,15 +85,15 @@ export function SecretInput(props: SecretInputProps) {
     )
 }
 
-export function decorateStart(children: React.ReactNode) {
-    return decorateSides({start: children})
+export function decoratingStart(children: React.ReactNode) {
+    return decoratingSides({start: children})
 }
 
-export function decorateEnd(children: React.ReactNode) {
-    return decorateSides({end: children})
+export function decoratingEnd(children: React.ReactNode) {
+    return decoratingSides({end: children})
 }
 
-export function decorateSides(sides: {start?: React.ReactNode, end?: React.ReactNode}) {
+export function decoratingSides(sides: {start?: React.ReactNode, end?: React.ReactNode}) {
     function decorator(element: React.ReactNode) {
         return <>
             {sides?.start}
