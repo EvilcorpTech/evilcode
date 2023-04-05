@@ -8,3 +8,5 @@
 .std-icon8 { --icon-size: var(--std-icon8); }
 .std-icon9 { --icon-size: var(--std-icon9); }
 .std-icon10 { --icon-size: var(--std-icon10); }
+
+.std-icon-cover { --icon-size: 100%; }
