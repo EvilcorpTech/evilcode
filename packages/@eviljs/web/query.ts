@@ -251,11 +251,11 @@ export function mergeQueryOptions(...optionsList: Array<QueryRequestOptions>): Q
     return {...mergedOptions, params: mergedOptionsParams}
 }
 
-export function withRequestParams(...params: Array<QueryParams>): QueryRequestOptions {
+export function withQueryParams(...params: Array<QueryParams>): QueryRequestOptions {
     return {params}
 }
 
-export function withRequestQuery(rules: QueryRules): QueryRequestOptions {
+export function withQueryRules(rules: QueryRules): QueryRequestOptions {
     return {
         headers: {
             [QueryRulesHeader]: JSON.stringify(rules),
