@@ -1,4 +1,5 @@
-import {I18nManager, useI18n as useCoreI18n} from '@eviljs/react/i18n'
+import type {I18nManager} from '@eviljs/react/i18n'
+import {useI18n as useCoreI18n} from '@eviljs/react/i18n'
 import type {I18nKeyOf, I18nLocaleOf} from '@eviljs/std/i18n'
 import type {I18nSpec} from './apis'
 

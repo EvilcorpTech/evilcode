@@ -1,6 +1,6 @@
 import {HtmlSandbox, defineHtmlSandbox} from '@eviljs/reactx/html-sandbox'
 import {defineShowcase} from '@eviljs/reactx/showcase'
-import {CSSProperties, useState} from 'react'
+import {useState} from 'react'
 
 defineHtmlSandbox()
 
@@ -14,7 +14,7 @@ export default defineShowcase('Html Sandbox', (props) => {
             <div><input value={color} onChange={event => setColor(event.target.value)}/></div>
 
             <HtmlSandbox
-                style={{'--color': color} as CSSProperties}
+                style={{'--color': color} as React.CSSProperties}
             >
                 {`
                     <style>

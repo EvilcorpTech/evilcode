@@ -4,7 +4,7 @@ import {withRequestHeaders, withRequestJson} from '@eviljs/web/fetch'
 import {mergeQueryOptions} from '@eviljs/web/query'
 
 export {mergeFetchOptions, withRequestHeaders, withRequestJson} from '@eviljs/web/fetch'
-export {mergeQueryOptions, withRequestParams} from '@eviljs/web/query'
+export {mergeQueryOptions, withQueryParams} from '@eviljs/web/query'
 export type {Query, QueryRequestOptions} from '@eviljs/web/query'
 
 export function withRequestAuth(token: string): FetchRequestOptions {
