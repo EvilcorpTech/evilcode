@@ -14,8 +14,10 @@ export function makeReactive<T>(initialValue: T, options?: undefined | ReactiveV
     }
 
     function write(newValue: T): T {
-        if (areEqual(value, newValue)) {
-            return newValue
+        const oldValue = value
+
+        if (areEqual(oldValue, newValue)) {
+            return value
         }
 
         value = newValue
@@ -27,7 +29,7 @@ export function makeReactive<T>(initialValue: T, options?: undefined | ReactiveV
         // the reentrant mutation is notified after current one is notified.
         cancelNotification = scheduleMicroTask(() => {
             for (const it of observers) {
-                it(newValue)
+                it(newValue, oldValue)
             }
         })
 
@@ -36,10 +38,14 @@ export function makeReactive<T>(initialValue: T, options?: undefined | ReactiveV
 
     return {
         ...createAccessor(read, write),
-        subscribe(observer: ReactiveValueObserver<T>): TaskVoid {
+        watch(observer, options) {
+            const immediate = options?.immediate ?? false
+
             observers.add(observer)
 
-            observer(value)
+            if (immediate) {
+                observer(value, value)
+            }
 
             function stop() {
                 observers.delete(observer)
@@ -53,7 +59,7 @@ export function makeReactive<T>(initialValue: T, options?: undefined | ReactiveV
 // Types ///////////////////////////////////////////////////////////////////////
 
 export interface ReactiveValue<T> extends AccessorSync<T> {
-    subscribe(observer: ReactiveValueObserver<T>): TaskVoid
+    watch(observer: ReactiveValueObserver<T>, options?: undefined | ReactiveWatchOptions): TaskVoid
 }
 
 export interface ReactiveValueOptions<T> {
@@ -61,9 +67,13 @@ export interface ReactiveValueOptions<T> {
 }
 
 export interface ReactiveValueObserver<T> {
-    (value: T): void
+    (newValue: T, oldValue: T): void
 }
 
 export interface ReactiveValueComparator<T> {
     (oldValue: T, newValue: T): boolean
+}
+
+export interface ReactiveWatchOptions {
+    immediate?: undefined | boolean
 }
