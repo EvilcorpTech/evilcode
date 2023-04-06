@@ -1,6 +1,7 @@
 {
     "name": "@evilcss/ui",
     "version": "1.1.0",
+    "type": "module",
     "files": [
         "/LICENSE.txt",
         "/**/*.css"
