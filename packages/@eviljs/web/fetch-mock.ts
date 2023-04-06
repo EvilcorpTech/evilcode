@@ -16,7 +16,7 @@ export const NoMock = Symbol('NoMock')
 *     ],
 *     'post': [
 *         ['^/v1/auth$', (options?: FetchRequestOptions) => {
-*             const body = JSON.parse(options?.body as string)
+*             const body = JSON.parse(options?.body as string) as any
 *             if (body.identifier !== 'demo' || body.secret !== 'demo') {
 *                 return new Response(null, {status: 404})
 *             }

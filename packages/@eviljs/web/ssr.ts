@@ -10,7 +10,7 @@ export function saveSsrState(id: string, payload: unknown, options?: undefined |
     ssrStorage.textContent = serializedPayload
 }
 
-export function loadSsrState<S = unknown>(id: string, options?: undefined | SsrOptions) {
+export function loadSsrState(id: string, options?: undefined | SsrOptions): unknown {
     const ssrStorage = findSsrStorageElement(id)
     const serializedPayload = ssrStorage?.textContent?.trim()
 
@@ -18,7 +18,7 @@ export function loadSsrState<S = unknown>(id: string, options?: undefined | SsrO
         return
     }
 
-    return JSON.parse(serializedPayload) as S
+    return JSON.parse(serializedPayload) as unknown
 }
 
 export function findSsrStorageElement(id: string) {
