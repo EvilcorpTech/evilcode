@@ -16,9 +16,19 @@ export function areSameObjectsShallow<T extends object>(a: T, b: T): boolean {
         return true
     }
 
+    const aKeys = Object.keys(a)
+    const bKeys = Object.keys(b)
+
+    if (aKeys.length !== bKeys.length) {
+        return false
+    }
+
     // Shallow equality check.
-    for (const key in b) {
-        if (a[key as keyof typeof a] !== b[key as keyof typeof b]) {
+    for (const key of aKeys) {
+        const aValue = a[key as keyof typeof a]
+        const bValue = b[key as keyof typeof b]
+
+        if (aValue !== bValue) {
             // Something changed inside the object.
             return false
         }
