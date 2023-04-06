@@ -95,7 +95,7 @@ export function saveJsonToStorage(storage: Storage, key: string, payload: unknow
     storage.setItem(key, serializedPayload)
 }
 
-export function loadJsonFromStorage(storage: Storage, key: string) {
+export function loadJsonFromStorage(storage: Storage, key: string): unknown {
     const serializedPayload = storage.getItem(key)
 
     if (! serializedPayload) {
@@ -103,9 +103,9 @@ export function loadJsonFromStorage(storage: Storage, key: string) {
     }
 
     try {
-        return JSON.parse(serializedPayload)
+        return JSON.parse(serializedPayload) as unknown
     }
-    catch (error: unknown) {
+    catch (error) {
         console.warn(error)
     }
     return // Makes TypeScript happy.
