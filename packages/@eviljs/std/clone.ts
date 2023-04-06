@@ -15,7 +15,7 @@ export function cloneDeep<T>(value: T): T {
 }
 
 export function cloneDeepSerializable<T>(value: T): T {
-    return JSON.parse(JSON.stringify(value))
+    return JSON.parse(JSON.stringify(value)) as T
 }
 
 export function cloneDate(date: Date) {

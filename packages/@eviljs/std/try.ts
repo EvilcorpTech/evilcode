@@ -12,7 +12,7 @@ export function tryCatch<R, F>(
     try {
         return fn()
     }
-    catch (error: unknown) {
+    catch (error) {
         return onError?.(error)
     }
     finally {
