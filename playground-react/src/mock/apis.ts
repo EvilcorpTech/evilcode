@@ -20,7 +20,7 @@ export const FetchMocksSpec: FetchMocks = {
     ],
     'post': [
         [exact('/auth'), (type, path, options) => {
-            const body = JSON.parse(options?.body as string)
+            const body = JSON.parse(options?.body as string) as any
             if (body.identifier !== 'demo' || body.secret !== 'demo') {
                 return new Response(null, {status: 404})
             }
