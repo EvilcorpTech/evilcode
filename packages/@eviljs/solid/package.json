@@ -4,10 +4,10 @@
     "type": "module",
     "files": [
         "/LICENSE.txt",
+        "/**/*.css",
         "/**/*.js",
         "/**/*.ts",
-        "/**/*.tsx",
-        "/**/*.css"
+        "/**/*.tsx"
     ],
     "scripts": {
         "build": "babel . --out-dir . --extensions '.ts,.tsx' --ignore '**/*.d.ts','node_modules/**/*' && tsc --listEmittedFiles",
