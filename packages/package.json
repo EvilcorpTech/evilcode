@@ -1,15 +1,16 @@
 {
     "scripts": {
-        "init": "npx pnpm@7 install",
+        "init": "npx pnpm@8 install",
+        "update": "npx pnpm@8 update -r",
         "build": "nx run-many --target build"
     },
     "devDependencies": {
-        "nx": "15",
-        "pnpm": "7"
+        "nx": "15.9.2",
+        "pnpm": "8.1.1"
     },
     "engines": {
-        "node": ">= 18",
-        "npm": ">= 9",
-        "pnpm": "7"
+        "node": ">= 16",
+        "npm": ">= 7",
+        "pnpm": "8"
     }
 }
