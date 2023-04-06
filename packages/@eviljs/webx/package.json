@@ -19,7 +19,7 @@
         "tslib": "2"
     },
     "devDependencies": {
-        "typescript": "^5.0"
+        "typescript": "5.0"
     },
     "author": "Daniele Orlando",
     "license": "BSD-2-Clause",

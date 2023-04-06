@@ -40,11 +40,11 @@
         "koa-logger": "3",
         "koa-mount": "4",
         "koa-static": "5",
-        "multer": "1",
+        "multer": "1.4.5-lts.1",
         "tslib": "2"
     },
     "devDependencies": {
-        "typescript": "^5.0"
+        "typescript": "5.0"
     },
     "author": "Daniele Orlando",
     "license": "BSD-2-Clause",
