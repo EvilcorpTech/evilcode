@@ -29,7 +29,7 @@ export function Tooltip(props: TooltipProps) {
 
 // Types ///////////////////////////////////////////////////////////////////////
 
-export interface TooltipProps extends React.HTMLAttributes<HTMLElement>, TooltipModel {
+export interface TooltipProps extends Omit<React.HTMLAttributes<HTMLElement>, 'content'>, TooltipModel {
 }
 
 export interface TooltipModel {
