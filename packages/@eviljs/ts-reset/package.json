@@ -1,0 +1,25 @@
+{
+    "name": "@eviljs/ts-reset",
+    "version": "1.0.0",
+    "type": "module",
+    "files": [
+        "/LICENSE.txt",
+        "/**/*.ts"
+    ],
+    "types": "./index.d.ts",
+    "author": "Daniele Orlando",
+    "license": "BSD-2-Clause",
+    "description": "TypeScript resets",
+    "keywords": [
+        "TypeScript",
+        "resets"
+    ],
+    "homepage": "https://github.com/EvilcorpTech/evilcode",
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/EvilcorpTech/evilcode.git"
+    },
+    "bugs": {
+        "url": "https://github.com/EvilcorpTech/evilcode/issues"
+    }
+}
