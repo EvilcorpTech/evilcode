@@ -3,20 +3,24 @@ import {tryCatch} from '@eviljs/std/try.js'
 import {isObject} from '@eviljs/std/type.js'
 import {useEffect, useRef} from 'react'
 
-export const DefaultDebounce = 1000
-export const DefaultStateVersion = '1'
-export const DefaultStorageKey = '@eviljs/react/store-storage.state'
+export const StoreStorageDefaultAdapter = globalThis.localStorage
+export const StoreStorageDefaultDebounce = 1000
+export const StoreStorageDefaultKey = '@eviljs/react/store-storage.state'
+export const StoreStorageDefaultVersion = '1'
 
 export function useRootStoreStorage<S, L = S>(state: S, options: StoreStorageOptions<S, L>) {
     const {onLoad, onMissing, onSave} = options
-    const debounce = options.debounce ?? DefaultDebounce
-    const stateVersion = options.stateVersion ?? DefaultStateVersion
-    const storage = options.storage ?? globalThis.localStorage
-    const storageKey = options.storageKey ?? DefaultStorageKey
+    const debounce = options.debounce ?? StoreStorageDefaultDebounce
+    const stateVersion = options.stateVersion ?? StoreStorageDefaultVersion
+    const storage = options.storage ?? StoreStorageDefaultAdapter
+    const storageKey = options.storageKey ?? StoreStorageDefaultKey
     const loadedRef = useRef(false)
 
     useEffect(() => {
         if (! storage) {
+            return
+        }
+        if (! onLoad && ! onMissing) {
             return
         }
 
@@ -36,7 +40,7 @@ export function useRootStoreStorage<S, L = S>(state: S, options: StoreStorageOpt
 
         const savedState = payload[stateVersion]
 
-        onLoad(savedState as L)
+        onLoad?.(savedState as L)
     }, [])
 
     useEffect(() => {
@@ -118,7 +122,7 @@ export interface StoreStorageOptions<S, L> {
     stateVersion?: undefined | number | string
     storage?: undefined | Storage
     storageKey?: undefined | string
-    onLoad: StoreStorageOnLoad<L>,
+    onLoad?: undefined | StoreStorageOnLoad<L>,
     onMissing?: undefined | (() => void)
     onSave?: undefined | StoreStorageOnSave<S, L>
 }
