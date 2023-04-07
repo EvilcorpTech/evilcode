@@ -1,7 +1,7 @@
 import type {Fn, ValueComputable} from '@eviljs/std/fn.js'
 import {computeValue} from '@eviljs/std/fn.js'
 import {escapeRegexp} from '@eviljs/std/regexp.js'
-import {isPromise} from '@eviljs/std/type.js'
+import {asArray, isPromise} from '@eviljs/std/type.js'
 import {exact, regexpFromPattern} from '@eviljs/web/route.js'
 import type {Router as RouterManager, RouterObserver, RouterRoute, RouterRouteChange, RouterRouteChangeParams, RouterRouteParams} from '@eviljs/web/router.js'
 import {encodeLink} from '@eviljs/web/router.js'
@@ -9,13 +9,13 @@ import {Children, forwardRef, isValidElement, useCallback, useContext, useEffect
 import {classes} from './classes.js'
 import {defineContext} from './ctx.js'
 
-export {All, Arg, End, exact, Path, PathGlob, PathOpt, Start, Value} from '@eviljs/web/route.js'
+export {All, Arg, End, Path, PathGlob, PathOpt, Start, Value, exact} from '@eviljs/web/route.js'
 export {createHashRouter, createMemoryRouter, createPathRouter} from '@eviljs/web/router.js'
 export type {RouterMemoryOptions, RouterObserver, RouterOptions} from '@eviljs/web/router.js'
 
 export const RouterContext = defineContext<Router>('RouterContext')
-export const RouteArgsContext = defineContext<RouteArgs>('RouteArgsContext')
-export const RouteDefaultActiveClass = 'route-active'
+export const RouteMatchContext = defineContext<RouteArgs>('RouteMatchContext')
+export const RouteActiveClassDefault = 'route-active'
 export const LinkSchemaRegexp = /^([0-9a-zA-Z]+):/ // "http://" "https://" "mailto:" "tel:"
 
 /*
@@ -34,6 +34,57 @@ export function RouterProvider(props: RouterProviderProps) {
         <RouterContext.Provider value={useRootRouter(createRouter)}>
             {children}
         </RouterContext.Provider>
+    )
+}
+
+/*
+* EXAMPLE
+*
+* <WhenRoute is="^/$">
+*     <h1>/ exact</h1>
+* </WhenRoute>
+* <WhenRoute is="^/book">
+*     <h1>/book*</h1>
+* </WhenRoute>
+* <WhenRoute is={Start+'/book'+End}>
+*     <h1>/book exact</h1>
+* </WhenRoute>
+* <WhenRoute is={exact('/book')}>
+*     <h1>/book exact</h1>
+* </WhenRoute>
+* <WhenRoute is={new RegExp('^/book(?:/)?$', 'i')}>
+*     <h1>/book</h1>
+* </WhenRoute>
+* <WhenRoute is={`${Start}/book/${Arg}/${Arg}${End}`}>
+*     {(arg1, arg2) =>
+*         <h1>/book/{arg1}/{arg2}</h1>
+*     }
+* </WhenRoute>
+*/
+export function WhenRoute(props: WhenRouteProps) {
+    const {children, is} = props
+    const {matchRoute} = useRouter()!
+
+    const routeArgs = useMemo((): undefined | RouteArgs => {
+        for (const pattern of asArray(is)) {
+            const routeMatches = matchRoute(pattern)
+
+            if (routeMatches) {
+                return routeMatches.slice(1) // Without whole match.
+            }
+        }
+
+        return // Makes TypeScript happy.
+    }, [is, matchRoute])
+
+    if (! routeArgs) {
+        return null
+    }
+
+    return (
+        <RouteMatchContext.Provider value={routeArgs}>
+            {computeValue(children, ...routeArgs)}
+        </RouteMatchContext.Provider>
     )
 }
 
@@ -73,15 +124,15 @@ export function SwitchRoute(props: SwitchRouteProps) {
         const childrenList = Children.toArray(children).filter(isCaseRouteElement)
 
         for (const child of childrenList) {
-            const routeMatches = matchRoute(child.props.is)
+            for (const pattern of asArray(child.props.is)) {
+                const routeMatches = matchRoute(pattern)
 
-            if (! routeMatches) {
-                continue
-            }
-
-            return {
-                child: child.props.children,
-                args: routeMatches.slice(1), // Without whole match.
+                if (routeMatches) {
+                    return {
+                        child: child.props.children,
+                        args: routeMatches.slice(1), // Without whole match.
+                    }
+                }
             }
         }
 
@@ -89,63 +140,14 @@ export function SwitchRoute(props: SwitchRouteProps) {
     }, [children, matchRoute])
 
     return (
-        <RouteArgsContext.Provider value={match.args}>
+        <RouteMatchContext.Provider value={match.args}>
             {computeValue(match.child, ...match.args)}
-        </RouteArgsContext.Provider>
+        </RouteMatchContext.Provider>
     )
 }
 
 export function CaseRoute(props: CaseRouteProps) {
     return null
-}
-
-/*
-* EXAMPLE
-*
-* <WhenRoute is="^/$">
-*     <h1>/ exact</h1>
-* </WhenRoute>
-* <WhenRoute is="^/book">
-*     <h1>/book*</h1>
-* </WhenRoute>
-* <WhenRoute is={Start+'/book'+End}>
-*     <h1>/book exact</h1>
-* </WhenRoute>
-* <WhenRoute is={exact('/book')}>
-*     <h1>/book exact</h1>
-* </WhenRoute>
-* <WhenRoute is={new RegExp('^/book(?:/)?$', 'i')}>
-*     <h1>/book</h1>
-* </WhenRoute>
-* <WhenRoute is={`${Start}/book/${Arg}/${Arg}${End}`}>
-*     {(arg1, arg2) =>
-*         <h1>/book/{arg1}/{arg2}</h1>
-*     }
-* </WhenRoute>
-*/
-export function WhenRoute(props: WhenRouteProps) {
-    const {children, is} = props
-    const {matchRoute} = useRouter()!
-
-    const routeArgs = useMemo((): undefined | RouteArgs => {
-        const routeMatches = matchRoute(is)
-
-        if (! routeMatches) {
-            return
-        }
-
-        return routeMatches.slice(1) // Without whole match.
-    }, [is, matchRoute])
-
-    if (! routeArgs) {
-        return null
-    }
-
-    return (
-        <RouteArgsContext.Provider value={routeArgs}>
-            {computeValue(children, ...routeArgs)}
-        </RouteArgsContext.Provider>
-    )
 }
 
 /*
@@ -225,7 +227,7 @@ export const Route = forwardRef(function Route(
     const activeClasses = false
         || activeClass
         || activeProps?.className
-        || RouteDefaultActiveClass
+        || RouteActiveClassDefault
 
     return (
         <a
@@ -357,7 +359,7 @@ export function useRouter() {
 }
 
 export function useRouteArgs() {
-    return useContext(RouteArgsContext)
+    return useContext(RouteMatchContext)
 }
 
 export function useRouterTransition() {
@@ -413,19 +415,17 @@ export interface Router<S = unknown> {
     stop(): void
 }
 
+export interface WhenRouteProps {
+    children: undefined | RouteMatchChildren
+    is: RoutePattern
+}
+
 export interface SwitchRouteProps {
     children: undefined | React.ReactNode
     default?: undefined | React.ReactNode
 }
 
-export interface CaseRouteProps {
-    children: undefined | RouteMatchChildren
-    is: string | RegExp
-}
-
-export interface WhenRouteProps {
-    children: undefined | RouteMatchChildren
-    is: string | RegExp
+export interface CaseRouteProps extends WhenRouteProps {
 }
 
 export interface RouteProps extends RoutingProps, React.AnchorHTMLAttributes<HTMLAnchorElement> {
@@ -454,6 +454,8 @@ export interface RouterRouteChangeComputable<S = unknown> extends Omit<RouterRou
         | RouterRouteChangeParams
         | ((params: RouterRouteParams) => RouterRouteChangeParams)
 }
+
+export type RoutePattern = string | RegExp | Array<string | RegExp>
 
 export type RouteMatchChildren =
     | React.ReactNode
