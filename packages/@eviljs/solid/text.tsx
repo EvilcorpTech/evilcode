@@ -27,7 +27,7 @@ export function Text(props: TextProps) {
                     ? props.children
                     : undefined
                 }
-                children={message}
+                children={message()}
             />
         </Show>
     )
