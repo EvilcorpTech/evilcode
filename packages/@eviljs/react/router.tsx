@@ -5,7 +5,7 @@ import {asArray, isPromise} from '@eviljs/std/type.js'
 import {exact, regexpFromPattern} from '@eviljs/web/route.js'
 import type {Router as RouterManager, RouterObserver, RouterRoute, RouterRouteChange, RouterRouteChangeParams, RouterRouteParams} from '@eviljs/web/router.js'
 import {encodeLink} from '@eviljs/web/router.js'
-import {isAbsoluteUrl} from '@eviljs/web/url.js'
+import {isUrlAbsolute} from '@eviljs/web/url.js'
 import {Children, forwardRef, isValidElement, useCallback, useContext, useEffect, useMemo, useRef, useState} from 'react'
 import {classes} from './classes.js'
 import {defineContext} from './ctx.js'
@@ -246,7 +246,7 @@ export const Route = forwardRef(function Route(
 
 export function Link(props: LinkProps) {
     const {children, className, params, replace, state, to, ...otherProps} = props
-    const isLink = isAbsoluteUrl(to)
+    const isLink = isUrlAbsolute(to)
 
     if (to && isLink) {
         return (
