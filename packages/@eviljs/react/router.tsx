@@ -5,6 +5,7 @@ import {asArray, isPromise} from '@eviljs/std/type.js'
 import {exact, regexpFromPattern} from '@eviljs/web/route.js'
 import type {Router as RouterManager, RouterObserver, RouterRoute, RouterRouteChange, RouterRouteChangeParams, RouterRouteParams} from '@eviljs/web/router.js'
 import {encodeLink} from '@eviljs/web/router.js'
+import {isAbsoluteUrl} from '@eviljs/web/url.js'
 import {Children, forwardRef, isValidElement, useCallback, useContext, useEffect, useMemo, useRef, useState} from 'react'
 import {classes} from './classes.js'
 import {defineContext} from './ctx.js'
@@ -16,7 +17,6 @@ export type {RouterMemoryOptions, RouterObserver, RouterOptions} from '@eviljs/w
 export const RouterContext = defineContext<Router>('RouterContext')
 export const RouteMatchContext = defineContext<RouteArgs>('RouteMatchContext')
 export const RouteActiveClassDefault = 'route-active'
-export const LinkSchemaRegexp = /^([0-9a-zA-Z]+):/ // "http://" "https://" "mailto:" "tel:"
 
 /*
 * EXAMPLE
@@ -246,9 +246,7 @@ export const Route = forwardRef(function Route(
 
 export function Link(props: LinkProps) {
     const {children, className, params, replace, state, to, ...otherProps} = props
-    const isLink = false
-        || Boolean(to?.startsWith('//'))
-        || Boolean(to && LinkSchemaRegexp.test(to))
+    const isLink = isAbsoluteUrl(to)
 
     if (to && isLink) {
         return (

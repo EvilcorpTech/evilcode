@@ -8,7 +8,7 @@ import {useCallback, useRef, useState} from 'react'
 
 export function useAsyncIo<A extends Array<unknown>, R>(asyncTask: Fn<A, Promise<R>>): AsyncIoManager<A, R> {
     const [state, setState] = useState<AsyncIoState<R>>({
-        lifecycle: ResourceLifecycle.Initial,
+        resource: ResourceLifecycle.Initial,
         output: undefined,
         error: undefined,
     })
@@ -26,7 +26,7 @@ export function useAsyncIo<A extends Array<unknown>, R>(asyncTask: Fn<A, Promise
         setState((state): AsyncIoState<R> => ({
             ...state,
             // {pending: true, fulfilled: false, rejected: false}
-            lifecycle: withResourceRequired(withResourceLoading(state.lifecycle)),
+            resource: withResourceRequired(withResourceLoading(state.resource)),
         }))
 
         taskRef.current = {
@@ -46,7 +46,7 @@ export function useAsyncIo<A extends Array<unknown>, R>(asyncTask: Fn<A, Promise
             setState((state): AsyncIoState<R> => ({
                 ...state,
                 // {pending: false, fulfilled: true}
-                lifecycle: withResourceLoaded(state.lifecycle),
+                resource: withResourceLoaded(state.resource),
                 output,
                 error: undefined,
             }))
@@ -61,7 +61,7 @@ export function useAsyncIo<A extends Array<unknown>, R>(asyncTask: Fn<A, Promise
             setState((state): AsyncIoState<R> => ({
                 ...state,
                 // {pending: false, rejected: true}
-                lifecycle: withResourceFailed(state.lifecycle),
+                resource: withResourceFailed(state.resource),
                 output: undefined,
                 error,
             }))
@@ -78,7 +78,7 @@ export function useAsyncIo<A extends Array<unknown>, R>(asyncTask: Fn<A, Promise
         setState((state): AsyncIoState<R> => ({
             ...state,
             // {pending: false}
-            lifecycle: withResourceCanceled(state.lifecycle),
+            resource: withResourceCanceled(state.resource),
         }))
     }, [])
 
@@ -100,20 +100,20 @@ export function useAsyncIo<A extends Array<unknown>, R>(asyncTask: Fn<A, Promise
         setState((state): AsyncIoState<R> => ({
             // ...state,
             // {pending: false, fulfilled: false, rejected: false}
-            lifecycle: ResourceLifecycle.Initial,
+            resource: ResourceLifecycle.Initial,
             output: undefined,
             error: undefined,
         }))
     }, [])
 
-    const lifecycleView = asResourceView(state.lifecycle)
+    const resourceView = asResourceView(state.resource)
 
     return {
         ...state,
-        lifecycleView,
-        pending: lifecycleView.loading,
-        fulfilled: lifecycleView.loaded,
-        rejected: lifecycleView.failed,
+        ...resourceView,
+        pending: resourceView.loading,
+        fulfilled: resourceView.loaded,
+        rejected: resourceView.failed,
         call,
         cancel,
         reset,
@@ -135,24 +135,23 @@ export function useAsyncIoStates(asyncIosStates: Record<string, AsyncIoStateView
 // Types ///////////////////////////////////////////////////////////////////////
 
 export interface AsyncIoState<R> {
-    lifecycle: ResourceLifecycle
+    resource: ResourceLifecycle
     output: undefined | R
     error: undefined | unknown
 }
 
-export interface AsyncIoStateView<R> extends AsyncIoState<R> {
-    lifecycleView: ResourceLifecycleView
+export interface AsyncIoStateView<R> extends AsyncIoState<R>, ResourceLifecycleView {
     pending: boolean
     fulfilled: boolean
     rejected: boolean
 }
 
 export interface AsyncIoManager<A extends Array<unknown>, R> extends AsyncIoStateView<R> {
-    call: (...args: A) => Promise<undefined | Either<R>>
-    cancel: () => void
-    reset: () => void
-    resetError: () => void
-    resetResponse: () => void
+    call(...args: A): Promise<undefined | Either<R>>
+    cancel(): void
+    reset(): void
+    resetError(): void
+    resetResponse(): void
 }
 
 export interface PromiseCancellable<T> {
