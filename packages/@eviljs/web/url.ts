@@ -1,14 +1,14 @@
-export const LinkSchemaRegexp = /^([0-9a-zA-Z]+):/ // "http://" "https://" "mailto:" "tel:"
+export const UrlSchemaRegexp = /^([0-9a-zA-Z]+):/ // "http://" "https://" "mailto:" "tel:"
 
-export function isAbsoluteUrl(url: string): boolean
-export function isAbsoluteUrl(url: undefined | string): undefined | boolean
-export function isAbsoluteUrl(url: undefined | string) {
+export function isUrlAbsolute(url: string): boolean
+export function isUrlAbsolute(url: undefined | string): undefined | boolean
+export function isUrlAbsolute(url: undefined | string) {
     if (! url) {
         return
     }
     return false
         || url.startsWith('//')
-        || LinkSchemaRegexp.test(url)
+        || UrlSchemaRegexp.test(url)
 }
 
 export function asBaseUrl(url?: undefined | string) {
