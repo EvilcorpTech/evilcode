@@ -1,3 +1,16 @@
+export const LinkSchemaRegexp = /^([0-9a-zA-Z]+):/ // "http://" "https://" "mailto:" "tel:"
+
+export function isAbsoluteUrl(url: string): boolean
+export function isAbsoluteUrl(url: undefined | string): undefined | boolean
+export function isAbsoluteUrl(url: undefined | string) {
+    if (! url) {
+        return
+    }
+    return false
+        || url.startsWith('//')
+        || LinkSchemaRegexp.test(url)
+}
+
 export function asBaseUrl(url?: undefined | string) {
     if (! url) {
         return ''
@@ -14,28 +27,7 @@ export function asBaseUrl(url?: undefined | string) {
     return url
 }
 
-// const joinPathTests: Array<[string, [string, string, ...Array<string>]]> = [
-//     ['/api', ['', 'api']],
-//     ['/api', ['', '/api']],
-//     ['/api/', ['/', 'api/']],
-//     ['/api/', ['/', '/api/']],
-//     ['api/v1', ['api', 'v1']],
-//     ['/api/v1', ['/api', 'v1']],
-//     ['/api/v1', ['/api', '/v1']],
-//     ['/api/v1', ['/api/', '/v1']],
-//     ['/api/v1/id/', ['/api/', '/v1/', '/id/']],
-//     ['https://api.com/api', ['https://api.com', 'api']],
-//     ['https://api.com/api', ['https://api.com/', 'api']],
-//     ['https://api.com/api', ['https://api.com', '/api']],
-//     ['https://api.com/api', ['https://api.com/', '/api']],
-//     ['https://api.com/api/v2', ['https://api.com', '/api/', 'v2']],
-// ]
-// for (const it of joinPathTests) {
-//     const [expected, args] = it
-//     const actual = joinPath(...args)
-//     console.assert(expected === actual, 'expected:', expected, 'given:', actual, args)
-// }
-export function joinPath(firstPart: string, secondPart: string, ...otherParts: Array<string>) {
+export function joinUrlPath(firstPart: string, secondPart: string, ...otherParts: Array<string>) {
     const parts = [secondPart, ...otherParts]
 
     let path = firstPart
@@ -48,4 +40,16 @@ export function joinPath(firstPart: string, secondPart: string, ...otherParts: A
             : it
     }
     return path
+}
+
+export function joinUrlPathAndParams(path: string, params: undefined | string): string {
+    if (! params) {
+        return path
+    }
+
+    const separator = path.includes('?')
+        ? '&'
+        : '?'
+
+    return path + separator + params
 }

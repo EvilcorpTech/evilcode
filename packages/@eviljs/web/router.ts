@@ -1,7 +1,7 @@
 import {isString} from '@eviljs/std/type.js'
 import type {QueryParams, QueryParamsDict, QueryParamsList} from './query.js'
 import {encodeQueryParamKey, encodeQueryParams, encodeQueryParamValue} from './query.js'
-import {asBaseUrl} from './url.js'
+import {asBaseUrl, joinUrlPathAndParams} from './url.js'
 
 export function createPathRouter<S = unknown>(observer: RouterObserver, options?: undefined | RouterOptions): Router<S> {
     const basePath = asBaseUrl(options?.basePath)
@@ -208,7 +208,7 @@ export function encodeLink(url: string, params?: undefined | RouterRouteChangePa
     const [urlPath, urlParams] = url.split('?')
     const paramsString = encodeRouteParams(params)
     const allParams = [urlParams, paramsString].filter(Boolean).join('&')
-    const linkEncoded = joinPathParams(urlPath ?? '', allParams)
+    const linkEncoded = joinUrlPathAndParams(urlPath ?? '', allParams)
     return linkEncoded
 }
 
@@ -217,7 +217,7 @@ export function encodeLink(url: string, params?: undefined | RouterRouteChangePa
 **/
 export function encodeRoute(path: string, params?: undefined | RouterRouteChangeParams): string {
     const paramsString = encodeRouteParams(params)
-    const routeEncoded = joinPathParams(path, paramsString)
+    const routeEncoded = joinUrlPathAndParams(path, paramsString)
     return routeEncoded
 }
 
@@ -271,12 +271,6 @@ export function flattenRouteParams(routeParams: undefined | RouterRouteChangePar
             encodeQueryParams(routeParams) || undefined // Casts '' to undefined.
         )
         : undefined
-}
-
-export function joinPathParams(path: string, params: undefined | string): string {
-    const separator = params ? '?' : ''
-    const url = path + separator + params
-    return url
 }
 
 // Types ///////////////////////////////////////////////////////////////////////
