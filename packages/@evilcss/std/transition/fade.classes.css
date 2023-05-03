@@ -2,11 +2,11 @@
     opacity: 1;
 }
 .std-transition-fade.exit-to {
-    opacity: 0;
+    opacity: var(--exit-to-opacity, 0);
     transition: opacity var(--exit-duration, var(--std-duration2));
 }
 .std-transition-fade.enter-from {
-    opacity: 0;
+    opacity: var(--enter-from-opacity, 0);
 }
 .std-transition-fade.enter-to {
     opacity: 1;

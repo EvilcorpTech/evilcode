@@ -1,0 +1,7 @@
+.std-no-pointer {
+    pointer-events: none;
+}
+
+.std-pointer {
+    pointer-events: initial;
+}

@@ -1,34 +1,47 @@
-.std,
-.std-background-z /* Needed for inheriting --std-color-bg-z. */
-{
+.std {
     --std-color-dark-bg-l-base: 9%;
     --std-color-dark-bg-l-factor: 3%;
     --std-color-dark-bg-z-factor: 4%;
+
     --std-color-dark-bg1-h: var(--std-color-dark-bg-h, 0deg);
     --std-color-dark-bg1-s: var(--std-color-dark-bg-s, 0%);
     --std-color-dark-bg1-l: calc(var(--std-color-dark-bg-l-base) + var(--std-color-bg-z, 0) * var(--std-color-dark-bg-z-factor));
+    --std-color-dark-bg1: hsl(var(--std-color-dark-bg1-h) var(--std-color-dark-bg1-s) var(--std-color-dark-bg1-l) / var(--std-color-dark-bg1-opacity, 1));
+
     --std-color-dark-bg2-h: var(--std-color-dark-bg-h, 0deg);
     --std-color-dark-bg2-s: var(--std-color-dark-bg-s, 0%);
     --std-color-dark-bg2-l: calc(var(--std-color-dark-bg1-l) + var(--std-color-dark-bg-l-factor));
+    --std-color-dark-bg2: hsl(var(--std-color-dark-bg2-h) var(--std-color-dark-bg2-s) var(--std-color-dark-bg2-l) / var(--std-color-dark-bg2-opacity, 1));
+
     --std-color-dark-bg3-h: var(--std-color-dark-bg-h, 0deg);
     --std-color-dark-bg3-s: var(--std-color-dark-bg-s, 0%);
     --std-color-dark-bg3-l: calc(var(--std-color-dark-bg2-l) + var(--std-color-dark-bg-l-factor));
+    --std-color-dark-bg3: hsl(var(--std-color-dark-bg3-h) var(--std-color-dark-bg3-s) var(--std-color-dark-bg3-l) / var(--std-color-dark-bg3-opacity, 1));
+
     --std-color-dark-bg4-h: var(--std-color-dark-bg-h, 0deg);
     --std-color-dark-bg4-s: var(--std-color-dark-bg-s, 0%);
     --std-color-dark-bg4-l: calc(var(--std-color-dark-bg3-l) + var(--std-color-dark-bg-l-factor));
-
-    --std-color-dark-bg1: hsl(var(--std-color-dark-bg1-h) var(--std-color-dark-bg1-s) var(--std-color-dark-bg1-l));
-    --std-color-dark-bg2: hsl(var(--std-color-dark-bg2-h) var(--std-color-dark-bg2-s) var(--std-color-dark-bg2-l));
-    --std-color-dark-bg3: hsl(var(--std-color-dark-bg3-h) var(--std-color-dark-bg3-s) var(--std-color-dark-bg3-l));
-    --std-color-dark-bg4: hsl(var(--std-color-dark-bg4-h) var(--std-color-dark-bg4-s) var(--std-color-dark-bg4-l));
+    --std-color-dark-bg4: hsl(var(--std-color-dark-bg4-h) var(--std-color-dark-bg4-s) var(--std-color-dark-bg4-l) / var(--std-color-dark-bg4-opacity, 1));
 }
-.std.theme-dark,
-.std.theme-dark .std-background-z, /* Needed for inheriting --std-color-bg-z. */
-.std.theme-light .std.theme-dark .std-background-z /* Needed for inheriting --std-color-bg-z when nesting a theme dark in a theme light. */
-{
+.std.theme-dark {
+    --std-color-bg1-h: var(--std-color-dark-bg1-h);
+    --std-color-bg1-s: var(--std-color-dark-bg1-s);
+    --std-color-bg1-l: var(--std-color-dark-bg1-l);
     --std-color-bg1: var(--std-color-dark-bg1);
+
+    --std-color-bg2-h: var(--std-color-dark-bg2-h);
+    --std-color-bg2-s: var(--std-color-dark-bg2-s);
+    --std-color-bg2-l: var(--std-color-dark-bg2-l);
     --std-color-bg2: var(--std-color-dark-bg2);
+
+    --std-color-bg3-h: var(--std-color-dark-bg3-h);
+    --std-color-bg3-s: var(--std-color-dark-bg3-s);
+    --std-color-bg3-l: var(--std-color-dark-bg3-l);
     --std-color-bg3: var(--std-color-dark-bg3);
+
+    --std-color-bg4-h: var(--std-color-dark-bg4-h);
+    --std-color-bg4-s: var(--std-color-dark-bg4-s);
+    --std-color-bg4-l: var(--std-color-dark-bg4-l);
     --std-color-bg4: var(--std-color-dark-bg4);
 
     --std-bg-l: 0%; /* Can be used with clamp() to obtain the desired lightness. */

@@ -1,11 +1,33 @@
 .std {
-    --std-color-dark-fg1: hsl(0deg 0% 95%);
-    --std-color-dark-fg2: hsl(0deg 0% 74%);
-    --std-color-dark-fg3: hsl(0deg 0% 53%);
+    --std-color-dark-fg1-h: var(--std-color-dark-fg-h, 0deg);
+    --std-color-dark-fg1-s: var(--std-color-dark-fg-s, 0%);
+    --std-color-dark-fg1-l: 95%;
+    --std-color-dark-fg1: hsl(var(--std-color-dark-fg1-h) var(--std-color-dark-fg1-s) var(--std-color-dark-fg1-l) / var(--std-color-dark-fg1-opacity, 1));
+
+    --std-color-dark-fg2-h: var(--std-color-dark-fg-h, 0deg);
+    --std-color-dark-fg2-s: var(--std-color-dark-fg-s, 0%);
+    --std-color-dark-fg2-l: 74%;
+    --std-color-dark-fg2: hsl(var(--std-color-dark-fg2-h) var(--std-color-dark-fg2-s) var(--std-color-dark-fg2-l) / var(--std-color-dark-fg2-opacity, 1));
+
+    --std-color-dark-fg3-h: var(--std-color-dark-fg-h, 0deg);
+    --std-color-dark-fg3-s: var(--std-color-dark-fg-s, 0%);
+    --std-color-dark-fg3-l: 53%;
+    --std-color-dark-fg3: hsl(var(--std-color-dark-fg3-h) var(--std-color-dark-fg3-s) var(--std-color-dark-fg3-l) / var(--std-color-dark-fg3-opacity, 1));
 }
 .std.theme-dark {
+    --std-color-fg1-h: var(--std-color-dark-fg1-h);
+    --std-color-fg1-s: var(--std-color-dark-fg1-s);
+    --std-color-fg1-l: var(--std-color-dark-fg1-l);
     --std-color-fg1: var(--std-color-dark-fg1);
+
+    --std-color-fg2-h: var(--std-color-dark-fg2-h);
+    --std-color-fg2-s: var(--std-color-dark-fg2-s);
+    --std-color-fg2-l: var(--std-color-dark-fg2-l);
     --std-color-fg2: var(--std-color-dark-fg2);
+
+    --std-color-fg3-h: var(--std-color-dark-fg3-h);
+    --std-color-fg3-s: var(--std-color-dark-fg3-s);
+    --std-color-fg3-l: var(--std-color-dark-fg3-l);
     --std-color-fg3: var(--std-color-dark-fg3);
 
     --std-fg-l: 100%;

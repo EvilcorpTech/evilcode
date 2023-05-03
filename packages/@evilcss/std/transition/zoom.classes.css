@@ -3,16 +3,16 @@
     transform: scale(1);
 }
 .std-transition-zoom.exit-to {
-    opacity: 0;
-    transform: scale(.9);
+    opacity: var(--exit-to-opacity, 0);
+    transform: scale(var(--exit-to-scale, .9));
     transition:
         opacity var(--exit-duration, var(--std-duration2)),
         transform var(--exit-duration, var(--std-duration2))
     ;
 }
 .std-transition-zoom.enter-from {
-    opacity: 0;
-    transform: scale(.9);
+    opacity: var(--enter-from-opacity, 0);
+    transform: scale(var(--enter-from-scale, .9));
 }
 .std-transition-zoom.enter-to {
     opacity: 1;

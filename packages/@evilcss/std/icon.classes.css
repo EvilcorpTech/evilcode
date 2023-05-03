@@ -13,3 +13,9 @@
     font-size: var(--icon-size, 1em);
     line-height: var(--icon-size, 1em);
 }
+.std-icon.flex {
+    min-width: initial;
+    max-width: initial;
+    min-height: initial;
+    max-height: initial;
+}

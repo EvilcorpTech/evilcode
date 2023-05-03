@@ -1,4 +1,4 @@
-html[no-scroll],
+/* html[no-scroll], */ /* Breaks `position: sticky`. */
 body[no-scroll],
 html[no-scroll] body {
     overflow: hidden;

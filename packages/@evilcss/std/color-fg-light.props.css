@@ -1,11 +1,33 @@
 .std {
-    --std-color-light-fg1: hsl(0deg 0% 13%);
-    --std-color-light-fg2: hsl(0deg 0% 36%);
-    --std-color-light-fg3: hsl(0deg 0% 59%);
+    --std-color-light-fg1-h: var(--std-color-light-fg-h, 0deg);
+    --std-color-light-fg1-s: var(--std-color-light-fg-s, 0%);
+    --std-color-light-fg1-l: 13%;
+    --std-color-light-fg1: hsl(var(--std-color-light-fg1-h) var(--std-color-light-fg1-s) var(--std-color-light-fg1-l) / var(--std-color-light-fg1-opacity, 1));
+
+    --std-color-light-fg2-h: var(--std-color-light-fg-h, 0deg);
+    --std-color-light-fg2-s: var(--std-color-light-fg-s, 0%);
+    --std-color-light-fg2-l: 36%;
+    --std-color-light-fg2: hsl(var(--std-color-light-fg2-h) var(--std-color-light-fg2-s) var(--std-color-light-fg2-l) / var(--std-color-light-fg2-opacity, 1));
+
+    --std-color-light-fg3-h: var(--std-color-light-fg-h, 0deg);
+    --std-color-light-fg3-s: var(--std-color-light-fg-s, 0%);
+    --std-color-light-fg3-l: 59%;
+    --std-color-light-fg3: hsl(var(--std-color-light-fg3-h) var(--std-color-light-fg3-s) var(--std-color-light-fg3-l) / var(--std-color-light-fg3-opacity, 1));
 }
 .std.theme-light {
+    --std-color-fg1-h: var(--std-color-light-fg1-h);
+    --std-color-fg1-s: var(--std-color-light-fg1-s);
+    --std-color-fg1-l: var(--std-color-light-fg1-l);
     --std-color-fg1: var(--std-color-light-fg1);
+
+    --std-color-fg2-h: var(--std-color-light-fg2-h);
+    --std-color-fg2-s: var(--std-color-light-fg2-s);
+    --std-color-fg2-l: var(--std-color-light-fg2-l);
     --std-color-fg2: var(--std-color-light-fg2);
+
+    --std-color-fg3-h: var(--std-color-light-fg3-h);
+    --std-color-fg3-s: var(--std-color-light-fg3-s);
+    --std-color-fg3-l: var(--std-color-light-fg3-l);
     --std-color-fg3: var(--std-color-light-fg3);
 
     --std-fg-l: 0%;
