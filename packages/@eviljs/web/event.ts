@@ -1,22 +1,21 @@
-export function preventEventDefault(event: PreventableEvent) {
+export function preventEventDefault(event: Pick<Event, 'preventDefault'>) {
     event.preventDefault()
 }
 
-export function stopEventPropagation(event: StoppableEvent) {
+export function stopEventPropagation(event: Pick<Event, 'stopPropagation'>) {
     event.stopPropagation()
 }
 
-export function cancelEvent(event: PreventableEvent & StoppableEvent) {
-    preventEventDefault(event)
-    stopEventPropagation(event)
+export function stopEventPropagationImmediately(event: Pick<Event, 'stopImmediatePropagation'>) {
+    event.stopImmediatePropagation()
 }
 
-// Types ///////////////////////////////////////////////////////////////////////
-
-export interface PreventableEvent {
-    preventDefault(): void
+export function cancelEvent(event: Pick<Event, 'preventDefault' | 'stopPropagation'>) {
+    event.preventDefault()
+    event.stopPropagation()
 }
 
-export interface StoppableEvent {
-    stopPropagation(): void
+export function cancelEventImmediately(event: Pick<Event, 'preventDefault' | 'stopImmediatePropagation'>) {
+    event.preventDefault()
+    event.stopImmediatePropagation()
 }

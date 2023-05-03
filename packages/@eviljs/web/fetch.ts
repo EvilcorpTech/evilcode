@@ -1,5 +1,6 @@
 import {throwInvalidArgument} from '@eviljs/std/throw.js'
 import {isArray, isNil, isObject} from '@eviljs/std/type.js'
+import {FormDataType, FormUrlType, JsonType, TextType} from './mimetype.js'
 import {asBaseUrl} from './url.js'
 
 export enum HttpMethod {
@@ -10,11 +11,11 @@ export enum HttpMethod {
     Put = 'put',
 }
 
-export enum ContentType {
-    Form = 'multipart/form-data',
-    Json = 'application/json',
-    Text = 'text/plain',
-    Url = 'application/x-www-form-urlencoded',
+export const ContentType = {
+    FormData: FormDataType,
+    FromUrl: FormUrlType,
+    Json: JsonType,
+    Text: TextType,
 }
 
 export function createFetch(options?: undefined | FetchOptions): Fetch {
@@ -106,10 +107,10 @@ export function unpackResponse(response: Response): Promise<string | FormData | 
     if (type.startsWith(ContentType.Json)) {
         return response.json() as Promise<unknown>
     }
-    if (type.startsWith(ContentType.Form)) {
+    if (type.startsWith(ContentType.FormData)) {
         return response.formData()
     }
-    if (type.startsWith(ContentType.Url)) {
+    if (type.startsWith(ContentType.FromUrl)) {
         return response.text().then(it => new URLSearchParams(it))
     }
     return response.text()
