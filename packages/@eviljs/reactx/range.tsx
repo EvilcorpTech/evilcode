@@ -1,7 +1,7 @@
 import './range.css'
 
-import type {DragEvent, DragPointerEvent} from '@eviljs/react/drag.js'
-import {asDragPointerEvent, useDrag} from '@eviljs/react/drag.js'
+import type {DragPointerEvent, UseDragOptions} from '@eviljs/react/drag.js'
+import {useDrag} from '@eviljs/react/drag.js'
 import {clamp} from '@eviljs/std/math.js'
 import {distanceBetween} from '@eviljs/std/scale.js'
 import {isNil} from '@eviljs/std/type.js'
@@ -12,9 +12,10 @@ export function Range(props: RangeProps) {
     const {
         className,
         start,
-        end,
         startHandle,
         startLine,
+        centerHandle,
+        end,
         endHandle,
         endLine,
         onChange,
@@ -24,8 +25,10 @@ export function Range(props: RangeProps) {
     const refs = {
         region: useRef<HTMLDivElement>(null),
         start: useRef<HTMLDivElement>(null),
+        startHandle: useRef<HTMLButtonElement>(null),
+        centerHandle: useRef<HTMLButtonElement>(null),
         end: useRef<HTMLDivElement>(null),
-        center: useRef<HTMLButtonElement>(null),
+        endHandle: useRef<HTMLButtonElement>(null),
         onChange: useRef<RangeObserver>(),
         onChanged: useRef<RangeObserver>(),
     }
@@ -33,9 +36,9 @@ export function Range(props: RangeProps) {
     const dragStartOptions = useMemo(() => createDragOptions(refs, 'start'), [])
     const dragEndOptions = useMemo(() => createDragOptions(refs, 'end'), [])
     const dragCenterOptions = useMemo(() => createDragOptions(refs, 'center'), [])
-    const startDrag = useDrag(dragStartOptions)
-    const endDrag = useDrag(dragEndOptions)
-    const centerDrag = useDrag(dragCenterOptions)
+    const startDrag = useDrag(refs.startHandle, dragStartOptions)
+    const endDrag = useDrag(refs.endHandle, dragEndOptions)
+    const centerDrag = useDrag(refs.centerHandle, dragCenterOptions)
 
     useEffect(() => {
         function onProgress(range: Range) {
@@ -81,7 +84,7 @@ export function Range(props: RangeProps) {
                     {startLine}
                 </span>
                 <button
-                    {...startDrag.withDrag}
+                    ref={refs.startHandle}
                     className="handle-bd2c start"
                     onKeyDown={(event) => {
                         switch (event.key) {
@@ -107,12 +110,12 @@ export function Range(props: RangeProps) {
             </div>
 
             <button
-                {...centerDrag.withDrag}
-                ref={refs.center}
+                ref={refs.centerHandle}
                 className="slider-fb28"
-                tabIndex={distanceBetween(rangeStart, rangeEnd) > 0.1
-                    ? 0
-                    : -1
+                tabIndex={
+                    distanceBetween(rangeStart, rangeEnd) > 0.1
+                        ? 0
+                        : -1
                 }
                 onKeyDown={(event) => {
                     switch (event.key) {
@@ -136,7 +139,9 @@ export function Range(props: RangeProps) {
                         break
                     }
                 }}
-            />
+            >
+                {centerHandle}
+            </button>
 
             <div
                 ref={refs.end}
@@ -144,7 +149,7 @@ export function Range(props: RangeProps) {
                 style={{width: `${(1 - rangeEnd) * 100}%`}}
             >
                 <button
-                    {...endDrag.withDrag}
+                    ref={refs.endHandle}
                     className="handle-bd2c end"
                     onKeyDown={(event) => {
                         switch (event.key) {
@@ -266,22 +271,17 @@ export function RangeTime(props: RangeTimeProps) {
     )
 }
 
-export function createDragOptions(refs: RangeRefs, target: RangeTarget) {
-    type StartState = [RangeRects, DragPointerEvent]
-    type ProgressState = [...StartState, DragPointerEvent]
-
+export function createDragOptions(refs: RangeRefs, target: RangeTarget): UseDragOptions<RangeStartState, RangeProgressState> {
     return {
-        onStart(dragEvent: DragEvent): StartState {
-            const event = asDragPointerEvent(dragEvent)
+        onStart(event: DragPointerEvent): RangeStartState {
             const start = refs.start.current!.getBoundingClientRect()
-            const center = refs.center.current!.getBoundingClientRect()
+            const center = refs.centerHandle.current!.getBoundingClientRect()
             const end = refs.end.current!.getBoundingClientRect()
             const rects = {start, center, end}
 
             return [rects, event]
         },
-        onProgress(dragEvent: DragEvent, startState: StartState): ProgressState {
-            const event = asDragPointerEvent(dragEvent)
+        onProgress(event: DragPointerEvent, startState: RangeStartState): RangeProgressState {
             const [rects, startEvent] = startState
             const ratio = computeRangeRatio(rects, startEvent, event, target)
 
@@ -289,7 +289,11 @@ export function createDragOptions(refs: RangeRefs, target: RangeTarget) {
 
             return [...startState, event]
         },
-        onEnd(progressState: ProgressState, startState: StartState) {
+        onEnd(event: DragPointerEvent, progressState: undefined | RangeProgressState, startState: RangeStartState) {
+            if (! progressState) {
+                return
+            }
+
             const [rects, startEvent, progressEvent] = progressState
             const ratio = computeRangeRatio(rects, startEvent, progressEvent, target)
 
@@ -331,15 +335,6 @@ export function computeRangeRatio(
 
                 return {startDistance, endDistance}
             }
-            case 'end': {
-                const leftLimit = rects.start.right
-                const rightLimit = rects.end.right + rects.end.width
-                const nextRect = moveRectX(rects.end, xDelta, leftLimit, rightLimit)
-                const startDistance = distanceBetween(rects.start.left, rects.start.right)
-                const endDistance = distanceBetween(rects.start.left, nextRect.left)
-
-                return {startDistance, endDistance}
-            }
             case 'center': {
                 const leftLimit = rects.start.left
                 const rightLimit = rects.end.right
@@ -347,6 +342,15 @@ export function computeRangeRatio(
                 const nextRect = moveRectX(rects.center, xDelta, leftLimit, rightLimit)
                 const startDistance = distanceBetween(rects.start.left, nextRect.left)
                 const endDistance = distanceBetween(rects.start.left, nextRect.right)
+
+                return {startDistance, endDistance}
+            }
+            case 'end': {
+                const leftLimit = rects.start.right
+                const rightLimit = rects.end.right + rects.end.width
+                const nextRect = moveRectX(rects.end, xDelta, leftLimit, rightLimit)
+                const startDistance = distanceBetween(rects.start.left, rects.start.right)
+                const endDistance = distanceBetween(rects.start.left, nextRect.left)
 
                 return {startDistance, endDistance}
             }
@@ -378,9 +382,10 @@ export function computeTimeRange(min: Date, max: Date, range: Range) {
 
 export interface RangeProps extends Omit<React.HTMLAttributes<HTMLDivElement>, 'onChange'> {
     start: undefined | number
-    end: undefined | number
     startHandle?: undefined | React.ReactNode
     startLine?: undefined | React.ReactNode
+    centerHandle?: undefined | React.ReactNode
+    end: undefined | number
     endHandle?: undefined | React.ReactNode
     endLine?: undefined | React.ReactNode
     onChange?: undefined | RangeObserver
@@ -401,11 +406,16 @@ export interface RangeTimeProps extends Omit<RangeProps, 'start' | 'end' | 'onCh
     onChanged?: undefined | RangeObserver<Date>
 }
 
+export type RangeStartState = [RangeRects, DragPointerEvent]
+export type RangeProgressState = [...RangeStartState, DragPointerEvent]
+
 export interface RangeRefs {
     region: React.RefObject<HTMLDivElement>
     start: React.RefObject<HTMLDivElement>
+    startHandle: React.RefObject<HTMLButtonElement>
+    centerHandle: React.RefObject<HTMLButtonElement>
     end: React.RefObject<HTMLDivElement>
-    center: React.RefObject<HTMLButtonElement>
+    endHandle: React.RefObject<HTMLButtonElement>
     onChange: React.RefObject<undefined | RangeObserver>
     onChanged: React.RefObject<undefined | RangeObserver>
 }

@@ -16,7 +16,7 @@ export function ThemeView(props: ThemeViewProps) {
     return (
         <div
             {...otherProps}
-            className={classes('ThemeView-t2eb', `std theme-${theme} std-background-theme std-viewport xl`, className)}
+            className={classes('ThemeView-t2eb', `std theme-${theme} std-text std-color-theme std-background-theme std-viewport xl`, className)}
             style={{
                 '--std-color-primary-h': primaryAccent[0] * 360 + 'deg',
                 '--std-color-primary-s': primaryAccent[1] * 100 + '%',
@@ -43,7 +43,7 @@ export function ThemeView(props: ThemeViewProps) {
                 <TextHeight/>
                 <TextSpace/>
                 <Icons/>
-                <Contrast/>
+                <Contrast theme={theme}/>
                 <Radiuses/>
                 <Shadows/>
                 <Transitions/>
@@ -390,7 +390,7 @@ export function Gutters() {
     )
 }
 
-export function Contrast() {
+export function Contrast(props: {theme: 'dark' | 'light'}) {
     return (
         <div
             className="layout-1e33 std-flex gap6"
@@ -409,33 +409,33 @@ export function Contrast() {
                 {[0, 1, 2].map(it =>
                     <div
                         key={it}
-                        className={classes('std-flex column gap4 std-background-z', `z${it}`)}
+                        className={classes('std-flex column gap4', `std-background-z${it}`, `std theme-${props.theme}`)}
                     >
-                        <h6>Bg Z {it}</h6>
+                        <h6 className="std-text-uppercase">Bg Z {it}</h6>
 
                         <label className="contrast-td08 std-background-bg1">
-                            <div className="std-color-fg1 std-text-weight1">Bg 1</div>
-                            <div className="std-color-fg1">Fg 1</div>
-                            <div className="std-color-fg2">Fg 2</div>
-                            <div className="std-color-fg3">Fg 3</div>
+                            <div className="std-color-fg1 std-text-h6 std-text-weight1 std-text-uppercase">Bg 1</div>
+                            <div className="std-color-fg1 std-text-subtitle1 std-text-weight1">Fg 1</div>
+                            <div className="std-color-fg2 std-text-subtitle1 std-text-weight1">Fg 2</div>
+                            <div className="std-color-fg3 std-text-subtitle1 std-text-weight1">Fg 3</div>
                         </label>
                         <label className="contrast-td08 std-background-bg2">
-                            <div className="std-color-fg1 std-text-weight1">Bg 2</div>
-                            <div className="std-color-fg1">Fg 1</div>
-                            <div className="std-color-fg2">Fg 2</div>
-                            <div className="std-color-fg3">Fg 3</div>
+                            <div className="std-color-fg1 std-text-h6 std-text-weight1 std-text-uppercase">Bg 2</div>
+                            <div className="std-color-fg1 std-text-subtitle1 std-text-weight1">Fg 1</div>
+                            <div className="std-color-fg2 std-text-subtitle1 std-text-weight1">Fg 2</div>
+                            <div className="std-color-fg3 std-text-subtitle1 std-text-weight1">Fg 3</div>
                         </label>
                         <label className="contrast-td08 std-background-bg3">
-                            <div className="std-color-fg1 std-text-weight1">Bg 3</div>
-                            <div className="std-color-fg1">Fg 1</div>
-                            <div className="std-color-fg2">Fg 2</div>
-                            <div className="std-color-fg3">Fg 3</div>
+                            <div className="std-color-fg1 std-text-h6 std-text-weight1 std-text-uppercase">Bg 3</div>
+                            <div className="std-color-fg1 std-text-subtitle1 std-text-weight1">Fg 1</div>
+                            <div className="std-color-fg2 std-text-subtitle1 std-text-weight1">Fg 2</div>
+                            <div className="std-color-fg3 std-text-subtitle1 std-text-weight1">Fg 3</div>
                         </label>
                         <label className="contrast-td08 std-background-bg4">
-                            <div className="std-color-fg1 std-text-weight1">Bg 4</div>
-                            <div className="std-color-fg1">Fg 1</div>
-                            <div className="std-color-fg2">Fg 2</div>
-                            <div className="std-color-fg3">Fg 3</div>
+                            <div className="std-color-fg1 std-text-h6 std-text-weight1 std-text-uppercase">Bg 4</div>
+                            <div className="std-color-fg1 std-text-subtitle1 std-text-weight1">Fg 1</div>
+                            <div className="std-color-fg2 std-text-subtitle1 std-text-weight1">Fg 2</div>
+                            <div className="std-color-fg3 std-text-subtitle1 std-text-weight1">Fg 3</div>
                         </label>
                     </div>
                 )}
@@ -450,55 +450,55 @@ export function Contrast() {
             >
                 <div className="std-flex column gap4">
                     <label className="contrast-td08 std-background-bg1">
-                        <div className="std-color-fg1 std-text-weight1">Bg 1</div>
-                        <div className="std-color-primary-fg1">Primary Fg 1</div>
-                        <div className="std-color-primary-fg2">Primary Fg 2</div>
-                        <div className="std-color-primary-fg3">Primary Fg 3</div>
+                        <div className="std-color-fg1 std-text-h6 std-text-weight1 std-text-uppercase">Bg 1</div>
+                        <div className="std-color-primary-fg1 std-text-subtitle1 std-text-weight1">Primary Fg 1</div>
+                        <div className="std-color-primary-fg2 std-text-subtitle1 std-text-weight1">Primary Fg 2</div>
+                        <div className="std-color-primary-fg3 std-text-subtitle1 std-text-weight1">Primary Fg 3</div>
                     </label>
                     <label className="contrast-td08 std-background-bg2">
-                        <div className="std-color-fg1 std-text-weight1">Bg 2</div>
-                        <div className="std-color-primary-fg1">Primary Fg 1</div>
-                        <div className="std-color-primary-fg2">Primary Fg 2</div>
-                        <div className="std-color-primary-fg3">Primary Fg 3</div>
+                        <div className="std-color-fg1 std-text-h6 std-text-weight1 std-text-uppercase">Bg 2</div>
+                        <div className="std-color-primary-fg1 std-text-subtitle1 std-text-weight1">Primary Fg 1</div>
+                        <div className="std-color-primary-fg2 std-text-subtitle1 std-text-weight1">Primary Fg 2</div>
+                        <div className="std-color-primary-fg3 std-text-subtitle1 std-text-weight1">Primary Fg 3</div>
                     </label>
                     <label className="contrast-td08 std-background-bg3">
-                        <div className="std-color-fg1 std-text-weight1">Bg 3</div>
-                        <div className="std-color-primary-fg1">Primary Fg 1</div>
-                        <div className="std-color-primary-fg2">Primary Fg 2</div>
-                        <div className="std-color-primary-fg3">Primary Fg 3</div>
+                        <div className="std-color-fg1 std-text-h6 std-text-weight1 std-text-uppercase">Bg 3</div>
+                        <div className="std-color-primary-fg1 std-text-subtitle1 std-text-weight1">Primary Fg 1</div>
+                        <div className="std-color-primary-fg2 std-text-subtitle1 std-text-weight1">Primary Fg 2</div>
+                        <div className="std-color-primary-fg3 std-text-subtitle1 std-text-weight1">Primary Fg 3</div>
                     </label>
                     <label className="contrast-td08 std-background-bg4">
-                        <div className="std-color-fg1 std-text-weight1">Bg 4</div>
-                        <div className="std-color-primary-fg1">Primary Fg 1</div>
-                        <div className="std-color-primary-fg2">Primary Fg 2</div>
-                        <div className="std-color-primary-fg3">Primary Fg 3</div>
+                        <div className="std-color-fg1 std-text-h6 std-text-weight1 std-text-uppercase">Bg 4</div>
+                        <div className="std-color-primary-fg1 std-text-subtitle1 std-text-weight1">Primary Fg 1</div>
+                        <div className="std-color-primary-fg2 std-text-subtitle1 std-text-weight1">Primary Fg 2</div>
+                        <div className="std-color-primary-fg3 std-text-subtitle1 std-text-weight1">Primary Fg 3</div>
                     </label>
                 </div>
 
                 <div className="std-flex column gap4">
                     <label className="contrast-td08 std-background-bg1">
-                        <div className="std-color-fg1 std-text-weight1">Bg 1</div>
-                        <div className="std-color-secondary-fg1">Secondary Fg 1</div>
-                        <div className="std-color-secondary-fg2">Secondary Fg 2</div>
-                        <div className="std-color-secondary-fg3">Secondary Fg 3</div>
+                        <div className="std-color-fg1 std-text-h6 std-text-weight1 std-text-uppercase">Bg 1</div>
+                        <div className="std-color-secondary-fg1 std-text-subtitle1 std-text-weight1">Secondary Fg 1</div>
+                        <div className="std-color-secondary-fg2 std-text-subtitle1 std-text-weight1">Secondary Fg 2</div>
+                        <div className="std-color-secondary-fg3 std-text-subtitle1 std-text-weight1">Secondary Fg 3</div>
                     </label>
                     <label className="contrast-td08 std-background-bg2">
-                        <div className="std-color-fg1 std-text-weight1">Bg 2</div>
-                        <div className="std-color-secondary-fg1">Secondary Fg 1</div>
-                        <div className="std-color-secondary-fg2">Secondary Fg 2</div>
-                        <div className="std-color-secondary-fg3">Secondary Fg 3</div>
+                        <div className="std-color-fg1 std-text-h6 std-text-weight1 std-text-uppercase">Bg 2</div>
+                        <div className="std-color-secondary-fg1 std-text-subtitle1 std-text-weight1">Secondary Fg 1</div>
+                        <div className="std-color-secondary-fg2 std-text-subtitle1 std-text-weight1">Secondary Fg 2</div>
+                        <div className="std-color-secondary-fg3 std-text-subtitle1 std-text-weight1">Secondary Fg 3</div>
                     </label>
                     <label className="contrast-td08 std-background-bg3">
-                        <div className="std-color-fg1 std-text-weight1">Bg 3</div>
-                        <div className="std-color-secondary-fg1">Secondary Fg 1</div>
-                        <div className="std-color-secondary-fg2">Secondary Fg 2</div>
-                        <div className="std-color-secondary-fg3">Secondary Fg 3</div>
+                        <div className="std-color-fg1 std-text-h6 std-text-weight1 std-text-uppercase">Bg 3</div>
+                        <div className="std-color-secondary-fg1 std-text-subtitle1 std-text-weight1">Secondary Fg 1</div>
+                        <div className="std-color-secondary-fg2 std-text-subtitle1 std-text-weight1">Secondary Fg 2</div>
+                        <div className="std-color-secondary-fg3 std-text-subtitle1 std-text-weight1">Secondary Fg 3</div>
                     </label>
                     <label className="contrast-td08 std-background-bg4">
-                        <div className="std-color-fg1 std-text-weight1">Bg 4</div>
-                        <div className="std-color-secondary-fg1">Secondary Fg 1</div>
-                        <div className="std-color-secondary-fg2">Secondary Fg 2</div>
-                        <div className="std-color-secondary-fg3">Secondary Fg 3</div>
+                        <div className="std-color-fg1 std-text-h6 std-text-weight1 std-text-uppercase">Bg 4</div>
+                        <div className="std-color-secondary-fg1 std-text-subtitle1 std-text-weight1">Secondary Fg 1</div>
+                        <div className="std-color-secondary-fg2 std-text-subtitle1 std-text-weight1">Secondary Fg 2</div>
+                        <div className="std-color-secondary-fg3 std-text-subtitle1 std-text-weight1">Secondary Fg 3</div>
                     </label>
                 </div>
             </div>

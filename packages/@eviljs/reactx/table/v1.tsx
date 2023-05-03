@@ -132,6 +132,7 @@ export const TableBody = forwardRef(function TableBody(
         </tbody>
     )
 })
+TableBody.displayName = 'TableBody'
 
 export const TableRow = forwardRef(function TableRow(
     props: TableRowProps,
@@ -151,6 +152,7 @@ export const TableRow = forwardRef(function TableRow(
         </tr>
     )
 })
+TableRow.displayName = 'TableRow'
 
 export const TableCell = forwardRef(function TableCell(
     props: TableCellProps,
@@ -173,6 +175,7 @@ export const TableCell = forwardRef(function TableCell(
         </td>
     )
 })
+TableCell.displayName = 'TableCell'
 
 export function elementTypeTestFor<T extends React.JSXElementConstructor<any>>(type: T) {
     function test(element: React.ReactNode) {

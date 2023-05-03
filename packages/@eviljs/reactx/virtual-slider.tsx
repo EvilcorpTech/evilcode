@@ -2,7 +2,7 @@ import './virtual-slider.css'
 
 import {classes} from '@eviljs/react/classes.js'
 import {useCallbackThrottled} from '@eviljs/react/event.js'
-import {mergeRefs} from '@eviljs/react/ref.js'
+import {mergingRefs} from '@eviljs/react/ref.js'
 import {useResizeObserver} from '@eviljs/react/resize-observer.js'
 import {isFunction} from '@eviljs/std/type.js'
 import {forwardRef, useCallback, useLayoutEffect, useMemo, useRef, useState} from 'react'
@@ -45,7 +45,7 @@ export const SliderVirtual = forwardRef(function SliderVirtual<I>(
     return (
         <div
             {...otherProps}
-            ref={mergeRefs(containerRef, ref)}
+            ref={mergingRefs(containerRef, ref)}
             className={classes('SliderVirtual-2f13 std-grid-layers', className)}
             style={{...style, ...styleOfContainer()}}
         >
@@ -63,9 +63,8 @@ export const SliderVirtual = forwardRef(function SliderVirtual<I>(
             )}
         </div>
     )
-}) as (
-    <I>(props: SliderVirtualProps<I> & React.RefAttributes<HTMLElement>) => null | React.ReactElement
-)
+}) as (<I>(props: SliderVirtualProps<I> & React.RefAttributes<HTMLElement>) => React.ReactElement) & Pick<React.FunctionComponent, 'displayName'>
+SliderVirtual.displayName = 'SliderVirtual'
 
 export function computeVirtualState<I>(spec: VirtualSpec<I>) {
     const {
