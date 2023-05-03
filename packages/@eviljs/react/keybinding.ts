@@ -1,21 +1,23 @@
 import {asArray} from '@eviljs/std/type.js'
-import {useLayoutEffect} from 'react'
+import {useEffect} from 'react'
 
 export function useKey(key: Key, handler: KeyHandler, options?: undefined | UseKeyOptions) {
-    useLayoutEffect(() => {
+    useEffect(() => {
         const keys = asArray(key)
         const el: GlobalEventHandlers = options?.ref?.current ?? document
-        const event = options?.event ?? 'keyup'
-        const phase = (() => {
-            switch (options?.phase) {
-                case 'capturing':
-                    return true
-                case 'bubbling':
-                    return false
-                default:
-                    return false // bubbling by default.
-            }
-        })()
+        const event = options?.event ?? 'keydown'
+        const active = options?.active ?? true
+
+        if (! active) {
+            return
+        }
+
+        const eventOptions: AddEventListenerOptions = {
+            capture: options?.phase === 'capturing'
+                ? true
+                : false // Bubbling by default.
+            ,
+        }
 
         function onKey(event: KeyboardEvent) {
             const isTheKey = keys.includes(event.key)
@@ -27,14 +29,14 @@ export function useKey(key: Key, handler: KeyHandler, options?: undefined | UseK
             handler(event)
         }
 
-        el.addEventListener(event, onKey, phase)
+        el.addEventListener(event, onKey, eventOptions)
 
         function onClean() {
-            el.removeEventListener(event, onKey, phase)
+            el.removeEventListener(event, onKey, eventOptions.capture)
         }
 
         return onClean
-    }, [key, handler, options?.event, options?.phase])
+    }, [key, handler, options?.event, options?.phase, options?.active])
 }
 
 // Types ///////////////////////////////////////////////////////////////////////
@@ -47,6 +49,7 @@ export interface KeyHandler {
 
 export interface UseKeyOptions {
     ref?: undefined | React.RefObject<HTMLElement> | React.MutableRefObject<HTMLElement>
+    active?: undefined | boolean
     event?: undefined | 'keyup' | 'keydown'
     phase?: undefined | 'capturing' | 'bubbling'
 }

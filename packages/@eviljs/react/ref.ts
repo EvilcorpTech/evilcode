@@ -1,14 +1,13 @@
 import {isFunction} from '@eviljs/std/type.js'
 
-export function mergeRefs(...refs: Array<undefined | Ref>) {
-    function refProxy(el: unknown) {
+export function mergingRefs<T = any>(...refs: Array<undefined | Ref<T>>) {
+    function refProxy(el: T) {
         for (const ref of refs) {
             if (isFunction(ref)) {
                 ref(el)
             }
             else {
-                const mutableRef = (ref as React.MutableRefObject<null | unknown>)
-                mutableRef.current = el
+                ;(ref as React.MutableRefObject<null | T>).current = el
             }
         }
     }
@@ -17,7 +16,7 @@ export function mergeRefs(...refs: Array<undefined | Ref>) {
 
 // Types ///////////////////////////////////////////////////////////////////////
 
-export type Ref = React.Ref<any> | React.MutableRefObject<any>
+export type Ref<T = any> = React.Ref<T> | React.MutableRefObject<T>
 
 export interface RefProp<V = Element> {
     onRef?: undefined | React.Ref<V>

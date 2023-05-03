@@ -186,6 +186,11 @@ export const Route = forwardRef(function Route(
     const {changeRoute, link, route, testRoute} = useRouter()!
 
     const onClick = useCallback((event: React.MouseEvent) => {
+        if (event.defaultPrevented) {
+            // Default behavior has been prevented. We must stop.
+            return
+        }
+
         event.preventDefault()
 
         function tryRouting(result: undefined | boolean) {
@@ -243,6 +248,7 @@ export const Route = forwardRef(function Route(
         </a>
     )
 })
+Route.displayName = 'Route'
 
 export function Link(props: LinkProps) {
     const {children, className, params, replace, state, to, ...otherProps} = props

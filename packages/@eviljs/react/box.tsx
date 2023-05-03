@@ -17,7 +17,8 @@ export const Box = forwardRef(function Box<T>(
     const {tag, ...otherProps} = props
 
     return createElement(tag ?? 'div', {...otherProps as {}, ref})
-})
+}) as (<T>(props: BoxProps<T>) => JSX.Element) & Pick<React.FunctionComponent, 'displayName'>
+Box.displayName = 'Box'
 
 /*
 * Optionally renders an element with a dynamic tag.
@@ -36,8 +37,8 @@ export const Box = forwardRef(function Box<T>(
 *     </OptionalBox>
 * }
 */
-export const OptionalBox = forwardRef(function OptionalBox<T>(
-    props: OptionalBoxProps<T>,
+export const BoxOptional = forwardRef(function BoxOptional<T>(
+    props: BoxOptionalProps<T>,
     ref?: undefined | React.Ref<T>,
 ) {
     const {if: guard, ...otherProps} = props
@@ -47,15 +48,16 @@ export const OptionalBox = forwardRef(function OptionalBox<T>(
     }
 
     return Box({...otherProps, ref})
-})
+}) as (<T>(props: BoxOptionalProps<T>) => JSX.Element) & Pick<React.FunctionComponent, 'displayName'>
+BoxOptional.displayName = 'BoxOptional'
 
 // Types ///////////////////////////////////////////////////////////////////////
 
-export interface BoxProps<T = Element> extends React.AllHTMLAttributes<T> {
+export interface BoxProps<T = Element> extends React.AllHTMLAttributes<T>, React.RefAttributes<T> {
     tag?: undefined | string | Tag
 }
 
-export interface OptionalBoxProps<T = Element> extends BoxProps<T> {
+export interface BoxOptionalProps<T = Element> extends BoxProps<T> {
     if?: undefined | any
 }
 

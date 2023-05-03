@@ -28,6 +28,7 @@ export const Text = memo(function Text(props: TextProps) {
         }, message)
     )
 })
+Text.displayName = 'Text'
 
 // Types ///////////////////////////////////////////////////////////////////////
 
