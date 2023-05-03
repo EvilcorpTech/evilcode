@@ -1,4 +1,5 @@
 import {useEffect} from 'react'
+import {Theme, themeClassesOf} from '~/theme/apis'
 
 export function useColorSchemePreference() {
     useEffect(() => {
@@ -6,9 +7,13 @@ export function useColorSchemePreference() {
 
         function onThemeChange(event: Pick<MediaQueryListEvent, 'matches'>) {
             const isDark = event.matches
-            const theme = isDark ? 'theme-dark' : 'theme-light'
-            document.documentElement.classList.remove('theme-light', 'theme-dark')
-            document.documentElement.classList.add('std', theme)
+            document.documentElement.classList.remove(
+                ...themeClassesOf(Theme.Dark),
+                ...themeClassesOf(Theme.Light),
+            )
+            document.documentElement.classList.add(
+                ...themeClassesOf(isDark ? Theme.Dark : Theme.Light)
+            )
         }
 
         onThemeChange(prefersColorSchemeDarkQuery)

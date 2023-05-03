@@ -65,6 +65,7 @@
 @import '@evilcss/std/layout-viewport.props.css';
 @import '@evilcss/std/media.classes.css';
 @import '@evilcss/std/modal.classes.css';
+@import '@evilcss/std/pointer.classes.css';
 @import '@evilcss/std/radius.classes.css';
 @import '@evilcss/std/radius.props.css';
 @import '@evilcss/std/reset/all-box.css';

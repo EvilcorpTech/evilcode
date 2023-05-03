@@ -3,6 +3,6 @@ export enum Theme {
     Light = 'light',
 }
 
-export function themeClassOf(theme: Theme) {
-    return `std theme-${theme}`
+export function themeClassesOf(theme: Theme): Array<string> {
+    return ['std', `theme-${theme}`, 'std-text', 'std-color-theme']
 }
