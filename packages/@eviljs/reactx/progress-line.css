@@ -1,0 +1,47 @@
+.ProgressLine-0f03 {
+    --progress-line-color1--default: cornflowerblue;
+    --progress-line-color2--default: aquamarine;
+    --progress-line-width--default: 10%;
+    --progress-line-height--default: 2px;
+    --progress-line-duration: 2s;
+    position: relative;
+    width: 100%;
+    height: var(--progress-line-height, var(--progress-line-height--default));
+    visibility: hidden;
+    overflow: hidden;
+    pointer-events: none;
+}
+.ProgressLine-0f03::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    background-image: linear-gradient(
+        to right,
+        var(--progress-line-color1, var(--progress-line-color1--default)),
+        var(--progress-line-color2, var(--progress-line-color2--default))
+    );
+    background-size: var(--progress-line-width, var(--progress-line-width--default));
+    background-repeat: no-repeat;
+    animation-duration: var(--progress-line-duration, var(--progress-line-duration--default));
+    animation-timing-function: linear;
+    animation-iteration-count: infinite;
+    animation-direction: alternate;
+}
+
+.ProgressLine-0f03[data-active="true"] {
+    visibility: visible;
+}
+.ProgressLine-0f03[data-active="true"]::after {
+    animation-name: progress-0f03;
+}
+
+@keyframes progress-0f03 {
+    from {
+        transform: translateX(0%);
+    }
+    to {
+        transform: translateX(100%);
+    }
+}

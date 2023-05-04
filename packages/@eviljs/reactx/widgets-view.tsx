@@ -19,6 +19,7 @@ import {CheckboxMark as CheckboxMarkV2} from './checkbox-mark/sign.js'
 import {Checkbox} from './checkbox.js'
 import {Input as InputV2, InputLabel as InputLabelV2, SecretInput as SecretInputV2} from './input/decorated.js'
 import {Input as InputV1} from './input/floating.js'
+import {ProgressLine} from './progress-line.js'
 import {RadioGroup} from './radio.js'
 import {Range, RangeNumeric} from './range.js'
 import {Slide, Slider} from './slider.js'
@@ -185,9 +186,11 @@ export function WidgetsView(props: WidgetsViewProps) {
                 </Button>
 
                 <SpinnerV1 className="std-color-secondary-accent" active={spinner}/>
+                <SpinnerV2 className="std-color-secondary-accent" active={spinner}/>
                 <SpinnerV3 className="std-color-secondary-accent" active={spinner}/>
                 <SpinnerV4 className="std-color-secondary-accent" active={spinner}/>
-                <SpinnerV2 className="std-color-secondary-accent" active={spinner}/>
+
+                <ProgressLine active={spinner}/>
             </div>
 
             <div className="section-0234">
