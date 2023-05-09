@@ -1,4 +1,3 @@
-import {isDefined} from '@eviljs/std/type.js'
 import {createElement, forwardRef} from 'react'
 
 /*
@@ -43,11 +42,11 @@ export const BoxOptional = forwardRef(function BoxOptional<T>(
 ) {
     const {if: guard, ...otherProps} = props
 
-    if (isDefined(guard) && ! guard) {
+    if (! guard) {
         return null
     }
 
-    return Box({...otherProps, ref})
+    return <Box {...otherProps} ref={ref}/>
 }) as (<T>(props: BoxOptionalProps<T>) => JSX.Element) & Pick<React.FunctionComponent, 'displayName'>
 BoxOptional.displayName = 'BoxOptional'
 
