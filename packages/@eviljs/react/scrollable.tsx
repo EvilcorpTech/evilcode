@@ -42,10 +42,10 @@ export const Scrollable = forwardRef(function Scrollable(
             className={classes('Scrollable-ab5c', className, {scrolling})}
             style={{
                 cursor: 'pointer',
-                ...style,
-                ...scrollingStyle?.(scrolling),
                 overflowX: horizontal ? 'auto' : 'hidden',
                 overflowY: vertical ? 'auto' : 'hidden',
+                ...style,
+                ...scrollingStyle?.(scrolling),
             }}
         />
     )
