@@ -49,12 +49,12 @@ export function useDrag<S, P>(targetRef: DragElementRef<DragMoveElement>, option
 
         setDragging(false)
 
+        state.unmount?.()
+        state.unmount = undefined
+
         if (state.startState) {
             options?.onEnd?.(event, state.progressState, state.startState)
         }
-
-        state.unmount?.()
-        state.unmount = undefined
     }, [options?.onEnd])
 
     const onPointerCancel = useCallback((event: DragPointerEvent) => {
@@ -62,6 +62,15 @@ export function useDrag<S, P>(targetRef: DragElementRef<DragMoveElement>, option
     }, [onPointerEnd])
 
     const onPointerStart = useCallback((event: MouseEvent | TouchEvent) => {
+        const MouseButtonPrimary = 0
+
+        if (event.type === 'mousedown' && (event as MouseEvent).button !== MouseButtonPrimary) {
+            // Ignores mouse clicks coming from buttons which are not the primary one.
+            // We end the dragging, if it is in progress.
+            onPointerEnd(asDragPointerEvent(event))
+            return
+        }
+
         if (event.type === 'mousedown' && event.cancelable) {
             // Prevents dragging of draggable elements like images.
             event.preventDefault()
