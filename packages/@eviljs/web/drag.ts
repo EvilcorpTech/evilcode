@@ -26,6 +26,7 @@ export function attachDragListeners(element: DragElement, listeners: DragListene
 
     element.addEventListener('mousemove', onPointerMove, {capture: true, passive: true})
     element.addEventListener('touchmove', onPointerMove, {capture: true, passive: false})
+    element.addEventListener('mousedown', onPointerEnd, {capture: true, passive: true}) // Non primary mouse button (right, middle) click.
     element.addEventListener('mouseup', onPointerEnd, {capture: true, passive: true})
     element.addEventListener('pointerup', onPointerEnd, {capture: true, passive: true})
     element.addEventListener('touchend', onPointerEnd, {capture: true, passive: true})
