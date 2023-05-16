@@ -76,10 +76,11 @@ export function useStore<S extends StoreStateGeneric = StoreStateGeneric, R exte
 
 export function patchState<S extends StoreStateGeneric>(state: S, statePatch: StoreStatePatch<S>): S {
     const nextState = computeValue(statePatch, state)
+    const mergedState = {...state, ...nextState}
 
-    return areObjectsEqualShallow(state, nextState)
+    return areObjectsEqualShallow(state, mergedState)
         ? state
-        : {...state, ...nextState}
+        : mergedState
 }
 
 // Types ///////////////////////////////////////////////////////////////////////
