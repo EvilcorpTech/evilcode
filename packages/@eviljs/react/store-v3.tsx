@@ -118,7 +118,7 @@ export function useStoreContext<S extends StoreStateGeneric>() {
 */
 export function useStoreState<S extends StoreStateGeneric, V>(selectorOptional: StoreSelector<S, V>): StateManager<V>
 export function useStoreState<S extends StoreStateGeneric>(): StateManager<S>
-export function useStoreState<S extends StoreStateGeneric, V>(selectorOptional?: undefined | StoreSelector<S, V>): StateManager<V> {
+export function useStoreState<S extends StoreStateGeneric, V>(selectorOptional?: undefined | StoreSelector<S, V>): StateManager<S | V> {
     const selector = (selectorOptional ?? defaultSelector) as StoreSelector<StoreStateGeneric, unknown>
     const store = useStoreContext<S>()!
     const state = store.stateRef.current
@@ -135,7 +135,7 @@ export function useStoreState<S extends StoreStateGeneric, V>(selectorOptional?:
         return stopObserving
     }, [pathKey])
 
-    const setSelectedState = useCallback((value: StateSetterArg<V>) => {
+    const setSelectedState = useCallback((value: StateSetterArg<S | V>) => {
         store.mutate(path, value)
     }, [pathKey])
 

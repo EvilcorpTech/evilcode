@@ -1,5 +1,5 @@
 import {computeValue} from '@eviljs/std/fn.js'
-import {areSameObjectsShallow} from '@eviljs/std/object.js'
+import {areObjectsEqualShallow} from '@eviljs/std/object.js'
 import type {Reducer, ReducerAction, ReducerActionsOf, ReducerArgs, ReducerId} from '@eviljs/std/redux.js'
 import {isArray, type Partial} from '@eviljs/std/type.js'
 import {useCallback, useContext, useMemo, useRef, useState} from 'react'
@@ -77,7 +77,7 @@ export function useStore<S extends StoreStateGeneric = StoreStateGeneric, R exte
 export function patchState<S extends StoreStateGeneric>(state: S, statePatch: StoreStatePatch<S>): S {
     const nextState = computeValue(statePatch, state)
 
-    return areSameObjectsShallow(state, nextState)
+    return areObjectsEqualShallow(state, nextState)
         ? state
         : {...state, ...nextState}
 }
