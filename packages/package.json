@@ -5,8 +5,8 @@
         "build": "nx run-many --target build"
     },
     "devDependencies": {
-        "nx": "16.0.3",
-        "pnpm": "8.4.0"
+        "nx": "16.1.4",
+        "pnpm": "8.5.1"
     },
     "engines": {
         "node": ">= 16",
