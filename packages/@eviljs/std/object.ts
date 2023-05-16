@@ -4,14 +4,39 @@ export const ObjectPathArrayOpenRegexp = /\[/g
 export const ObjectPathArrayCloseRegexp = /\]/g
 export const ObjectPathCache: Record<string, Array<string | number>> = {}
 
-export function isEmptyObject(obj: object): boolean {
+export function isObjectEmpty(obj: object): boolean {
     for (const it in obj) {
         return false
     }
     return true
 }
 
-export function areSameObjectsShallow<T extends object>(a: T, b: T): boolean {
+export function areObjectsEqualShallow<T extends object>(a: T, b: T): boolean {
+    if (a === b) {
+        return true
+    }
+
+    const aKeys = Object.keys(a)
+    const bKeys = Object.keys(b)
+    const allKeys = new Set([...aKeys, ...bKeys])
+
+    // Shallow equality check.
+    for (const key of allKeys) {
+        // A not defined property and a property with undefined value are considered equal.
+        const aValue = a[key as keyof typeof a]
+        const bValue = b[key as keyof typeof b]
+
+        if (aValue !== bValue) {
+            // Something changed inside the object.
+            return false
+        }
+    }
+
+    // Nothing changed inside the object.
+    return true
+}
+
+export function areObjectsEqualShallowStrict<T extends object>(a: T, b: T): boolean {
     if (a === b) {
         return true
     }

@@ -1,6 +1,10 @@
 import type {Nil} from './type.js'
 import {isSome} from './type.js'
 
+export function firstOf<I>(list: Array<I>): undefined | I {
+    return list[0]
+}
+
 export function lastOf<I>(list: Array<I>): undefined | I {
     return list.at(-1)
 }
@@ -9,7 +13,7 @@ export function withoutNil<I>(list: Array<Nil | I>): Array<I> {
     return list.filter(isSome)
 }
 
-export function mapWith<I, R>(mapItem: (it: I, idx: number) => R) {
+export function mappingWith<I, R>(mapItem: (it: I, idx: number) => R) {
     function mapList(list: Array<I>) {
         return list.map(mapItem)
     }
@@ -29,13 +33,13 @@ export function asMatrix<I>(list: Array<I>, size: number) {
     }, [] as Array<Array<I>>)
 }
 
-export function move<I>(list: Array<I>, from: number, to: number) {
+export function moveItem<I>(list: Array<I>, from: number, to: number): Array<I> {
     const listClone = Array.from(list)
-    moveMutating(listClone, from, to)
+    moveItemReference(listClone, from, to)
     return listClone
 }
 
-export function moveMutating<I>(list: Array<I>, from: number, to: number) {
+export function moveItemReference<I>(list: Array<I>, from: number, to: number): void {
     if (from < 0) {
         return
     }
