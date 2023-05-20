@@ -1,0 +1,5 @@
+{
+    "extends": "../packages/@eviljs/tsconfig/preset-web-lib.json",
+    "include": ["./**/*.mts", "./**/*.mtsx"],
+    "compilerOptions": {},
+}
