@@ -1,13 +1,10 @@
-import {computeValue} from '@eviljs/std/fn.js'
-import {areObjectsEqualShallow} from '@eviljs/std/object.js'
-import type {Reducer, ReducerAction, ReducerActionsOf, ReducerArgs, ReducerId} from '@eviljs/std/redux.js'
-import {isArray, type Partial} from '@eviljs/std/type.js'
+import type {ReducerAction, ReducerArgs, ReducerId} from '@eviljs/std/redux.js'
+import {isArray} from '@eviljs/std/type.js'
 import {useCallback, useContext, useMemo, useRef, useState} from 'react'
 import {defineContext} from './ctx.js'
 import type {StoreStateGeneric} from './store-v1.js'
 
-export {composeReducers, defineReducerAction, withId} from '@eviljs/std/redux.js'
-export type {Reducer, ReducerAction, ReducerActionsOf, ReducerArgs, ReducerId} from '@eviljs/std/redux.js'
+export * from '@eviljs/std/redux.js'
 
 export const StoreContext = defineContext<Store>('StoreContext')
 
@@ -34,7 +31,10 @@ export function StoreProvider(props: StoreProviderProps<StoreStateGeneric, Reduc
     )
 }
 
-export function useRootStore<S extends StoreStateGeneric, A extends ReducerAction>(spec: StoreSpec<S, A>) {
+export function useRootStore<
+    S extends StoreStateGeneric,
+    A extends ReducerAction,
+>(spec: StoreSpec<S, A>): Store<S, A> {
     const {createState, reduce, onDispatch} = spec
     const [state, setState] = useState(createState)
     const stateRef = useRef(state)
@@ -63,24 +63,18 @@ export function useRootStore<S extends StoreStateGeneric, A extends ReducerActio
         return newState
     }, [reduce, onDispatch])
 
-    const store = useMemo((): Store<S, ReducerActionsOf<(state: S, ...args: A) => S>> => {
+    const store = useMemo((): Store<S, A> => {
         return [state, dispatch]
     }, [state, dispatch])
 
     return store
 }
 
-export function useStore<S extends StoreStateGeneric = StoreStateGeneric, R extends Reducer<S> = Reducer<S>>() {
-    return useContext(StoreContext) as undefined | Store<S, ReducerActionsOf<R>>
-}
-
-export function patchState<S extends StoreStateGeneric>(state: S, statePatch: StoreStatePatch<S>): S {
-    const nextState = computeValue(statePatch, state)
-    const mergedState = {...state, ...nextState}
-
-    return areObjectsEqualShallow(state, mergedState)
-        ? state
-        : mergedState
+export function useStore<
+    S extends StoreStateGeneric = StoreStateGeneric,
+    A extends ReducerAction = ReducerAction,
+>() {
+    return useContext(StoreContext) as undefined | Store<S, A>
 }
 
 // Types ///////////////////////////////////////////////////////////////////////
@@ -95,7 +89,10 @@ export interface StoreSpec<S extends StoreStateGeneric, A extends ReducerAction>
     onDispatch?: undefined | ((id: ReducerId, ...args: ReducerArgs) => void)
 }
 
-export type Store<S extends StoreStateGeneric = StoreStateGeneric, A extends ReducerAction = ReducerAction> = [S, StoreDispatch<S, A>]
+export type Store<
+    S extends StoreStateGeneric = StoreStateGeneric,
+    A extends ReducerAction = ReducerAction,
+> = [S, StoreDispatch<S, A>]
 
 export interface StoreDispatch<S extends StoreStateGeneric, A extends ReducerAction = ReducerAction> {
     (action: A): S
@@ -105,5 +102,3 @@ export interface StoreDispatch<S extends StoreStateGeneric, A extends ReducerAct
 export type StoreDispatchPolymorphicArgs =
     | ReducerAction
     | [ReducerAction]
-
-export type StoreStatePatch<S extends StoreStateGeneric> = Partial<S> | ((prevState: S) => Partial<S>)

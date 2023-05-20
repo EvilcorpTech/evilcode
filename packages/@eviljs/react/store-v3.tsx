@@ -1,6 +1,6 @@
-import {cloneShallow} from '@eviljs/std/clone.js'
 import type {Fn, TaskVoid} from '@eviljs/std/fn.js'
 import {computeValue} from '@eviljs/std/fn.js'
+import {cloneShallow} from '@eviljs/std/struct.js'
 import {isArray, isObject} from '@eviljs/std/type.js'
 import {useCallback, useContext, useLayoutEffect, useMemo, useRef} from 'react'
 import {defineContext} from './ctx.js'
