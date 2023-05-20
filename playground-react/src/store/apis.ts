@@ -1,20 +1,12 @@
-import type {OnChangeEventArgs, StoreSpec as StdStoreSpec} from '@eviljs/react/store-v3'
 import type {Theme} from '~/theme/apis'
 
 export const StoreStateVersion = 1
-export const StoreSpec: StdStoreSpec<StoreState> = {createState, onChange}
-export const StoreStateSsrId = 'AppState-' + StoreStateVersion
-export const Storage: Storage = window.localStorage
 
 export function createState(): StoreState {
     return {}
 }
 
-export function onChange(args: OnChangeEventArgs) {
-    console.log('Store change:', args)
-}
-
-export function mergeStorageState(state: StoreState, savedState: StoreState) {
+export function mergeStorageState(state: StoreState, savedState: StoreStateSaved): StoreState {
     return {
         // We overwrite the base state...
         ...state,
@@ -24,11 +16,11 @@ export function mergeStorageState(state: StoreState, savedState: StoreState) {
     }
 }
 
-export function filterStorageState(state: StoreState) {
+export function filterStorageState(state: StoreState): StoreStateSaved {
     return {
         // Shallow clone.
         ...state,
-        cache: {}, // Cache Metadata must not persist.
+        data: {},
     }
 }
 
@@ -37,4 +29,10 @@ export function filterStorageState(state: StoreState) {
 export interface StoreState {
     theme?: undefined | Theme
     token?: undefined | string
+    data?: {
+        something?: undefined | Array<string>
+    }
+}
+
+export interface StoreStateSaved extends Partial<StoreState> {
 }

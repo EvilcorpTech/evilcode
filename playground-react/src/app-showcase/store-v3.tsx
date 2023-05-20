@@ -1,9 +1,9 @@
+import {useStoreState} from '@eviljs/react/store-v3'
 import {defineShowcase} from '@eviljs/reactx/showcase'
-import type {StoreState} from '~/store/hooks'
-import {useStoreState} from '~/store/hooks'
+import type {StoreState} from '~/store/apis'
 import {Theme} from '~/theme/apis'
 
-export default defineShowcase('Store', (props) => {
+export default defineShowcase('Store v3', (props) => {
     const [theme] = useStoreState((state: StoreState) => state.theme)
 
     return (

@@ -1,24 +1,26 @@
-import {useStoreState} from '@eviljs/react/store-v3'
 import {useRootStoreStorage as useStdRootStoreStorage} from '@eviljs/react/store-storage'
+import {useStoreState as useStoreStateV3} from '@eviljs/react/store-v3'
 import type {StoreState} from './apis'
 import {filterStorageState, mergeStorageState, StoreStateVersion} from './apis'
 
-export {useStoreState} from '@eviljs/react/store-v3'
-export type {Store} from '@eviljs/react/store-v3'
-export type {StoreState} from './apis'
+export {useStoreState as useStoreStateV3} from '@eviljs/react/store-v3'
+export {useStoreDispatch as useStoreDispatchV4, useStoreState as useStoreStateV4, useStore as useStoreV4} from '@eviljs/react/store-v4'
+
+export const Storage: Storage = window.localStorage
 
 export function useRootStoreStorage() {
-    const [state, setState] = useStoreState<StoreState>()
+    const [storeV3State, storeV3SetState] = useStoreStateV3<StoreState>()
 
-    useStdRootStoreStorage(state, {
-        stateVersion: StoreStateVersion,
+    useStdRootStoreStorage(storeV3State, {
+        stateVersion: StoreStateVersion + '-v3',
+        storage: Storage,
         debounce: 5000,
         onLoad(savedState) {
-            const nextState = mergeStorageState(state, savedState)
+            const nextState = mergeStorageState(storeV3State, savedState)
 
-            setState(nextState)
+            storeV3SetState(nextState)
 
-            console.debug('app:', 'store state restored from LocalStorage')
+            console.debug('app:', 'store v3 state restored from LocalStorage')
         },
         onSave: filterStorageState,
     })

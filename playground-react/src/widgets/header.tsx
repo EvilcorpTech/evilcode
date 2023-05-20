@@ -3,8 +3,6 @@ import './header.css'
 import {classes} from '@eviljs/react/classes'
 import {Route} from '@eviljs/react/router'
 import * as Routes from '~/route/apis'
-import type {StoreState} from '~/store/hooks'
-import {useStoreState} from '~/store/hooks'
 
 const Menu = [
     {to: Routes.RootRoute.path(), message: 'Home'},
@@ -15,7 +13,6 @@ const Menu = [
 
 export function Header(props: HeaderProps) {
     const {children, className, ...otherProps} = props
-    const [theme] = useStoreState((state: StoreState) => state.theme)
 
     return (
         <header
