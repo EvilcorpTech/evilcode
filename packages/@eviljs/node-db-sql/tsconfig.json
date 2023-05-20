@@ -1,7 +1,6 @@
 {
     "extends": "../../@eviljs/tsconfig/preset-node-lib.json",
     "include": ["./**/*.ts"],
-    "exclude": ["node_modules"],
     "compilerOptions": {
     },
 }

@@ -1,7 +1,6 @@
 {
     "extends": "../../@eviljs/tsconfig/preset-react-lib.json",
     "include": ["./**/*.ts", "./**/*.tsx"],
-    "exclude": ["node_modules"],
     "compilerOptions": {
     },
 }
