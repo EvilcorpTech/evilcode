@@ -1,19 +1,19 @@
 import {createAccessor, type AccessorSync} from './accessor.js'
-import {areEqualIdentity} from './equal.js'
 import {scheduleMicroTask} from './eventloop.js'
 import type {TaskVoid} from './fn.js'
+import {areEqualIdentity} from './struct.js'
 
-export function makeReactive<T>(initialValue: T, options?: undefined | ReactiveValueOptions<T>): ReactiveValue<T> {
+export function makeReactive<V>(initialValue: V, options?: undefined | ReactiveValueOptions<V>): ReactiveValue<V> {
     let value = initialValue
     let cancelNotification: undefined | TaskVoid = undefined
-    const observers: Set<ReactiveValueObserver<T>> = new Set()
+    const observers: Set<ReactiveValueObserver<V>> = new Set()
     const areEqual = options?.equals ?? areEqualIdentity
 
-    function read(): T {
+    function read(): V {
         return value
     }
 
-    function write(newValue: T): T {
+    function write(newValue: V): V {
         const oldValue = value
 
         if (areEqual(oldValue, newValue)) {
@@ -22,12 +22,12 @@ export function makeReactive<T>(initialValue: T, options?: undefined | ReactiveV
 
         value = newValue
 
-        // Notifies once multiple mutations in the same micro task.
-        cancelNotification?.()
-
-        // We schedule a micro task so that if the observer triggers a value mutation,
+        // We notify once multiple mutations in the same micro task.
+        // We schedule a micro task so that if an observer triggers a value mutation,
         // the reentrant mutation is notified after current one is notified.
-        cancelNotification = scheduleMicroTask(() => {
+        cancelNotification ??= scheduleMicroTask(() => {
+            cancelNotification = undefined
+
             for (const it of observers) {
                 it(newValue, oldValue)
             }
@@ -38,6 +38,12 @@ export function makeReactive<T>(initialValue: T, options?: undefined | ReactiveV
 
     return {
         ...createAccessor(read, write),
+        get value() {
+            return value
+        },
+        set value(newValue) {
+            write(newValue)
+        },
         watch(observer, options) {
             const immediate = options?.immediate ?? false
 
@@ -58,20 +64,20 @@ export function makeReactive<T>(initialValue: T, options?: undefined | ReactiveV
 
 // Types ///////////////////////////////////////////////////////////////////////
 
-export interface ReactiveValue<T> extends AccessorSync<T> {
-    watch(observer: ReactiveValueObserver<T>, options?: undefined | ReactiveWatchOptions): TaskVoid
+export interface ReactiveValue<V> extends AccessorSync<V> {
+    watch(observer: ReactiveValueObserver<V>, options?: undefined | ReactiveWatchOptions): TaskVoid
 }
 
-export interface ReactiveValueOptions<T> {
-    equals?: undefined | ReactiveValueComparator<T>
+export interface ReactiveValueOptions<V> {
+    equals?: undefined | ReactiveValueComparator<V>
 }
 
-export interface ReactiveValueObserver<T> {
-    (newValue: T, oldValue: T): void
+export interface ReactiveValueObserver<V> {
+    (newValue: V, oldValue: V): void
 }
 
-export interface ReactiveValueComparator<T> {
-    (oldValue: T, newValue: T): boolean
+export interface ReactiveValueComparator<V> {
+    (oldValue: V, newValue: V): boolean
 }
 
 export interface ReactiveWatchOptions {

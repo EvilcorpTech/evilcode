@@ -72,6 +72,13 @@ export function areObjectsEqualShallowStrict<T extends object>(a: T, b: T): bool
     return true
 }
 
+export function cloneObjectShallow<O extends object>(object: O): O {
+    return Object.create(
+        Object.getPrototypeOf(object),
+        Object.getOwnPropertyDescriptors(object),
+    )
+}
+
 export function mapObject<K extends PropertyKey, V, RK extends PropertyKey>(
     object: Record<K, V>,
     withFn: {key: MapObjectKeyFn<K, V, RK>, value?: never},

@@ -17,10 +17,10 @@ export type FnArgs = Array<unknown>
 
 export type Task<R = void> = () => R
 export type TaskVoid = () => void
-export type AsyncTask<R = void> = () => Promise<R>
+export type AsyncTask<R = void> = Task<Promise<R>>
 
-export type Fn<A extends FnArgs, R> = (...args: A) => R
+export type Fn<A extends FnArgs, R = void> = (...args: A) => R
 export type Io<I = unknown, O = unknown> = (input: I) => O
-export type AsyncIo<I, O> = (input: I) => Promise<O>
+export type AsyncIo<I, O> = Io<I, Promise<O>>
 
 export type ValueComputable<T, A extends FnArgs = []> = T | Fn<A, T>

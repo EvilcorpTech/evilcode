@@ -8,7 +8,7 @@ import {
     ensureNumber,
     ensureString,
     ensureStringOptional,
-    throwAssertError,
+    throwAssertTypeError,
 } from './assert.js'
 import {getObjectPath} from './object.js'
 import {isArray, isFunction, isNil} from './type.js'
@@ -42,7 +42,7 @@ export function bool(ctx: Ctx, oneExp: Exp<Ctx, any>): boolean {
 */
 export function and(ctx: Ctx, ...exps: Array<Exp<Ctx, boolean>>): boolean {
     if (exps.length === 0) {
-        return throwAssertError('a Non Empty Array', exps)
+        return throwAssertTypeError('a Non Empty Array', exps)
     }
     return exps.every(itExp => ensureBoolean(evaluateExp(ctx, itExp)))
 }
@@ -52,7 +52,7 @@ export function and(ctx: Ctx, ...exps: Array<Exp<Ctx, boolean>>): boolean {
 */
 export function or(ctx: Ctx, ...exps: Array<Exp<Ctx, boolean>>): boolean {
     if (exps.length === 0) {
-        return throwAssertError('a Non Empty Array', exps)
+        return throwAssertTypeError('a Non Empty Array', exps)
     }
     return exps.some(itExp => ensureBoolean(evaluateExp(ctx, itExp)))
 }

@@ -4,9 +4,11 @@ export function scheduleMicroTask(task: TaskVoid): TaskVoid {
     let canceled = false
 
     Promise.resolve().then(() => {
-        if (! canceled) {
-            task()
+        if (canceled) {
+            return
         }
+
+        task()
     })
 
     function cancel() {

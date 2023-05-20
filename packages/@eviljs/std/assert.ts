@@ -1,4 +1,5 @@
-import {throwInvalidInput} from './throw.js'
+import {computeValue} from './fn.js'
+import {StdError, throwError} from './throw.js'
 import type {Nil} from './type.js'
 import {
     isArray,
@@ -15,14 +16,34 @@ import {
     isUndefined,
 } from './type.js'
 
+export class InvalidCondition extends StdError {}
+export class InvalidType extends StdError {}
+
 /**
-* @throws InvalidInput
+* @throws InvalidCondition
 */
-export function throwAssertError(type: string, value: unknown, ctx?: any) {
-    return throwInvalidInput(errorMessage(type, value, ctx))
+export function throwAssertConditionError(message: string) {
+    return throwError({type: InvalidCondition, message})
+}
+
+/**
+* @throws InvalidType
+*/
+export function throwAssertTypeError(type: string, value: unknown, ctx?: any) {
+    const message = errorMessage(type, value, ctx)
+    return throwError({type: InvalidType, message})
 }
 
 // Assertions //////////////////////////////////////////////////////////////////
+
+/**
+* @throws Error
+*/
+export function assert(condition: boolean, error: string | (() => string)): void {
+    if (! condition) {
+        throwAssertConditionError(computeValue(error))
+    }
+}
 
 /**
 * @throws InvalidInput
@@ -194,7 +215,7 @@ export function ensureArray<T extends Array<unknown>>(value: T, ctx?: any): T
 export function ensureArray(value: unknown, ctx?: any): Array<unknown>
 export function ensureArray(value: unknown, ctx?: any) {
     if (! isArray(value)) {
-        return throwAssertError('an Array', value, ctx)
+        return throwAssertTypeError('an Array', value, ctx)
     }
 
     return value
@@ -216,7 +237,7 @@ export function ensureBoolean<T extends boolean>(value: T, ctx?: any): T
 export function ensureBoolean(value: unknown, ctx?: any): boolean
 export function ensureBoolean(value: unknown, ctx?: any) {
     if (! isBoolean(value)) {
-        return throwAssertError('a Boolean', value, ctx)
+        return throwAssertTypeError('a Boolean', value, ctx)
     }
 
     return value
@@ -238,7 +259,7 @@ export function ensureDate<T extends Date>(value: T, ctx?: any): T
 export function ensureDate(value: unknown, ctx?: any): Date
 export function ensureDate(value: unknown, ctx?: any) {
     if (! isDate(value)) {
-        return throwAssertError('a Date', value, ctx)
+        return throwAssertTypeError('a Date', value, ctx)
     }
 
     return value
@@ -260,7 +281,7 @@ export function ensureDefined(value: undefined, ctx?: any): never
 export function ensureDefined<T>(value: undefined | T, ctx?: any): T
 export function ensureDefined<T>(value: undefined | T, ctx?: any): T {
     if (! isDefined(value)) {
-        return throwAssertError('defined', value, ctx)
+        return throwAssertTypeError('defined', value, ctx)
     }
 
     return value
@@ -280,7 +301,7 @@ export function ensureEnum<E>(value: unknown, enumValues: Array<E>, ctx?: any) {
         }
     }
 
-    return throwAssertError(`one of ${enumValues.join(' | ')}`, value, ctx)
+    return throwAssertTypeError(`one of ${enumValues.join(' | ')}`, value, ctx)
 }
 
 /**
@@ -299,7 +320,7 @@ export function ensureFunction<T extends Function>(value: T, ctx?: any): T
 export function ensureFunction(value: unknown, ctx?: any): Function
 export function ensureFunction(value: unknown, ctx?: any) {
     if (! isFunction(value)) {
-        return throwAssertError('a Function', value, ctx)
+        return throwAssertTypeError('a Function', value, ctx)
     }
 
     return value
@@ -321,7 +342,7 @@ export function ensureNumber<T extends number>(value: T, ctx?: any): T
 export function ensureNumber(value: unknown, ctx?: any): number
 export function ensureNumber(value: unknown, ctx?: any) {
     if (! isNumber(value)) {
-        return throwAssertError('a Number', value, ctx)
+        return throwAssertTypeError('a Number', value, ctx)
     }
 
     return value
@@ -345,7 +366,7 @@ export function ensureInteger(value: unknown, ctx?: any) {
     assertNumber(value, ctx)
 
     if (! isInteger(value)) {
-        return throwAssertError('an Integer', value, ctx)
+        return throwAssertTypeError('an Integer', value, ctx)
     }
 
     return value
@@ -367,7 +388,7 @@ export function ensureObject<T extends object | Record<PropertyKey, unknown>>(va
 export function ensureObject(value: unknown, ctx?: any): Record<PropertyKey, unknown>
 export function ensureObject(value: unknown, ctx?: any) {
     if (! isObject(value)) {
-        return throwAssertError('an Object', value, ctx)
+        return throwAssertTypeError('an Object', value, ctx)
     }
 
     return value
@@ -389,7 +410,7 @@ export function ensureSome(value: Nil, ctx?: any): never
 export function ensureSome<T>(value: Nil | T, ctx?: any): T
 export function ensureSome<T>(value: Nil | T, ctx?: any): T {
     if (! isSome(value)) {
-        return throwAssertError('not undefined and not null', value, ctx)
+        return throwAssertTypeError('not undefined and not null', value, ctx)
     }
 
     return value
@@ -402,7 +423,7 @@ export function ensureString<T extends string>(value: T, ctx?: any): T
 export function ensureString(value: unknown, ctx?: any): string
 export function ensureString(value: unknown, ctx?: any) {
     if (! isString(value)) {
-        return throwAssertError('a String', value, ctx)
+        return throwAssertTypeError('a String', value, ctx)
     }
 
     return value
@@ -424,7 +445,7 @@ export function ensureStringNotEmpty<T extends string>(value: T, ctx?: any): T
 export function ensureStringNotEmpty(value: unknown, ctx?: any): string
 export function ensureStringNotEmpty(value: unknown, ctx?: any) {
     if (ensureString(value, ctx).trim() === '') {
-        return throwAssertError('a not empty String', value, ctx)
+        return throwAssertTypeError('a not empty String', value, ctx)
     }
 
     return value
@@ -444,7 +465,7 @@ export function ensureStringNotEmptyOptional(value: unknown, ctx?: any) {
 */
 export function ensureUndefined(value: unknown, ctx?: any): undefined {
     if (! isUndefined(value)) {
-        return throwAssertError('undefined', value, ctx)
+        return throwAssertTypeError('undefined', value, ctx)
     }
 
     return

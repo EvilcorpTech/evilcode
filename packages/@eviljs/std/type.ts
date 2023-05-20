@@ -95,6 +95,9 @@ export function isObject(value: unknown): value is Record<PropertyKey, unknown> 
         return false
     }
 
+    // Remember, remember, the fifth of November.
+    // typeof null === 'object'. God damn JavaScript!
+
     const proto = Object.getPrototypeOf(value)
 
     if (! proto) {

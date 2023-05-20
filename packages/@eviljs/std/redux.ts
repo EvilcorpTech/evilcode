@@ -1,4 +1,7 @@
 import type {FnArgs} from './fn.js'
+import {computeValue} from './fn.js'
+import {areObjectsEqualShallow} from './object.js'
+import type {ValueOf} from './type.js'
 
 export let ReducerUid = 0
 
@@ -22,7 +25,7 @@ export function defineReducerAction<S extends ReducerState, K extends ReducerId,
 
 export function composeReducers<
     T extends Array<[ReducerId, ReducerTarget<any, any>]>,
->(...reducers: T): CompositeReducerOf<T> {
+>(...reducers: T): CompositeReducerOfList<T> {
     function reducerComposite(state: ReducerState, id: ReducerId, ...args: ReducerArgs): ReducerState {
         for (const it of reducers) {
             const [reducerId, reducer] = it
@@ -37,7 +40,28 @@ export function composeReducers<
         return state
     }
 
-    return reducerComposite as unknown as CompositeReducerOf<T>
+    return reducerComposite as unknown as CompositeReducerOfList<T>
+}
+
+export function fromActionsDefinitions<S extends ReducerState>(
+    actionsSpec: Record<
+        PropertyKey,
+        ReducerActionDefinition<S, ReducerId, Array<any>>
+    >,
+): Array<[ReducerId, ReducerTarget<S, ReducerArgs>]> {
+    return Object.values(actionsSpec).map(it => [
+        it.id,
+        it.reducer,
+    ] as [ReducerId, ReducerTarget<S>])
+}
+
+export function patchState<S extends ReducerState>(state: S, statePatch: StoreStatePatch<S>): S {
+    const nextState = computeValue(statePatch, state)
+    const mergedState = {...state, ...nextState}
+
+    return areObjectsEqualShallow(state, mergedState)
+        ? state
+        : mergedState
 }
 
 // Types ///////////////////////////////////////////////////////////////////////
@@ -46,13 +70,20 @@ export type ReducerState = object
 export type ReducerId = number | string
 export type ReducerArgs = FnArgs
 
-export interface ReducerActionDefinition<S extends ReducerState, K extends ReducerId, A extends ReducerArgs> {
+export interface ReducerActionDefinition<
+    S extends ReducerState = ReducerState,
+    K extends ReducerId = ReducerId,
+    A extends ReducerArgs = ReducerArgs,
+> {
     id: K
     action(...args: A): ReducerAction<K, A>
     reducer: ReducerTarget<S, A>
 }
 
-export type ReducerAction<K extends ReducerId = ReducerId, A extends ReducerArgs = ReducerArgs> = [id: K, ...args: A]
+export type ReducerAction<
+    K extends ReducerId = ReducerId,
+    A extends ReducerArgs = ReducerArgs,
+> = [id: K, ...args: A]
 
 export interface Reducer<
     S extends ReducerState = ReducerState,
@@ -69,25 +100,28 @@ export interface ReducerTarget<
     (state: S, ...args: A): S
 }
 
-export type CompositeReducerOf<T extends Array<[ReducerId, ReducerTarget<ReducerState, ReducerArgs>]>> =
-    (...args: ReducersArgsOf<T>) => ReducerStateOf<T>
+export type CompositeReducerOfList<L extends Array<[ReducerId, ReducerTarget<any, Array<any>>]>> =
+    (...args: ReducerArgsOfList<L>) => ReducerStateOfList<L>
 
-export type ReducerStateOf<T extends Array<[ReducerId, ReducerTarget<ReducerState, ReducerArgs>]>> =
-    T extends Array<[ReducerId, ReducerTarget<infer S, ReducerArgs>]>
+export type ReducerStateOfList<L extends Array<[ReducerId, ReducerTarget<any, Array<any>>]>> =
+    L extends Array<[ReducerId, ReducerTarget<infer S, ReducerArgs>]>
         ? S
         : ReducerState
 
-export type ReducersArgsOf<T extends Array<[ReducerId, ReducerTarget<ReducerState, ReducerArgs>]>> =
-    {
-        [key in keyof T]: ReducerArgsOf<T[key]>
-    }[number]
+export type ReducerArgsOfList<L extends Array<[ReducerId, ReducerTarget<any, Array<any>>]>> =
+    { [key in keyof L]: ReducerArgsOfListItem<L[key]> }[number]
 
-export type ReducerArgsOf<T extends [ReducerId, ReducerTarget]> =
-    T extends [infer K, ReducerTarget<infer S, infer A>]
+export type ReducerArgsOfListItem<I extends [ReducerId, ReducerTarget]> =
+    I extends [infer K, ReducerTarget<infer S, infer A>]
         ? [S, K, ...A]
         : [ReducerState, ReducerId, ...FnArgs]
 
-export type ReducerActionsOf<R extends ((state: any, ...args: any) => ReducerState)> =
+export type ReducerActionOf<R extends ((state: any, ...args: Array<any>) => ReducerState)> =
     R extends ((state: ReducerState, ...args: infer A) => ReducerState)
         ? A
         : [ReducerId, ...ReducerArgs]
+
+export type ReducerActionOfDict<D extends Record<PropertyKey, ReducerActionDefinition<any, ReducerId, Array<any>>>> =
+    ReturnType<ValueOf<D>['action']>
+
+export type StoreStatePatch<S extends ReducerState> = Partial<S> | ((prevState: S) => Partial<S>)
