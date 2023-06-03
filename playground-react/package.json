@@ -1,7 +1,7 @@
 {
     "type": "module",
     "scripts": {
-        "init": "npx pnpm@latest install && npm --prefix dev run init",
+        "init": "npx pnpm@8.6 install && npm --prefix dev run init",
         "upgrade": "npx npm-upgrade@latest && npm --prefix dev run upgrade && npm run init",
         "check": "npm --prefix dev run check",
         "build": "npm --prefix dev run build",
@@ -17,8 +17,8 @@
         "@eviljs/std": "1",
         "@eviljs/web": "1",
         "@eviljs/webx": "1",
-        "@types/react": "18.2.1",
-        "@types/react-dom": "18.2.2",
+        "@types/react": "18.2.8",
+        "@types/react-dom": "18.2.4",
         "react": "18.2.0",
         "react-dom": "18.2.0"
     },

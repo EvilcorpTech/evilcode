@@ -1,7 +1,7 @@
 {
     "scripts": {
-        "init": "npx pnpm@8 install",
-        "update": "npx pnpm@8 update -r",
+        "init": "npx pnpm@8.6 install",
+        "update": "npx pnpm@8.6 update -r",
         "build": "nx run-many --target build"
     },
     "devDependencies": {
