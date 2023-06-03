@@ -16,12 +16,12 @@
     "dependencies": {
         "@eviljs/node": "1",
         "@eviljs/std": "1",
-        "@types/node": "18",
+        "@types/node": "20",
         "mariadb": "3",
         "tslib": "2"
     },
     "devDependencies": {
-        "typescript": "5.0"
+        "typescript": "5.1"
     },
     "author": "Daniele Orlando",
     "license": "BSD-2-Clause",

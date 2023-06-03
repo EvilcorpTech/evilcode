@@ -31,7 +31,7 @@
         "@types/koa-static": "4",
         "@types/koa__multer": "2",
         "@types/koa__router": "12",
-        "@types/node": "18",
+        "@types/node": "20",
         "koa": "2",
         "koa-bodyparser": "4",
         "koa-compress": "5",
@@ -44,7 +44,7 @@
         "tslib": "2"
     },
     "devDependencies": {
-        "typescript": "5.0"
+        "typescript": "5.1"
     },
     "author": "Daniele Orlando",
     "license": "BSD-2-Clause",

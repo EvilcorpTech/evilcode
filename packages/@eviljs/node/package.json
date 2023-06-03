@@ -15,12 +15,12 @@
     "dependencies": {
         "@eviljs/std": "1",
         "@types/bcryptjs": "2",
-        "@types/node": "18",
+        "@types/node": "20",
         "bcryptjs": "2",
         "tslib": "2"
     },
     "devDependencies": {
-        "typescript": "5.0"
+        "typescript": "5.1"
     },
     "author": "Daniele Orlando",
     "license": "BSD-2-Clause",
