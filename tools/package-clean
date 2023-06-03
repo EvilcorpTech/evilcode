@@ -6,7 +6,7 @@ set -u # nounset
 # Cleans package generated files.
 #
 # EXAMPLE
-# ./init-package ./packages/evil*
+# ./package-clean ./packages/@evil*/*
 
 Dir="$(cd "$(dirname "$0")/.." && pwd)"
 
