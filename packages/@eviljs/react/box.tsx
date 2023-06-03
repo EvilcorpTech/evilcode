@@ -16,7 +16,10 @@ export const Box = forwardRef(function Box<T>(
     const {tag, ...otherProps} = props
 
     return createElement(tag ?? 'div', {...otherProps as {}, ref})
-}) as (<T>(props: BoxProps<T>) => JSX.Element) & Pick<React.FunctionComponent, 'displayName'>
+}) as (
+    & (<T>(props: BoxProps<T>) => JSX.Element)
+    & Pick<React.FunctionComponent, 'displayName'>
+)
 Box.displayName = 'Box'
 
 /*

@@ -63,7 +63,10 @@ export const SliderVirtual = forwardRef(function SliderVirtual<I>(
             )}
         </div>
     )
-}) as (<I>(props: SliderVirtualProps<I> & React.RefAttributes<HTMLElement>) => React.ReactElement) & Pick<React.FunctionComponent, 'displayName'>
+}) as (
+    & (<I>(props: SliderVirtualProps<I>) => JSX.Element)
+    & Pick<React.FunctionComponent, 'displayName'>
+)
 SliderVirtual.displayName = 'SliderVirtual'
 
 export function computeVirtualState<I>(spec: VirtualSpec<I>) {
