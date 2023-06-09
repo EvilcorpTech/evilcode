@@ -1,24 +1,42 @@
-.std-space-h {
+.std-space-h1,
+.std-space-h2,
+.std-space-h3,
+.std-space-h4,
+.std-space-h5,
+.std-space-h6,
+.std-space-h7,
+.std-space-h8,
+.std-space-h9,
+.std-space-h10 {
     display: inline-block;
     height: 100%;
-    min-width: var(--size, 1em);
-    width: var(--size, 1em);
-    max-width: var(--size, 1em);
+    min-width: var(--space-size, 1em);
+    width: var(--space-size, 1em);
+    max-width: var(--space-size, 1em);
 }
-.std-space-v {
+.std-space-v1,
+.std-space-v2,
+.std-space-v3,
+.std-space-v4,
+.std-space-v5,
+.std-space-v6,
+.std-space-v7,
+.std-space-v8,
+.std-space-v9,
+.std-space-v10 {
     display: block;
     width: 100%;
-    min-height: var(--size, 1em);
-    height: var(--size, 1em);
-    max-height: var(--size, 1em);
+    min-height: var(--space-size, 1em);
+    height: var(--space-size, 1em);
+    max-height: var(--space-size, 1em);
 }
-.std-space-h.s1, .std-space-v.s1 { --size: var(--std-gutter1); }
-.std-space-h.s2, .std-space-v.s2 { --size: var(--std-gutter2); }
-.std-space-h.s3, .std-space-v.s3 { --size: var(--std-gutter3); }
-.std-space-h.s4, .std-space-v.s4 { --size: var(--std-gutter4); }
-.std-space-h.s5, .std-space-v.s5 { --size: var(--std-gutter5); }
-.std-space-h.s6, .std-space-v.s6 { --size: var(--std-gutter6); }
-.std-space-h.s7, .std-space-v.s7 { --size: var(--std-gutter7); }
-.std-space-h.s8, .std-space-v.s8 { --size: var(--std-gutter8); }
-.std-space-h.s9, .std-space-v.s9 { --size: var(--std-gutter9); }
-.std-space-h.s10, .std-space-v.s10 { --size: var(--std-gutter10); }
+.std-space-h1, .std-space-v1 { --space-size: var(--std-gutter1); }
+.std-space-h2, .std-space-v2 { --space-size: var(--std-gutter2); }
+.std-space-h3, .std-space-v3 { --space-size: var(--std-gutter3); }
+.std-space-h4, .std-space-v4 { --space-size: var(--std-gutter4); }
+.std-space-h5, .std-space-v5 { --space-size: var(--std-gutter5); }
+.std-space-h6, .std-space-v6 { --space-size: var(--std-gutter6); }
+.std-space-h7, .std-space-v7 { --space-size: var(--std-gutter7); }
+.std-space-h8, .std-space-v8 { --space-size: var(--std-gutter8); }
+.std-space-h9, .std-space-v9 { --space-size: var(--std-gutter9); }
+.std-space-h10, .std-space-v10 { --space-size: var(--std-gutter10); }

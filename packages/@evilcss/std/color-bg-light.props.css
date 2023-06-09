@@ -1,4 +1,4 @@
-.std {
+.std-root {
     --std-color-light-bg-l-base: 100%;
     --std-color-light-bg-l-factor: 2%;
     --std-color-light-bg-z-factor: 1%;
@@ -23,7 +23,7 @@
     --std-color-light-bg4-l: calc(var(--std-color-light-bg3-l) - var(--std-color-light-bg-l-factor));
     --std-color-light-bg4: hsl(var(--std-color-light-bg4-h) var(--std-color-light-bg4-s) var(--std-color-light-bg4-l) / var(--std-color-light-bg4-opacity, 1));
 }
-.std.theme-light {
+.std-theme-light {
     --std-color-bg1-h: var(--std-color-light-bg1-h);
     --std-color-bg1-s: var(--std-color-light-bg1-s);
     --std-color-bg1-l: var(--std-color-light-bg1-l);

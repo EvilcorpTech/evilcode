@@ -1,4 +1,4 @@
-.std {
+.std-root {
     --std-duration-base: .1s;
     --std-duration-factor: .1s;
     --std-duration1: var(--std-duration-base);

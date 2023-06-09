@@ -1,4 +1,4 @@
-.std {
+.std-root {
     --std-text-small-size: var(--std-text-size1);
     --std-text-body2-size: var(--std-text-size2);
     --std-text-body1-size: var(--std-text-size3);

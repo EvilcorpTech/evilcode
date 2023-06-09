@@ -1,8 +1,9 @@
-.std {
+.std-root {
     /*
-    --std-color-primary-h: <n>deg;
-    --std-color-primary-s: <n>%;
-    --std-color-primary-l: <n>%;
+    * EXAMPLE
+    * --std-color-primary-h: <n>deg;
+    * --std-color-primary-s: <n>%;
+    * --std-color-primary-l: <n>%;
     */
     --std-color-primary-accent: hsl(var(--std-color-primary-h) var(--std-color-primary-s) var(--std-color-primary-l));
 
@@ -25,12 +26,12 @@
     --std-color-primary-tone5: hsl(var(--std-color-primary-h) calc(var(--std-color-primary-s) * .2) calc(var(--std-color-primary-l) * 1.0));
     --std-color-primary-tone6: hsl(var(--std-color-primary-h) calc(var(--std-color-primary-s) * .1) calc(var(--std-color-primary-l) * 1.0));
 }
-.std.theme-light {
+.std-theme-light {
     --std-color-primary-fg1: hsl(var(--std-color-primary-h) var(--std-color-primary-s) 48%);
     --std-color-primary-fg2: hsl(var(--std-color-primary-h) var(--std-color-primary-s) 40%);
     --std-color-primary-fg3: hsl(var(--std-color-primary-h) var(--std-color-primary-s) 32%);
 }
-.std.theme-dark {
+.std-theme-dark {
     --std-color-primary-fg1: hsl(var(--std-color-primary-h) var(--std-color-primary-s) 62%);
     --std-color-primary-fg2: hsl(var(--std-color-primary-h) var(--std-color-primary-s) 72%);
     --std-color-primary-fg3: hsl(var(--std-color-primary-h) var(--std-color-primary-s) 82%);

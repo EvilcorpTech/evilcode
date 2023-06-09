@@ -1,4 +1,4 @@
-.std {
+.std-root {
     /* Values must be integer, for a pixel perfect result. */
     --std-icon-base: 12px;
     --std-icon-factor: 2px;

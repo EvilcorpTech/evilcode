@@ -1,4 +1,4 @@
-.std {
+.std-root {
     --std-text-size-base: 12px;
     --std-text-size-factor: 2px;
     --std-text-size1: var(--std-text-size-base);

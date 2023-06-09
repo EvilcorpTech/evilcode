@@ -1,4 +1,4 @@
-.std {
+.std-root {
     --std-color-dark-fg1-h: var(--std-color-dark-fg-h, 0deg);
     --std-color-dark-fg1-s: var(--std-color-dark-fg-s, 0%);
     --std-color-dark-fg1-l: 95%;
@@ -14,7 +14,7 @@
     --std-color-dark-fg3-l: 53%;
     --std-color-dark-fg3: hsl(var(--std-color-dark-fg3-h) var(--std-color-dark-fg3-s) var(--std-color-dark-fg3-l) / var(--std-color-dark-fg3-opacity, 1));
 }
-.std.theme-dark {
+.std-theme-dark {
     --std-color-fg1-h: var(--std-color-dark-fg1-h);
     --std-color-fg1-s: var(--std-color-dark-fg1-s);
     --std-color-fg1-l: var(--std-color-dark-fg1-l);

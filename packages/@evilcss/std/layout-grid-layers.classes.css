@@ -1,9 +1,4 @@
-.std-grid-layers {
-    display: grid;
-}
-.std-grid-layers.inline {
-    display: inline-grid;
-}
+.std-grid-layer,
 .std-grid-layers > * {
     grid-area: 1 / 1;
 }

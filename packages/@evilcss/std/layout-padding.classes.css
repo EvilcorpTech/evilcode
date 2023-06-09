@@ -1,0 +1,54 @@
+.std-padding1 { padding: var(--std-gutter1); }
+.std-padding2 { padding: var(--std-gutter2); }
+.std-padding3 { padding: var(--std-gutter3); }
+.std-padding4 { padding: var(--std-gutter4); }
+.std-padding5 { padding: var(--std-gutter5); }
+.std-padding6 { padding: var(--std-gutter6); }
+.std-padding7 { padding: var(--std-gutter7); }
+.std-padding8 { padding: var(--std-gutter8); }
+.std-padding9 { padding: var(--std-gutter9); }
+.std-padding10 { padding: var(--std-gutter10); }
+
+.std-padding-h1 { padding-left: var(--std-gutter1); padding-right: var(--std-gutter1); }
+.std-padding-h2 { padding-left: var(--std-gutter2); padding-right: var(--std-gutter2); }
+.std-padding-h3 { padding-left: var(--std-gutter3); padding-right: var(--std-gutter3); }
+.std-padding-h4 { padding-left: var(--std-gutter4); padding-right: var(--std-gutter4); }
+.std-padding-h5 { padding-left: var(--std-gutter5); padding-right: var(--std-gutter5); }
+.std-padding-h6 { padding-left: var(--std-gutter6); padding-right: var(--std-gutter6); }
+.std-padding-h7 { padding-left: var(--std-gutter7); padding-right: var(--std-gutter7); }
+.std-padding-h8 { padding-left: var(--std-gutter8); padding-right: var(--std-gutter8); }
+.std-padding-h9 { padding-left: var(--std-gutter9); padding-right: var(--std-gutter9); }
+.std-padding-h10 { padding-left: var(--std-gutter10); padding-right: var(--std-gutter10); }
+
+.std-padding-v1 { padding-top: var(--std-gutter1); padding-bottom: var(--std-gutter1); }
+.std-padding-v2 { padding-top: var(--std-gutter2); padding-bottom: var(--std-gutter2); }
+.std-padding-v3 { padding-top: var(--std-gutter3); padding-bottom: var(--std-gutter3); }
+.std-padding-v4 { padding-top: var(--std-gutter4); padding-bottom: var(--std-gutter4); }
+.std-padding-v5 { padding-top: var(--std-gutter5); padding-bottom: var(--std-gutter5); }
+.std-padding-v6 { padding-top: var(--std-gutter6); padding-bottom: var(--std-gutter6); }
+.std-padding-v7 { padding-top: var(--std-gutter7); padding-bottom: var(--std-gutter7); }
+.std-padding-v8 { padding-top: var(--std-gutter8); padding-bottom: var(--std-gutter8); }
+.std-padding-v9 { padding-top: var(--std-gutter9); padding-bottom: var(--std-gutter9); }
+.std-padding-v10 { padding-top: var(--std-gutter10); padding-bottom: var(--std-gutter10); }
+
+.std-padding-b1 { padding-block: var(--std-gutter1); }
+.std-padding-b2 { padding-block: var(--std-gutter2); }
+.std-padding-b3 { padding-block: var(--std-gutter3); }
+.std-padding-b4 { padding-block: var(--std-gutter4); }
+.std-padding-b5 { padding-block: var(--std-gutter5); }
+.std-padding-b6 { padding-block: var(--std-gutter6); }
+.std-padding-b7 { padding-block: var(--std-gutter7); }
+.std-padding-b8 { padding-block: var(--std-gutter8); }
+.std-padding-b9 { padding-block: var(--std-gutter9); }
+.std-padding-b10 { padding-block: var(--std-gutter10); }
+
+.std-padding-i1 { padding-inline: var(--std-gutter1); }
+.std-padding-i2 { padding-inline: var(--std-gutter2); }
+.std-padding-i3 { padding-inline: var(--std-gutter3); }
+.std-padding-i4 { padding-inline: var(--std-gutter4); }
+.std-padding-i5 { padding-inline: var(--std-gutter5); }
+.std-padding-i6 { padding-inline: var(--std-gutter6); }
+.std-padding-i7 { padding-inline: var(--std-gutter7); }
+.std-padding-i8 { padding-inline: var(--std-gutter8); }
+.std-padding-i9 { padding-inline: var(--std-gutter9); }
+.std-padding-i10 { padding-inline: var(--std-gutter10); }

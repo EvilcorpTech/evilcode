@@ -1,4 +1,4 @@
-.std {
+.std-root {
     --std-color-info-h: var(--std-color-primary-h);
     --std-color-info-s: var(--std-color-primary-s);
     --std-color-info-l: var(--std-color-primary-l);

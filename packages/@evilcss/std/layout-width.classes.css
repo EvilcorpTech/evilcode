@@ -1,0 +1,10 @@
+.std-width-s,
+.std-width-m,
+.std-width-l,
+.std-width-xl {
+    width: 100%;
+}
+.std-width-s { max-width: var(--std-width-s); }
+.std-width-m { max-width: var(--std-width-m); }
+.std-width-l { max-width: var(--std-width-l); }
+.std-width-xl { max-width: var(--std-width-xl); }

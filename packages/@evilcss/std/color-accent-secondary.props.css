@@ -1,8 +1,9 @@
-.std {
+.std-root {
     /*
-    --std-color-secondary-h: <n>deg;
-    --std-color-secondary-s: <n>%;
-    --std-color-secondary-l: <n>%;
+    * EXAMPLE
+    * --std-color-secondary-h: <n>deg;
+    * --std-color-secondary-s: <n>%;
+    * --std-color-secondary-l: <n>%;
     */
     --std-color-secondary-accent: hsl(var(--std-color-secondary-h) var(--std-color-secondary-s) var(--std-color-secondary-l));
 
@@ -25,12 +26,12 @@
     --std-color-secondary-tone5: hsl(var(--std-color-secondary-h) calc(var(--std-color-secondary-s) * .2) calc(var(--std-color-secondary-l) * 1.0));
     --std-color-secondary-tone6: hsl(var(--std-color-secondary-h) calc(var(--std-color-secondary-s) * .1) calc(var(--std-color-secondary-l) * 1.0));
 }
-.std.theme-light {
+.std-theme-light {
     --std-color-secondary-fg1: hsl(var(--std-color-secondary-h) var(--std-color-secondary-s) 48%);
     --std-color-secondary-fg2: hsl(var(--std-color-secondary-h) var(--std-color-secondary-s) 40%);
     --std-color-secondary-fg3: hsl(var(--std-color-secondary-h) var(--std-color-secondary-s) 32%);
 }
-.std.theme-dark {
+.std-theme-dark {
     --std-color-secondary-fg1: hsl(var(--std-color-secondary-h) var(--std-color-secondary-s) 62%);
     --std-color-secondary-fg2: hsl(var(--std-color-secondary-h) var(--std-color-secondary-s) 72%);
     --std-color-secondary-fg3: hsl(var(--std-color-secondary-h) var(--std-color-secondary-s) 82%);

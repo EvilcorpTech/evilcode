@@ -1,4 +1,4 @@
-.std {
+.std-root {
     --std-text-weight-base: 400;
     --std-text-weight-factor: 100;
     --std-text-weight-2: calc(var(--std-text-weight-1) - var(--std-text-weight-factor));

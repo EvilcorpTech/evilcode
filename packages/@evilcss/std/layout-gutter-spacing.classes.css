@@ -1,16 +1,34 @@
-.std-spacing {
+.std-spacing1,
+.std-spacing2,
+.std-spacing3,
+.std-spacing4,
+.std-spacing5,
+.std-spacing6,
+.std-spacing7,
+.std-spacing8,
+.std-spacing9,
+.std-spacing10 {
     margin: calc(-1 * var(--spacing-size));
 }
-.std-spacing > * {
+.std-spacing1 > *,
+.std-spacing2 > *,
+.std-spacing3 > *,
+.std-spacing4 > *,
+.std-spacing5 > *,
+.std-spacing6 > *,
+.std-spacing7 > *,
+.std-spacing8 > *,
+.std-spacing9 > *,
+.std-spacing10 > * {
     margin: var(--spacing-size);
 }
-.std-spacing.s1 { --spacing-size: var(--std-gutter1); }
-.std-spacing.s2 { --spacing-size: var(--std-gutter2); }
-.std-spacing.s3 { --spacing-size: var(--std-gutter3); }
-.std-spacing.s4 { --spacing-size: var(--std-gutter4); }
-.std-spacing.s5 { --spacing-size: var(--std-gutter5); }
-.std-spacing.s6 { --spacing-size: var(--std-gutter6); }
-.std-spacing.s7 { --spacing-size: var(--std-gutter7); }
-.std-spacing.s8 { --spacing-size: var(--std-gutter8); }
-.std-spacing.s9 { --spacing-size: var(--std-gutter9); }
-.std-spacing.s10 { --spacing-size: var(--std-gutter10); }
+.std-spacing1 { --spacing-size: var(--std-gutter1); }
+.std-spacing2 { --spacing-size: var(--std-gutter2); }
+.std-spacing3 { --spacing-size: var(--std-gutter3); }
+.std-spacing4 { --spacing-size: var(--std-gutter4); }
+.std-spacing5 { --spacing-size: var(--std-gutter5); }
+.std-spacing6 { --spacing-size: var(--std-gutter6); }
+.std-spacing7 { --spacing-size: var(--std-gutter7); }
+.std-spacing8 { --spacing-size: var(--std-gutter8); }
+.std-spacing9 { --spacing-size: var(--std-gutter9); }
+.std-spacing10 { --spacing-size: var(--std-gutter10); }

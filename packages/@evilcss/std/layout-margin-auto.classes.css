@@ -1,0 +1,5 @@
+.std-margin-auto { margin: auto; }
+.std-margin-h-auto { margin-left: auto; margin-right: auto; }
+.std-margin-v-auto { margin-top: auto; margin-bottom: auto; }
+.std-margin-b-auto { margin-block: auto; }
+.std-margin-i-auto { margin-inline: auto; }
