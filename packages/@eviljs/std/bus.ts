@@ -1,7 +1,7 @@
 import {scheduleMacroTask} from './eventloop.js'
 import type {TaskVoid} from './fn.js'
 
-export const EventRegExpCache: Record<BusEvent, RegExp> = {}
+export const EventRegexpCache: Record<BusEvent, RegExp> = {}
 
 export function createBus() {
     const self: Bus = {
@@ -85,11 +85,11 @@ export function unobserveEvent(observers: BusEventObservers, event: BusEvent, ob
 }
 
 export function regexpFromEvent(event: BusEvent): RegExp {
-    if (! EventRegExpCache[event]) {
-        EventRegExpCache[event] = new RegExp(event)
+    if (! EventRegexpCache[event]) {
+        EventRegexpCache[event] = new RegExp(event)
     }
 
-    return EventRegExpCache[event]!
+    return EventRegexpCache[event]!
 }
 
 // Types ///////////////////////////////////////////////////////////////////////

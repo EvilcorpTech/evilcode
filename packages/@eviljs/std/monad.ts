@@ -9,6 +9,21 @@ export type {Io} from './fn.js'
 
 export const MonadTag = '#__kind__$' // We can't use a Symbol or Class, because it must be serializable.
 
+// Debug ///////////////////////////////////////////////////////////////////////
+
+export function inspecting<V>(inspect: Io<V, void>): Io<V, V> {
+    return (input: V) => (inspect(input), input)
+}
+
+export function logging<V>(format?: undefined | Io<V, any>): Io<V, V> {
+    return (input: V) =>
+        inspectWithConsoleLog(format ? format(input) : input)
+}
+
+export function inspectWithConsoleLog<V>(input: V): V {
+    return (console.log(input), input)
+}
+
 // Optional ////////////////////////////////////////////////////////////////////
 
 export function mappingSome<V1, V2>(
@@ -47,35 +62,21 @@ export function mapNone<V1, V2>(
 
 // Boolean Expression //////////////////////////////////////////////////////////
 
-export function mappingTrue(
-    onTrue: Io<boolean, boolean>
-): Io<boolean, boolean>
-{
+export function mappingTrue(onTrue: Io<boolean, boolean>): Io<boolean, boolean> {
     return input => mapTrue(input, onTrue)
 }
 
-export function mappingFalse(
-    onFalse: Io<boolean, boolean>
-): Io<boolean, boolean>
-{
+export function mappingFalse(onFalse: Io<boolean, boolean>): Io<boolean, boolean> {
     return input => mapFalse(input, onFalse)
 }
 
-export function mapTrue(
-    input: boolean,
-    onTrue: Io<boolean, boolean>
-): boolean
-{
+export function mapTrue(input: boolean, onTrue: Io<boolean, boolean>): boolean {
     return input
         ? onTrue(input)
         : input
 }
 
-export function mapFalse(
-    input: boolean,
-    onFalse: Io<boolean, boolean>
-): boolean
-{
+export function mapFalse(input: boolean, onFalse: Io<boolean, boolean>): boolean {
     return ! input
         ? onFalse(input)
         : input
@@ -192,7 +193,12 @@ export function mappingPromise<V1, V2, V3>(
 }
 
 /*
-* Utility API, mapping only the fulfillment.
+* Utility API, mapping the fulfillment.
+*/
+export const awaiting = mappingThen
+
+/*
+* Utility API, mapping the fulfillment.
 */
 export function mappingThen<V1, V2>(
     onThen: Io<V1, V2>,
@@ -202,7 +208,7 @@ export function mappingThen<V1, V2>(
 }
 
 /*
-* Utility API, mapping only the rejection.
+* Utility API, mapping the rejection.
 */
 export function mappingCatch<V1, V2>(
     onCatch: Io<unknown, V2>,
