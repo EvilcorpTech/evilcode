@@ -20,9 +20,7 @@ export const LoggerContext = defineContext<Logger>('LoggerContext')
 export function LoggerProvider(props: LoggerProviderProps) {
     const {value, children} = props
 
-    return (
-        <LoggerContext.Provider value={value} children={children}/>
-    )
+    return <LoggerContext.Provider value={value} children={children}/>
 }
 
 export function useLogger<T extends Logger = Logger>() {

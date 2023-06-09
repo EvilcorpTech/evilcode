@@ -22,9 +22,7 @@ export function BusProvider(props: BusProviderProps) {
         return createBus()
     }, [])
 
-    return (
-        <BusContext.Provider value={bus} children={children}/>
-    )
+    return <BusContext.Provider value={bus} children={children}/>
 }
 
 export function useBus<T extends undefined | Bus = undefined | Bus>() {

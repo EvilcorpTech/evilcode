@@ -24,9 +24,7 @@ export const RequestContext = defineContext('RequestContext')
 export function RequestProvider(props: RequestProviderProps) {
     const {children, value} = props
 
-    return (
-        <RequestContext.Provider value={value} children={children}/>
-    )
+    return <RequestContext.Provider value={value} children={children}/>
 }
 
 export function useRequest<C, A extends Array<unknown>, R>(asyncTask: RequestIo<C, A, R>): RequestManager<A, R> {

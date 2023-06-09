@@ -39,9 +39,7 @@ export function AuthProvider(props: AuthProviderProps) {
     const {children, cookie, fetch, ...options} = props
     const value = useRootAuth(fetch, cookie, options)
 
-    return (
-        <AuthContext.Provider value={value} children={children}/>
-    )
+    return <AuthContext.Provider value={value} children={children}/>
 }
 
 export function useRootAuth(fetch: Fetch, cookie: Cookie, options?: undefined | AuthOptions) {
