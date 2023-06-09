@@ -1,0 +1,23 @@
+import {Error, awaiting, inspecting, logging, mappingCatch, mappingError, mappingThen, pipe} from '../packages/@eviljs/std/pipe.js'
+
+const r1 = pipe({})
+    .to(it => ({...it, name: 'Mike'}))
+    .to(it => ({...it, age: 18}))
+    .to(it => it.age >= 18 ? it : Error('TooYoung'))
+    .to(mappingError(error => ({name: error.error, age: 0})))
+    .to(inspecting(it => console.log(it)))
+    .to(logging(it => `Value is: ${it}`))
+    .to(it => `${it.name} ${it.age} years old!`)
+    .to(it => `Hello, ${it}`)
+.end()
+
+const r2 = await pipe({})
+    .to(it => Promise.resolve(it))
+    .to(awaiting(it => ({...it, name: 'Mike', age: 18})))
+    .to(awaiting(it => it))
+    .to(awaiting(logging()))
+    .to(it => it)
+    .to(awaiting(it => it.name))
+    .to(mappingThen(it => it.toUpperCase()))
+    .to(mappingCatch(error => Error(error)))
+.end()
