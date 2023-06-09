@@ -2,7 +2,7 @@ import type HtmlWebpackPlugin from 'html-webpack-plugin'
 import type {HtmlTagObject} from 'html-webpack-plugin'
 import type {Compilation, Compiler} from 'webpack'
 
-export class HtmlStyleInlinePlugin {
+module.exports = class HtmlStyleInlinePlugin {
     readonly HtmlWebpackPlugin: HtmlWebpackPluginClass
     readonly options?: undefined | HtmlStyleInlinePluginOptions
 
