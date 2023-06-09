@@ -9,7 +9,7 @@ export function lastOf<I>(list: Array<I>): undefined | I {
     return list.at(-1)
 }
 
-export function withoutNil<I>(list: Array<Nil | I>): Array<I> {
+export function filterSome<I>(list: Array<Nil | I>): Array<I> {
     return list.filter(isSome)
 }
 
