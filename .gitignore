@@ -1,8 +1,10 @@
-*.code-workspace
-/.vscode
+/packages/@evil*/**/*.d.cts
+/packages/@evil*/**/*.d.mts
 /packages/@evil*/**/*.d.ts
+/packages/@evil*/**/*.cjs
+/packages/@evil*/**/*.mjs
 /packages/@evil*/**/*.js
-node_modules
+node_modules/
 package-lock.json
 pnpm-lock.yaml
 tsconfig.tsbuildinfo
