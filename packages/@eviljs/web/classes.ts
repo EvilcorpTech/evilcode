@@ -1,40 +1,49 @@
 import type {Nil} from '@eviljs/std/type.js'
-import {isArray, isObject, isString} from '@eviljs/std/type.js'
+import {isObject} from '@eviljs/std/type.js'
 
-export function classes(...names: Array<Classes>) {
-    const list: Array<string> = []
+export function classes(...args: Array<Classes>) {
+    // Implementation based on these benchmarks:
+    // https://jsperf.app/xiboxo/5
+    // https://jsperf.app/zuleqe/1
+    // Tested in 2023 on Chrome 114, Firefox 114, Safari 16.
 
-    for (const item of names) {
-        if (! item) {
+    let classString = ''
+
+    for (const arg of args) {
+        if (! arg) {
             continue
         }
 
-        if (isString(item)) {
-            list.push(item)
+        const separator = classString ? ' ' : ''
+
+        // From most to least probable.
+
+        if (typeof arg === 'string') {
+            classString += separator + arg
             continue
         }
 
-        if (isArray(item)) {
-            list.push(classes(...item))
+        if (Array.isArray(arg)) {
+            classString += separator + classes(...arg)
             continue
         }
 
-        if (isObject(item)) {
-            for (const name in item) {
-                if (item[name]) {
-                    list.push(name)
+        if (isObject(arg)) {
+            for (const key in arg) {
+                if (arg[key]) {
+                    classString += separator + key
                 }
             }
             continue
         }
 
         console.error(
-            '@eviljs/web/classes.classes(~~names~~):\n'
-            + `names must be a String | Object | Array, given "${item}".`
+            '@eviljs/web/classes.classes(~~...args~~):\n'
+            + `args must be of type String | Object | Array, given "${arg}".`
         )
     }
 
-    return list.join(' ')
+    return classString
 }
 
 // Types ///////////////////////////////////////////////////////////////////////
@@ -42,7 +51,7 @@ export function classes(...names: Array<Classes>) {
 export type Classes =
     | Nil
     | string
-    | Record<string, boolean | null | undefined>
+    | Record<string, Nil | boolean>
     | Array<Classes>
     | readonly Classes[]
     // | readonly [...Array<Classes>]

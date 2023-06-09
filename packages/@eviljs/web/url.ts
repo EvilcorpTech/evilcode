@@ -1,4 +1,4 @@
-export const UrlSchemaRegexp = /^([0-9a-zA-Z]+):/ // "http://" "https://" "mailto:" "tel:"
+export const UrlSchemaRegexp = /^([a-zA-Z0-9]+):/ // "http://" "https://" "mailto:" "tel:"
 
 export function isUrlAbsolute(url: string): boolean
 export function isUrlAbsolute(url: undefined | string): undefined | boolean
@@ -27,11 +27,10 @@ export function asBaseUrl(url?: undefined | string) {
     return url
 }
 
-export function joinUrlPath(firstPart: string, secondPart: string, ...otherParts: Array<string>) {
-    const parts = [secondPart, ...otherParts]
-
+export function joinUrlPath(...parts: [string, ...Array<string>]) {
+    const [firstPart, ...otherParts] = parts
     let path = firstPart
-    for (const it of parts) {
+    for (const it of otherParts) {
         if (! path.endsWith('/')) {
             path += '/'
         }

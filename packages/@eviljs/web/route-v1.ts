@@ -1,4 +1,8 @@
-import {compilePattern, cleanPattern, regexpFromPattern, exact, CapturingGroupRegexp} from './route.js'
+import {compilePattern, cleanPattern, regexpFromPattern, exact} from './route.js'
+
+// An opening round bracket, not followed by an opening or closing round bracket,
+// followed by a closing round bracket.
+export const CapturingGroupRegexp = /\([^()]+\)/
 
 /*
 * Creates a Route. Used mostly for type checking.

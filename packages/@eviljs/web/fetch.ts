@@ -1,7 +1,7 @@
 import {throwInvalidArgument} from '@eviljs/std/throw.js'
 import {isArray, isNil, isObject} from '@eviljs/std/type.js'
 import {FormDataType, FormUrlType, JsonType, TextType} from './mimetype.js'
-import {asBaseUrl} from './url.js'
+import {asBaseUrl, isUrlAbsolute, joinUrlPath} from './url.js'
 
 export enum HttpMethod {
     Delete = 'delete',
@@ -22,13 +22,13 @@ export function createFetch(options?: undefined | FetchOptions): Fetch {
     const self: Fetch = {
         baseUrl: asBaseUrl(options?.baseUrl),
 
-        request(method: HttpMethod, path: string, options?: undefined | FetchRequestOptions) {
-            const url = path.startsWith('/')
-                ? `${self.baseUrl}${path}`
-                : path
-            const opts = mergeFetchOptions(options ?? {}, {method})
+        request(method: HttpMethod, path: string, optionsOptional?: undefined | FetchRequestOptions) {
+            const url = isUrlAbsolute(path)
+                ? path
+                : joinUrlPath(self.baseUrl, path)
+            const options = mergeFetchOptions(optionsOptional ?? {}, {method})
 
-            return fetch(url, opts)
+            return fetch(url, options)
         },
         get(...args) {
             return self.request(HttpMethod.Get, ...args)

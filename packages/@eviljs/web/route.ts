@@ -1,29 +1,38 @@
-import {isRegExp} from '@eviljs/std/type.js'
+import {isArray, isRegExp} from '@eviljs/std/type.js'
 
 export const Start = '^'
 export const End = '(?:/)?$'
-export const All = '(.*)'
+export const Any = '(.*)'
 export const Arg = '([^/]+)'
-export const Value = '([0-9a-zA-Z]+)'
-export const Path = `/${Arg}`
-export const PathOpt = `(?:${Path})?`
-export const PathGlob = '(/.*)?' + End
 
-export const EmptyRegexp = /^$/
-export const EmptiesRegexp = /[\n ]/g
-export const RepeatingSlashRegexp = /\/\/+/g
-export const TrailingSlashRegexp = /\/$/
-export const CapturingGroupRegexp = /\([^()]+\)/    // An opening round bracket,
-                                                    // not followed by an opening or closing round bracket,
-                                                    // followed by a closing round bracket.
+export const PatternEmptyRegexp = /^$/
+export const PatternEmptiesRegexp = /[\n ]/g
+export const PatternRepeatingSlashRegexp = /\/\/+/g
+export const PatternTrailingSlashRegexp = /\/$/
 
-export const PatternRegExpCache: Record<string, RegExp> = {}
+export const PatternRegexpCache: Record<string, RegExp> = {}
 
-export function exact(pattern: string) {
+export const RoutePathArgPlaceholder = '{arg}'
+
+export function exact(pattern: string): string
+export function exact(strings: TemplateStringsArray, ...substitutions: Array<unknown>): string
+export function exact(...args: [string] | [TemplateStringsArray, ...Array<unknown>]): string {
+    const [strings, substitutions] = args
+
+    return isArray(strings)
+        ? exactTemplate(strings as TemplateStringsArray, substitutions as Array<unknown>)
+        : exactString(strings as string)
+}
+
+export function exactString(pattern: string) {
     return `${Start}${pattern}${End}`
 }
 
-export function compilePattern(pattern: string | RegExp) {
+export function exactTemplate(strings: TemplateStringsArray, ...substitutions: Array<unknown>): string {
+    return exactString(String.raw(strings, ...substitutions))
+}
+
+export function compilePattern(pattern: string | RegExp): RegExp {
     if (isRegExp(pattern)) {
         return pattern
     }
@@ -31,12 +40,30 @@ export function compilePattern(pattern: string | RegExp) {
     return regexpFromPattern(cleanPattern(pattern))
 }
 
-export function cleanPattern(pattern: string) {
+export function cleanPattern(pattern: string): string {
     return pattern
-        .replace(EmptiesRegexp, '')
-        .replace(RepeatingSlashRegexp, '/')
-        .replace(TrailingSlashRegexp, '')
-        .replace(EmptyRegexp, '/')
+        .replace(PatternEmptiesRegexp, '')
+        .replace(PatternRepeatingSlashRegexp, '/')
+        .replace(PatternTrailingSlashRegexp, '')
+        .replace(PatternEmptyRegexp, '/')
+}
+
+export function encodeRoutePathArgs(route: string, ...args: RoutePatternArgs) {
+    return replaceRoutePathArgPlaceholdersWithValues(route, RoutePathArgPlaceholder, args)
+}
+
+export function replaceRoutePathArgPlaceholdersWithValues(template: string, placeholder: string, args: RoutePatternArgs) {
+    let output = template
+
+    for (const arg of args) {
+        output = output.replace(placeholder, String(arg))
+    }
+
+    return output
+}
+
+export function replaceRoutePathArgPlaceholdersWithValue(template: string, placeholder: string, replacement: string) {
+    return template.replaceAll(placeholder, String(replacement))
 }
 
 export function regexpFromPattern(pattern: string | RegExp): RegExp {
@@ -44,9 +71,13 @@ export function regexpFromPattern(pattern: string | RegExp): RegExp {
         return pattern
     }
 
-    if (! PatternRegExpCache[pattern]) {
-        PatternRegExpCache[pattern] = new RegExp(pattern, 'i')
+    if (! PatternRegexpCache[pattern]) {
+        PatternRegexpCache[pattern] = new RegExp(pattern, 'i')
     }
 
-    return PatternRegExpCache[pattern]!
+    return PatternRegexpCache[pattern]!
 }
+
+// Types ///////////////////////////////////////////////////////////////////////
+
+export type RoutePatternArgs = Array<number | string>

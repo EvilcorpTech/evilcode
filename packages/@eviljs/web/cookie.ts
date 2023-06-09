@@ -2,7 +2,7 @@ import {mapSome} from '@eviljs/std/monad.js'
 import {escapeRegexp} from '@eviljs/std/regexp.js'
 import {isSome} from '@eviljs/std/type.js'
 
-export const KeyRegExpCache: Record<string, RegExp> = {}
+export const KeyRegexpCache: Record<string, RegExp> = {}
 
 export function createCookie(key: string, options?: undefined | CookieOptions) {
     const self: Cookie = {
@@ -100,11 +100,11 @@ export function cleanCookies(options?: undefined | CookieOptions) {
 }
 
 export function regexpFromKey(key: string) {
-    if (! KeyRegExpCache[key]) {
-        KeyRegExpCache[key] = new RegExp(`\\b${escapeRegexp(key)}=([^;]*);?`)
+    if (! KeyRegexpCache[key]) {
+        KeyRegexpCache[key] = new RegExp(`\\b${escapeRegexp(key)}=([^;]*);?`)
     }
 
-    return KeyRegExpCache[key]!
+    return KeyRegexpCache[key]!
 }
 
 // Types ///////////////////////////////////////////////////////////////////////

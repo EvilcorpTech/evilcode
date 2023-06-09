@@ -1,92 +1,55 @@
 import type {FnArgs} from '@eviljs/std/fn.js'
-import {mapObjectValue} from '@eviljs/std/object.js'
-import {asArray, type ElementOf} from '@eviljs/std/type.js'
+import {asArray} from '@eviljs/std/type.js'
 import type {QueryParamsDictKey} from './query.js'
+import type {RoutePatternArgs} from './route.js'
 import type {RouterRouteChangeParamsDict, RouterRouteParams} from './router.js'
 
-export const RoutePathPlaceholder = '{arg}'
+export * from './route.js'
 
-export function defineRoutePath<A extends RoutePatternArgs = [], L extends string = string>(defineSpec: (context: RoutePathSpecContext) => RoutePathSpec<A, L>): RoutePath<A, L> {
-    const spec = defineSpec({
-        arg: RoutePathPlaceholder,
-        encode: encodeRoutePathArgs,
-    })
-
+export function defineRoutePath<A extends RoutePatternArgs = []>(
+    options: RoutePathOptions<A>,
+): RoutePathDefinition<A> {
     return {
-        paths: mapObjectValue(spec.paths, asArray),
-        encode: spec.encode ?? encodeRoutePathArgs,
+        match: asArray(options.match),
+        encode: options.encode,
     }
-}
-
-export function createDefineRoutePathStrict<L extends string>() {
-    function defineRoutePathStrict<A extends RoutePatternArgs = []>(spec: (context: RoutePathSpecContext) => RoutePathSpec<A, L>): RoutePath<A, L> {
-        return defineRoutePath(spec)
-    }
-
-    return defineRoutePathStrict
 }
 
 export function defineRouteParam<
     const N extends QueryParamsDictKey,
     A extends FnArgs,
     O,
->(spec: RouteParamSpec<N, A, O>): RouteParam<N, A, O> {
+>(options: RouteParamOptions<N, A, O>): RouteParamDefinition<N, A, O> {
     return {
-        name: spec.name,
-        encode: spec.encode.bind(spec.name),
-        decode: spec.decode.bind(spec.name),
-        omit: spec.omit ?? ((params) => {
-            const {[spec.name]: omittedParam, ...otherParams} = params ?? {}
+        name: options.name,
+        encode: options.encode.bind(options.name),
+        decode: options.decode.bind(options.name),
+        omit: options.omit ?? ((params) => {
+            const {[options.name]: omittedParam, ...otherParams} = params ?? {}
             return otherParams
         }),
     }
 }
 
-function encodeRoutePathArgs(route: string, ...args: RoutePatternArgs) {
-    return replaceRoutePatternPlaceholders(route, RoutePathPlaceholder, args)
-}
-
-export function replaceRoutePatternPlaceholders(template: string, placeholder: string, args: RoutePatternArgs) {
-    let output = template
-
-    for (const arg of args) {
-        output = output.replace(placeholder, String(arg))
-    }
-
-    return output
-}
-
-export function replaceAllRoutePatternPlaceholders(template: string, placeholder: string, replacement: ElementOf<RoutePatternArgs>) {
-    return template.replaceAll(placeholder, String(replacement))
-}
-
 // Types ///////////////////////////////////////////////////////////////////////
 
-export type RoutePatternArgs = Array<number | string>
-
-export interface RoutePathSpec<A extends RoutePatternArgs = [], L extends string = string> {
-    paths: Record<L, string | [string, ...Array<string>]>
-    encode?: undefined | ((pattern: string, ...args: A) => string)
+export interface RoutePathOptions<A extends RoutePatternArgs = []> extends Omit<RoutePathDefinition<A>, 'match'> {
+    match: string | [string, ...Array<string>]
 }
 
-export interface RoutePathSpecContext {
-    arg: string
-    encode(route: string, ...args: RoutePatternArgs): string
+export interface RoutePathDefinition<A extends RoutePatternArgs> {
+    match: Array<string>
+    encode(...args: A): string
 }
 
-export interface RoutePath<A extends RoutePatternArgs, L extends string = string> {
-    paths: Record<L, Array<string>>
-    encode(pattern: string, ...args: A): string
-}
-
-export interface RouteParamSpec<N extends QueryParamsDictKey, A extends FnArgs, O> {
+export interface RouteParamOptions<N extends QueryParamsDictKey, A extends FnArgs, O> {
     name: N
     encode(this: N, ...args: A): RouterRouteChangeParamsDict
     decode(this: N, params: RouterRouteParams): O
     omit?: undefined | ((params: RouterRouteParams) => RouterRouteParams)
 }
 
-export interface RouteParam<N extends QueryParamsDictKey, A extends FnArgs, O> {
+export interface RouteParamDefinition<N extends QueryParamsDictKey, A extends FnArgs, O> {
     name: N
     encode(...args: A): RouterRouteChangeParamsDict
     decode(params: RouterRouteParams): O
