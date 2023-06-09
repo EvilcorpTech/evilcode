@@ -23,7 +23,7 @@ export function RadioGroup(props: RadioGroupProps) {
                 return (
                     <label
                         key={idx}
-                        className={classes('item-bf74 std-flex align-center', {selected: isSelected})}
+                        className={classes('item-bf74 std-flex std-flex-align-center', {selected: isSelected})}
                     >
                         <input
                             className="radio-1370"

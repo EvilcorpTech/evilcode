@@ -43,7 +43,7 @@ export function WidgetsView(props: WidgetsViewProps) {
     return (
         <div
             {...props}
-            className={classes('WidgetsView-a252 std-flex wrap', className)}
+            className={classes('WidgetsView-a252 std-flex std-flex-wrap', className)}
         >
             <div className="section-0234 column">
                 <h6 className="title-74a6">
@@ -217,7 +217,7 @@ export function WidgetsView(props: WidgetsViewProps) {
                     }}
                 >
                     {times(5).map(it =>
-                        <Slide key={it} className="std-flex stack">
+                        <Slide key={it} className="std-flex std-flex-stack">
                             <h6>{it}</h6>
                         </Slide>
                     )}
@@ -236,7 +236,7 @@ export function WidgetsView(props: WidgetsViewProps) {
                             key={idx}
                             head={it.name}
                         >
-                            <div className="std-viewport s std-text-body2 std-text-weight-1">
+                            <div className="std-width-s std-text-body2 std-text-weight-1">
                                 {Lorem}
                             </div>
                         </Accordion>

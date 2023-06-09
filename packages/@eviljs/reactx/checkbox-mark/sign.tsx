@@ -9,7 +9,7 @@ export function CheckboxMark(props: CheckboxMarkProps) {
     return (
         <span
             {...otherProps}
-            className={classes('CheckboxMark-3ae4 std-flex center align-center', className)}
+            className={classes('CheckboxMark-3ae4 std-flex std-flex-justify-center std-flex-align-center', className)}
         >
             {
                 checked === 'mixed'

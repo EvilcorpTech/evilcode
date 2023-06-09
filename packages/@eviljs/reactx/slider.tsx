@@ -17,12 +17,12 @@ export function Slider(props: SliderProps) {
     return (
         <div
             {...otherProps}
-            className={classes('Slider-73e4 std-grid-layers', className)}
+            className={classes('Slider-73e4 std-grid', className)}
         >
             {childrenList.map((it, idx) =>
                 <Slide
                     key={idx}
-                    className={classes('slide-1c54', {
+                    className={classes('slide-1c54 std-grid-layer', {
                         previous: idx < selected,
                         selected: idx === selected,
                         following: idx > selected,

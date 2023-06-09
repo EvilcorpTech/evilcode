@@ -6,6 +6,6 @@
 
 .radio-1370 {
     font-size: inherit;
-    width: var(--size, 1em);
-    height: var(--size, 1em);
+    width: var(--radio-size, 1em);
+    height: var(--radio-size, 1em);
 }

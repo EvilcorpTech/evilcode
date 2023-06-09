@@ -16,7 +16,7 @@ export function ThemeView(props: ThemeViewProps) {
     return (
         <div
             {...otherProps}
-            className={classes('ThemeView-t2eb', `std theme-${theme} std-text std-color-theme std-background-theme std-viewport xl`, className)}
+            className={classes('ThemeView-t2eb', `std-root std-theme-${theme} std-text std-color-theme std-background-theme std-width-xl`, className)}
             style={{
                 '--std-color-primary-h': primaryAccent[0] * 360 + 'deg',
                 '--std-color-primary-s': primaryAccent[1] * 100 + '%',
@@ -34,9 +34,9 @@ export function ThemeView(props: ThemeViewProps) {
                 onThemeChange={setTheme}
             />
 
-            <i className="std-space-v s5"/>
+            <i className="std-space-v5"/>
 
-            <div className="grid-1c73 std-flex center wrap">
+            <div className="grid-1c73 std-flex std-flex-justify-center std-flex-wrap">
                 <Gutters/>
                 <Colors/>
                 <Typography/>
@@ -71,16 +71,16 @@ export function Picker(props: PickerProps) {
     }, [])
 
     return (
-        <h1 className="std-flex align-center std-text-overline">
+        <h1 className="std-flex std-flex-align-center std-text-overline">
             <input
                 ref={primaryRef}
                 className="picker-t8c2"
                 type="color"
                 onChange={event => onPrimaryChange(computeHslFromHexColor(event.target.value))}
             />
-            <i className="std-space-h s5"/>
+            <i className="std-space-h5"/>
             <label>Theme</label>
-            <i className="std-space-h s5"/>
+            <i className="std-space-h5"/>
             <input
                 ref={secondaryRef}
                 className="picker-t8c2"
@@ -88,9 +88,9 @@ export function Picker(props: PickerProps) {
                 onChange={event => onSecondaryChange(computeHslFromHexColor(event.target.value))}
             />
 
-            <i className="std-space-h s5"/>
+            <i className="std-space-h5"/>
 
-            <label className="std-flex column align-center">
+            <label className="std-flex std-flex-column std-flex-align-center">
                 <input
                     type="checkbox"
                     onChange={event => onThemeChange(
@@ -99,7 +99,7 @@ export function Picker(props: PickerProps) {
                             : 'light'
                     )}
                 />
-                <i className="std-space-v s1"/>
+                <i className="std-space-v1"/>
                 <b>Dark</b>
             </label>
         </h1>
@@ -108,13 +108,13 @@ export function Picker(props: PickerProps) {
 
 export function Colors() {
     return (
-        <div className="std-flex column center">
+        <div className="std-flex std-flex-column std-flex-justify-center">
             <div className="std-flex">
                 <label className="std-text-h6 std-color-primary-accent">Primary</label>
                 <div className="std-grow"/>
             </div>
 
-            <i className="std-space-v s4"/>
+            <i className="std-space-v4"/>
 
             <div className="std-flex">
                 <label>Accent</label>
@@ -126,12 +126,12 @@ export function Colors() {
                 />
             </div>
 
-            <i className="std-space-v s4"/>
+            <i className="std-space-v4"/>
 
             <div className="std-flex">
                 <label>Tint</label>
                 <div className="std-grow"/>
-                <div className="std-flex row-reverse">
+                <div className="std-flex std-flex-row-reverse">
                     {times(6).map(idx => (
                         <span
                             key={idx}
@@ -143,12 +143,12 @@ export function Colors() {
                 </div>
             </div>
 
-            <div className="std-space-v s4"/>
+            <div className="std-space-v4"/>
 
             <div className="std-flex">
                 <label>Shade</label>
                 <div className="std-grow"/>
-                <div className="std-flex row-reverse">
+                <div className="std-flex std-flex-row-reverse">
                     {times(6).map(idx => (
                         <span
                             key={idx}
@@ -160,12 +160,12 @@ export function Colors() {
                 </div>
             </div>
 
-            <div className="std-space-v s4"/>
+            <div className="std-space-v4"/>
 
             <div className="std-flex">
                 <label>Tone</label>
                 <div className="std-grow"/>
-                <div className="std-flex row-reverse">
+                <div className="std-flex std-flex-row-reverse">
                     {times(6).map(idx => (
                         <span
                             key={idx}
@@ -177,12 +177,12 @@ export function Colors() {
                 </div>
             </div>
 
-            <div className="std-space-v s4"/>
+            <div className="std-space-v4"/>
 
             <div className="std-flex">
                 <label>Fg</label>
                 <div className="std-grow"/>
-                <div className="std-flex row-reverse">
+                <div className="std-flex std-flex-row-reverse">
                     {times(5).map(idx => (
                         <span
                             key={idx}
@@ -194,12 +194,12 @@ export function Colors() {
                 </div>
             </div>
 
-            <div className="std-space-v s4"/>
+            <div className="std-space-v4"/>
 
             <div className="std-flex">
                 <label>Bg</label>
                 <div className="std-grow"/>
-                <div className="std-flex row-reverse">
+                <div className="std-flex std-flex-row-reverse">
                     {times(4).map(idx => (
                         <span
                             key={idx}
@@ -211,14 +211,14 @@ export function Colors() {
                 </div>
             </div>
 
-            <i className="std-space-v s5"/>
+            <i className="std-space-v5"/>
 
             <div className="std-flex">
                 <label className="std-text-h6 std-color-secondary-accent">Secondary</label>
                 <div className="std-grow"/>
             </div>
 
-            <div className="std-space-v s4"/>
+            <div className="std-space-v4"/>
 
             <div className="std-flex">
                 <label>Accent</label>
@@ -230,12 +230,12 @@ export function Colors() {
                 />
             </div>
 
-            <div className="std-space-v s4"/>
+            <div className="std-space-v4"/>
 
             <div className="std-flex">
                 <label>Tint</label>
                 <div className="std-grow"/>
-                <div className="std-flex row-reverse">
+                <div className="std-flex std-flex-row-reverse">
                     {times(6).map(idx => (
                         <span
                             key={idx}
@@ -247,12 +247,12 @@ export function Colors() {
                 </div>
             </div>
 
-            <div className="std-space-v s4"/>
+            <div className="std-space-v4"/>
 
             <div className="std-flex">
                 <label>Shade</label>
                 <div className="std-grow"/>
-                <div className="std-flex row-reverse">
+                <div className="std-flex std-flex-row-reverse">
                     {times(6).map(idx => (
                         <span
                             key={idx}
@@ -264,12 +264,12 @@ export function Colors() {
                 </div>
             </div>
 
-            <div className="std-space-v s4"/>
+            <div className="std-space-v4"/>
 
             <div className="std-flex">
                 <label>Tone</label>
                 <div className="std-grow"/>
-                <div className="std-flex row-reverse">
+                <div className="std-flex std-flex-row-reverse">
                     {times(6).map(idx => (
                         <span
                             key={idx}
@@ -281,12 +281,12 @@ export function Colors() {
                 </div>
             </div>
 
-            <div className="std-space-v s4"/>
+            <div className="std-space-v4"/>
 
             <div className="std-flex">
                 <label>Fg</label>
                 <div className="std-grow"/>
-                <div className="std-flex row-reverse">
+                <div className="std-flex std-flex-row-reverse">
                     {times(5).map(idx => (
                         <span
                             key={idx}
@@ -298,12 +298,12 @@ export function Colors() {
                 </div>
             </div>
 
-            <div className="std-space-v s4"/>
+            <div className="std-space-v4"/>
 
             <div className="std-flex">
                 <label>Bg</label>
                 <div className="std-grow"/>
-                <div className="std-flex row-reverse">
+                <div className="std-flex std-flex-row-reverse">
                     {times(4).map(idx => (
                         <span
                             key={idx}
@@ -320,7 +320,7 @@ export function Colors() {
 
 export function Typography() {
     return (
-        <div className="std-flex column align-start">
+        <div className="std-flex std-flex-column std-flex-align-start">
             <label className="text-8fa3 std-text-display1 std-color-primary-fg1">Display 1</label>
             <label className="text-8fa3 std-text-display2 std-color-primary-fg1">Display 2</label>
             <label className="text-8fa3 std-text-h1 std-color-primary-fg2">Headline 1</label>
@@ -343,7 +343,7 @@ export function Typography() {
 
 export function TextHeight() {
     return (
-        <div className="std-flex center gap3">
+        <div className="std-flex std-flex-justify-center std-gap3">
             {['0', '-2', '-1', '', '1', '2'].map(it =>
                 <Fragment key={it}>
                     <p className={`std-text-height${it}`} style={{maxWidth: '14em'}}>
@@ -362,7 +362,7 @@ export function TextHeight() {
 
 export function TextSpace() {
     return (
-        <div className="std-flex column center gap3">
+        <div className="std-flex std-flex-column std-flex-justify-center std-gap3">
             {['-2', '-1', '', '1', '2'].map((it, idx) =>
                 <Fragment key={it}>
                     <label className={`std-text-space${it} std-text-size5`}>
@@ -376,14 +376,14 @@ export function TextSpace() {
 
 export function Gutters() {
     return (
-        <div className="std-flex column center">
+        <div className="std-flex std-flex-column std-flex-justify-center">
             {times(10).map(it =>
                 <Fragment key={it}>
-                    <label className="gutter-t1d3 std-flex column">
+                    <label className="gutter-t1d3 std-flex std-flex-column">
                         <span>Gap {it + 1}</span>
-                        <i className={`std-space-h s${it + 1}`}/>
+                        <i className={`std-space-h${it + 1}`}/>
                     </label>
-                    <i className="std-space-v s3"/>
+                    <i className="std-space-v3"/>
                 </Fragment>
             )}
         </div>
@@ -393,14 +393,14 @@ export function Gutters() {
 export function Contrast(props: {theme: 'dark' | 'light'}) {
     return (
         <div
-            className="layout-1e33 std-flex gap6"
+            className="layout-1e33 std-flex std-gap6"
             style={{
                 padding: 'var(--std-gutter5)',
                 backgroundColor: 'floralwhite',
             }}
         >
             <div
-                className="std-flex gap4"
+                className="std-flex std-gap4"
                 style={{
                     padding: 'var(--std-gutter5)',
                     backgroundColor: 'hsl(0deg 0% var(--std-bg-l))',
@@ -409,7 +409,7 @@ export function Contrast(props: {theme: 'dark' | 'light'}) {
                 {[0, 1, 2].map(it =>
                     <div
                         key={it}
-                        className={classes('std-flex column gap4', `std-background-z${it}`, `std theme-${props.theme}`)}
+                        className={classes('std-flex std-flex-column std-gap4', `std-background-z${it}`, `std theme-${props.theme}`)}
                     >
                         <h6 className="std-text-uppercase">Bg Z {it}</h6>
 
@@ -442,13 +442,13 @@ export function Contrast(props: {theme: 'dark' | 'light'}) {
             </div>
 
             <div
-                className="std-grow std-flex gap4"
+                className="std-grow std-flex std-gap4"
                 style={{
                     padding: 'var(--std-gutter5)',
                     backgroundColor: 'hsl(0deg 0% var(--std-bg-l))',
                 } as React.CSSProperties}
             >
-                <div className="std-flex column gap4">
+                <div className="std-flex std-flex-column std-gap4">
                     <label className="contrast-td08 std-background-bg1">
                         <div className="std-color-fg1 std-text-h6 std-text-weight1 std-text-uppercase">Bg 1</div>
                         <div className="std-color-primary-fg1 std-text-subtitle1 std-text-weight1">Primary Fg 1</div>
@@ -475,7 +475,7 @@ export function Contrast(props: {theme: 'dark' | 'light'}) {
                     </label>
                 </div>
 
-                <div className="std-flex column gap4">
+                <div className="std-flex std-flex-column std-gap4">
                     <label className="contrast-td08 std-background-bg1">
                         <div className="std-color-fg1 std-text-h6 std-text-weight1 std-text-uppercase">Bg 1</div>
                         <div className="std-color-secondary-fg1 std-text-subtitle1 std-text-weight1">Secondary Fg 1</div>
@@ -508,7 +508,7 @@ export function Contrast(props: {theme: 'dark' | 'light'}) {
 
 export function Buttons() {
     return (
-        <div className="buttons-45cb std-flex column center align-center wrap">
+        <div className="buttons-45cb std-flex std-flex-column std-flex-justify-center std-flex-align-center std-flex-wrap">
             <div>
                 <button className="std-text-button std-button dye">Dye</button>
                 <button className="std-text-button std-button flat">Flat</button>
@@ -516,7 +516,7 @@ export function Buttons() {
                 <button className="std-text-button std-button plain">Plain</button>
             </div>
 
-            <div className="std-space-v s3"/>
+            <div className="std-space-v3"/>
 
             <div>
                 <button className="std-text-button std-button dye" disabled>Dye</button>
@@ -530,7 +530,7 @@ export function Buttons() {
 
 export function Transitions() {
     return (
-        <div className="std-flex center align-center wrap">
+        <div className="std-flex std-flex-justify-center std-flex-align-center std-flex-wrap">
             {times(5).map(it =>
                 <label
                     key={it}
@@ -546,11 +546,11 @@ export function Transitions() {
 
 export function Icons() {
     return (
-        <div className="std-flex row center align-end aligned-center wrap">
+        <div className="std-flex std-flex-row std-flex-justify-center std-flex-align-end std-flex-aligned-center std-flex-wrap">
             {times(10).map(it =>
                 <div key={it} className="icon-e43c">
                     <Icon className={classes('std-icon', `std-icon${it + 1}`)}/>
-                    <div className="std-space-h s3"/>
+                    <div className="std-space-h3"/>
                     <label>{it + 1}</label>
                 </div>
             )}
@@ -560,7 +560,7 @@ export function Icons() {
 
 export function Radiuses() {
     return (
-        <div className="std-flex center align-center wrap">
+        <div className="std-flex std-flex-justify-center std-flex-align-center std-flex-wrap">
             {times(4).map(it =>
                 <label
                     key={it}
@@ -575,7 +575,7 @@ export function Radiuses() {
 
 export function Shadows() {
     return (
-        <div className="std-flex center align-center wrap std-viewport m">
+        <div className="std-flex std-flex-center std-flex-align-center std-flex-wrap std-width-m">
             <label className="shadow-t9a2 std-shadow-soft">Soft</label>
             {times(12).map(idx => (
                 <label

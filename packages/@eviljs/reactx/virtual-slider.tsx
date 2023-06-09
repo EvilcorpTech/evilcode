@@ -46,13 +46,13 @@ export const SliderVirtual = forwardRef(function SliderVirtual<I>(
         <div
             {...otherProps}
             ref={mergingRefs(containerRef, ref)}
-            className={classes('SliderVirtual-2f13 std-grid-layers', className)}
+            className={classes('SliderVirtual-2f13 std-grid', className)}
             style={{...style, ...styleOfContainer()}}
         >
             {render.map((it, idx) =>
                 <div
                     key={keyOf(it.item)}
-                    className="v-item-ed22"
+                    className="v-item-ed22 std-grid-layer"
                     style={styleOfChild(it)}
                 >
                     {isFunction(children)

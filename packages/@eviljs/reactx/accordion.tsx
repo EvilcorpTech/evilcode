@@ -197,7 +197,7 @@ export function AccordionItem(props: AccordionItemProps) {
     return (
         <Box
             {...otherProps}
-            className={classes('AccordionItem-de4f std-flex column', className, {
+            className={classes('AccordionItem-de4f std-flex std-flex-column', className, {
                 'selected': selected,
             })}
         >

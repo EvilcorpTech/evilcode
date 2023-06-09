@@ -15,7 +15,7 @@ export function ArmoredButton(props: ArmoredButtonProps) {
     return (
         <div
             {...otherProps}
-            className={classes('ArmoredButton-aa3e std-flex align-center', className, {
+            className={classes('ArmoredButton-aa3e std-flex std-flex-align-center', className, {
                 initial: ! armored,
                 armored,
             })}

@@ -55,7 +55,7 @@ export function Showcase(props: ShowcaseProps) {
                     }
                 />
 
-                <i className="std-space-v s4"/>
+                <i className="std-space-v4"/>
 
                 {items.map((it, idx) =>
                     <Route
