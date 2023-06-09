@@ -36,7 +36,7 @@ export function useStateObject<S extends object>(initialState: StateInit<S>): [.
 */
 export function useMergeState<S extends object>(setState: StateSetter<S>) {
     const patchState = useCallback((statePatch: Partial<S>) => {
-        setState(merging(statePatch))
+        setState(mergingState(statePatch))
     }, [setState])
 
     return patchState
@@ -55,7 +55,7 @@ export function useMergeState<S extends object>(setState: StateSetter<S>) {
 *     )
 * }
 */
-export function merging<S extends object>(statePatch: Partial<S>) {
+export function mergingState<S extends object>(statePatch: Partial<S>) {
     function setState(state: S) {
         return {...state, ...statePatch}
     }

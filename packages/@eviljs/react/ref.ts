@@ -1,4 +1,4 @@
-import {isFunction, isNil, type Writable} from '@eviljs/std/type.js'
+import {isFunction, isNil, type Nil, type Writable} from '@eviljs/std/type.js'
 import {useCallback, useEffect, useLayoutEffect, useRef} from 'react'
 
 /*
@@ -77,26 +77,26 @@ export function useClosure<A extends Array<unknown>, R>(closure: (...args: A) =>
     return callback
 }
 
-export function mergingRefs<T = any>(...refs: Array<undefined | Ref<T>>) {
-    function refProxy(el: T) {
-        for (const ref of refs) {
-            if (isNil(ref)) {
+export function mergingRefs<V>(...refHandlers: Array<RefHandler<null | V>>) {
+    function onRef(element: null | V) {
+        for (const refHandler of refHandlers) {
+            if (isNil(refHandler)) {
                 continue
             }
-            if (isFunction(ref)) {
-                ref(el)
+            if (isFunction(refHandler)) {
+                refHandler(element)
                 continue
             }
-            ;(ref as Writable<typeof ref>).current = el
+            ;(refHandler as Writable<typeof refHandler>).current = element
         }
     }
-    return refProxy
+    return onRef
 }
 
 // Types ///////////////////////////////////////////////////////////////////////
 
-export type Ref<T = any> = React.Ref<T> | React.MutableRefObject<T>
+export type RefHandler<V> = Nil | React.MutableRefObject<V> | React.RefObject<V> | React.RefCallback<V>
 
-export interface RefProp<V = Element> {
-    onRef?: undefined | React.Ref<V>
+export interface RefProp<V> {
+    onRef?: undefined | RefHandler<V>
 }
