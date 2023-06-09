@@ -37,11 +37,10 @@ export enum AuthTokenState {
 */
 export function AuthProvider(props: AuthProviderProps) {
     const {children, cookie, fetch, ...options} = props
+    const value = useRootAuth(fetch, cookie, options)
 
     return (
-        <AuthContext.Provider value={useRootAuth(fetch, cookie, options)}>
-            {children}
-        </AuthContext.Provider>
+        <AuthContext.Provider value={value} children={children}/>
     )
 }
 

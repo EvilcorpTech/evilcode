@@ -6,13 +6,13 @@ import {exact, regexpFromPattern} from '@eviljs/web/route.js'
 import type {Router as RouterManager, RouterObserver, RouterRoute, RouterRouteChange, RouterRouteChangeParams, RouterRouteParams} from '@eviljs/web/router.js'
 import {encodeLink} from '@eviljs/web/router.js'
 import {isUrlAbsolute} from '@eviljs/web/url.js'
-import {Children, forwardRef, isValidElement, useCallback, useContext, useEffect, useMemo, useRef, useState} from 'react'
+import {Children, Fragment, forwardRef, isValidElement, useCallback, useContext, useEffect, useMemo, useRef, useState} from 'react'
 import {classes} from './classes.js'
 import {defineContext} from './ctx.js'
 
-export {All, Arg, End, Path, PathGlob, PathOpt, Start, Value, exact} from '@eviljs/web/route.js'
-export {createHashRouter, createMemoryRouter, createPathRouter} from '@eviljs/web/router.js'
-export type {RouterMemoryOptions, RouterObserver, RouterOptions} from '@eviljs/web/router.js'
+export * from '@eviljs/web/route-v2.js'
+export * from '@eviljs/web/route.js'
+export * from '@eviljs/web/router.js'
 
 export const RouterContext = defineContext<Router>('RouterContext')
 export const RouteMatchContext = defineContext<RouteArgs>('RouteMatchContext')
@@ -29,11 +29,10 @@ export const RouteActiveClassDefault = 'route-active'
 */
 export function RouterProvider(props: RouterProviderProps) {
     const {children, createRouter} = props
+    const value = useRootRouter(createRouter)
 
     return (
-        <RouterContext.Provider value={useRootRouter(createRouter)}>
-            {children}
-        </RouterContext.Provider>
+        <RouterContext.Provider value={value} children={children}/>
     )
 }
 
@@ -91,7 +90,7 @@ export function WhenRoute(props: WhenRouteProps) {
 /*
 * EXAMPLE
 *
-* <SwitchRoute default={<NotFoundView/>}>
+* <SwitchRoute fallback={<NotFoundView/>}>
 *     <CaseRoute is={new RegExp(`^/book/${Arg}/${Arg}`, 'i')}>
 *         {(arg1, arg2) => (
 *             <h1>/book/{arg1}/{arg2}</h1>
@@ -115,35 +114,45 @@ export function WhenRoute(props: WhenRouteProps) {
 * </SwitchRoute>
 */
 export function SwitchRoute(props: SwitchRouteProps) {
-    const {children, default: fallback} = props
+    const {children, fallback} = props
     const {matchRoute} = useRouter()!
 
-    interface RouteMatch {child: undefined | RouteMatchChildren, args: RouteArgs}
+    interface RouteMatch {
+        key: undefined | React.Key
+        child: undefined | RouteMatchChildren
+        args: RouteArgs,
+    }
 
     const match = useMemo((): RouteMatch => {
-        const childrenList = Children.toArray(children).filter(isCaseRouteElement)
+        const candidates = Children.toArray(children).filter(isCaseRouteElement)
 
-        for (const child of childrenList) {
-            for (const pattern of asArray(child.props.is)) {
+        for (const candidate of candidates) {
+            const candidatePatterns = asArray(candidate.props.is)
+
+            for (const pattern of candidatePatterns) {
                 const routeMatches = matchRoute(pattern)
 
                 if (routeMatches) {
                     return {
-                        child: child.props.children,
+                        key: candidate.key ?? undefined,
+                        child: candidate.props.children,
                         args: routeMatches.slice(1), // Without whole match.
                     }
                 }
             }
         }
 
-        return {child: fallback, args: []}
+        return {
+            key: undefined,
+            child: fallback,
+            args: [],
+        }
     }, [children, matchRoute])
 
-    return (
-        <RouteMatchContext.Provider value={match.args}>
-            {computeValue(match.child, ...match.args)}
-        </RouteMatchContext.Provider>
-    )
+    const {key, args} = match
+    const child = computeValue(match.child, ...args)
+
+    return <RouteMatchContext.Provider key={key} value={args} children={child}/>
 }
 
 export function CaseRoute(props: CaseRouteProps) {
@@ -426,10 +435,11 @@ export interface WhenRouteProps {
 
 export interface SwitchRouteProps {
     children: undefined | React.ReactNode
-    default?: undefined | React.ReactNode
+    fallback?: undefined | React.ReactNode
 }
 
 export interface CaseRouteProps extends WhenRouteProps {
+    key?: undefined | React.Key
 }
 
 export interface RouteProps extends RoutingProps, React.AnchorHTMLAttributes<HTMLAnchorElement> {

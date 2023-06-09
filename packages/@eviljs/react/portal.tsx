@@ -1,17 +1,16 @@
-import {createElement, useContext, useEffect, useRef, useState} from 'react'
+import {useContext, useMemo, useState} from 'react'
 import {createPortal} from 'react-dom'
-import type {Tag} from './box.js'
+import {Box, type BoxProps} from './box.js'
 import {defineContext} from './ctx.js'
 import type {StateManager} from './state.js'
 
 export const PortalContext = defineContext<StateManager<null | PortalElement>>('PortalContext')
 
 export function PortalProvider(props: PortalProviderProps) {
-    return (
-        <PortalContext.Provider value={useRootPortal()}>
-            {props.children}
-        </PortalContext.Provider>
-    )
+    const {children} = props
+    const value = useRootPortal()
+
+    return <PortalContext.Provider value={value} children={children}/>
 }
 
 /*
@@ -30,15 +29,9 @@ export function PortalProvider(props: PortalProviderProps) {
 * }
 */
 export function Portal(props: PortalProps) {
-    const {tag, ...otherProps} = props
-    const portalRef = useRef<null | PortalElement>(null)
-    const [portal, setPortal] = useContext(PortalContext)!
+    const [, setPortal] = useContext(PortalContext)!
 
-    useEffect(() => {
-        setPortal(portalRef.current)
-    }, [tag])
-
-    return createElement(tag ?? 'div', {...otherProps, ref: portalRef})
+    return <Box {...props} ref={setPortal}/>
 }
 
 /*
@@ -67,21 +60,21 @@ export function Teleport(props: TeleportProps) {
     return createPortal(children, portal)
 }
 
-export function useRootPortal() {
-    return useState<null | PortalElement>(null)
+export function useRootPortal(): StateManager<null | PortalElement> {
+    const [element, setElement] = useState<null | PortalElement>(null)
+
+    return useMemo(() => [element, setElement], [element, setElement])
 }
 
 // Types ///////////////////////////////////////////////////////////////////////
 
-export type PortalElement = HTMLElement
+export type PortalElement = Element
 
 export interface PortalProviderProps {
     children: undefined | React.ReactNode
 }
 
-export interface PortalProps extends React.HTMLAttributes<PortalElement> {
-    tag?: undefined | Tag
-    [key: string]: unknown
+export interface PortalProps extends BoxProps {
 }
 
 export interface TeleportProps {

@@ -19,11 +19,9 @@ export const ContainerContext = defineContext<Container>('ContainerContext')
 * }
 */
 export function ContainerProvider(props: ContainerProviderProps) {
-    return (
-        <ContainerContext.Provider value={props.value}>
-            {props.children}
-        </ContainerContext.Provider>
-    )
+    const {value, children} = props
+
+    return <ContainerContext.Provider value={value} children={children}/>
 }
 
 export function useContainer<T extends Container = Container>() {

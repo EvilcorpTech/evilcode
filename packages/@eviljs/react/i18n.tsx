@@ -20,11 +20,10 @@ export const I18nContext = defineContext<I18nManager>('I18nContext')
 */
 export function I18nProvider(props: I18nProviderProps) {
     const {children, ...spec} = props
+    const value = useRootI18n(spec)
 
     return (
-        <I18nContext.Provider value={useRootI18n(spec)}>
-            {children}
-        </I18nContext.Provider>
+        <I18nContext.Provider value={value} children={children}/>
     )
 }
 

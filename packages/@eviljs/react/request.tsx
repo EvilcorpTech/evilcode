@@ -1,8 +1,7 @@
 import {filterResult} from '@eviljs/std/result.js'
 import {useCallback, useContext} from 'react'
 import {defineContext} from './ctx.js'
-import type {AsyncIoManager} from './io.js'
-import {useAsyncIo} from './io.js'
+import {useAsyncIo, type AsyncIoManager} from './io.js'
 
 export {asBaseUrl, joinUrlPath} from '@eviljs/web/url.js'
 export {useAsyncIoStates as useRequestStates} from './io.js'
@@ -23,10 +22,10 @@ export const RequestContext = defineContext('RequestContext')
 * }
 */
 export function RequestProvider(props: RequestProviderProps) {
+    const {children, value} = props
+
     return (
-        <RequestContext.Provider value={props.value}>
-            {props.children}
-        </RequestContext.Provider>
+        <RequestContext.Provider value={value} children={children}/>
     )
 }
 

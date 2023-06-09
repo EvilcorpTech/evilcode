@@ -13,7 +13,7 @@ export function useReactive<V>(reactiveValue: undefined | ReactiveValue<V>): Sta
             return
         }
 
-        const valueComputed = computeValue(value, reactiveValue?.value)
+        const valueComputed = computeValue(value, reactiveValue.value)
 
         setValue(valueComputed)
     }, [reactiveValue])
@@ -22,6 +22,8 @@ export function useReactive<V>(reactiveValue: undefined | ReactiveValue<V>): Sta
         if (! reactiveValue) {
             return
         }
+
+        setValue(reactiveValue.value)
 
         const stopWatching = reactiveValue.watch((newValue, oldValue) => {
             setValue(newValue)

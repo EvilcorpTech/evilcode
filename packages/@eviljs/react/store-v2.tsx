@@ -11,11 +11,9 @@ export const StoreContext = defineContext<Store>('StoreContext')
 /*
 * EXAMPLE
 *
-* const spec = {createState, actions}
-*
 * export function MyMain(props) {
 *     return (
-*         <StoreProvider spec={spec}>
+*         <StoreProvider createState={createState} reduce={reduce}>
 *             <MyApp/>
 *         </StoreProvider>
 *     )
@@ -23,18 +21,15 @@ export const StoreContext = defineContext<Store>('StoreContext')
 */
 export function StoreProvider(props: StoreProviderProps<StoreStateGeneric, ReducerAction>) {
     const {children, ...spec} = props
+    const value = useRootStore(spec)
 
-    return (
-        <StoreContext.Provider value={useRootStore(spec)}>
-            {children}
-        </StoreContext.Provider>
-    )
+    return <StoreContext.Provider value={value} children={children}/>
 }
 
 export function useRootStore<
     S extends StoreStateGeneric,
     A extends ReducerAction,
->(spec: StoreSpec<S, A>): Store<S, A> {
+>(spec: StoreDefinition<S, A>): Store<S, A> {
     const {createState, reduce, onDispatch} = spec
     const [state, setState] = useState(createState)
     const stateRef = useRef(state)
@@ -51,10 +46,10 @@ export function useRootStore<
             return polymorphicArgs as ReducerAction
         })()
 
-        onDispatch?.(id, args)
-
         const oldState = stateRef.current
         const newState = reduce(oldState, ...[id, ...args] as A)
+
+        onDispatch?.(id, args, newState, oldState)
 
         stateRef.current = newState
 
@@ -79,14 +74,14 @@ export function useStore<
 
 // Types ///////////////////////////////////////////////////////////////////////
 
-export interface StoreProviderProps<S extends StoreStateGeneric, A extends ReducerAction> extends StoreSpec<S, A> {
+export interface StoreProviderProps<S extends StoreStateGeneric, A extends ReducerAction> extends StoreDefinition<S, A> {
     children: undefined | React.ReactNode
 }
 
-export interface StoreSpec<S extends StoreStateGeneric, A extends ReducerAction> {
+export interface StoreDefinition<S extends StoreStateGeneric, A extends ReducerAction> {
     createState(): S
     reduce(state: S, ...args: A): S
-    onDispatch?: undefined | ((id: ReducerId, ...args: ReducerArgs) => void)
+    onDispatch?: undefined | ((id: ReducerId, args: ReducerArgs, newState: S, oldState: S) => void)
 }
 
 export type Store<

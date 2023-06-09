@@ -23,9 +23,7 @@ export function BusProvider(props: BusProviderProps) {
     }, [])
 
     return (
-        <BusContext.Provider value={bus}>
-            {children}
-        </BusContext.Provider>
+        <BusContext.Provider value={bus} children={children}/>
     )
 }
 

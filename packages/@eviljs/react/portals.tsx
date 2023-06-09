@@ -1,6 +1,6 @@
-import {createElement, useContext, useEffect, useRef, useState} from 'react'
+import {useCallback, useContext, useMemo, useState} from 'react'
 import {createPortal} from 'react-dom'
-import type {Tag} from './box.js'
+import {Box, type BoxProps} from './box.js'
 import {defineContext} from './ctx.js'
 import type {StateManager} from './state.js'
 
@@ -20,11 +20,10 @@ export const PortalsContext = defineContext<StateManager<Portals>>('PortalsConte
 * )
 */
 export function PortalsProvider(props: PortalsProviderProps) {
-    return (
-        <PortalsContext.Provider value={useRootPortals()}>
-            {props.children}
-        </PortalsContext.Provider>
-    )
+    const {children} = props
+    const value = useRootPortals()
+
+    return <PortalsContext.Provider value={value} children={children}/>
 }
 
 /*
@@ -41,20 +40,17 @@ export function PortalsProvider(props: PortalsProviderProps) {
 * )
 */
 export function Portal(props: PortalProps) {
-    const {name, tag, ...otherProps} = props
-    const portalRef = useRef<null | PortalElement>(null)
-    const [portals, setPortals] = useContext(PortalsContext)!
+    const {name, ...otherProps} = props
+    const [, setPortals] = useContext(PortalsContext)!
 
-    useEffect(() => {
-        const el = portalRef.current
-
-        if (! el) {
+    const onRef = useCallback((element: Element) => {
+        if (! element) {
             return
         }
 
         setPortals(state => ({
             ...state,
-            [name]: el,
+            [name]: element,
         }))
 
         function onClean() {
@@ -65,9 +61,9 @@ export function Portal(props: PortalProps) {
         }
 
         return onClean
-    }, [name, tag])
+    }, [name, setPortals])
 
-    return createElement(tag ?? 'div', {...otherProps, ref: portalRef})
+    return <Box {...otherProps} ref={onRef}/>
 }
 
 /*
@@ -95,13 +91,15 @@ export function Teleport(props: TeleportProps) {
     return createPortal(children, portal)
 }
 
-export function useRootPortals() {
-    return useState<Portals>({})
+export function useRootPortals(): StateManager<Portals> {
+    const [portals, setPortals] = useState<Portals>({})
+
+    return useMemo(() => [portals, setPortals], [portals, setPortals])
 }
 
 // Types ///////////////////////////////////////////////////////////////////////
 
-export type PortalElement = HTMLElement
+export type PortalElement = Element
 export type Portals = Record<PortalId, null | PortalElement>
 export type PortalId = PropertyKey
 
@@ -109,10 +107,8 @@ export interface PortalsProviderProps {
     children?: undefined | React.ReactNode
 }
 
-export interface PortalProps extends React.HTMLAttributes<PortalElement> {
-    tag?: undefined | Tag
+export interface PortalProps extends Omit<BoxProps, 'name'> {
     name: PortalId
-    [key: string]: unknown
 }
 
 export interface TeleportProps {

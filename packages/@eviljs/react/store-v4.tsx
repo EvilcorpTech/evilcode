@@ -1,150 +1,313 @@
-import type {Io} from '@eviljs/std/fn.js'
-import {makeReactive, type ReactiveValue} from '@eviljs/std/reactive.js'
-import type {ReducerAction} from '@eviljs/std/redux.js'
-import {isArray} from '@eviljs/std/type.js'
-import {useCallback, useContext, useEffect, useMemo, useState} from 'react'
+import {computeValue, identity, type Fn, type TaskVoid} from '@eviljs/std/fn.js'
+import {cloneShallow} from '@eviljs/std/struct.js'
+import {isArray, isObject} from '@eviljs/std/type.js'
+import {useCallback, useContext, useLayoutEffect, useMemo, useRef} from 'react'
 import {defineContext} from './ctx.js'
-import {useClosure} from './ref.js'
+import {useRender} from './lifecycle.js'
+import type {StateManager, StateSetterArg} from './state.js'
 import type {StoreStateGeneric} from './store-v1.js'
-import type {StoreDispatch, StoreDispatchPolymorphicArgs, StoreProviderProps, StoreSpec} from './store-v2.js'
-import {defaultSelector, type StoreSelector} from './store-v3.js'
+import type {StoreSelector} from './store.js'
 
-export * from '@eviljs/std/redux.js'
-
-export {patchState} from './store-v2.js'
-export type {StoreSpec} from './store-v2.js'
-
-export const StoreContext = defineContext<StoreManager>('StoreContext')
+export const StoreContext = defineContext<Store<StoreStateGeneric>>('StoreContext')
 
 /*
 * EXAMPLE
 *
-* const spec = {createState, actions}
-*
 * export function MyMain(props) {
 *     return (
-*         <StoreProvider spec={spec}>
+*         <StoreProvider createState={createState}>
 *             <MyApp/>
 *         </StoreProvider>
 *     )
 * }
 */
-export function StoreProvider(props: StoreProviderProps<StoreStateGeneric, ReducerAction>) {
+export function StoreProvider(props: StoreProviderProps<StoreStateGeneric>) {
     const {children, ...spec} = props
+    const value = useRootStore(spec)
 
-    return (
-        <StoreContext.Provider value={useRootStore(spec)}>
-            {children}
-        </StoreContext.Provider>
-    )
+    return <StoreContext.Provider value={value} children={children}/>
 }
 
-export function useRootStore<
-    S extends StoreStateGeneric,
-    A extends ReducerAction,
->(spec: StoreSpec<S, A>): StoreManager<S, A> {
-    const {createState, reduce, onDispatch} = spec
+export function useRootStore<S extends StoreStateGeneric>(spec: StoreDefinition<S>): Store<S> {
+    const {createState, onChange} = spec
+    const stateRef = useRef(createState())
+    const storeObservers = useMemo(() =>
+        new Map<string, Array<TaskVoid>>()
+    , [])
 
-    const state = useMemo(() => {
-        return makeReactive(createState())
+    const mutate = useCallback((path: StatePath, value: StateSetterArg<unknown>) => {
+        const pathKey = asPathKey(path)
+        const oldState = stateRef.current
+
+        stateRef.current = mutateState(stateRef.current, path, value)
+
+        onChange?.({
+            path,
+            pathKey,
+            value: selectStateValue(stateRef.current, path),
+            valueOld: selectStateValue(oldState, path),
+            state: stateRef.current,
+            stateOld: oldState,
+        })
+
+        const keyObservers = storeObservers.get(pathKey)
+
+        if (! keyObservers) {
+            console.warn(
+                '@eviljs/react/store-v4:\n'
+                + `missing observers for '${pathKey}'.`
+            )
+            return
+        }
+
+        for (const it of keyObservers) {
+            it()
+        }
     }, [])
 
-    const dispatch = useCallback((...polymorphicArgs: StoreDispatchPolymorphicArgs): S => {
-        const [id, ...args] = (() => {
-            const [idOrAction] = polymorphicArgs
+    const observe = useCallback((path: StatePath, observer: TaskVoid) => {
+        forEachPath(path, pathSegment => {
+            const pathKey = asPathKey(pathSegment)
+            addToMapList(storeObservers, pathKey, observer)
+        })
 
-            if (isArray(idOrAction)) {
-                const [id, ...args] = idOrAction
-                return [id, ...args] as ReducerAction
-            }
+        function stop() {
+            forEachPath(path, pathSegment => {
+                const pathKey = asPathKey(pathSegment)
+                const keyObservers = storeObservers.get(pathKey)
+                const idx = keyObservers?.indexOf(observer) ?? -1
 
-            return polymorphicArgs as ReducerAction
-        })()
+                if (idx < 0) {
+                    console.warn(
+                        '@eviljs/react/store-v3:\n'
+                        + `observer vanished. Was listening on '${JSON.stringify(path)}'.`
+                    )
+                    return
+                }
 
-        onDispatch?.(id, args)
+                keyObservers?.splice(idx, 1)
+            })
+        }
 
-        const oldState = state.value
-        const newState = reduce(oldState, ...[id, ...args] as A)
+        return stop
+    }, [])
 
-        state.value = newState
+    const state = useCallback(() => {
+        return stateRef.current
+    }, [])
 
-        return newState
-    }, [reduce, onDispatch])
-
-    const store = useMemo((): StoreManager<S, A> => {
-        return [state, dispatch]
-    }, [state, dispatch])
+    const store = useMemo(() => {
+        return {mutate, observe, state, stateRef}
+    }, [mutate, observe, state])
 
     return store
 }
 
-export function useStoreContext<S extends StoreStateGeneric, A extends ReducerAction = ReducerAction>() {
-    return useContext(StoreContext) as undefined | StoreManager<S, A>
+export function useStoreContext<S extends StoreStateGeneric>() {
+    return useContext(StoreContext) as undefined | Store<S>
 }
 
 /*
 * EXAMPLE
 *
-* const [books, dispatch] = useStore(state => state.books)
-* const [selectedFood, dispatch] = useStore(state => state.food[selectedFoodIndex])
+* const [books, setBooks] = useStoreState(state => state.books)
+* const [selectedFood, setSelectedFood] = useStoreState(state => state.food[selectedFoodIndex])
 */
-export function useStore<S extends StoreStateGeneric, A extends ReducerAction = ReducerAction>(): StoreAccessor<S, S, A>
-export function useStore<V, S extends StoreStateGeneric, A extends ReducerAction = ReducerAction>(selector: StoreSelector<S, V>): StoreAccessor<V, S, A>
-export function useStore<V, S extends StoreStateGeneric, A extends ReducerAction = ReducerAction>(selectorOptional?: undefined | StoreSelector<S, V>): StoreAccessor<V | S, S, A> {
-    const selectedState = useStoreState<V, S>(selectorOptional)
-    const dispatch = useStoreDispatch<S, A>()
+export function useStoreState<S extends StoreStateGeneric, V>(selectorOptional: StoreSelector<S, V>): StateManager<V>
+export function useStoreState<S extends StoreStateGeneric>(): StateManager<S>
+export function useStoreState<S extends StoreStateGeneric, V>(selectorOptional?: undefined | StoreSelector<S, V>): StateManager<S | V> {
+    const selector = (selectorOptional ?? identity) as StoreSelector<StoreStateGeneric, unknown>
+    const store = useStoreContext<S>()!
+    const state = store.stateRef.current
+    const path = selectStatePath(state, selector)
+    const pathKey = asPathKey(path)
+    const render = useRender()
 
-    return [selectedState, dispatch]
+    const selectedState = useMemo((): V => {
+        return selectStateValue(state, path) as V
+    }, [state, pathKey])
+
+    useLayoutEffect(() => {
+        const stopObserving = store.observe(path, render)
+        return stopObserving
+    }, [pathKey])
+
+    const setSelectedState = useCallback((value: StateSetterArg<S | V>) => {
+        store.mutate(path, value)
+    }, [pathKey])
+
+    return [selectedState, setSelectedState]
 }
 
-/*
-* EXAMPLE
-*
-* const storeState = useStoreState()
-* const selectedFood = useStoreState(state => state.food[selectedFoodIndex])
-*/
-export function useStoreState<S extends StoreStateGeneric>(): S
-export function useStoreState<V, S extends StoreStateGeneric>(selector: StoreSelector<S, V>): V
-export function useStoreState<V, S extends StoreStateGeneric>(selectorOptional?: undefined | StoreSelector<S, V>): V | S
-export function useStoreState<V, S extends StoreStateGeneric>(selectorOptional?: undefined | StoreSelector<S, V>): V | S {
-    const [state] = useStoreContext<S>()!
-    const selector: Io<S, V | S> = selectorOptional ?? defaultSelector
-    const selectedState = selector(state.value)
-    const [_, setSelectedState] = useState(selectedState)
-    const selectorClosure = useClosure(selector)
+export function selectStatePath(state: StoreStateGeneric, selector: StoreSelector<StoreStateGeneric, unknown>): StatePath {
+    const path: StatePath = ['/']
 
-    useEffect(() => {
-        const stopWatching = state.watch((newState, oldState) => {
-            setSelectedState(selectorClosure(newState))
-        })
+    if (! isObject(state) && ! isArray(state)) {
+        // A number or a string.
+        return path
+    }
 
-        function onClean() {
-            stopWatching()
-        }
+    function onGet(key: PropertyKey) {
+        path.push(key)
+    }
 
-        return onClean
-    }, [state])
+    const stateProxy = createStateProxy(state, onGet)
+
+    selector(stateProxy)
+
+    return path
+}
+
+export function selectStateValue<S>(state: S, path: StatePath): unknown {
+    let selectedState: any = state
+
+    // First path item is '/', the root state.
+    for (const it of path.slice(1)) {
+        selectedState = selectedState[it]
+    }
 
     return selectedState
 }
 
-export function useStoreDispatch<
-    S extends StoreStateGeneric = StoreStateGeneric,
-    A extends ReducerAction = ReducerAction,
->(): StoreDispatch<S, A> {
-    const [state, dispatch] = useStoreContext<S, A>()!
-    return dispatch
+export function mutateState<S extends StoreStateGeneric = StoreStateGeneric>(
+    state: S,
+    path: StatePath,
+    nextValue: StateSetterArg<unknown>
+): S {
+    if (path.length === 1) {
+        // We are mutating the state root.
+        return computeValue(nextValue, state) as S
+    }
+
+    const nextState: any = cloneShallow(state)
+
+    walkState(state, path, (state, key, currentValue, info) => {
+        if (key === '/') {
+            return
+        }
+
+        nextState[key] = ! info.leaf
+            // We are traversing the path. We shallow clone all structures on this path.
+            ? cloneShallow(currentValue)
+            // We reached the end of the path. Time to compute the state value.
+            : computeValue(nextValue, currentValue)
+    })
+
+    return nextState
+}
+
+export function walkState(
+    state: any,
+    path: StatePath,
+    onNode: (state: any, key: PropertyKey, value: any, info: {leaf: boolean}) => void,
+) {
+    let stateHead: any = state
+    let pathIndex = 0
+
+    while (pathIndex < path.length) {
+        const key = path[pathIndex]!
+        const value = key === '/'
+            ? stateHead
+            : stateHead[key]
+        const leaf = pathIndex === path.length - 1
+
+        onNode(stateHead, key, value, {leaf})
+
+        pathIndex += 1 // We move the pointers.
+
+        // onNode() can mutate in place, so this operations must be done after the onNode() completion.
+        stateHead = key === '/'
+            ? stateHead
+            : stateHead[key]
+
+        if (! stateHead) {
+            console.warn(
+                '@eviljs/react/store-v3.walkState():\n'
+                + `state vanished from path '${JSON.stringify(path)}'.`
+            )
+            break
+        }
+    }
+}
+
+export function createStateProxy<S extends StoreStateGeneric>(state: S, onGet: (key: PropertyKey) => void) {
+    const proxy = new Proxy(state, {
+        get(obj, prop, proxy): unknown {
+            onGet(prop)
+
+            if (! (prop in obj)) {
+                return
+            }
+            // if (! hasOwnProperty(obj, prop)) {
+            //     console.warn(
+            //         '@eviljs/react/store-v3:\n'
+            //         + `accessing inherited property '${String(prop)}'.`
+            //     )
+            //     return
+            // }
+
+            const value = (obj as Record<PropertyKey, any>)[prop]
+
+            return isObject(value) || isArray(value)
+                ? createStateProxy(value, onGet)
+                : value
+        },
+    })
+
+    return proxy
+}
+
+export function asPathKey(path: StatePath) {
+    return '/' + path.slice(1).map(it => String(it).replaceAll('/', '_')).join('/')
+}
+
+export function forEachPath(path: StatePath, fn: Fn<[StatePath], unknown>) {
+    for (let idx = 0, pathSize = path.length; idx < pathSize; ++idx) {
+        const pathSegment = path.slice(0, idx + 1)
+        fn(pathSegment)
+    }
+}
+
+export function addToMapList<K extends PropertyKey, I>(map: Map<K, Array<I>>, key: K, item: I): Array<I> {
+    // Optimization.
+    // We use Map.get(), instead of Map.has() + Map.get().
+    const items = map.get(key) ?? (() => {
+        const items: Array<I> = []
+        map.set(key, items)
+        return items
+    })()
+
+    items.push(item)
+
+    return items
 }
 
 // Types ///////////////////////////////////////////////////////////////////////
 
-export type StoreManager<
-    S extends StoreStateGeneric = StoreStateGeneric,
-    A extends ReducerAction = ReducerAction,
-> = [ReactiveValue<S>, StoreDispatch<S, A>]
+export interface StoreProviderProps<S extends StoreStateGeneric> extends StoreDefinition<S> {
+    children: undefined | React.ReactNode
+}
 
-export type StoreAccessor<
-    V,
-    S extends StoreStateGeneric = StoreStateGeneric,
-    A extends ReducerAction = ReducerAction,
-> = [V, StoreDispatch<S, A>]
+export interface StoreDefinition<S extends StoreStateGeneric> {
+    createState(): S
+    onChange?: undefined | ((args: OnChangeEventArgs) => void)
+}
+
+export interface Store<S extends StoreStateGeneric> {
+    stateRef: React.MutableRefObject<S>
+    state(): S
+    observe(path: StatePath, observer: TaskVoid): TaskVoid
+    mutate<V>(path: StatePath, value: StateSetterArg<V>): void
+}
+
+export type StatePath = Array<PropertyKey>
+
+
+export interface OnChangeEventArgs<S extends StoreStateGeneric = StoreStateGeneric> {
+    state: S,
+    stateOld: S
+    path: StatePath,
+    pathKey: string,
+    value: any,
+    valueOld: any,
+}
