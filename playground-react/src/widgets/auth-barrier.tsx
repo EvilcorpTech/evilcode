@@ -23,7 +23,7 @@ export function AuthProgress() {
     }))
 
     return (
-        <h1 className="std-flex column stack std-color-primary-accent">
+        <h1 className="std-flex std-flex-column std-flex-stack std-color-primary-accent">
             {msg.auth}...
         </h1>
     )

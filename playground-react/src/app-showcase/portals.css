@@ -3,9 +3,9 @@
 }
 
 .card-8a91 {
-    max-width: var(--size, 20rem);
-    max-height: var(--size, 20rem);
+    max-width: var(--card-size, 20rem);
+    max-height: var(--card-size, 20rem);
     margin: auto;
-    border-radius: var(--size, 20rem);
+    border-radius: var(--card-size, 20rem);
     overflow: hidden;
 }

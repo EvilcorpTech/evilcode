@@ -8,7 +8,7 @@ import {Portal, PortalProvider} from '@eviljs/react/portal'
 import {PortalsProvider} from '@eviljs/react/portals'
 import {RequestProvider} from '@eviljs/react/request'
 import {Arg, CaseRoute, RouterProvider, SwitchRoute, exact} from '@eviljs/react/router'
-import {StoreProvider as StoreProviderV3} from '@eviljs/react/store-v3'
+import {StoreProvider as StoreProviderV3} from '@eviljs/react/store'
 import {StoreProvider as StoreProviderV4} from '@eviljs/react/store-v4'
 import {Showcase} from '@eviljs/reactx/showcase'
 import {pipe} from '@eviljs/std/pipe'
@@ -21,8 +21,8 @@ import type {Container} from '~/container/apis'
 import {I18nSpec} from '~/i18n/apis'
 import * as Routes from '~/route/apis'
 import {createRouter} from '~/router/router'
-import {StoreSpec as StoreSpecV3} from '~/store-v3/apis'
-import {StoreSpec as StoreSpecV4} from '~/store-v4/apis'
+import {StoreSpec as StoreSpecV4} from '~/store-v3/apis'
+import {StoreSpec as StoreSpecV3} from '~/store-v4/apis'
 import {useRootStoreStorage} from '~/store/hooks'
 import {useColorSchemePreference} from '~/theme/hooks'
 import {AuthBarrier} from '~/widgets/auth-barrier'
@@ -41,8 +41,8 @@ export function Root(props: RootProps) {
         .to(it => PortalsProvider({children: it}))
         .to(it => RequestProvider({children: it, value: Query}))
         .to(it => RouterProvider({children: it, createRouter}))
-        .to(it => StoreProviderV3({children: it, ...StoreSpecV3}))
-        .to(it => StoreProviderV4({children: it, ...StoreSpecV4}))
+        .to(it => StoreProviderV4({children: it, ...StoreSpecV3}))
+        .to(it => StoreProviderV3({children: it, ...StoreSpecV4}))
     .end()
 }
 

@@ -1,13 +1,14 @@
-import {useStoreState} from '@eviljs/react/store-v3'
+import {useStore, useStoreDispatch, useStoreState} from '@eviljs/react/store'
 import {defineShowcase} from '@eviljs/reactx/showcase'
+import {resetState, setState} from '~/store-v3/apis'
 import type {StoreState} from '~/store/apis'
 import {Theme} from '~/theme/apis'
 
 export default defineShowcase('Store v3', (props) => {
-    const [theme] = useStoreState((state: StoreState) => state.theme)
+    const [theme, dispatch] = useStore((state: StoreState) => state.theme)
 
     return (
-        <div className="std-flex gap6">
+        <div className="std-flex std-gap6">
             <Comp1/>
             <Comp2/>
 
@@ -17,13 +18,13 @@ export default defineShowcase('Store v3', (props) => {
 })
 
 function Comp1() {
-    const [state, setState] = useStoreState((state: StoreState) => state)
+    const dispatch = useStoreDispatch<StoreState>()
 
     return (
         <div>
             <button
                 onClick={() => {
-                    setState({})
+                    dispatch(resetState())
                 }}
             >
                 Reset
@@ -33,7 +34,8 @@ function Comp1() {
 }
 
 function Comp2() {
-    const [theme, setTheme] = useStoreState((state: StoreState) => state.theme)
+    const theme = useStoreState((state: StoreState) => state.theme)
+    const dispatch = useStoreDispatch<StoreState>()
 
     return (
         <div>
@@ -41,8 +43,8 @@ function Comp2() {
                 type="checkbox"
                 onChange={event => {
                     event.currentTarget.checked
-                        ? setTheme(Theme.Dark)
-                        : setTheme(Theme.Light)
+                        ? dispatch(setState({theme: Theme.Dark}))
+                        : dispatch(setState({theme: Theme.Light}))
                 }}
             />
         </div>

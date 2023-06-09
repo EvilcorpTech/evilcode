@@ -5,7 +5,7 @@ import {useEffect, useState} from 'react'
 
 export default defineShowcase('Transition', props => {
     return (
-        <div className="std-flex align-start wrap gap5">
+        <div className="std-flex std-flex-align-start std-flex-wrap std-gap5">
             <Starter interval={1_000}>
                 {(start, counter) =>
                     <Transition initial mode="out-in">
@@ -120,7 +120,7 @@ function Starter(props: {
     }, [start, interval])
 
     return (
-        <div className="std-flex column align-center gap5">
+        <div className="std-flex std-flex-column std-flex-align-center std-gap5">
             <button
                 className="std-button flat"
                 onClick={() => setStart(! start)}

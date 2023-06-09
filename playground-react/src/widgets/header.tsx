@@ -20,7 +20,7 @@ export function Header(props: HeaderProps) {
             className={classes('Header-cf53', className)}
         >
             <nav>
-                <ul className="std-flex align-center">
+                <ul className="std-flex std-flex-align-center">
                     {Menu.map((it, idx) =>
                         <li
                             key={idx}

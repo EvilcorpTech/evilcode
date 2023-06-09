@@ -4,5 +4,5 @@ export enum Theme {
 }
 
 export function themeClassesOf(theme: Theme): Array<string> {
-    return ['std', `theme-${theme}`, 'std-text', 'std-color-theme']
+    return ['std-root', `std-theme-${theme}`, 'std-text', 'std-color-theme']
 }
