@@ -33,7 +33,7 @@ export function AdminView(props: AdminViewProps) {
             </h1>
 
             <Button
-                className="halo"
+                className="std-button-halo"
                 onClick={onExitButtonClick}
             >
                 Exit

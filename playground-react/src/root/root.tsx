@@ -51,7 +51,7 @@ export function App(props: AppProps) {
     useColorSchemePreference()
 
     return <>
-        <SwitchRoute default={<NotFoundView/>}>
+        <SwitchRoute fallback={<NotFoundView/>}>
             <CaseRoute is={Routes.RootRoute.pattern}>
                 <HomeView/>
             </CaseRoute>
@@ -61,14 +61,12 @@ export function App(props: AppProps) {
                     <Showcase>{ShowcaseIndex}</Showcase>
                 </div>
             </CaseRoute>
-            <CaseRoute is={exact('/arg/' + Arg)}>
-                {(...[id]) =>
-                    <div>
-                        <Header/>
-                        <h1>Route ID {id}</h1>
-                    </div>
-                }
-            </CaseRoute>
+            <CaseRoute is={exact('/arg/' + Arg)} children={id =>
+                <div>
+                    <Header/>
+                    <h1>Route ID {id}</h1>
+                </div>
+            }/>
             <CaseRoute is={Routes.AdminRoute.pattern}>
                 <AuthBarrier>
                     <AdminView/>

@@ -5,7 +5,7 @@ import type {StoreState} from '~/store/apis'
 import {Theme} from '~/theme/apis'
 
 export default defineShowcase('Store v3', (props) => {
-    const [theme, dispatch] = useStore((state: StoreState) => state.theme)
+    const [theme, dispatch] = useStore((state: StoreState) => state.theme)!
 
     return (
         <div className="std-flex std-gap6">
@@ -18,7 +18,7 @@ export default defineShowcase('Store v3', (props) => {
 })
 
 function Comp1() {
-    const dispatch = useStoreDispatch<StoreState>()
+    const dispatch = useStoreDispatch<StoreState>()!
 
     return (
         <div>
@@ -35,7 +35,7 @@ function Comp1() {
 
 function Comp2() {
     const theme = useStoreState((state: StoreState) => state.theme)
-    const dispatch = useStoreDispatch<StoreState>()
+    const dispatch = useStoreDispatch<StoreState>()!
 
     return (
         <div>
