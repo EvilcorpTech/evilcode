@@ -12,7 +12,7 @@ export function Checkbox(props: CheckboxProps) {
         <button
             tabIndex={0}
             {...otherProps}
-            className={classes('Checkbox-16ba std-button flex', className)}
+            className={classes('Checkbox-16ba std-button std-button-flex', className)}
             role="checkbox"
             aria-checked={
                 checked === 'mixed'

@@ -91,7 +91,7 @@ export function AuthCredentials(props: AuthCredentialsProps) {
             />
 
             <Button
-                className={classes('button-fcb2 dye', {
+                className={classes('button-fcb2 std-button-dye', {
                     busy: pending,
                     'std-shadow8': validCredentials,
                 })}

@@ -409,7 +409,7 @@ export function Contrast(props: {theme: 'dark' | 'light'}) {
                 {[0, 1, 2].map(it =>
                     <div
                         key={it}
-                        className={classes('std-flex std-flex-column std-gap4', `std-background-z${it}`, `std theme-${props.theme}`)}
+                        className={classes('std-flex std-flex-column std-gap4', `std-background-z${it}`, `std-root std-theme-${props.theme}`)}
                     >
                         <h6 className="std-text-uppercase">Bg Z {it}</h6>
 
@@ -510,19 +510,19 @@ export function Buttons() {
     return (
         <div className="buttons-45cb std-flex std-flex-column std-flex-justify-center std-flex-align-center std-flex-wrap">
             <div>
-                <button className="std-text-button std-button dye">Dye</button>
-                <button className="std-text-button std-button flat">Flat</button>
-                <button className="std-text-button std-button plain halo">Halo</button>
-                <button className="std-text-button std-button plain">Plain</button>
+                <button className="std-text-button std-button std-button-dye">Dye</button>
+                <button className="std-text-button std-button std-button-flat">Flat</button>
+                <button className="std-text-button std-button std-button-plain std-button-halo">Halo</button>
+                <button className="std-text-button std-button std-button-plain">Plain</button>
             </div>
 
             <div className="std-space-v3"/>
 
             <div>
-                <button className="std-text-button std-button dye" disabled>Dye</button>
-                <button className="std-text-button std-button flat" disabled>Flat</button>
-                <button className="std-text-button std-button plain halo" disabled>Halo</button>
-                <button className="std-text-button std-button plain" disabled>Plain</button>
+                <button className="std-text-button std-button std-button-dye" disabled>Dye</button>
+                <button className="std-text-button std-button std-button-flat" disabled>Flat</button>
+                <button className="std-text-button std-button std-button-plain std-button-halo" disabled>Halo</button>
+                <button className="std-text-button std-button std-button-plain" disabled>Plain</button>
             </div>
         </div>
     )

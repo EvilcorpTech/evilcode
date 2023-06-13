@@ -50,12 +50,12 @@ export function WidgetsView(props: WidgetsViewProps) {
                     Buttons
                 </h6>
 
-                <Button className="dye">
+                <Button className="std-button-dye">
                     Don't Click Me
                 </Button>
 
                 <BusyButton
-                    className="reveal dye"
+                    className="reveal std-button-dye"
                     busy={busy}
                     spinner={<SpinnerV4 className="std-icon" active={busy}/>}
                     onClick={() => setBusy(! busy)}
@@ -64,7 +64,7 @@ export function WidgetsView(props: WidgetsViewProps) {
                 </BusyButton>
 
                 <BusyButton
-                    className="replace dye"
+                    className="replace std-button-dye"
                     busy={busy}
                     spinner={<SpinnerV4 className="std-icon" active={busy}/>}
                     onClick={() => setBusy(! busy)}
@@ -76,21 +76,21 @@ export function WidgetsView(props: WidgetsViewProps) {
                     {({armor, close}) =>
                         <>
                             <Button
-                                className="armor plain halo"
+                                className="armor std-button-plain std-button-halo"
                                 onClick={armor}
                             >
                                 Armor
                             </Button>
 
                             <Button
-                                className="cancel plain"
+                                className="cancel std-button-plain"
                                 onClick={close}
                             >
                                 Cancel
                             </Button>
 
                             <Button
-                                className="confirm dye"
+                                className="confirm std-button-dye"
                                 onClick={close}
                             >
                                 Confirm
@@ -181,7 +181,7 @@ export function WidgetsView(props: WidgetsViewProps) {
             <div className="section-0234">
                 <h6 className="title-74a6">Spinners</h6>
 
-                <Button className="plain" onClick={event => setSpinner(! spinner)}>
+                <Button className="std-button-plain" onClick={event => setSpinner(! spinner)}>
                     {spinner ? 'Stop' : 'Start'}
                 </Button>
 
@@ -205,7 +205,7 @@ export function WidgetsView(props: WidgetsViewProps) {
             <div className="section-0234">
                 <h6 className="title-74a6">Slider</h6>
 
-                <Button className="plain" onClick={(event) => setSlide(Math.max(0, slide - 1))}>
+                <Button className="std-button-plain" onClick={(event) => setSlide(Math.max(0, slide - 1))}>
                     Prev.
                 </Button>
                 <Slider
@@ -222,7 +222,7 @@ export function WidgetsView(props: WidgetsViewProps) {
                         </Slide>
                     )}
                 </Slider>
-                <Button className="plain" onClick={(event) => setSlide(Math.min(4, slide + 1))}>
+                <Button className="std-button-plain" onClick={(event) => setSlide(Math.min(4, slide + 1))}>
                     Next
                 </Button>
             </div>

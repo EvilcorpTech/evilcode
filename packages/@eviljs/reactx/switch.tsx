@@ -9,7 +9,7 @@ export function Switch(props: SwitchProps) {
         <button
             tabIndex={0}
             {...otherProps}
-            className={classes('Switch-5a04 std-button flex std-switch', className)}
+            className={classes('Switch-5a04 std-button std-button-flex std-switch', className)}
             type="button"
             role="switch"
             aria-checked={asBooleanString(checked ?? false)}
