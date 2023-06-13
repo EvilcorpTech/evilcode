@@ -1,8 +1,8 @@
-.std-button.halo {
+.std-button-halo {
     position: relative;
     z-index: 0;
 }
-.std-button.halo::after {
+.std-button-halo::after {
     content: '';
     position: absolute;
     top: 0;
@@ -19,16 +19,16 @@
     transform: scale(0);
     transition: all var(--button-duration, var(--std-duration3));
 }
-.std-button.halo:focus::after,
-.std-button.halo:hover::after {
+.std-button-halo:focus::after,
+.std-button-halo:hover::after {
     transform: scale(1);
 }
-.std-button.halo:hover::after {
+.std-button-halo:hover::after {
     opacity: var(--halo-opacity--hover, .1);
 }
-.std-button.halo:focus::after {
+.std-button-halo:focus::after {
     opacity: var(--halo-opacity--focus, .1);
 }
-.std-button.halo:active::after {
+.std-button-halo:active::after {
     opacity: var(--halo-opacity--active, .2);
 }

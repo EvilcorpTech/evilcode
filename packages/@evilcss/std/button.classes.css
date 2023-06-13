@@ -4,13 +4,13 @@
     user-select: none;
     transition: all var(--button-duration, var(--std-duration3));
 }
-.std-button.flex {
+.std-button-flex {
     display: inline-flex;
     align-items: center;
     justify-content: center;
     text-align: center;
 }
-.std-button.grid {
+.std-button-grid {
     display: inline-grid;
     grid-auto-flow: column;
     place-content: center;

@@ -1,12 +1,12 @@
-.std-button.plain {
+.std-button-plain {
     color: var(--button-accent, var(--std-color-primary-shade1));
 }
-.std-button.plain:hover {
+.std-button-plain:hover {
     color: var(--button-accent--hover, var(--std-color-primary-accent));
 }
-.std-button.plain:focus {
+.std-button-plain:focus {
     color: var(--button-accent--focus, var(--std-color-primary-accent));
 }
-.std-button.plain:active {
+.std-button-plain:active {
     color: var(--button-accent--active, var(--std-color-primary-shade2));
 }
