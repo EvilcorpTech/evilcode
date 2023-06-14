@@ -1,4 +1,4 @@
-export function createAccessor<T>(read: () => T, write: (value: T) => T): AccessorSync<T> {
+export function createAccessor<V>(read: () => V, write: (value: V) => V): AccessorSync<V> {
     return {
         get value() {
             return read()
@@ -13,8 +13,8 @@ export function createAccessor<T>(read: () => T, write: (value: T) => T): Access
 
 // Types ///////////////////////////////////////////////////////////////////////
 
-export interface AccessorSync<T> {
-    value: T
-    read(): T
-    write(value: T): T
+export interface AccessorSync<V> {
+    value: V
+    read(): V
+    write(value: V): V
 }
