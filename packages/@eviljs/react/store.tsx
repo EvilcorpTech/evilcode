@@ -170,7 +170,7 @@ export function useStoreDispatch<S extends StoreStateGeneric, A extends ReducerA
 * type Action = ['hello', string] | ['sum', number, number]
 *
 * const context = defineContext<StoreManager<State, Action>>('ExampleContextName')
-* const {useStore, useStoreState, useStoreDispatch} = createStoreBound(context)
+* const {useStore, useStoreState, useStoreDispatch} = createStore(context)
 */
 export function createStore<S extends StoreStateGeneric, A extends ReducerAction = ReducerAction>(
     context: React.Context<undefined | StoreManager<S, A>>,
