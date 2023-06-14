@@ -6,14 +6,14 @@ import {asBoolean, asNumber, isUndefined} from '@eviljs/std/type.js'
 export function createBrowserStorageAccessor(
     key: string,
     options?: undefined | BrowserStorageAccessorOptions,
-): BrowserStorageAccessorSync {
+): BrowserStorageAccessorSync<string> {
     const storage: Storage = options?.storage ?? window.localStorage
 
-    function read(): BrowserStorageValue {
+    function read(): BrowserStorageValue<string> {
         return storage.getItem(key) ?? undefined
     }
 
-    function write<T extends BrowserStorageValue>(newValue: T): T {
+    function write<I extends BrowserStorageValue<string>>(newValue: I): I {
         if (isUndefined(newValue)) {
             storage.removeItem(key)
         }
@@ -26,21 +26,21 @@ export function createBrowserStorageAccessor(
     return createAccessor(read, write)
 }
 
-export function createBrowserStorageAccessorJson<T = unknown>(
+export function createBrowserStorageAccessorJson<V = unknown>(
     key: string,
     options?: undefined | BrowserStorageAccessorOptions,
-): BrowserStorageAccessorSync<T> {
+): BrowserStorageAccessorSync<V> {
     const accessor = createBrowserStorageAccessor(key, options)
 
-    function read(): BrowserStorageValue<T> {
+    function read(): BrowserStorageValue<V> {
         const value = accessor.read()
 
         return value
-            ? tryCatch(() => JSON.parse(value) as T)
+            ? tryCatch(() => JSON.parse(value) as V)
             : undefined
     }
 
-    function write<V extends BrowserStorageValue<T>>(newValue: V): V {
+    function write<I extends BrowserStorageValue<V>>(newValue: I): I {
         accessor.write(JSON.stringify(newValue))
 
         return newValue
@@ -70,7 +70,7 @@ export function createBrowserStorageAccessorNumber(
             : undefined
     }
 
-    function write<V extends BrowserStorageValue<number>>(newValue: V): V {
+    function write<I extends BrowserStorageValue<number>>(newValue: I): I {
         accessor.write(JSON.stringify(newValue))
 
         return newValue
@@ -93,7 +93,7 @@ export function createBrowserStorageAccessorBoolean(
             : undefined
     }
 
-    function write<V extends BrowserStorageValue<boolean>>(newValue: V): V {
+    function write(newValue: BrowserStorageValue<boolean>): BrowserStorageValue<boolean> {
         accessor.write(JSON.stringify(newValue))
 
         return newValue
@@ -104,9 +104,9 @@ export function createBrowserStorageAccessorBoolean(
 
 // Types ///////////////////////////////////////////////////////////////////////
 
-export type BrowserStorageValue<T = string> = undefined | T
+export type BrowserStorageValue<V = string> = undefined | V
 
-export interface BrowserStorageAccessorSync<T = string> extends AccessorSync<BrowserStorageValue<T>> {
+export interface BrowserStorageAccessorSync<V = string> extends AccessorSync<BrowserStorageValue<V>> {
 }
 
 export interface BrowserStorageAccessorOptions {
