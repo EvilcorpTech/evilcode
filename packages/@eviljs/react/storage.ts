@@ -1,64 +1,67 @@
 import {createAccessor} from '@eviljs/std/accessor.js'
 import {scheduleMacroTask} from '@eviljs/std/eventloop.js'
+import {identity, type Io, type TaskVoid} from '@eviljs/std/fn.js'
 import {tryCatch} from '@eviljs/std/try.js'
 import {asBoolean, asNumber} from '@eviljs/std/type.js'
 import type {BrowserStorageAccessorSync, BrowserStorageValue} from '@eviljs/web/storage.js'
-import {useCallback, useState} from 'react'
+import {useCallback, useMemo, useRef, useState} from 'react'
 
-export function useBrowserStorageAccessor<T = string>(accessor: BrowserStorageAccessorSync<T>): BrowserStorageManager<T> {
-    // Reading from LocalStorage is slow, so we must wrap property access.
-    const [value, setValue] = useState(() => accessor.value)
+export function useBrowserStorageAccessor<V = string>(
+    accessor: BrowserStorageAccessorSync<V>,
+    codecOptional?: undefined,
+): BrowserStorageManager<V>
+export function useBrowserStorageAccessor<V = string, S = string>(
+    accessor: BrowserStorageAccessorSync<S>,
+    codec: BrowserStorageManagerOptions<V>,
+): BrowserStorageManager<V>
+export function useBrowserStorageAccessor<V = string, S = string>(
+    accessor: BrowserStorageAccessorSync<S>,
+    codecOptional?: undefined | BrowserStorageManagerOptions<V>,
+): BrowserStorageManager<S | V> {
+    const decode = (codecOptional?.decode ?? identity) as Io<BrowserStorageValue<S>, BrowserStorageValue<S | V>>
+    const encode = (codecOptional?.encode ?? identity) as Io<BrowserStorageValue<S | V>, BrowserStorageValue<S>>
+    // Reading from LocalStorage is slow, so we must wrap value access.
+    const [initialValue, render] = useState(() => decode(accessor.value))
+    const valueRef = useRef(initialValue)
+    const cancelWriteTaskRef = useRef<TaskVoid>()
 
-    const read = useCallback((): BrowserStorageValue<T> => {
-        return value
-    }, [value])
-
-    const write = useCallback(<V extends BrowserStorageValue<T>>(newValue: V): V => {
-        setValue(newValue)
-
-        scheduleMacroTask(() => {
-            accessor.value = newValue
-        })
-
-        return newValue
+    const read = useCallback((): BrowserStorageValue<S | V> => {
+        return valueRef.current
     }, [])
 
-    return createAccessor(read, write)
-}
+    const write = useCallback(<I extends BrowserStorageValue<S | V>>(newValue: I): I => {
+        valueRef.current = newValue
+        render(newValue)
 
-export function useBrowserStorageCodec<T>(args: BrowserStorageManagerArgs<T>): BrowserStorageManager<T> {
-    const {accessor, decode, encode} = args
-    // Reading from LocalStorage is slow, so we must wrap property access.
-    const [value, setValue] = useState(() => decode(accessor.value))
-
-    const read = useCallback((): BrowserStorageValue<T> => {
-        return value
-    }, [value])
-
-    const write = useCallback(<V extends BrowserStorageValue<T>>(newValue: V): V => {
-        setValue(newValue)
-
-        scheduleMacroTask(() => {
+        cancelWriteTaskRef.current?.()
+        cancelWriteTaskRef.current = scheduleMacroTask(() => {
+            // We can't use valueRef.current here, due to React 17/18 constraint
+            // on references usage on unmounted components. When the the macro task
+            // is executed, the component could be unmounted and the reference
+            // would be undefined.
             accessor.value = encode(newValue)
+            cancelWriteTaskRef.current = undefined
         })
 
         return newValue
     }, [])
 
-    return createAccessor(read, write)
+    const accessorManager = useMemo(() => {
+        return createAccessor(read, write)
+    }, [read, write])
+
+    return accessorManager
 }
 
-export function useBrowserStorageString(accessor: BrowserStorageAccessorSync): BrowserStorageManager<string> {
-    return useBrowserStorageCodec({
-        accessor,
+export function useBrowserStorageString(accessor: BrowserStorageAccessorSync<string>): BrowserStorageManager<string> {
+    return useBrowserStorageAccessor(accessor, {
         encode: value => value ?? '',
         decode: value => value ?? '',
     })
 }
 
-export function useBrowserStorageNumber(accessor: BrowserStorageAccessorSync): BrowserStorageManager<number> {
-    return useBrowserStorageCodec({
-        accessor,
+export function useBrowserStorageNumber(accessor: BrowserStorageAccessorSync<string>): BrowserStorageManager<number> {
+    return useBrowserStorageAccessor(accessor, {
         encode: value => JSON.stringify(value),
         decode: value => value
             ? asNumber(tryCatch(() => JSON.parse(value) as unknown))
@@ -67,9 +70,8 @@ export function useBrowserStorageNumber(accessor: BrowserStorageAccessorSync): B
     })
 }
 
-export function useBrowserStorageBoolean(accessor: BrowserStorageAccessorSync): BrowserStorageManager<boolean> {
-    return useBrowserStorageCodec({
-        accessor,
+export function useBrowserStorageBoolean(accessor: BrowserStorageAccessorSync<string>): BrowserStorageManager<boolean> {
+    return useBrowserStorageAccessor(accessor, {
         encode: value => JSON.stringify(value),
         decode: value => value
             ? asBoolean(tryCatch(() => JSON.parse(value) as unknown))
@@ -80,11 +82,10 @@ export function useBrowserStorageBoolean(accessor: BrowserStorageAccessorSync): 
 
 // Types ///////////////////////////////////////////////////////////////////////
 
-export interface BrowserStorageManager<T> extends BrowserStorageAccessorSync<T> {
+export interface BrowserStorageManager<V> extends BrowserStorageAccessorSync<V> {
 }
 
-export interface BrowserStorageManagerArgs<T> {
-    accessor: BrowserStorageAccessorSync
-    encode(value: BrowserStorageValue<T>): BrowserStorageValue
-    decode(value: BrowserStorageValue): BrowserStorageValue<T>
+export interface BrowserStorageManagerOptions<V, S = string> {
+    encode: Io<BrowserStorageValue<V>, BrowserStorageValue<S>>
+    decode: Io<BrowserStorageValue<S>, BrowserStorageValue<V>>
 }

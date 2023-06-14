@@ -172,10 +172,13 @@ export function useStoreDispatch<S extends StoreStateGeneric, A extends ReducerA
 * const context = defineContext<StoreManager<State, Action>>('ExampleContextName')
 * const {useStore, useStoreState, useStoreDispatch} = createStoreBound(context)
 */
-export function createStoreBound<S extends StoreStateGeneric, A extends ReducerAction = ReducerAction>(
+export function createStore<S extends StoreStateGeneric, A extends ReducerAction = ReducerAction>(
     context: React.Context<undefined | StoreManager<S, A>>,
 ): StoreBound<S, A> {
-    return {
+    const self: StoreBound<S, A> = {
+        StoreProvider(props) {
+            return <StoreProvider context={context} {...props}/>
+        },
         useStore<V>(selectorOptional?: undefined | StoreSelector<S, V>) {
             return useStore(selectorOptional, context)
         },
@@ -186,6 +189,9 @@ export function createStoreBound<S extends StoreStateGeneric, A extends ReducerA
             return useStoreDispatch(context)
         },
     }
+    ;(self.StoreProvider as React.FunctionComponent).displayName = 'StoreProviderFactory'
+
+    return self
 }
 
 // Types ///////////////////////////////////////////////////////////////////////
@@ -211,6 +217,9 @@ export interface StoreSelector<S extends StoreStateGeneric, V> {
 }
 
 export interface StoreBound<S extends StoreStateGeneric, A extends ReducerAction = ReducerAction> {
+    StoreProvider: {
+        (props: StoreProviderProps<S, A>): JSX.Element,
+    },
     useStore: {
         (selectorOptional?: undefined): undefined | StoreAccessor<S, S, A>
         <V>(selector: StoreSelector<S, V>): undefined | StoreAccessor<V, S, A>
