@@ -21,7 +21,7 @@ export function useBrowserStorageAccessor<V = string, S = string>(
     const decode = (codecOptional?.decode ?? identity) as Io<BrowserStorageValue<S>, BrowserStorageValue<S | V>>
     const encode = (codecOptional?.encode ?? identity) as Io<BrowserStorageValue<S | V>, BrowserStorageValue<S>>
     // Reading from LocalStorage is slow, so we must wrap value access.
-    const [initialValue, render] = useState(() => decode(accessor.value))
+    const [initialValue, render] = useState(() => decode(accessor.read()))
     const valueRef = useRef(initialValue)
     const cancelWriteTaskRef = useRef<TaskVoid>()
 
@@ -39,7 +39,7 @@ export function useBrowserStorageAccessor<V = string, S = string>(
             // on references usage on unmounted components. When the the macro task
             // is executed, the component could be unmounted and the reference
             // would be undefined.
-            accessor.value = encode(newValue)
+            accessor.write(encode(newValue))
             cancelWriteTaskRef.current = undefined
         })
 

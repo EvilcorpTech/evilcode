@@ -6,14 +6,14 @@ import type {StateManager, StateSetterArg} from './state.js'
 export function useReactive<V>(reactiveValue: ReactiveValue<V>): StateManager<V>
 export function useReactive<V>(reactiveValue: undefined | ReactiveValue<V>): StateManager<undefined | V>
 export function useReactive<V>(reactiveValue: undefined | ReactiveValue<V>): StateManager<undefined | V> {
-    const [value, setValue] = useState(reactiveValue?.value)
+    const [value, setValue] = useState(reactiveValue?.read())
 
     const setReactiveValue = useCallback((value: StateSetterArg<undefined | V>) => {
         if (! reactiveValue) {
             return
         }
 
-        const valueComputed = computeValue(value, reactiveValue.value)
+        const valueComputed = computeValue(value, reactiveValue.read())
 
         setValue(valueComputed)
     }, [reactiveValue])
@@ -23,7 +23,7 @@ export function useReactive<V>(reactiveValue: undefined | ReactiveValue<V>): Sta
             return
         }
 
-        setValue(reactiveValue.value)
+        setValue(reactiveValue.read())
 
         const stopWatching = reactiveValue.watch((newValue, oldValue) => {
             setValue(newValue)

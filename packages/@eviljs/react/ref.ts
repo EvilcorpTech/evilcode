@@ -1,5 +1,5 @@
 import {isFunction, isNil, type Nil, type Writable} from '@eviljs/std/type.js'
-import {useCallback, useEffect, useLayoutEffect, useRef} from 'react'
+import {useCallback, useEffect, useLayoutEffect, useMemo, useRef} from 'react'
 
 /*
 * Used to access the previous volatile value of a prop or state.
@@ -75,6 +75,14 @@ export function useClosure<A extends Array<unknown>, R>(closure: (...args: A) =>
     }, [])
 
     return callback
+}
+
+export function useMergeRefs<V>(...refHandlers: Array<RefHandler<null | V>>) {
+    const onRef = useMemo(() => {
+        return mergingRefs(...refHandlers)
+    }, refHandlers)
+
+    return onRef
 }
 
 export function mergingRefs<V>(...refHandlers: Array<RefHandler<null | V>>) {

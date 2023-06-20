@@ -56,12 +56,12 @@ export function useRootStore<
             return polymorphicArgs as ReducerAction
         })()
 
-        const oldState = state.value
+        const oldState = state.read()
         const newState = reduce(oldState, ...[id, ...args] as A)
 
         onDispatch?.(id, args, newState, oldState)
 
-        state.value = newState
+        state.write(newState)
 
         return newState
     }, [reduce, onDispatch])
@@ -136,11 +136,11 @@ export function useStoreState<V, S extends StoreStateGeneric>(
 ): undefined | V | S {
     const [state] = useStoreContext<S>(contextOptional)!
     const selector: Io<S, V | S> = selectorOptional ?? identity
-    const selectedState = selector(state.value)
+    const selectedState = selector(state.read())
     const [_, setSelectedState] = useState(selectedState)
 
     useEffect(() => {
-        setSelectedState(selector(state.value))
+        setSelectedState(selector(state.read()))
 
         const stopWatching = state.watch((newState, oldState) => {
             setSelectedState(selector(newState))
