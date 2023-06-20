@@ -2,31 +2,28 @@ import {asBooleanString} from '@eviljs/web/aria.js'
 import {classes} from '@eviljs/web/classes.js'
 
 export function Switch(props: SwitchProps) {
-    const {className, checked, children, disabled, onChange, ...otherProps} = props
-    const enabled = ! disabled
+    const {className, checked, onChange, ...otherProps} = props
 
     return (
         <button
-            tabIndex={0}
             {...otherProps}
-            className={classes('Switch-5a04 std-button std-button-flex std-switch', className)}
+            className={classes('Switch-5a04 std-button std-button-flex std-switch', className, {
+                'std-knob': ! otherProps.children,
+            })}
             type="button"
             role="switch"
             aria-checked={asBooleanString(checked ?? false)}
-            disabled={disabled}
-            onClick={enabled
+            onClick={! otherProps.disabled
                 ? () => onChange?.(! checked)
                 : undefined
             }
-        >
-            {children}
-        </button>
+        />
     )
 }
 
 // Types ///////////////////////////////////////////////////////////////////////
 
 export interface SwitchProps extends Omit<React.ButtonHTMLAttributes<HTMLButtonElement>, 'onChange'> {
-    checked?: boolean
-    onChange?(value: boolean): void
+    checked?: undefined | boolean
+    onChange?: undefined | ((value: boolean) => void)
 }

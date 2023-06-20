@@ -104,7 +104,6 @@ export function WidgetsView(props: WidgetsViewProps) {
                 <h6 className="title-74a6">Controls</h6>
 
                 <Switch
-                    className="std-knob"
                     checked={checkbox}
                     onChange={setCheckbox}
                     style={{fontSize: 'var(--std-icon2'}}
