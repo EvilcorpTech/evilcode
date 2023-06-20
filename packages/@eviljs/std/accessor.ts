@@ -1,20 +1,17 @@
 export function createAccessor<V>(read: () => V, write: (value: V) => V): AccessorSync<V> {
-    return {
-        get value() {
-            return read()
-        },
-        set value(newValue) {
-            write(newValue)
-        },
-        read,
-        write,
-    }
+    // We opted out from using a `.value` getter+setter,
+    // because getter and setters can not be spread using the spread operator (...)
+    // and Object.assign() but requires a special extend utility.
+    // It would be an easy trap for the API consumer, who could do
+    // {...accessor} or
+    // {value, read, write} = accessor
+    // with consequent loss of reactivity and bug.
+    return {read, write}
 }
 
 // Types ///////////////////////////////////////////////////////////////////////
 
 export interface AccessorSync<V> {
-    value: V
     read(): V
     write(value: V): V
 }

@@ -38,12 +38,6 @@ export function makeReactive<V>(initialValue: V, options?: undefined | ReactiveV
 
     return {
         ...createAccessor(read, write),
-        get value() {
-            return value
-        },
-        set value(newValue) {
-            write(newValue)
-        },
         watch(observer, options) {
             const immediate = options?.immediate ?? false
 

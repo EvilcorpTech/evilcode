@@ -240,3 +240,7 @@ export type UnionOf<T extends Array<unknown>> = T[number]
 
 export type Writable<T> = { -readonly [P in keyof T]: T[P] }
 export type WritableDeep<T> = { -readonly [P in keyof T]: WritableDeep<T[P]> }
+
+export type Prettify<T> = {
+    [K in keyof T]: T[K]
+} & {}
