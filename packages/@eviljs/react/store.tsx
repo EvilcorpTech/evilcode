@@ -150,8 +150,8 @@ export function useStoreState<V, S extends StoreStateGeneric>(
         setSelectedState(selector(state.read()))
 
         const stopWatching = state.watch((newState, oldState) => {
-            setSelectedStateOld(selector(oldState))
             setSelectedState(selector(newState))
+            setSelectedStateOld(selector(oldState))
         })
 
         function onClean() {
