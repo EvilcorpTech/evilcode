@@ -26,11 +26,11 @@ export function defineReducerAction<S extends ReducerState, K extends ReducerId,
 export function composeReducers<
     T extends Array<[ReducerId, ReducerTarget<any, any>]>,
 >(...reducers: T): CompositeReducerOfList<T> {
-    function reducerComposite(state: ReducerState, id: ReducerId, ...args: ReducerArgs): ReducerState {
+    function reduce(state: ReducerState, actionId: ReducerId, ...args: ReducerArgs): ReducerState {
         for (const it of reducers) {
             const [reducerId, reducer] = it
 
-            if (reducerId !== id) {
+            if (reducerId !== actionId) {
                 continue
             }
 
@@ -40,19 +40,16 @@ export function composeReducers<
         return state
     }
 
-    return reducerComposite as unknown as CompositeReducerOfList<T>
+    return reduce as unknown as CompositeReducerOfList<T>
 }
 
 export function fromActionsDefinitions<S extends ReducerState>(
-    actionsSpec: Record<
+    actions: Record<
         PropertyKey,
         ReducerActionDefinition<S, ReducerId, Array<any>>
     >,
-): Array<[ReducerId, ReducerTarget<S, ReducerArgs>]> {
-    return Object.values(actionsSpec).map(it => [
-        it.id,
-        it.reducer,
-    ] as [ReducerId, ReducerTarget<S>])
+): Array<[ReducerId, ReducerTarget<S>]> {
+    return Object.values(actions).map((it): [ReducerId, ReducerTarget<S>] => [it.id, it.reducer])
 }
 
 export function patchState<S extends ReducerState>(state: S, statePatch: StoreStatePatch<S>): S {

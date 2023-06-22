@@ -4,23 +4,22 @@ import type {TaskVoid} from './fn.js'
 import {areEqualIdentity} from './struct.js'
 
 export function makeReactive<V>(initialValue: V, options?: undefined | ReactiveValueOptions<V>): ReactiveValue<V> {
-    let value = initialValue
+    let currentValue = initialValue
     let cancelNotification: undefined | TaskVoid = undefined
     const observers: Set<ReactiveValueObserver<V>> = new Set()
     const areEqual = options?.equals ?? areEqualIdentity
 
     function read(): V {
-        return value
+        return currentValue
     }
 
     function write(newValue: V): V {
-        const oldValue = value
-
-        if (areEqual(oldValue, newValue)) {
-            return value
+        if (areEqual(currentValue, newValue)) {
+            return currentValue
         }
 
-        value = newValue
+        const oldValue = currentValue
+        currentValue = newValue
 
         // We notify once multiple mutations in the same micro task.
         // We schedule a micro task so that if an observer triggers a value mutation,
@@ -28,8 +27,12 @@ export function makeReactive<V>(initialValue: V, options?: undefined | ReactiveV
         cancelNotification ??= scheduleMicroTask(() => {
             cancelNotification = undefined
 
+            if (areEqual(currentValue, oldValue)) {
+                return
+            }
+
             for (const it of observers) {
-                it(newValue, oldValue)
+                it(currentValue, oldValue)
             }
         })
 
@@ -44,7 +47,7 @@ export function makeReactive<V>(initialValue: V, options?: undefined | ReactiveV
             observers.add(observer)
 
             if (immediate) {
-                observer(value, value)
+                observer(currentValue, currentValue)
             }
 
             function stop() {
