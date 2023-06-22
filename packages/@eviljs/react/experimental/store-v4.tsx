@@ -2,11 +2,11 @@ import {computeValue, identity, type Fn, type TaskVoid} from '@eviljs/std/fn.js'
 import {cloneShallow} from '@eviljs/std/struct.js'
 import {isArray, isObject} from '@eviljs/std/type.js'
 import {useCallback, useContext, useLayoutEffect, useMemo, useRef} from 'react'
-import {defineContext} from './ctx.js'
-import {useRender} from './lifecycle.js'
-import type {StateManager, StateSetterArg} from './state.js'
-import type {StoreStateGeneric} from './store-v1.js'
-import type {StoreSelector} from './store.js'
+import {defineContext} from '../ctx.js'
+import {useRender} from '../lifecycle.js'
+import type {StateManager, StateSetterArg} from '../state.js'
+import type {StoreStateGeneric} from '../store-v1.js'
+import type {StoreSelector} from '../store.js'
 
 export const StoreContext = defineContext<Store<StoreStateGeneric>>('StoreContext')
 
@@ -54,7 +54,7 @@ export function useRootStore<S extends StoreStateGeneric>(spec: StoreDefinition<
 
         if (! keyObservers) {
             console.warn(
-                '@eviljs/react/store-v4:\n'
+                '@eviljs/react/experimental/store-v4:\n'
                 + `missing observers for '${pathKey}'.`
             )
             return

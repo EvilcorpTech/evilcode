@@ -2,7 +2,7 @@ import {identity, type Io} from '@eviljs/std/fn.js'
 import {makeReactive, type ReactiveValue} from '@eviljs/std/reactive.js'
 import type {ReducerAction} from '@eviljs/std/redux.js'
 import {isArray} from '@eviljs/std/type.js'
-import {useCallback, useContext, useEffect, useMemo, useState} from 'react'
+import {useCallback, useContext, useEffect, useMemo, useRef, useState} from 'react'
 import {defineContext} from './ctx.js'
 import type {StoreStateGeneric} from './store-v1.js'
 import type {StoreDefinition, StoreDispatch, StoreDispatchPolymorphicArgs} from './store-v2.js'
@@ -106,11 +106,13 @@ export function useStore<V, S extends StoreStateGeneric, A extends ReducerAction
     const selectedState = useStoreState<V, S>(selectorOptional, contextOptional)
     const dispatch = useStoreDispatch<S, A>(contextOptional)
 
-    if (! dispatch) {
+    if (! selectedState || ! dispatch) {
         return
     }
 
-    return [selectedState!, dispatch]
+    const [selectedStateNew, selectedStateOld] = selectedState
+
+    return [selectedStateNew, dispatch]
 }
 
 /*
@@ -121,28 +123,31 @@ export function useStore<V, S extends StoreStateGeneric, A extends ReducerAction
 export function useStoreState<S extends StoreStateGeneric>(
     selectorOptional?: undefined,
     contextOptional?: undefined | React.Context<undefined | StoreManager<S, any>>,
-): undefined | S
+): undefined | [S, S]
 export function useStoreState<V, S extends StoreStateGeneric>(
     selector: StoreSelector<S, V>,
     contextOptional?: undefined | React.Context<undefined | StoreManager<S, any>>,
-): undefined | V
+): undefined | [V, V]
 export function useStoreState<V, S extends StoreStateGeneric>(
     selectorOptional?: undefined | StoreSelector<S, V>,
     contextOptional?: undefined | React.Context<undefined | StoreManager<S, any>>,
-): undefined | V | S
+): undefined | [V | S, V | S]
 export function useStoreState<V, S extends StoreStateGeneric>(
     selectorOptional?: undefined | StoreSelector<S, V>,
     contextOptional?: undefined | React.Context<undefined | StoreManager<S, any>>,
-): undefined | V | S {
-    const [state] = useStoreContext<S>(contextOptional)!
+): undefined | [V | S, V | S] {
+    const store = useStoreContext<S>(contextOptional)
+    const [state] = store ?? [makeReactive(undefined as unknown as S)]
     const selector: Io<S, V | S> = selectorOptional ?? identity
     const selectedState = selector(state.read())
+    const selectedStateOld = useRef(selectedState)
     const [_, setSelectedState] = useState(selectedState)
 
     useEffect(() => {
         setSelectedState(selector(state.read()))
 
         const stopWatching = state.watch((newState, oldState) => {
+            selectedStateOld.current = selector(oldState)
             setSelectedState(selector(newState))
         })
 
@@ -153,7 +158,11 @@ export function useStoreState<V, S extends StoreStateGeneric>(
         return onClean
     }, [state, selector])
 
-    return selectedState
+    if (! store) {
+        return
+    }
+
+    return [selectedState, selectedStateOld.current]
 }
 
 export function useStoreDispatch<S extends StoreStateGeneric, A extends ReducerAction = ReducerAction>(
@@ -225,9 +234,9 @@ export interface StoreBound<S extends StoreStateGeneric, A extends ReducerAction
         <V>(selector: StoreSelector<S, V>): undefined | StoreAccessor<V, S, A>
     }
     useStoreState: {
-        (selectorOptional?: undefined): undefined | S
-        <V>(selector: StoreSelector<S, V>): undefined | V
-        <V>(selectorOptional?: undefined | StoreSelector<S, V>): undefined | V | S
+        (selectorOptional?: undefined): undefined | [S, S]
+        <V>(selector: StoreSelector<S, V>): undefined | [V, V]
+        <V>(selectorOptional?: undefined | StoreSelector<S, V>): undefined | [V | S, V | S]
     }
     useStoreDispatch: {
         (): undefined | StoreDispatch<S, A>
