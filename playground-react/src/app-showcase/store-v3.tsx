@@ -1,11 +1,10 @@
-import {useStore, useStoreDispatch, useStoreState} from '@eviljs/react/store'
 import {defineShowcase} from '@eviljs/reactx/showcase'
 import {resetState, setState} from '~/store-v3/apis'
-import type {StoreState} from '~/store/apis'
+import {useStore, useStoreDispatch, useStoreState} from '~/store-v3/hooks'
 import {Theme} from '~/theme/apis'
 
 export default defineShowcase('Store v3', (props) => {
-    const [theme, dispatch] = useStore((state: StoreState) => state.theme)!
+    const [theme, dispatch] = useStore(state => state.theme)!
 
     return (
         <div className="std-flex std-gap6">
@@ -18,7 +17,7 @@ export default defineShowcase('Store v3', (props) => {
 })
 
 function Comp1() {
-    const dispatch = useStoreDispatch<StoreState>()!
+    const dispatch = useStoreDispatch()!
 
     return (
         <div>
@@ -34,8 +33,8 @@ function Comp1() {
 }
 
 function Comp2() {
-    const theme = useStoreState((state: StoreState) => state.theme)
-    const dispatch = useStoreDispatch<StoreState>()!
+    const [theme] = useStoreState(state => state.theme)!
+    const dispatch = useStoreDispatch()!
 
     return (
         <div>
