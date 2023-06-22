@@ -2,7 +2,7 @@ import {identity, type Io} from '@eviljs/std/fn.js'
 import {makeReactive, type ReactiveValue} from '@eviljs/std/reactive.js'
 import type {ReducerAction} from '@eviljs/std/redux.js'
 import {isArray} from '@eviljs/std/type.js'
-import {useCallback, useContext, useEffect, useMemo, useRef, useState} from 'react'
+import {useCallback, useContext, useEffect, useMemo, useState} from 'react'
 import {defineContext} from './ctx.js'
 import type {StoreStateGeneric} from './store-v1.js'
 import type {StoreDefinition, StoreDispatch, StoreDispatchPolymorphicArgs} from './store-v2.js'
@@ -139,15 +139,18 @@ export function useStoreState<V, S extends StoreStateGeneric>(
     const store = useStoreContext<S>(contextOptional)
     const [state] = store ?? [makeReactive(undefined as unknown as S)]
     const selector: Io<S, V | S> = selectorOptional ?? identity
-    const selectedState = selector(state.read())
-    const selectedStateOld = useRef(selectedState)
-    const [_, setSelectedState] = useState(selectedState)
+    const [selectedState, setSelectedState] = useState(selector(state.read()))
+    const [selectedStateOld, setSelectedStateOld] = useState(selectedState)
 
     useEffect(() => {
+        if (! store) {
+            return
+        }
+
         setSelectedState(selector(state.read()))
 
         const stopWatching = state.watch((newState, oldState) => {
-            selectedStateOld.current = selector(oldState)
+            setSelectedStateOld(selector(oldState))
             setSelectedState(selector(newState))
         })
 
@@ -162,7 +165,7 @@ export function useStoreState<V, S extends StoreStateGeneric>(
         return
     }
 
-    return [selectedState, selectedStateOld.current]
+    return [selectedState, selectedStateOld]
 }
 
 export function useStoreDispatch<S extends StoreStateGeneric, A extends ReducerAction = ReducerAction>(
