@@ -1,5 +1,7 @@
 import {scheduleMacroTask} from './eventloop.js'
 import type {TaskVoid} from './fn.js'
+import type {ReducerAction} from './redux.js'
+import {isArray} from './type.js'
 
 export const EventRegexpCache: Record<BusEvent, RegExp> = {}
 
@@ -7,8 +9,8 @@ export function createBus() {
     const self: Bus = {
         observers: new Map(),
 
-        emit(event, payload) {
-            return emitEvent(self.observers, event, payload)
+        emit(...args: BusEventPolymorphicArgs) {
+            return emitEvent(self.observers, ...args)
         },
 
         observe(event, observer) {
@@ -23,8 +25,20 @@ export function createBus() {
     return self
 }
 
-export function emitEvent(observers: BusEventObservers, event: BusEvent, payload: unknown): void {
+export function emitEvent(observers: BusEventObservers, event: BusEvent, payload?: unknown): void
+export function emitEvent(observers: BusEventObservers, args: [event: BusEvent, payload?: unknown]): void
+export function emitEvent(observers: BusEventObservers, ...args: BusEventPolymorphicArgs): void
+export function emitEvent(observers: BusEventObservers, ...polymorphicArgs: BusEventPolymorphicArgs): void {
     const eventObservers: Array<[Array<BusEventObserver>, RegExpMatchArray]> = []
+    const [event, payload] = (() => {
+        const [eventOrArgs, payload] = polymorphicArgs
+
+        if (isArray(eventOrArgs)) {
+            return eventOrArgs
+        }
+
+        return [eventOrArgs, payload]
+    })()
 
     for (const entry of observers.entries()) {
         const [observedEvent, observers] = entry
@@ -97,6 +111,8 @@ export function regexpFromEvent(event: BusEvent): RegExp {
 export interface Bus {
     observers: BusEventObservers
     emit(event: BusEvent, payload?: unknown): void
+    emit(args: [event: BusEvent, payload?: unknown]): void
+    emit(...args: BusEventPolymorphicArgs): void
     observe(event: BusEvent, observer: BusEventObserver): TaskVoid
     unobserve(event: BusEvent, observer: BusEventObserver): void
 }
@@ -107,3 +123,7 @@ export type BusEventObservers = Map<BusEvent, Array<BusEventObserver>>
 export interface BusEventObserver {
     (event: BusEvent, matches: RegExpMatchArray, payload: unknown): void
 }
+
+export type BusEventPolymorphicArgs =
+    | [event: BusEvent, payload?: unknown]
+    | [[event: BusEvent, payload?: unknown]]
