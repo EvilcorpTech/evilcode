@@ -1,8 +1,8 @@
 .Spinner-9fef {
     position: relative;
     display: inline-block;
-    width: 1em;
-    height: 1em;
+    width: var(--spinner-size, var(--icon-size, 1em));
+    height: var(--spinner-size, var(--icon-size, 1em));
     opacity: 0;
 }
 

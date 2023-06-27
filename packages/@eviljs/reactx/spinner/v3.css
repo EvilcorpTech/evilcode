@@ -1,8 +1,8 @@
 .Spinner-2a9d {
     display: inline-block;
-    width: var(--icon-size, 1em);
-    height: var(--icon-size, 1em);
-    font-size: var(--icon-size, 1em);
+    width: var(--spinner-size, var(--icon-size, 1em));
+    height: var(--spinner-size, var(--icon-size, 1em));
+    font-size: var(--spinner-size, var(--icon-size, 1em));
     border-radius: var(--spinner-radius, .1em);
     opacity: 0;
     background-color: var(--color, currentColor);
