@@ -1,10 +1,9 @@
 import type {Bus, BusEvent, BusEventObserver} from '@eviljs/std/bus.js'
 import {createBus as createStdBus} from '@eviljs/std/bus.js'
-import type {TaskVoid} from '@eviljs/std/fn.js'
-import {useCallback, useContext, useEffect, useMemo} from 'react'
+import {useContext, useEffect, useMemo} from 'react'
 import {defineContext} from './ctx.js'
 
-export type {Bus} from '@eviljs/std/bus.js'
+export type {Bus, BusEvent, BusEventObserver} from '@eviljs/std/bus.js'
 
 export const BusContext = defineContext<Bus>('BusContext')
 
