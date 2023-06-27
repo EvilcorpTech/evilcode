@@ -1,6 +1,5 @@
 import {scheduleMacroTask} from './eventloop.js'
 import type {TaskVoid} from './fn.js'
-import type {ReducerAction} from './redux.js'
 import {isArray} from './type.js'
 
 export const EventRegexpCache: Record<BusEvent, RegExp> = {}
