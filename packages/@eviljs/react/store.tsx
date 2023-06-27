@@ -26,9 +26,9 @@ export const StoreContext = defineContext<StoreManager>('StoreContext')
 * }
 */
 export function StoreProvider<S extends StoreStateGeneric, A extends ReducerAction>(props: StoreProviderProps<S, A>) {
-    const {children, context, ...spec} = props
+    const {children, context: contextOptional, ...spec} = props
     const contextDefault = StoreContext as React.Context<undefined | StoreManager<S, A>>
-    const Context = context ?? contextDefault
+    const Context = contextOptional ?? contextDefault
     const value = useRootStore(spec)
 
     return <Context.Provider value={value} children={children}/>
@@ -75,10 +75,10 @@ export function useRootStore<
 
 export function useStoreContext<S extends StoreStateGeneric, A extends ReducerAction = ReducerAction>(
     contextOptional?: undefined | React.Context<undefined | StoreManager<S, A>>,
-) {
+): undefined | StoreManager<S, A> {
     const contextDefault = StoreContext as React.Context<undefined | StoreManager<S, A>>
 
-    return useContext(contextOptional ?? contextDefault) as undefined | StoreManager<S, A>
+    return useContext(contextOptional ?? contextDefault)
 }
 
 /*

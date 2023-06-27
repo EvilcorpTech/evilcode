@@ -1,8 +1,10 @@
 import type {Bus, BusEvent, BusEventObserver} from '@eviljs/std/bus.js'
-import {createBus} from '@eviljs/std/bus.js'
+import {createBus as createStdBus} from '@eviljs/std/bus.js'
 import type {TaskVoid} from '@eviljs/std/fn.js'
 import {useCallback, useContext, useEffect, useMemo} from 'react'
 import {defineContext} from './ctx.js'
+
+export type {Bus} from '@eviljs/std/bus.js'
 
 export const BusContext = defineContext<Bus>('BusContext')
 
@@ -15,42 +17,80 @@ export const BusContext = defineContext<Bus>('BusContext')
 *     </BusProvider>
 * )
 */
-export function BusProvider(props: BusProviderProps) {
-    const {children} = props
+export function BusProvider<B extends Bus = Bus>(props: BusProviderProps<B>) {
+    const {children, context: contextOptional} = props
+    const contextDefault = BusContext as React.Context<undefined | B>
+    const Context = contextOptional ?? contextDefault
 
-    const bus = useMemo(() => {
-        return createBus()
-    }, [])
+    const value = useMemo(() => createStdBus() as B, [])
 
-    return <BusContext.Provider value={bus} children={children}/>
+    return <Context.Provider value={value} children={children}/>
 }
 
-export function useBus<T extends undefined | Bus = undefined | Bus>() {
-    return useContext(BusContext) as T
+export function useBus<B extends Bus = Bus>(
+    contextOptional?: undefined | React.Context<undefined | B>,
+): undefined | B {
+    const contextDefault = BusContext as React.Context<undefined | B>
+
+    return useContext(contextOptional ?? contextDefault)
 }
 
-export function useBusEvent(event: BusEvent, observer: BusEventObserver): TaskVoid {
-    const bus = useBus()!
+export function useBusEvent<B extends Bus = Bus>(
+    event: BusEvent,
+    observer: undefined | BusEventObserver,
+    contextOptional?: undefined | React.Context<undefined | B>,
+) {
+    const bus = useBus(contextOptional)
 
     useEffect(() => {
-        const unobserve = bus.observe(event, observer)
+        if (! observer) {
+            return
+        }
+
+        const unobserve = bus?.observe(event, observer)
 
         function onClean() {
-            unobserve()
+            unobserve?.()
         }
 
         return onClean
     }, [bus, event, observer])
+}
 
-    const unobserve = useCallback(() => {
-        bus.unobserve(event, observer)
-    }, [bus, event, observer])
+export function createBus<B extends Bus = Bus>(
+    context: React.Context<undefined | B>,
+): BusBound<B> {
+    const self: BusBound<B> = {
+        BusProvider(props) {
+            return <BusProvider context={context} {...props}/>
+        },
+        useBus() {
+            return useBus(context)
+        },
+        useBusEvent(event: BusEvent, observer: undefined | BusEventObserver) {
+            useBusEvent(event, observer, context)
+        },
+    }
+    ;(self.BusProvider as React.FunctionComponent).displayName = 'BusProviderFactory'
 
-    return unobserve
+    return self
 }
 
 // Types ///////////////////////////////////////////////////////////////////////
 
-export interface BusProviderProps {
+export interface BusProviderProps<B extends Bus = Bus> {
     children?: undefined | React.ReactNode
+    context?: undefined | React.Context<undefined | B>
+}
+
+export interface BusBound<B extends Bus> {
+    BusProvider: {
+        (props: BusProviderProps<B>): JSX.Element,
+    },
+    useBus: {
+        (): undefined | B
+    }
+    useBusEvent: {
+        (event: BusEvent, observer: undefined | BusEventObserver): void
+    }
 }
