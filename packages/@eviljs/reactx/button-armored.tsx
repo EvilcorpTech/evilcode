@@ -1,4 +1,4 @@
-import {classes} from '@eviljs/web/classes.js'
+import {classes} from '@eviljs/react/classes.js'
 import {useCallback, useState} from 'react'
 
 export function ArmoredButton(props: ArmoredButtonProps) {

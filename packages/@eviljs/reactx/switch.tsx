@@ -1,5 +1,5 @@
 import {asBooleanString} from '@eviljs/web/aria.js'
-import {classes} from '@eviljs/web/classes.js'
+import {classes} from '@eviljs/react/classes.js'
 
 export function Switch(props: SwitchProps) {
     const {className, checked, onChange, ...otherProps} = props

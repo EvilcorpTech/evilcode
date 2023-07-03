@@ -1,4 +1,4 @@
-import {classes} from '@eviljs/web/classes.js'
+import {classes} from '@eviljs/react/classes.js'
 
 export function Button(props: ButtonProps) {
     const {className, children, ...otherProps} = props

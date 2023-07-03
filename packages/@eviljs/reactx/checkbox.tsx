@@ -1,7 +1,7 @@
 import './checkbox.css'
 
 import {asBooleanString} from '@eviljs/web/aria.js'
-import {classes} from '@eviljs/web/classes.js'
+import {classes} from '@eviljs/react/classes.js'
 import {cloneElement, isValidElement} from 'react'
 
 export function Checkbox(props: CheckboxProps) {

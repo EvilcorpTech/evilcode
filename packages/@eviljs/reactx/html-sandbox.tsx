@@ -1,4 +1,4 @@
-import {classes} from '@eviljs/web/classes.js'
+import {classes} from '@eviljs/react/classes.js'
 import {HtmlSandbox as HtmlSandboxElement} from '@eviljs/webx/html-sandbox.js'
 import {createElement} from 'react'
 

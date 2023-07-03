@@ -1,4 +1,4 @@
-import {classes} from '@eviljs/web/classes.js'
+import {classes} from '@eviljs/react/classes.js'
 import {cloneElement} from 'react'
 import type {ButtonProps} from './button.js'
 import {Button} from './button.js'

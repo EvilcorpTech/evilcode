@@ -7,7 +7,7 @@ import './range/theme.css'
 import './widgets-view.css'
 
 import {times} from '@eviljs/std/iter.js'
-import {classes} from '@eviljs/web/classes.js'
+import {classes} from '@eviljs/react/classes.js'
 import {useState} from 'react'
 import {Accordion, AccordionList} from './accordion.js'
 import {NotificationBadge} from './badge/notification-badge.js'

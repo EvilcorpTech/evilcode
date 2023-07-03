@@ -1,7 +1,7 @@
 import './decorated.css'
 
 import {identity} from '@eviljs/std/fn.js'
-import {classes} from '@eviljs/web/classes.js'
+import {classes} from '@eviljs/react/classes.js'
 import {useRef, useState} from 'react'
 import {Button} from '../button.js'
 

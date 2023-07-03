@@ -1,6 +1,6 @@
 import './shape.css'
 
-import {classes} from '@eviljs/web/classes.js'
+import {classes} from '@eviljs/react/classes.js'
 import type {CheckboxModel} from '../checkbox.js'
 
 export function CheckboxMark(props: CheckboxMarkProps) {

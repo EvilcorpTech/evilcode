@@ -1,6 +1,6 @@
 import './floating.css'
 
-import {classes} from '@eviljs/web/classes.js'
+import {classes} from '@eviljs/react/classes.js'
 import {useLayoutEffect, useMemo, useRef, useState} from 'react'
 
 export function Input(props: InputProps) {

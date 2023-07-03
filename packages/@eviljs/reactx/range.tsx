@@ -5,7 +5,7 @@ import {useDrag} from '@eviljs/react/drag.js'
 import {clamp} from '@eviljs/std/math.js'
 import {distanceBetween} from '@eviljs/std/scale.js'
 import {isNil} from '@eviljs/std/type.js'
-import {classes} from '@eviljs/web/classes.js'
+import {classes} from '@eviljs/react/classes.js'
 import {useCallback, useEffect, useMemo, useRef, useState} from 'react'
 
 export function Range(props: RangeProps) {

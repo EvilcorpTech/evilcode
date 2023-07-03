@@ -3,7 +3,7 @@ import './theme-view.css'
 import type {Hsl} from '@eviljs/std/color.js'
 import {hslFromRgb, rgbFromHexString, rgbFromHsl, rgbToHexString} from '@eviljs/std/color.js'
 import {times} from '@eviljs/std/iter.js'
-import {classes} from '@eviljs/web/classes.js'
+import {classes} from '@eviljs/react/classes.js'
 import {Fragment, useEffect, useRef, useState} from 'react'
 import {ExampleIcon as Icon} from './icon-example/v2.js'
 
