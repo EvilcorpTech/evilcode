@@ -1,12 +1,13 @@
 import {scheduleMicroTask} from './eventloop.js'
 import type {FnArgs, TaskVoid} from './fn.js'
+import {makeReactive, type ReactiveValue} from './reactive.js'
 import {isArray} from './type.js'
 
 export const EventRegexpCache: Record<BusEvent, RegExp> = {}
 
 export function createBus() {
     const self: Bus = {
-        observers: new Map(),
+        observers: makeReactive({}),
 
         emit(...args: BusEventPolymorphicArgs) {
             return emitEvent(self.observers, ...args)
@@ -24,13 +25,14 @@ export function createBus() {
     return self
 }
 
-export function emitEvent(observers: BusEventObservers, event: BusEvent, payload?: unknown): void
-export function emitEvent(observers: BusEventObservers, args: [event: BusEvent, payload?: unknown]): void
-export function emitEvent(observers: BusEventObservers, ...args: BusEventPolymorphicArgs): void
-export function emitEvent(observers: BusEventObservers, ...polymorphicArgs: BusEventPolymorphicArgs): void {
+export function emitEvent(reactiveObservers: BusEventObservers, event: BusEvent, payload?: unknown): void
+export function emitEvent(reactiveObservers: BusEventObservers, args: [event: BusEvent, payload?: unknown]): void
+export function emitEvent(reactiveObservers: BusEventObservers, ...args: BusEventPolymorphicArgs): void
+export function emitEvent(reactiveObservers: BusEventObservers, ...polymorphicArgs: BusEventPolymorphicArgs): void {
+    const observers = reactiveObservers.read()
     const eventObservers: Array<[Array<BusEventObserver>, RegExpMatchArray]> = []
 
-    const [event, payload] = (() => {
+    const [emittedEvent, emittedPayload] = (() => {
         const [eventOrArgs, payload] = polymorphicArgs
 
         if (isArray(eventOrArgs)) {
@@ -40,9 +42,9 @@ export function emitEvent(observers: BusEventObservers, ...polymorphicArgs: BusE
         return [eventOrArgs, payload]
     })()
 
-    for (const entry of observers.entries()) {
-        const [observedEvent, observers] = entry
-        const matches = event.match(observedEvent)
+    for (const entry of Object.entries(observers)) {
+        const [event, observers] = entry
+        const matches = emittedEvent.match(event)
 
         if (! matches) {
             continue
@@ -60,42 +62,43 @@ export function emitEvent(observers: BusEventObservers, ...polymorphicArgs: BusE
             const [observersGroup, matches] = entry
 
             for (const observer of observersGroup) {
-                observer(event, matches, payload)
+                observer(emittedEvent, matches, emittedPayload)
             }
         }
     })
 }
 
-export function observeEvent(observers: BusEventObservers, event: BusEvent, observer: BusEventObserver): TaskVoid {
-    const eventObservers = observers.get(event) ?? (() => {
-        const eventObservers: Array<BusEventObserver> = []
-        observers.set(event, eventObservers)
-        return eventObservers
-    })()
+export function observeEvent(reactiveObservers: BusEventObservers, event: BusEvent, observer: BusEventObserver): TaskVoid {
+    const observers = reactiveObservers.read()
+    const eventObservers = observers[event] ?? []
 
-    eventObservers.push(observer)
+    reactiveObservers.write({
+        ...observers,
+        [event]: [...eventObservers, observer],
+    })
 
     function unobserve() {
-        return unobserveEvent(observers, event, observer)
+        return unobserveEvent(reactiveObservers, event, observer)
     }
 
     return unobserve
 }
 
-export function unobserveEvent(observers: BusEventObservers, event: BusEvent, observer: BusEventObserver): void {
-    const eventObservers = observers.get(event)
+export function unobserveEvent(reactiveObservers: BusEventObservers, event: BusEvent, observer: BusEventObserver): void {
+    const observers = reactiveObservers.read()
+    const eventObservers = observers[event]
 
     if (! eventObservers) {
         return
     }
-
-    const observerIndex = eventObservers.indexOf(observer)
-
-    if (observerIndex < 0) {
+    if (! eventObservers.includes(observer)) {
         return
     }
 
-    eventObservers.splice(observerIndex, 1)
+    reactiveObservers.write({
+        ...observers,
+        [event]: eventObservers.filter(it => it !== observer),
+    })
 }
 
 export function defineBusEvent<
@@ -130,7 +133,7 @@ export interface Bus {
 }
 
 export type BusEvent = string
-export type BusEventObservers = Map<BusEvent, Array<BusEventObserver>>
+export type BusEventObservers = ReactiveValue<Record<BusEvent, Array<BusEventObserver>>>
 
 export interface BusEventObserver {
     (event: BusEvent, matches: RegExpMatchArray, payload: unknown): void
