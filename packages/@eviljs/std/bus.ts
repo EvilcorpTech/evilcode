@@ -1,5 +1,5 @@
-import {scheduleMacroTask} from './eventloop.js'
-import type {TaskVoid} from './fn.js'
+import {scheduleMicroTask} from './eventloop.js'
+import type {FnArgs, TaskVoid} from './fn.js'
 import {isArray} from './type.js'
 
 export const EventRegexpCache: Record<BusEvent, RegExp> = {}
@@ -29,6 +29,7 @@ export function emitEvent(observers: BusEventObservers, args: [event: BusEvent, 
 export function emitEvent(observers: BusEventObservers, ...args: BusEventPolymorphicArgs): void
 export function emitEvent(observers: BusEventObservers, ...polymorphicArgs: BusEventPolymorphicArgs): void {
     const eventObservers: Array<[Array<BusEventObserver>, RegExpMatchArray]> = []
+
     const [event, payload] = (() => {
         const [eventOrArgs, payload] = polymorphicArgs
 
@@ -54,7 +55,7 @@ export function emitEvent(observers: BusEventObservers, ...polymorphicArgs: BusE
         return
     }
 
-    scheduleMacroTask(() => {
+    scheduleMicroTask(() => {
         for (const entry of eventObservers) {
             const [observersGroup, matches] = entry
 
@@ -97,6 +98,18 @@ export function unobserveEvent(observers: BusEventObservers, event: BusEvent, ob
     eventObservers.splice(observerIndex, 1)
 }
 
+export function defineBusEvent<
+    const C,
+    EI extends FnArgs,
+    EO extends string | [string, unknown],
+    TI extends FnArgs,
+>(
+    shared: C,
+    define: (shared: C) => BusEventDescriptor<EI, EO, TI>,
+): BusEventDescriptor<EI, EO, TI> {
+    return define(shared)
+}
+
 export function regexpFromEvent(event: BusEvent): RegExp {
     if (! EventRegexpCache[event]) {
         EventRegexpCache[event] = new RegExp(event)
@@ -126,3 +139,27 @@ export interface BusEventObserver {
 export type BusEventPolymorphicArgs =
     | [event: BusEvent, payload?: unknown]
     | [[event: BusEvent, payload?: unknown]]
+
+export interface BusEventDescriptor<
+    EI extends FnArgs,
+    EO extends string | [string, unknown],
+    TI extends FnArgs,
+> {
+    event(...args: EI): EO
+    topic(...args: TI): string
+}
+
+export type BusEventPayloadOf<
+    D extends BusEventDescriptor<
+        Array<any>,
+        string | [string, unknown],
+        Array<any>
+    >
+> =
+    D extends BusEventDescriptor<
+        Array<any>,
+        [string, infer P],
+        Array<any>
+    >
+        ? P
+        : undefined
