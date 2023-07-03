@@ -10,5 +10,8 @@ declare global {
         interface HTMLAttributes<T> extends AriaAttributes, DOMAttributes<T> {
             invisible?: undefined | null | string
         }
+        interface CSSProperties {
+            [key: `--${string}`]: undefined | number | string
+        }
     }
 }
