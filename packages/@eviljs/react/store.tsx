@@ -29,12 +29,12 @@ export function StoreProvider<S extends StoreStateGeneric, A extends ReducerActi
     const {children, context: contextOptional, ...spec} = props
     const contextDefault = StoreContext as React.Context<undefined | StoreManager<S, A>>
     const Context = contextOptional ?? contextDefault
-    const value = useRootStore(spec)
+    const value = useStoreCreator(spec)
 
     return <Context.Provider value={value} children={children}/>
 }
 
-export function useRootStore<
+export function useStoreCreator<
     S extends StoreStateGeneric,
     A extends ReducerAction,
 >(spec: StoreDefinition<S, A>): StoreManager<S, A> {
@@ -168,6 +168,20 @@ export function useStoreState<V, S extends StoreStateGeneric>(
     return [selectedState, selectedStateOld]
 }
 
+export function useStoreStateReader<S extends StoreStateGeneric>(
+    contextOptional?: undefined | React.Context<undefined | StoreManager<S, any>>,
+): undefined | ReactiveValue<S>['read'] {
+    const store = useStoreContext<S>(contextOptional)
+
+    if (! store) {
+        return
+    }
+
+    const [state] = store
+
+    return state.read
+}
+
 export function useStoreDispatch<S extends StoreStateGeneric, A extends ReducerAction = ReducerAction>(
     contextOptional?: undefined | React.Context<undefined | StoreManager<S, A>>,
 ): undefined | StoreDispatch<S, A> {
@@ -191,11 +205,17 @@ export function createStore<S extends StoreStateGeneric, A extends ReducerAction
         StoreProvider(props) {
             return <StoreProvider context={context} {...props}/>
         },
+        useStoreContext() {
+            return useStoreContext(context)
+        },
         useStore<V>(selectorOptional?: undefined | StoreSelector<S, V>) {
             return useStore(selectorOptional, context)
         },
         useStoreState<V>(selectorOptional?: undefined | StoreSelector<S, V>) {
             return useStoreState(selectorOptional, context)
+        },
+        useStoreStateReader() {
+            return useStoreStateReader(context)
         },
         useStoreDispatch() {
             return useStoreDispatch(context)
@@ -232,6 +252,9 @@ export interface StoreBound<S extends StoreStateGeneric, A extends ReducerAction
     StoreProvider: {
         (props: StoreProviderProps<S, A>): JSX.Element,
     },
+    useStoreContext: {
+        (): undefined | StoreManager<S, A>
+    }
     useStore: {
         (selectorOptional?: undefined): undefined | StoreAccessor<S, S, A>
         <V>(selector: StoreSelector<S, V>): undefined | StoreAccessor<V, S, A>
@@ -240,6 +263,9 @@ export interface StoreBound<S extends StoreStateGeneric, A extends ReducerAction
         (selectorOptional?: undefined): undefined | [S, S]
         <V>(selector: StoreSelector<S, V>): undefined | [V, V]
         <V>(selectorOptional?: undefined | StoreSelector<S, V>): undefined | [V | S, V | S]
+    }
+    useStoreStateReader: {
+        (): undefined | ReactiveValue<S>['read']
     }
     useStoreDispatch: {
         (): undefined | StoreDispatch<S, A>

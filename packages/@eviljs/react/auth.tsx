@@ -37,12 +37,12 @@ export enum AuthTokenState {
 */
 export function AuthProvider(props: AuthProviderProps) {
     const {children, cookie, fetch, ...options} = props
-    const value = useRootAuth(fetch, cookie, options)
+    const value = useAuthCreator(fetch, cookie, options)
 
     return <AuthContext.Provider value={value} children={children}/>
 }
 
-export function useRootAuth(fetch: Fetch, cookie: Cookie, options?: undefined | AuthOptions) {
+export function useAuthCreator(fetch: Fetch, cookie: Cookie, options?: undefined | AuthOptions) {
     const authenticateOptions = options?.authenticate
     const validateOptions = options?.validate
     const invalidateOptions = options?.invalidate
@@ -105,7 +105,7 @@ export function useRootAuth(fetch: Fetch, cookie: Cookie, options?: undefined | 
 
             if (! ok) {
                 throwInvalidResponse(
-                    `@eviljs/react/auth.useRootAuth().destroySession()`
+                    `@eviljs/react/auth.useAuthCreator().destroySession()`
                 )
             }
         }
@@ -149,4 +149,4 @@ export interface AuthOptions {
     validate?: undefined | ValidateOptions
 }
 
-export type Auth = ReturnType<typeof useRootAuth>
+export type Auth = ReturnType<typeof useAuthCreator>

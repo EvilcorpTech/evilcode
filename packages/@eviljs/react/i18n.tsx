@@ -20,12 +20,12 @@ export const I18nContext = defineContext<I18nManager>('I18nContext')
 */
 export function I18nProvider(props: I18nProviderProps) {
     const {children, ...spec} = props
-    const value = useRootI18n(spec)
+    const value = useI18nCreator(spec)
 
     return <I18nContext.Provider value={value} children={children}/>
 }
 
-export function useRootI18n(spec: I18nSpec<string, string, string, string>) {
+export function useI18nCreator(spec: I18nSpec<string, string, string, string>) {
     const [locale, setLocale] = useState(spec.locale)
     const [fallbackLocale, setFallbackLocale] = useState(spec.fallbackLocale)
     const [messages, setMessages] = useState(spec.messages)

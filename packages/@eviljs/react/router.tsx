@@ -6,7 +6,7 @@ import {exact, regexpFromPattern} from '@eviljs/web/route.js'
 import type {Router as RouterManager, RouterObserver, RouterRoute, RouterRouteChange, RouterRouteChangeParams, RouterRouteParams} from '@eviljs/web/router.js'
 import {encodeLink} from '@eviljs/web/router.js'
 import {isUrlAbsolute} from '@eviljs/web/url.js'
-import {Children, Fragment, forwardRef, isValidElement, useCallback, useContext, useEffect, useMemo, useRef, useState} from 'react'
+import {Children, forwardRef, isValidElement, useCallback, useContext, useEffect, useMemo, useRef, useState} from 'react'
 import {classes} from './classes.js'
 import {defineContext} from './ctx.js'
 
@@ -29,7 +29,7 @@ export const RouteActiveClassDefault = 'route-active'
 */
 export function RouterProvider(props: RouterProviderProps) {
     const {children, createRouter} = props
-    const value = useRootRouter(createRouter)
+    const value = useRouterCreator(createRouter)
 
     return (
         <RouterContext.Provider value={value} children={children}/>
@@ -306,7 +306,7 @@ export function Redirect(props: RedirectProps) {
     return <>{children}</>
 }
 
-export function useRootRouter<S = unknown>(routerFactory: RouterFactory<S>): Router<S> {
+export function useRouterCreator<S = unknown>(routerFactory: RouterFactory<S>): Router<S> {
     const [route, setRoute] = useState(() => {
         return routerFactory(() => {}).route
     })

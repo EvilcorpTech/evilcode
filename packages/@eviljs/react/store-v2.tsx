@@ -21,12 +21,12 @@ export const StoreContext = defineContext<Store>('StoreContext')
 */
 export function StoreProvider(props: StoreProviderProps<StoreStateGeneric, ReducerAction>) {
     const {children, ...spec} = props
-    const value = useRootStore(spec)
+    const value = useStoreCreator(spec)
 
     return <StoreContext.Provider value={value} children={children}/>
 }
 
-export function useRootStore<
+export function useStoreCreator<
     S extends StoreStateGeneric,
     A extends ReducerAction,
 >(spec: StoreDefinition<S, A>): Store<S, A> {

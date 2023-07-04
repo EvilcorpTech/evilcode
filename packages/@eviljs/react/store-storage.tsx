@@ -8,7 +8,7 @@ export const StoreStorageDefaultDebounce = 1000
 export const StoreStorageDefaultKey = '@eviljs/react/store-storage.state'
 export const StoreStorageDefaultVersion = '1'
 
-export function useRootStoreStorage<S, L = S>(state: S, options: StoreStorageOptions<S, L>) {
+export function useStoreStorage<S, L = S>(state: S, options: StoreStorageOptions<S, L>) {
     const {onLoad, onMissing, onSave} = options
     const debounce = options.debounce ?? StoreStorageDefaultDebounce
     const stateVersion = options.stateVersion ?? StoreStorageDefaultVersion
