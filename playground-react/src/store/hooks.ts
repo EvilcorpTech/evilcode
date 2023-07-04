@@ -1,14 +1,14 @@
-import {useRootStoreStorage as useStdRootStoreStorage} from '@eviljs/react/store-storage'
+import {useStoreStorage as useStdStoreStorage} from '@eviljs/react/store-storage'
 import {setState} from '~/store-v3/apis'
 import {useStore} from '~/store-v3/hooks'
 import {filterStorageState, mergeStorageState, StoreStateVersion} from './apis'
 
 export const Storage: Storage = window.localStorage
 
-export function useRootStoreStorage() {
+export function useStoreStorage() {
     const [storeState, dispatch] = useStore()!
 
-    useStdRootStoreStorage(storeState, {
+    useStdStoreStorage(storeState, {
         stateVersion: StoreStateVersion,
         storage: Storage,
         debounce: 5000,

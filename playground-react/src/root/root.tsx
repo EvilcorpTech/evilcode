@@ -23,7 +23,7 @@ import {createRouter} from '~/router/router'
 import {StoreSpec as StoreSpecV3} from '~/store-v3/apis'
 import {StoreProvider as StoreProviderV3} from '~/store-v3/hooks'
 import {StoreSpec as StoreSpecV4} from '~/store-v4-experimental/apis'
-import {useRootStoreStorage} from '~/store/hooks'
+import {useStoreStorage} from '~/store/hooks'
 import {useColorSchemePreference} from '~/theme/hooks'
 import {AuthBarrier} from '~/widgets/auth-barrier'
 import {Header} from '~/widgets/header'
@@ -47,7 +47,7 @@ export function Root(props: RootProps) {
 }
 
 export function App(props: AppProps) {
-    useRootStoreStorage()
+    useStoreStorage()
     useColorSchemePreference()
 
     return <>
