@@ -150,6 +150,8 @@ export function asBooleanLike(value: unknown): undefined | boolean {
     return
 }
 
+export function asDate(value: number | Date): Date
+export function asDate(value: unknown): undefined | Date
 export function asDate(value: unknown): undefined | Date {
     if (! value) {
         return
