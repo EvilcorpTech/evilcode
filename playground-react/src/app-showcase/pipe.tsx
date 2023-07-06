@@ -1,6 +1,5 @@
 import {defineShowcase} from '@eviljs/reactx/showcase'
 import {ensureStringNotEmpty} from '@eviljs/std/assert'
-import {identity} from '@eviljs/std/fn'
 import {
     mappingCatch,
     mappingCatchError,
@@ -17,6 +16,7 @@ import {
 } from '@eviljs/std/monad'
 import {pipe} from '@eviljs/std/pipe'
 import {Error} from '@eviljs/std/result'
+import {identity} from '@eviljs/std/return'
 
 const someResult = pipe(undefined as undefined | null | string)
     .to(mappingNone(it => 'Mario'))
