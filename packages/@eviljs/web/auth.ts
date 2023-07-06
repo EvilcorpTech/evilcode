@@ -1,4 +1,4 @@
-import {computeValue} from '@eviljs/std/fn.js'
+import {compute} from '@eviljs/std/compute.js'
 import {isFunction, isObject} from '@eviljs/std/type.js'
 import type {Fetch, FetchRequestOptions} from './fetch.js'
 import {HttpMethod, mergeFetchOptions, withRequestJson} from './fetch.js'
@@ -87,7 +87,7 @@ export async function invalidate(fetch: Fetch, token: string, options?: undefine
 }
 
 export function createUrl<A extends Array<unknown>>(url: undefined | FetchOptionGetter<A, string>, ...args: A) {
-    return computeValue(url, ...args) ?? AuthDefaultUrl
+    return compute(url, ...args) ?? AuthDefaultUrl
 }
 
 export function createOptions<A extends Array<unknown>>(
