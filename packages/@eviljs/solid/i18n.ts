@@ -1,4 +1,4 @@
-import {computeValue} from '@eviljs/std/fn.js'
+import {compute} from '@eviljs/std/compute.js'
 import type {I18n, I18nMessages, I18nSpec, MsgValues} from '@eviljs/std/i18n.js'
 import {createI18n as createStdI18n} from '@eviljs/std/i18n.js'
 import type {Accessor, Setter} from 'solid-js'
@@ -70,8 +70,8 @@ export function createI18nMessage(
     const i18n = useI18n()!
 
     const message = createMemo(() => {
-        const id = computeValue(getId)
-        const args = computeValue(getArgs)
+        const id = compute(getId)
+        const args = compute(getArgs)
 
         return id
             ? i18n().translate(id, args)
