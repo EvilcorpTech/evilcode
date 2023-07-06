@@ -1,14 +1,14 @@
 {
     "scripts": {
-        "init": "npx pnpm@8.6 install",
+        "init": "npx pnpm@$(npm pkg get devDependencies.pnpm | tr -d '\"') install",
         "upgrade": "npx npm-upgrade@latest && npm run init",
-        "update": "npx pnpm@8.6 update -r",
+        "update": "npx pnpm@$(npm pkg get devDependencies.pnpm | tr -d '\"') update -r",
         "build": "nx run-many --target build",
         "build-watch": "(nx run-many --target build --skip-nx-cache || true) && nx watch --all run-many -- npm run build"
     },
     "devDependencies": {
-        "nx": "16.3.2",
-        "pnpm": "8.6.0"
+        "nx": "16.5.0",
+        "pnpm": "8.6.6"
     },
     "engines": {
         "node": ">= 16",
