@@ -1,6 +1,7 @@
 import {createAccessor} from '@eviljs/std/accessor.js'
 import {scheduleMacroTask} from '@eviljs/std/eventloop.js'
-import {identity, type Io, type TaskVoid} from '@eviljs/std/fn.js'
+import type {Io, TaskVoid} from '@eviljs/std/fn.js'
+import {identity} from '@eviljs/std/return.js'
 import {tryCatch} from '@eviljs/std/try.js'
 import {asBoolean, asNumber} from '@eviljs/std/type.js'
 import type {BrowserStorageAccessorSync, BrowserStorageValue} from '@eviljs/web/storage.js'

@@ -1,5 +1,5 @@
-import type {Fn, ValueComputable} from '@eviljs/std/fn.js'
-import {computeValue} from '@eviljs/std/fn.js'
+import {compute, type ComputableValue} from '@eviljs/std/compute.js'
+import type {Fn} from '@eviljs/std/fn.js'
 import {escapeRegexp} from '@eviljs/std/regexp.js'
 import {asArray, isPromise} from '@eviljs/std/type.js'
 import {exact, regexpFromPattern} from '@eviljs/web/route.js'
@@ -82,7 +82,7 @@ export function WhenRoute(props: WhenRouteProps) {
 
     return (
         <RouteMatchContext.Provider value={routeArgs}>
-            {computeValue(children, ...routeArgs)}
+            {compute(children, ...routeArgs)}
         </RouteMatchContext.Provider>
     )
 }
@@ -150,7 +150,7 @@ export function SwitchRoute(props: SwitchRouteProps) {
     }, [children, matchRoute])
 
     const {key, args} = match
-    const child = computeValue(match.child, ...args)
+    const child = compute(match.child, ...args)
 
     return <RouteMatchContext.Provider key={key} value={args} children={child}/>
 }
@@ -213,7 +213,7 @@ export const Route = forwardRef(function Route(
             changeRoute({path: to, params, state, replace})
         }
 
-        const guardResult = computeValue(guard)
+        const guardResult = compute(guard)
 
         if (isPromise(guardResult)) {
             // Async behavior.
@@ -329,7 +329,7 @@ export function useRouterCreator<S = unknown>(routerFactory: RouterFactory<S>): 
 
     const changeRoute = useCallback((args: RouterRouteChangeComputable<S>) => {
         const {params, ...otherArgs} = args
-        const paramsComputed = computeValue(params, routerManager.route.params)
+        const paramsComputed = compute(params, routerManager.route.params)
 
         routerManager.changeRoute({...otherArgs, params: paramsComputed})
 
@@ -447,7 +447,7 @@ export interface RouteProps extends RoutingProps, React.AnchorHTMLAttributes<HTM
     activeProps?: undefined | {className?: undefined | string}
     activeWhenExact?: undefined | boolean
     children: undefined | React.ReactNode
-    if?: undefined | ValueComputable<RouteGuardResult>
+    if?: undefined | ComputableValue<RouteGuardResult>
 }
 
 export interface LinkProps extends RoutingProps, React.AnchorHTMLAttributes<HTMLAnchorElement> {

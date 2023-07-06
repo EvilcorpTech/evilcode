@@ -1,6 +1,7 @@
-import {identity, type Io} from '@eviljs/std/fn.js'
+import type {Io} from '@eviljs/std/fn.js'
 import {makeReactive, type ReactiveValue} from '@eviljs/std/reactive.js'
 import type {ReducerAction} from '@eviljs/std/redux.js'
+import {identity} from '@eviljs/std/return.js'
 import {isArray} from '@eviljs/std/type.js'
 import {useCallback, useContext, useEffect, useMemo, useState} from 'react'
 import {defineContext} from './ctx.js'

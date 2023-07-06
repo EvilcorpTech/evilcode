@@ -1,4 +1,4 @@
-import {computeValue} from '@eviljs/std/fn.js'
+import {compute} from '@eviljs/std/compute.js'
 import {createHistory} from '@eviljs/std/undoredo.js'
 import {useCallback, useMemo} from 'react'
 import {useRender} from './lifecycle.js'
@@ -23,7 +23,7 @@ export function useUndoRedo<S>(initState: S | (() => S)) {
     }
 
     const history = useMemo(() => {
-        return createHistory(computeValue(initState))
+        return createHistory(compute(initState))
     }, [])
 
     const onUndo = useCallback(withRenderEffect(history.undo), [history])
@@ -31,7 +31,7 @@ export function useUndoRedo<S>(initState: S | (() => S)) {
 
     const onSave = useCallback(withRenderEffect((state: StateSetterArg<S>) => {
         const prevState = history.state
-        const nextState = computeValue(state, prevState)
+        const nextState = compute(state, prevState)
         return history.save(nextState)
     }), [history])
 

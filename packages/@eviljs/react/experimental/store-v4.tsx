@@ -1,4 +1,6 @@
-import {computeValue, identity, type Fn, type TaskVoid} from '@eviljs/std/fn.js'
+import {compute} from '@eviljs/std/compute.js'
+import type {Fn, TaskVoid} from '@eviljs/std/fn.js'
+import {identity} from '@eviljs/std/return.js'
 import {cloneShallow} from '@eviljs/std/struct.js'
 import {isArray, isObject} from '@eviljs/std/type.js'
 import {useCallback, useContext, useLayoutEffect, useMemo, useRef} from 'react'
@@ -176,7 +178,7 @@ export function mutateState<S extends StoreStateGeneric = StoreStateGeneric>(
 ): S {
     if (path.length === 1) {
         // We are mutating the state root.
-        return computeValue(nextValue, state) as S
+        return compute(nextValue, state) as S
     }
 
     const nextState: any = cloneShallow(state)
@@ -190,7 +192,7 @@ export function mutateState<S extends StoreStateGeneric = StoreStateGeneric>(
             // We are traversing the path. We shallow clone all structures on this path.
             ? cloneShallow(currentValue)
             // We reached the end of the path. Time to compute the state value.
-            : computeValue(nextValue, currentValue)
+            : compute(nextValue, currentValue)
     })
 
     return nextState

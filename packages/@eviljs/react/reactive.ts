@@ -1,4 +1,4 @@
-import {computeValue} from '@eviljs/std/fn.js'
+import {compute} from '@eviljs/std/compute.js'
 import {makeReactive, type ReactiveValue} from '@eviljs/std/reactive.js'
 import {useCallback, useEffect, useMemo, useState} from 'react'
 import type {StateManager, StateSetterArg} from './state.js'
@@ -13,7 +13,7 @@ export function useReactive<V>(reactiveValue: undefined | ReactiveValue<V>): Sta
             return
         }
 
-        const valueComputed = computeValue(value, reactiveValue.read())
+        const valueComputed = compute(value, reactiveValue.read())
 
         setValue(valueComputed)
     }, [reactiveValue])

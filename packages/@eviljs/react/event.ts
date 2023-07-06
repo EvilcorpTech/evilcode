@@ -1,7 +1,7 @@
+import {compute} from '@eviljs/std/compute.js'
 import type {EventTask} from '@eviljs/std/event.js'
 import {debounce, throttle} from '@eviljs/std/event.js'
 import type {FnArgs} from '@eviljs/std/fn.js'
-import {computeValue} from '@eviljs/std/fn.js'
 import {useEffect, useMemo, useState} from 'react'
 import type {StateInit, StateSetter} from './state.js'
 
@@ -71,7 +71,7 @@ export function useValueDebounced<V>(
 ): V
  {
     const [output, setOutput] = useState(input)
-    const debounceInput = computeValue(isDebounced, input) ?? true
+    const debounceInput = compute(isDebounced, input) ?? true
 
     useEffect(() => {
         const timeoutId = setTimeout(() => {
