@@ -1,4 +1,4 @@
-import {computeValue} from './fn.js'
+import {compute} from './compute.js'
 import {StdError, throwError} from './throw.js'
 import type {Nil} from './type.js'
 import {
@@ -41,7 +41,7 @@ export function throwAssertTypeError(type: string, value: unknown, ctx?: any) {
 */
 export function assert(condition: boolean, error: string | (() => string)): void {
     if (! condition) {
-        throwAssertConditionError(computeValue(error))
+        throwAssertConditionError(compute(error))
     }
 }
 

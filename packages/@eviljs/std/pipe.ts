@@ -1,4 +1,4 @@
-import {identity} from './fn.js'
+import {identity} from './return.js'
 import type {Io} from './monad.js'
 
 export * from './monad.js'

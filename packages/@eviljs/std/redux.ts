@@ -1,5 +1,5 @@
+import {compute} from './compute.js'
 import type {FnArgs} from './fn.js'
-import {computeValue} from './fn.js'
 import {areObjectsEqualShallow} from './object.js'
 import type {ValueOf} from './type.js'
 
@@ -53,7 +53,7 @@ export function fromActionsDefinitions<S extends ReducerState>(
 }
 
 export function patchState<S extends ReducerState>(state: S, statePatch: StoreStatePatch<S>): S {
-    const nextState = computeValue(statePatch, state)
+    const nextState = compute(statePatch, state)
     const mergedState = {...state, ...nextState}
 
     return areObjectsEqualShallow(state, mergedState)

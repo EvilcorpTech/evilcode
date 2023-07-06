@@ -1,3 +1,5 @@
+export {returnInput as identity}
+
 export function returnInput<V>(input: V): V {
     return input
 }
