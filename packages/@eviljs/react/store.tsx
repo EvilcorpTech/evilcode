@@ -1,5 +1,5 @@
 import type {Io} from '@eviljs/std/fn.js'
-import {makeReactive, type ReactiveValue} from '@eviljs/std/reactive.js'
+import {createReactiveAccessor, type ReactiveAccessor} from '@eviljs/std/reactive.js'
 import type {ReducerAction} from '@eviljs/std/redux.js'
 import {identity} from '@eviljs/std/return.js'
 import {isArray} from '@eviljs/std/type.js'
@@ -42,7 +42,7 @@ export function useStoreCreator<
     const {createState, reduce, onDispatch} = spec
 
     const state = useMemo(() => {
-        return makeReactive(createState())
+        return createReactiveAccessor(createState())
     }, [])
 
     const dispatch = useCallback((...polymorphicArgs: StoreDispatchPolymorphicArgs): S => {
@@ -138,7 +138,7 @@ export function useStoreState<V, S extends StoreStateGeneric>(
     contextOptional?: undefined | React.Context<undefined | StoreManager<S, any>>,
 ): undefined | [V | S, V | S] {
     const store = useStoreContext<S>(contextOptional)
-    const [state] = store ?? [makeReactive(undefined as unknown as S)]
+    const [state] = store ?? [createReactiveAccessor(undefined as unknown as S)]
     const selector: Io<S, V | S> = selectorOptional ?? identity
     const [selectedState, setSelectedState] = useState(selector(state.read()))
     const [selectedStateOld, setSelectedStateOld] = useState(selectedState)
@@ -171,7 +171,7 @@ export function useStoreState<V, S extends StoreStateGeneric>(
 
 export function useStoreStateReader<S extends StoreStateGeneric>(
     contextOptional?: undefined | React.Context<undefined | StoreManager<S, any>>,
-): undefined | ReactiveValue<S>['read'] {
+): undefined | ReactiveAccessor<S>['read'] {
     const store = useStoreContext<S>(contextOptional)
 
     if (! store) {
@@ -237,7 +237,7 @@ export interface StoreProviderProps<S extends StoreStateGeneric, A extends Reduc
 export type StoreManager<
     S extends StoreStateGeneric = StoreStateGeneric,
     A extends ReducerAction = ReducerAction,
-> = [ReactiveValue<S>, StoreDispatch<S, A>]
+> = [ReactiveAccessor<S>, StoreDispatch<S, A>]
 
 export type StoreAccessor<
     V,
@@ -266,7 +266,7 @@ export interface StoreBound<S extends StoreStateGeneric, A extends ReducerAction
         <V>(selectorOptional?: undefined | StoreSelector<S, V>): undefined | [V | S, V | S]
     }
     useStoreStateReader: {
-        (): undefined | ReactiveValue<S>['read']
+        (): undefined | ReactiveAccessor<S>['read']
     }
     useStoreDispatch: {
         (): undefined | StoreDispatch<S, A>

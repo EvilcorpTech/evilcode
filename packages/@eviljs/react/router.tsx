@@ -1,4 +1,4 @@
-import {compute, type ComputableValue} from '@eviljs/std/compute.js'
+import {compute, type Computable} from '@eviljs/std/compute.js'
 import type {Fn} from '@eviljs/std/fn.js'
 import {escapeRegexp} from '@eviljs/std/regexp.js'
 import {asArray, isPromise} from '@eviljs/std/type.js'
@@ -447,7 +447,7 @@ export interface RouteProps extends RoutingProps, React.AnchorHTMLAttributes<HTM
     activeProps?: undefined | {className?: undefined | string}
     activeWhenExact?: undefined | boolean
     children: undefined | React.ReactNode
-    if?: undefined | ComputableValue<RouteGuardResult>
+    if?: undefined | Computable<RouteGuardResult>
 }
 
 export interface LinkProps extends RoutingProps, React.AnchorHTMLAttributes<HTMLAnchorElement> {
