@@ -1,9 +1,10 @@
 .ProgressLine-0f03 {
     --progress-line-color1--default: cornflowerblue;
-    --progress-line-color2--default: aquamarine;
+    --progress-line-color2--default: fuchsia;
+    --progress-line-color3--default: crimson;
     --progress-line-width--default: 10%;
     --progress-line-height--default: 2px;
-    --progress-line-duration: 2s;
+    --progress-line-duration--default: 2s;
     position: relative;
     width: 100%;
     height: var(--progress-line-height, var(--progress-line-height--default));
@@ -20,7 +21,8 @@
     background-image: linear-gradient(
         to right,
         var(--progress-line-color1, var(--progress-line-color1--default)),
-        var(--progress-line-color2, var(--progress-line-color2--default))
+        var(--progress-line-color2, var(--progress-line-color2--default)),
+        var(--progress-line-color3, var(--progress-line-color3--default))
     );
     background-size: var(--progress-line-width, var(--progress-line-width--default));
     background-repeat: no-repeat;
@@ -39,7 +41,7 @@
 
 @keyframes progress-0f03 {
     from {
-        transform: translateX(0%);
+        transform: translateX(calc(-1 * var(--progress-line-width, var(--progress-line-width--default))));
     }
     to {
         transform: translateX(100%);

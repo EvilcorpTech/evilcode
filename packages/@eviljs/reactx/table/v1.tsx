@@ -43,7 +43,7 @@ export function Table(props: TableProps) {
         scrollerProps,
         ...otherProps
     } = props
-    const childrenList = asArray(children)
+    const childrenList = asArray(children) as Array<React.ReactNode>
     const tableHead = childrenList.find(elementTypeTestFor(TableHead))
     const tableBody = childrenList.find(elementTypeTestFor(TableBody))
 
@@ -78,7 +78,7 @@ export function Table(props: TableProps) {
 
 export function TableHead(props: TableHeadProps) {
     const {children, className, innerProps, ...otherProps} = props
-    const childrenList = asArray(children ?? [])
+    const childrenList = asArray(children ?? []) as Array<React.ReactNode>
     const columns = childrenList.filter(elementTypeTestFor(TableColumn))
 
     return (
@@ -119,7 +119,7 @@ export const TableBody = forwardRef(function TableBody(
     ref: React.ForwardedRef<HTMLTableSectionElement>,
 ) {
     const {children, className, ...otherProps} = props
-    const childrenList = asArray(children ?? [])
+    const childrenList = asArray(children ?? []) as Array<React.ReactNode>
     const rows = childrenList.filter(elementTypeTestFor(TableRow))
 
     return (
@@ -139,7 +139,7 @@ export const TableRow = forwardRef(function TableRow(
     ref: React.ForwardedRef<HTMLTableRowElement>,
 ) {
     const {children, className, ...otherProps} = props
-    const childrenList = asArray(children ?? [])
+    const childrenList = asArray(children ?? []) as Array<React.ReactNode>
     const cells = childrenList.filter(elementTypeTestFor(TableCell))
 
     return (
