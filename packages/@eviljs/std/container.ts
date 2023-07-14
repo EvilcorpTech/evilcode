@@ -36,12 +36,22 @@ export function createContainer<F extends ContainerFactories>(
     }
 
     if (factories) {
-        for (const it of Object.entries(factories)) {
-            const [id, factory] = it
+        for (const id in factories) {
+            const factory = factories[id]
+
+            if (! factory) {
+                continue
+            }
+
             self.register(id, factory)
         }
         for (const id of Object.getOwnPropertySymbols(factories)) {
-            const factory = factories[id]!
+            const factory = factories[id]
+
+            if (! factory) {
+                continue
+            }
+
             self.register(id, factory)
         }
     }
@@ -90,12 +100,12 @@ function requireService<T = unknown>(
 ): undefined | T {
     if (options?.type === 'prototype') {
         // A new instance is requested.
-        return makeService(container, serviceId)
+        return createService(container, serviceId)
     }
 
     if (! container[ContainerInstancesKey][serviceId]) {
         // By default we use a singleton strategy.
-        container[ContainerInstancesKey][serviceId] = makeService(container, serviceId)
+        container[ContainerInstancesKey][serviceId] = createService(container, serviceId)
     }
 
     return container[ContainerInstancesKey][serviceId]
@@ -107,11 +117,11 @@ function requireService<T = unknown>(
 *
 * EXAMPLE
 *
-* makeService(container, 'MyService')
+* createService(container, 'MyService')
 * // is the same of
 * requireService(container, 'MyService', {type: 'prototype'})
 */
-export function makeService<T = unknown>(container: Container, serviceId: ServiceId): undefined | T {
+export function createService<T = unknown>(container: Container, serviceId: ServiceId): undefined | T {
     const factory = container[ContainerFactoriesKey][serviceId]
     return factory?.(container)
 }

@@ -5,7 +5,7 @@ export function createAccessor<V>(read: () => V, write: (value: V) => V): Access
     // It would be an easy trap for the API consumer, who could do
     // {...accessor} or
     // {value, read, write} = accessor
-    // with consequent loss of reactivity and bug.
+    // with consequent loss of reactivity and bugs.
     return {read, write}
 }
 

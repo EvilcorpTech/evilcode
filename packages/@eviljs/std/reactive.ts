@@ -1,12 +1,13 @@
 import {createAccessor, type AccessorSync} from './accessor.js'
 import {scheduleMicroTask} from './eventloop.js'
 import type {TaskVoid} from './fn.js'
+import type {Ref} from './ref.js'
 import {areEqualIdentity} from './struct.js'
 
-export function makeReactive<V>(initialValue: V, options?: undefined | ReactiveValueOptions<V>): ReactiveValue<V> {
+export function createReactiveAccessor<V>(initialValue: V, options?: undefined | ReactiveOptions<V>): ReactiveAccessor<V> {
     let currentValue = initialValue
     let cancelNotification: undefined | TaskVoid = undefined
-    const observers: Set<ReactiveValueObserver<V>> = new Set()
+    const observers: Set<ReactiveObserver<V>> = new Set()
     const areEqual = options?.equals ?? areEqualIdentity
 
     function read(): V {
@@ -39,8 +40,11 @@ export function makeReactive<V>(initialValue: V, options?: undefined | ReactiveV
         return newValue
     }
 
+    const accessor = createAccessor(read, write)
+
     return {
-        ...createAccessor(read, write),
+        read: accessor.read,
+        write: accessor.write,
         watch(observer, options) {
             const immediate = options?.immediate ?? false
 
@@ -59,24 +63,44 @@ export function makeReactive<V>(initialValue: V, options?: undefined | ReactiveV
     }
 }
 
+export function createReactiveRef<V>(initialValue: V, options?: undefined | ReactiveOptions<V>): ReactiveRef<V> {
+    const reactiveAccessor = createReactiveAccessor(initialValue, options)
+
+    return {
+        get value() {
+            return reactiveAccessor.read()
+        },
+        set value(value) {
+            reactiveAccessor.write(value)
+        },
+        watch: reactiveAccessor.watch,
+    }
+}
+
 // Types ///////////////////////////////////////////////////////////////////////
 
-export interface ReactiveValue<V> extends AccessorSync<V> {
-    watch(observer: ReactiveValueObserver<V>, options?: undefined | ReactiveWatchOptions): TaskVoid
+export interface ReactiveAccessor<V> extends AccessorSync<V>, ReactiveObservable<V> {
 }
 
-export interface ReactiveValueOptions<V> {
-    equals?: undefined | ReactiveValueComparator<V>
+export interface ReactiveRef<V> extends Ref<V>, ReactiveObservable<V> {
 }
 
-export interface ReactiveValueObserver<V> {
-    (newValue: V, oldValue: V): void
+export interface ReactiveObservable<V> {
+    watch(observer: ReactiveObserver<V>, options?: undefined | ReactiveWatchOptions): TaskVoid
 }
 
-export interface ReactiveValueComparator<V> {
-    (oldValue: V, newValue: V): boolean
+export interface ReactiveOptions<V> {
+    equals?: undefined | ReactiveComparator<V>
 }
 
 export interface ReactiveWatchOptions {
     immediate?: undefined | boolean
+}
+
+export interface ReactiveObserver<V> {
+    (newValue: V, oldValue: V): void
+}
+
+export interface ReactiveComparator<V> {
+    (oldValue: V, newValue: V): boolean
 }

@@ -1,3 +1,5 @@
+import type {FnArgs} from './fn.js'
+
 export const Tests = {
     array: isArray,
     boolean: isBoolean,
@@ -29,7 +31,7 @@ export function kindOf<T extends keyof typeof Tests>(value: unknown, ...tests: A
 
 // Tests ///////////////////////////////////////////////////////////////////////
 
-export function isDefined<T>(value: void | undefined | T): value is T {
+export function isDefined<V>(value: void | undefined | V): value is V {
     return ! isUndefined(value)
 }
 
@@ -41,8 +43,8 @@ export function isNull(value: unknown): value is null {
     return value === null
 }
 
-export function isSome<I>(item: Nil | I): item is I {
-    return ! isNil(item)
+export function isSome<V>(value: Nil | V): value is V {
+    return ! isNil(value)
 }
 
 export function isUndefined(value: unknown): value is undefined {
@@ -70,7 +72,7 @@ export function isDate(value: unknown): value is Date {
         : false
 }
 
-export function isFunction<O, A extends Array<unknown>, R>(value: O | ((...args: A) => R)): value is ((...args: A) => R)
+export function isFunction<O, A extends FnArgs, R>(value: O | ((...args: A) => R)): value is ((...args: A) => R)
 export function isFunction(value: unknown): value is Function {
     if (! value) {
         return false
@@ -128,10 +130,16 @@ export function isString(value: unknown): value is string {
 
 // Casts ///////////////////////////////////////////////////////////////////////
 
-export function asArray<T>(item: T | Array<T> | [T] | readonly [T]): Array<T> {
-    return isArray(item)
-        ? item
-        : [item] as Array<T>
+// export function asArray<V, I>(value: V | readonly I[]): [V] | readonly I[]
+// export function asArray<V, I>(value: V | I[]): V[] | I[]
+export function asArray<V, T extends unknown[]>(value: V | [...T]): [V] | [...T]
+export function asArray<V, T extends unknown[]>(value: V | readonly [...T]): [V] | readonly [...T]
+export function asArray<V, I>(value: V | Array<I>): [V] | Array<I>
+export function asArray<V>(value: V | Array<V>): Array<V>
+export function asArray<V>(value: V | Array<V>): Array<V> {
+    return isArray(value)
+        ? value as Array<V>
+        : [value] as Array<V>
 }
 
 export function asBoolean(value: unknown): undefined | boolean {

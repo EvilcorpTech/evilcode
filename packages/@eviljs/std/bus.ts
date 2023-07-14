@@ -1,13 +1,13 @@
 import {scheduleMicroTask} from './eventloop.js'
 import type {FnArgs, TaskVoid} from './fn.js'
-import {makeReactive, type ReactiveValue} from './reactive.js'
+import {createReactiveAccessor, type ReactiveAccessor} from './reactive.js'
 import {isArray} from './type.js'
 
 export const EventRegexpCache: Record<BusEvent, RegExp> = {}
 
 export function createBus() {
     const self: Bus = {
-        observers: makeReactive({}),
+        observers: createReactiveAccessor({}),
 
         emit(...args: BusEventPolymorphicArgs) {
             return emitEvent(self.observers, ...args)
@@ -29,8 +29,8 @@ export function emitEvent(reactiveObservers: BusEventObservers, event: BusEvent,
 export function emitEvent(reactiveObservers: BusEventObservers, args: [event: BusEvent, payload?: unknown]): void
 export function emitEvent(reactiveObservers: BusEventObservers, ...args: BusEventPolymorphicArgs): void
 export function emitEvent(reactiveObservers: BusEventObservers, ...polymorphicArgs: BusEventPolymorphicArgs): void {
-    const observers = reactiveObservers.read()
-    const eventObservers: Array<[Array<BusEventObserver>, RegExpMatchArray]> = []
+    const observersMap = reactiveObservers.read()
+    const observersNotified: Array<[Array<BusEventObserver>, RegExpMatchArray]> = []
 
     const [emittedEvent, emittedPayload] = (() => {
         const [eventOrArgs, payload] = polymorphicArgs
@@ -42,23 +42,28 @@ export function emitEvent(reactiveObservers: BusEventObservers, ...polymorphicAr
         return [eventOrArgs, payload]
     })()
 
-    for (const entry of Object.entries(observers)) {
-        const [event, observers] = entry
-        const matches = emittedEvent.match(event)
+    for (const event in observersMap) {
+        const observers = observersMap[event]
 
-        if (! matches) {
+        if (! observers) {
             continue
         }
 
-        eventObservers.push([observers, matches])
+        const eventMatches = emittedEvent.match(event)
+
+        if (! eventMatches) {
+            continue
+        }
+
+        observersNotified.push([observers, eventMatches])
     }
 
-    if (eventObservers.length === 0) {
+    if (observersNotified.length === 0) {
         return
     }
 
     scheduleMicroTask(() => {
-        for (const entry of eventObservers) {
+        for (const entry of observersNotified) {
             const [observersGroup, matches] = entry
 
             for (const observer of observersGroup) {
@@ -133,7 +138,7 @@ export interface Bus {
 }
 
 export type BusEvent = string
-export type BusEventObservers = ReactiveValue<Record<BusEvent, Array<BusEventObserver>>>
+export type BusEventObservers = ReactiveAccessor<Record<BusEvent, Array<BusEventObserver>>>
 
 export interface BusEventObserver {
     (event: BusEvent, matches: RegExpMatchArray, payload: unknown): void
