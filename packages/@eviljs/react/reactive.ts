@@ -1,7 +1,7 @@
 import {compute} from '@eviljs/std/compute.js'
-import {createReactiveAccessor, createReactiveRef, type ReactiveAccessor, type ReactiveRef} from '@eviljs/std/reactive.js'
+import type {ReactiveAccessor, ReactiveRef} from '@eviljs/std/reactive.js'
 import {identity, returnUndefined} from '@eviljs/std/return.js'
-import {useCallback, useEffect, useMemo, useState} from 'react'
+import {useCallback, useEffect, useState} from 'react'
 import type {StateManager, StateSetterArg} from './state.js'
 
 const noopWatch = () => () => {}
@@ -66,20 +66,4 @@ export function useReactiveRef<V>(reactiveValue: undefined | ReactiveRef<V>): St
         write,
         reactiveValue?.watch ?? noopWatch,
     )
-}
-
-export function useReactiveAccessorValue<V>(initialValue: V): StateManager<V> {
-    const reactiveValue = useMemo(() => {
-        return createReactiveAccessor(initialValue)
-    }, [])
-
-    return useReactiveAccessor(reactiveValue)
-}
-
-export function useReactiveRefValue<V>(initialValue: V): StateManager<V> {
-    const reactiveValue = useMemo(() => {
-        return createReactiveRef(initialValue)
-    }, [])
-
-    return useReactiveRef(reactiveValue)
 }

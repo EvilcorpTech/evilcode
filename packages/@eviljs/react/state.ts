@@ -1,24 +1,4 @@
-import {useCallback, useState} from 'react'
-
-/*
-* Used to shallow merge a state object with a change.
-*
-* EXAMPLE
-*
-* function MyComponent(props) {
-*     const [state, setState, patchState] = useStateObject({checked: false, input: ''})
-*
-*     return (
-*         <Input onChange={input => patchState({input})}/>
-*     )
-* }
-*/
-export function useStateObject<S extends object>(initialState: StateInit<S>): [...StateManager<S>, StatePatcher<S>] {
-    const [state, setState] = useState(initialState)
-    const patchState = useMergeState(setState)
-
-    return [state, setState, patchState]
-}
+import {useCallback} from 'react'
 
 /*
 * Used to shallow merge a state object with a change.
@@ -56,11 +36,11 @@ export function useMergeState<S extends object>(setState: StateSetter<S>) {
 * }
 */
 export function mergingState<S extends object>(statePatch: Partial<S>) {
-    function setState(state: S) {
+    function mergeState(state: S): S {
         return {...state, ...statePatch}
     }
 
-    return setState
+    return mergeState
 }
 
 // Types ///////////////////////////////////////////////////////////////////////
