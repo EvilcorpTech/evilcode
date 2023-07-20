@@ -4,10 +4,13 @@ import type {TaskVoid} from './fn.js'
 import type {Ref} from './ref.js'
 import {areEqualIdentity} from './struct.js'
 
-export function createReactiveAccessor<V>(initialValue: V, options?: undefined | ReactiveOptions<V>): ReactiveAccessor<V> {
+export function createReactiveAccessor<V>(
+    initialValue: V,
+    options?: undefined | ReactiveOptions<V>,
+): ReactiveAccessor<V> & ReactiveInternals<V> {
     let currentValue = initialValue
     let cancelNotification: undefined | TaskVoid = undefined
-    const observers: Set<ReactiveObserver<V>> = new Set()
+    const observers: ReactiveInternals<V>['__observers__'] = new Set()
     const areEqual = options?.equals ?? areEqualIdentity
 
     function read(): V {
@@ -43,6 +46,7 @@ export function createReactiveAccessor<V>(initialValue: V, options?: undefined |
     const accessor = createAccessor(read, write)
 
     return {
+        __observers__: observers,
         read: accessor.read,
         write: accessor.write,
         watch(observer, options) {
@@ -63,23 +67,33 @@ export function createReactiveAccessor<V>(initialValue: V, options?: undefined |
     }
 }
 
-export function createReactiveRef<V>(initialValue: V, options?: undefined | ReactiveOptions<V>): ReactiveRef<V> {
-    const reactiveAccessor = createReactiveAccessor(initialValue, options)
+export function createReactiveRef<V>(
+    initialValue: V,
+    options?: undefined | ReactiveOptions<V>,
+): ReactiveRef<V> & ReactiveInternals<V> {
+    const reactiveObserver = createReactiveAccessor(initialValue, options)
+
+    const {read, write} = reactiveObserver
 
     return {
+        __observers__: reactiveObserver.__observers__,
         get value() {
-            return reactiveAccessor.read()
+            return read()
         },
         set value(value) {
-            reactiveAccessor.write(value)
+            write(value)
         },
-        watch: reactiveAccessor.watch,
+        watch: reactiveObserver.watch,
     }
 }
 
 // Types ///////////////////////////////////////////////////////////////////////
 
 export interface ReactiveAccessor<V> extends AccessorSync<V>, ReactiveObservable<V> {
+}
+
+export interface ReactiveInternals<V> {
+    __observers__: Set<ReactiveObserver<V>>
 }
 
 export interface ReactiveRef<V> extends Ref<V>, ReactiveObservable<V> {

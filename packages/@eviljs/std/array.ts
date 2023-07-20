@@ -1,3 +1,4 @@
+import type {Io} from './fn.js'
 import type {Nil} from './type.js'
 import {isSome} from './type.js'
 
@@ -19,6 +20,42 @@ export function mappingWith<I, R>(mapItem: (it: I, idx: number) => R) {
     }
 
     return mapList
+}
+
+export function groupBy<I, K extends PropertyKey>(
+    list: Array<I>,
+    keyOf: Io<I, K>,
+): Record<K, Array<I>> {
+    const groups = {} as Record<K, Array<I>>
+
+    for (const it of list) {
+        const key = keyOf(it)
+        groups[key] ??= []
+        groups[key]?.push(it)
+    }
+
+    return groups
+}
+
+export function groupMapBy<I, K>(
+    list: Array<I>,
+    keyOf: Io<I, K>,
+): Map<K, Array<I>> {
+    const groupsMap = new Map<K, Array<I>>()
+
+    function setupKey(key: K) {
+        const group: Array<I> = []
+        groupsMap.set(key, group)
+        return group
+    }
+
+    for (const it of list) {
+        const key = keyOf(it)
+        const group = groupsMap.get(key) ?? setupKey(key)
+        group?.push(it)
+    }
+
+    return groupsMap
 }
 
 export function asMatrix<I>(list: Array<I>, size: number) {

@@ -1,6 +1,7 @@
-import {identity} from './return.js'
 import type {Io} from './monad.js'
+import {identity} from './return.js'
 
+export * from './chain.js'
 export * from './monad.js'
 export * from './result.js'
 

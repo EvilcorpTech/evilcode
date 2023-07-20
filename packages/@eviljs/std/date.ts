@@ -1,29 +1,47 @@
 import {assertStringNotEmpty, ensureOptionalWith, throwAssertTypeError} from './assert.js'
 import {isBetween} from './math.js'
-import {isString} from './type.js'
+import {isDefined, isString} from './type.js'
+
+export const OneSecondInMs = 1_000
+export const OneMinuteInMs = 60 * OneSecondInMs
+export const OneHourInMs = 60 * OneMinuteInMs
+export const OneDayInMs = 24 * OneHourInMs
+export const OneWeekInMs = 7 * OneDayInMs
+export const OneMonthInMs = 30 * OneDayInMs
+
+export function dateNow(): Date {
+    return new Date()
+}
 
 export function cloneDate(date: Date) {
     return new Date(date.getTime())
 }
 
-export function isDateBetween(from: undefined | Date, date: Date, to: undefined | Date) {
-    if (! from && ! to) {
+export function isTimeBetween(from: undefined | DateNumber, date: DateNumber, to: undefined | DateNumber) {
+    const fromDefined = isDefined(from)
+    const toDefined = isDefined(to)
+
+    if (! fromDefined && ! toDefined) {
         return true
     }
-    if (from && to) {
-        return isBetween(from.getTime(), date.getTime(), to.getTime())
+    if (fromDefined && toDefined) {
+        return isBetween(from, date, to)
     }
-    if (from) {
-        return from.getTime() <= date.getTime()
+    if (fromDefined) {
+        return from <= date
     }
-    if (to) {
-        return to.getTime() >= date.getTime()
+    if (toDefined) {
+        return to >= date
     }
     return false
 }
 
-export function dateNow(): Date {
-    return new Date()
+export function isDateBetween(from: undefined | Date, date: Date, to: undefined | Date) {
+    return isTimeBetween(from?.getTime(), date.getTime(), to?.getTime())
+}
+
+export function roundTimeToSeconds(time: DateNumber) {
+    return Math.trunc(time / 1_000) * 1_000
 }
 
 // Guards //////////////////////////////////////////////////////////////////////
@@ -129,3 +147,8 @@ export function ensureDateAsIsoUtcStringOptional(value: unknown, ctx?: any): und
 export function ensureDateAsIsoUtcStringOptional(value: unknown, ctx?: any) {
     return ensureOptionalWith(ensureDateAsIsoUtcString, value, ctx)
 }
+
+// Types ///////////////////////////////////////////////////////////////////////
+
+export type DateNumber = number
+export type Milliseconds = number
