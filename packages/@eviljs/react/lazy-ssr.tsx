@@ -1,4 +1,4 @@
-import type {TaskVoid} from '@eviljs/std/fn.js'
+import type {Task} from '@eviljs/std/fn.js'
 import {lazy, Suspense, useEffect, useLayoutEffect, useRef} from 'react'
 import {Box, type BoxProps} from './box.js'
 import {asDefault, type LazySuspendedFallback, type LazySuspendedLoader} from './lazy.js'
@@ -119,5 +119,5 @@ export interface LazySuspendedSsrProps {
 export interface SsrFallbackProps extends VoidProps<BoxProps> {
     attributes: Array<Attr>
     children: string
-    onUnmount?: undefined | TaskVoid
+    onUnmount?: undefined | Task
 }

@@ -1,6 +1,6 @@
 import {createAccessor} from '@eviljs/std/accessor.js'
 import {scheduleMacroTask} from '@eviljs/std/eventloop.js'
-import type {Io, TaskVoid} from '@eviljs/std/fn.js'
+import type {Io, Task} from '@eviljs/std/fn.js'
 import {identity} from '@eviljs/std/return.js'
 import {tryCatch} from '@eviljs/std/try.js'
 import {asBoolean, asNumber} from '@eviljs/std/type.js'
@@ -24,7 +24,7 @@ export function useBrowserStorageAccessor<V = string, S = string>(
     // Reading from LocalStorage is slow, so we must wrap value access.
     const [initialValue, render] = useState(() => decode(accessor.read()))
     const valueRef = useRef(initialValue)
-    const cancelWriteTaskRef = useRef<TaskVoid>()
+    const cancelWriteTaskRef = useRef<Task>()
 
     const read = useCallback((): BrowserStorageValue<S | V> => {
         return valueRef.current

@@ -1,10 +1,10 @@
-import type {TaskVoid} from '@eviljs/std/fn.js'
+import type {Task} from '@eviljs/std/fn.js'
 import {asArray} from '@eviljs/std/type.js'
 import {useEffect} from 'react'
 
 export function useOnClickOutside(
     selector: string | Array<string>,
-    onClickOutside: TaskVoid,
+    onClickOutside: Task,
     options?: undefined | OnClickOutsideOptions,
 ) {
     const active = options?.active ?? true

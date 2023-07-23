@@ -124,19 +124,19 @@ export function useStore<V, S extends StoreStateGeneric, A extends ReducerAction
 export function useStoreState<S extends StoreStateGeneric>(
     selectorOptional?: undefined,
     contextOptional?: undefined | React.Context<undefined | StoreManager<S, any>>,
-): undefined | [S, S]
+): undefined | StoreSelection<S, S>
 export function useStoreState<V, S extends StoreStateGeneric>(
     selector: StoreSelector<S, V>,
     contextOptional?: undefined | React.Context<undefined | StoreManager<S, any>>,
-): undefined | [V, V]
+): undefined | StoreSelection<S, V>
 export function useStoreState<V, S extends StoreStateGeneric>(
     selectorOptional?: undefined | StoreSelector<S, V>,
     contextOptional?: undefined | React.Context<undefined | StoreManager<S, any>>,
-): undefined | [V | S, V | S]
+): undefined | StoreSelection<S, V | S>
 export function useStoreState<V, S extends StoreStateGeneric>(
     selectorOptional?: undefined | StoreSelector<S, V>,
     contextOptional?: undefined | React.Context<undefined | StoreManager<S, any>>,
-): undefined | [V | S, V | S] {
+): undefined | StoreSelection<S, V | S> {
     const store = useStoreContext<S>(contextOptional)
     const [state] = store ?? [createReactiveAccessor(undefined as unknown as S)]
     const selector: Io<S, V | S> = selectorOptional ?? identity
@@ -166,12 +166,19 @@ export function useStoreState<V, S extends StoreStateGeneric>(
         return
     }
 
-    return [selectedState, selectedStateOld]
+    return [selectedState, selectedStateOld, state.read]
 }
 
-export function useStoreStateReader<S extends StoreStateGeneric>(
+export function useStoreDispatch<S extends StoreStateGeneric, A extends ReducerAction = ReducerAction>(
+    contextOptional?: undefined | React.Context<undefined | StoreManager<S, A>>,
+): undefined | StoreDispatch<S, A> {
+    const [state, dispatch] = useStoreContext<S, A>(contextOptional) ?? []
+    return dispatch
+}
+
+export function useStoreRead<S extends StoreStateGeneric>(
     contextOptional?: undefined | React.Context<undefined | StoreManager<S, any>>,
-): undefined | ReactiveAccessor<S>['read'] {
+): undefined | StoreReader<S> {
     const store = useStoreContext<S>(contextOptional)
 
     if (! store) {
@@ -181,13 +188,6 @@ export function useStoreStateReader<S extends StoreStateGeneric>(
     const [state] = store
 
     return state.read
-}
-
-export function useStoreDispatch<S extends StoreStateGeneric, A extends ReducerAction = ReducerAction>(
-    contextOptional?: undefined | React.Context<undefined | StoreManager<S, A>>,
-): undefined | StoreDispatch<S, A> {
-    const [state, dispatch] = useStoreContext<S, A>(contextOptional) ?? []
-    return dispatch
 }
 
 /*
@@ -215,8 +215,8 @@ export function createStore<S extends StoreStateGeneric, A extends ReducerAction
         useStoreState<V>(selectorOptional?: undefined | StoreSelector<S, V>) {
             return useStoreState(selectorOptional, context)
         },
-        useStoreStateReader() {
-            return useStoreStateReader(context)
+        useStoreRead() {
+            return useStoreRead(context)
         },
         useStoreDispatch() {
             return useStoreDispatch(context)
@@ -245,9 +245,9 @@ export type StoreAccessor<
     A extends ReducerAction = ReducerAction,
 > = [V, StoreDispatch<S, A>]
 
-export interface StoreSelector<S extends StoreStateGeneric, V> {
-    (state: S): V
-}
+export type StoreReader<S extends StoreStateGeneric> = ReactiveAccessor<S>['read']
+export type StoreSelector<S extends StoreStateGeneric, V> = (state: S) => V
+export type StoreSelection<S extends StoreStateGeneric, V> = [V, V, StoreReader<S>]
 
 export interface StoreBound<S extends StoreStateGeneric, A extends ReducerAction = ReducerAction> {
     StoreProvider: {
@@ -261,14 +261,14 @@ export interface StoreBound<S extends StoreStateGeneric, A extends ReducerAction
         <V>(selector: StoreSelector<S, V>): undefined | StoreAccessor<V, S, A>
     }
     useStoreState: {
-        (selectorOptional?: undefined): undefined | [S, S]
-        <V>(selector: StoreSelector<S, V>): undefined | [V, V]
-        <V>(selectorOptional?: undefined | StoreSelector<S, V>): undefined | [V | S, V | S]
-    }
-    useStoreStateReader: {
-        (): undefined | ReactiveAccessor<S>['read']
+        (selectorOptional?: undefined): undefined | StoreSelection<S, S>
+        <V>(selector: StoreSelector<S, V>): undefined | StoreSelection<S, V>
+        <V>(selectorOptional?: undefined | StoreSelector<S, V>): undefined | StoreSelection<S, V | S>
     }
     useStoreDispatch: {
         (): undefined | StoreDispatch<S, A>
+    }
+    useStoreRead: {
+        (): undefined | ReactiveAccessor<S>['read']
     }
 }
