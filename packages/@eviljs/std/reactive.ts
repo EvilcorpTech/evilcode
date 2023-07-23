@@ -1,6 +1,6 @@
 import {createAccessor, type AccessorSync} from './accessor.js'
 import {scheduleMicroTask} from './eventloop.js'
-import type {TaskVoid} from './fn.js'
+import type {Task} from './fn.js'
 import type {Ref} from './ref.js'
 import {areEqualIdentity} from './struct.js'
 
@@ -9,7 +9,7 @@ export function createReactiveAccessor<V>(
     options?: undefined | ReactiveOptions<V>,
 ): ReactiveAccessor<V> & ReactiveInternals<V> {
     let currentValue = initialValue
-    let cancelNotification: undefined | TaskVoid = undefined
+    let cancelNotification: undefined | Task = undefined
     const observers: ReactiveInternals<V>['__observers__'] = new Set()
     const areEqual = options?.equals ?? areEqualIdentity
 
@@ -100,7 +100,7 @@ export interface ReactiveRef<V> extends Ref<V>, ReactiveObservable<V> {
 }
 
 export interface ReactiveObservable<V> {
-    watch(observer: ReactiveObserver<V>, options?: undefined | ReactiveWatchOptions): TaskVoid
+    watch(observer: ReactiveObserver<V>, options?: undefined | ReactiveWatchOptions): Task
 }
 
 export interface ReactiveOptions<V> {

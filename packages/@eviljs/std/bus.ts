@@ -1,5 +1,5 @@
 import {scheduleMicroTask} from './eventloop.js'
-import type {FnArgs, TaskVoid} from './fn.js'
+import type {FnArgs, Task} from './fn.js'
 import {createReactiveAccessor, type ReactiveAccessor} from './reactive.js'
 import {isArray} from './type.js'
 
@@ -73,7 +73,7 @@ export function emitEvent(reactiveObservers: BusEventObservers, ...polymorphicAr
     })
 }
 
-export function observeEvent(reactiveObservers: BusEventObservers, event: BusEvent, observer: BusEventObserver): TaskVoid {
+export function observeEvent(reactiveObservers: BusEventObservers, event: BusEvent, observer: BusEventObserver): Task {
     const observers = reactiveObservers.read()
     const eventObservers = observers[event] ?? []
 
@@ -133,7 +133,7 @@ export interface Bus {
     emit(event: BusEvent, payload?: unknown): void
     emit(args: [event: BusEvent, payload?: unknown]): void
     emit(...args: BusEventPolymorphicArgs): void
-    observe(event: BusEvent, observer: BusEventObserver): TaskVoid
+    observe(event: BusEvent, observer: BusEventObserver): Task
     unobserve(event: BusEvent, observer: BusEventObserver): void
 }
 

@@ -4,20 +4,20 @@ export function createHistory<S>(state: S) {
         state,
         redoStack: [],
         save(state: S) {
-            return save(self, state)
+            return saveHistory(self, state)
         },
         undo() {
-            return undo(self)
+            return undoHistory(self)
         },
         redo() {
-            return redo(self)
+            return redoHistory(self)
         },
     }
 
     return self
 }
 
-export function save<S>(history: History<S>, state: S) {
+export function saveHistory<S>(history: History<S>, state: S) {
     if (history.state === state) {
         // This is a recoil notification:
         // a mutation wants to change the state with a value identical to the one
@@ -32,7 +32,7 @@ export function save<S>(history: History<S>, state: S) {
     return history.state
 }
 
-export function undo<S>(history: History<S>) {
+export function undoHistory<S>(history: History<S>) {
     const nextState = history.undoStack.pop()
 
     if (! nextState) {
@@ -46,7 +46,7 @@ export function undo<S>(history: History<S>) {
     return history.state
 }
 
-export function redo<S>(history: History<S>) {
+export function redoHistory<S>(history: History<S>) {
     const nextState = history.redoStack.pop()
 
     if (! nextState) {

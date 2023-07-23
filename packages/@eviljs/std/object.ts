@@ -1,3 +1,4 @@
+import type {Fn, Io} from './fn.js'
 import {isArray, isDefined, isObject, isUndefined} from './type.js'
 
 export const ObjectPathArrayOpenRegexp = /\[/g
@@ -142,7 +143,7 @@ export function mapObjectValue<K extends PropertyKey, V, RV>(
     ) as Record<K, RV>
 }
 
-export function withoutProps<O extends object, P extends keyof O>(object: O, ...props: Array<P>) {
+export function excludeObjectProps<O extends object, P extends keyof O>(object: O, ...props: Array<P>) {
     const obj = {...object}
 
     for (const prop of props) {
@@ -152,7 +153,7 @@ export function withoutProps<O extends object, P extends keyof O>(object: O, ...
     return obj as Omit<O, P>
 }
 
-export function withoutPropsUndefined<O extends object>(object: O) {
+export function excludeObjectPropsUndefined<O extends object>(object: O) {
     const obj = {...object}
 
     for (const prop in obj) {
@@ -205,6 +206,45 @@ export function fromObjectPathToParts(path: string) {
     }
     return ObjectPathCache[path]!
 }
+
+/*
+* Stores an item inside an object, returning the object. Useful when used inside
+* an Array.reduce() function.
+*
+* EXAMPLE
+* const index = indexBy({}, {key: 123}, it => it.key)
+* [{id: 123}, {id: 234}].reduce((index, it) => indexBy(index, it, it => it.id), {})
+*/
+export function indexBy<
+    M extends Record<PropertyKey, unknown>,
+    K extends keyof M,
+    T extends M[K],
+>(
+    map: M,
+    item: T,
+    keyOf: Io<T, K>,
+): M {
+    const key = keyOf(item)
+
+    map[key] = item
+
+    return map
+}
+
+export function indexingBy<
+    M extends Record<PropertyKey, unknown>,
+    K extends keyof M,
+    T extends M[K],
+>(
+    keyOf: Io<T, K>,
+): Fn<[map: M, item: T], M> {
+    function indexItem(map: M, item: T) {
+        return indexBy(map, item, keyOf)
+    }
+
+    return indexItem
+}
+
 
 // Types ///////////////////////////////////////////////////////////////////////
 
