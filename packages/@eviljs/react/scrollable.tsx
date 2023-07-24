@@ -41,7 +41,7 @@ export const Scrollable = forwardRef(function Scrollable(
             {...hasTouch ? {ref: undefined} : undefined}
             className={classes('Scrollable-ab5c', className, {scrolling})}
             style={{
-                cursor: 'pointer',
+                cursor: 'grab',
                 overflowX: horizontal ? 'auto' : 'hidden',
                 overflowY: vertical ? 'auto' : 'hidden',
                 ...style,

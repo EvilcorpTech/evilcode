@@ -4,7 +4,7 @@ import {defineContext} from './ctx.js'
 import {useAsyncIo, type AsyncIoManager} from './io.js'
 
 export {asBaseUrl, joinUrlPath} from '@eviljs/web/url.js'
-export {useAsyncIoStates as useRequestStates} from './io.js'
+export {useAsyncIoAggregated as useRequestsAggregated} from './io.js'
 
 export const RequestContext = defineContext('RequestContext')
 

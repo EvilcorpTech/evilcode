@@ -104,16 +104,16 @@ export function useStore<V, S extends StoreStateGeneric, A extends ReducerAction
     selectorOptional?: undefined | StoreSelector<S, V>,
     contextOptional?: undefined | React.Context<undefined | StoreManager<S, A>>,
 ): undefined | StoreAccessor<V | S, S, A> {
-    const selectedState = useStoreState<V, S>(selectorOptional, contextOptional)
+    const stateSelection = useStoreState<V, S>(selectorOptional, contextOptional)
     const dispatch = useStoreDispatch<S, A>(contextOptional)
 
-    if (! selectedState || ! dispatch) {
+    if (! stateSelection || ! dispatch) {
         return
     }
 
-    const [selectedStateNew, selectedStateOld] = selectedState
+    const [selectedState, selectedStateOld, readState] = stateSelection
 
-    return [selectedStateNew, dispatch]
+    return [selectedState, dispatch, readState]
 }
 
 /*
@@ -243,7 +243,7 @@ export type StoreAccessor<
     V,
     S extends StoreStateGeneric = StoreStateGeneric,
     A extends ReducerAction = ReducerAction,
-> = [V, StoreDispatch<S, A>]
+> = [V, StoreDispatch<S, A>, StoreReader<S>]
 
 export type StoreReader<S extends StoreStateGeneric> = ReactiveAccessor<S>['read']
 export type StoreSelector<S extends StoreStateGeneric, V> = (state: S) => V
