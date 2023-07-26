@@ -3,19 +3,14 @@
     width: var(--icon-size, 1em);
     height: var(--icon-size, 1em);
 
-    /* Stops growing or shrinking inside a flex container (stiff icon). */
-    min-width: var(--icon-size, 1em);
-    max-width: var(--icon-size, 1em);
-    min-height: var(--icon-size, 1em);
-    max-height: var(--icon-size, 1em);
-
     /* Compatibility with Unicode characters. */
     font-size: var(--icon-size, 1em);
     line-height: var(--icon-size, 1em);
 }
-.std-icon-flexible {
-    min-width: initial;
-    max-width: initial;
-    min-height: initial;
-    max-height: initial;
+.std-icon-stiff {
+    /* Stops growing or shrinking inside a flex container. */
+    min-width: var(--icon-size, 1em);
+    max-width: var(--icon-size, 1em);
+    min-height: var(--icon-size, 1em);
+    max-height: var(--icon-size, 1em);
 }

@@ -1,12 +1,12 @@
-.std-icon1 { --icon-size: var(--std-icon1); }
-.std-icon2 { --icon-size: var(--std-icon2); }
-.std-icon3 { --icon-size: var(--std-icon3); }
-.std-icon4 { --icon-size: var(--std-icon4); }
-.std-icon5 { --icon-size: var(--std-icon5); }
-.std-icon6 { --icon-size: var(--std-icon6); }
-.std-icon7 { --icon-size: var(--std-icon7); }
-.std-icon8 { --icon-size: var(--std-icon8); }
-.std-icon9 { --icon-size: var(--std-icon9); }
-.std-icon10 { --icon-size: var(--std-icon10); }
+.std-icon-size1 { --icon-size: var(--std-icon-size1); }
+.std-icon-size2 { --icon-size: var(--std-icon-size2); }
+.std-icon-size3 { --icon-size: var(--std-icon-size3); }
+.std-icon-size4 { --icon-size: var(--std-icon-size4); }
+.std-icon-size5 { --icon-size: var(--std-icon-size5); }
+.std-icon-size6 { --icon-size: var(--std-icon-size6); }
+.std-icon-size7 { --icon-size: var(--std-icon-size7); }
+.std-icon-size8 { --icon-size: var(--std-icon-size8); }
+.std-icon-size9 { --icon-size: var(--std-icon-size9); }
+.std-icon-size10 { --icon-size: var(--std-icon-size10); }
 
 .std-icon-cover { --icon-size: 100%; }

@@ -1,15 +1,15 @@
 .std-root {
     /* Values must be integer, for a pixel perfect result. */
-    --std-icon-base: 12px;
-    --std-icon-factor: 2px;
-    --std-icon1: var(--std-icon-base);
-    --std-icon2: calc(var(--std-icon1) + 1 * var(--std-icon-factor));
-    --std-icon3: calc(var(--std-icon2) + 2 * var(--std-icon-factor));
-    --std-icon4: calc(var(--std-icon3) + 3 * var(--std-icon-factor));
-    --std-icon5: calc(var(--std-icon4) + 4 * var(--std-icon-factor));
-    --std-icon6: calc(var(--std-icon5) + 5 * var(--std-icon-factor));
-    --std-icon7: calc(var(--std-icon6) + 6 * var(--std-icon-factor));
-    --std-icon8: calc(var(--std-icon7) + 7 * var(--std-icon-factor));
-    --std-icon9: calc(var(--std-icon8) + 8 * var(--std-icon-factor));
-    --std-icon10: calc(var(--std-icon9) + 9 * var(--std-icon-factor));
+    --std-icon-size-base: 12px;
+    --std-icon-size-factor: 2px;
+    --std-icon-size1: var(--std-icon-size-base);
+    --std-icon-size2: calc(var(--std-icon-size1) + 1 * var(--std-icon-size-factor));
+    --std-icon-size3: calc(var(--std-icon-size2) + 2 * var(--std-icon-size-factor));
+    --std-icon-size4: calc(var(--std-icon-size3) + 3 * var(--std-icon-size-factor));
+    --std-icon-size5: calc(var(--std-icon-size4) + 4 * var(--std-icon-size-factor));
+    --std-icon-size6: calc(var(--std-icon-size5) + 5 * var(--std-icon-size-factor));
+    --std-icon-size7: calc(var(--std-icon-size6) + 6 * var(--std-icon-size-factor));
+    --std-icon-size8: calc(var(--std-icon-size7) + 7 * var(--std-icon-size-factor));
+    --std-icon-size9: calc(var(--std-icon-size8) + 8 * var(--std-icon-size-factor));
+    --std-icon-size10: calc(var(--std-icon-size9) + 9 * var(--std-icon-size-factor));
 }
