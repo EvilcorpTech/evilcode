@@ -33,7 +33,7 @@ export function FallbackIcon(props: SvgProps) {
     return (
         <svg
             {...otherProps}
-            className={classes('std-icon', className)}
+            className={classes('std-icon std-icon-color', className)}
         />
     )
 }
