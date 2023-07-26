@@ -2,7 +2,7 @@ import {defineSvg} from '@eviljs/react/svg.js'
 
 export const ExampleIcon = defineSvg({
     name: 'ExampleIcon',
-    className: 'std-icon',
+    className: 'std-icon std-icon-color',
     viewBox: '0 0 24 24',
     children: <>
         <path

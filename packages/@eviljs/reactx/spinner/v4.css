@@ -6,18 +6,17 @@
     opacity: 0;
 }
 
-.Spinner-9fef.active {
+.Spinner-9fef[data-active="true"] {
     opacity: 1;
-    animation: spinner-9fef 2.5s infinite linear both;
+    animation: spinner-9fef 2.5s infinite linear;
 }
 
-.Spinner-9fef.active .dot-b05e,
-.Spinner-9fef.active .dot-b05e::before {
+.Spinner-9fef[data-active="true"] .dot-b05e,
+.Spinner-9fef[data-active="true"] .dot-b05e::before {
     animation-name: spinner-9fef-dot;
     animation-duration: 2.0s;
     animation-iteration-count: infinite;
     animation-timing-function: ease-in-out;
-    animation-direction: both
 }
 
 .dot-b05e {
@@ -27,20 +26,14 @@
     width: 100%;
     height: 100%;
 }
-.Spinner-9fef.active .dot-b05e {
-    animation-name: spinner-9fef-dot;
-}
 
 .dot-b05e::before {
     content: '';
     display: block;
-    width: 25%;
-    height: 25%;
+    width: 16%;
+    height: 16%;
     border-radius: 100%;
     background-color: var(--color, currentColor);
-}
-.Spinner-9fef.active .dot-b05e::before {
-    animation-name: spinner-9fef-dot-before;
 }
 
 .dot-b05e:nth-child(1) { animation-delay: -1.1s; }

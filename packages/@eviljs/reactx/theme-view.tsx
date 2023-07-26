@@ -549,7 +549,7 @@ export function Icons() {
         <div className="std-flex std-flex-row std-flex-justify-center std-flex-align-end std-flex-aligned-center std-flex-wrap">
             {times(10).map(it =>
                 <div key={it} className="icon-e43c">
-                    <Icon className={classes('std-icon', `std-icon${it + 1}`)}/>
+                    <Icon className={`std-icon-size${it + 1}`}/>
                     <div className="std-space-h3"/>
                     <label>{it + 1}</label>
                 </div>

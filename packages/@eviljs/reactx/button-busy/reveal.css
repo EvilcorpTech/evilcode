@@ -1,13 +1,19 @@
-.BusyButton-f1d2.reveal .spinner-932c {
-    font-size: 1.2em;
+.BusyButton-f1d2.\+reveal {
+    display: flex;
+    align-items: center;
+}
+
+.BusyButton-f1d2.\+reveal .spinner-932c {
+    display: flex;
+    align-items: center;
     max-width: 0;
     opacity: 0;
     /* transform: scale(0); *//* Breaks on Safari. */
     transition: all var(--std-duration3);
 }
-.BusyButton-f1d2.reveal.busy .spinner-932c {
+.BusyButton-f1d2[data-busy="true"].\+reveal .spinner-932c {
     max-width: 1em;
-    margin-left: 1em;
+    margin-left: var(--busy-button-reveal-gap, 1em);
     opacity: 1;
     /* transform: scale(1); *//* Breaks on Safari. */
 }

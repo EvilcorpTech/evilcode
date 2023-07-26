@@ -21,8 +21,8 @@
     opacity: 0;
     transform: scale(0);
 }
-.Spinner-5b07.active::before,
-.Spinner-5b07.active::after {
+.Spinner-5b07[data-active="true"]::before,
+.Spinner-5b07[data-active="true"]::after {
     opacity: 1;
     animation-name: spinner-5b07;
 }

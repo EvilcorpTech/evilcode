@@ -55,18 +55,18 @@ export function WidgetsView(props: WidgetsViewProps) {
                 </Button>
 
                 <BusyButton
-                    className="reveal std-button-dye"
+                    className="+reveal std-button-dye"
                     busy={busy}
-                    spinner={<SpinnerV4 className="std-icon" active={busy}/>}
+                    spinner={<SpinnerV4 active={busy}/>}
                     onClick={() => setBusy(! busy)}
                 >
                     Reveal Busy Button
                 </BusyButton>
 
                 <BusyButton
-                    className="replace std-button-dye"
+                    className="+replace std-button-dye"
                     busy={busy}
-                    spinner={<SpinnerV4 className="std-icon" active={busy}/>}
+                    spinner={<SpinnerV4 active={busy}/>}
                     onClick={() => setBusy(! busy)}
                 >
                     Replace Busy Button
@@ -106,13 +106,13 @@ export function WidgetsView(props: WidgetsViewProps) {
                 <Switch
                     checked={checkbox}
                     onChange={setCheckbox}
-                    style={{fontSize: 'var(--std-icon2'}}
+                    style={{fontSize: 'var(--std-icon-size2'}}
                 />
 
                 <Switch
                     checked={checkbox}
                     onChange={setCheckbox}
-                    style={{fontSize: 'var(--std-icon4'}}
+                    style={{fontSize: 'var(--std-icon-size4'}}
                 >
                     <CheckboxMarkV1
                         className="std-knob round std-icon"
@@ -124,20 +124,20 @@ export function WidgetsView(props: WidgetsViewProps) {
                     <CheckboxMarkV2/>
                 </Checkbox>
                 <Checkbox checked={checkbox} onChange={setCheckbox}>
-                    <CheckboxMarkV2 className="std-icon std-icon1"/>
+                    <CheckboxMarkV2 className="std-icon std-icon-size1"/>
                 </Checkbox>
                 <Checkbox className="round" checked={checkbox} onChange={setCheckbox}>
-                    <CheckboxMarkV2 className="std-icon std-icon1"/>
+                    <CheckboxMarkV2 className="std-icon std-icon-size1"/>
                 </Checkbox>
 
                 <Checkbox checked disabled>
-                    <CheckboxMarkV1 className="std-icon std-icon1"/>
+                    <CheckboxMarkV1 className="std-icon std-icon-size1"/>
                 </Checkbox>
                 <Checkbox checked={checkbox} onChange={setCheckbox}>
-                    <CheckboxMarkV1 className="std-icon std-icon1"/>
+                    <CheckboxMarkV1 className="std-icon std-icon-size1"/>
                 </Checkbox>
                 <Checkbox className="round" checked={checkbox} onChange={setCheckbox}>
-                    <CheckboxMarkV1 className="std-icon std-icon1"/>
+                    <CheckboxMarkV1 className="std-icon std-icon-size1"/>
                 </Checkbox>
 
                 <RadioGroup

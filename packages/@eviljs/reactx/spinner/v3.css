@@ -8,7 +8,7 @@
     background-color: var(--color, currentColor);
     transition: all var(--std-duration3);
 }
-.Spinner-2a9d.active {
+.Spinner-2a9d[data-active="true"] {
     opacity: 1;
     animation: spinner-2a9d var(--spinner-duration, 2s) infinite ease-in-out;
 }

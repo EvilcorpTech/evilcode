@@ -8,7 +8,8 @@ export function Spinner(props: SpinnerProps) {
     return (
         <div
             {...otherProps}
-            className={classes('Spinner-5b07', className, {active})}
+            className={classes('Spinner-5b07', className)}
+            data-active={String(active)}
         />
     )
 }

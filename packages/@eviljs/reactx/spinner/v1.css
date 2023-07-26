@@ -10,7 +10,7 @@
     border-radius: 50%;
 }
 
-.Spinner-sa7b.active .dot-sdd5 {
+.Spinner-sa7b[data-active="true"] .dot-sdd5 {
     opacity: 1;
     animation-name: spinner-sa7b;
     animation-duration: 1s;
