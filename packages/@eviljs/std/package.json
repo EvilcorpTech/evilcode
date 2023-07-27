@@ -1,6 +1,6 @@
 {
     "name": "@eviljs/std",
-    "version": "1.2.33",
+    "version": "1.2.34",
     "type": "module",
     "files": [
         "/LICENSE.txt",
