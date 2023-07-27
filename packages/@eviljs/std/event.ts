@@ -1,95 +1,93 @@
 import type {Fn, FnArgs} from './fn.js'
+import {isDefined, isUndefined} from './type.js'
 
-export function debounce<A extends Array<unknown>>(task: EventTask<A>, delay: number) {
+export function debounce<A extends FnArgs>(task: Fn<A>, delay: number) {
     interface State {
-        args: null | A
-        callTime: null | number
-        timeoutId: null | ReturnType<typeof setTimeout>
+        lastCallArgs: A
+        lastCallTime: undefined | number
+        timeoutId: undefined | ReturnType<typeof setTimeout>
     }
     const state: State = {
-        args: null,
-        callTime: null,
-        timeoutId: null,
+        lastCallArgs: [] as unknown as A,
+        lastCallTime: undefined,
+        timeoutId: undefined,
     }
 
-    function call(...args: A) {
-        state.args = args
-        state.callTime = Date.now()
+    function callTask(...args: A) {
+        state.lastCallArgs = args
+        state.lastCallTime = Date.now()
 
-        if (state.timeoutId !== null) {
+        if (isDefined(state.timeoutId)) {
             return
         }
 
-        state.timeoutId = setTimeout(run, delay)
+        state.timeoutId = setTimeout(runTask, delay)
     }
 
-    function cancel() {
-        if (state.timeoutId === null) {
+    function cancelTask() {
+        if (isUndefined(state.timeoutId)) {
             return
         }
 
         clearTimeout(state.timeoutId)
-        state.timeoutId = null
+        state.timeoutId = undefined
     }
 
-    function run() {
-        const elapsedTime = Date.now() - state.callTime!
-        const isTimeExpired = elapsedTime >= delay
+    function runTask() {
+        const timeElapsed = Date.now() - state.lastCallTime!
+        const timeIsExpired = timeElapsed >= delay
 
-        if (isTimeExpired) {
-            state.timeoutId = null
-            task(...state.args!)
-        }
-        else {
-            const remainingDelay = delay - elapsedTime
-            state.timeoutId = setTimeout(run, remainingDelay)
-        }
-    }
-
-    call.cancel = cancel
-
-    return call
-}
-
-export function throttle<A extends Array<unknown>>(task: EventTask<A>, delay: number) {
-    interface State {
-        args: null | A
-        timeoutId: null | ReturnType<typeof setTimeout>
-    }
-    const state: State = {
-        args: null,
-        timeoutId: null,
-    }
-
-    function call(...args: A) {
-        state.args = args
-
-        if (state.timeoutId !== null) {
+        if (! timeIsExpired) {
+            const delayRemaining = delay - timeElapsed
+            state.timeoutId = setTimeout(runTask, delayRemaining)
             return
         }
 
-        state.timeoutId = setTimeout(run, delay)
+        state.timeoutId = undefined
+        task(...state.lastCallArgs)
     }
 
-    function cancel() {
-        if (state.timeoutId === null) {
+    callTask.cancel = cancelTask
+
+    return callTask
+}
+
+export function throttle<A extends FnArgs>(task: Fn<A>, delay: number) {
+    interface State {
+        lastCallArgs: A
+        timeoutId: undefined | ReturnType<typeof setTimeout>
+    }
+    const state: State = {
+        lastCallArgs: [] as unknown as A,
+        timeoutId: undefined,
+    }
+
+    function callTask(...args: A) {
+        state.lastCallArgs = args
+
+        if (isDefined(state.timeoutId)) {
+            return
+        }
+
+        task(...args)
+        state.timeoutId = setTimeout(runTask, delay)
+    }
+
+    function cancelTask() {
+        if (isUndefined(state.timeoutId)) {
             return
         }
 
         clearTimeout(state.timeoutId)
-        state.timeoutId = null
+        state.timeoutId = undefined
     }
 
-    function run() {
-        state.timeoutId = null
-        task(...state.args!)
+    function runTask() {
+        state.timeoutId = undefined
+        task(...state.lastCallArgs)
     }
 
-    call.cancel = cancel
+    callTask.cancel = cancelTask
 
-    return call
+    return callTask
 }
-
-// Types ///////////////////////////////////////////////////////////////////////
-
-export type EventTask<A extends FnArgs> = Fn<A, void>
