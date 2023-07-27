@@ -32,7 +32,7 @@ export const SliderVirtual = forwardRef(function SliderVirtual<I>(
         setSizes(computeSizes(containerRef.current))
     }, [])
 
-    useLayoutEffect(updateSize, []) // eslint-disable-line
+    useLayoutEffect(updateSize, [])
     useResizeObserver(containerRef, useCallbackThrottled(updateSize, 100))
 
     const render = useMemo(() => {
