@@ -30,7 +30,7 @@ export function usePictureInPicture(
             videoRef.current?.requestPictureInPicture().then(onEnter, onError)
         }
 
-    }, [onEnter, onError]) // eslint-disable-line
+    }, [onEnter, onError])
 
     const exit = useCallback(() => {
         if (document.pictureInPictureElement) {
