@@ -3,12 +3,12 @@ import {isDefined, isUndefined} from './type.js'
 
 export function debounce<A extends FnArgs>(task: Fn<A>, delay: number) {
     interface State {
-        lastCallArgs: A
+        lastCallArgs: undefined | A
         lastCallTime: undefined | number
         timeoutId: undefined | ReturnType<typeof setTimeout>
     }
     const state: State = {
-        lastCallArgs: [] as unknown as A,
+        lastCallArgs: undefined,
         lastCallTime: undefined,
         timeoutId: undefined,
     }
@@ -34,7 +34,16 @@ export function debounce<A extends FnArgs>(task: Fn<A>, delay: number) {
     }
 
     function runTask() {
-        const timeElapsed = Date.now() - state.lastCallTime!
+        state.timeoutId = undefined
+
+        if (isUndefined(state.lastCallArgs)) {
+            return
+        }
+        if (isUndefined(state.lastCallTime)) {
+            return
+        }
+
+        const timeElapsed = Date.now() - state.lastCallTime
         const timeIsExpired = timeElapsed >= delay
 
         if (! timeIsExpired) {
@@ -43,7 +52,6 @@ export function debounce<A extends FnArgs>(task: Fn<A>, delay: number) {
             return
         }
 
-        state.timeoutId = undefined
         task(...state.lastCallArgs)
     }
 
@@ -54,11 +62,11 @@ export function debounce<A extends FnArgs>(task: Fn<A>, delay: number) {
 
 export function throttle<A extends FnArgs>(task: Fn<A>, delay: number) {
     interface State {
-        lastCallArgs: A
+        lastCallArgs: undefined | A
         timeoutId: undefined | ReturnType<typeof setTimeout>
     }
     const state: State = {
-        lastCallArgs: [] as unknown as A,
+        lastCallArgs: undefined,
         timeoutId: undefined,
     }
 
@@ -69,7 +77,6 @@ export function throttle<A extends FnArgs>(task: Fn<A>, delay: number) {
             return
         }
 
-        task(...args)
         state.timeoutId = setTimeout(runTask, delay)
     }
 
@@ -84,6 +91,11 @@ export function throttle<A extends FnArgs>(task: Fn<A>, delay: number) {
 
     function runTask() {
         state.timeoutId = undefined
+
+        if (isUndefined(state.lastCallArgs)) {
+            return
+        }
+
         task(...state.lastCallArgs)
     }
 
