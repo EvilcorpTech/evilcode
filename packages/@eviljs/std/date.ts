@@ -8,6 +8,7 @@ export const OneHourInMs = 60 * OneMinuteInMs
 export const OneDayInMs = 24 * OneHourInMs
 export const OneWeekInMs = 7 * OneDayInMs
 export const OneMonthInMs = 30 * OneDayInMs
+export const OneYearInMs = 365 * OneDayInMs
 
 export function dateNow(): Date {
     return new Date()

@@ -2,6 +2,14 @@ import type {Io} from './fn.js'
 import type {Nil} from './type.js'
 import {isSome} from './type.js'
 
+export function areArraysEqual(a: Array<unknown>, b: Array<unknown>): boolean {
+    if (a.length !== b.length) {
+        return false
+    }
+
+    return a.every((_, idx) => a[idx] === b[idx])
+}
+
 export function firstOf<I>(list: Array<I>): undefined | I {
     return list[0]
 }

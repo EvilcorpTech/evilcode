@@ -1,5 +1,5 @@
 import {createAccessor, type AccessorSync} from './accessor.js'
-import {scheduleMicroTask} from './eventloop.js'
+import {scheduleMicroTaskUsingPromise} from './eventloop.js'
 import type {Task} from './fn.js'
 import type {Ref} from './ref.js'
 import {areEqualIdentity} from './struct.js'
@@ -28,7 +28,7 @@ export function createReactiveAccessor<V>(
         // We notify once multiple mutations in the same micro task.
         // We schedule a micro task so that if an observer triggers a value mutation,
         // the reentrant mutation is notified after current one is notified.
-        cancelNotification ??= scheduleMicroTask(() => {
+        cancelNotification ??= scheduleMicroTaskUsingPromise(() => {
             cancelNotification = undefined
 
             if (areEqual(currentValue, oldValue)) {
