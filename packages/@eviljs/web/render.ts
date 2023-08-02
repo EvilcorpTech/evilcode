@@ -42,10 +42,10 @@ export function updateElement<E extends RenderElement>(
 
         const value = otherProps[property as Property] as unknown
 
-        if (value === undefined) {
+        if (isUndefined(value)) {
             continue
         }
-        if (value === null) {
+        if (isNull(value)) {
             element.removeAttribute(property)
             continue
         }
@@ -129,9 +129,19 @@ export function setAttributeString(element: RenderElement, property: string, val
     element.setAttribute(property, String(value))
 }
 
-export function setDataset(element: RenderElement, dataset: HTMLElement['dataset']) {
+export function setDataset(element: RenderElement, dataset: RenderDatasetAttribute) {
     for (const key in dataset) {
-        element.dataset[key] = dataset[key]
+        const value = dataset[key]
+
+        if (isUndefined(value)) {
+            continue
+        }
+        if (isNull(value)) {
+            delete element.dataset[key]
+            continue
+        }
+
+        element.dataset[key] = String(value)
     }
 }
 
@@ -234,7 +244,7 @@ export interface RenderAttributesProps {
     autofocus?: undefined | null | HTMLElement['autofocus']
     children?: RenderChildren
     class?: undefined | null | HTMLElement['className'] | Classes
-    dataset?: undefined | null | HTMLElement['dataset']
+    dataset?: undefined | null | RenderDatasetAttribute
     hidden?: undefined | null | HTMLElement['hidden']
     id?: undefined | null | HTMLElement['id']
     style?: undefined | null | string
@@ -262,3 +272,5 @@ export type RenderEventHandlerFunction<E> = Io<E, void>
 export type RenderEventHandlerTuple<E> =
     | [RenderEventHandlerFunction<E>]
     | [RenderEventHandlerFunction<E>, undefined | AddEventListenerOptions]
+
+export type RenderDatasetAttribute = Record<string, undefined | null | boolean | number | string>
