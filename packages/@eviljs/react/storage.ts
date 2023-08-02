@@ -1,5 +1,5 @@
 import {createAccessor} from '@eviljs/std/accessor.js'
-import {scheduleMacroTask} from '@eviljs/std/eventloop.js'
+import {scheduleMacroTaskUsingTimeout} from '@eviljs/std/eventloop.js'
 import type {Io, Task} from '@eviljs/std/fn.js'
 import {identity} from '@eviljs/std/return.js'
 import {tryCatch} from '@eviljs/std/try.js'
@@ -35,7 +35,7 @@ export function useBrowserStorageAccessor<V = string, S = string>(
         render(newValue)
 
         cancelWriteTaskRef.current?.()
-        cancelWriteTaskRef.current = scheduleMacroTask(() => {
+        cancelWriteTaskRef.current = scheduleMacroTaskUsingTimeout(() => {
             // We can't use valueRef.current here, due to React 17/18 constraint
             // on references usage on unmounted components. When the the macro task
             // is executed, the component could be unmounted and the reference

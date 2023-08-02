@@ -3,7 +3,7 @@ import {createReactiveAccessor, type ReactiveAccessor} from '@eviljs/std/reactiv
 import type {ReducerAction} from '@eviljs/std/redux.js'
 import {identity} from '@eviljs/std/return.js'
 import {isArray} from '@eviljs/std/type.js'
-import {useCallback, useContext, useEffect, useMemo, useState} from 'react'
+import {useCallback, useContext, useEffect, useMemo, useRef, useState} from 'react'
 import {defineContext} from './ctx.js'
 import type {StoreStateGeneric} from './store-v1.js'
 import type {StoreDefinition, StoreDispatch, StoreDispatchPolymorphicArgs} from './store-v2.js'
@@ -141,7 +141,7 @@ export function useStoreState<V, S extends StoreStateGeneric>(
     const [state] = store ?? [createReactiveAccessor(undefined as unknown as S)]
     const selector: Io<S, V | S> = selectorOptional ?? identity
     const [selectedState, setSelectedState] = useState(selector(state.read()))
-    const [selectedStateOld, setSelectedStateOld] = useState(selectedState)
+    const selectedStateOldRef = useRef(selectedState)
 
     useEffect(() => {
         if (! store) {
@@ -152,7 +152,7 @@ export function useStoreState<V, S extends StoreStateGeneric>(
 
         const stopWatching = state.watch((newState, oldState) => {
             setSelectedState(selector(newState))
-            setSelectedStateOld(selector(oldState))
+            selectedStateOldRef.current = selector(oldState)
         })
 
         function onClean() {
@@ -166,7 +166,7 @@ export function useStoreState<V, S extends StoreStateGeneric>(
         return
     }
 
-    return [selectedState, selectedStateOld, state.read]
+    return [selectedState, selectedStateOldRef.current, state.read]
 }
 
 export function useStoreDispatch<S extends StoreStateGeneric, A extends ReducerAction = ReducerAction>(
