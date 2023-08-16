@@ -1,9 +1,18 @@
+import type {FnArgs} from './fn.js'
+
 export const CollatorOptionsDefault: Intl.CollatorOptions = {
     numeric: true, // '1' < '2' < '10'.
 }
 
+/*
+* EXAMPLE
+*
+* const list = [{id: 1, name: 'Mike'}, {id: 2, name: 'John'}]
+* list.sort(sortingOn(it => it.id))
+* list.sort(sortingOn(it => it.name))
+*/
 export function sortingOn<I, R extends undefined | number | string>(
-    getItemValue: (item: I) => R,
+    getter: (item: I) => R,
     collatorOptional?: undefined | Intl.Collator | Intl.CollatorOptions,
 ) {
     const collator = collatorOptional instanceof Intl.Collator
@@ -12,15 +21,21 @@ export function sortingOn<I, R extends undefined | number | string>(
 
     function onSort(a: I, b: I) {
         return collator.compare(
-            String(getItemValue(a) ?? ''),
-            String(getItemValue(b) ?? ''),
+            String(getter(a) ?? ''),
+            String(getter(b) ?? ''),
         )
     }
 
     return onSort
 }
 
-export function invertedSort<A extends Array<unknown>>(
+/*
+* EXAMPLE
+*
+* const list = [{id: 1, name: 'Mike'}]
+* list.sort(inverting(sortingOn(it => it.id)))
+*/
+export function inverting<A extends FnArgs>(
     fn: (...args: A) => number,
 ) {
     function invert(...args: A) {
@@ -28,14 +43,4 @@ export function invertedSort<A extends Array<unknown>>(
     }
 
     return invert
-}
-
-export function filteringOn<I, R extends boolean | number | string>(
-    getItemValue: (item: I) => undefined | R,
-) {
-    function onFilter(filterValue: R, item: I) {
-        return getItemValue(item) === filterValue
-    }
-
-    return onFilter
 }

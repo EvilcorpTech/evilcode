@@ -5,27 +5,27 @@ export const ObjectPathArrayOpenRegexp = /\[/g
 export const ObjectPathArrayCloseRegexp = /\]/g
 export const ObjectPathCache: Record<string, Array<string | number>> = {}
 
-export function isObjectEmpty(obj: object): boolean {
-    for (const it in obj) {
+export function isObjectEmpty(object: object): boolean {
+    for (const it in object) {
         return false
     }
     return true
 }
 
-export function areObjectsEqualShallow<T extends object>(a: T, b: T): boolean {
-    if (a === b) {
+export function areObjectsEqualShallow<T extends object>(firstObject: T, secondObject: T): boolean {
+    if (firstObject === secondObject) {
         return true
     }
 
-    const aKeys = Object.keys(a)
-    const bKeys = Object.keys(b)
+    const aKeys = Object.keys(firstObject)
+    const bKeys = Object.keys(secondObject)
     const allKeys = new Set([...aKeys, ...bKeys])
 
     // Shallow equality check.
     for (const key of allKeys) {
         // A not defined property and a property with undefined value are considered equal.
-        const aValue = a[key as keyof typeof a]
-        const bValue = b[key as keyof typeof b]
+        const aValue = firstObject[key as keyof typeof firstObject]
+        const bValue = secondObject[key as keyof typeof secondObject]
 
         if (aValue !== bValue) {
             // Something changed inside the object.
@@ -37,13 +37,13 @@ export function areObjectsEqualShallow<T extends object>(a: T, b: T): boolean {
     return true
 }
 
-export function areObjectsEqualShallowStrict<T extends object>(a: T, b: T): boolean {
-    if (a === b) {
+export function areObjectsEqualShallowStrict<T extends object>(firstObject: T, secondObject: T): boolean {
+    if (firstObject === secondObject) {
         return true
     }
 
-    const aKeys = Object.keys(a)
-    const bKeys = Object.keys(b)
+    const aKeys = Object.keys(firstObject)
+    const bKeys = Object.keys(secondObject)
 
     if (aKeys.length !== bKeys.length) {
         return false
@@ -53,15 +53,15 @@ export function areObjectsEqualShallowStrict<T extends object>(a: T, b: T): bool
 
     // Shallow equality check.
     for (const key of allKeys) {
-        const aIn = key in a
-        const bIn = key in b
+        const aIn = key in firstObject
+        const bIn = key in secondObject
 
         if (aIn !== bIn) {
             return false
         }
 
-        const aValue = a[key as keyof typeof a]
-        const bValue = b[key as keyof typeof b]
+        const aValue = firstObject[key as keyof typeof firstObject]
+        const bValue = secondObject[key as keyof typeof secondObject]
 
         if (aValue !== bValue) {
             // Something changed inside the object.
@@ -82,87 +82,84 @@ export function cloneObjectShallow<O extends object>(object: O): O {
 
 export function mapObject<K extends PropertyKey, V, RK extends PropertyKey>(
     object: Record<K, V>,
-    withFn: {key: MapObjectKeyFn<K, V, RK>, value?: never},
+    fn: {key: ObjectKeyMapper<K, V, RK>, value?: never},
 ): Record<RK, V>
 export function mapObject<K extends PropertyKey, V, RV>(
     object: Record<K, V>,
-    withFn: {key?: never, value: MapObjectValueFn<V, K, RV>},
+    fn: {key?: never, value: ObjectValueMapper<V, K, RV>},
 ): Record<K, RV>
 export function mapObject<K extends PropertyKey, V, RK extends PropertyKey, RV>(
     object: Record<K, V>,
-    withFn: {key: MapObjectKeyFn<K, V, RK>, value: MapObjectValueFn<V, K, RV>},
+    withFn: {key: ObjectKeyMapper<K, V, RK>, value: ObjectValueMapper<V, K, RV>},
 ): Record<RK, RV>
 export function mapObject<K extends PropertyKey, V, RK extends PropertyKey, RV>(
     object: Record<K, V>,
-    withFn: {key?: MapObjectKeyFn<K, V, RK>, value?: MapObjectValueFn<V, K, RV>},
+    fn: {key?: ObjectKeyMapper<K, V, RK>, value?: ObjectValueMapper<V, K, RV>},
 ): Record<K | RK, V | RV> {
-    function mapper(it: [K, V]): [K | RK, V | RV] {
+    function mapKeyValue(it: [K, V]): [K | RK, V | RV] {
         const [key, value] = it
         return [
-            withFn.key
-                ? withFn.key(key, value)
+            fn.key
+                ? fn.key(key, value)
                 : key
             ,
-            withFn.value
-                ? withFn.value(value, key)
+            fn.value
+                ? fn.value(value, key)
                 : value
             ,
         ]
     }
 
-    return Object.fromEntries(
-        (Object.entries(object) as Array<[K, V]>).map(mapper)
-    ) as Record<K | RK, V | RV>
+    const entries = Object.entries(object) as Array<[K, V]>
+    return Object.fromEntries(entries.map(mapKeyValue)) as Record<K | RK, V | RV>
 }
 
 export function mapObjectKey<K extends PropertyKey, V, RK extends PropertyKey>(
     object: Record<K, V>,
-    withFn: MapObjectKeyFn<K, V, RK>,
+    fn: ObjectKeyMapper<K, V, RK>,
 ): Record<RK, V> {
-    function mapper(it: [K, V]): [RK, V] {
+    function mapKey(it: [K, V]): [RK, V] {
         const [key, value] = it
-        return [withFn(key, value), value]
+        return [fn(key, value), value]
     }
 
-    return Object.fromEntries(
-        (Object.entries(object) as Array<[K, V]>).map(mapper)
-    ) as Record<RK, V>
+    const entries = Object.entries(object) as Array<[K, V]>
+    return Object.fromEntries(entries.map(mapKey)) as Record<RK, V>
 }
 
 export function mapObjectValue<K extends PropertyKey, V, RV>(
     object: Record<K, V>,
-    withFn: MapObjectValueFn<V, K, RV>,
+    fn: ObjectValueMapper<V, K, RV>,
 ): Record<K, RV> {
-    function mapper(it: [K, V]): [K, RV] {
+    function mapValue(it: [K, V]): [K, RV] {
         const [key, value] = it
-        return [key, withFn(value, key)]
+        return [key, fn(value, key)]
     }
 
-    return Object.fromEntries(
-        (Object.entries(object) as Array<[K, V]>).map(mapper)
-    ) as Record<K, RV>
+    const entries = Object.entries(object) as Array<[K, V]>
+    return Object.fromEntries(entries.map(mapValue)) as Record<K, RV>
 }
 
-export function excludeObjectProps<O extends object, P extends keyof O>(object: O, ...props: Array<P>) {
-    const obj = {...object}
+export function omitObjectProps<O extends object, P extends keyof O>(object: O, ...props: Array<P>) {
+    const objectOmitted = {...object}
 
     for (const prop of props) {
-        delete obj[prop]
+        delete objectOmitted[prop]
     }
 
-    return obj as Omit<O, P>
+    return objectOmitted as Omit<O, P>
 }
 
-export function excludeObjectPropsUndefined<O extends object>(object: O) {
-    const obj = {...object}
+export function omitObjectPropsUndefined<O extends object>(object: O) {
+    const objectOmitted = {...object}
 
-    for (const prop in obj) {
-        if (isUndefined(obj[prop])) {
-            delete obj[prop]
+    for (const prop in objectOmitted) {
+        if (isUndefined(objectOmitted[prop])) {
+            delete objectOmitted[prop]
         }
     }
 
-    return obj
+    return objectOmitted
 }
 
 export function objectFromEntry<K extends PropertyKey, V>(
@@ -248,12 +245,8 @@ export function indexingBy<
 
 // Types ///////////////////////////////////////////////////////////////////////
 
-export interface MapObjectKeyFn<K, V, R> {
-    (key: K, value: V): R
-}
-export interface MapObjectValueFn<V, K, R> {
-    (value: V, key: K): R
-}
+export type ObjectKeyMapper<K, V, R> = (key: K, value: V) => R
+export type ObjectValueMapper<V, K, R> = (value: V, key: K) => R
 
 export type ObjectRoot = Record<PropertyKey, unknown> | Array<unknown>
 export type ObjectPath = string | Array<string | number>
