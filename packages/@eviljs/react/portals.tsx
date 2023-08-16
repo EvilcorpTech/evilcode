@@ -1,4 +1,4 @@
-import {useCallback, useContext, useMemo, useState} from 'react'
+import {useCallback, useContext, useEffect, useMemo, useState} from 'react'
 import {createPortal} from 'react-dom'
 import {Box, type BoxProps} from './box.js'
 import {defineContext} from './ctx.js'
@@ -43,16 +43,14 @@ export function Portal(props: PortalProps) {
     const {name, ...otherProps} = props
     const [, setPortals] = useContext(PortalsContext)!
 
-    const onRef = useCallback((element: Element) => {
-        if (! element) {
-            return
-        }
-
+    const onRef = useCallback((element: null | Element) => {
         setPortals(state => ({
             ...state,
             [name]: element,
         }))
+    }, [name, setPortals])
 
+    useEffect(() => {
         function onClean() {
             setPortals(state => ({
                 ...state,
@@ -61,7 +59,7 @@ export function Portal(props: PortalProps) {
         }
 
         return onClean
-    }, [name, setPortals])
+    }, [name])
 
     return <Box {...otherProps} ref={onRef}/>
 }

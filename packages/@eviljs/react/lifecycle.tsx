@@ -59,10 +59,15 @@ export function useMountedRef() {
 * }
 */
 export function useRender() {
-    const [, setShouldRender] = useState(true)
+    const [, setShouldRender] = useState([])
 
     const render = useCallback(() => {
-        setShouldRender(state => ! state)
+        // Don't use -1/1 or !boolean, which don't work on even number of consecutive calls.
+        // Don't use ++number, which can overflow Number.MAX_SAFE_INTEGER.
+        // [] is faster and memory cheaper
+        // than {} which is faster
+        // than Object.create(null).
+        setShouldRender([])
     }, [])
 
     return render
