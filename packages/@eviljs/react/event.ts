@@ -5,8 +5,8 @@ import {useEffect, useMemo, useState} from 'react'
 import type {StateInit, StateSetter} from './state.js'
 
 export function useCallbackDebounced<A extends FnArgs>(callback: Fn<A>, delay: number): EventFn<A> {
-    const callbackDebounced: EventFn<A> = useMemo(() => {
-        return debounced<A>(callback, delay)
+    const callbackDebounced = useMemo(() => {
+        return debounced(callback, delay)
     }, [callback, delay])
 
     useEffect(() => {
@@ -21,8 +21,8 @@ export function useCallbackDebounced<A extends FnArgs>(callback: Fn<A>, delay: n
 }
 
 export function useCallbackThrottled<A extends FnArgs>(callback: Fn<A>, delay: number): EventFn<A> {
-    const callbackThrottled: EventFn<A> = useMemo(() => {
-        return throttled<A>(callback, delay)
+    const callbackThrottled = useMemo(() => {
+        return throttled(callback, delay)
     }, [callback, delay])
 
     useEffect(() => {
