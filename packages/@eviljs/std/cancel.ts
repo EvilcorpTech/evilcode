@@ -17,10 +17,8 @@ export function createCancelable<A extends FnArgs, R>(
     task: Fn<A, R>,
     onCancel?: undefined | Task,
 ): CancelableFn<A, R> {
-    let canceled = false
-
     function run(...args: A): undefined | R {
-        if (canceled) {
+        if (run.canceled) {
             return
         }
 
@@ -28,23 +26,15 @@ export function createCancelable<A extends FnArgs, R>(
     }
 
     function cancel() {
-        canceled = true
+        run.canceled = true
 
         onCancel?.()
     }
 
-    function isCanceled() {
-        return canceled
-    }
-
     run.cancel = cancel
+    run.canceled = false
 
-    Object.defineProperty(run, 'canceled' satisfies keyof CancelableFn, {
-        get: isCanceled,
-        writable: false,
-    })
-
-    return run as CancelableFn<A, R>
+    return run
 }
 
 // Types ///////////////////////////////////////////////////////////////////////
