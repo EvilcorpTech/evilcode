@@ -1,54 +1,33 @@
+import {asCancelable} from './cancel.js'
 import type {Task} from './fn.js'
 
 export function scheduleMicroTaskUsingPromise(task: Task): Task {
-    let canceled = false
+    const [taskCancelable, cancelTask] = asCancelable(task)
 
-    Promise.resolve().then(() => {
-        if (canceled) {
-            return
-        }
+    Promise.resolve().then(taskCancelable)
 
-        task()
-    })
-
-    function cancel() {
-        canceled = true
-    }
-
-    return cancel
+    return cancelTask
 }
 
 export function scheduleMicroTaskUsingMutationObserver(task: Task): Task {
-    let canceled = false
-
-    function taskCancelable() {
-        if (canceled) {
-            return
-        }
-
-        task()
-    }
+    const [taskCancelable, cancelTask] = asCancelable(task)
 
     const observer = new MutationObserver(taskCancelable)
     const node = document.createTextNode('')
     observer.observe(node, {characterData: true})
     node.data = ''
 
-    function cancel() {
-        canceled = true
-    }
-
-    return cancel
+    return cancelTask
 }
 
 export function scheduleMacroTaskUsingTimeout(task: Task): Task {
     const timeoutId = setTimeout(task, 0)
 
-    function cancel() {
+    function cancelTask() {
         clearTimeout(timeoutId)
     }
 
-    return cancel
+    return cancelTask
 }
 
 let PostMessageInit = false
@@ -56,7 +35,7 @@ export let PostMessageId = '@eviljs/std/eventloop.scheduleMacroTaskWithPostMessa
 export const PostMessageQueue: Array<Task> = []
 
 export function scheduleMacroTaskUsingPostMessage(task: Task): Task {
-    let canceled = false
+    const [taskCancelable, cancelTask] = asCancelable(task)
 
     if (! PostMessageInit) {
         PostMessageInit = true
@@ -80,42 +59,18 @@ export function scheduleMacroTaskUsingPostMessage(task: Task): Task {
         )
     }
 
-    function taskCancelable() {
-        if (canceled) {
-            return
-        }
-
-        task()
-    }
-
     PostMessageQueue.push(taskCancelable)
     window.postMessage(PostMessageId, '*')
 
-    function cancel() {
-        canceled = true
-    }
-
-    return cancel
+    return cancelTask
 }
 
 export function scheduleMacroTaskUsingMessageChannel(task: Task): Task {
-    let canceled = false
-
-    function taskCancelable() {
-        if (canceled) {
-            return
-        }
-
-        task()
-    }
+    const [taskCancelable, cancelTask] = asCancelable(task)
 
     const channel = new MessageChannel()
     channel.port1.onmessage = taskCancelable
     channel.port2.postMessage(0)
 
-    function cancel() {
-        canceled = true
-    }
-
-    return cancel
+    return cancelTask
 }

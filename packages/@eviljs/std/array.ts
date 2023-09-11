@@ -2,12 +2,12 @@ import type {Io} from './fn.js'
 import type {Nil} from './type.js'
 import {isSome} from './type.js'
 
-export function areArraysEqual(a: Array<unknown>, b: Array<unknown>): boolean {
-    if (a.length !== b.length) {
+export function areArraysEqual(firstList: Array<unknown>, secondList: Array<unknown>): boolean {
+    if (firstList.length !== secondList.length) {
         return false
     }
 
-    return a.every((_, idx) => a[idx] === b[idx])
+    return firstList.every((_, idx) => firstList[idx] === secondList[idx])
 }
 
 export function firstOf<I>(list: Array<I>): undefined | I {

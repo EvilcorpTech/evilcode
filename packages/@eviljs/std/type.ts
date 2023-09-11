@@ -125,7 +125,7 @@ export function isRegExp(value: unknown): value is RegExp {
 }
 
 export function isString(value: unknown): value is string {
-    return typeof value === 'string'
+    return typeof value === 'string' || value instanceof String
 }
 
 // Casts ///////////////////////////////////////////////////////////////////////
@@ -161,7 +161,7 @@ export function asBooleanLike(value: unknown): undefined | boolean {
 export function asDate(value: number | Date): Date
 export function asDate(value: unknown): undefined | Date
 export function asDate(value: unknown): undefined | Date {
-    if (! value) {
+    if (isNil(value)) {
         return
     }
     if (isDate(value)) {
@@ -170,13 +170,12 @@ export function asDate(value: unknown): undefined | Date {
     if (isNumber(value)) {
         return new Date(value)
     }
-    if (! isString(value)) {
-        return
+    if (isString(value)) {
+        // Date.parse() is omnivorous:
+        // it accepts everything, and everything not string is returned as NaN.
+        return asDate(Date.parse(value))
     }
-
-    // Date.parse() is omnivorous:
-    // it accepts everything, and everything not string is returned as NaN.
-    return asDate(Date.parse(value))
+    return // Makes TypeScript happy.
 }
 
 export function asNumber(value: number): number

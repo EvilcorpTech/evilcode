@@ -17,17 +17,17 @@ export function areObjectsEqualShallow<T extends object>(firstObject: T, secondO
         return true
     }
 
-    const aKeys = Object.keys(firstObject)
-    const bKeys = Object.keys(secondObject)
-    const allKeys = new Set([...aKeys, ...bKeys])
+    const firstKeys = Object.keys(firstObject)
+    const secondKeys = Object.keys(secondObject)
+    const allKeys = new Set([...firstKeys, ...secondKeys])
 
     // Shallow equality check.
     for (const key of allKeys) {
         // A not defined property and a property with undefined value are considered equal.
-        const aValue = firstObject[key as keyof typeof firstObject]
-        const bValue = secondObject[key as keyof typeof secondObject]
+        const firstValue = firstObject[key as keyof typeof firstObject]
+        const secondValue = secondObject[key as keyof typeof secondObject]
 
-        if (aValue !== bValue) {
+        if (firstValue !== secondValue) {
             // Something changed inside the object.
             return false
         }
@@ -42,21 +42,21 @@ export function areObjectsEqualShallowStrict<T extends object>(firstObject: T, s
         return true
     }
 
-    const aKeys = Object.keys(firstObject)
-    const bKeys = Object.keys(secondObject)
+    const firstKeys = Object.keys(firstObject)
+    const secondKeys = Object.keys(secondObject)
 
-    if (aKeys.length !== bKeys.length) {
+    if (firstKeys.length !== secondKeys.length) {
         return false
     }
 
-    const allKeys = new Set([...aKeys, ...bKeys])
+    const allKeys = new Set([...firstKeys, ...secondKeys])
 
     // Shallow equality check.
     for (const key of allKeys) {
-        const aIn = key in firstObject
-        const bIn = key in secondObject
+        const keyInFirst = key in firstObject
+        const keyInSecond = key in secondObject
 
-        if (aIn !== bIn) {
+        if (keyInFirst !== keyInSecond) {
             return false
         }
 
@@ -241,7 +241,6 @@ export function indexingBy<
 
     return indexItem
 }
-
 
 // Types ///////////////////////////////////////////////////////////////////////
 
