@@ -31,8 +31,8 @@ export function createCancelable<A extends FnArgs, R>(
         onCancel?.()
     }
 
-    run.cancel = cancel
     run.canceled = false
+    run.cancel = cancel
 
     return run
 }
