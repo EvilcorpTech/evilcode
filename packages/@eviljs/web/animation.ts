@@ -1,8 +1,10 @@
-import {PromiseCancellable} from '@eviljs/std/async.js'
-import {directionOf, distanceBetween, createLinearScale} from '@eviljs/std/scale.js'
+import {Future} from '@eviljs/std/async.js'
+import type {Task} from '@eviljs/std/fn.js'
+import {createLinearScale, directionOf, distanceBetween} from '@eviljs/std/scale.js'
 
-export {play, wait} from '@eviljs/std/async.js'
-export type {AsyncTimeline, AsyncTimelineParallel, AsyncTimelineSequence, AsyncTimelineTask} from '@eviljs/std/async.js'
+export {wait} from '@eviljs/std/async.js'
+export {playTimeline} from '@eviljs/std/timeline.js'
+export type {TimelineAsync, TimelineParallel, TimelineSequence, TimelineTask} from '@eviljs/std/timeline.js'
 
 export const SpringPrecision = 200
 export const SpringSnapping = 1 / SpringPrecision
@@ -26,26 +28,23 @@ export function flushStyles(...elements: Array<HTMLElement>) {
     }
 }
 
-export function requestStylesFlush(...elements: Array<HTMLElement>): PromiseCancellable<void> {
+export function requestStylesFlush(...elements: Array<HTMLElement>): Future<void> {
     let taskId: undefined | ReturnType<typeof requestAnimationFrame>
 
-    const promise = new Promise<void>((resolve, reject) => {
+    const promise = new Future<void>((resolve, reject) => {
         taskId = requestAnimationFrame(() => {
             flushStyles(...elements)
             resolve()
         })
     })
 
-    const promiseCancellable = promise as PromiseCancellable<void>
-
-    promiseCancellable.cancel = function cancel() {
+    promise.onCancel = function onCancel() {
         if (taskId) {
             cancelAnimationFrame(taskId)
         }
-        promiseCancellable.cancelled = true
     }
 
-    return promiseCancellable
+    return promise
 }
 
 export function playCssTransition<T extends HTMLElement, S1 = void, S2 = void>(
@@ -88,14 +87,14 @@ export function createCssTransition<S1, S2, T extends HTMLElement>(
 }
 
 export function createSpringAnimation(options: SpringAnimationOptions) {
-    let promise: undefined | PromiseCancellable
+    let promise: undefined | Future<void>
 
-    function loop(initialTime: number, done: Function, wasSnapped = false) {
+    function loop(initialTime: number, done: Task, wasSnapped = false) {
         if (! promise) {
             return
         }
 
-        if (promise.cancelled) {
+        if (promise.canceled) {
             options.onCancel?.()
             options.onFinally?.()
             done()
@@ -127,14 +126,14 @@ export function createSpringAnimation(options: SpringAnimationOptions) {
     }
 
     function play() {
-        promise = new PromiseCancellable((resolve, reject) => {
+        promise = new Future<void>((resolve, reject) => {
             loop(Date.now(), resolve)
         })
 
         return promise
     }
 
-    return play
+    return play // TODO: We should expose a `cancel` callback.
 }
 
 export function createSpringScaleAnimation(finalScale: number, initialScale = 1, options?: undefined | Partial<SpringAnimationOptions>) {
