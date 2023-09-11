@@ -1,14 +1,14 @@
 import {compute} from '@eviljs/std/compute.js'
-import {debounce, throttle} from '@eviljs/std/event.js'
+import {debounced, throttled} from '@eviljs/std/event.js'
 import type {Fn, FnArgs} from '@eviljs/std/fn.js'
 import {useEffect, useMemo, useState} from 'react'
 import type {StateInit, StateSetter} from './state.js'
 
-export {debounce, throttle} from '@eviljs/std/event.js'
+export {debounced, throttled} from '@eviljs/std/event.js'
 
 export function useCallbackDebounced<A extends FnArgs>(callback: Fn<A>, delay: number) {
     const callbackDebounced = useMemo(() => {
-        return debounce(callback, delay)
+        return debounced(callback, delay)
     }, [callback, delay])
 
     useEffect(() => {
@@ -24,7 +24,7 @@ export function useCallbackDebounced<A extends FnArgs>(callback: Fn<A>, delay: n
 
 export function useCallbackThrottled<A extends FnArgs>(callback: Fn<A>, delay: number) {
     const callbackThrottled = useMemo(() => {
-        return throttle(callback, delay)
+        return throttled(callback, delay)
     }, [callback, delay])
 
     useEffect(() => {
