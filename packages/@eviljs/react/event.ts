@@ -1,14 +1,12 @@
 import {compute} from '@eviljs/std/compute.js'
-import {debounced, throttled} from '@eviljs/std/event.js'
+import {debounced, throttled, type EventFn} from '@eviljs/std/event.js'
 import type {Fn, FnArgs} from '@eviljs/std/fn.js'
 import {useEffect, useMemo, useState} from 'react'
 import type {StateInit, StateSetter} from './state.js'
 
-export {debounced, throttled} from '@eviljs/std/event.js'
-
-export function useCallbackDebounced<A extends FnArgs>(callback: Fn<A>, delay: number) {
-    const callbackDebounced = useMemo(() => {
-        return debounced(callback, delay)
+export function useCallbackDebounced<A extends FnArgs>(callback: Fn<A>, delay: number): EventFn<A> {
+    const callbackDebounced: EventFn<A> = useMemo(() => {
+        return debounced<A>(callback, delay)
     }, [callback, delay])
 
     useEffect(() => {
@@ -22,9 +20,9 @@ export function useCallbackDebounced<A extends FnArgs>(callback: Fn<A>, delay: n
     return callbackDebounced
 }
 
-export function useCallbackThrottled<A extends FnArgs>(callback: Fn<A>, delay: number) {
-    const callbackThrottled = useMemo(() => {
-        return throttled(callback, delay)
+export function useCallbackThrottled<A extends FnArgs>(callback: Fn<A>, delay: number): EventFn<A> {
+    const callbackThrottled: EventFn<A> = useMemo(() => {
+        return throttled<A>(callback, delay)
     }, [callback, delay])
 
     useEffect(() => {
