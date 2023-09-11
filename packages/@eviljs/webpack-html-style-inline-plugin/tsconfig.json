@@ -1,8 +1,7 @@
 {
-    "extends": "../../@eviljs/tsconfig/preset-node-lib.json",
+    "extends": "../../@eviljs/tsconfig/preset-node-cjs.json",
     "include": ["./**/*.cts"],
     "exclude": ["./**/*.d.cts"],
     "compilerOptions": {
-        "module": "commonjs",
     },
 }
