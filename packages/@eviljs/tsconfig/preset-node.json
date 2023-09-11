@@ -1,9 +1,8 @@
 {
     "extends": [
-        "./with-api-modern-web.json",
+        "./with-api-modern.json",
         "./with-check-strict.json",
         "./with-compile.json",
-        "./with-jsx-react.json",
         "./with-module-node.json"
     ],
     "compilerOptions": {

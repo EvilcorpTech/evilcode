@@ -1,4 +1,5 @@
 {
+    "extends": ["./with-api-modern.json"],
     "compilerOptions": {
         "lib": ["esnext", "dom", "dom.iterable", "webworker"]
     }

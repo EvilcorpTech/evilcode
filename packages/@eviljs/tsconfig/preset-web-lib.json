@@ -1,9 +1,9 @@
 {
     "extends": [
-        "./is-strict.json",
-        "./is-module.json",
-        "./is-web.json",
-        "./is-lib.json"
+        "./with-api-modern-web.json",
+        "./with-check-strict.json",
+        "./with-compile.json",
+        "./with-module-node.json"
     ],
     "compilerOptions": {
     }

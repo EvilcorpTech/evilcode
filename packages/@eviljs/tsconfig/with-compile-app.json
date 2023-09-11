@@ -1,0 +1,8 @@
+{
+    "extends": ["./with-compile.json"],
+    "compilerOptions": {
+        "declaration": false,
+        "noEmit": true,
+        "sourceMap": true
+    }
+}

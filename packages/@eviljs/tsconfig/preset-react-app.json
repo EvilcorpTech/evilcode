@@ -1,10 +1,10 @@
 {
     "extends": [
-        "./is-strict.json",
-        "./is-module.json",
-        "./is-web.json",
-        "./is-app.json",
-        "./is-react.json"
+        "./with-api-modern-web.json",
+        "./with-check-strict.json",
+        "./with-compile-app.json",
+        "./with-jsx-react.json",
+        "./with-module-bundle.json"
     ],
     "compilerOptions": {
     }
