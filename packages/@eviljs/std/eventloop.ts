@@ -1,8 +1,8 @@
-import {asCancelable} from './cancel.js'
+import {createCancelable} from './cancel.js'
 import type {Task} from './fn.js'
 
 export function scheduleMicroTaskUsingPromise(task: Task): Task {
-    const [taskCancelable, cancelTask] = asCancelable(task)
+    const [taskCancelable, cancelTask] = createCancelable(task)
 
     Promise.resolve().then(taskCancelable)
 
@@ -10,7 +10,7 @@ export function scheduleMicroTaskUsingPromise(task: Task): Task {
 }
 
 export function scheduleMicroTaskUsingMutationObserver(task: Task): Task {
-    const [taskCancelable, cancelTask] = asCancelable(task)
+    const [taskCancelable, cancelTask] = createCancelable(task)
 
     const observer = new MutationObserver(taskCancelable)
     const node = document.createTextNode('')
@@ -35,7 +35,7 @@ export let PostMessageId = '@eviljs/std/eventloop.scheduleMacroTaskWithPostMessa
 export const PostMessageQueue: Array<Task> = []
 
 export function scheduleMacroTaskUsingPostMessage(task: Task): Task {
-    const [taskCancelable, cancelTask] = asCancelable(task)
+    const [taskCancelable, cancelTask] = createCancelable(task)
 
     if (! PostMessageInit) {
         PostMessageInit = true
@@ -66,7 +66,7 @@ export function scheduleMacroTaskUsingPostMessage(task: Task): Task {
 }
 
 export function scheduleMacroTaskUsingMessageChannel(task: Task): Task {
-    const [taskCancelable, cancelTask] = asCancelable(task)
+    const [taskCancelable, cancelTask] = createCancelable(task)
 
     const channel = new MessageChannel()
     channel.port1.onmessage = taskCancelable

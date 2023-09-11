@@ -1,8 +1,7 @@
-import {createCancelable, type CancelableFn} from './cancel.js'
-import type {Fn, FnArgs} from './fn.js'
+import type {Fn, FnArgs, Task} from './fn.js'
 import {isDefined, isUndefined} from './type.js'
 
-export function debounce<A extends FnArgs>(task: Fn<A>, delay: number): CancelableFn<A> {
+export function debounced<A extends FnArgs>(task: Fn<A>, delay: number): EventFn {
     interface State {
         lastCallArgs: undefined | A
         lastCallTime: undefined | number
@@ -16,6 +15,10 @@ export function debounce<A extends FnArgs>(task: Fn<A>, delay: number): Cancelab
     }
 
     function call(...args: A) {
+        if (! call.enabled) {
+            return
+        }
+
         state.lastCallArgs = args
         state.lastCallTime = Date.now()
 
@@ -57,12 +60,24 @@ export function debounce<A extends FnArgs>(task: Fn<A>, delay: number): Cancelab
         state.timeoutId = undefined
     }
 
-    const taskCancelable = createCancelable(call, cancel)
+    function disable() {
+        call.enabled = false
+        cancel()
+    }
 
-    return taskCancelable
+    function enable() {
+        call.enabled = true
+    }
+
+    call.enabled = true
+    call.cancel = cancel
+    call.disable = disable
+    call.enable = enable
+
+    return call
 }
 
-export function throttle<A extends FnArgs>(task: Fn<A>, delay: number): CancelableFn<A> {
+export function throttled<A extends FnArgs>(task: Fn<A>, delay: number): EventFn {
     interface State {
         lastCallArgs: undefined | A
         timeoutId: undefined | ReturnType<typeof setTimeout>
@@ -74,6 +89,10 @@ export function throttle<A extends FnArgs>(task: Fn<A>, delay: number): Cancelab
     }
 
     function call(...args: A) {
+        if (! call.enabled) {
+            return
+        }
+
         state.lastCallArgs = args
 
         if (isDefined(state.timeoutId)) {
@@ -102,7 +121,28 @@ export function throttle<A extends FnArgs>(task: Fn<A>, delay: number): Cancelab
         state.timeoutId = undefined
     }
 
-    const taskCancelable = createCancelable(call, cancel)
+    function disable() {
+        call.enabled = false
+        cancel()
+    }
 
-    return taskCancelable
+    function enable() {
+        call.enabled = true
+    }
+
+    call.enabled = true
+    call.cancel = cancel
+    call.disable = disable
+    call.enable = enable
+
+    return call
+}
+
+// Types ///////////////////////////////////////////////////////////////////////
+
+export interface EventFn<A extends FnArgs = []> extends Fn<A, void> {
+    cancel: Task
+    disable: Task
+    enable: Task
+    readonly enabled: boolean
 }
