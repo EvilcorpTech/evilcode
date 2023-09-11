@@ -2,6 +2,7 @@
     "extends": ["./with-compile.json"],
     "compilerOptions": {
         "declaration": false,
+        "importHelpers": false,
         "noEmit": true,
         "sourceMap": true
     }
