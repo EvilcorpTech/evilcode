@@ -1,3 +1,4 @@
+import {Future} from '@eviljs/std/async.js'
 import type {Fn} from '@eviljs/std/fn.js'
 import {pipe} from '@eviljs/std/pipe.js'
 import type {ResourceMaskView, ResourcePromiseView} from '@eviljs/std/resource.js'
@@ -24,13 +25,11 @@ export function useAsyncIo<A extends Array<unknown>, R>(asyncTask: Fn<A, Promise
         output: undefined,
         error: undefined,
     })
-    const taskRef = useRef<null | PromiseCancellable<R>>(null)
+    const taskRef = useRef<undefined | Future<R>>()
 
     const call = useCallback(async (...args: A) => {
-        if (taskRef.current) {
-            // We automatically cancel previous task.
-            taskRef.current.cancelled = true
-        }
+        // We automatically cancel previous task.
+        taskRef.current?.cancel()
 
         // We must retain current output and error states.
         // Whether the developer wants to clear them, he uses the reset() API
@@ -43,17 +42,14 @@ export function useAsyncIo<A extends Array<unknown>, R>(asyncTask: Fn<A, Promise
             .end(),
         }))
 
-        taskRef.current = {
-            promise: asyncTask(...args),
-            cancelled: false,
-        }
+        const taskPromise = Future.from(asyncTask(...args))
 
-        const task = taskRef.current
+        taskRef.current = taskPromise
 
         try {
-            const output = await task.promise
+            const output = await taskPromise
 
-            if (task.cancelled) {
+            if (taskPromise.canceled) {
                 return
             }
 
@@ -71,7 +67,7 @@ export function useAsyncIo<A extends Array<unknown>, R>(asyncTask: Fn<A, Promise
             return output
         }
         catch (error) {
-            if (task.cancelled) {
+            if (taskPromise.canceled) {
                 return
             }
 
@@ -91,9 +87,7 @@ export function useAsyncIo<A extends Array<unknown>, R>(asyncTask: Fn<A, Promise
     }, [asyncTask])
 
     const cancel = useCallback(() => {
-        if (taskRef.current) {
-            taskRef.current.cancelled = true
-        }
+        taskRef.current?.cancel()
 
         setState((state): AsyncIoState<R> => ({
             ...state,
@@ -174,9 +168,4 @@ export interface AsyncIoManager<A extends Array<unknown>, R> extends AsyncIoView
     reset(): void
     resetError(): void
     resetResponse(): void
-}
-
-export interface PromiseCancellable<T> {
-    promise: Promise<T>
-    cancelled: boolean
 }

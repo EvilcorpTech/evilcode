@@ -1,4 +1,4 @@
-import {createCssTransition, play} from '@eviljs/web/animation.js'
+import {createCssTransition, playTimeline} from '@eviljs/web/animation.js'
 import {useEffect, useMemo, useState} from 'react'
 import {useRouterTransition} from './router.js'
 
@@ -111,7 +111,7 @@ export function playFadeInAnimation(selector: string, options?: {transform?: str
         },
     })
 
-    return play(animation)
+    return playTimeline(animation)
 }
 
 export function playFadeOutAnimation(selector: string) {
@@ -129,7 +129,7 @@ export function playFadeOutAnimation(selector: string) {
         // Opacity is cleaned by the render function.
     })
 
-    return play(animation)
+    return playTimeline(animation)
 }
 
 export function getViewElement(selector: string) {
