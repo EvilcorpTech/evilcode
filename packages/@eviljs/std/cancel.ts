@@ -38,14 +38,13 @@ export function createCancelable<A extends FnArgs, R>(
     }
 
     run.cancel = cancel
-    run.canceled = false // Needed for typing the return type.
 
     Object.defineProperty(run, 'canceled' satisfies keyof CancelableFn, {
         get: isCanceled,
         writable: false,
     })
 
-    return run
+    return run as CancelableFn<A, R>
 }
 
 // Types ///////////////////////////////////////////////////////////////////////
