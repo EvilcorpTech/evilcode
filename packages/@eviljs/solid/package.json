@@ -27,7 +27,7 @@
         "@babel/core": "7",
         "@babel/preset-typescript": "7",
         "babel-preset-solid": "1",
-        "typescript": "5.1"
+        "typescript": "5.2"
     },
     "author": "Daniele Orlando",
     "license": "BSD-2-Clause",
