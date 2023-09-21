@@ -27,8 +27,12 @@ export function RequestProvider(props: RequestProviderProps) {
     return <RequestContext.Provider value={value} children={children}/>
 }
 
+export function useRequestContext<C>() {
+    return useContext<C>(RequestContext as React.Context<C>)
+}
+
 export function useRequest<C, A extends Array<unknown>, R>(asyncTask: RequestIo<C, A, R>): RequestManager<A, R> {
-    const context = useContext<C>(RequestContext as React.Context<C>)
+    const context = useRequestContext<C>()
 
     const asyncIo = useCallback((...args: A): Promise<R> => {
         return asyncTask(context, ...args)
