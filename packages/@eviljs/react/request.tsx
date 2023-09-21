@@ -28,11 +28,11 @@ export function RequestProvider(props: RequestProviderProps) {
 }
 
 export function useRequestContext<C>() {
-    return useContext<C>(RequestContext as React.Context<C>)
+    return useContext<undefined | C>(RequestContext as React.Context<undefined | C>)
 }
 
 export function useRequest<C, A extends Array<unknown>, R>(asyncTask: RequestIo<C, A, R>): RequestManager<A, R> {
-    const context = useRequestContext<C>()
+    const context = useRequestContext<C>()!
 
     const asyncIo = useCallback((...args: A): Promise<R> => {
         return asyncTask(context, ...args)
