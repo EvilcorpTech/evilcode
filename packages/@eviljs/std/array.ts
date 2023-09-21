@@ -30,6 +30,10 @@ export function mappingWith<I, R>(mapItem: (it: I, idx: number) => R) {
     return mapList
 }
 
+export function uniq<I>(list: Array<I>): Array<I> {
+    return Array.from(new Set(list))
+}
+
 export function groupBy<I, K extends PropertyKey>(
     list: Array<I>,
     keyOf: Io<I, K>,

@@ -1,4 +1,4 @@
-import {isUndefined} from './type.js'
+import {isDefined, isUndefined} from './type.js'
 
 export function clamp(min: number, value: number, max: number) {
     return Math.min(max, Math.max(min, value))
@@ -9,31 +9,31 @@ export function round(value: number, round: number) {
 }
 
 export function sum(items: Array<number>, getter?: undefined): number;
-export function sum<I>(items: Array<I>, getter: ItemGetter<I>): number;
-export function sum<I>(items: Array<number> | Array<I>, getter?: undefined | ItemGetter<I>): number {
+export function sum<I>(items: Array<I>, getter: NumberGetter<I>): number;
+export function sum<I>(items: Array<number> | Array<I>, getter?: undefined | NumberGetter<I>): number {
     const total = (items as Array<I>).reduce((sum: number, it) =>
-        sum + valueForItem(it, getter as ItemGetter<I>)
+        sum + readItemNumber(it, getter as NumberGetter<I>)
     , 0)
 
     return total
 }
 
 export function average(items: Array<number>, getter?: undefined): number;
-export function average<I>(items: Array<I>, getter: ItemGetter<I>): number;
-export function average<I>(items: Array<number> | Array<I>, getter?: undefined | ItemGetter<I>): number {
-    const total = sum(items as Array<I>, getter as ItemGetter<I>)
+export function average<I>(items: Array<I>, getter: NumberGetter<I>): number;
+export function average<I>(items: Array<number> | Array<I>, getter?: undefined | NumberGetter<I>): number {
+    const total = sum(items as Array<I>, getter as NumberGetter<I>)
 
     return total / items.length
 }
 
 export function minMax(items: Array<number>, getter?: undefined): MaybeMinMax;
-export function minMax<I>(items: Array<I>, getter: ItemGetter<I>): MaybeMinMax;
-export function minMax<I>(items: Array<number> | Array<I>, getter?: undefined | ItemGetter<I>): MaybeMinMax {
+export function minMax<I>(items: Array<I>, getter: NumberGetter<I>): MaybeMinMax;
+export function minMax<I>(items: Array<number> | Array<I>, getter?: undefined | NumberGetter<I>): MaybeMinMax {
     let min: undefined | number = undefined
     let max: undefined | number = undefined
 
     for (const it of items) {
-        const value = valueForItem(it as I, getter as ItemGetter<I>)
+        const value = readItemNumber(it as I, getter as NumberGetter<I>)
         min = Math.min(value, min ?? value)
         max = Math.max(value, max ?? value)
     }
@@ -46,16 +46,18 @@ export function minMax<I>(items: Array<number> | Array<I>, getter?: undefined | 
 }
 
 export function minMaxOrZero(items: Array<number>, getter?: undefined): MinMax;
-export function minMaxOrZero<I>(items: Array<I>, getter: ItemGetter<I>): MinMax;
-export function minMaxOrZero<I>(items: Array<number> | Array<I>, getter?: undefined | ItemGetter<I>): MinMax {
-    const [min, max] = minMax(items as Array<I>, getter as ItemGetter<I>)
+export function minMaxOrZero<I>(items: Array<I>, getter: NumberGetter<I>): MinMax;
+export function minMaxOrZero<I>(items: Array<number> | Array<I>, getter?: undefined | NumberGetter<I>): MinMax {
+    const [min, max] = minMax(items as Array<I>, getter as NumberGetter<I>)
     return [min ?? 0, max ?? 0]
 }
 
-export function valueForItem(it: number, getter?: undefined): number
-export function valueForItem<I>(it: I, getter: ItemGetter<I>): number
-export function valueForItem<I>(it: number | I, getter?: undefined | ItemGetter<I>): number {
-    return getter?.(it as I) ?? it as number
+export function readItemNumber(it: number, getter?: undefined): number
+export function readItemNumber<I>(it: I, getter: NumberGetter<I>): number
+export function readItemNumber<I>(it: number | I, getter?: undefined | NumberGetter<I>): number {
+    return isDefined(getter)
+        ? getter(it as I)
+        : it as number
 }
 
 export function isBetween(a: number, value: number, b: number) {
@@ -70,7 +72,4 @@ export function isBetween(a: number, value: number, b: number) {
 
 export type MaybeMinMax = [undefined, undefined] | MinMax
 export type MinMax = [number, number]
-
-export interface ItemGetter<I> {
-    (it: I): number
-}
+export type NumberGetter<I> = (it: I) => number
