@@ -1,7 +1,7 @@
 import {useStoreStorage as useStdStoreStorage} from '@eviljs/react/store-storage'
-import {setState} from '~/store-v3/apis'
-import {useStore} from '~/store-v3/hooks'
-import {filterStorageState, mergeStorageState, StoreStateVersion} from './apis'
+import {setState} from '~/store/store-v3-apis'
+import {useStore} from '~/store/store-v3-hooks'
+import {filterStorageState, mergeStorageState, StoreStateVersion} from './store-apis'
 
 export const Storage: Storage = window.localStorage
 

@@ -1,7 +1,7 @@
 import {useStoreState} from '@eviljs/react/experimental/store-v4'
 import {defineShowcase} from '@eviljs/reactx/showcase'
-import type {StoreState} from '~/store/apis'
-import {Theme} from '~/theme/apis'
+import type {StoreState} from '~/store/store-apis'
+import {Theme} from '~/theme/theme-apis'
 
 export default defineShowcase('Store v4 (experimental)', (props) => {
     const [theme] = useStoreState((state: StoreState) => state.theme)

@@ -2,10 +2,10 @@ import '~/style/index.css'
 
 import {createContainer} from '@eviljs/std/container'
 import {createRoot} from 'react-dom/client'
-import {ContainerSpec} from '~/container/apis'
-import * as Env from '~/env/apis'
-import {attachRootElement} from '~/root/apis'
+import {ContainerSpec} from '~/container/container-apis'
+import * as Env from '~/env/env-apis'
 import {App, Root} from '~/root/root'
+import {attachRootElement} from '~/root/root-apis'
 
 console.table({...Env})
 

@@ -1,5 +1,5 @@
 import type {OnChangeEventArgs, StoreDefinition} from '@eviljs/react/experimental/store-v4'
-import {createState, type StoreState} from '~/store/apis'
+import {createState, type StoreState} from '~/store/store-apis'
 
 export const StoreSpec: StoreDefinition<StoreState> = {
     createState,

@@ -10,7 +10,7 @@ import {
     type StoreDefinition,
     type StoreStatePatch,
 } from '@eviljs/react/store'
-import {createState, type StoreState} from '~/store/apis'
+import {createState, type StoreState} from '~/store/store-apis'
 
 export const StoreActionsSpec = {
     SetState: defineReducerAction(withId('setState'), patchState<StoreState>),

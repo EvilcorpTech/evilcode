@@ -6,9 +6,9 @@ import {createFetch} from '@eviljs/web/fetch'
 import {mockFetchDelayed} from '@eviljs/web/fetch-mock'
 import {createQuery} from '@eviljs/web/query'
 import {asBaseUrl} from '@eviljs/web/url'
-import {CookieSpec} from '~/cookie/apis'
-import {ApiUrl, BasePath} from '~/env/apis'
-import {FetchMocksSpec} from '~/mock/apis'
+import {CookieSpec} from '~/cookie/cookie-apis'
+import {ApiUrl, BasePath} from '~/env/env-apis'
+import {FetchMocksSpec} from '~/mock/mock-apis'
 
 export const ContainerSpec = {
     Cookie(container: {}) {

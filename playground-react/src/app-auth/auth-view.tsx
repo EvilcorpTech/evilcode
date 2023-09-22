@@ -5,7 +5,7 @@ import {classes} from '@eviljs/react/classes'
 import {Redirect, useRouter} from '@eviljs/react/router'
 import {AuthCredentials} from '@eviljs/reactx/auth-credentials'
 import {useCallback} from 'react'
-import {useI18nMsg} from '~/i18n/hooks'
+import {useI18nMsg} from '~/i18n/i18n-hooks'
 
 export function AuthView(props: AuthViewProps) {
     const {className, ...otherProps} = props

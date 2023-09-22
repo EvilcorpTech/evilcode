@@ -1,8 +1,8 @@
 import './home-view.css'
 
 import {classes} from '@eviljs/react/classes'
-import {useI18nMsg} from '~/i18n/hooks'
-import {Header} from '~/widgets/header'
+import {useI18nMsg} from '~/i18n/i18n-hooks'
+import {Header} from '~/ui-widgets/header'
 
 export function HomeView(props: HomeViewProps) {
     const {className, ...otherProps} = props

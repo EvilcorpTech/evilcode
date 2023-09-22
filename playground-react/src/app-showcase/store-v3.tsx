@@ -1,7 +1,7 @@
 import {defineShowcase} from '@eviljs/reactx/showcase'
-import {resetState, setState} from '~/store-v3/apis'
-import {useStore, useStoreDispatch, useStoreState} from '~/store-v3/hooks'
-import {Theme} from '~/theme/apis'
+import {resetState, setState} from '~/store/store-v3-apis'
+import {useStore, useStoreDispatch, useStoreState} from '~/store/store-v3-hooks'
+import {Theme} from '~/theme/theme-apis'
 
 export default defineShowcase('Store v3', (props) => {
     const [theme, dispatch] = useStore(state => state.theme)!

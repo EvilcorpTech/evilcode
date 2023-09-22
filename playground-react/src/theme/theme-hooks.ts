@@ -1,5 +1,5 @@
 import {useEffect} from 'react'
-import {Theme, themeClassesOf} from '~/theme/apis'
+import {Theme, themeClassesOf} from '~/theme/theme-apis'
 
 export function useColorSchemePreference() {
     useEffect(() => {

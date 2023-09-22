@@ -1,4 +1,4 @@
-import type {Theme} from '~/theme/apis'
+import type {Theme} from '~/theme/theme-apis'
 
 export const StoreStateVersion = 1
 
