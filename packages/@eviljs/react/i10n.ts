@@ -2,25 +2,25 @@ import {isSome} from '@eviljs/std/type.js'
 import {useMemo} from 'react'
 import {useRouter} from './router.js'
 
-export const I10nRouteLocaleRegexp = /\/([a-zA-Z]{2})(?:\/|$)/
+export const RoutePathLocaleRegexp = /\/([a-zA-Z]{2})(?:\/|$)/
 
-export function useRoutePathLocale(options?: UseRoutePathLocaleOptions) {
+export function useRoutePathLocale(options?: undefined | UseRoutePathLocaleOptions) {
     const {matchRoute} = useRouter()!
 
     const locale = useMemo(() => {
-        const [wholeMatch, routeLocale] = matchRoute(I10nRouteLocaleRegexp) ?? []
+        const [wholeMatch, routeLocale] = matchRoute(RoutePathLocaleRegexp) ?? []
 
         if (! routeLocale) {
             return
         }
 
-        return routeLocale
+        return routeLocale.toLowerCase()
     }, [matchRoute])
 
     return locale
 }
 
-export function useRouteParamLocale(options?: UseRouteParamsLocaleOptions) {
+export function useRouteParamLocale(options?: undefined | UseRouteParamsLocaleOptions) {
     const {route} = useRouter()!
     const name = options?.name
     const names = options?.names ?? ['lang', 'locale']
@@ -35,7 +35,7 @@ export function useRouteParamLocale(options?: UseRouteParamsLocaleOptions) {
                 continue
             }
 
-            return value
+            return value.toLowerCase()
         }
 
         return // Makes TypeScript happy.
