@@ -12,14 +12,14 @@ export function useI18n() {
 
 export function createI18n(spec: I18nSpec<string, string, string, string>) {
     const [locale, setLocale] = createSignal(spec.locale)
-    const [fallbackLocale, setFallbackLocale] = createSignal(spec.fallbackLocale)
+    const [localeFallback, setLocaleFallback] = createSignal(spec.localeFallback)
     const [messages, setMessages] = createSignal(spec.messages)
 
     const i18n = createMemo((): I18nManager => {
         const manager = createStdI18n({
             ...spec,
             locale: locale(),
-            fallbackLocale: fallbackLocale(),
+            localeFallback: localeFallback(),
             messages: messages(),
         })
 
@@ -35,13 +35,13 @@ export function createI18n(spec: I18nSpec<string, string, string, string>) {
                 setLocale(value)
             },
             setLocale,
-            get fallbackLocale() {
-                return fallbackLocale()
+            get localeFallback() {
+                return localeFallback()
             },
-            set fallbackLocale(value) {
-                setFallbackLocale(value)
+            set localeFallback(value) {
+                setLocaleFallback(value)
             },
-            setFallbackLocale,
+            setLocaleFallback,
             get messages() {
                 return messages()
             },
@@ -50,7 +50,7 @@ export function createI18n(spec: I18nSpec<string, string, string, string>) {
             },
             setMessages,
         }
-    }, [locale, fallbackLocale, messages])
+    }, [locale, localeFallback, messages])
 
     return i18n
 }
@@ -93,6 +93,6 @@ export interface I18nManager<L extends string = string, K extends string = strin
 
 export interface I18nSetters<L extends string = string, K extends string = string> {
     setLocale: Setter<L>
-    setFallbackLocale: Setter<L>
+    setLocaleFallback: Setter<L>
     setMessages: Setter<I18nMessages<L, K>>
 }
