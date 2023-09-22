@@ -7,11 +7,11 @@ export function createI18n
     <L extends string, L1 extends L, L2 extends L, K extends string>
     (spec: I18nSpec<L, L1, L2, K>)
 {
-    const {locale, fallbackLocale, messages, symbol} = spec
+    const {locale, localeFallback, messages, symbol} = spec
 
     const self: I18n<L, K> = {
         locale,
-        fallbackLocale,
+        localeFallback,
         messages,
         // `messages` must have a structure like this:
         // {
@@ -59,7 +59,7 @@ export function translate
         options?: undefined | unknown,
     )
 {
-    const {locale, fallbackLocale, messages} = i18n
+    const {locale, localeFallback, messages} = i18n
 
     if (! id) {
         return id
@@ -67,7 +67,7 @@ export function translate
 
     const msg = undefined
         ?? messages[locale]?.[id]
-        ?? messages[fallbackLocale]?.[id]
+        ?? messages[localeFallback]?.[id]
         ?? id
 
     const text = isFunction(msg)
@@ -169,7 +169,7 @@ export function defineMessages<L extends string, K extends string>(
 
 export interface I18n<L extends string = string, K extends string = string> {
     locale: L
-    fallbackLocale: L
+    localeFallback: L
     messages: I18nMessages<L, K>
     symbol: string
     __regexpCache__: Record<string, RegExp>
@@ -180,7 +180,7 @@ export interface I18n<L extends string = string, K extends string = string> {
 
 export interface I18nSpec<L extends string, L1 extends L, L2 extends L, K extends string> {
     locale: L1
-    fallbackLocale: L2
+    localeFallback: L2
     messages: I18nMessages<L, K>
     symbol?: undefined | string
 }
