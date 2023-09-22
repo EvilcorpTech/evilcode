@@ -12,7 +12,7 @@ export const I18nContext = defineContext<I18nManager>('I18nContext')
 *
 * export function MyMain(props) {
 *     return (
-*         <I18nProvider locale={locale} fallbackLocale={fallbackLocale} messages={messages}>
+*         <I18nProvider locale={locale} localeFallback={localeFallback} messages={messages}>
 *             <MyApp/>
 *         </I18nProvider>
 *     )
@@ -27,11 +27,11 @@ export function I18nProvider(props: I18nProviderProps) {
 
 export function useI18nCreator(spec: I18nSpec<string, string, string, string>) {
     const [locale, setLocale] = useState(spec.locale)
-    const [fallbackLocale, setFallbackLocale] = useState(spec.fallbackLocale)
+    const [localeFallback, setLocaleFallback] = useState(spec.localeFallback)
     const [messages, setMessages] = useState(spec.messages)
 
     const i18n = useMemo((): I18nManager => {
-        const manager = createI18n({...spec, locale, fallbackLocale, messages})
+        const manager = createI18n({...spec, locale, localeFallback, messages})
 
         return {
             symbol: manager.symbol,
@@ -45,13 +45,13 @@ export function useI18nCreator(spec: I18nSpec<string, string, string, string>) {
                 setLocale(value)
             },
             setLocale,
-            get fallbackLocale() {
-                return fallbackLocale
+            get localeFallback() {
+                return localeFallback
             },
-            set fallbackLocale(value) {
-                setFallbackLocale(value)
+            set localeFallback(value) {
+                setLocaleFallback(value)
             },
-            setFallbackLocale,
+            setLocaleFallback,
             get messages() {
                 return messages
             },
@@ -60,7 +60,7 @@ export function useI18nCreator(spec: I18nSpec<string, string, string, string>) {
             },
             setMessages,
         }
-    }, [locale, fallbackLocale, messages])
+    }, [locale, localeFallback, messages])
 
     return i18n
 }
@@ -74,14 +74,14 @@ export function useI18nMsg<T extends object, L extends string = string, K extend
     deps?: undefined | Array<unknown>,
 ) {
     const i18n = useI18n()! as I18nManager<L, K>
-    const {locale, fallbackLocale, messages} = i18n
+    const {locale, localeFallback, messages} = i18n
 
     const i18nMsg = useMemo(() => {
         return {
             ...compute(i18n),
             $i18n: i18n,
         }
-    }, [i18n, locale, fallbackLocale, messages, ...(deps ?? [])])
+    }, [i18n, locale, localeFallback, messages, ...(deps ?? [])])
 
     return i18nMsg
 }
@@ -104,6 +104,6 @@ export interface I18nManager<L extends string = string, K extends string = strin
 
 export interface I18nSetters<L extends string = string, K extends string = string> {
     setLocale: StateSetter<L>
-    setFallbackLocale: StateSetter<L>
+    setLocaleFallback: StateSetter<L>
     setMessages: StateSetter<I18nMessages<L, K>>
 }

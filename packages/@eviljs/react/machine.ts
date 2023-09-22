@@ -22,7 +22,7 @@ export function useMachine<S, E>(reduce: MachineReducer<S, E>, createState: Mach
 
 // Types ///////////////////////////////////////////////////////////////////////
 
-export type MachineManager<S, E> = [state: S, dispatch: MachineDispatch<S, E>, Task<S>]
+export type MachineManager<S, E> = [state: S, dispatch: MachineDispatch<S, E>, readState: Task<S>]
 export type MachineDispatch<S, E> = Io<E, S>
 export type MachineReducer<S, E> = (state: S, event: E) => S
 export type MachineInitState<S> = S | (() => S)

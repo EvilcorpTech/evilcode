@@ -81,7 +81,7 @@ export function useStoreCreator<S extends StoreStateGeneric>(spec: StoreDefiniti
 
                 if (idx < 0) {
                     console.warn(
-                        '@eviljs/react/store-v3:\n'
+                        '@eviljs/react/store-v4:\n'
                         + `observer vanished. Was listening on '${JSON.stringify(path)}'.`
                     )
                     return
@@ -224,7 +224,7 @@ export function walkState(
 
         if (! stateHead) {
             console.warn(
-                '@eviljs/react/store-v3.walkState():\n'
+                '@eviljs/react/store-v4.walkState():\n'
                 + `state vanished from path '${JSON.stringify(path)}'.`
             )
             break
@@ -242,7 +242,7 @@ export function createStateProxy<S extends StoreStateGeneric>(state: S, onGet: (
             }
             // if (! hasOwnProperty(obj, prop)) {
             //     console.warn(
-            //         '@eviljs/react/store-v3:\n'
+            //         '@eviljs/react/store-v4:\n'
             //         + `accessing inherited property '${String(prop)}'.`
             //     )
             //     return

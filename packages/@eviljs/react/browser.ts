@@ -1,7 +1,7 @@
 import {hasBrowserTouch} from '@eviljs/web/browser.js'
 import {useEffect, useState} from 'react'
 
-export function useBrowserFeaturesClasses() {
+export function useBrowserFeaturesClassesProvider() {
     const features = useBrowserFeatures()
 
     useEffect(() => {
