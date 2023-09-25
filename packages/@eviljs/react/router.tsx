@@ -2,6 +2,7 @@ import {compute, type Computable} from '@eviljs/std/compute.js'
 import type {Fn} from '@eviljs/std/fn.js'
 import {escapeRegexp} from '@eviljs/std/regexp.js'
 import {asArray, isPromise} from '@eviljs/std/type.js'
+import type {RoutePathTest} from '@eviljs/web/route-v2.js'
 import {exact, regexpFromPattern} from '@eviljs/web/route.js'
 import type {Router as RouterManager, RouterObserver, RouterRoute, RouterRouteChange, RouterRouteChangeParams, RouterRouteParams} from '@eviljs/web/router.js'
 import {encodeLink} from '@eviljs/web/router.js'
@@ -430,7 +431,7 @@ export interface Router<S = unknown> {
 
 export interface WhenRouteProps {
     children: undefined | RouteMatchChildren
-    is: RoutePattern
+    is: RoutePathTest
 }
 
 export interface SwitchRouteProps {
@@ -468,8 +469,6 @@ export interface RouterRouteChangeComputable<S = unknown> extends Omit<RouterRou
         | RouterRouteChangeParams
         | ((params: RouterRouteParams) => RouterRouteChangeParams)
 }
-
-export type RoutePattern = string | RegExp | Array<string | RegExp>
 
 export type RouteMatchChildren =
     | React.ReactNode

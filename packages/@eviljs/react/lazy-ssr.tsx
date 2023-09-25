@@ -50,6 +50,7 @@ export function lazySuspendedSsr<P extends object>(
                         ? <SsrFallback
                             data-suspense-name={name}
                             data-suspense-id={ssrId}
+                            tag={element.tag}
                             attributes={element.attributes}
                             children={element.html}
                             onUnmount={() => LazySuspendedSsrElements.delete(key)}
@@ -72,7 +73,7 @@ export function lazySuspendedSsr<P extends object>(
 }
 
 export function SsrFallback(props: SsrFallbackProps) {
-    const {attributes, children, className, onUnmount, ...otherProps} = props
+    const {attributes, children, className, tag, onUnmount, ...otherProps} = props
     const elementRef = useRef<Element>(null)
 
     useLayoutEffect(() => {
@@ -101,6 +102,7 @@ export function SsrFallback(props: SsrFallbackProps) {
         <Box
             // {...otherProps}
             ref={elementRef}
+            tag={tag}
             dangerouslySetInnerHTML={{__html: children}}
         />
     )
