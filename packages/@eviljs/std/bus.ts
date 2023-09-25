@@ -121,10 +121,10 @@ export function defineBusEvent<
 export function exact(pattern: string): string
 export function exact(strings: TemplateStringsArray, ...substitutions: Array<unknown>): string
 export function exact(...args: [string] | [TemplateStringsArray, ...Array<unknown>]): string {
-    const [strings, substitutions] = args
+    const [strings, ...substitutions] = args
 
     return isArray(strings)
-        ? exactTemplate(strings as TemplateStringsArray, substitutions as Array<unknown>)
+        ? exactTemplate(strings as TemplateStringsArray, ...substitutions)
         : exactString(strings as string)
 }
 
@@ -133,7 +133,7 @@ export function exactString(pattern: string) {
 }
 
 export function exactTemplate(strings: TemplateStringsArray, ...substitutions: Array<unknown>): string {
-    return exactString(String.raw(strings, ...substitutions))
+    return exactString(String.raw({raw: strings}, ...substitutions))
 }
 
 export function regexpFromEvent(event: BusEvent): RegExp {
