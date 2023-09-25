@@ -2,25 +2,25 @@ import {isArray, isRegExp} from '@eviljs/std/type.js'
 
 export const Start = '^'
 export const End = '(?:/)?$'
+export const Deep = '(?:/.*)?$'
 export const Any = '(.*)'
 export const Arg = '([^/]+)'
 
+export const PatternRegexpCache: Record<string, RegExp> = {}
 export const PatternEmptyRegexp = /^$/
 export const PatternEmptiesRegexp = /[\n ]/g
 export const PatternRepeatingSlashRegexp = /\/\/+/g
 export const PatternTrailingSlashRegexp = /\/$/
-
-export const PatternRegexpCache: Record<string, RegExp> = {}
 
 export const RoutePathArgPlaceholder = '{arg}'
 
 export function exact(pattern: string): string
 export function exact(strings: TemplateStringsArray, ...substitutions: Array<unknown>): string
 export function exact(...args: [string] | [TemplateStringsArray, ...Array<unknown>]): string {
-    const [strings, substitutions] = args
+    const [strings, ...substitutions] = args
 
     return isArray(strings)
-        ? exactTemplate(strings as TemplateStringsArray, substitutions as Array<unknown>)
+        ? exactTemplate(strings as TemplateStringsArray, ...substitutions)
         : exactString(strings as string)
 }
 
@@ -29,7 +29,7 @@ export function exactString(pattern: string) {
 }
 
 export function exactTemplate(strings: TemplateStringsArray, ...substitutions: Array<unknown>): string {
-    return exactString(String.raw(strings, ...substitutions))
+    return exactString(String.raw({raw: strings}, ...substitutions))
 }
 
 export function compilePattern(pattern: string | RegExp): RegExp {

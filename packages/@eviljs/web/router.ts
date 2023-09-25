@@ -157,7 +157,9 @@ export function mergeRouteChange<S>(route: RouterRoute<S>, routeChange: RouterRo
 
 export function decodePathRoute<S>(basePath: string): RouterRoute<S> {
     const {pathname, search} = window.location
-    const path = pathname.replace(basePath, '')
+    const path = basePath
+        ? pathname.slice(basePath.length) // pathname.replace(basePath, '')
+        : pathname
     const params = decodeRouteParams(
         search.substring(1) // Without the initial '?'.
     )
@@ -195,7 +197,11 @@ export function decodeRouteParams(paramsString: undefined | string): undefined |
         const key = keyEncoded ? decodeURIComponent(keyEncoded) : keyEncoded
         const value = valueEncoded ? decodeURIComponent(valueEncoded) : valueEncoded
 
-        params[key!] = value ?? ''
+        if (! key) {
+            continue
+        }
+
+        params[key] = value ?? ''
     }
 
     return params
@@ -309,7 +315,7 @@ export interface RouterMemoryOptions<S = unknown> extends RouterOptions {
     initialState?: undefined | S
 }
 
-export type RouterRouteParams = undefined | Record<string | number, string>
+export type RouterRouteParams = undefined | Record<string, string>
 
 export interface RouterRouteChange<S = unknown> {
     path?: undefined | string
@@ -321,16 +327,3 @@ export interface RouterRouteChange<S = unknown> {
 export type RouterRouteChangeParams = RouterRouteParams | QueryParams
 export type RouterRouteChangeParamsDict = QueryParamsDict
 export type RouterRouteChangeParamsList = QueryParamsList
-
-// export type RouterRouteChangeParams =
-//     | string
-//     | RouterRouteChangeParamsDict
-//     | RouterRouteChangeParamsList
-//
-// export type RouterRouteChangeParamsDict = Record<string | number,
-//     | Nil
-//     | boolean
-//     | number
-//     | string
-// >
-// export type RouterRouteChangeParamsList = Array<string | RouterRouteChangeParamsDict>

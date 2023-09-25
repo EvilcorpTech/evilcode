@@ -1,5 +1,4 @@
 import {throwInvalidArgument} from '@eviljs/std/throw.js'
-import type {Nil} from '@eviljs/std/type.js'
 import {isArray, isObject, isSome, isString, kindOf} from '@eviljs/std/type.js'
 import type {Fetch, FetchAttributes, FetchRequestOptions} from './fetch.js'
 import {HttpMethod, mergeFetchOptions, unpackResponse} from './fetch.js'
@@ -91,7 +90,7 @@ export function setupQuery(path: string, options?: undefined | QueryRequestOptio
 /**
 * @throws InvalidArgument
 **/
-export function encodeQueryParams(params: Nil | QueryParams, options?: undefined | QueryEncodeParamsOptions): string {
+export function encodeQueryParams(params: undefined | QueryParams, options?: undefined | QueryEncodeParamsOptions): string {
     if (! params) {
         return ''
     }
@@ -110,7 +109,7 @@ export function encodeQueryParams(params: Nil | QueryParams, options?: undefined
     return throwInvalidArgument(
         '@eviljs/web/query.encodeQueryParams(~~params~~):\n'
         + 'params is of an invalid type.\n'
-        + `Must be a <string | object | array>, given "${params}".`
+        + `Must be a <undefined | string | object | array>, given "${params}".`
     )
 }
 
@@ -369,7 +368,8 @@ export interface QueryParamsDict extends Record<QueryParamsDictKey, QueryParamsD
 
 export type QueryParamsDictKey = number | string
 export type QueryParamsDictValue =
-    | Nil
+    | undefined
+    | null
     | boolean
     | number
     | string

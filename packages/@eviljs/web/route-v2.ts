@@ -1,25 +1,24 @@
 import type {FnArgs} from '@eviljs/std/fn.js'
-import {asArray} from '@eviljs/std/type.js'
-import type {QueryParamsDictKey} from './query.js'
 import type {RoutePatternArgs} from './route.js'
 import type {RouterRouteChangeParamsDict, RouterRouteParams} from './router.js'
 
 export * from './route.js'
 
 export function defineRoutePath<A extends RoutePatternArgs = []>(
-    options: RoutePathOptions<A>,
-): RoutePathDefinition<A> {
+    options: RoutePathCodecOptions<A>,
+): RoutePathCodec<A> {
     return {
-        match: asArray(options.match),
+        match: options.match,
         encode: options.encode,
     }
 }
 
 export function defineRouteParam<
-    const N extends QueryParamsDictKey,
-    A extends FnArgs,
+    const N extends string,
+    EA extends FnArgs,
+    DA extends FnArgs,
     O,
->(options: RouteParamOptions<N, A, O>): RouteParamDefinition<N, A, O> {
+>(options: RouteParamCodecOptions<N, EA, DA, O>): RouteParamCodec<N, EA, DA, O> {
     return {
         name: options.name,
         encode: options.encode.bind(options.name),
@@ -33,25 +32,36 @@ export function defineRouteParam<
 
 // Types ///////////////////////////////////////////////////////////////////////
 
-export interface RoutePathOptions<A extends RoutePatternArgs = []> extends Omit<RoutePathDefinition<A>, 'match'> {
-    match: string | [string, ...Array<string>]
+export interface RoutePathCodecOptions<A extends RoutePatternArgs = []> extends RoutePathCodec<A> {
 }
 
-export interface RoutePathDefinition<A extends RoutePatternArgs> {
-    match: Array<string>
+export interface RoutePathCodec<A extends RoutePatternArgs> {
+    match: RoutePathTest
     encode(...args: A): string
 }
 
-export interface RouteParamOptions<N extends QueryParamsDictKey, A extends FnArgs, O> {
+export type RoutePathTest = string | RegExp | Array<string | RegExp>
+
+export interface RouteParamCodecOptions<
+    N extends string,
+    EA extends FnArgs,
+    DA extends FnArgs,
+    O
+> {
     name: N
-    encode(this: N, ...args: A): RouterRouteChangeParamsDict
-    decode(this: N, params: RouterRouteParams): O
+    encode(this: N, ...args: EA): RouterRouteChangeParamsDict
+    decode(this: N, params: RouterRouteParams, ...args: DA): O
     omit?: undefined | ((params: RouterRouteParams) => RouterRouteParams)
 }
 
-export interface RouteParamDefinition<N extends QueryParamsDictKey, A extends FnArgs, O> {
+export interface RouteParamCodec<
+    N extends string,
+    EA extends FnArgs,
+    DA extends FnArgs,
+    O
+> {
     name: N
-    encode(...args: A): RouterRouteChangeParamsDict
-    decode(params: RouterRouteParams): O
+    encode(...args: EA): RouterRouteChangeParamsDict
+    decode(params: RouterRouteParams, ...args: DA): O
     omit(params: RouterRouteParams): RouterRouteParams
 }
