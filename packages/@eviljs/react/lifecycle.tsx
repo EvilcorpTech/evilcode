@@ -1,3 +1,4 @@
+import type {Task} from '@eviljs/std/fn.js'
 import {useCallback, useLayoutEffect, useRef, useState} from 'react'
 
 /*
@@ -44,31 +45,28 @@ export function useMountedRef() {
 
 /*
 * Used to force the rendering of a component.
-*
-* EXAMPLE
-*
-* function MyComponent(props) {
-*     const render = useRender()
-*
-*     useEffect(() => {
-*         promise.then((value) => {
-*             // Do something, then
-*             render()
-*         })
-*     }, [])
-* }
 */
 export function useRender() {
-    const [, setShouldRender] = useState([])
+    const [signal, render] = useRenderSignal()
 
-    const render = useCallback(() => {
+    return render
+}
+
+export function useRenderSignal(): [RenderSignal, Task] {
+    const [signal, setSignal] = useState([])
+
+    const notifySignal = useCallback(() => {
         // Don't use -1/1 or !boolean, which don't work on even number of consecutive calls.
         // Don't use ++number, which can overflow Number.MAX_SAFE_INTEGER.
         // [] is faster and memory cheaper
         // than {} which is faster
         // than Object.create(null).
-        setShouldRender([])
+        setSignal([])
     }, [])
 
-    return render
+    return [signal, notifySignal]
 }
+
+// Types ///////////////////////////////////////////////////////////////////////
+
+export type RenderSignal = never[]
