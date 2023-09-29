@@ -8,8 +8,12 @@
 @import '@evilcss/std/button/flat.css' layer(std);
 @import '@evilcss/std/button/halo.css' layer(std);
 @import '@evilcss/std/button/plain.css' layer(std);
+@import '@evilcss/std/color-accent-primary-variants.classes.css' layer(std);
+@import '@evilcss/std/color-accent-primary-variants.props.css' layer(std);
 @import '@evilcss/std/color-accent-primary.classes.css' layer(std);
 @import '@evilcss/std/color-accent-primary.props.css' layer(std);
+@import '@evilcss/std/color-accent-secondary-variants.classes.css' layer(std);
+@import '@evilcss/std/color-accent-secondary-variants.props.css' layer(std);
 @import '@evilcss/std/color-accent-secondary.classes.css' layer(std);
 @import '@evilcss/std/color-accent-secondary.props.css' layer(std);
 @import '@evilcss/std/color-bg-dark.props.css' layer(std);
