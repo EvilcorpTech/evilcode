@@ -1,3 +1,5 @@
+export {returnVoid as noop} from './return.js'
+
 // Types ///////////////////////////////////////////////////////////////////////
 
 export type Fn<A extends FnArgs, R = void> = (...args: A) => R

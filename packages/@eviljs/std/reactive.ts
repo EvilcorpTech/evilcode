@@ -71,19 +71,19 @@ export function createReactiveRef<V>(
     initialValue: V,
     options?: undefined | ReactiveOptions<V>,
 ): ReactiveRef<V> & ReactiveInternals<V> {
-    const reactiveObserver = createReactiveAccessor(initialValue, options)
+    const reactiveAccessor = createReactiveAccessor(initialValue, options)
 
-    const {read, write} = reactiveObserver
+    const {read, write} = reactiveAccessor
 
     return {
-        __observers__: reactiveObserver.__observers__,
+        __observers__: reactiveAccessor.__observers__,
         get value() {
             return read()
         },
         set value(value) {
             write(value)
         },
-        watch: reactiveObserver.watch,
+        watch: reactiveAccessor.watch,
     }
 }
 
