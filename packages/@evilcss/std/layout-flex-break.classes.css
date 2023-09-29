@@ -7,6 +7,9 @@
     flex-wrap: inherit;
     gap: inherit;
 }
-.std-flex-break.wrap {
+.std-flex-break.std-flex-wrap {
     flex-wrap: wrap;
+}
+.std-flex-break.std-flex-no-wrap {
+    flex-wrap: nowrap;
 }

@@ -1,0 +1,56 @@
+.std-root {
+    --std-color-secondary-tint1: hsl(var(--std-color-secondary-h) calc(var(--std-color-secondary-s) * .8) calc(var(--std-color-secondary-l) + (100% - var(--std-color-secondary-l)) * .2));
+    --std-color-secondary-tint2: hsl(var(--std-color-secondary-h) calc(var(--std-color-secondary-s) * .8) calc(var(--std-color-secondary-l) + (100% - var(--std-color-secondary-l)) * .4));
+    --std-color-secondary-tint3: hsl(var(--std-color-secondary-h) calc(var(--std-color-secondary-s) * .8) calc(var(--std-color-secondary-l) + (100% - var(--std-color-secondary-l)) * .6));
+    --std-color-secondary-tint4: hsl(var(--std-color-secondary-h) calc(var(--std-color-secondary-s) * .8) calc(var(--std-color-secondary-l) + (100% - var(--std-color-secondary-l)) * .7));
+    --std-color-secondary-tint5: hsl(var(--std-color-secondary-h) calc(var(--std-color-secondary-s) * .8) calc(var(--std-color-secondary-l) + (100% - var(--std-color-secondary-l)) * .8));
+    --std-color-secondary-tint6: hsl(var(--std-color-secondary-h) calc(var(--std-color-secondary-s) * .8) calc(var(--std-color-secondary-l) + (100% - var(--std-color-secondary-l)) * .95));
+    --std-color-secondary-shade1: hsl(var(--std-color-secondary-h) calc(var(--std-color-secondary-s) * .6) calc(var(--std-color-secondary-l) * .9));
+    --std-color-secondary-shade2: hsl(var(--std-color-secondary-h) calc(var(--std-color-secondary-s) * .6) calc(var(--std-color-secondary-l) * .8));
+    --std-color-secondary-shade3: hsl(var(--std-color-secondary-h) calc(var(--std-color-secondary-s) * .6) calc(var(--std-color-secondary-l) * .7));
+    --std-color-secondary-shade4: hsl(var(--std-color-secondary-h) calc(var(--std-color-secondary-s) * .6) calc(var(--std-color-secondary-l) * .6));
+    --std-color-secondary-shade5: hsl(var(--std-color-secondary-h) calc(var(--std-color-secondary-s) * .6) calc(var(--std-color-secondary-l) * .5));
+    --std-color-secondary-shade6: hsl(var(--std-color-secondary-h) calc(var(--std-color-secondary-s) * .6) calc(var(--std-color-secondary-l) * .4));
+    --std-color-secondary-tone1: hsl(var(--std-color-secondary-h) calc(var(--std-color-secondary-s) * .8) calc(var(--std-color-secondary-l) * 1.0));
+    --std-color-secondary-tone2: hsl(var(--std-color-secondary-h) calc(var(--std-color-secondary-s) * .6) calc(var(--std-color-secondary-l) * 1.0));
+    --std-color-secondary-tone3: hsl(var(--std-color-secondary-h) calc(var(--std-color-secondary-s) * .4) calc(var(--std-color-secondary-l) * 1.0));
+    --std-color-secondary-tone4: hsl(var(--std-color-secondary-h) calc(var(--std-color-secondary-s) * .3) calc(var(--std-color-secondary-l) * 1.0));
+    --std-color-secondary-tone5: hsl(var(--std-color-secondary-h) calc(var(--std-color-secondary-s) * .2) calc(var(--std-color-secondary-l) * 1.0));
+    --std-color-secondary-tone6: hsl(var(--std-color-secondary-h) calc(var(--std-color-secondary-s) * .1) calc(var(--std-color-secondary-l) * 1.0));
+
+    --std-dark-color-secondary-fg1-h: var(--std-color-secondary-h);
+    --std-dark-color-secondary-fg1-s: var(--std-color-secondary-s);
+    --std-dark-color-secondary-fg1-l: var(--std-dark-color-primary-fg1-l); /* Inherits the primary value. */
+    --std-dark-color-secondary-fg1: hsl(var(--std-dark-color-secondary-fg1-h) var(--std-dark-color-secondary-fg1-s) var(--std-dark-color-secondary-fg1-l));
+    --std-dark-color-secondary-fg2-h: var(--std-color-secondary-h);
+    --std-dark-color-secondary-fg2-s: var(--std-color-secondary-s);
+    --std-dark-color-secondary-fg2-l: var(--std-dark-color-primary-fg2-l); /* Inherits the primary value. */
+    --std-dark-color-secondary-fg2: hsl(var(--std-dark-color-secondary-fg2-h) var(--std-dark-color-secondary-fg2-s) var(--std-dark-color-secondary-fg2-l));
+    --std-dark-color-secondary-fg3-h: var(--std-color-secondary-h);
+    --std-dark-color-secondary-fg3-s: var(--std-color-secondary-s);
+    --std-dark-color-secondary-fg3-l: var(--std-dark-color-primary-fg3-l); /* Inherits the primary value. */
+    --std-dark-color-secondary-fg3: hsl(var(--std-dark-color-secondary-fg3-h) var(--std-dark-color-secondary-fg3-s) var(--std-dark-color-secondary-fg3-l));
+
+    --std-light-color-secondary-fg1-h: var(--std-color-secondary-h);
+    --std-light-color-secondary-fg1-s: var(--std-color-secondary-s);
+    --std-light-color-secondary-fg1-l: var(--std-light-color-primary-fg1-l); /* Inherits the primary value. */
+    --std-light-color-secondary-fg1: hsl(var(--std-light-color-secondary-fg1-h) var(--std-light-color-secondary-fg1-s) var(--std-light-color-secondary-fg1-l));
+    --std-light-color-secondary-fg2-h: var(--std-color-secondary-h);
+    --std-light-color-secondary-fg2-s: var(--std-color-secondary-s);
+    --std-light-color-secondary-fg2-l: var(--std-light-color-primary-fg2-l); /* Inherits the primary value. */
+    --std-light-color-secondary-fg2: hsl(var(--std-light-color-secondary-fg2-h) var(--std-light-color-secondary-fg2-s) var(--std-light-color-secondary-fg2-l));
+    --std-light-color-secondary-fg3-h: var(--std-color-secondary-h);
+    --std-light-color-secondary-fg3-s: var(--std-color-secondary-s);
+    --std-light-color-secondary-fg3-l: var(--std-light-color-primary-fg3-l); /* Inherits the primary value. */
+    --std-light-color-secondary-fg3: hsl(var(--std-light-color-secondary-fg3-h) var(--std-light-color-secondary-fg3-s) var(--std-light-color-secondary-fg3-l));
+}
+.std-theme-dark {
+    --std-color-secondary-fg1: var(--std-dark-color-secondary-fg1);
+    --std-color-secondary-fg2: var(--std-dark-color-secondary-fg2);
+    --std-color-secondary-fg3: var(--std-dark-color-secondary-fg3);
+}
+.std-theme-light {
+    --std-color-secondary-fg1: var(--std-light-color-secondary-fg1);
+    --std-color-secondary-fg2: var(--std-light-color-secondary-fg2);
+    --std-color-secondary-fg3: var(--std-light-color-secondary-fg3);
+}

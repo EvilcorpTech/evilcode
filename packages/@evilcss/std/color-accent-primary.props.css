@@ -6,33 +6,4 @@
     * --std-color-primary-l: <n>%;
     */
     --std-color-primary-accent: hsl(var(--std-color-primary-h) var(--std-color-primary-s) var(--std-color-primary-l));
-
-    --std-color-primary-tint1: hsl(var(--std-color-primary-h) calc(var(--std-color-primary-s) * .8) calc(var(--std-color-primary-l) + (100% - var(--std-color-primary-l)) * .2));
-    --std-color-primary-tint2: hsl(var(--std-color-primary-h) calc(var(--std-color-primary-s) * .8) calc(var(--std-color-primary-l) + (100% - var(--std-color-primary-l)) * .4));
-    --std-color-primary-tint3: hsl(var(--std-color-primary-h) calc(var(--std-color-primary-s) * .8) calc(var(--std-color-primary-l) + (100% - var(--std-color-primary-l)) * .6));
-    --std-color-primary-tint4: hsl(var(--std-color-primary-h) calc(var(--std-color-primary-s) * .8) calc(var(--std-color-primary-l) + (100% - var(--std-color-primary-l)) * .7));
-    --std-color-primary-tint5: hsl(var(--std-color-primary-h) calc(var(--std-color-primary-s) * .8) calc(var(--std-color-primary-l) + (100% - var(--std-color-primary-l)) * .8));
-    --std-color-primary-tint6: hsl(var(--std-color-primary-h) calc(var(--std-color-primary-s) * .8) calc(var(--std-color-primary-l) + (100% - var(--std-color-primary-l)) * .95));
-    --std-color-primary-shade1: hsl(var(--std-color-primary-h) calc(var(--std-color-primary-s) * .6) calc(var(--std-color-primary-l) * .9));
-    --std-color-primary-shade2: hsl(var(--std-color-primary-h) calc(var(--std-color-primary-s) * .6) calc(var(--std-color-primary-l) * .8));
-    --std-color-primary-shade3: hsl(var(--std-color-primary-h) calc(var(--std-color-primary-s) * .6) calc(var(--std-color-primary-l) * .7));
-    --std-color-primary-shade4: hsl(var(--std-color-primary-h) calc(var(--std-color-primary-s) * .6) calc(var(--std-color-primary-l) * .6));
-    --std-color-primary-shade5: hsl(var(--std-color-primary-h) calc(var(--std-color-primary-s) * .6) calc(var(--std-color-primary-l) * .5));
-    --std-color-primary-shade6: hsl(var(--std-color-primary-h) calc(var(--std-color-primary-s) * .6) calc(var(--std-color-primary-l) * .4));
-    --std-color-primary-tone1: hsl(var(--std-color-primary-h) calc(var(--std-color-primary-s) * .8) calc(var(--std-color-primary-l) * 1.0));
-    --std-color-primary-tone2: hsl(var(--std-color-primary-h) calc(var(--std-color-primary-s) * .6) calc(var(--std-color-primary-l) * 1.0));
-    --std-color-primary-tone3: hsl(var(--std-color-primary-h) calc(var(--std-color-primary-s) * .4) calc(var(--std-color-primary-l) * 1.0));
-    --std-color-primary-tone4: hsl(var(--std-color-primary-h) calc(var(--std-color-primary-s) * .3) calc(var(--std-color-primary-l) * 1.0));
-    --std-color-primary-tone5: hsl(var(--std-color-primary-h) calc(var(--std-color-primary-s) * .2) calc(var(--std-color-primary-l) * 1.0));
-    --std-color-primary-tone6: hsl(var(--std-color-primary-h) calc(var(--std-color-primary-s) * .1) calc(var(--std-color-primary-l) * 1.0));
-}
-.std-theme-light {
-    --std-color-primary-fg1: hsl(var(--std-color-primary-h) var(--std-color-primary-s) 48%);
-    --std-color-primary-fg2: hsl(var(--std-color-primary-h) var(--std-color-primary-s) 40%);
-    --std-color-primary-fg3: hsl(var(--std-color-primary-h) var(--std-color-primary-s) 32%);
-}
-.std-theme-dark {
-    --std-color-primary-fg1: hsl(var(--std-color-primary-h) var(--std-color-primary-s) 62%);
-    --std-color-primary-fg2: hsl(var(--std-color-primary-h) var(--std-color-primary-s) 72%);
-    --std-color-primary-fg3: hsl(var(--std-color-primary-h) var(--std-color-primary-s) 82%);
 }

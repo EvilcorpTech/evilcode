@@ -1,35 +1,38 @@
 .std-root {
-    --std-color-light-fg1-h: var(--std-color-light-fg-h, 0deg);
-    --std-color-light-fg1-s: var(--std-color-light-fg-s, 0%);
-    --std-color-light-fg1-l: 13%;
-    --std-color-light-fg1: hsl(var(--std-color-light-fg1-h) var(--std-color-light-fg1-s) var(--std-color-light-fg1-l) / var(--std-color-light-fg1-opacity, 1));
+    --std-light-color-fg1-h: var(--std-light-color-fg-h, 0deg);
+    --std-light-color-fg1-s: var(--std-light-color-fg-s, 0%);
+    --std-light-color-fg1-l: 13%;
+    --std-light-color-fg1: hsl(var(--std-light-color-fg1-h) var(--std-light-color-fg1-s) var(--std-light-color-fg1-l) / var(--std-light-color-fg1-opacity, 1));
 
-    --std-color-light-fg2-h: var(--std-color-light-fg-h, 0deg);
-    --std-color-light-fg2-s: var(--std-color-light-fg-s, 0%);
-    --std-color-light-fg2-l: 36%;
-    --std-color-light-fg2: hsl(var(--std-color-light-fg2-h) var(--std-color-light-fg2-s) var(--std-color-light-fg2-l) / var(--std-color-light-fg2-opacity, 1));
+    --std-light-color-fg2-h: var(--std-light-color-fg-h, 0deg);
+    --std-light-color-fg2-s: var(--std-light-color-fg-s, 0%);
+    --std-light-color-fg2-l: 36%;
+    --std-light-color-fg2: hsl(var(--std-light-color-fg2-h) var(--std-light-color-fg2-s) var(--std-light-color-fg2-l) / var(--std-light-color-fg2-opacity, 1));
 
-    --std-color-light-fg3-h: var(--std-color-light-fg-h, 0deg);
-    --std-color-light-fg3-s: var(--std-color-light-fg-s, 0%);
-    --std-color-light-fg3-l: 59%;
-    --std-color-light-fg3: hsl(var(--std-color-light-fg3-h) var(--std-color-light-fg3-s) var(--std-color-light-fg3-l) / var(--std-color-light-fg3-opacity, 1));
+    --std-light-color-fg3-h: var(--std-light-color-fg-h, 0deg);
+    --std-light-color-fg3-s: var(--std-light-color-fg-s, 0%);
+    --std-light-color-fg3-l: 59%;
+    --std-light-color-fg3: hsl(var(--std-light-color-fg3-h) var(--std-light-color-fg3-s) var(--std-light-color-fg3-l) / var(--std-light-color-fg3-opacity, 1));
+
+    --std-light-color-fg-l: 0%; /* Can be used with clamp() to obtain the desired lightness. */
+    --std-light-color-fg-ll: 1; /* Can be used with calc() to obtain the desired lightness. */
 }
 .std-theme-light {
-    --std-color-fg1-h: var(--std-color-light-fg1-h);
-    --std-color-fg1-s: var(--std-color-light-fg1-s);
-    --std-color-fg1-l: var(--std-color-light-fg1-l);
-    --std-color-fg1: var(--std-color-light-fg1);
+    --std-color-fg1-h: var(--std-light-color-fg1-h);
+    --std-color-fg1-s: var(--std-light-color-fg1-s);
+    --std-color-fg1-l: var(--std-light-color-fg1-l);
+    --std-color-fg1: var(--std-light-color-fg1);
 
-    --std-color-fg2-h: var(--std-color-light-fg2-h);
-    --std-color-fg2-s: var(--std-color-light-fg2-s);
-    --std-color-fg2-l: var(--std-color-light-fg2-l);
-    --std-color-fg2: var(--std-color-light-fg2);
+    --std-color-fg2-h: var(--std-light-color-fg2-h);
+    --std-color-fg2-s: var(--std-light-color-fg2-s);
+    --std-color-fg2-l: var(--std-light-color-fg2-l);
+    --std-color-fg2: var(--std-light-color-fg2);
 
-    --std-color-fg3-h: var(--std-color-light-fg3-h);
-    --std-color-fg3-s: var(--std-color-light-fg3-s);
-    --std-color-fg3-l: var(--std-color-light-fg3-l);
-    --std-color-fg3: var(--std-color-light-fg3);
+    --std-color-fg3-h: var(--std-light-color-fg3-h);
+    --std-color-fg3-s: var(--std-light-color-fg3-s);
+    --std-color-fg3-l: var(--std-light-color-fg3-l);
+    --std-color-fg3: var(--std-light-color-fg3);
 
-    --std-fg-l: 0%;
-    --std-fg-ll: 1;
+    --std-fg-l: var(--std-light-color-fg-l);
+    --std-fg-ll: var(--std-light-color-fg-ll);
 }
