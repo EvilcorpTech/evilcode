@@ -183,29 +183,12 @@ export function Colors() {
                 <label>Fg</label>
                 <div className="std-grow"/>
                 <div className="std-flex std-flex-row-reverse">
-                    {times(5).map(idx => (
+                    {times(3).map(idx => (
                         <span
                             key={idx}
                             className="color-t75a"
                             title={`Primary fg ${idx+1}`}
                             style={{backgroundColor: `var(--std-color-primary-fg${idx+1})`}}
-                        />
-                    ))}
-                </div>
-            </div>
-
-            <div className="std-space-v4"/>
-
-            <div className="std-flex">
-                <label>Bg</label>
-                <div className="std-grow"/>
-                <div className="std-flex std-flex-row-reverse">
-                    {times(4).map(idx => (
-                        <span
-                            key={idx}
-                            className="color-t75a"
-                            title={`Primary bg ${idx+1}`}
-                            style={{backgroundColor: `var(--std-color-primary-bg${idx+1})`}}
                         />
                     ))}
                 </div>
@@ -287,29 +270,12 @@ export function Colors() {
                 <label>Fg</label>
                 <div className="std-grow"/>
                 <div className="std-flex std-flex-row-reverse">
-                    {times(5).map(idx => (
+                    {times(3).map(idx => (
                         <span
                             key={idx}
                             className="color-t75a"
                             title={`Secondary fg ${idx+1}`}
                             style={{backgroundColor: `var(--std-color-secondary-fg${idx+1})`}}
-                        />
-                    ))}
-                </div>
-            </div>
-
-            <div className="std-space-v4"/>
-
-            <div className="std-flex">
-                <label>Bg</label>
-                <div className="std-grow"/>
-                <div className="std-flex std-flex-row-reverse">
-                    {times(4).map(idx => (
-                        <span
-                            key={idx}
-                            className="color-t75a"
-                            title={`Secondary bg ${idx+1}`}
-                            style={{backgroundColor: `var(--std-color-secondary-bg${idx+1})`}}
                         />
                     ))}
                 </div>
