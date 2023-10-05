@@ -70,6 +70,23 @@ export function groupMapBy<I, K>(
     return groupsMap
 }
 
+export function intersectBy<I, K>(keyOf: Io<I, K>, ...lists: Array<Array<I>>): Array<I> {
+    const intersectionList: Array<I> = []
+    const uniqueItemsMap = new Map(lists.flat().map(it => [keyOf(it), it]))
+
+    for (const [itemKey, item] of uniqueItemsMap.entries()) {
+        const itemKeyIsInEveryList = lists.every(list =>
+            list.some(it => keyOf(it) === itemKey)
+        )
+        if (! itemKeyIsInEveryList) {
+            continue
+        }
+        intersectionList.push(item)
+    }
+
+    return intersectionList
+}
+
 export function asMatrix<I>(list: Array<I>, size: number) {
     return list.reduce((rows, key, index) => {
         if ((index % size) === 0) {
