@@ -1,14 +1,14 @@
 .std-root {
-    --std-color-info-h: var(--std-color-primary-h);
-    --std-color-info-s: var(--std-color-primary-s);
-    --std-color-info-l: var(--std-color-primary-l);
-    --std-color-info: hsl(var(--std-color-info-h) var(--std-color-info-s) var(--std-color-info-l) / var(--std-color-info-opacity, 1));
-
     /* --std-color-green8 */
-    --std-color-success-h: 123deg;
-    --std-color-success-s: 43%;
-    --std-color-success-l: 39%;
-    --std-color-success: hsl(var(--std-color-success-h) var(--std-color-success-s) var(--std-color-success-l) / var(--std-color-success-opacity, 1));
+    --std-color-safety-h: 123deg;
+    --std-color-safety-s: 43%;
+    --std-color-safety-l: 39%;
+    --std-color-safety: hsl(var(--std-color-safety-h) var(--std-color-safety-s) var(--std-color-safety-l) / var(--std-color-safety-opacity, 1));
+
+    --std-color-notice-h: var(--std-color-primary-h);
+    --std-color-notice-s: var(--std-color-primary-s);
+    --std-color-notice-l: var(--std-color-primary-l);
+    --std-color-notice: hsl(var(--std-color-notice-h) var(--std-color-notice-s) var(--std-color-notice-l) / var(--std-color-notice-opacity, 1));
 
     /* --std-color-amber6 */
     --std-color-warning-h: 45deg;
@@ -17,8 +17,8 @@
     --std-color-warning: hsl(var(--std-color-warning-h) var(--std-color-warning-s) var(--std-color-warning-l) / var(--std-color-warning-opacity, 1));
 
     /* --std-color-deeporange6 */
-    --std-color-error-h: 14deg;
-    --std-color-error-s: 100%;
-    --std-color-error-l: 57%;
-    --std-color-error: hsl(var(--std-color-error-h) var(--std-color-error-s) var(--std-color-error-l) / var(--std-color-error-opacity, 1));
+    --std-color-danger-h: 14deg;
+    --std-color-danger-s: 100%;
+    --std-color-danger-l: 57%;
+    --std-color-danger: hsl(var(--std-color-danger-h) var(--std-color-danger-s) var(--std-color-danger-l) / var(--std-color-danger-opacity, 1));
 }
