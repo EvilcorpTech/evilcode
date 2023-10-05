@@ -158,11 +158,11 @@ export function setChildren(element: RenderElement, children: RenderChildren) {
         return
     }
     if (isString(children) || isNumber(children)) {
-        element.appendChild(document.createTextNode(String(children)))
+        element.replaceChildren(document.createTextNode(String(children)))
         return
     }
     if (children instanceof Node) {
-        element.appendChild(children)
+        element.replaceChildren(children)
         return
     }
     if (isArray(children)) {
