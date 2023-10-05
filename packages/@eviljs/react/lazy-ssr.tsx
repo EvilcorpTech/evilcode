@@ -5,22 +5,7 @@ import {asDefault, type LazySuspendedFallback, type LazySuspendedLoader} from '.
 import type {VoidProps} from './type.js'
 
 export const LazySuspendedSsrNames = new Set<string>()
-
-export const LazySuspendedSsrElements = new Map(
-    Array.from(document.querySelectorAll('[data-suspense-name]')).map(it => [
-        lazySuspendedSsrElementKey(
-            it.getAttribute('data-suspense-name') ?? '' ,
-            it.getAttribute('data-suspense-id') ?? '',
-        ),
-        {
-            name: it.getAttribute('data-suspense-name') ?? undefined,
-            id: it.getAttribute('data-suspense-id') ?? undefined,
-            tag: it.tagName,
-            attributes: Array.from(it.attributes),
-            html: it.innerHTML,
-        },
-    ])
-)
+export const LazySuspendedSsrElements = collectLazySuspendedSsrElements()
 
 export function lazySuspendedSsr<P extends object>(
     name: string,
@@ -46,8 +31,8 @@ export function lazySuspendedSsr<P extends object>(
         return (
             <Suspense
                 fallback={
-                    element
-                        ? <SsrFallback
+                    element ?
+                        <SsrFallback
                             data-suspense-name={name}
                             data-suspense-id={ssrId}
                             tag={element.tag}
@@ -55,7 +40,8 @@ export function lazySuspendedSsr<P extends object>(
                             children={element.html}
                             onUnmount={() => LazySuspendedSsrElements.delete(key)}
                         />
-                    : fallback?.(otherProps)
+                    :
+                        fallback?.(otherProps)
                 }
                 children={
                     <ComponentLazy
@@ -110,6 +96,24 @@ export function SsrFallback(props: SsrFallbackProps) {
 
 export function lazySuspendedSsrElementKey(name: string, cid: string) {
     return `${name}@${cid}`
+}
+
+export function collectLazySuspendedSsrElements() {
+    return new Map(
+        Array.from(document.querySelectorAll('[data-suspense-name][data-suspense-id]')).map(it => [
+            lazySuspendedSsrElementKey(
+                it.getAttribute('data-suspense-name') ?? '' ,
+                it.getAttribute('data-suspense-id') ?? '',
+            ),
+            {
+                name: it.getAttribute('data-suspense-name') ?? undefined,
+                id: it.getAttribute('data-suspense-id') ?? undefined,
+                tag: it.tagName,
+                attributes: Array.from(it.attributes),
+                html: it.innerHTML,
+            },
+        ])
+    )
 }
 
 // Types ///////////////////////////////////////////////////////////////////////

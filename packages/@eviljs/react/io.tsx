@@ -1,5 +1,5 @@
 import {Future} from '@eviljs/std/async.js'
-import type {Fn} from '@eviljs/std/fn.js'
+import type {Fn, FnArgs} from '@eviljs/std/fn.js'
 import {pipe} from '@eviljs/std/pipe.js'
 import type {ResourceMaskView, ResourcePromiseView} from '@eviljs/std/resource.js'
 import {
@@ -19,7 +19,7 @@ import {Error} from '@eviljs/std/result.js'
 import {isDefined} from '@eviljs/std/type.js'
 import {useCallback, useRef, useState} from 'react'
 
-export function useAsyncIo<A extends Array<unknown>, R>(asyncTask: Fn<A, Promise<R>>): AsyncIoManager<A, R> {
+export function useAsyncIo<A extends FnArgs, R>(asyncTask: Fn<A, Promise<R>>): AsyncIoManager<A, R> {
     const [state, setState] = useState<AsyncIoState<R>>({
         resource: ResourceMask.Initial,
         output: undefined,
@@ -162,7 +162,7 @@ export interface AsyncIoResultState<R> {
 export interface AsyncIoView<R> extends AsyncIoState<R>, ResourceMaskView, ResourcePromiseView {
 }
 
-export interface AsyncIoManager<A extends Array<unknown>, R> extends AsyncIoView<R> {
+export interface AsyncIoManager<A extends FnArgs, R> extends AsyncIoView<R> {
     call(...args: A): Promise<undefined | Either<R>>
     cancel(): void
     reset(): void

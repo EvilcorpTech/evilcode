@@ -81,7 +81,7 @@ export function useI18nMsg<T extends object, L extends string = string, K extend
             ...compute(i18n),
             $i18n: i18n,
         }
-    }, [i18n, locale, localeFallback, messages, ...(deps ?? [])])
+    }, [i18n, locale, localeFallback, messages, ...deps ?? []])
 
     return i18nMsg
 }
