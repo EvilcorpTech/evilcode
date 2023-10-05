@@ -252,10 +252,7 @@ export interface RenderAttributesProps {
 }
 
 export type RenderEventsProps = {
-    on?: undefined | (
-        & {[key in keyof HTMLElementEventMap]?: undefined | RenderEventHandler<HTMLElementEventMap[key]>}
-        & {[key in string]?: undefined | RenderEventHandler<any>}
-    )
+    on?: undefined | RenderEvents
 }
 
 export interface RenderRefProps<E extends Node> {
@@ -266,6 +263,10 @@ export type RenderElement = HTMLElement | SVGElement
 export type RenderChild = undefined | null | boolean | number | string | Node
 export type RenderChildren = RenderChild | Array<RenderChild>
 export type RenderEventName = keyof HTMLElementEventMap
+
+export type RenderEvents = RenderEventsHtml & RenderEventsCustom
+export type RenderEventsHtml = {[key in keyof HTMLElementEventMap]?: undefined | RenderEventHandler<HTMLElementEventMap[key]>}
+export type RenderEventsCustom = {[key in string]?: undefined | RenderEventHandler<any>}
 
 export type RenderEventHandler<E> = RenderEventHandlerFunction<E> | RenderEventHandlerTuple<E>
 export type RenderEventHandlerFunction<E> = Io<E, void>
