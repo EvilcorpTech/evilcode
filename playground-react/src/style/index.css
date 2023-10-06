@@ -23,25 +23,44 @@
 @import '@evilcss/std/color-fg-light.props.css' layer(std);
 @import '@evilcss/std/color-fg.classes.css' layer(std);
 @import '@evilcss/std/color-icon.props.css' layer(std);
-@import '@evilcss/std/color-material/amber.props.css' layer(std);
-@import '@evilcss/std/color-material/blue-light.props.css' layer(std);
-@import '@evilcss/std/color-material/blue.props.css' layer(std);
-@import '@evilcss/std/color-material/brown.props.css' layer(std);
-@import '@evilcss/std/color-material/cyan.props.css' layer(std);
-@import '@evilcss/std/color-material/green-light.props.css' layer(std);
-@import '@evilcss/std/color-material/green.props.css' layer(std);
-@import '@evilcss/std/color-material/grey-blue.props.css' layer(std);
-@import '@evilcss/std/color-material/grey.props.css' layer(std);
-@import '@evilcss/std/color-material/indigo.props.css' layer(std);
-@import '@evilcss/std/color-material/lime.props.css' layer(std);
-@import '@evilcss/std/color-material/orange-deep.props.css' layer(std);
-@import '@evilcss/std/color-material/orange.props.css' layer(std);
-@import '@evilcss/std/color-material/pink.props.css' layer(std);
-@import '@evilcss/std/color-material/purple-deep.props.css' layer(std);
-@import '@evilcss/std/color-material/purple.props.css' layer(std);
-@import '@evilcss/std/color-material/red.props.css' layer(std);
-@import '@evilcss/std/color-material/teal.props.css' layer(std);
-@import '@evilcss/std/color-material/yellow.props.css' layer(std);
+@import '@evilcss/std/color-material1/amber.props.css' layer(std);
+@import '@evilcss/std/color-material1/blue-light.props.css' layer(std);
+@import '@evilcss/std/color-material1/blue.props.css' layer(std);
+@import '@evilcss/std/color-material1/brown.props.css' layer(std);
+@import '@evilcss/std/color-material1/cyan.props.css' layer(std);
+@import '@evilcss/std/color-material1/green-light.props.css' layer(std);
+@import '@evilcss/std/color-material1/green.props.css' layer(std);
+@import '@evilcss/std/color-material1/grey-blue.props.css' layer(std);
+@import '@evilcss/std/color-material1/grey.props.css' layer(std);
+@import '@evilcss/std/color-material1/indigo.props.css' layer(std);
+@import '@evilcss/std/color-material1/lime.props.css' layer(std);
+@import '@evilcss/std/color-material1/orange-deep.props.css' layer(std);
+@import '@evilcss/std/color-material1/orange.props.css' layer(std);
+@import '@evilcss/std/color-material1/pink.props.css' layer(std);
+@import '@evilcss/std/color-material1/purple-deep.props.css' layer(std);
+@import '@evilcss/std/color-material1/purple.props.css' layer(std);
+@import '@evilcss/std/color-material1/red.props.css' layer(std);
+@import '@evilcss/std/color-material1/teal.props.css' layer(std);
+@import '@evilcss/std/color-material1/yellow.props.css' layer(std);
+@import '@evilcss/std/color-palette1/blue.props.css' layer(std);
+@import '@evilcss/std/color-palette1/forest.props.css' layer(std);
+@import '@evilcss/std/color-palette1/green.props.css' layer(std);
+@import '@evilcss/std/color-palette1/grey-bright.props.css' layer(std);
+@import '@evilcss/std/color-palette1/grey-cool.props.css' layer(std);
+@import '@evilcss/std/color-palette1/grey-flat.props.css' layer(std);
+@import '@evilcss/std/color-palette1/grey-neutral.props.css' layer(std);
+@import '@evilcss/std/color-palette1/indigo.props.css' layer(std);
+@import '@evilcss/std/color-palette1/magenta.props.css' layer(std);
+@import '@evilcss/std/color-palette1/maroon.props.css' layer(std);
+@import '@evilcss/std/color-palette1/orange.props.css' layer(std);
+@import '@evilcss/std/color-palette1/pool-blue.props.css' layer(std);
+@import '@evilcss/std/color-palette1/purple.props.css' layer(std);
+@import '@evilcss/std/color-palette1/red.props.css' layer(std);
+@import '@evilcss/std/color-palette1/squash.props.css' layer(std);
+@import '@evilcss/std/color-palette1/teal.props.css' layer(std);
+@import '@evilcss/std/color-palette1/ultramarine.props.css' layer(std);
+@import '@evilcss/std/color-palette1/violet.props.css' layer(std);
+@import '@evilcss/std/color-state.classes.css' layer(std);
 @import '@evilcss/std/color-state.props.css' layer(std);
 @import '@evilcss/std/color-theme.classes.css' layer(std);
 @import '@evilcss/std/duration.props.css' layer(std);
@@ -136,11 +155,6 @@
 @import '@eviljs/reactx/checkbox-mark/shape.css' layer(std-reactx);
 @import '@eviljs/reactx/input/floating-theme.css' layer(std-reactx);
 @import '@eviljs/reactx/range/theme.css' layer(std-reactx);
-
-/*
-.Root {
-}
-*/
 
 .std-root {
     --std-font-primary:

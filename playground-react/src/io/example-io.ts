@@ -1,4 +1,4 @@
-import type {Nullish} from '@eviljs/std/type'
+import type {Unsafe} from '@eviljs/std/type'
 import type {Query} from '@eviljs/web/query'
 import {withRequestAuth} from '~/io/apis'
 import type {DateString, IdString, UrlString} from '~/type/type-apis'
@@ -19,7 +19,7 @@ export function decodeAccountResponse(response: ReadAccountResponse): ReadAccoun
     }
 }
 
-export interface ReadAccountResponse extends NonNullable<Nullish<{
+export interface ReadAccountResponse extends NonNullable<Unsafe<{
     id: IdString
     createdAt: DateString
     identifier: string
