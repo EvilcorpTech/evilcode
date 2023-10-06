@@ -1,4 +1,3 @@
-import type {Partial} from '@eviljs/std/type.js'
 import {isNumber} from '@eviljs/std/type.js'
 
 export function attachDragListeners(element: DragElement, listeners: DragListeners) {
