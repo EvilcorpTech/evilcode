@@ -7,8 +7,8 @@
         "build-watch": "(nx run-many --target build --skip-nx-cache || true) && nx watch --all run-many -- npm run build"
     },
     "devDependencies": {
-        "nx": "16.7.4",
-        "pnpm": "8.7.1"
+        "nx": "16.10.0",
+        "pnpm": "8.8.0"
     },
     "engines": {
         "node": ">= 16",
