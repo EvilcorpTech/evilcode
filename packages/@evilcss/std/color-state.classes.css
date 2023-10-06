@@ -1,0 +1,12 @@
+.std-color-safety {
+    color: var(--std-color-safety);
+}
+.std-color-notice {
+    color: var(--std-color-notice);
+}
+.std-color-warning {
+    color: var(--std-color-warning);
+}
+.std-color-danger {
+    color: var(--std-color-danger);
+}

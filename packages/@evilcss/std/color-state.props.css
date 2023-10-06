@@ -1,5 +1,5 @@
 .std-root {
-    /* --std-color-green8 */
+    /* --std-color-m1-green8 */
     --std-color-safety-h: 123deg;
     --std-color-safety-s: 43%;
     --std-color-safety-l: 39%;
@@ -10,13 +10,13 @@
     --std-color-notice-l: var(--std-color-primary-l);
     --std-color-notice: hsl(var(--std-color-notice-h) var(--std-color-notice-s) var(--std-color-notice-l) / var(--std-color-notice-opacity, 1));
 
-    /* --std-color-amber6 */
+    /* --std-color-m1-amber6 */
     --std-color-warning-h: 45deg;
     --std-color-warning-s: 100%;
     --std-color-warning-l: 51%;
     --std-color-warning: hsl(var(--std-color-warning-h) var(--std-color-warning-s) var(--std-color-warning-l) / var(--std-color-warning-opacity, 1));
 
-    /* --std-color-deeporange6 */
+    /* --std-color-m1-deeporange6 */
     --std-color-danger-h: 14deg;
     --std-color-danger-s: 100%;
     --std-color-danger-l: 57%;
