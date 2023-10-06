@@ -1,5 +1,5 @@
-import type {AuthCredentials, AuthenticateOptions, InvalidateOptions, ValidateOptions} from '@eviljs/web/auth.js'
-import {authenticate, invalidate, validate} from '@eviljs/web/auth.js'
+import type {AuthAuthenticateOptions, AuthCredentials, AuthInvalidateOptions, AuthValidateOptions} from '@eviljs/web/auth.js'
+import {authenticate, invalidateAuthentication, validateAuthentication} from '@eviljs/web/auth.js'
 import type {Cookie} from '@eviljs/web/cookie.js'
 import type {Fetch} from '@eviljs/web/fetch.js'
 import {throwInvalidResponse} from '@eviljs/web/throw.js'
@@ -65,7 +65,7 @@ export function useAuthCreator(fetch: Fetch, cookie: Cookie, options?: undefined
         setTokenState(AuthTokenState.Validating)
         busyLock()
 
-        validate(fetch, token, validateOptions).then(isTokenValid => {
+        validateAuthentication(fetch, token, validateOptions).then(isTokenValid => {
             setTokenState(isTokenValid
                 ? AuthTokenState.Valid
                 : AuthTokenState.Invalid
@@ -101,7 +101,7 @@ export function useAuthCreator(fetch: Fetch, cookie: Cookie, options?: undefined
 
         busyLock()
         try {
-            const ok = await invalidate(fetch, token, invalidateOptions)
+            const ok = await invalidateAuthentication(fetch, token, invalidateOptions)
 
             if (! ok) {
                 throwInvalidResponse(
@@ -144,9 +144,9 @@ export interface AuthProviderProps extends AuthOptions {
 }
 
 export interface AuthOptions {
-    authenticate?: undefined | AuthenticateOptions
-    invalidate?: undefined | InvalidateOptions
-    validate?: undefined | ValidateOptions
+    authenticate?: undefined | AuthAuthenticateOptions
+    invalidate?: undefined | AuthInvalidateOptions
+    validate?: undefined | AuthValidateOptions
 }
 
 export type Auth = ReturnType<typeof useAuthCreator>
