@@ -217,25 +217,25 @@ export function asInteger(value: unknown): undefined | number {
 export type Nil = undefined | null
 export type Some<T> = NonNullable<T>
 
-export type Partial<T> = {
-    [K in keyof T]?: undefined | T[K]
-}
-
-export type PartialDeep<T> = {
-    [K in keyof T]?: undefined | (T[K] extends object ? PartialDeep<T[K]> : T[K])
-}
-
-export type Required<T> = {
+export type Defined<T> = {
     [P in keyof T]-?: Exclude<T[P], undefined>
 }
 
-export type Nullish<T> =
+export type Undefined<T> = {
+    [K in keyof T]?: undefined | T[K]
+}
+
+export type UndefinedDeep<T> = {
+    [K in keyof T]?: undefined | (T[K] extends object ? UndefinedDeep<T[K]> : T[K])
+}
+
+export type Unsafe<T> =
     T extends Nil | boolean | number | string | symbol
         ? Nil | T
     : T extends Array<infer I>
-        ? Nil | Array<Nullish<I>>
+        ? Nil | Array<Unsafe<I>>
     : T extends object
-        ? Nil | {[key in keyof T]?: Nil | Nullish<T[key]>}
+        ? Nil | {[key in keyof T]?: Nil | Unsafe<T[key]>}
     : unknown
 
 export type ValueOf<T> = T[keyof T]
@@ -250,6 +250,6 @@ export type UnionOf<T extends Array<unknown>> = T[number]
 export type Writable<T> = { -readonly [P in keyof T]: T[P] }
 export type WritableDeep<T> = { -readonly [P in keyof T]: WritableDeep<T[P]> }
 
-export type Prettify<T> = {
+export type Prettify<T> = {} & {
     [K in keyof T]: T[K]
-} & {}
+}
