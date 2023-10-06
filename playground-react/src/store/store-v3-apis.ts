@@ -10,12 +10,13 @@ import {
     type StoreDefinition,
     type StoreStatePatch,
 } from '@eviljs/react/store'
+import {Mode} from '~/env/env-apis'
 import {createState, type StoreState} from '~/store/store-apis'
 
 export const StoreActionsSpec = {
-    SetState: defineReducerAction(withId('setState'), patchState<StoreState>),
-    ResetState: defineReducerAction(withId('resetState'), reduceStateReset),
-    SetData: defineReducerAction(withId('setData'), reduceStateSetData),
+    SetState: defineReducerAction(withId('SetState'), patchState<StoreState>),
+    ResetState: defineReducerAction(withId('ResetState'), reduceStateReset),
+    SetData: defineReducerAction(withId('SetData'), reduceStateSetData),
 }
 
 export const StoreSpec: StoreDefinition<StoreState, StoreAction> = {
@@ -24,8 +25,26 @@ export const StoreSpec: StoreDefinition<StoreState, StoreAction> = {
     onDispatch,
 }
 
-export function onDispatch(id: ReducerId, ...args: ReducerArgs) {
-    console.log('StoreV3 change:', id, args)
+export function onDispatch(id: ReducerId, args: ReducerArgs, newState: StoreState, oldState: StoreState) {
+    if (Mode === 'production') {
+        return
+    }
+
+    if (newState === oldState) {
+        console.groupCollapsed('StoreV3: state did\'t change')
+        console.debug('state:', newState)
+        console.debug('id:', id)
+        console.debug('args:', args)
+        console.groupEnd()
+        return
+    }
+
+    console.groupCollapsed('StoreV3: state did change')
+    console.debug('to:', newState)
+    console.debug('from:', oldState)
+    console.debug('id:', id)
+    console.debug('args:', args)
+    console.groupEnd()
 }
 
 export const setState = StoreActionsSpec.SetState.action

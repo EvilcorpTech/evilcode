@@ -1,18 +1,26 @@
 import './header.css'
 
 import {classes} from '@eviljs/react/classes'
+import {useRoutePathLocalized} from '@eviljs/react/route'
 import {Route} from '@eviljs/react/router'
-import * as Routes from '~/route/route-apis'
-
-const Menu = [
-    {to: Routes.RootRoute.path(), message: 'Home'},
-    {to: Routes.ShowcaseRoute.path(), message: 'Showcase'},
-    {to: '/arg/123', message: 'Arg'},
-    {to: Routes.AdminRoute.path(), message: 'Admin'},
-]
+import {RoutePath} from '~/route/route-paths'
 
 export function Header(props: HeaderProps) {
     const {children, className, ...otherProps} = props
+
+    const routes = {
+        home: useRoutePathLocalized(RoutePath.Home),
+        admin: useRoutePathLocalized(RoutePath.Admin),
+        showcase: useRoutePathLocalized(RoutePath.Showcase),
+        example: useRoutePathLocalized(RoutePath.ExampleWithArg),
+    }
+
+    const menu = [
+        {to: routes.home.link(), message: 'Home'},
+        {to: routes.showcase.link(), message: 'Showcase'},
+        {to: routes.admin.link(), message: 'Admin'},
+        {to: routes.example.link('123'), message: 'Arg'},
+    ]
 
     return (
         <header
@@ -21,7 +29,7 @@ export function Header(props: HeaderProps) {
         >
             <nav>
                 <ul className="std-flex std-flex-align-center">
-                    {Menu.map((it, idx) =>
+                    {menu.map((it, idx) =>
                         <li
                             key={idx}
                             className="item-ac64"

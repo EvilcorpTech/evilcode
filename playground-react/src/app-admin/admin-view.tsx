@@ -2,20 +2,14 @@ import './admin-view.css'
 
 import {useAuth} from '@eviljs/react/auth'
 import {classes} from '@eviljs/react/classes'
+import {Text} from '@eviljs/react/text'
 import {Button} from '@eviljs/reactx/button'
 import {useCallback} from 'react'
-import {useI18nMsg} from '~/i18n/i18n-hooks'
 import {Header} from '~/ui-widgets/header'
 
 export function AdminView(props: AdminViewProps) {
     const {className, ...otherProps} = props
     const {destroySession} = useAuth()!
-
-    const msg = useI18nMsg(({ t }) => {
-        return {
-            title: t`Admin`,
-        }
-    })
 
     const onExitButtonClick = useCallback(() => {
         destroySession()
@@ -28,15 +22,17 @@ export function AdminView(props: AdminViewProps) {
         >
             <Header/>
 
-            <h1 className="page-title">
-                {msg.title}
-            </h1>
+            <Text tag="h1" className="page-title">
+                Admin
+            </Text>
 
             <Button
                 className="std-button-halo"
                 onClick={onExitButtonClick}
             >
-                Exit
+                <Text>
+                    Exit
+                </Text>
             </Button>
         </div>
     )

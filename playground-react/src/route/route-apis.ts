@@ -1,6 +1,5 @@
-import {createSimpleRoute} from '@eviljs/web/route-v1'
+import {Deep, Start} from '@eviljs/web/route'
 
-export const RootRoute = createSimpleRoute('/')
-export const AdminRoute = createSimpleRoute('/admin')
-export const AuthRoute = createSimpleRoute('/auth')
-export const ShowcaseRoute = createSimpleRoute('/showcase')
+export function matchBasePath(basePath: string) {
+    return `${Start}${basePath}${Deep}`
+}

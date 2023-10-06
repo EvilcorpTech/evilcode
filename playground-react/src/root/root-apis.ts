@@ -1,14 +1,26 @@
-export function attachRootElement(): Element {
-    const existingRootElement = Array.from(document.body.children).find(it =>
-        it.classList.contains('Root')
-    )
+export const RootId = 'AppRoot'
+export const RootNode = setupRootElement()
 
-    if (existingRootElement) {
-        return existingRootElement
-    }
+export function setupRootElement(): HTMLElement {
+    return findRootElement() ?? attachRootElement(createRootElement())
+}
 
-    const rootElement = document.createElement('div')
-    rootElement.classList.add('Root')
-    document.body.prepend(rootElement)
-    return rootElement
+export function attachRootElement(element: HTMLElement) {
+    document.body.prepend(element)
+    return element
+}
+
+export function createRootElement(): HTMLElement {
+    const element = document.createElement('div')
+    element.id = RootId
+    element.classList.add('std-root', 'std-text')
+    return element
+}
+
+export function findRootElement(): undefined | HTMLElement {
+    return document.getElementById(RootId) ?? undefined
+}
+
+export function isRootElement(element: Element): element is HTMLElement {
+    return element.id === RootId
 }

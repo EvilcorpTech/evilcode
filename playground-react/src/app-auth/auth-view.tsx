@@ -6,6 +6,7 @@ import {Redirect, useRouter} from '@eviljs/react/router'
 import {AuthCredentials} from '@eviljs/reactx/auth-credentials'
 import {useCallback} from 'react'
 import {useI18nMsg} from '~/i18n/i18n-hooks'
+import {Header} from '~/ui-widgets/header'
 
 export function AuthView(props: AuthViewProps) {
     const {className, ...otherProps} = props
@@ -33,6 +34,8 @@ export function AuthView(props: AuthViewProps) {
             {...otherProps}
             className={classes('AuthView-b622 std-extend-v std-flex std-flex-column std-flex-stack', className)}
         >
+            <Header/>
+
             <AuthCredentials
                 className="credentials-b2be"
                 messages={msg}

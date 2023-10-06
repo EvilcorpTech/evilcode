@@ -1,7 +1,7 @@
 {
     "type": "module",
     "scripts": {
-        "init": "npx pnpm@8.6 install && npm --prefix dev run init",
+        "init": "npx pnpm@$(npm pkg get devDependencies.pnpm | tr -d '\"') install && npm --prefix dev run init",
         "upgrade": "npx npm-upgrade@latest && npm --prefix dev run upgrade && npm run init",
         "check": "npm --prefix dev run check",
         "build": "npm --prefix dev run build",
@@ -15,15 +15,18 @@
         "@eviljs/react": "1",
         "@eviljs/reactx": "1",
         "@eviljs/std": "1",
+        "@eviljs/ts-reset": "1",
+        "@eviljs/tsconfig": "1",
         "@eviljs/web": "1",
         "@eviljs/webx": "1",
-        "@types/react": "18.2.21",
-        "@types/react-dom": "18.2.7",
+        "@types/react": "18.2.25",
+        "@types/react-dom": "18.2.10",
         "react": "18.2.0",
         "react-dom": "18.2.0"
     },
     "devDependencies": {
-        "@eviljs/tsconfig": "1"
+        "@eviljs/tsconfig": "1",
+        "pnpm": "8.8.0"
     },
     "pnpm": {
         "overrides": {
@@ -32,6 +35,7 @@
             "@eviljs/react": "link:../packages/@eviljs/react",
             "@eviljs/reactx": "link:../packages/@eviljs/reactx",
             "@eviljs/std": "link:../packages/@eviljs/std",
+            "@eviljs/ts-reset": "link:../packages/@eviljs/ts-reset",
             "@eviljs/tsconfig": "link:../packages/@eviljs/tsconfig",
             "@eviljs/web": "link:../packages/@eviljs/web",
             "@eviljs/webx": "link:../packages/@eviljs/webx"
@@ -39,6 +43,6 @@
     },
     "engines": {
         "node": ">= 16",
-        "npm": ">= 7"
+        "pnpm": ">= 8"
     }
 }

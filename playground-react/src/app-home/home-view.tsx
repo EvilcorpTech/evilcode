@@ -1,17 +1,11 @@
 import './home-view.css'
 
 import {classes} from '@eviljs/react/classes'
-import {useI18nMsg} from '~/i18n/i18n-hooks'
+import {Text} from '@eviljs/react/text'
 import {Header} from '~/ui-widgets/header'
 
 export function HomeView(props: HomeViewProps) {
     const {className, ...otherProps} = props
-
-    const msg = useI18nMsg(({ translate }) => {
-        return {
-            title: translate('Home'),
-        }
-    })
 
     return (
         <div
@@ -20,9 +14,9 @@ export function HomeView(props: HomeViewProps) {
         >
             <Header/>
 
-            <h1 className="page-title">
-                {msg.title}
-            </h1>
+            <Text tag="h1" className="page-title">
+                Home
+            </Text>
         </div>
     )
 }

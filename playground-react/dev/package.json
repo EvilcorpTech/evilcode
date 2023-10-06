@@ -1,7 +1,7 @@
 {
     "type": "module",
     "scripts": {
-        "init": "npx pnpm@8.6 install",
+        "init": "npx pnpm@$(npm pkg get devDependencies.pnpm | tr -d '\"') install",
         "upgrade": "npx npm-upgrade@latest && npm run init",
         "check": "npm run check-ts && npm run check-circular",
         "check-ts": "tsc --noEmit --project ..",
@@ -12,20 +12,23 @@
         "serve": "npx http-server@latest ../build -a 0.0.0.0 -p 8000"
     },
     "dependencies": {
-        "@types/node": "20.5.9",
-        "@vitejs/plugin-react": "4.0.4",
-        "postcss": "8.4.29",
+        "@types/node": "20.8.2",
+        "@vitejs/plugin-react": "4.1.0",
+        "postcss": "8.4.31",
         "postcss-import": "15.1.0",
-        "postcss-preset-env": "9.1.3",
+        "postcss-preset-env": "9.1.4",
         "rollup-plugin-visualizer": "5",
         "tslib": "2.6.2",
         "typescript": "5.2.2",
-        "vite": "4.4.9",
+        "vite": "4.4.11",
         "vite-plugin-checker": "0.6.2",
         "vite-plugin-ejs": "1.6.4"
     },
+    "devDependencies": {
+        "pnpm": "8.8.0"
+    },
     "engines": {
         "node": ">= 16",
-        "npm": ">= 7"
+        "pnpm": ">= 8"
     }
 }
