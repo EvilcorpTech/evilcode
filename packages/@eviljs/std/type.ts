@@ -238,6 +238,8 @@ export type Unsafe<T> =
         ? Nil | {[key in keyof T]?: Nil | Unsafe<T[key]>}
     : unknown
 
+export type UnsafeObject<T extends object> = NonNullable<Unsafe<T>>
+
 export type ValueOf<T> = T[keyof T]
 
 export type ElementOf<A extends Array<unknown>> =
