@@ -1,20 +1,28 @@
 import {classes} from './classes.js'
+import type {VoidProps} from './type.js'
 
 export function defineSvg(definitionProps: SvgDefinitionProps) {
-    const {name, children, className, viewBox, ...otherDefinitionProps} = definitionProps
+    const {
+        children,
+        className: definitionClassName,
+        name,
+        viewBox,
+        ...otherDefinitionProps
+    } = definitionProps
 
     function Svg(props: SvgProps) {
+        const {className, ...otherProps} = props
+
         return (
             <svg
                 xmlns="http://www.w3.org/2000/svg"
                 version="1.1"
-                {...otherDefinitionProps}
-                {...props}
-                className={classes(className, props.className)}
                 viewBox={viewBox}
-            >
-                {children}
-            </svg>
+                {...otherDefinitionProps}
+                {...otherProps}
+                className={classes(definitionClassName, className)}
+                children={children}
+            />
         )
     }
 
@@ -30,5 +38,5 @@ export interface SvgDefinitionProps extends React.SVGAttributes<SVGSVGElement> {
     viewBox: string
 }
 
-export interface SvgProps extends Omit<React.SVGAttributes<SVGSVGElement>, 'children'> {
+export interface SvgProps extends VoidProps<React.SVGAttributes<SVGSVGElement>> {
 }
