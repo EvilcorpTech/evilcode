@@ -3,8 +3,8 @@ import {classes} from './classes.js'
 import type {SvgProps} from './svg.js'
 
 export function lazySuspended<P extends object>(
-    load: LazySuspendedLoader<P>,
-    fallback?: undefined | LazySuspendedFallback<P>,
+    load: LazyLoader<P>,
+    fallback?: undefined | LazyFallback<P>,
 ): React.ComponentType<P> {
     const ComponentLazy = lazy(() => load().then(asDefault)) as unknown as React.ComponentType<P>
 
@@ -12,9 +12,7 @@ export function lazySuspended<P extends object>(
         return (
             <Suspense
                 fallback={fallback?.(props)}
-                children={
-                    <ComponentLazy {...props}/>
-                }
+                children={<ComponentLazy {...props}/>}
             />
         )
     }
@@ -23,19 +21,8 @@ export function lazySuspended<P extends object>(
     return LazySuspended
 }
 
-export function lazySuspendedIcon<P extends SvgProps>(load: LazySuspendedLoader<P>) {
-    return lazySuspended(load, FallbackIcon)
-}
-
-export function FallbackIcon(props: SvgProps) {
-    const {className, ...otherProps} = props
-
-    return (
-        <svg
-            {...otherProps}
-            className={classes('std-icon std-icon-color', className)}
-        />
-    )
+export function lazySuspendedIcon<P extends SvgProps>(load: LazyLoader<P>, icon?: undefined | LazyFallback<P>) {
+    return lazySuspended(load, icon ?? FallbackIcon)
 }
 
 export function asDefault<V>(value: V) {
@@ -49,7 +36,18 @@ export function exportingDefault<E, V>(getDefaultExport: (allExports: E) => V) {
     return exportDefault
 }
 
+export function FallbackIcon(props: SvgProps) {
+    const {className, ...otherProps} = props
+
+    return (
+        <svg
+            {...otherProps}
+            className={classes('std-icon std-icon-color', className)}
+        />
+    )
+}
+
 // Types ///////////////////////////////////////////////////////////////////////
 
-export type LazySuspendedLoader<P extends object> = () => Promise<React.ComponentType<P>>
-export type LazySuspendedFallback<P extends object> = (props: P) => React.ReactNode
+export type LazyLoader<P extends object> = () => Promise<React.ComponentType<P>>
+export type LazyFallback<P extends object> = (props: P) => React.ReactNode

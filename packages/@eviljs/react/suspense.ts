@@ -1,6 +1,6 @@
 import type {Fn, FnArgs} from '@eviljs/std/fn.js'
 
-export const SuspenseMap = new WeakMap<SuspenseAsyncMapKey, SuspenseAsyncMapValue>()
+export const SuspenseMap = new WeakMap<SuspenseMapKey, SuspenseMapValue>()
 
 /**
 * @throws Promise | Error
@@ -85,5 +85,5 @@ type SuspenseState<R> =
         promise: Promise<R>
     }
 
-type SuspenseAsyncMapKey = Function
-type SuspenseAsyncMapValue = {args: FnArgs, suspense: SuspenseState<unknown>}
+type SuspenseMapKey = Function
+type SuspenseMapValue = {args: FnArgs, suspense: SuspenseState<unknown>}
