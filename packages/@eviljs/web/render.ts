@@ -9,16 +9,23 @@ export type {Ref} from '@eviljs/std/ref.js'
 export function createElement<E extends RenderElement>(
     tag: string,
     props?: undefined | RenderProps<E> | RenderCustomProps,
-    setup?: undefined | Io<E, void>
+    build?: undefined | Io<E, void>
 ): E {
     const element = document.createElement(tag) as unknown as E
-    return updateElement(element, props, setup)
+    return updateElement(element, props, build)
+}
+
+export function buildElement<E extends RenderElement>(
+    tag: string,
+    build?: undefined | Io<E, void>,
+): E {
+    return createElement(tag, undefined, build)
 }
 
 export function updateElement<E extends RenderElement>(
     element: E,
     props?: undefined | RenderProps<E> | RenderCustomProps,
-    setup?: undefined | Io<E, void>
+    build?: undefined | Io<E, void>
 ): E
 export function updateElement<E extends RenderElement>(
     element: undefined | E,
