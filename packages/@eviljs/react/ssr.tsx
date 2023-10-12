@@ -77,6 +77,28 @@ export function SuspenseSsr(props: SuspenseSsrProps) {
     )
 }
 
+export function BarrierSsr(props: BarrierSsrProps) {
+    const {name, ssrId, if: guard, fallback, children} = props
+    const elementSsr = SuspendedSsrElements.get(suspendedSsrElementKeyOf(name, ssrId))
+    const suspenseAttrs = withSuspenseSsrAttributes(name, ssrId)
+
+    if (! guard && elementSsr) {
+        return (
+            <SsrFallback
+                {...suspenseAttrs}
+                tag={elementSsr.tag}
+                attributes={elementSsr.attributes}
+                children={elementSsr.content}
+            />
+        )
+    }
+    if (! guard && ! elementSsr) {
+        return fallback?.()
+    }
+
+    return children(suspenseAttrs)
+}
+
 export function SsrFallback(props: SsrFallbackProps) {
     const {attributes, children, className, tag, onUnmount} = props
     const elementRef = useRef<Element>(null)
@@ -159,6 +181,14 @@ export interface SuspenseSsrProps {
     name: string
     ssrId: string
     children: (attrs: SuspenseSsrHtmlAttributes) => React.ReactNode
+    fallback?: undefined | (() => React.ReactNode)
+}
+
+export interface BarrierSsrProps {
+    name: string
+    ssrId: string
+    if: boolean
+    children(attrs: SuspenseSsrHtmlAttributes): React.ReactNode
     fallback?: undefined | (() => React.ReactNode)
 }
 

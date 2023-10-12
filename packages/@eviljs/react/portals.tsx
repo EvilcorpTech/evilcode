@@ -83,7 +83,7 @@ export function Teleport(props: TeleportProps) {
     const portal = portals[to]
 
     if (! portal) {
-        return null
+        return
     }
 
     return createPortal(children, portal)

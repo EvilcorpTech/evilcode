@@ -32,9 +32,7 @@ export function RouterProvider(props: RouterProviderProps) {
     const {children, createRouter} = props
     const value = useRouterCreator(createRouter)
 
-    return (
-        <RouterContext.Provider value={value} children={children}/>
-    )
+    return <RouterContext.Provider value={value} children={children}/>
 }
 
 /*
@@ -69,16 +67,18 @@ export function WhenRoute(props: WhenRouteProps) {
         for (const pattern of asArray(is)) {
             const routeMatches = matchRoute(pattern)
 
-            if (routeMatches) {
-                return routeMatches.slice(1) // Without whole match.
+            if (! routeMatches) {
+                continue
             }
+
+            return routeMatches.slice(1) // Without whole match.
         }
 
         return // Makes TypeScript happy.
     }, [is, matchRoute])
 
     if (! routeArgs) {
-        return null
+        return
     }
 
     return (
@@ -133,12 +133,14 @@ export function SwitchRoute(props: SwitchRouteProps) {
             for (const pattern of candidatePatterns) {
                 const routeMatches = matchRoute(pattern)
 
-                if (routeMatches) {
-                    return {
-                        key: candidate.key ?? undefined,
-                        child: candidate.props.children,
-                        args: routeMatches.slice(1), // Without whole match.
-                    }
+                if (! routeMatches) {
+                    continue
+                }
+
+                return {
+                    key: candidate.key ?? undefined,
+                    child: candidate.props.children,
+                    args: routeMatches.slice(1), // Without whole match.
                 }
             }
         }
@@ -156,8 +158,7 @@ export function SwitchRoute(props: SwitchRouteProps) {
     return <RouteMatchContext.Provider key={key} value={args} children={child}/>
 }
 
-export function CaseRoute(props: CaseRouteProps) {
-    return null
+export function CaseRoute(props: CaseRouteProps): undefined {
 }
 
 /*
@@ -181,10 +182,9 @@ export const Route = forwardRef(function Route(
     ref?: undefined | React.Ref<HTMLAnchorElement>,
 ) {
     const {
-        activeClass,
+        activeClass: activeClassOptional,
         activeProps,
         activeWhenExact,
-        children,
         className,
         if: guard,
         params,
@@ -239,10 +239,10 @@ export const Route = forwardRef(function Route(
         return testRoute(pathExact)
     }, [to, testRoute])
 
-    const activeClasses = false
-        || activeClass
-        || activeProps?.className
-        || RouteActiveClassDefault
+    const activeClass = undefined
+        ?? activeClassOptional
+        ?? activeProps?.className
+        ?? RouteActiveClassDefault
 
     return (
         <a
@@ -250,18 +250,16 @@ export const Route = forwardRef(function Route(
             {...otherProps}
             ref={ref}
             className={classes(className, {
-                [activeClasses]: isActive,
+                [activeClass]: isActive,
             })}
             href={link(to ?? route.path, params)}
-        >
-            {children}
-        </a>
+        />
     )
 })
 Route.displayName = 'Route'
 
 export function Link(props: LinkProps) {
-    const {children, className, params, replace, state, to, ...otherProps} = props
+    const {className, params, replace, state, to, ...otherProps} = props
     const isLink = isUrlAbsolute(to)
 
     if (to && isLink) {
@@ -271,9 +269,7 @@ export function Link(props: LinkProps) {
                 {...otherProps}
                 className={classes('Link-b705 link', className)}
                 href={encodeLink(to, params)}
-            >
-                {children}
-            </a>
+            />
         )
     }
 
@@ -285,9 +281,7 @@ export function Link(props: LinkProps) {
             params={params}
             state={state}
             replace={replace}
-        >
-            {children}
-        </Route>
+        />
     )
 }
 
@@ -304,7 +298,7 @@ export function Redirect(props: RedirectProps) {
         changeRoute({path, params, state, replace})
     })
 
-    return <>{children}</>
+    return children
 }
 
 export function useRouterCreator<S = unknown>(routerFactory: RouterFactory<S>): Router<S> {

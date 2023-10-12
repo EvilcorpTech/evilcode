@@ -5,7 +5,7 @@
 *
 * function MyComponent(props) {
 *     if (! something) {
-*         return null
+*         return
 *     }
 *
 *     return (
@@ -25,7 +25,7 @@ export function HookProvider<V>(props: HookProviderProps<V>) {
 
     const value = hook()
 
-    return <>{children(value)}</>
+    return children(value)
 }
 
 // Types ///////////////////////////////////////////////////////////////////////

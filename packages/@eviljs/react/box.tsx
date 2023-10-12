@@ -46,11 +46,14 @@ export const BoxOptional = forwardRef(function BoxOptional<T>(
     const {if: guard, ...otherProps} = props
 
     if (! guard) {
-        return null
+        return
     }
 
     return <Box {...otherProps} ref={ref}/>
-}) as (<T>(props: BoxOptionalProps<T>) => JSX.Element) & Pick<React.FunctionComponent, 'displayName'>
+}) as (
+    & (<T>(props: BoxOptionalProps<T>) => JSX.Element)
+    & Pick<React.FunctionComponent, 'displayName'>
+)
 BoxOptional.displayName = 'BoxOptional'
 
 // Types ///////////////////////////////////////////////////////////////////////

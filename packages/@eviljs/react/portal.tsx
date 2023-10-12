@@ -54,7 +54,7 @@ export function Teleport(props: TeleportProps) {
     const [portal] = useContext(PortalContext)!
 
     if (! portal) {
-        return null
+        return
     }
 
     return createPortal(children, portal)

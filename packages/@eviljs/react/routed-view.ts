@@ -39,7 +39,7 @@ export function useRoutedViewLifecycle(routeRegexp: RegExp) {
 *     () => playFadeOutAnimation('.MyView'),
 * )
 * if (viewLifecycle === 'exited') {
-*     return null
+*     return
 * }
 * return <div style={style}>...</div>
 */
