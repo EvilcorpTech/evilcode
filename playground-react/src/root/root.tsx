@@ -49,7 +49,7 @@ export function RootIsolate(props: RootIsolateProps) {
     useColorSchemePreference()
     useStoreStorage()
 
-    return null
+    return
 }
 
 // Types ///////////////////////////////////////////////////////////////////////
