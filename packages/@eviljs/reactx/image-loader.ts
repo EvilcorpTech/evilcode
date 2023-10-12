@@ -1,6 +1,6 @@
 import {useEffect, useRef} from 'react'
 
-export function ImageLoader(props: ImageLoaderProps) {
+export function ImageLoader(props: ImageLoaderProps): undefined {
     const {items} = props
     const loadingRef = useRef<Array<string>>([])
     const loadedRef = useRef<Array<string>>([])
@@ -42,8 +42,6 @@ export function ImageLoader(props: ImageLoaderProps) {
             mountImageLoader(img)
         }
     }, [identifiers])
-
-    return null
 }
 
 export function imageId(image: Image) {

@@ -91,7 +91,7 @@ export function AccordionList(props: AccordionListProps) {
         >
             {Children.map(children, (it, idx) => {
                 if (! isValidElement(it)) {
-                    return null
+                    return
                 }
 
                 const isSelected = selected.includes(idx)

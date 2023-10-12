@@ -1,8 +1,9 @@
 import './decorated.css'
 
 import {classes} from '@eviljs/react/classes.js'
+import {useMergeRefs} from '@eviljs/react/ref.js'
 import {identity} from '@eviljs/std/return.js'
-import {useRef, useState} from 'react'
+import {forwardRef, useRef, useState} from 'react'
 import {Button} from '../button.js'
 
 export function InputLabel(props: InputLabelProps) {
@@ -22,7 +23,10 @@ export function InputLabel(props: InputLabelProps) {
     )
 }
 
-export function Input(props: InputProps) {
+export const Input = forwardRef(function Input(
+    props: InputProps,
+    ref?: undefined | React.Ref<HTMLInputElement>,
+) {
     const {className, decorate, disabled, inputClass, onChange, ...otherProps} = props
     const inputRef = useRef<HTMLInputElement>(null)
     const render = decorate ?? identity
@@ -36,34 +40,44 @@ export function Input(props: InputProps) {
                 <input
                     onChange={event => onChange?.(event.currentTarget.value)}
                     {...otherProps}
-                    ref={inputRef}
+                    ref={useMergeRefs(inputRef, ref)}
                     className={classes('input-2d2b', inputClass)}
                     disabled={disabled}
                 />
             )}
         </div>
     )
-}
+})
+Input.displayName = 'Input'
 
-export function TextInput(props: TextInputProps) {
+export const TextInput = forwardRef(function TextInput(
+    props: TextInputProps,
+    ref?: undefined | React.Ref<HTMLInputElement>,
+) {
     const {className, ...otherProps} = props
 
     return (
         <Input
             type="text"
             {...otherProps}
+            ref={ref}
             className={classes('TextInput-1330', className)}
         />
     )
-}
+})
+TextInput.displayName = 'TextInput'
 
-export function SecretInput(props: SecretInputProps) {
+export const SecretInput = forwardRef(function SecretInput(
+    props: SecretInputProps,
+    ref?: undefined | React.Ref<HTMLInputElement>,
+) {
     const {buttonClass, buttonStyle, className, decorate, hideIcon, showIcon, ...otherProps} = props
     const [visible, setVisible] = useState(false)
 
     return (
         <Input
             {...otherProps}
+            ref={ref}
             type={visible ? 'text' : 'password'}
             className={classes('SecretInput-b91c', className)}
             decorate={input => <>
@@ -83,7 +97,8 @@ export function SecretInput(props: SecretInputProps) {
             </>}
         />
     )
-}
+})
+SecretInput.displayName = 'SecretInput'
 
 export function decoratingStart(children: React.ReactNode) {
     return decoratingSides({start: children})

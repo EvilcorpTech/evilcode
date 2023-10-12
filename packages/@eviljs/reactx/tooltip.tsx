@@ -6,7 +6,7 @@ export function Tooltip(props: TooltipProps) {
     const {children, className, content, contentClass, position, ...otherProps} = props
 
     if (! children) {
-        return null
+        return
     }
 
     return (

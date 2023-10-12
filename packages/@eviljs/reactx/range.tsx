@@ -204,7 +204,7 @@ export function RangeNumeric(props: RangeNumericProps) {
     }, [onChanged, min, max])
 
     if (isNil(min) || isNil(max) || isNil(start) || isNil(end)) {
-        return null
+        return
     }
 
     const startClamped = Math.max(start, min)
@@ -248,7 +248,7 @@ export function RangeTime(props: RangeTimeProps) {
 
 
     if (isNil(min) || isNil(max) || isNil(start) || isNil(end)) {
-        return null
+        return
     }
 
     const minTime = min.getTime()

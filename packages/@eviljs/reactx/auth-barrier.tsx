@@ -8,17 +8,17 @@ export function AuthBarrier(props: AuthBarrierProps) {
     switch (tokenState) {
         case AuthTokenState.Validating:
             // We are waiting the response from the server.
-            return <>{progress}</>
+            return progress
         case AuthTokenState.Valid:
             // Token has been verified and is valid. We can safely continue.
-            return <>{children}</>
+            return children
         case AuthTokenState.Missing:
         case AuthTokenState.Invalid:
             // Token is missing or invalid.
-            return <>{fallback}</>
+            return fallback
     }
 
-    return null
+    return // Makes TypeScript happy.
 }
 
 // Types ///////////////////////////////////////////////////////////////////////

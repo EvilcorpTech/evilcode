@@ -1,9 +1,13 @@
 import './floating.css'
 
 import {classes} from '@eviljs/react/classes.js'
-import {useLayoutEffect, useMemo, useRef, useState} from 'react'
+import {useMergeRefs} from '@eviljs/react/ref.js'
+import {forwardRef, useLayoutEffect, useMemo, useRef, useState} from 'react'
 
-export function Input(props: InputProps) {
+export const Input = forwardRef(function Input(
+    props: InputProps,
+    ref?: undefined | React.Ref<HTMLInputElement>,
+) {
     const {className, type, label, placeholder, value, autoComplete, autoFocus, tabIndex, onChange, ...otherProps} = props
     const [focus, setFocus] = useState(false)
     const [translateY, setTranslateY] = useState(0)
@@ -38,7 +42,8 @@ export function Input(props: InputProps) {
             {...otherProps}
             ref={fieldRef}
             className={classes('Input-i7ee', className, {
-                focus, placeholder: labelPlaceholder,
+                focus,
+                placeholder: labelPlaceholder,
             })}
             onClick={() =>
                 inputRef.current?.focus()
@@ -55,7 +60,7 @@ export function Input(props: InputProps) {
             }
 
             <input
-                ref={inputRef}
+                ref={useMergeRefs(inputRef, ref)}
                 className="field-ceba std-text-body1"
                 type={type || 'text'}
                 value={value}
@@ -69,7 +74,8 @@ export function Input(props: InputProps) {
             />
         </div>
     )
-}
+})
+Input.displayName = 'Input'
 
 // Types ///////////////////////////////////////////////////////////////////////
 
