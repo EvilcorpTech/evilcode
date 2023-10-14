@@ -2,7 +2,7 @@ import {isArray, isRegExp} from '@eviljs/std/type.js'
 
 export const Start = '^'
 export const End = '(?:/)?$'
-export const Deep = '(?:/.*)?$'
+export const Deep = '(?:/|$)'
 export const Any = '(.*)'
 export const Arg = '([^/]+)'
 
