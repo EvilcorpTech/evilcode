@@ -9,3 +9,6 @@ a:hover {
 a:visited {
     color: inherit;
 }
+a:not([href]) {
+    cursor: default;
+}

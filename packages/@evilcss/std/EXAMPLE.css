@@ -113,6 +113,7 @@
 @import '@evilcss/std/reset/tag-i-em.css' layer(std);
 @import '@evilcss/std/reset/tag-img-picture-svg-video.css' layer(std);
 @import '@evilcss/std/reset/tag-input.css' layer(std);
+@import '@evilcss/std/reset/tag-label.css' layer(std);
 @import '@evilcss/std/reset/tag-ol-ul.css' layer(std);
 @import '@evilcss/std/reset/tag-q-blockquote.css' layer(std);
 @import '@evilcss/std/reset/tag-select.css' layer(std);
