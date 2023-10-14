@@ -17,6 +17,9 @@ export function useStoreStorage<S, L = S>(state: S, options: StoreStorageOptions
     const loadedRef = useRef(false)
 
     useEffect(() => {
+        // We use a ref avoiding triggering a re-render if not needed.
+        loadedRef.current = true
+
         if (! storage) {
             return
         }
@@ -27,9 +30,6 @@ export function useStoreStorage<S, L = S>(state: S, options: StoreStorageOptions
         // We try deriving the state from LocalStorage.
         // We need to derive the state inside an effect instead of inside
         // the render function because we are mutating a different component.
-
-        // We use a ref avoiding triggering a re-render if not needed.
-        loadedRef.current = true
 
         const payload = loadJsonFromStorage(storage, storageKey) as undefined | Record<PropertyKey, L>
 
@@ -47,14 +47,12 @@ export function useStoreStorage<S, L = S>(state: S, options: StoreStorageOptions
         if (! storage) {
             return
         }
-
         if (! loadedRef.current) {
             // We can't save the state yet.
             return
         }
 
-        // We debounce the Storage saving.
-        const timeoutId = setTimeout(() => {
+        function saveState() {
             const savedState = onSave?.(state) ?? state
             const payload = {[stateVersion]: savedState}
 
@@ -77,7 +75,10 @@ export function useStoreStorage<S, L = S>(state: S, options: StoreStorageOptions
                 storage.clear() // But clearing the storage first.
                 trySaving()
             })
-        }, debounce)
+        }
+
+        // We debounce the Storage saving.
+        const timeoutId = setTimeout(saveState, debounce)
 
         function onClean() {
             clearTimeout(timeoutId)
