@@ -2,9 +2,10 @@ import './decorated.css'
 
 import {classes} from '@eviljs/react/classes.js'
 import {useMergeRefs} from '@eviljs/react/ref.js'
+import type {VoidProps} from '@eviljs/react/type.js'
 import {identity} from '@eviljs/std/return.js'
 import {forwardRef, useRef, useState} from 'react'
-import {Button} from '../button.js'
+import {Button, type ButtonProps} from '../button.js'
 
 export function InputLabel(props: InputLabelProps) {
     const {children, className, labelClass, title, ...otherProps} = props
@@ -27,22 +28,26 @@ export const Input = forwardRef(function Input(
     props: InputProps,
     ref?: undefined | React.Ref<HTMLInputElement>,
 ) {
-    const {className, decorate, disabled, inputClass, onChange, ...otherProps} = props
+    const {className, decorate, hostClass, hostProps, hostStyle, onChange, ...otherProps} = props
     const inputRef = useRef<HTMLInputElement>(null)
     const render = decorate ?? identity
 
     return (
         <div
-            className={classes('Input-cc0a', className)}
-            onClick={() => inputRef.current?.focus()}
+            {...hostProps}
+            className={classes('Input-cc0a', hostClass, hostProps?.className)}
+            style={{...hostStyle, ...hostProps?.style}}
+            onClick={event => {
+                inputRef.current?.focus()
+                hostProps?.onClick?.(event)
+            }}
         >
             {render(
                 <input
-                    onChange={event => onChange?.(event.currentTarget.value)}
                     {...otherProps}
                     ref={useMergeRefs(inputRef, ref)}
-                    className={classes('input-2d2b', inputClass)}
-                    disabled={disabled}
+                    className={classes('input-2d2b', className)}
+                    onChange={event => onChange?.(event.currentTarget.value)}
                 />
             )}
         </div>
@@ -71,7 +76,7 @@ export const SecretInput = forwardRef(function SecretInput(
     props: SecretInputProps,
     ref?: undefined | React.Ref<HTMLInputElement>,
 ) {
-    const {buttonClass, buttonStyle, className, decorate, hideIcon, showIcon, ...otherProps} = props
+    const {buttonClass, buttonProps, buttonStyle, className, decorate, hideIcon, showIcon, ...otherProps} = props
     const [visible, setVisible] = useState(false)
 
     return (
@@ -84,10 +89,17 @@ export const SecretInput = forwardRef(function SecretInput(
                 {decorate?.(input) ?? input}
 
                 <Button
-                    className={classes('button-2bdf', buttonClass)}
                     tabIndex={-1}
-                    style={buttonStyle}
-                    onClick={() => setVisible(! visible)}
+                    {...buttonProps}
+                    className={classes('button-2bdf', buttonClass, buttonProps?.className)}
+                    style={{
+                        ...buttonStyle,
+                        ...buttonProps?.style,
+                    }}
+                    onClick={event => {
+                        setVisible(! visible)
+                        buttonProps?.onClick?.(event)
+                    }}
                 >
                     {visible
                         ? hideIcon
@@ -127,9 +139,11 @@ export interface InputLabelProps extends Omit<React.HTMLAttributes<HTMLDivElemen
     labelClass?: string
 }
 
-export interface InputProps extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'onChange'> {
+export interface InputProps extends VoidProps<Omit<React.InputHTMLAttributes<HTMLInputElement>, 'onChange'>> {
     decorate?: undefined | ((input: React.ReactNode) => React.ReactNode)
-    inputClass?: undefined | string
+    hostClass?: undefined | string
+    hostProps?: undefined | React.HTMLAttributes<HTMLElement>
+    hostStyle?: undefined | React.CSSProperties
     onChange?: undefined | ((event: string) => void)
 }
 
@@ -139,6 +153,7 @@ export interface TextInputProps extends InputProps {
 export interface SecretInputProps extends InputProps {
     buttonClass?: undefined | string
     buttonStyle?: undefined | React.CSSProperties
+    buttonProps?: undefined | ButtonProps
     showIcon: React.ReactNode
     hideIcon: React.ReactNode
 }
