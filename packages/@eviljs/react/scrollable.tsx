@@ -10,7 +10,7 @@ import {mergingRefs} from './ref.js'
 
 export const Scrollable = forwardRef(function Scrollable(
     props: ScrollableProps,
-    ref?: undefined | React.Ref<HTMLElement>,
+    ref: React.ForwardedRef<HTMLElement>
 ) {
     const {
         className,

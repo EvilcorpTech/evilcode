@@ -179,7 +179,7 @@ export function CaseRoute(props: CaseRouteProps): undefined {
 */
 export const Route = forwardRef(function Route(
     props: RouteProps,
-    ref?: undefined | React.Ref<HTMLAnchorElement>,
+    ref: React.ForwardedRef<HTMLAnchorElement>
 ) {
     const {
         activeClass: activeClassOptional,
@@ -258,7 +258,10 @@ export const Route = forwardRef(function Route(
 })
 Route.displayName = 'Route'
 
-export function Link(props: LinkProps) {
+export const Link = forwardRef(function Link(
+    props: LinkProps,
+    ref: React.ForwardedRef<HTMLAnchorElement>
+) {
     const {className, params, replace, state, to, ...otherProps} = props
     const isLink = isUrlAbsolute(to)
 
@@ -267,6 +270,7 @@ export function Link(props: LinkProps) {
             <a
                 target="_blank"
                 {...otherProps}
+                ref={ref}
                 className={classes('Link-b705 link', className)}
                 href={encodeLink(to, params)}
             />
@@ -276,6 +280,7 @@ export function Link(props: LinkProps) {
     return (
         <Route
             {...otherProps}
+            ref={ref}
             className={classes('Link-b705 route', className)}
             to={to}
             params={params}
@@ -283,7 +288,8 @@ export function Link(props: LinkProps) {
             replace={replace}
         />
     )
-}
+})
+Link.displayName = 'Link'
 
 export function Redirect(props: RedirectProps) {
     const {children, params, replace: replaceOptional, state, to: path} = props
@@ -322,6 +328,10 @@ export function useRouterCreator<S = unknown>(routerFactory: RouterFactory<S>): 
         return onClean
     }, [routerManager])
 
+    const readRoute = useCallback(() => {
+        return routerManager.route
+    }, [routerManager])
+
     const changeRoute = useCallback((args: RouterRouteChangeComputable<S>) => {
         const {params, ...otherArgs} = args
         const paramsComputed = compute(params, routerManager.route.params)
@@ -342,6 +352,7 @@ export function useRouterCreator<S = unknown>(routerFactory: RouterFactory<S>): 
     const router = useMemo((): Router<S> => {
         return {
             route,
+            readRoute,
             changeRoute,
             testRoute,
             matchRoute,
@@ -354,6 +365,7 @@ export function useRouterCreator<S = unknown>(routerFactory: RouterFactory<S>): 
         route.path,
         route.params,
         route.state,
+        readRoute,
         changeRoute,
         testRoute,
         matchRoute,
@@ -415,6 +427,7 @@ export interface RouterFactory<S = any> {
 
 export interface Router<S = unknown> {
     route: RouterRoute<S>
+    readRoute(): RouterRoute<S>
     changeRoute(args: RouterRouteChangeComputable<S>): void
     testRoute(pattern: string | RegExp): boolean
     matchRoute(pattern: string | RegExp): null | RegExpMatchArray

@@ -25,12 +25,12 @@ export function HookProvider<V>(props: HookProviderProps<V>) {
 
     const value = hook()
 
-    return children(value)
+    return children?.(value)
 }
 
 // Types ///////////////////////////////////////////////////////////////////////
 
 export interface HookProviderProps<V> {
     hook(): V
-    children(value: V): undefined | React.ReactNode
+    children?: undefined | ((value: V) => React.ReactNode)
 }

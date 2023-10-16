@@ -3,7 +3,7 @@ import {asArray} from '@eviljs/std/type.js'
 import {useEffect} from 'react'
 
 export function useOnClickOutside(
-    selector: string | Array<string>,
+    selectorList: string | Array<string>,
     onClickOutside: Task,
     options?: undefined | OnClickOutsideOptions,
 ) {
@@ -15,17 +15,21 @@ export function useOnClickOutside(
         }
 
         function onClick(event: MouseEvent) {
-            const target = event.target as null | Partial<Element>
-            const selectors = asArray(selector)
+            const eventTarget = event.target as null | Partial<Element>
+            const selectors = asArray(selectorList)
 
             for (const selector of selectors) {
-                const isClickInsideTarget = Boolean(target?.closest?.(selector))
-                const isClickOutsideTarget = ! isClickInsideTarget
+                const selectedElement = eventTarget?.closest?.(selector)
+                const clickIsOutsideSelector = ! selectedElement
+                const clickIsInsideSelector = ! clickIsOutsideSelector
 
-                if (isClickOutsideTarget) {
-                    onClickOutside()
-                    return
+                if (clickIsInsideSelector) {
+                    // Every selector must match otherwise a click is considered outside.
+                    continue
                 }
+
+                onClickOutside()
+                return
             }
         }
 
@@ -36,7 +40,7 @@ export function useOnClickOutside(
         }
 
         return onClean
-    }, [active, selector, onClickOutside])
+    }, [selectorList, onClickOutside, active])
 }
 
 // Types ///////////////////////////////////////////////////////////////////////

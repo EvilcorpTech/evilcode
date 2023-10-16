@@ -11,7 +11,7 @@ import {createElement, forwardRef} from 'react'
 */
 export const Box = forwardRef(function Box<T>(
     props: BoxProps<T>,
-    ref?: undefined | React.Ref<T>,
+    ref: React.ForwardedRef<HTMLElement>
 ) {
     const {tag, ...otherProps} = props
 
@@ -41,7 +41,7 @@ Box.displayName = 'Box'
 */
 export const BoxOptional = forwardRef(function BoxOptional<T>(
     props: BoxOptionalProps<T>,
-    ref?: undefined | React.Ref<T>,
+    ref: React.ForwardedRef<T>
 ) {
     const {if: guard, ...otherProps} = props
 
