@@ -6,7 +6,7 @@ import {forwardRef, useLayoutEffect, useMemo, useRef, useState} from 'react'
 
 export const Input = forwardRef(function Input(
     props: InputProps,
-    ref?: undefined | React.Ref<HTMLInputElement>,
+    ref: React.ForwardedRef<HTMLInputElement>
 ) {
     const {className, type, label, placeholder, value, autoComplete, autoFocus, tabIndex, onChange, ...otherProps} = props
     const [focus, setFocus] = useState(false)

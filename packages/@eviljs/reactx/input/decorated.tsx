@@ -26,7 +26,7 @@ export function InputLabel(props: InputLabelProps) {
 
 export const Input = forwardRef(function Input(
     props: InputProps,
-    ref?: undefined | React.Ref<HTMLInputElement>,
+    ref: React.ForwardedRef<HTMLInputElement>
 ) {
     const {className, decorate, hostClass, hostProps, hostStyle, onChange, ...otherProps} = props
     const inputRef = useRef<HTMLInputElement>(null)
@@ -57,7 +57,7 @@ Input.displayName = 'Input'
 
 export const TextInput = forwardRef(function TextInput(
     props: TextInputProps,
-    ref?: undefined | React.Ref<HTMLInputElement>,
+    ref: React.ForwardedRef<HTMLInputElement>
 ) {
     const {className, ...otherProps} = props
 
@@ -74,7 +74,7 @@ TextInput.displayName = 'TextInput'
 
 export const SecretInput = forwardRef(function SecretInput(
     props: SecretInputProps,
-    ref?: undefined | React.Ref<HTMLInputElement>,
+    ref: React.ForwardedRef<HTMLInputElement>
 ) {
     const {buttonClass, buttonProps, buttonStyle, className, decorate, hideIcon, showIcon, ...otherProps} = props
     const [visible, setVisible] = useState(false)
