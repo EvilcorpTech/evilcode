@@ -1,5 +1,9 @@
 import type {Task} from '@eviljs/std/fn.js'
-import {useCallback, useLayoutEffect, useRef, useState} from 'react'
+import {useCallback, useEffect, useLayoutEffect, useRef, useState} from 'react'
+
+export function useMountEffect(effect: Task) {
+    useEffect(effect, [])
+}
 
 /*
 * Used to track the mounted state of a component. Useful inside async tasks.
