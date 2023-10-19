@@ -1,6 +1,4 @@
 import {Component} from 'react'
-import {Box, type BoxProps} from './box.js'
-import {classes} from './classes.js'
 
 export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
     override state: ErrorBoundaryState = {hasError: false}
@@ -14,26 +12,21 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
     }
 
     override render() {
-        const {children, className, fallback, onError, ...otherProps} = this.props
+        const {children, fallback} = this.props
 
-        if (! this.state.hasError) {
-            return children
+        if (this.state.hasError) {
+            return fallback?.(this.state.error)
         }
 
-        return (
-            <Box
-                {...otherProps}
-                className={classes('ErrorBoundary-9d1f', className)}
-                children={fallback?.(this.state.error)}
-            />
-        )
+        return children
     }
 }
 
 // Types ///////////////////////////////////////////////////////////////////////
 
-export interface ErrorBoundaryProps extends Omit<BoxProps, 'onError'> {
+export interface ErrorBoundaryProps {
     fallback?: undefined | ((error: unknown) => React.ReactNode)
+    children: undefined | React.ReactNode
     onError?: undefined | ErrorBoundaryHandler
 }
 
