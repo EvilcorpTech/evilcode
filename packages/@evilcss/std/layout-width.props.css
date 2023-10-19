@@ -1,6 +1,10 @@
 .std-root {
-    --std-width-s: 800px;
-    --std-width-m: calc(var(--std-width-s) * 1.5);
-    --std-width-l: calc(var(--std-width-m) * 1.5);
-    --std-width-xl: calc(var(--std-width-l) * 1.5);
+    --std-width1: 20rem;
+    --std-width2: 30rem;
+    --std-width3: 40rem;
+    --std-width4: 50rem;
+    --std-width5: 60rem;
+    --std-width6: 80rem;
+    --std-width7: 100rem;
+    --std-width8: 120rem;
 }

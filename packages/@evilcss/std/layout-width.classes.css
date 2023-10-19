@@ -1,10 +1,8 @@
-.std-width-s,
-.std-width-m,
-.std-width-l,
-.std-width-xl {
-    width: 100%;
-}
-.std-width-s { max-width: var(--std-width-s); }
-.std-width-m { max-width: var(--std-width-m); }
-.std-width-l { max-width: var(--std-width-l); }
-.std-width-xl { max-width: var(--std-width-xl); }
+.std-width-max1 { max-width: var(--std-width1); }
+.std-width-max2 { max-width: var(--std-width2); }
+.std-width-max3 { max-width: var(--std-width3); }
+.std-width-max4 { max-width: var(--std-width4); }
+.std-width-max5 { max-width: var(--std-width5); }
+.std-width-max6 { max-width: var(--std-width6); }
+.std-width-max7 { max-width: var(--std-width7); }
+.std-width-max8 { max-width: var(--std-width8); }
