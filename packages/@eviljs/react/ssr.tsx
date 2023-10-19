@@ -1,6 +1,6 @@
-import type {Task} from '@eviljs/std/fn.js'
-import {lazy, Suspense, useEffect, useLayoutEffect, useRef} from 'react'
+import {lazy, Suspense, useLayoutEffect, useRef} from 'react'
 import {Box, type BoxProps} from './box.js'
+import {classes} from './classes.js'
 import {asDefault, type LazyFallback, type LazyLoader} from './lazy.js'
 import type {VoidProps} from './type.js'
 
@@ -42,24 +42,21 @@ export function lazySuspendedSsr<P extends object, F extends P>(
 
 export function SuspenseSsr(props: SuspenseSsrProps) {
     const {ssrId, fallback, children} = props
-    const suspenseAttrs = withSuspenseSsrAttributes(ssrId)
     const elementSsr = SuspendedSsrElements.get(ssrId)
 
     return (
         <Suspense
             fallback={
                 elementSsr ?
-                    <SsrFallback
-                        {...suspenseAttrs}
+                    <SsrRender
                         tag={elementSsr.tag}
                         attributes={elementSsr.attributes}
                         children={elementSsr.content}
-                        // onUnmount={() => LazySuspendedSsrElements.delete(key)}
                     />
                 :
                     fallback?.()
             }
-            children={children(suspenseAttrs)}
+            children={children(withSuspenseSsrAttributes(ssrId))}
         />
     )
 }
@@ -67,12 +64,10 @@ export function SuspenseSsr(props: SuspenseSsrProps) {
 export function BarrierSsr(props: BarrierSsrProps) {
     const {ssrId, if: guard, fallback, children} = props
     const elementSsr = SuspendedSsrElements.get(ssrId)
-    const suspenseAttrs = withSuspenseSsrAttributes(ssrId)
 
     if (! guard && elementSsr) {
         return (
-            <SsrFallback
-                {...suspenseAttrs}
+            <SsrRender
                 tag={elementSsr.tag}
                 attributes={elementSsr.attributes}
                 children={elementSsr.content}
@@ -83,40 +78,42 @@ export function BarrierSsr(props: BarrierSsrProps) {
         return fallback?.()
     }
 
-    return children(suspenseAttrs)
+    return children(withSuspenseSsrAttributes(ssrId))
 }
 
-export function SsrFallback(props: SsrFallbackProps) {
-    const {attributes, children, className, tag, onUnmount} = props
+export function SsrRender(props: SsrRenderProps) {
+    const {attributes, children, className, ...otherProps} = props
     const elementRef = useRef<Element>(null)
 
-    useLayoutEffect(() => {
-        const element = elementRef.current
+    const {
+        class: attrClassName,
+        style,
+        ...otherAttrsProps
+    } = Object.fromEntries(attributes.map(it => [it.name, it.value]))
 
-        if (! element) {
+    useLayoutEffect(() => {
+        if (! style) {
             return
         }
 
-        for (const it of attributes) {
-            element.setAttribute(it.name, it.value)
+        const styleAttr = [
+            elementRef.current?.getAttribute('style'),
+            style,
+        ].filter(Boolean).join(';')
+
+        if (! styleAttr) {
+            return
         }
 
-        element.classList.add('SsrFallback-ba1e')
-    }, [])
-
-    useEffect(() => {
-        function onClean() {
-            onUnmount?.()
-        }
-
-        return onClean
-    }, [])
+        elementRef.current?.setAttribute('style', styleAttr)
+    }, [style])
 
     return (
         <Box
-            // {...otherProps}
+            {...otherAttrsProps}
+            {...otherProps}
+            className={classes('SsrRender-ba1e', attrClassName, className)}
             ref={elementRef}
-            tag={tag}
             dangerouslySetInnerHTML={{__html: children}}
         />
     )
@@ -171,10 +168,9 @@ export interface BarrierSsrProps {
     fallback?: undefined | (() => React.ReactNode)
 }
 
-export interface SsrFallbackProps extends VoidProps<BoxProps> {
+export interface SsrRenderProps extends VoidProps<BoxProps> {
     attributes: Array<Attr>
     children: string
-    onUnmount?: undefined | Task
 }
 
 export interface SuspenseSsrHtmlAttributes {
