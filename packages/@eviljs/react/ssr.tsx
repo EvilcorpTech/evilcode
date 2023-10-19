@@ -5,7 +5,6 @@ import {asDefault, type LazyFallback, type LazyLoader} from './lazy.js'
 import type {VoidProps} from './type.js'
 
 export enum SuspenseSsrAttribute {
-    Name = 'data-suspense-name',
     Id = 'data-suspense-id',
 }
 
@@ -14,27 +13,16 @@ export const SuspendedSsrElements = collectSuspendedSsrElements()
 export const LazySuspendedSsrNames = new Set<string>()
 
 export function lazySuspendedSsr<P extends object, F extends P>(
-    name: string,
     load: LazyLoader<P>,
     fallback?: undefined | LazyFallback<F>,
-): React.ComponentType<P & LazySuspendedSsrProps> {
+): React.ComponentType<Omit<P, keyof SuspenseSsrHtmlAttributes> & LazySuspendedSsrProps> {
     const ComponentLazy = lazy(() => load().then(asDefault)) as unknown as React.ComponentType<P>
 
-    if (LazySuspendedSsrNames.has(name)) {
-        console.warn(
-            '@eviljs/react/ssr.lazySuspendedSsr(~~id~~, load, fallback)\n'
-            + `name "${name}" is not unique.`
-        )
-    }
-
-    LazySuspendedSsrNames.add(name)
-
-    function LazySuspendedSsr(props: P & LazySuspendedSsrProps) {
+    function LazySuspendedSsr(props: Omit<P, keyof SuspenseSsrHtmlAttributes> & LazySuspendedSsrProps) {
         const {ssrId, ...otherProps} = props
 
         return (
             <SuspenseSsr
-                name={name}
                 ssrId={ssrId}
                 fallback={() => fallback?.(otherProps as F)}
             >
@@ -53,10 +41,9 @@ export function lazySuspendedSsr<P extends object, F extends P>(
 }
 
 export function SuspenseSsr(props: SuspenseSsrProps) {
-    const {name, ssrId, fallback, children} = props
-    const suspenseAttrs = withSuspenseSsrAttributes(name, ssrId)
-    const key = suspendedSsrElementKeyOf(name, ssrId)
-    const elementSsr = SuspendedSsrElements.get(key)
+    const {ssrId, fallback, children} = props
+    const suspenseAttrs = withSuspenseSsrAttributes(ssrId)
+    const elementSsr = SuspendedSsrElements.get(ssrId)
 
     return (
         <Suspense
@@ -78,9 +65,9 @@ export function SuspenseSsr(props: SuspenseSsrProps) {
 }
 
 export function BarrierSsr(props: BarrierSsrProps) {
-    const {name, ssrId, if: guard, fallback, children} = props
-    const elementSsr = SuspendedSsrElements.get(suspendedSsrElementKeyOf(name, ssrId))
-    const suspenseAttrs = withSuspenseSsrAttributes(name, ssrId)
+    const {ssrId, if: guard, fallback, children} = props
+    const elementSsr = SuspendedSsrElements.get(ssrId)
+    const suspenseAttrs = withSuspenseSsrAttributes(ssrId)
 
     if (! guard && elementSsr) {
         return (
@@ -135,29 +122,23 @@ export function SsrFallback(props: SsrFallbackProps) {
     )
 }
 
-export function withSuspenseSsrAttributes(name: string, id: string): SuspenseSsrHtmlAttributes {
+export function ssrIdOf(attrs: SuspenseSsrHtmlAttributes) {
+    return attrs[SuspenseSsrAttribute.Id]
+}
+
+export function withSuspenseSsrAttributes(id: string): SuspenseSsrHtmlAttributes {
     return {
-        [SuspenseSsrAttribute.Name]: escapeHtmlAttributeValue(name),
         [SuspenseSsrAttribute.Id]: escapeHtmlAttributeValue(id),
     }
 }
 
-export function suspendedSsrElementKeyOf(name: string, id: string) {
-    return `${name}@${id}`
-}
-
 export function collectSuspendedSsrElements() {
-    const attrName = SuspenseSsrAttribute.Name
     const attrId = SuspenseSsrAttribute.Id
 
     return new Map(
-        Array.from(document.querySelectorAll(`[${attrName}][${attrId}]`)).map(it => [
-            suspendedSsrElementKeyOf(
-                it.getAttribute(attrName) ?? '' ,
-                it.getAttribute(attrId) ?? '',
-            ),
+        Array.from(document.querySelectorAll(`[${attrId}]`)).map(it => [
+            it.getAttribute(attrId) ?? '',
             {
-                name: it.getAttribute(attrName) ?? undefined,
                 id: it.getAttribute(attrId) ?? undefined,
                 tag: it.tagName,
                 attributes: Array.from(it.attributes),
@@ -178,14 +159,12 @@ export interface LazySuspendedSsrProps {
 }
 
 export interface SuspenseSsrProps {
-    name: string
     ssrId: string
     children: (attrs: SuspenseSsrHtmlAttributes) => React.ReactNode
     fallback?: undefined | (() => React.ReactNode)
 }
 
 export interface BarrierSsrProps {
-    name: string
     ssrId: string
     if: boolean
     children(attrs: SuspenseSsrHtmlAttributes): React.ReactNode
@@ -199,6 +178,5 @@ export interface SsrFallbackProps extends VoidProps<BoxProps> {
 }
 
 export interface SuspenseSsrHtmlAttributes {
-    [SuspenseSsrAttribute.Name]: string
     [SuspenseSsrAttribute.Id]: string
 }
