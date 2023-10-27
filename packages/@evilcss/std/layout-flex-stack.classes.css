@@ -1,5 +1,9 @@
 .std-flex-stack {
+    display: flex;
     align-items: center;
     align-content: center;
     justify-content: center;
+}
+.std-flex-stack.std-flex-inline {
+    display: inline-flex;
 }
