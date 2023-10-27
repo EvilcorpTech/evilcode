@@ -223,7 +223,8 @@ export function styleOfChild<I>(child: VirtualChild<I>): React.CSSProperties {
 // Types ///////////////////////////////////////////////////////////////////////
 
 export interface SliderVirtualProps<I> extends
-    Omit<React.HTMLAttributes<HTMLElement>, 'children' | 'onSelect'>
+    Omit<React.HTMLAttributes<HTMLElement>, 'children' | 'onSelect'>,
+    React.RefAttributes<HTMLElement>
 {
     // align: undefined | 'start' | 'center' | 'end'
     children: (item: I, idx: number) => React.ReactElement
