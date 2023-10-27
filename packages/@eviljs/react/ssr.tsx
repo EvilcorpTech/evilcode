@@ -15,7 +15,7 @@ export const LazySuspendedSsrNames = new Set<string>()
 export function lazySuspendedSsr<P extends object, F extends P>(
     load: LazyLoader<P>,
     fallback?: undefined | LazyFallback<F>,
-): React.ComponentType<Omit<P, keyof SuspenseSsrHtmlAttributes> & LazySuspendedSsrProps> {
+) {
     const ComponentLazy = lazy(() => load().then(asDefault)) as unknown as React.ComponentType<P>
 
     function LazySuspendedSsr(props: Omit<P, keyof SuspenseSsrHtmlAttributes> & LazySuspendedSsrProps) {

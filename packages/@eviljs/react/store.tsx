@@ -140,19 +140,20 @@ export function useStoreState<V, S extends StoreStateGeneric>(
     const store = useStoreContext<S>(contextOptional)
     const [state] = store ?? [createReactiveAccessor(undefined as unknown as S)]
     const selector: Io<S, V | S> = selectorOptional ?? identity
-    const [selectedState, setSelectedState] = useState(selector(state.read()))
-    const selectedStateOldRef = useRef(selectedState)
+    const selectedState = selector(state.read())
+    const [selectedTrackedState, setSelectedTrackedState] = useState(selectedState)
+    const selectedOldStateRef = useRef(selectedTrackedState)
 
     useEffect(() => {
         if (! store) {
             return
         }
 
-        setSelectedState(selector(state.read()))
+        setSelectedTrackedState(selector(state.read()))
 
         const stopWatching = state.watch((newState, oldState) => {
-            setSelectedState(selector(newState))
-            selectedStateOldRef.current = selector(oldState)
+            setSelectedTrackedState(selector(newState))
+            selectedOldStateRef.current = selector(oldState)
         })
 
         function onClean() {
@@ -166,7 +167,7 @@ export function useStoreState<V, S extends StoreStateGeneric>(
         return
     }
 
-    return [selectedState, selectedStateOldRef.current, state.read]
+    return [selectedState, selectedOldStateRef.current, state.read]
 }
 
 export function useStoreDispatch<S extends StoreStateGeneric, A extends ReducerAction = ReducerAction>(

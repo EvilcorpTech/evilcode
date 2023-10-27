@@ -9,15 +9,15 @@ import {createElement, forwardRef} from 'react'
 *     {children}
 * </Box>
 */
-export const Box = forwardRef(function Box<T>(
+export const Box = forwardRef(function Box<T extends Element = HTMLElement>(
     props: BoxProps<T>,
-    ref: React.ForwardedRef<HTMLElement>
+    ref: React.ForwardedRef<T>
 ) {
     const {tag, ...otherProps} = props
 
     return createElement(tag ?? 'div', {...otherProps as {}, ref})
 }) as (
-    & (<T>(props: BoxProps<T>) => JSX.Element)
+    & (<T extends Element = HTMLElement>(props: BoxProps<T>) => JSX.Element)
     & Pick<React.FunctionComponent, 'displayName'>
 )
 Box.displayName = 'Box'
@@ -39,7 +39,7 @@ Box.displayName = 'Box'
 *     </OptionalBox>
 * }
 */
-export const BoxOptional = forwardRef(function BoxOptional<T>(
+export const BoxOptional = forwardRef(function BoxOptional<T extends Element = HTMLElement>(
     props: BoxOptionalProps<T>,
     ref: React.ForwardedRef<T>
 ) {
@@ -51,18 +51,18 @@ export const BoxOptional = forwardRef(function BoxOptional<T>(
 
     return <Box {...otherProps} ref={ref}/>
 }) as (
-    & (<T>(props: BoxOptionalProps<T>) => JSX.Element)
+    & (<T extends Element = HTMLElement>(props: BoxOptionalProps<T>) => JSX.Element)
     & Pick<React.FunctionComponent, 'displayName'>
 )
 BoxOptional.displayName = 'BoxOptional'
 
 // Types ///////////////////////////////////////////////////////////////////////
 
-export interface BoxProps<T = Element> extends React.AllHTMLAttributes<T>, React.RefAttributes<T> {
+export interface BoxProps<T extends Element = HTMLElement> extends React.AllHTMLAttributes<T>, React.RefAttributes<T> {
     tag?: undefined | string | Tag
 }
 
-export interface BoxOptionalProps<T = Element> extends BoxProps<T> {
+export interface BoxOptionalProps<T extends Element = HTMLElement> extends BoxProps<T> {
     if?: undefined | any
 }
 

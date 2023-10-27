@@ -20,9 +20,9 @@ import {defineContext} from './ctx.js'
 const DisplayNoneStyle: React.CSSProperties = {display: 'none'}
 
 export const TransitionContext = defineContext<TransitionContext>('TransitionContext')
-export const TransitionTimeoutDefault = 1_500
+export const TransitionTimeoutDefault = 2_000
 
-export function useTransitionLifecycle() {
+export function useTransitionContext() {
     return useContext(TransitionContext)
 }
 
