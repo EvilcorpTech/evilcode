@@ -1,4 +1,4 @@
-import {isFunction, isNil, type Nil, type Writable} from '@eviljs/std/type.js'
+import {isFunction, isNone, type None, type Writable} from '@eviljs/std/type.js'
 import {useCallback, useEffect, useLayoutEffect, useMemo, useRef} from 'react'
 
 /*
@@ -88,7 +88,7 @@ export function useMergeRefs<V>(...refHandlers: Array<RefHandler<null | V>>) {
 export function mergingRefs<V>(...refHandlers: Array<RefHandler<null | V>>) {
     function onRef(element: null | V) {
         for (const refHandler of refHandlers) {
-            if (isNil(refHandler)) {
+            if (isNone(refHandler)) {
                 continue
             }
             if (isFunction(refHandler)) {
@@ -103,7 +103,7 @@ export function mergingRefs<V>(...refHandlers: Array<RefHandler<null | V>>) {
 
 // Types ///////////////////////////////////////////////////////////////////////
 
-export type RefHandler<V> = Nil | React.MutableRefObject<V> | React.RefObject<V> | React.RefCallback<V>
+export type RefHandler<V> = None | React.MutableRefObject<V> | React.RefObject<V> | React.RefCallback<V>
 
 export interface RefProp<V> {
     onRef?: undefined | RefHandler<V>
