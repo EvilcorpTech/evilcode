@@ -1,4 +1,4 @@
-import type {Nil} from '@eviljs/std/type.js'
+import type {None} from '@eviljs/std/type.js'
 import {isObject} from '@eviljs/std/type.js'
 
 export function classes(...args: Array<Classes>) {
@@ -49,9 +49,9 @@ export function classes(...args: Array<Classes>) {
 // Types ///////////////////////////////////////////////////////////////////////
 
 export type Classes =
-    | Nil
+    | None
     | string
-    | Record<string, Nil | boolean>
+    | Record<string, None | boolean>
     | Array<Classes>
     | readonly Classes[]
     // | readonly [...Array<Classes>]

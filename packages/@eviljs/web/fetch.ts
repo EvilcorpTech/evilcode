@@ -1,5 +1,5 @@
 import {throwInvalidArgument} from '@eviljs/std/throw.js'
-import {isArray, isNil, isObject} from '@eviljs/std/type.js'
+import {isArray, isNone, isObject} from '@eviljs/std/type.js'
 import {FormDataType, FormUrlType, JsonType, TextType} from './mimetype.js'
 import {asBaseUrl, isUrlAbsolute, joinUrlPath} from './url.js'
 
@@ -78,7 +78,7 @@ export function mergeFetchOptions(...optionsList: Array<FetchRequestOptions>): F
                     else if (isObject(options.headers)) {
                         Object.assign(mergedOptionsHeaders, options.headers)
                     }
-                    else if (isNil(options.headers)) {
+                    else if (isNone(options.headers)) {
                     }
                     else {
                         return throwInvalidArgument(

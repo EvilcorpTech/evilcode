@@ -292,18 +292,18 @@ export function withQueryRules(rules: QueryRules): QueryRequestOptions {
 //     rules: QueryRules,
 //     parent?: undefined | number | string,
 // ): Record<string,
-//     | Nil
+//     | None
 //     | boolean
 //     | number
 //     | string
 //     | Array<
-//         | Nil
+//         | None
 //         | boolean
 //         | number
 //         | string,
 //     >
 // > {
-//     if (isNil(rules)) {
+//     if (isNone(rules)) {
 //         return parent
 //             ? [String(parent)]
 //             : []

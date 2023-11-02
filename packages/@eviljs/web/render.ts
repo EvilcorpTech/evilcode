@@ -1,6 +1,6 @@
 import type {Io} from '@eviljs/std/fn.js'
 import type {Ref} from '@eviljs/std/ref.js'
-import {asArray, isArray, isBoolean, isNil, isNull, isNumber, isString, isUndefined} from '@eviljs/std/type.js'
+import {asArray, isArray, isBoolean, isNone, isNull, isNumber, isString, isUndefined} from '@eviljs/std/type.js'
 import {classes, type Classes} from './classes.js'
 
 export {createRef} from '@eviljs/std/ref.js'
@@ -176,7 +176,7 @@ export function setChildren(element: RenderElement, children: RenderChildren) {
         removeChildren(element)
 
         children.forEach(child => {
-            if (isNil(child) || isBoolean(child)) {
+            if (isNone(child) || isBoolean(child)) {
                 return
             }
             if (isString(child) || isNumber(child)) {
