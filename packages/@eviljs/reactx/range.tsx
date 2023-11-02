@@ -4,7 +4,7 @@ import type {DragPointerEvent, UseDragOptions} from '@eviljs/react/drag.js'
 import {useDrag} from '@eviljs/react/drag.js'
 import {clamp} from '@eviljs/std/math.js'
 import {distanceBetween} from '@eviljs/std/scale.js'
-import {isNil} from '@eviljs/std/type.js'
+import {isNone} from '@eviljs/std/type.js'
 import {classes} from '@eviljs/react/classes.js'
 import {useCallback, useEffect, useMemo, useRef, useState} from 'react'
 
@@ -184,7 +184,7 @@ export function RangeNumeric(props: RangeNumericProps) {
     const {start, end, min, max, onChange, onChanged, ...otherProps} = props
 
     const onRangeChange = useCallback((range: Range) => {
-        if (isNil(min) || isNil(max)) {
+        if (isNone(min) || isNone(max)) {
             return
         }
 
@@ -194,7 +194,7 @@ export function RangeNumeric(props: RangeNumericProps) {
     }, [onChange, min, max])
 
     const onRangeChanged = useCallback((range: Range) => {
-        if (isNil(min) || isNil(max)) {
+        if (isNone(min) || isNone(max)) {
             return
         }
 
@@ -203,7 +203,7 @@ export function RangeNumeric(props: RangeNumericProps) {
         onChanged?.(numbersRange)
     }, [onChanged, min, max])
 
-    if (isNil(min) || isNil(max) || isNil(start) || isNil(end)) {
+    if (isNone(min) || isNone(max) || isNone(start) || isNone(end)) {
         return
     }
 
@@ -227,7 +227,7 @@ export function RangeTime(props: RangeTimeProps) {
     const {start, end, min, max, onChange, onChanged, ...otherProps} = props
 
     const onRangeChange = useCallback((range: Range) => {
-        if (isNil(min) || isNil(max)) {
+        if (isNone(min) || isNone(max)) {
             return
         }
 
@@ -237,7 +237,7 @@ export function RangeTime(props: RangeTimeProps) {
     }, [onChange, min, max])
 
     const onRangeChanged = useCallback((range: Range) => {
-        if (isNil(min) || isNil(max)) {
+        if (isNone(min) || isNone(max)) {
             return
         }
 
@@ -247,7 +247,7 @@ export function RangeTime(props: RangeTimeProps) {
     }, [onChanged, min, max])
 
 
-    if (isNil(min) || isNil(max) || isNil(start) || isNil(end)) {
+    if (isNone(min) || isNone(max) || isNone(start) || isNone(end)) {
         return
     }
 
