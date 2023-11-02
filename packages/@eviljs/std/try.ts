@@ -1,4 +1,4 @@
-import type {Nil} from './type.js'
+import type {None} from './type.js'
 import {isSome} from './type.js'
 
 export function tryCatch<R>(fn: TryOrFn<R>, onError?: undefined, onEnd?: undefined | (() => void)): undefined | R
@@ -56,5 +56,5 @@ export function tryMap<I, R>(
 
 export type TryOnError<R = void> = (error: unknown) => R
 export type TryOrFn<R> = () => R
-export type TryMapArgItems<I> = Nil | Array<I>
-export type TryMapArgFn<I, R> = (it: I, idx: number) => Nil | R
+export type TryMapArgItems<I> = None | Array<I>
+export type TryMapArgFn<I, R> = (it: I, idx: number) => None | R

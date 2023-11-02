@@ -1,5 +1,5 @@
 import type {Io} from './fn.js'
-import type {Nil} from './type.js'
+import type {None} from './type.js'
 import {isSome} from './type.js'
 
 export function areArraysEqual(firstList: Array<unknown>, secondList: Array<unknown>): boolean {
@@ -18,7 +18,7 @@ export function lastOf<I>(list: Array<I>): undefined | I {
     return list.at(-1)
 }
 
-export function filterSome<I>(list: Array<Nil | I>): Array<I> {
+export function filterSome<I>(list: Array<None | I>): Array<I> {
     return list.filter(isSome)
 }
 

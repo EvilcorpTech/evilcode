@@ -2,8 +2,8 @@ import type {Io} from './fn.js'
 import type {ErrorOf, ResultOf} from './result.js'
 import {Error, isError} from './result.js'
 import {tryCatch} from './try.js'
-import type {Nil} from './type.js'
-import {isNil} from './type.js'
+import type {None} from './type.js'
+import {isNone} from './type.js'
 
 export type {Io} from './fn.js'
 
@@ -28,14 +28,14 @@ export function inspectWithConsoleLog<V>(input: V): V {
 
 export function mappingSome<V1, V2>(
     onSome: Io<NonNullable<V1>, V2>
-): Io<V1, Extract<V1, Nil> | V2>
+): Io<V1, Extract<V1, None> | V2>
 {
     return (input: V1) => mapSome(input, onSome)
 }
 
 export function mappingNone<V1, V2>(
-    onNone: Io<Nil, V2>
-): Io<V1, Exclude<V1, Nil> | V2>
+    onNone: Io<None, V2>
+): Io<V1, Exclude<V1, None> | V2>
 {
     return (input: V1) => mapNone(input, onNone)
 }
@@ -43,21 +43,21 @@ export function mappingNone<V1, V2>(
 export function mapSome<V1, V2>(
     input: V1,
     onSome: Io<NonNullable<V1>, V2>
-): Extract<V1, Nil> | V2
+): Extract<V1, None> | V2
 {
-    return ! isNil(input)
+    return ! isNone(input)
         ? onSome(input as NonNullable<V1>)
-        : input as Extract<V1, Nil>
+        : input as Extract<V1, None>
 }
 
 export function mapNone<V1, V2>(
     input: V1,
-    onNone: Io<Nil, V2>
-): Exclude<V1, Nil> | V2
+    onNone: Io<None, V2>
+): Exclude<V1, None> | V2
 {
-    return isNil(input)
-        ? onNone(input as Nil)
-        : input as Exclude<V1, Nil>
+    return isNone(input)
+        ? onNone(input as None)
+        : input as Exclude<V1, None>
 }
 
 // Boolean Expression //////////////////////////////////////////////////////////
@@ -220,7 +220,7 @@ export function mappingCatch<V1, V2>(
 /*
 * Shortcut API. Same of mappingCatch(Error).
 */
-export function mappingCatchError<V1>(error?: Nil | never): Io<Promise<V1>, Promise<V1 | Error<unknown>>>
+export function mappingCatchError<V1>(error?: None | never): Io<Promise<V1>, Promise<V1 | Error<unknown>>>
 export function mappingCatchError<V1, V2>(error: V2): Io<Promise<V1>, Promise<V1 | Error<V2>>>
 export function mappingCatchError<V1, V2>(
     errorOptional?: V2,

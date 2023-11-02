@@ -7,7 +7,7 @@ export const Tests = {
     defined: isDefined,
     function: isFunction,
     integer: isInteger,
-    nil: isNil,
+    none: isNone,
     null: isNull,
     number: isNumber,
     object: isObject,
@@ -35,7 +35,7 @@ export function isDefined<V>(value: void | undefined | V): value is V {
     return ! isUndefined(value)
 }
 
-export function isNil(value: unknown): value is Nil {
+export function isNone(value: unknown): value is None {
     return isUndefined(value) || isNull(value)
 }
 
@@ -43,8 +43,8 @@ export function isNull(value: unknown): value is null {
     return value === null
 }
 
-export function isSome<V>(value: Nil | V): value is V {
-    return ! isNil(value)
+export function isSome<V>(value: None | V): value is V {
+    return ! isNone(value)
 }
 
 export function isUndefined(value: unknown): value is undefined {
@@ -161,7 +161,7 @@ export function asBooleanLike(value: unknown): undefined | boolean {
 export function asDate(value: number | Date): Date
 export function asDate(value: unknown): undefined | Date
 export function asDate(value: unknown): undefined | Date {
-    if (isNil(value)) {
+    if (isNone(value)) {
         return
     }
     if (isDate(value)) {
@@ -214,28 +214,28 @@ export function asInteger(value: unknown): undefined | number {
 
 // Types ///////////////////////////////////////////////////////////////////////
 
-export type Nil = undefined | null
+export type None = undefined | null
 export type Some<T> = NonNullable<T>
 
-export type Defined<T> = {
+export type ObjectComplete<T extends object> = {
     [P in keyof T]-?: Exclude<T[P], undefined>
 }
 
-export type Undefined<T> = {
+export type ObjectPartial<T extends object> = {
     [K in keyof T]?: undefined | T[K]
 }
 
-export type UndefinedDeep<T> = {
-    [K in keyof T]?: undefined | (T[K] extends object ? UndefinedDeep<T[K]> : T[K])
+export type ObjectPartialDeep<T extends object> = {
+    [K in keyof T]?: undefined | (T[K] extends object ? ObjectPartialDeep<T[K]> : T[K])
 }
 
 export type Unsafe<T> =
-    T extends Nil | boolean | number | string | symbol
-        ? Nil | T
+    T extends None | boolean | number | string | symbol
+        ? None | T
     : T extends Array<infer I>
-        ? Nil | Array<Unsafe<I>>
+        ? None | Array<Unsafe<I>>
     : T extends object
-        ? Nil | {[key in keyof T]?: Nil | Unsafe<T[key]>}
+        ? None | {[key in keyof T]?: None | Unsafe<T[key]>}
     : unknown
 
 export type UnsafeObject<T extends object> = NonNullable<Unsafe<T>>

@@ -11,7 +11,7 @@ import {
     throwAssertTypeError,
 } from './assert.js'
 import {getObjectPath} from './object.js'
-import {isArray, isFunction, isNil} from './type.js'
+import {isArray, isFunction, isNone, type None} from './type.js'
 
 export function evaluateExp<C extends Ctx, R>(ctx: C, exp: Exp<C, R>) {
     if (! isFunction(exp)) {
@@ -27,7 +27,7 @@ export function bool(ctx: Ctx, oneExp: Exp<Ctx, any>): boolean {
     if (one === false) {
         return false
     }
-    if (isNil(one)) {
+    if (isNone(one)) {
         return false
     }
     if (typeof one === 'number' && isNaN(one)) {
@@ -195,10 +195,10 @@ export function compileTree(operators: Record<PropertyKey, Operator>, tree: Tree
 
 // Types ///////////////////////////////////////////////////////////////////////
 
-export type NilAtom = null | undefined
+export type NoneAtom = None
 export type ScalarAtom = boolean | number | string
 export type ComplexAtom = {}
-export type Atom = NilAtom | ScalarAtom | ComplexAtom
+export type Atom = NoneAtom | ScalarAtom | ComplexAtom
 
 export type Exp<C extends Ctx, R> = R | ExpFn<C, R>
 export type ExpFn<C extends Ctx, R> = (ctx: C) => R

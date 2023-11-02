@@ -1,6 +1,6 @@
 import {compute} from './compute.js'
 import {StdError, throwError} from './throw.js'
-import type {Nil} from './type.js'
+import type {None} from './type.js'
 import {
     isArray,
     isBoolean,
@@ -8,7 +8,7 @@ import {
     isDefined,
     isFunction,
     isInteger,
-    isNil,
+    isNone,
     isNumber,
     isObject,
     isSome,
@@ -406,9 +406,9 @@ export function ensureObjectOptional(value: unknown, ctx?: any) {
 /**
 * @throws InvalidInput
 */
-export function ensureSome(value: Nil, ctx?: any): never
-export function ensureSome<T>(value: Nil | T, ctx?: any): T
-export function ensureSome<T>(value: Nil | T, ctx?: any): T {
+export function ensureSome(value: None, ctx?: any): never
+export function ensureSome<T>(value: None | T, ctx?: any): T
+export function ensureSome<T>(value: None | T, ctx?: any): T {
     if (! isSome(value)) {
         return throwAssertTypeError('not undefined and not null', value, ctx)
     }
@@ -484,7 +484,7 @@ export function ensureOptionalWith<T>(assertion: Assertion<T>, value: undefined 
 
 export function errorMessage(expected: string, actual: unknown, ctx?: any) {
     return (
-        isNil(ctx)
+        isNone(ctx)
             ? `value must be ${expected}, given "${actual}".`
         : isString(ctx)
             ? `${ctx} must be ${expected}, given "${actual}".`
