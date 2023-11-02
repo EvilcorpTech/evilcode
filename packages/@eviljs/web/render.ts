@@ -243,7 +243,7 @@ export interface RenderRefProps<E> {
 }
 
 export type AllCustomAttrs = {
-    [key in string]?: undefined | null | boolean | number | string
+    [key in string]?: undefined | null | boolean | number | string | unknown
 }
 
 export type RenderEventsProps = {
