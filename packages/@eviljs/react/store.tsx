@@ -3,7 +3,7 @@ import {createReactiveAccessor, type ReactiveAccessor} from '@eviljs/std/reactiv
 import type {ReducerAction} from '@eviljs/std/redux.js'
 import {identity} from '@eviljs/std/return.js'
 import {isArray} from '@eviljs/std/type.js'
-import {useCallback, useContext, useEffect, useMemo, useRef, useState} from 'react'
+import {useCallback, useContext, useEffect, useMemo, useState} from 'react'
 import {defineContext} from './ctx.js'
 import type {StoreStateGeneric} from './store-v1.js'
 import type {StoreDefinition, StoreDispatch, StoreDispatchPolymorphicArgs} from './store-v2.js'
@@ -111,7 +111,7 @@ export function useStore<V, S extends StoreStateGeneric, A extends ReducerAction
         return
     }
 
-    const [selectedState, selectedStateOld, readState] = stateSelection
+    const [selectedState, readState] = stateSelection
 
     return [selectedState, dispatch, readState]
 }
@@ -141,20 +141,17 @@ export function useStoreState<V, S extends StoreStateGeneric>(
     const [state] = store ?? [createReactiveAccessor(undefined as unknown as S)]
     const selector: Io<S, V | S> = selectorOptional ?? identity
     const selectedState = selector(state.read())
-    const [selectedTrackedState, setSelectedTrackedState] = useState(selectedState)
-    const selectedOldStateRef = useRef(selectedTrackedState)
+    const [signal, setSignal] = useState(selectedState)
 
     useEffect(() => {
         if (! store) {
             return
         }
 
-        setSelectedTrackedState(selector(state.read()))
-
-        const stopWatching = state.watch((newState, oldState) => {
-            setSelectedTrackedState(selector(newState))
-            selectedOldStateRef.current = selector(oldState)
-        })
+        const stopWatching = state.watch(
+            (newState, oldState) => setSignal(selector(newState)),
+            {immediate: true},
+        )
 
         function onClean() {
             stopWatching()
@@ -167,7 +164,7 @@ export function useStoreState<V, S extends StoreStateGeneric>(
         return
     }
 
-    return [selectedState, selectedOldStateRef.current, state.read]
+    return [selectedState, state.read]
 }
 
 export function useStoreDispatch<S extends StoreStateGeneric, A extends ReducerAction = ReducerAction>(
@@ -248,7 +245,7 @@ export type StoreAccessor<
 
 export type StoreReader<S extends StoreStateGeneric> = ReactiveAccessor<S>['read']
 export type StoreSelector<S extends StoreStateGeneric, V> = (state: S) => V
-export type StoreSelection<S extends StoreStateGeneric, V> = [V, V, StoreReader<S>]
+export type StoreSelection<S extends StoreStateGeneric, V> = [V, StoreReader<S>]
 
 export interface StoreBound<S extends StoreStateGeneric, A extends ReducerAction = ReducerAction> {
     StoreProvider: {

@@ -1,28 +1,18 @@
 import {isFunction, isNone, type None, type Writable} from '@eviljs/std/type.js'
-import {useCallback, useEffect, useLayoutEffect, useMemo, useRef} from 'react'
+import {useCallback, useLayoutEffect, useMemo, useRef} from 'react'
 
-/*
-* Used to access the previous volatile value of a prop or state.
-*
-* EXAMPLE
-*
-* function MyComponent(props) {
-*     const {selected} = props
-*     const prevSelected = usePrev(props.selected)
-*
-*     if (selected !== prevSelected) {
-*         console.log('selected changed')
-*     }
-* }
-*/
-export function usePreviousValue<T>(value: T) {
-    const prevRef = useRef<T>()
+export function usePreviousValueRef<T>(value: T): React.MutableRefObject<undefined | T> {
+    const oldValueRef = useRef<T>()
 
-    useEffect(() => {
-        prevRef.current = value
-    })
+    useLayoutEffect(() => {
+        function onClean() {
+            oldValueRef.current = value
+        }
 
-    return prevRef.current
+        return onClean
+    }, [value])
+
+    return oldValueRef
 }
 
 /*
