@@ -3,25 +3,17 @@
 import {asInteger} from '@eviljs/std/type.js'
 import {useEffect} from 'react'
 
-export function useScrollLockAuto() {
-    useEffect(() => {
-        lockScroll()
+export function useScrollLock(activeOptional?: undefined | boolean) {
+    const active = activeOptional ?? true
 
-        return unlockScroll
-    }, [])
-}
-
-export function useScrollLockToggle(locked: boolean) {
     useEffect(() => {
-        if (locked) {
+        if (active) {
             lockScroll()
         }
         else {
             unlockScroll()
         }
-
-        return unlockScroll
-    }, [locked])
+    }, [active])
 }
 
 export function lockScroll() {
