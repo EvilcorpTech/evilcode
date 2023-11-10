@@ -1,9 +1,10 @@
 import type {Io} from './fn.js'
 import type {ErrorOf, ResultOf} from './result.js'
 import {Error, isError} from './result.js'
+import {identity} from './return.js'
 import {tryCatch} from './try.js'
 import type {None} from './type.js'
-import {isNone} from './type.js'
+import {asArray, isNone} from './type.js'
 
 export type {Io} from './fn.js'
 
@@ -11,17 +12,33 @@ export const MonadTag = '#__kind__$' // We can't use a Symbol or Class, because 
 
 // Debug ///////////////////////////////////////////////////////////////////////
 
-export function inspecting<V>(inspect: Io<V, void>): Io<V, V> {
-    return (input: V) => (inspect(input), input)
+export function logging<V>(
+    formatOptional?: undefined | Io<V, unknown>,
+    typeOptional?: undefined | 'debug' | 'log' | 'warn' | 'error',
+): Io<V, V> {
+    const type = typeOptional ?? 'log'
+    const format = formatOptional ?? identity
+
+    return (input: V) => (
+        inspectWithConsoleLog(type, asArray(format(input))),
+        input
+    )
 }
 
-export function logging<V>(format?: undefined | Io<V, any>): Io<V, V> {
-    return (input: V) =>
-        inspectWithConsoleLog(format ? format(input) : input)
+export function inspectWithConsoleLog(type: 'debug' | 'log' | 'warn' | 'error', args: Array<unknown>): void {
+    switch (type) {
+        case 'error': return console.error(...args)
+        case 'warn': return console.warn(...args)
+        case 'log': return console.log(...args)
+        case 'debug': return console.debug(...args)
+        default: return console.log(...args)
+    }
 }
 
-export function inspectWithConsoleLog<V>(input: V): V {
-    return (console.log(input), input)
+// Chaining ////////////////////////////////////////////////////////////////////
+
+export function chaining<V>(chain: Io<V, any>): Io<V, V> {
+    return (input: V) => (chain(input), input)
 }
 
 // Optional ////////////////////////////////////////////////////////////////////

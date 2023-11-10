@@ -1,30 +1,50 @@
-import type {Io} from './monad.js'
+import type {Io} from './fn.js'
 import {identity} from './return.js'
 
-export * from './chain.js'
 export * from './monad.js'
 export * from './result.js'
 
-export function pipe<V1>(input: V1) {
-    const stack: Array<PipeTask> = [identity]
-
-    function compute(stack: Array<PipeTask>): unknown {
-        return computePipe(stack, input)
+export function chain<I>(input: I, ...args: Array<Io<I, void>>): I {
+    for (const arg of args) {
+        arg(input)
     }
 
-    return createPipe(stack, compute) as Pipe<V1>
+    return input
 }
 
-export function createPipe(
-    stack: Array<PipeTask>,
-    compute: Io<Array<PipeTask>, unknown>,
+export function piping<I>(input: I): PipeContinuation<I> {
+    function continuation(): I
+    function continuation<O>(fn: Io<I, O>): PipeContinuation<O>
+    function continuation<O>(fn?: undefined | Io<I, O>): I | PipeContinuation<O> {
+        if (! fn) {
+            return input
+        }
+        return piping(fn(input))
+    }
+
+    return continuation
+}
+
+export function pipe<V1>(input: V1) {
+    const stack: Array<PipeLazyTask> = [identity]
+
+    function compute(stack: Array<PipeLazyTask>): unknown {
+        return computePipeLazy(stack, input)
+    }
+
+    return createPipeLazy(stack, compute) as PipeLazy<V1>
+}
+
+export function createPipeLazy(
+    stack: Array<PipeLazyTask>,
+    compute: Io<Array<PipeLazyTask>, unknown>,
 ) {
     const self = {
         get __stack__() {
             return stack
         },
         to(fn: Io<unknown, unknown>) {
-            return createPipe([...stack, fn], compute)
+            return createPipeLazy([...stack, fn], compute)
         },
         end() {
             return compute(stack)
@@ -34,22 +54,27 @@ export function createPipe(
     return self
 }
 
-export function computePipe(stack: Array<PipeTask>, input: unknown): unknown {
+export function computePipeLazy(stack: Array<PipeLazyTask>, input: unknown): unknown {
     const [task, ...otherStack] = stack
 
     if (! task) {
         return input
     }
 
-    return computePipe(otherStack, task(input))
+    return computePipeLazy(otherStack, task(input))
 }
 
 // Types ///////////////////////////////////////////////////////////////////////
 
-export interface Pipe<V1> {
-    __stack__: Array<PipeTask>
-    to<V2>(fn: Io<V1, V2>): Pipe<V2>
+export interface PipeContinuation<I> {
+    (): I
+    <O>(fn: Io<I, O>): PipeContinuation<O>
+}
+
+export interface PipeLazy<V1> {
+    __stack__: Array<PipeLazyTask>
+    to<V2>(fn: Io<V1, V2>): PipeLazy<V2>
     end(): V1
 }
 
-export type PipeTask = Io<unknown, unknown>
+export type PipeLazyTask = Io<unknown, unknown>

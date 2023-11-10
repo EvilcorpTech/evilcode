@@ -4,14 +4,14 @@ export function compose<I, O = I>(fn: Io<I, O>) {
     return createComposer<I, I, O>([], fn)
 }
 
-function createComposer<InitialInput, LastOutput>(stack: Array<Io>): Io<InitialInput, LastOutput>
-function createComposer<InitialInput, LastOutput>(stack: Array<Io>, fn: undefined): Io<InitialInput, LastOutput>
-function createComposer<InitialInput, LastOutput, CurrentOutput>(stack: Array<Io>, fn: Io<LastOutput, CurrentOutput>): Composition<InitialInput, CurrentOutput>
-function createComposer<InitialInput, LastOutput, CurrentOutput>(stack: Array<Io>, fn?: undefined | Io<LastOutput, CurrentOutput>): Io<InitialInput, LastOutput> | Composition<InitialInput, CurrentOutput>
-function createComposer<InitialInput, LastOutput, CurrentOutput>(stack: Array<Io>, fn?: Io<LastOutput, CurrentOutput>): Io<InitialInput, LastOutput> | Composition<InitialInput, CurrentOutput> {
+function createComposer<I, LastO>(stack: Array<Io>): Io<I, LastO>
+function createComposer<I, LastO>(stack: Array<Io>, fn: undefined): Io<I, LastO>
+function createComposer<I, LastO, CurrentO>(stack: Array<Io>, fn: Io<LastO, CurrentO>): Composition<I, CurrentO>
+function createComposer<I, LastO, CurrentO>(stack: Array<Io>, fn?: undefined | Io<LastO, CurrentO>): Io<I, LastO> | Composition<I, CurrentO>
+function createComposer<I, LastO, CurrentO>(stack: Array<Io>, fn?: Io<LastO, CurrentO>): Io<I, LastO> | Composition<I, CurrentO> {
     if (! fn) {
-        function continuation(input: InitialInput): LastOutput {
-            return computeComposition(stack, input) as LastOutput
+        function continuation(input: I): LastO {
+            return computeComposition(stack, input) as LastO
         }
 
         return continuation
@@ -19,11 +19,11 @@ function createComposer<InitialInput, LastOutput, CurrentOutput>(stack: Array<Io
 
     const nextStack = [...stack, fn as Io]
 
-    function continuation<NextOutput>(nextFn?: Io<CurrentOutput, NextOutput>) {
-        return createComposer<InitialInput, CurrentOutput, NextOutput>(nextStack, nextFn)
+    function continuation<NextO>(nextFn?: Io<CurrentO, NextO>) {
+        return createComposer<I, CurrentO, NextO>(nextStack, nextFn)
     }
 
-    return continuation as Composition<InitialInput, CurrentOutput>
+    return continuation as Composition<I, CurrentO>
 }
 
 export function computeComposition<I>(stack: Array<Io<I, I>>, initialInput: I): I {
@@ -32,7 +32,7 @@ export function computeComposition<I>(stack: Array<Io<I, I>>, initialInput: I): 
 
 // Types ///////////////////////////////////////////////////////////////////////
 
-export interface Composition<InitialInput, LastOutput> {
-    (): Io<InitialInput, LastOutput>
-    <CurrentOutput>(fn: Io<LastOutput, CurrentOutput>): Composition<InitialInput, CurrentOutput>
+export interface Composition<I, LastO> {
+    (): Io<I, LastO>
+    <CurrentO>(fn: Io<LastO, CurrentO>): Composition<I, CurrentO>
 }
