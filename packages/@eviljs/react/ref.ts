@@ -1,4 +1,5 @@
-import {isFunction, isNone, type None, type Writable} from '@eviljs/std/type.js'
+import type {FnArgs} from '@eviljs/std/fn.js'
+import {isFunction, isNone, isObject, type None, type Writable} from '@eviljs/std/type.js'
 import {useCallback, useLayoutEffect, useMemo, useRef} from 'react'
 
 export function usePreviousValueRef<T>(value: T): React.MutableRefObject<undefined | T> {
@@ -53,7 +54,7 @@ export function useConstant<V>(value: V) {
 *     )
 * }
 */
-export function useClosure<A extends Array<unknown>, R>(closure: (...args: A) => R) {
+export function useClosure<A extends FnArgs, R>(closure: (...args: A) => R) {
     const closureRef = useRef(closure)
 
     useLayoutEffect(() => {
@@ -67,34 +68,52 @@ export function useClosure<A extends Array<unknown>, R>(closure: (...args: A) =>
     return callback
 }
 
-export function useMergeRefs<V>(...refHandlers: Array<RefHandler<null | V>>) {
+export function useMergeRefs<V>(...refs: Array<None | RefHandler<null | V>>) {
     const onRef = useMemo(() => {
-        return mergingRefs(...refHandlers)
-    }, refHandlers)
+        return mergingRefs(...refs)
+    }, refs)
 
     return onRef
 }
 
-export function mergingRefs<V>(...refHandlers: Array<RefHandler<null | V>>) {
+export function mergingRefs<V>(...refs: Array<None | RefHandler<null | V>>) {
     function onRef(element: null | V) {
-        for (const refHandler of refHandlers) {
-            if (isNone(refHandler)) {
-                continue
-            }
-            if (isFunction(refHandler)) {
-                refHandler(element)
-                continue
-            }
-            ;(refHandler as Writable<typeof refHandler>).current = element
+        for (const ref of refs) {
+            setRef(ref, element)
         }
     }
     return onRef
 }
 
+export function setRef<V>(ref: None | RefHandler<V>, value: V): void {
+    if (isNone(ref)) {
+        return
+    }
+    if (isFunction(ref)) {
+        ref(value)
+        return
+    }
+    if (isObject(ref)) {
+        ;(ref as Writable<typeof ref>).current = value
+        return
+    }
+}
+
 // Types ///////////////////////////////////////////////////////////////////////
 
-export type RefHandler<V> = None | React.MutableRefObject<V> | React.RefObject<V> | React.RefCallback<V>
+export type RefHandler<V> = React.MutableRefObject<V> | React.RefObject<V> | React.RefCallback<V>
 
 export interface RefProp<V> {
     onRef?: undefined | RefHandler<V>
 }
+
+export type RefValueOf<R extends None | React.Ref<any> | React.ForwardedRef<any>> =
+    R extends React.MutableRefObject<infer V>
+        ? V
+    : R extends React.RefObject<infer V>
+        ? V
+    : R extends React.RefCallback<infer V>
+        ? V
+    : R extends None
+        ? never
+    : never
