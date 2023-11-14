@@ -1,6 +1,6 @@
 import {Future} from '@eviljs/std/async.js'
 import type {Fn, FnArgs} from '@eviljs/std/fn.js'
-import {pipe} from '@eviljs/std/pipe.js'
+import {piping} from '@eviljs/std/pipe.js'
 import type {ResourceMaskView, ResourcePromiseView} from '@eviljs/std/resource.js'
 import {
     ResourceMask,
@@ -36,10 +36,10 @@ export function useAsyncIo<A extends FnArgs, R>(asyncTask: Fn<A, Promise<R>>): A
         // before issuing a call() request.
         setState((state): AsyncIoState<R> => ({
             ...state,
-            resource: pipe(state.resource)
-                .to(withResourceRequired)
-                .to(withResourceLoading)
-            .end(),
+            resource: piping(state.resource)
+                (withResourceRequired)
+                (withResourceLoading)
+            (),
         }))
 
         const taskPromise = Future.from(asyncTask(...args))
@@ -55,11 +55,11 @@ export function useAsyncIo<A extends FnArgs, R>(asyncTask: Fn<A, Promise<R>>): A
 
             setState((state): AsyncIoState<R> => ({
                 ...state,
-                resource: pipe(state.resource)
-                    .to(withResourceLoaded)
-                    .to(withoutResourceLoading)
-                    .to(withoutResourceFailed)
-                .end(),
+                resource: piping(state.resource)
+                    (withResourceLoaded)
+                    (withoutResourceLoading)
+                    (withoutResourceFailed)
+                (),
                 output,
                 error: undefined,
             }))
@@ -73,11 +73,11 @@ export function useAsyncIo<A extends FnArgs, R>(asyncTask: Fn<A, Promise<R>>): A
 
             setState((state): AsyncIoState<R> => ({
                 ...state,
-                resource: pipe(state.resource)
-                    .to(withResourceFailed)
-                    .to(withoutResourceLoading)
-                    .to(withoutResourceLoaded)
-                .end(),
+                resource: piping(state.resource)
+                    (withResourceFailed)
+                    (withoutResourceLoading)
+                    (withoutResourceLoaded)
+                (),
                 output: undefined,
                 error,
             }))
@@ -91,9 +91,9 @@ export function useAsyncIo<A extends FnArgs, R>(asyncTask: Fn<A, Promise<R>>): A
 
         setState((state): AsyncIoState<R> => ({
             ...state,
-            resource: pipe(state.resource)
-                .to(withoutResourceLoading)
-            .end(),
+            resource: piping(state.resource)
+                (withoutResourceLoading)
+            (),
         }))
     }, [])
 
@@ -109,9 +109,9 @@ export function useAsyncIo<A extends FnArgs, R>(asyncTask: Fn<A, Promise<R>>): A
     const resetResponse = useCallback(() => {
         setState((state): AsyncIoState<R> => ({
             ...state,
-            resource: pipe(state.resource)
-                .to(withoutResourceLoaded)
-            .end(),
+            resource: piping(state.resource)
+                (withoutResourceLoaded)
+            (),
             output: undefined,
         }))
     }, [])
@@ -119,9 +119,9 @@ export function useAsyncIo<A extends FnArgs, R>(asyncTask: Fn<A, Promise<R>>): A
     const resetError = useCallback(() => {
         setState((state): AsyncIoState<R> => ({
             ...state,
-            resource: pipe(state.resource)
-                .to(withoutResourceFailed)
-            .end(),
+            resource: piping(state.resource)
+                (withoutResourceFailed)
+            (),
             error: undefined,
         }))
     }, [])
