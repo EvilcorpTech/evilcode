@@ -1,8 +1,9 @@
 import {defineShowcase} from '@eviljs/reactx/showcase'
 import {ensureStringNotEmpty} from '@eviljs/std/assert'
 import {
-    mappingCatch,
-    mappingCatchError,
+    awaiting,
+    catching,
+    catchingError,
     mappingEither,
     mappingError,
     mappingErrorValue,
@@ -10,28 +11,27 @@ import {
     mappingPromise,
     mappingResult,
     mappingSome,
-    mappingThen,
-    mappingTry,
     then,
+    trying,
 } from '@eviljs/std/monad'
-import {pipe} from '@eviljs/std/pipe'
+import {piping} from '@eviljs/std/pipe'
 import {Error} from '@eviljs/std/result'
 import {identity} from '@eviljs/std/return'
 
-const someResult = pipe(undefined as undefined | null | string)
-    .to(mappingNone(it => 'Mario'))
-    .to(mappingSome(it => ({name: `Super ${it}`, age: 21})))
-.end()
+const someResult = piping(undefined as undefined | null | string)
+    (mappingNone(it => 'Mario'))
+    (mappingSome(it => ({name: `Super ${it}`, age: 21})))
+()
 
-const eitherResult = pipe(someResult)
-    .to(it => it.age > 18 ? it : Error('TooYoung' as const))
-    .to(mappingEither(identity, identity))
-    .to(mappingTry(
+const eitherResult = piping(someResult)
+    (it => it.age > 18 ? it : Error('TooYoung' as const))
+    (mappingEither(identity, identity))
+    (trying(
         mappingResult(it => (ensureStringNotEmpty(it), it)),
         error => Error('BadString' as const),
     ))
-    .to(mappingResult(it => it.name))
-    .to(mappingError(it => {
+    (mappingResult(it => it.name))
+    (mappingError(it => {
         switch (it.error) {
             case 'TooYoung':
                 return Error('Blocked' as const)
@@ -39,21 +39,22 @@ const eitherResult = pipe(someResult)
                 return 'John Snow' as const
         }
     }))
-    .to(mappingErrorValue(it => `Ops ${it}`))
-    .to(it => `Hello, ${it}!`)
-.end()
+    (mappingErrorValue(it => `Ops ${it}`))
+    (it => `Hello, ${it}!`)
+()
 
-const asyncResult = pipe(Promise.resolve(eitherResult))
-    .to(then(identity, Error))
-    .to(mappingThen(identity))
-    .to(mappingCatch(Error))
-    .to(mappingCatch(error => Error('BadRequest' as const)))
-    .to(mappingPromise(identity, Error))
-    .to(mappingCatchError()) // Same of mappingCatch(Error).
-    .to(mappingCatchError('BadRequest' as const))
-    .to(then(mappingResult(identity)))
-    .to(then(mappingError(it => 'Hello World!')))
-.end()
+const asyncResult = piping(Promise.resolve(eitherResult))
+    (mappingPromise(identity, Error))
+    (awaiting(identity))
+    (then(identity))
+    (then(identity, Error))
+    (catching(Error))
+    (catching(error => Error('BadRequest' as const)))
+    (catchingError()) // Same of catching(Error).
+    (catchingError('BadRequest' as const))
+    (then(mappingResult(identity)))
+    (then(mappingError(it => 'Hello World!')))
+()
 
 export default defineShowcase('Pipe', (props) => {
     return (
