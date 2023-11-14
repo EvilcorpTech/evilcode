@@ -1,58 +1,39 @@
-export function dispatchMachineEvent<S extends object, E>(
-    prevState: S,
-    event: E,
-    handler: MachineEventHandler<S, E>,
-    observer?: MachineStateObserver<S>,
-): S
-{
-    const nextState = {...prevState} // Shallow clone.
-    let dirtyState = false
+import {piping} from './pipe.js'
 
-    const state = createMachineStateObserver(nextState, (state, prop, value, prevValue) => {
-        if (value === prevValue) {
-            return
-        }
+export function defineMachine<S, E, P extends object = {}>(
+    args: MachineDefinitionOptions<S, E> & P,
+): MachineDefinition<S, E> & Omit<P, keyof MachineDefinitionOptions<S, E>> {
+    const {createState, reduce, log, pipeline, ...otherProps} = args
 
-        dirtyState = true
-        observer?.(state, prop, value, prevValue)
-    })
+    function reduceMachine(oldState: S, event: E) {
+        return piping(oldState)
+            (newState => reduce(newState, event))
+            (newState => pipeline?.reduce((state, transform) => transform(state, oldState, event), newState) ?? newState)
+            (newState => (log?.(newState, oldState, event), newState))
+        ()
+    }
 
-    handler(state, event)
-
-    return dirtyState
-        ? nextState
-        : prevState
-}
-
-export function createMachineStateObserver<S extends object>(state: S, observer?: MachineStateObserver<S>): S {
-    const proxy = new Proxy(state, {
-        get(state: any, prop) {
-            return state[prop]
-        },
-        set(state: any, prop, value) {
-            const prevValue = state[prop]
-
-            state[prop] = value
-
-            observer?.(state, prop, value, prevValue)
-
-            return true
-        },
-    })
-
-    return proxy
+    return {...otherProps as P, createState, reduce: reduceMachine}
 }
 
 // Types ///////////////////////////////////////////////////////////////////////
 
-export type MachineEventHandler<S extends object, E> = (
-    state: S,
-    event: E,
-) => void
+export interface MachineDefinitionOptions<S, E> {
+    createState(): S
+    reduce(state: S, event: E): S
+    pipeline?: undefined | Array<MachinePipelineTransformer<S, E>>
+    log?: undefined | MachineLogger<S, E>
+}
 
-export type MachineStateObserver<S extends object> = (
-    state: S,
-    prop: string | number | symbol,
-    value: any,
-    prevValue: any,
-) => void
+export interface MachineDefinition<S, E> {
+    createState(): S
+    reduce(state: S, event: E): S
+}
+
+export interface MachinePipelineTransformer<S, E> {
+    (newState: S, oldState: S, event: E): S
+}
+
+export interface MachineLogger<S, E> {
+    (newState: S, oldState: S, event: E): void
+}

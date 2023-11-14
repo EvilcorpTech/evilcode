@@ -25,7 +25,7 @@ export function piping<I>(input: I): PipeContinuation<I> {
     return continuation
 }
 
-export function pipe<V1>(input: V1) {
+export function piped<V1>(input: V1) {
     const stack: Array<PipeLazyTask> = [identity]
 
     function compute(stack: Array<PipeLazyTask>): unknown {

@@ -25,15 +25,15 @@ export function throwInvalidInput(message?: undefined | string) {
 /**
 * @throws Error
 */
-export function throwError<T extends StdErrorConstructor>(spec: ErrorSpec<T>): never {
-    const {type = StdError, message} = spec
+export function throwError<T extends StdErrorConstructor>(args: ErrorDefinition<T>): never {
+    const {type = StdError, message} = args
 
     throw new type(message)
 }
 
 // Types ///////////////////////////////////////////////////////////////////////
 
-export interface ErrorSpec<T extends StdErrorConstructor> {
+export interface ErrorDefinition<T extends StdErrorConstructor> {
     type?: undefined | T
     message?: undefined | string
 }
