@@ -1,48 +1,44 @@
 import type {Io} from '@eviljs/std/fn.js'
-import {chain} from '@eviljs/std/pipe.js'
 import {useMemo, useState} from 'react'
 
 export function Awaited<V>(props: AwaitedProps<V>) {
     const {children, promise, fallback, pending} = props
-    const [registry, setRegistry] = useState<PromiseMap>(() => new Map())
-    const shouldHandleRejection = Boolean(fallback)
+    const promiseState = useAwaited(promise)
 
-    type PromiseMap = Map<Promise<V>, PromiseState>
-    type PromiseState =
-        | {
-            state: 'fulfilled'
-            result: V
-        }
-        | {
-            state: 'rejected'
-            error: unknown
-        }
+    if (! promiseState) {
+        return pending
+    }
+    if (promiseState.stage === 'rejected' && ! fallback) {
+        throw promiseState.error
+    }
+    if (promiseState.stage === 'rejected' && fallback) {
+        return fallback(promiseState.error)
+    }
+    if (promiseState.stage === 'fulfilled') {
+        return children(promiseState.result)
+    }
+    return // Makes TypeScript happy.
+}
 
-    const promiseHandled = useMemo(() => {
+export function useAwaited<V>(promise: undefined | Promise<V>): undefined | AwaitedPromiseState<V> {
+    const [registry, setRegistry] = useState<AwaitedPromiseMap<V>>(() => new Map())
+
+    // We must use a useMemo, because an useLayoutEffect
+    // can miss the promise resolution/rejection.
+    useMemo(() => {
         if (! promise) {
-            return promise
+            return
         }
 
-        function asRegistry(promise: Promise<V>, promiseState: PromiseState) {
-            type Key = typeof promise
-            type Value = typeof promiseState
-
-            return chain(new Map<Key, Value>(),
-                it => it.set(promise, promiseState),
-            )
+        function createRegistry(promise: Promise<V>, promiseState: AwaitedPromiseState<V>): AwaitedPromiseMap<V> {
+            const registry: AwaitedPromiseMap<V> = new Map()
+            registry.set(promise, promiseState)
+            return registry
         }
 
-        return promise.then(
-            result => {
-                setRegistry(asRegistry(promise, {state: 'fulfilled', result}))
-            },
-            error => {
-                if (! shouldHandleRejection) {
-                    throw error
-                }
-
-                setRegistry(asRegistry(promise, {state: 'rejected', error}))
-            },
+        promise.then(
+            result => setRegistry(createRegistry(promise, {stage: 'fulfilled', result})),
+            error => setRegistry(createRegistry(promise, {stage: 'rejected', error})),
         )
     }, [promise])
 
@@ -50,21 +46,7 @@ export function Awaited<V>(props: AwaitedProps<V>) {
         return
     }
 
-    const promiseState = registry.get(promise)
-
-    if (! promiseState) {
-        return pending
-    }
-
-    if (promiseState.state === 'rejected') {
-        return fallback?.(promiseState.error)
-    }
-
-    if (promiseState.state === 'fulfilled') {
-        return children(promiseState.result)
-    }
-
-    return // Makes TypeScript happy.
+    return registry.get(promise)
 }
 
 // Types ///////////////////////////////////////////////////////////////////////
@@ -75,3 +57,15 @@ export interface AwaitedProps<V> {
     pending?: undefined | React.ReactNode
     promise: undefined | Promise<V>
 }
+
+export type AwaitedPromiseMap<V> = Map<Promise<V>, AwaitedPromiseState<V>>
+
+export type AwaitedPromiseState<V> =
+    | {
+        stage: 'fulfilled'
+        result: V
+    }
+    | {
+        stage: 'rejected'
+        error: unknown
+    }
