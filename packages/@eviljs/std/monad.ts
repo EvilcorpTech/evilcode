@@ -138,16 +138,16 @@ export function trying<V1, V2, V3>(onTry: Io<V1, V2>, onCatch: Io<unknown, V3>):
 /*
 * The safest API, requiring to handle the error.
 */
-export function mappingPromise<V1, V2, V3>(onThen: Io<V1, V2>, onCatch: Io<unknown, V3>): Io<Promise<V1>, Promise<V2 | V3>> {
+export function mappingPromise<V1, V2, V3>(onThen: Io<V1, V2 | PromiseLike<V2>>, onCatch: Io<unknown, V3 | PromiseLike<V3>>): Io<Promise<V1>, Promise<V2 | V3>> {
     return (input: Promise<V1>) => input.then(onThen).catch(onCatch)
 }
 
 /*
 * Sugar API, for easy prototyping.
 */
-export function then<V1, V2>(onThen: Io<V1, V2>, onCatch?: never): Io<Promise<V1>, Promise<V2>>
-export function then<V1, V2, V3>(onThen: Io<V1, V2>, onCatch: Io<unknown, V3>): Io<Promise<V1>, Promise<V2 | V3>>
-export function then<V1, V2, V3>(onThen: Io<V1, V2>, onCatch?: Io<unknown, V3>): Io<Promise<V1>, Promise<V2 | V3>> {
+export function then<V1, V2>(onThen: Io<V1, V2 | PromiseLike<V2>>, onCatch?: never): Io<Promise<V1>, Promise<V2>>
+export function then<V1, V2, V3>(onThen: Io<V1, V2 | PromiseLike<V2>>, onCatch: Io<unknown, V3 | PromiseLike<V3>>): Io<Promise<V1>, Promise<V2 | V3>>
+export function then<V1, V2, V3>(onThen: Io<V1, V2 | PromiseLike<V2>>, onCatch?: Io<unknown, V3 | PromiseLike<V3>>): Io<Promise<V1>, Promise<V2 | V3>> {
     return ! onCatch
         ? (input: Promise<V1>) => input.then(onThen)
         : (input: Promise<V1>) => input.then(onThen).catch(onCatch)
@@ -156,14 +156,14 @@ export function then<V1, V2, V3>(onThen: Io<V1, V2>, onCatch?: Io<unknown, V3>):
 /*
 * Utility API, mapping the fulfillment.
 */
-export function awaiting<V1, V2>(onThen: Io<V1, V2>): Io<Promise<V1>, Promise<V2>> {
+export function awaiting<V1, V2>(onThen: Io<V1, V2 | PromiseLike<V2>>): Io<Promise<V1>, Promise<V2>> {
     return (input: Promise<V1>) => input.then(onThen)
 }
 
 /*
 * Utility API, mapping the rejection.
 */
-export function catching<V1, V2>(onCatch: Io<unknown, V2>): Io<Promise<V1>, Promise<V1 | V2>> {
+export function catching<V1, V2>(onCatch: Io<unknown, V2 | PromiseLike<V2>>): Io<Promise<V1>, Promise<V1 | V2>> {
     return (input: Promise<V1>) => input.catch(onCatch)
 }
 
