@@ -1,5 +1,5 @@
-import {Future} from '@eviljs/std/async.js'
 import type {Task} from '@eviljs/std/fn.js'
+import {Future, createFuture} from '@eviljs/std/future.js'
 import {createLinearScale, directionOf, distanceBetween} from '@eviljs/std/scale.js'
 
 export {wait} from '@eviljs/std/async.js'
@@ -28,21 +28,22 @@ export function flushStyles(...elements: Array<HTMLElement>) {
     }
 }
 
-export function requestStylesFlush(...elements: Array<HTMLElement>): Future<void> {
+export function requestStylesFlush(...elements: Array<HTMLElement>): Promise<void> {
     let taskId: undefined | ReturnType<typeof requestAnimationFrame>
 
-    const promise = new Future<void>((resolve, reject) => {
+    const promise = createFuture<void>((resolve, reject) => {
         taskId = requestAnimationFrame(() => {
             flushStyles(...elements)
             resolve()
         })
     })
 
-    promise.onCancel = function onCancel() {
-        if (taskId) {
-            cancelAnimationFrame(taskId)
+    promise.onCancel(() => {
+        if (! taskId) {
+            return
         }
-    }
+        cancelAnimationFrame(taskId)
+    })
 
     return promise
 }
@@ -126,14 +127,15 @@ export function createSpringAnimation(options: SpringAnimationOptions) {
     }
 
     function play() {
-        promise = new Future<void>((resolve, reject) => {
+        promise = createFuture<void>((resolve, reject) => {
             loop(Date.now(), resolve)
         })
 
         return promise
     }
 
-    return play // TODO: We should expose a `cancel` callback.
+    // TODO: We should expose a `cancel` callback.
+    return play
 }
 
 export function createSpringScaleAnimation(finalScale: number, initialScale = 1, options?: undefined | Partial<SpringAnimationOptions>) {

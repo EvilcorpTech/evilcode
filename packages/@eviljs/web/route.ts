@@ -1,16 +1,17 @@
-import {isArray, isRegExp} from '@eviljs/std/type.js'
+import type {Io} from '@eviljs/std/fn.js'
+import {asArray, isArray, isRegExp} from '@eviljs/std/type.js'
 
-export const Start = '^'
-export const End = '(?:/)?$'
-export const Deep = '(?:/|$)'
-export const Any = '(.*)'
-export const Arg = '([^/]+)'
+export const MatchStart = '^'
+export const MatchEnd = '(?:/)?$'
+export const MatchDeep = '(?:/|$)'
+export const MatchAny = '(.*)'
+export const MatchArg = '([^/]+)'
 
-export const PatternRegexpCache: Record<string, RegExp> = {}
-export const PatternEmptyRegexp = /^$/
-export const PatternEmptiesRegexp = /[\n ]/g
-export const PatternRepeatingSlashRegexp = /\/\/+/g
-export const PatternTrailingSlashRegexp = /\/$/
+export const RoutePatternRegexpCache: Record<string, RegExp> = {}
+export const RoutePatternEmptyRegexp = /^$/
+export const RoutePatternEmptiesRegexp = /[\n ]/g
+export const RoutePatternRepeatingSlashRegexp = /\/\/+/g
+export const RoutePatternTrailingSlashRegexp = /\/$/
 
 export const RoutePathArgPlaceholder = '{arg}'
 
@@ -25,7 +26,7 @@ export function exact(...args: [string] | [TemplateStringsArray, ...Array<unknow
 }
 
 export function exactString(pattern: string) {
-    return `${Start}${pattern}${End}`
+    return `${MatchStart}${pattern}${MatchEnd}`
 }
 
 export function exactTemplate(strings: TemplateStringsArray, ...substitutions: Array<unknown>): string {
@@ -37,15 +38,15 @@ export function compilePattern(pattern: string | RegExp): RegExp {
         return pattern
     }
 
-    return regexpFromPattern(cleanPattern(pattern))
+    return routeRegexpFromPattern(cleanPattern(pattern))
 }
 
 export function cleanPattern(pattern: string): string {
     return pattern
-        .replace(PatternEmptiesRegexp, '')
-        .replace(PatternRepeatingSlashRegexp, '/')
-        .replace(PatternTrailingSlashRegexp, '')
-        .replace(PatternEmptyRegexp, '/')
+        .replace(RoutePatternEmptiesRegexp, '')
+        .replace(RoutePatternRepeatingSlashRegexp, '/')
+        .replace(RoutePatternTrailingSlashRegexp, '')
+        .replace(RoutePatternEmptyRegexp, '/')
 }
 
 export function encodeRoutePathArgs(route: string, ...args: RoutePatternArgs) {
@@ -66,18 +67,81 @@ export function replaceRoutePathArgPlaceholdersWithValue(template: string, place
     return template.replaceAll(placeholder, String(replacement))
 }
 
-export function regexpFromPattern(pattern: string | RegExp): RegExp {
+export function routeRegexpFromPattern(pattern: string | RegExp): RegExp {
     if (isRegExp(pattern)) {
         return pattern
     }
 
-    if (! PatternRegexpCache[pattern]) {
-        PatternRegexpCache[pattern] = new RegExp(pattern, 'i')
+    if (! RoutePatternRegexpCache[pattern]) {
+        RoutePatternRegexpCache[pattern] = new RegExp(pattern, 'i')
     }
 
-    return PatternRegexpCache[pattern]!
+    return RoutePatternRegexpCache[pattern]!
+}
+
+export function testRoutePattern(routePath: string, pattern: string | RegExp): boolean {
+    return routeRegexpFromPattern(pattern).test(routePath)
+}
+
+export function matchRoutePattern(routePath: string, pattern: string | RegExp): undefined | RegExpMatchArray {
+    return routePath.match(routeRegexpFromPattern(pattern)) ?? undefined
+}
+
+export function testRouteMatch(
+    routePath: string,
+    tests: RoutePathTest,
+): undefined | RegExpMatchArray {
+    const patterns = asArray(tests)
+
+    for (const pattern of patterns) {
+        const routeMatches = matchRoutePattern(routePath, pattern)
+
+        if (! routeMatches) {
+            continue
+        }
+
+        return routeMatches
+    }
+
+    return // Makes TypeScript happy.
+}
+
+export function selectRouteMatch<R>(
+    routePath: string,
+    list: Array<[RoutePathTest, R]>,
+): undefined | [RegExpMatchArray, R] {
+    for (const item of list) {
+        const [tests, selectedValue] = item
+
+        const routeMatches = testRouteMatch(routePath, tests)
+
+        if (! routeMatches) {
+            continue
+        }
+
+        return [routeMatches, selectedValue]
+    }
+
+    return // Makes TypeScript happy.
+}
+
+export function whenRouteMatch<R>(
+    routePath: string,
+    list: Array<[RoutePathTest, Io<RegExpMatchArray, R>]>,
+): undefined | R {
+    const result = selectRouteMatch(routePath, list)
+
+    if (! result) {
+        return
+    }
+
+    const [matches, callback] = result
+
+    return callback(matches)
 }
 
 // Types ///////////////////////////////////////////////////////////////////////
 
 export type RoutePatternArgs = Array<number | string>
+
+export type RoutePathTest = string | RegExp | Array<string | RegExp>

@@ -1,5 +1,5 @@
 import type {FnArgs} from '@eviljs/std/fn.js'
-import type {RoutePatternArgs} from './route.js'
+import type {RoutePathTest, RoutePatternArgs} from './route.js'
 import type {RouterRouteChangeParamsDict, RouterRouteParams} from './router.js'
 
 export * from './route.js'
@@ -39,8 +39,6 @@ export interface RoutePathCodec<A extends RoutePatternArgs> {
     match: RoutePathTest
     encode(...args: A): string
 }
-
-export type RoutePathTest = string | RegExp | Array<string | RegExp>
 
 export interface RouteParamCodecOptions<
     N extends string,

@@ -2,7 +2,7 @@ import {wait} from '@eviljs/std/async.js'
 import {randomInt} from '@eviljs/std/random.js'
 import type {Fetch, FetchRequestOptions} from './fetch.js'
 import {HttpMethod, createFetch, mergeFetchOptions, withRequestJson} from './fetch.js'
-import {regexpFromPattern} from './route.js'
+import {routeRegexpFromPattern} from './route.js'
 
 export const NoMock = Symbol('NoMock')
 
@@ -95,7 +95,7 @@ export function mockResponse(
 
     for (const mock of typeMocks) {
         const [pattern, responseFor] = mock
-        const regexp = regexpFromPattern(pattern)
+        const regexp = routeRegexpFromPattern(pattern)
 
         if (! regexp.test(path)) {
             continue

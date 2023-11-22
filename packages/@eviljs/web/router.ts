@@ -1,135 +1,8 @@
+import type {ReactiveRef} from '@eviljs/std/reactive.js'
 import {isString} from '@eviljs/std/type.js'
 import type {QueryParams, QueryParamsDict, QueryParamsList} from './query.js'
-import {encodeQueryParamKey, encodeQueryParams, encodeQueryParamValue} from './query.js'
-import {asBaseUrl, joinUrlPathAndParams} from './url.js'
-
-export function createPathRouter<S = unknown>(observer: RouterObserver, options?: undefined | RouterOptions): Router<S> {
-    const basePath = asBaseUrl(options?.basePath)
-
-    function onRouteChange() {
-        self.route = decodePathRoute(basePath)
-
-        observer(self.route)
-    }
-
-    const self: Router<S> = {
-        route: decodePathRoute(basePath),
-
-        start() {
-            self.route = decodePathRoute(basePath)
-
-            window.addEventListener('popstate', onRouteChange)
-        },
-        stop() {
-            window.removeEventListener('popstate', onRouteChange)
-        },
-        changeRoute(routeChange) {
-            const nextRoute = mergeRouteChange(self.route, routeChange)
-
-            if (areSameRoutes(self.route, nextRoute)) {
-                return
-            }
-
-            self.route = nextRoute
-
-            const routeString = self.createLink(self.route.path, self.route.params)
-
-            // The History mutation does not trigger the PopState event.
-            if (routeChange.replace) {
-                history.replaceState(self.route.state, '', routeString)
-            }
-            else {
-                history.pushState(self.route.state, '', routeString)
-            }
-        },
-        createLink(path: string, params?: undefined | RouterRouteChangeParams) {
-            return encodeLink(basePath + path, params)
-        },
-    }
-
-    return self
-}
-
-export function createHashRouter<S = unknown>(observer: RouterObserver, options?: undefined | RouterOptions): Router<S> {
-    function onRouteChange() {
-        self.route = decodeHashRoute()
-
-        observer(self.route)
-    }
-
-    const self: Router<S> = {
-        route: decodeHashRoute(),
-
-        start() {
-            self.route = decodeHashRoute()
-
-            window.addEventListener('hashchange', onRouteChange)
-        },
-        stop() {
-            window.removeEventListener('hashchange', onRouteChange)
-        },
-        changeRoute(routeChange) {
-            const nextRoute = mergeRouteChange(self.route, routeChange)
-
-            if (areSameRoutes(self.route, nextRoute)) {
-                return
-            }
-
-            self.route = nextRoute
-
-            const routeString = self.createLink(self.route.path, self.route.params)
-
-            // The History mutation does not trigger the HashChange event.
-            if (routeChange.replace) {
-                history.replaceState(self.route.state, '', routeString)
-            }
-            else {
-                // Algorithm 1:
-                // BEGIN
-                history.pushState(self.route.state, '', routeString)
-                // END
-
-                // // Algorithm 2 (legacy):
-                // // BEGIN
-                // self.stop()
-                // window.location.hash = routeString
-                // self.start()
-                // // END
-            }
-        },
-        createLink(path: string, params?: undefined | RouterRouteChangeParams) {
-            return '#' + encodeLink(path, params)
-        },
-    }
-
-    return self
-}
-
-export function createMemoryRouter<S = unknown>(observer: RouterObserver, options?: undefined | RouterMemoryOptions<S>): Router<S> {
-    const self: Router<S> = {
-        route: {
-            path: options?.initialPath ?? '/',
-            params: options?.initialParams,
-            state: options?.initialState,
-        },
-        start() {},
-        stop() {},
-        changeRoute(routeChange) {
-            const nextRoute = mergeRouteChange(self.route, routeChange)
-
-            if (areSameRoutes(self.route, nextRoute)) {
-                return
-            }
-
-            self.route = nextRoute
-        },
-        createLink(path: string, params?: undefined | RouterRouteChangeParams) {
-            return encodeLink(path, params)
-        },
-    }
-
-    return self
-}
+import {encodeQueryParamKey, encodeQueryParamValue, encodeQueryParams} from './query.js'
+import {joinUrlPathAndParams} from './url.js'
 
 export function areSameRoutes<S>(firstRoute: RouterRoute<S>, secondRoute: RouterRoute<S>): boolean {
     const samePath = firstRoute.path === secondRoute.path
@@ -282,7 +155,8 @@ export function flattenRouteParams(routeParams: undefined | RouterRouteChangePar
 // Types ///////////////////////////////////////////////////////////////////////
 
 export interface Router<S = unknown> {
-    route: RouterRoute<S>
+    readonly route: ReactiveRef<RouterRoute<S>>
+    readonly started: boolean
     start(): void
     stop(): void
     /**
@@ -301,18 +175,10 @@ export interface RouterRoute<S = unknown> {
     readonly state: undefined | S
 }
 
-export interface RouterObserver<S = unknown> {
-    (route: RouterRoute<S>): void
-}
+export type RouterObserver<S = unknown> = (route: RouterRoute<S>) => void
 
 export interface RouterOptions {
     basePath?: undefined | string
-}
-
-export interface RouterMemoryOptions<S = unknown> extends RouterOptions {
-    initialPath?: undefined | string
-    initialParams?: undefined | RouterRouteParams
-    initialState?: undefined | S
 }
 
 export type RouterRouteParams = undefined | Record<string, string>
