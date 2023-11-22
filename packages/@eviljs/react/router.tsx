@@ -2,14 +2,14 @@ import {compute, type Computable} from '@eviljs/std/compute.js'
 import type {Fn} from '@eviljs/std/fn.js'
 import {escapeRegexp} from '@eviljs/std/regexp.js'
 import {asArray, isPromise} from '@eviljs/std/type.js'
-import type {RoutePathTest} from '@eviljs/web/route-v2.js'
-import {exact, regexpFromPattern} from '@eviljs/web/route.js'
-import type {Router as RouterManager, RouterObserver, RouterRoute, RouterRouteChange, RouterRouteChangeParams, RouterRouteParams} from '@eviljs/web/router.js'
+import {exact, matchRoutePattern, testRoutePattern, type RoutePathTest} from '@eviljs/web/route.js'
+import type {Router as RouterManager, RouterRoute, RouterRouteChange, RouterRouteChangeParams, RouterRouteParams} from '@eviljs/web/router.js'
 import {encodeLink} from '@eviljs/web/router.js'
 import {isUrlAbsolute} from '@eviljs/web/url.js'
-import {Children, forwardRef, isValidElement, useCallback, useContext, useEffect, useMemo, useRef, useState} from 'react'
+import {Children, forwardRef, isValidElement, useCallback, useContext, useEffect, useMemo, useRef} from 'react'
 import {classes} from './classes.js'
 import {defineContext} from './ctx.js'
+import {useReactiveRef} from './reactive.js'
 
 export * from '@eviljs/web/route-v2.js'
 export * from '@eviljs/web/route.js'
@@ -29,8 +29,8 @@ export const RouteActiveClassDefault = 'route-active'
 * </RouterProvider>
 */
 export function RouterProvider(props: RouterProviderProps) {
-    const {children, createRouter} = props
-    const value = useRouterCreator(createRouter)
+    const {children, router} = props
+    const value = useRouterCreator(router)
 
     return <RouterContext.Provider value={value} children={children}/>
 }
@@ -44,7 +44,7 @@ export function RouterProvider(props: RouterProviderProps) {
 * <WhenRoute is="^/book">
 *     <h1>/book*</h1>
 * </WhenRoute>
-* <WhenRoute is={Start+'/book'+End}>
+* <WhenRoute is={MatchStart+'/book'+MatchEnd}>
 *     <h1>/book exact</h1>
 * </WhenRoute>
 * <WhenRoute is={exact('/book')}>
@@ -53,7 +53,7 @@ export function RouterProvider(props: RouterProviderProps) {
 * <WhenRoute is={new RegExp('^/book(?:/)?$', 'i')}>
 *     <h1>/book</h1>
 * </WhenRoute>
-* <WhenRoute is={`${Start}/book/${Arg}/${Arg}${End}`}>
+* <WhenRoute is={`${MatchStart}/book/${Arg}/${Arg}${MatchEnd}`}>
 *     {(arg1, arg2) =>
 *         <h1>/book/{arg1}/{arg2}</h1>
 *     }
@@ -97,7 +97,7 @@ export function WhenRoute(props: WhenRouteProps) {
 *             <h1>/book/{arg1}/{arg2}</h1>
 *         )}
 *     </CaseRoute>
-*     <CaseRoute is={Start+'/book'+End}>
+*     <CaseRoute is={MatchStart+'/book'+MatchEnd}>
 *         <h1>/book exact</h1>
 *     </CaseRoute>
 *     <CaseRoute is={exact('/book')}>
@@ -307,46 +307,40 @@ export function Redirect(props: RedirectProps) {
     return children
 }
 
-export function useRouterCreator<S = unknown>(routerFactory: RouterFactory<S>): Router<S> {
-    const [route, setRoute] = useState(() => {
-        return routerFactory(() => {}).route
-    })
-
-    const routerManager = useMemo(() => {
-        return routerFactory(setRoute)
-    }, [routerFactory])
+export function useRouterCreator<S = unknown>(routerAdapter: RouterManager<S>): Router<S> {
+    const [route, setRoute] = useReactiveRef(routerAdapter.route)
 
     useEffect(() => {
-        routerManager.start()
+        routerAdapter.start()
 
-        setRoute(routerManager.route)
+        setRoute(routerAdapter.route.value)
 
         function onClean() {
-            routerManager.stop()
+            routerAdapter.stop()
         }
 
         return onClean
-    }, [routerManager])
+    }, [routerAdapter])
 
     const readRoute = useCallback(() => {
-        return routerManager.route
-    }, [routerManager])
+        return routerAdapter.route.value
+    }, [routerAdapter])
 
     const changeRoute = useCallback((args: RouterRouteChangeComputable<S>) => {
         const {params, ...otherArgs} = args
-        const paramsComputed = compute(params, routerManager.route.params)
+        const paramsComputed = compute(params, readRoute().params)
 
-        routerManager.changeRoute({...otherArgs, params: paramsComputed})
+        routerAdapter.changeRoute({...otherArgs, params: paramsComputed})
 
-        setRoute(routerManager.route)
-    }, [routerManager])
+        setRoute(readRoute())
+    }, [routerAdapter, readRoute])
 
     const testRoute = useCallback((pattern: string | RegExp) => {
-        return regexpFromPattern(pattern).test(route.path)
+        return testRoutePattern(route.path, pattern)
     }, [route.path])
 
     const matchRoute = useCallback((pattern: string | RegExp) => {
-        return route.path.match(regexpFromPattern(pattern))
+        return matchRoutePattern(route.path, pattern)
     }, [route.path])
 
     const router = useMemo((): Router<S> => {
@@ -356,12 +350,12 @@ export function useRouterCreator<S = unknown>(routerFactory: RouterFactory<S>): 
             changeRoute,
             testRoute,
             matchRoute,
-            link: routerManager.createLink,
-            start: routerManager.start,
-            stop: routerManager.stop,
+            link: routerAdapter.createLink,
+            start: routerAdapter.start,
+            stop: routerAdapter.stop,
         }
     }, [
-        routerManager,
+        routerAdapter,
         route.path,
         route.params,
         route.state,
@@ -411,9 +405,9 @@ function isCaseRouteElement(element: unknown): element is React.ReactElement<Cas
 
 // Types ///////////////////////////////////////////////////////////////////////
 
-export interface RouterProviderProps {
+export interface RouterProviderProps<S = unknown> {
     children: undefined | React.ReactNode
-    createRouter: RouterFactory
+    router: RouterManager<S>
 }
 
 export interface RouteArgsProviderProps {
@@ -421,16 +415,12 @@ export interface RouteArgsProviderProps {
     value: RouteArgs
 }
 
-export interface RouterFactory<S = any> {
-    (observer: RouterObserver<S>): RouterManager<S>
-}
-
 export interface Router<S = unknown> {
     route: RouterRoute<S>
     readRoute(): RouterRoute<S>
     changeRoute(args: RouterRouteChangeComputable<S>): void
     testRoute(pattern: string | RegExp): boolean
-    matchRoute(pattern: string | RegExp): null | RegExpMatchArray
+    matchRoute(pattern: string | RegExp): undefined | RegExpMatchArray
     link(path: string, params?: undefined | RouterRouteChangeParams): string
     start(): void
     stop(): void

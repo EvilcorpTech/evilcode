@@ -7,12 +7,17 @@ export function useScrollLock(activeOptional?: undefined | boolean) {
     const active = activeOptional ?? true
 
     useEffect(() => {
-        if (active) {
-            lockScroll()
+        if (! active) {
+            return
         }
-        else {
+
+        lockScroll()
+
+        function onClean() {
             unlockScroll()
         }
+
+        return onClean
     }, [active])
 }
 

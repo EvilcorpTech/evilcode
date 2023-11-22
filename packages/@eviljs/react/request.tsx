@@ -1,10 +1,10 @@
 import {filterResult} from '@eviljs/std/result.js'
 import {useCallback, useContext} from 'react'
+import {useAsyncIo, type AsyncIoManager} from './async-io.js'
 import {defineContext} from './ctx.js'
-import {useAsyncIo, type AsyncIoManager} from './io.js'
 
 export {asBaseUrl, joinUrlPath} from '@eviljs/web/url.js'
-export {useAsyncIoAggregated as useRequestsAggregated} from './io.js'
+export {useAsyncIoAggregated as useRequestsAggregated} from './async-io.js'
 
 export const RequestContext = defineContext('RequestContext')
 
