@@ -3,7 +3,7 @@
 # Bumps up a package version and publishes it.
 #
 # EXAMPLE
-# PublishVersion=minor ./package-publish ./packages/@eviljs/*
+# NpmPublishVersion=minor ./package-publish ./packages/@eviljs/*
 
 set -e # errexit
 set -u # nounset
@@ -15,7 +15,7 @@ Dir="$(cd "$(dirname "$0")/.." && pwd)"
 : ${NpmVersionArgs:=--no-git-tag-version}
 : ${NpmPublishCmd:=publish}
 : ${NpmPublishArgs:=--access public --auth-type legacy}
-: ${PublishVersion:=patch}
+: ${NpmPublishVersion:=minor}
 
 for pkg; do
     if test ! -e "$pkg/package.json"; then
@@ -29,7 +29,7 @@ for pkg; do
             *) cd "$PWD/$pkg";;
         esac
 
-        set -- $NpmVersionCmd $NpmVersionArgs $PublishVersion
+        set -- $NpmVersionCmd $NpmVersionArgs $NpmPublishVersion
         $Npm "$@"
         printf -- 'Press Enter to continue'
         read answer
