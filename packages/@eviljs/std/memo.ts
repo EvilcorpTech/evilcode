@@ -1,4 +1,4 @@
-import type {Task} from './fn.js'
+import type {Io, Task} from './fn.js'
 
 export function memoizing<R>(fn: Task<R>): Task<R> {
     let executed = false
@@ -13,4 +13,22 @@ export function memoizing<R>(fn: Task<R>): Task<R> {
     }
 
     return singleton
+}
+
+export function createCache<K, V>() {
+    const cacheMap = new Map<K, V>()
+
+    function use(key: K, computeValue: Io<K, V>) {
+        if (cacheMap.has(key)) {
+            return cacheMap.get(key)
+        }
+
+        const value = computeValue(key)
+        cacheMap.set(key, value)
+        return value
+    }
+
+    const clear = cacheMap.clear.bind(cacheMap)
+
+    return {use, clear}
 }
