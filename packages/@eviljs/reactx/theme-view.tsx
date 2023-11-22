@@ -309,10 +309,10 @@ export function Typography() {
 
 export function TextHeight() {
     return (
-        <div className="std-flex std-flex-justify-center std-gap3">
-            {['0', '-2', '-1', '', '1', '2'].map(it =>
+        <div className="std-flex std-flex-justify-center std-flex-wrap std-gap3">
+            {['0', '1', '2', '3', '4', '5', '6'].map(it =>
                 <Fragment key={it}>
-                    <p className={`std-text-height${it}`} style={{maxWidth: '14em'}}>
+                    <p className={`std-text-height${it}`} style={{maxWidth: '10rem'}}>
                         Text height <b>{it}</b>
                         <br/>
                         Lorem ipsum is simply dummy text of the printing and typesetting industry.
