@@ -124,6 +124,7 @@
 @import '@evilcss/std/shadow-extra.classes.css' layer(std);
 @import '@evilcss/std/shadow-extra.props.css' layer(std);
 @import '@evilcss/std/shadow-material.classes.css' layer(std);
+@import '@evilcss/std/shadow-material.classes.css' layer(std);
 @import '@evilcss/std/shadow-material.props.css' layer(std);
 @import '@evilcss/std/switch.classes.css' layer(std);
 @import '@evilcss/std/text-align.classes.css' layer(std);
@@ -134,6 +135,7 @@
 @import '@evilcss/std/text-height.classes.css' layer(std);
 @import '@evilcss/std/text-height.props.css' layer(std);
 @import '@evilcss/std/text-overflow.classes.css' layer(std);
+@import '@evilcss/std/text-size-material-extended.classes.css' layer(std);
 @import '@evilcss/std/text-size-material.classes.css' layer(std);
 @import '@evilcss/std/text-size-material.props.css' layer(std);
 @import '@evilcss/std/text-size-material.tags.css' layer(std);

@@ -45,11 +45,9 @@ export function Root(props: RootProps) {
     </>
 }
 
-export function RootIsolate(props: RootIsolateProps) {
+export function RootIsolate(props: RootIsolateProps): undefined {
     useColorSchemePreference()
     useStoreStorage()
-
-    return
 }
 
 // Types ///////////////////////////////////////////////////////////////////////
