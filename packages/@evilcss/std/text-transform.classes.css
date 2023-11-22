@@ -1,3 +1,3 @@
-.std-text-capitalize { --text-transform: capitalize; text-transform: var(--text-transform); }
-.std-text-lowercase { --text-transform: lowercase; text-transform: var(--text-transform); }
-.std-text-uppercase { --text-transform: uppercase; text-transform: var(--text-transform); }
+.std-text-capitalize { text-transform: capitalize; }
+.std-text-lowercase { text-transform: lowercase; }
+.std-text-uppercase { text-transform: uppercase; }

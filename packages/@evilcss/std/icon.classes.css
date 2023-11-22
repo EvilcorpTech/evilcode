@@ -1,5 +1,5 @@
 .std-icon {
-    display: inline-block;
+    display: var(--icon-display, inline-block);
     width: var(--icon-size, 1em);
     height: var(--icon-size, 1em);
 

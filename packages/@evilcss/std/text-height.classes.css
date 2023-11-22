@@ -1,6 +1,7 @@
-.std-text-height0 { --text-height: 1; line-height: var(--text-height); }
-.std-text-height-2 { --text-height: var(--std-text-height-2); line-height: var(--text-height); }
-.std-text-height-1 { --text-height: var(--std-text-height-1); line-height: var(--text-height); }
-.std-text-height { --text-height: var(--std-text-height); line-height: var(--text-height); }
-.std-text-height1 { --text-height: var(--std-text-height1); line-height: var(--text-height); }
-.std-text-height2 { --text-height: var(--std-text-height2); line-height: var(--text-height); }
+.std-text-height0 { line-height: var(--std-text-height0); }
+.std-text-height1 { line-height: var(--std-text-height1); }
+.std-text-height2 { line-height: var(--std-text-height2); }
+.std-text-height3 { line-height: var(--std-text-height3); }
+.std-text-height4 { line-height: var(--std-text-height4); }
+.std-text-height5 { line-height: var(--std-text-height5); }
+.std-text-height6 { line-height: var(--std-text-height6); }

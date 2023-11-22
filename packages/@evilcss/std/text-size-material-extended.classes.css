@@ -1,0 +1,144 @@
+.std-text-small {
+    font-family: var(--text-font, var(--std-font-primary));
+    font-weight: var(--text-weight, var(--std-text-small-weight));
+    font-style: var(--text-style, var(--std-text-small-style));
+    letter-spacing: var(--text-space, var(--std-text-small-space));
+    line-height: var(--text-height, var(--std-text-small-height));
+    text-transform: var(--text-transform, var(--std-text-small-transform));
+    opacity: var(--text-opacity, var(--std-text-small-opacity));
+}
+.std-text-body2 {
+    font-family: var(--text-font, var(--std-font-primary));
+    font-weight: var(--text-weight, var(--std-text-body2-weight));
+    font-style: var(--text-style, var(--std-text-body2-style));
+    letter-spacing: var(--text-space, var(--std-text-body2-space));
+    line-height: var(--text-height, var(--std-text-body2-height));
+    text-transform: var(--text-transform, var(--std-text-body2-transform));
+    opacity: var(--text-opacity, var(--std-text-body2-opacity));
+}
+.std-text-body1 {
+    font-family: var(--text-font, var(--std-font-primary));
+    font-weight: var(--text-weight, var(--std-text-body1-weight));
+    font-style: var(--text-style, var(--std-text-body1-style));
+    letter-spacing: var(--text-space, var(--std-text-body1-space));
+    line-height: var(--text-height, var(--std-text-body1-height));
+    text-transform: var(--text-transform, var(--std-text-body1-transform));
+    opacity: var(--text-opacity, var(--std-text-body1-opacity));
+}
+.std-text-button {
+    font-family: var(--text-font, var(--std-font-primary));
+    font-weight: var(--text-weight, var(--std-text-button-weight));
+    font-style: var(--text-style, var(--std-text-button-style));
+    letter-spacing: var(--text-space, var(--std-text-button-space));
+    line-height: var(--text-height, var(--std-text-button-height));
+    text-transform: var(--text-transform, var(--std-text-button-transform));
+    opacity: var(--text-opacity, var(--std-text-button-opacity));
+}
+.std-text-caption {
+    font-family: var(--text-font, var(--std-font-primary));
+    font-weight: var(--text-weight, var(--std-text-caption-weight));
+    font-style: var(--text-style, var(--std-text-caption-style));
+    letter-spacing: var(--text-space, var(--std-text-caption-space));
+    line-height: var(--text-height, var(--std-text-caption-height));
+    text-transform: var(--text-transform, var(--std-text-caption-transform));
+    opacity: var(--text-opacity, var(--std-text-caption-opacity));
+}
+.std-text-overline {
+    font-family: var(--text-font, var(--std-font-primary));
+    font-weight: var(--text-weight, var(--std-text-overline-weight));
+    font-style: var(--text-style, var(--std-text-overline-style));
+    letter-spacing: var(--text-space, var(--std-text-overline-space));
+    line-height: var(--text-height, var(--std-text-overline-height));
+    text-transform: var(--text-transform, var(--std-text-overline-transform, uppercase));
+    opacity: var(--text-opacity, var(--std-text-overline-opacity));
+}
+.std-text-subtitle2 {
+    font-family: var(--text-font, var(--std-font-primary));
+    font-weight: var(--text-weight, var(--std-text-subtitle2-weight));
+    font-style: var(--text-style, var(--std-text-subtitle2-style));
+    letter-spacing: var(--text-space, var(--std-text-subtitle2-space));
+    line-height: var(--text-height, var(--std-text-subtitle2-height));
+    text-transform: var(--text-transform, var(--std-text-subtitle2-transform));
+    opacity: var(--text-opacity, var(--std-text-subtitle2-opacity));
+}
+.std-text-subtitle1 {
+    font-family: var(--text-font, var(--std-font-primary));
+    font-weight: var(--text-weight, var(--std-text-subtitle1-weight));
+    font-style: var(--text-style, var(--std-text-subtitle1-style));
+    letter-spacing: var(--text-space, var(--std-text-subtitle1-space));
+    line-height: var(--text-height, var(--std-text-subtitle1-height));
+    text-transform: var(--text-transform, var(--std-text-subtitle1-transform));
+    opacity: var(--text-opacity, var(--std-text-subtitle1-opacity));
+}
+.std-text-h6 {
+    font-family: var(--text-font, var(--std-font-primary));
+    font-weight: var(--text-weight, var(--std-text-h6-weight));
+    font-style: var(--text-style, var(--std-text-h6-style));
+    letter-spacing: var(--text-space, var(--std-text-h6-space));
+    line-height: var(--text-height, var(--std-text-h6-height));
+    text-transform: var(--text-transform, var(--std-text-h6-transform));
+    opacity: var(--text-opacity, var(--std-text-h6-opacity));
+}
+.std-text-h5 {
+    font-family: var(--text-font, var(--std-font-primary));
+    font-weight: var(--text-weight, var(--std-text-h5-weight));
+    font-style: var(--text-style, var(--std-text-h5-style));
+    letter-spacing: var(--text-space, var(--std-text-h5-space));
+    line-height: var(--text-height, var(--std-text-h5-height));
+    text-transform: var(--text-transform, var(--std-text-h5-transform));
+    opacity: var(--text-opacity, var(--std-text-h5-opacity));
+}
+.std-text-h4 {
+    font-family: var(--text-font, var(--std-font-primary));
+    font-weight: var(--text-weight, var(--std-text-h4-weight));
+    font-style: var(--text-style, var(--std-text-h4-style));
+    letter-spacing: var(--text-space, var(--std-text-h4-space));
+    line-height: var(--text-height, var(--std-text-h4-height));
+    text-transform: var(--text-transform, var(--std-text-h4-transform));
+    opacity: var(--text-opacity, var(--std-text-h4-opacity));
+}
+.std-text-h3 {
+    font-family: var(--text-font, var(--std-font-primary));
+    font-weight: var(--text-weight, var(--std-text-h3-weight));
+    font-style: var(--text-style, var(--std-text-h3-style));
+    letter-spacing: var(--text-space, var(--std-text-h3-space));
+    line-height: var(--text-height, var(--std-text-h3-height));
+    text-transform: var(--text-transform, var(--std-text-h3-transform));
+    opacity: var(--text-opacity, var(--std-text-h3-opacity));
+}
+.std-text-h2 {
+    font-family: var(--text-font, var(--std-font-primary));
+    font-weight: var(--text-weight, var(--std-text-h2-weight));
+    font-style: var(--text-style, var(--std-text-h2-style));
+    letter-spacing: var(--text-space, var(--std-text-h2-space));
+    line-height: var(--text-height, var(--std-text-h2-height));
+    text-transform: var(--text-transform, var(--std-text-h2-transform));
+    opacity: var(--text-opacity, var(--std-text-h2-opacity));
+}
+.std-text-h1 {
+    font-family: var(--text-font, var(--std-font-primary));
+    font-weight: var(--text-weight, var(--std-text-h1-weight));
+    font-style: var(--text-style, var(--std-text-h1-style));
+    letter-spacing: var(--text-space, var(--std-text-h1-space));
+    line-height: var(--text-height, var(--std-text-h1-height));
+    text-transform: var(--text-transform, var(--std-text-h1-transform));
+    opacity: var(--text-opacity, var(--std-text-h1-opacity));
+}
+.std-text-display2 {
+    font-family: var(--text-font, var(--std-font-primary));
+    font-weight: var(--text-weight, var(--std-text-display2-weight));
+    font-style: var(--text-style, var(--std-text-display2-style));
+    letter-spacing: var(--text-space, var(--std-text-display2-space));
+    line-height: var(--text-height, var(--std-text-display2-height));
+    text-transform: var(--text-transform, var(--std-text-display2-transform));
+    opacity: var(--text-opacity, var(--std-text-display2-opacity));
+}
+.std-text-display1 {
+    font-family: var(--text-font, var(--std-font-primary));
+    font-weight: var(--text-weight, var(--std-text-display1-weight));
+    font-style: var(--text-style, var(--std-text-display1-style));
+    letter-spacing: var(--text-space, var(--std-text-display1-space));
+    line-height: var(--text-height, var(--std-text-display1-height));
+    text-transform: var(--text-transform, var(--std-text-display1-transform));
+    opacity: var(--text-opacity, var(--std-text-display1-opacity));
+}

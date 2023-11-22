@@ -134,6 +134,7 @@
 @import '@evilcss/std/text-height.classes.css' layer(std);
 @import '@evilcss/std/text-height.props.css' layer(std);
 @import '@evilcss/std/text-overflow.classes.css' layer(std);
+@import '@evilcss/std/text-size-material-extended.classes.css' layer(std);
 @import '@evilcss/std/text-size-material.classes.css' layer(std);
 @import '@evilcss/std/text-size-material.props.css' layer(std);
 @import '@evilcss/std/text-size-material.tags.css' layer(std);

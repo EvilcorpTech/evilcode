@@ -4,13 +4,13 @@
 }
 .std-button-dye:hover {
     color: var(--button-color--hover, var(--button-color, white));
-    background: var(--button-accent--hover, var(--button-accent, var(--std-color-primary-tone1)));
+    background: var(--button-accent--hover, var(--button-accent, var(--std-color-primary-accent)));
 }
 .std-button-dye:focus {
     color: var(--button-color--focus, var(--button-color, white));
-    background: var(--button-accent--focus, var(--button-accent, var(--std-color-primary-tone1)));
+    background: var(--button-accent--focus, var(--button-accent, var(--std-color-primary-accent)));
 }
 .std-button-dye:active {
     color: var(--button-color--active, var(--button-color, white));
-    background: var(--button-accent--active, var(--button-accent, var(--std-color-primary-shade1)));
+    background: var(--button-accent--active, var(--button-accent, var(--std-color-primary-accent)));
 }

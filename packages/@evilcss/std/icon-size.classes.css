@@ -1,12 +1,12 @@
-.std-icon-size1 { --icon-size: var(--std-icon-size1); }
-.std-icon-size2 { --icon-size: var(--std-icon-size2); }
-.std-icon-size3 { --icon-size: var(--std-icon-size3); }
-.std-icon-size4 { --icon-size: var(--std-icon-size4); }
-.std-icon-size5 { --icon-size: var(--std-icon-size5); }
-.std-icon-size6 { --icon-size: var(--std-icon-size6); }
-.std-icon-size7 { --icon-size: var(--std-icon-size7); }
-.std-icon-size8 { --icon-size: var(--std-icon-size8); }
-.std-icon-size9 { --icon-size: var(--std-icon-size9); }
-.std-icon-size10 { --icon-size: var(--std-icon-size10); }
+.std-icon-size1 { --icon-size: var(--std-icon-size1); font-size: var(--icon-size); }
+.std-icon-size2 { --icon-size: var(--std-icon-size2); font-size: var(--icon-size); }
+.std-icon-size3 { --icon-size: var(--std-icon-size3); font-size: var(--icon-size); }
+.std-icon-size4 { --icon-size: var(--std-icon-size4); font-size: var(--icon-size); }
+.std-icon-size5 { --icon-size: var(--std-icon-size5); font-size: var(--icon-size); }
+.std-icon-size6 { --icon-size: var(--std-icon-size6); font-size: var(--icon-size); }
+.std-icon-size7 { --icon-size: var(--std-icon-size7); font-size: var(--icon-size); }
+.std-icon-size8 { --icon-size: var(--std-icon-size8); font-size: var(--icon-size); }
+.std-icon-size9 { --icon-size: var(--std-icon-size9); font-size: var(--icon-size); }
+.std-icon-size10 { --icon-size: var(--std-icon-size10); font-size: var(--icon-size); }
 
 .std-icon-cover { --icon-size: 100%; }

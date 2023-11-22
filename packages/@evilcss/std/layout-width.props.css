@@ -1,10 +1,12 @@
 .std-root {
-    --std-width1: 20rem;
-    --std-width2: 30rem;
-    --std-width3: 40rem;
-    --std-width4: 50rem;
-    --std-width5: 60rem;
-    --std-width6: 80rem;
-    --std-width7: 100rem;
-    --std-width8: 120rem;
+    --std-width-base: 20rem;
+    --std-width-factor: 10rem;
+    --std-width1: var(--std-width-base);
+    --std-width2: calc(var(--std-width1) + 1 * var(--std-width-factor));
+    --std-width3: calc(var(--std-width2) + 1 * var(--std-width-factor));
+    --std-width4: calc(var(--std-width3) + 1 * var(--std-width-factor));
+    --std-width5: calc(var(--std-width4) + 1 * var(--std-width-factor));
+    --std-width6: calc(var(--std-width5) + 2 * var(--std-width-factor));
+    --std-width7: calc(var(--std-width6) + 2 * var(--std-width-factor));
+    --std-width8: calc(var(--std-width7) + 2 * var(--std-width-factor));
 }

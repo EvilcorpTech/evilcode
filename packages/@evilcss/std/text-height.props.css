@@ -1,9 +1,11 @@
 .std-root {
-    --std-text-height-base: 1.3;
+    --std-text-height-base: 1;
     --std-text-height-factor: .1;
-    --std-text-height-2: calc(var(--std-text-height-1) - 1 * var(--std-text-height-factor));
-    --std-text-height-1: calc(var(--std-text-height) - 1 * var(--std-text-height-factor));
-    --std-text-height: var(--std-text-height-base);
-    --std-text-height1: calc(var(--std-text-height) + 1 * var(--std-text-height-factor));
-    --std-text-height2: calc(var(--std-text-height1) + 1 * var(--std-text-height-factor));
+    --std-text-height0: var(--std-text-height-base);
+    --std-text-height1: calc(var(--std-text-height0) + var(--std-text-height-factor));
+    --std-text-height2: calc(var(--std-text-height1) + var(--std-text-height-factor));
+    --std-text-height3: calc(var(--std-text-height2) + var(--std-text-height-factor));
+    --std-text-height4: calc(var(--std-text-height3) + var(--std-text-height-factor));
+    --std-text-height5: calc(var(--std-text-height4) + var(--std-text-height-factor));
+    --std-text-height6: calc(var(--std-text-height5) + var(--std-text-height-factor));
 }
