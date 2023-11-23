@@ -128,6 +128,19 @@ export function isString(value: unknown): value is string {
     return typeof value === 'string' || value instanceof String
 }
 
+export function isIterator(value: unknown):
+    value is
+        | Iterator<unknown, unknown, unknown>
+        | AsyncIterator<unknown, unknown, unknown>
+        | AsyncGenerator<unknown, unknown, unknown>
+{
+    return true
+        && Boolean(value)
+        && (value instanceof Object)
+        && ('next' in value)
+        && isFunction(value.next)
+}
+
 // Casts ///////////////////////////////////////////////////////////////////////
 
 // export function asArray<V, I>(value: V | readonly I[]): [V] | readonly I[]
