@@ -89,7 +89,8 @@ export function mergeFetchOptions(...optionsList: Array<FetchRequestOptions>): F
                 break
 
                 default:
-                    mergedOptions[optionName] = options[optionName] as any
+                    // @ts-ignore
+                    mergedOptions[optionName] = options[optionName]
                 break
             }
         }
