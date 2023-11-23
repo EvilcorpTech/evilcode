@@ -19,14 +19,14 @@
         "@eviljs/tsconfig": "1",
         "@eviljs/web": "1",
         "@eviljs/webx": "1",
-        "@types/react": "18.2.27",
-        "@types/react-dom": "18.2.12",
+        "@types/react": "18.2.38",
+        "@types/react-dom": "18.2.17",
         "react": "18.2.0",
         "react-dom": "18.2.0"
     },
     "devDependencies": {
         "@eviljs/tsconfig": "1",
-        "pnpm": "8.9.0"
+        "pnpm": "8.10.5"
     },
     "pnpm": {
         "overrides": {
