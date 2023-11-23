@@ -20,14 +20,14 @@
         "tslib": "2"
     },
     "peerDependencies": {
-        "solid-js": "^1.7"
+        "solid-js": "^1.8"
     },
     "devDependencies": {
         "@babel/cli": "7",
         "@babel/core": "7",
         "@babel/preset-typescript": "7",
         "babel-preset-solid": "1",
-        "typescript": "5.2"
+        "typescript": "5.3"
     },
     "author": "Daniele Orlando",
     "license": "BSD-2-Clause",

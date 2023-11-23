@@ -1,9 +1,10 @@
+/packages/.nx/
+/packages/@evil*/**/*.cjs
 /packages/@evil*/**/*.d.cts
 /packages/@evil*/**/*.d.mts
 /packages/@evil*/**/*.d.ts
-/packages/@evil*/**/*.cjs
-/packages/@evil*/**/*.mjs
 /packages/@evil*/**/*.js
+/packages/@evil*/**/*.mjs
 node_modules/
 package-lock.json
 pnpm-lock.yaml
