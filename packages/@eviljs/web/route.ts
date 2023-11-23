@@ -1,5 +1,5 @@
-import type {Io} from '@eviljs/std/fn.js'
-import {asArray, isArray, isRegExp} from '@eviljs/std/type.js'
+import type {Io, Task} from '@eviljs/std/fn.js'
+import {asArray, isArray, isRegExp, type ElementOf} from '@eviljs/std/type.js'
 
 export const MatchStart = '^'
 export const MatchEnd = '(?:/)?$'
@@ -7,13 +7,13 @@ export const MatchDeep = '(?:/|$)'
 export const MatchAny = '(.*)'
 export const MatchArg = '([^/]+)'
 
+export const RouteArgPlaceholder = '{arg}'
+
 export const RoutePatternRegexpCache: Record<string, RegExp> = {}
 export const RoutePatternEmptyRegexp = /^$/
 export const RoutePatternEmptiesRegexp = /[\n ]/g
 export const RoutePatternRepeatingSlashRegexp = /\/\/+/g
 export const RoutePatternTrailingSlashRegexp = /\/$/
-
-export const RoutePathArgPlaceholder = '{arg}'
 
 export function exact(pattern: string): string
 export function exact(strings: TemplateStringsArray, ...substitutions: Array<unknown>): string
@@ -21,27 +21,27 @@ export function exact(...args: [string] | [TemplateStringsArray, ...Array<unknow
     const [strings, ...substitutions] = args
 
     return isArray(strings)
-        ? exactTemplate(strings as TemplateStringsArray, ...substitutions)
-        : exactString(strings as string)
+        ? exactRouteTemplate(strings as TemplateStringsArray, ...substitutions)
+        : exactRouteString(strings as string)
 }
 
-export function exactString(pattern: string) {
+export function exactRouteString(pattern: string) {
     return `${MatchStart}${pattern}${MatchEnd}`
 }
 
-export function exactTemplate(strings: TemplateStringsArray, ...substitutions: Array<unknown>): string {
-    return exactString(String.raw({raw: strings}, ...substitutions))
+export function exactRouteTemplate(strings: TemplateStringsArray, ...substitutions: Array<unknown>): string {
+    return exactRouteString(String.raw({raw: strings}, ...substitutions))
 }
 
-export function compilePattern(pattern: string | RegExp): RegExp {
+export function compileRoutePattern(pattern: RoutePattern): RegExp {
     if (isRegExp(pattern)) {
         return pattern
     }
 
-    return routeRegexpFromPattern(cleanPattern(pattern))
+    return routeRegexpFromPattern(cleanRoutePattern(pattern))
 }
 
-export function cleanPattern(pattern: string): string {
+export function cleanRoutePattern(pattern: string): string {
     return pattern
         .replace(RoutePatternEmptiesRegexp, '')
         .replace(RoutePatternRepeatingSlashRegexp, '/')
@@ -49,25 +49,7 @@ export function cleanPattern(pattern: string): string {
         .replace(RoutePatternEmptyRegexp, '/')
 }
 
-export function encodeRoutePathArgs(route: string, ...args: RoutePatternArgs) {
-    return replaceRoutePathArgPlaceholdersWithValues(route, RoutePathArgPlaceholder, args)
-}
-
-export function replaceRoutePathArgPlaceholdersWithValues(template: string, placeholder: string, args: RoutePatternArgs) {
-    let output = template
-
-    for (const arg of args) {
-        output = output.replace(placeholder, String(arg))
-    }
-
-    return output
-}
-
-export function replaceRoutePathArgPlaceholdersWithValue(template: string, placeholder: string, replacement: string) {
-    return template.replaceAll(placeholder, String(replacement))
-}
-
-export function routeRegexpFromPattern(pattern: string | RegExp): RegExp {
+export function routeRegexpFromPattern(pattern: RoutePattern): RegExp {
     if (isRegExp(pattern)) {
         return pattern
     }
@@ -79,21 +61,34 @@ export function routeRegexpFromPattern(pattern: string | RegExp): RegExp {
     return RoutePatternRegexpCache[pattern]!
 }
 
-export function testRoutePattern(routePath: string, pattern: string | RegExp): boolean {
+export function encodeRouteArgs(route: string, ...args: RouteArgs) {
+    return replaceRouteArgPlaceholderWithValues(route, RouteArgPlaceholder, args)
+}
+
+export function replaceRouteArgPlaceholderWithValues(template: string, argPlaceholder: string, argValues: RouteArgs) {
+    let output = template
+
+    for (const arg of argValues) {
+        output = output.replace(argPlaceholder, String(arg))
+    }
+
+    return output
+}
+
+export function replaceRouteArgPlaceholderWithValue(template: string, argPlaceholder: string, argValue: ElementOf<RouteArgs>) {
+    return template.replaceAll(argPlaceholder, String(argValue))
+}
+
+export function testRoutePattern(routePath: string, pattern: RoutePattern): boolean {
     return routeRegexpFromPattern(pattern).test(routePath)
 }
 
-export function matchRoutePattern(routePath: string, pattern: string | RegExp): undefined | RegExpMatchArray {
+export function matchRoutePattern(routePath: string, pattern: RoutePattern): undefined | RegExpMatchArray {
     return routePath.match(routeRegexpFromPattern(pattern)) ?? undefined
 }
 
-export function testRouteMatch(
-    routePath: string,
-    tests: RoutePathTest,
-): undefined | RegExpMatchArray {
-    const patterns = asArray(tests)
-
-    for (const pattern of patterns) {
+export function matchRoutePatterns(routePath: string, patterns: RoutePatterns): undefined | RegExpMatchArray {
+    for (const pattern of asArray(patterns)) {
         const routeMatches = matchRoutePattern(routePath, pattern)
 
         if (! routeMatches) {
@@ -106,14 +101,11 @@ export function testRouteMatch(
     return // Makes TypeScript happy.
 }
 
-export function selectRouteMatch<R>(
-    routePath: string,
-    list: Array<[RoutePathTest, R]>,
-): undefined | [RegExpMatchArray, R] {
+export function selectRouteMatch<R>(routePath: string, list: Array<[RoutePatterns, R]>): undefined | [RegExpMatchArray, R] {
     for (const item of list) {
-        const [tests, selectedValue] = item
+        const [patterns, selectedValue] = item
 
-        const routeMatches = testRouteMatch(routePath, tests)
+        const routeMatches = matchRoutePatterns(routePath, patterns)
 
         if (! routeMatches) {
             continue
@@ -125,10 +117,7 @@ export function selectRouteMatch<R>(
     return // Makes TypeScript happy.
 }
 
-export function whenRouteMatch<R>(
-    routePath: string,
-    list: Array<[RoutePathTest, Io<RegExpMatchArray, R>]>,
-): undefined | R {
+export function whenRouteMatch<R>(routePath: string, list: Array<[RoutePatterns, Io<RegExpMatchArray, R>]>): undefined | R {
     const result = selectRouteMatch(routePath, list)
 
     if (! result) {
@@ -140,8 +129,33 @@ export function whenRouteMatch<R>(
     return callback(matches)
 }
 
+export function ifRouteMatch<T>(
+    routePath: string,
+    patterns: RoutePatterns,
+    onTrue: Io<RegExpMatchArray, T>,
+    onFalse?: undefined,
+): undefined | T
+export function ifRouteMatch<T, F>(
+    routePath: string,
+    patterns: RoutePatterns,
+    onTrue: Io<RegExpMatchArray, T>,
+    onFalse: Task<F>,
+): T | F
+export function ifRouteMatch<T, F = undefined>(
+    routePath: string,
+    patterns: RoutePatterns,
+    onTrue: Io<RegExpMatchArray, T>,
+    onFalse?: undefined | Task<F>,
+): undefined | T | F {
+    const matches = matchRoutePatterns(routePath, patterns)
+
+    return matches
+        ? onTrue(matches)
+        : onFalse?.()
+}
+
 // Types ///////////////////////////////////////////////////////////////////////
 
-export type RoutePatternArgs = Array<number | string>
-
-export type RoutePathTest = string | RegExp | Array<string | RegExp>
+export type RouteArgs = Array<number | string>
+export type RoutePattern = string | RegExp
+export type RoutePatterns = RoutePattern | Array<RoutePattern>

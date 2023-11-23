@@ -1,4 +1,4 @@
-import {compilePattern, cleanPattern, routeRegexpFromPattern, exact} from './route.js'
+import {compileRoutePattern, cleanRoutePattern, routeRegexpFromPattern, exact} from './route.js'
 
 // An opening round bracket, not followed by an opening or closing round bracket,
 // followed by a closing round bracket.
@@ -20,7 +20,7 @@ export function createRoute<A extends Args>(
     path: (...args: A) => string,
     params: (path: string) => Array<string>,
 ): Route<A, Array<string>> {
-    const pattern = compilePattern(patternString)
+    const pattern = compileRoutePattern(patternString)
 
     return {pattern, path, params}
 }
@@ -37,7 +37,7 @@ export function createRoute<A extends Args>(
 export function createSimpleRoute<
     A extends Array<string | number> = Array<string | number>
 >(patternStringRaw: string): Route<A, Array<string>> {
-    const patternString = cleanPattern(patternStringRaw)
+    const patternString = cleanRoutePattern(patternStringRaw)
     const pattern = routeRegexpFromPattern(exact(patternString))
 
     function path(...args: A) {
