@@ -1,4 +1,4 @@
-import {Arg, exact} from '@eviljs/web/route'
+import {MatchArg as Arg, exact} from '@eviljs/web/route'
 import {defineRoutePath} from '@eviljs/web/route-v2'
 import {matchBasePath} from '~/route/route-apis'
 
@@ -23,7 +23,7 @@ export const RouteBase = {
 
 export const RoutePath = {
     Home: defineRoutePath({
-        match: [
+        patterns: [
             exact`/`,
             exact`/en`,
             exact`/it`,
@@ -33,7 +33,7 @@ export const RoutePath = {
         },
     }),
     Admin: defineRoutePath({
-        match: [
+        patterns: [
             exact`${RouteBase.Admin.En}`,
             exact`${RouteBase.Admin.It}`,
         ],
@@ -45,7 +45,7 @@ export const RoutePath = {
         },
     }),
     Auth: defineRoutePath({
-        match: [
+        patterns: [
             exact`${RouteBase.Auth.En}`,
             exact`${RouteBase.Auth.It}`,
         ],
@@ -57,7 +57,7 @@ export const RoutePath = {
         },
     }),
     Showcase: defineRoutePath({
-        match: [
+        patterns: [
             exact`${RouteBase.Showcase.En}`,
             exact`${RouteBase.Showcase.It}`,
         ],
@@ -69,7 +69,7 @@ export const RoutePath = {
         },
     }),
     ExampleWithArg: defineRoutePath({
-        match: [
+        patterns: [
             exact`${RouteBase.Example.En}/${Arg}`,
             exact`${RouteBase.Example.It}/${Arg}`,
         ],

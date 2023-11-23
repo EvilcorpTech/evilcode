@@ -5,9 +5,11 @@ import type {Fetch} from '@eviljs/web/fetch'
 import {createFetch} from '@eviljs/web/fetch'
 import {mockFetchDelayed} from '@eviljs/web/fetch-mock'
 import {createQuery} from '@eviljs/web/query'
+import {createHashRouter} from '@eviljs/web/router-hash'
+import {createPathRouter} from '@eviljs/web/router-path'
 import {asBaseUrl} from '@eviljs/web/url'
 import {CookieSpec} from '~/cookie/cookie-apis'
-import {ApiUrl, BasePath} from '~/env/env-apis'
+import {ApiUrl, BasePath, RouterType} from '~/env/env-apis'
 import {FetchMocksSpec} from '~/mock/mock-apis'
 
 export const ContainerSpec = {
@@ -29,6 +31,11 @@ export const ContainerSpec = {
     },
     Logger(container: {}) {
         return createLogger(createConsoleLog())
+    },
+    Router(container: {}) {
+        return RouterType === 'path'
+            ? createPathRouter({basePath: BasePath})
+            : createHashRouter({basePath: BasePath})
     },
     Query(container: {Fetch: Fetch}) {
         return createQuery(container.Fetch)

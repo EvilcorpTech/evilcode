@@ -12,7 +12,6 @@ import {RouterProvider} from '@eviljs/react/router'
 import {piping} from '@eviljs/std/pipe'
 import type {Container} from '~/container/container-apis'
 import {I18nSpec} from '~/i18n/i18n-apis'
-import {createRouter} from '~/router/router-apis'
 import {RouterStatic} from '~/router/router-static'
 import {StoreSpec as StoreSpecV4} from '~/store-v4-experimental/store-v4-experimental-apis'
 import {useStoreStorage} from '~/store/store-hooks'
@@ -22,7 +21,7 @@ import {useColorSchemePreference} from '~/theme/theme-hooks'
 
 export function RootContext(props: RootContextProps) {
     const {children, container} = props
-    const {Cookie, Fetch, Logger, Query} = container
+    const {Cookie, Fetch, Logger, Router, Query} = container
 
     return piping(children)
         (it => AuthProvider({children: it, fetch: Fetch, cookie: Cookie}))
@@ -32,7 +31,7 @@ export function RootContext(props: RootContextProps) {
         (it => PortalProvider({children: it}))
         (it => PortalsProvider({children: it}))
         (it => RequestProvider({children: it, value: Query}))
-        (it => RouterProvider({children: it, createRouter}))
+        (it => RouterProvider({children: it, router: Router}))
         (it => StoreProviderV3({children: it, ...StoreSpecV3}))
         (it => StoreProviderV4({children: it, ...StoreSpecV4}))
     ()

@@ -15,24 +15,24 @@ export function RouterStatic(props: RouterStaticProps) {
 
     return (
         <SwitchRoute fallback={<NotFoundView/>}>
-            <CaseRoute is={RoutePath.Home.match}>
+            <CaseRoute is={RoutePath.Home.patterns}>
                 <HomeView/>
             </CaseRoute>
-            <CaseRoute is={RoutePath.Showcase.match}>
+            <CaseRoute is={RoutePath.Showcase.patterns}>
                 <div>
                     <Header/>
                     <Showcase children={ShowcaseIndex}/>
                 </div>
             </CaseRoute>
-            <CaseRoute is={RoutePath.Admin.match}>
+            <CaseRoute is={RoutePath.Admin.patterns}>
                 <AuthBarrier>
                     <AdminView/>
                 </AuthBarrier>
             </CaseRoute>
-            <CaseRoute is={RoutePath.Auth.match}>
+            <CaseRoute is={RoutePath.Auth.patterns}>
                 <AuthView/>
             </CaseRoute>
-            <CaseRoute is={RoutePath.ExampleWithArg.match} children={id =>
+            <CaseRoute is={RoutePath.ExampleWithArg.patterns} children={id =>
                 <div>
                     <Header/>
                     <h1>Route ID {id}</h1>
