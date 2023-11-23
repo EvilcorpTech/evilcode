@@ -1,6 +1,7 @@
 import type {Task} from '@eviljs/std/fn.js'
 import {memoizing} from '@eviljs/std/memo.js'
-import {selectRouteMatch, type RoutePathTest} from '@eviljs/web/route.js'
+import {isIterator} from '@eviljs/std/type.js'
+import {selectRouteMatch, type RoutePatterns} from '@eviljs/web/route.js'
 
 export function defineAppEntryLoader<C extends object = {}>(loader: Task<Promise<AppEntry<C>>>): Task<Promise<AppEntry<C>>> {
     return memoizing(() => loader())
@@ -19,18 +20,24 @@ export function selectAppEntryMatch<C extends object = {}>(
     return [routePathMatches, loadEntry]
 }
 
-export async function computeAppEntryResult<C extends object = {}>(
+export function computeAppEntryResult<C extends object = {}>(
     context: AppContext<C>,
     entry: AppEntry<C>,
 ): Promise<React.ReactNode> {
-    const generator = entry(context)
+    return computeGeneratorResult(entry(context))
+}
 
+export async function computeGeneratorResult(generator: AppEntryGenerator): Promise<React.ReactNode> {
     while (true) {
         const it = await generator.next()
 
-        if (it.done) {
-            return it.value // The return value of the generator.
+        if (! it.done) {
+            continue
         }
+
+        return isIterator(it.value)
+            ? computeGeneratorResult(it.value)
+            : it.value // The return value of the generator.
     }
 }
 
@@ -41,13 +48,16 @@ export type AppContext<C extends object = {}> = {
     routePathArgs: undefined | RegExpMatchArray
 } & C
 
-export type AppEntry<C extends object = {}> = (context: AppContext<C>) => AsyncGenerator<
-    JSX.Element | React.ReactNode, JSX.Element | React.ReactNode, void
->
+export type AppEntry<C extends object = {}> = (context: AppContext<C>) => AppEntryGenerator
+
+export type AppEntryGenerator = AsyncGenerator<AppEntryYield, AppEntryReturn, void>
+export type AppEntryOutput = JSX.Element | React.ReactNode
+export type AppEntryYield = AppEntryOutput
+export type AppEntryReturn = AppEntryOutput | AsyncGenerator<AppEntryOutput, AppEntryOutput, void>
 
 export type AppEntriesDefinition<C extends object = {}> = Record<string, {
-    route: RoutePathTest
+    route: RoutePatterns
     loader: Task<Promise<AppEntry<C>>>
 }>
 
-export type AppEntriesList<C extends object = {}> = Array<[RoutePathTest, Task<Promise<AppEntry<C>>>]>
+export type AppEntriesList<C extends object = {}> = Array<[RoutePatterns, Task<Promise<AppEntry<C>>>]>

@@ -1,15 +1,15 @@
-import type {RoutePathCodec, RoutePatternArgs} from '@eviljs/web/route-v2.js'
+import type {RouteArgs, RoutePathCodec} from '@eviljs/web/route-v2.js'
 import {useCallback} from 'react'
 import {useI18n} from './i18n.js'
 
-export function useRoutePath<A extends RoutePatternArgs>(routeSpec: RoutePathCodec<A>): RouteManager<A> {
+export function useRoutePath<A extends RouteArgs>(routeSpec: RoutePathCodec<A>): RouteManager<A> {
     return {
-        match: routeSpec.match,
+        patterns: routeSpec.patterns,
         link: routeSpec.encode,
     }
 }
 
-export function useRoutePathLocalized<A extends RoutePatternArgs>(
+export function useRoutePathLocalized<A extends RouteArgs>(
     routeSpec: RoutePathCodec<[string, ...A]>,
 ): RouteManager<A> {
     const routePath = useRoutePath(routeSpec)
@@ -19,13 +19,14 @@ export function useRoutePathLocalized<A extends RoutePatternArgs>(
         return routePath.link(locale, ...args)
     }, [routePath.link, locale])
 
-    const {match} = routePath
+    const {patterns} = routePath
 
-    return {match, link}
+    return {patterns, link}
 }
 
 // Types ///////////////////////////////////////////////////////////////////////
 
-export interface RouteManager<A extends RoutePatternArgs> extends Pick<RoutePathCodec<[]>, 'match'> {
+export interface RouteManager<A extends RouteArgs> {
+    patterns: RoutePathCodec<[]>['patterns']
     link(...args: A): string
 }

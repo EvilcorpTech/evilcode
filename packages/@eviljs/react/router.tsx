@@ -2,7 +2,7 @@ import {compute, type Computable} from '@eviljs/std/compute.js'
 import type {Fn} from '@eviljs/std/fn.js'
 import {escapeRegexp} from '@eviljs/std/regexp.js'
 import {asArray, isPromise} from '@eviljs/std/type.js'
-import {exact, matchRoutePattern, testRoutePattern, type RoutePathTest} from '@eviljs/web/route.js'
+import {exact, matchRoutePattern, testRoutePattern, type RoutePatterns, type RoutePattern} from '@eviljs/web/route.js'
 import type {Router as RouterManager, RouterRoute, RouterRouteChange, RouterRouteChangeParams, RouterRouteParams} from '@eviljs/web/router.js'
 import {encodeLink} from '@eviljs/web/router.js'
 import {isUrlAbsolute} from '@eviljs/web/url.js'
@@ -91,7 +91,7 @@ export function WhenRoute(props: WhenRouteProps) {
 /*
 * EXAMPLE
 *
-* <SwitchRoute fallback={<NotFoundView/>}>
+* <SwitchRoute fallback={() => <NotFoundView/>}>
 *     <CaseRoute is={new RegExp(`^/book/${Arg}/${Arg}`, 'i')}>
 *         {(arg1, arg2) => (
 *             <h1>/book/{arg1}/{arg2}</h1>
@@ -116,7 +116,7 @@ export function WhenRoute(props: WhenRouteProps) {
 */
 export function SwitchRoute(props: SwitchRouteProps) {
     const {children, fallback} = props
-    const {matchRoute} = useRouter()!
+    const {matchRoute, readRoute} = useRouter()!
 
     interface RouteMatch {
         key: undefined | React.Key
@@ -147,10 +147,10 @@ export function SwitchRoute(props: SwitchRouteProps) {
 
         return {
             key: undefined,
-            child: fallback,
+            child: compute(fallback, readRoute().path),
             args: [],
         }
-    }, [children, matchRoute])
+    }, [children, matchRoute, readRoute])
 
     const {key, args} = match
     const child = compute(match.child, ...args)
@@ -335,11 +335,11 @@ export function useRouterCreator<S = unknown>(routerAdapter: RouterManager<S>): 
         setRoute(readRoute())
     }, [routerAdapter, readRoute])
 
-    const testRoute = useCallback((pattern: string | RegExp) => {
+    const testRoute = useCallback((pattern: RoutePattern) => {
         return testRoutePattern(route.path, pattern)
     }, [route.path])
 
-    const matchRoute = useCallback((pattern: string | RegExp) => {
+    const matchRoute = useCallback((pattern: RoutePattern) => {
         return matchRoutePattern(route.path, pattern)
     }, [route.path])
 
@@ -419,8 +419,8 @@ export interface Router<S = unknown> {
     route: RouterRoute<S>
     readRoute(): RouterRoute<S>
     changeRoute(args: RouterRouteChangeComputable<S>): void
-    testRoute(pattern: string | RegExp): boolean
-    matchRoute(pattern: string | RegExp): undefined | RegExpMatchArray
+    testRoute(pattern: RoutePattern): boolean
+    matchRoute(pattern: RoutePattern): undefined | RegExpMatchArray
     link(path: string, params?: undefined | RouterRouteChangeParams): string
     start(): void
     stop(): void
@@ -428,12 +428,12 @@ export interface Router<S = unknown> {
 
 export interface WhenRouteProps {
     children: undefined | RouteMatchChildren
-    is: RoutePathTest
+    is: RoutePatterns
 }
 
 export interface SwitchRouteProps {
     children: undefined | React.ReactNode
-    fallback?: undefined | React.ReactNode
+    fallback?: undefined | Computable<React.ReactNode, [RouterRoute['path']]>
 }
 
 export interface CaseRouteProps extends WhenRouteProps {

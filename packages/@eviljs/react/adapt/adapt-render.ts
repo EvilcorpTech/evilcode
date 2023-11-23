@@ -1,7 +1,8 @@
+import {isIterator} from '@eviljs/std/type.js'
 import {createElement} from 'react'
 import {hydrateRoot, type Root as ReactRoot} from 'react-dom/client'
 import type {AdaptOptions} from './adapt-boot.js'
-import {computeAppEntryResult, selectAppEntryMatch, type AppContext} from './adapt-entry.js'
+import {computeGeneratorResult, selectAppEntryMatch, type AppContext, type AppEntryGenerator} from './adapt-entry.js'
 
 export async function createReactHydratedRoot<C extends object = {}>(args: AdaptHydratedTaskOptions<C>): Promise<ReactRoot> {
     const {context, fallback, entries, Root, routePath} = args
@@ -14,7 +15,7 @@ export async function createReactHydratedRoot<C extends object = {}>(args: Adapt
             return fallback(appContext)
         }
         const appEntry = await loadSelectedAppEntry()
-        return computeAppEntryResult(appContext, appEntry)
+        return computeGeneratorResult(appEntry(appContext))
     })().catch(error => void console.error(error))
 
     return hydrateRoot(
@@ -42,28 +43,43 @@ export function createReactRenderTask<C extends object = {}>(args: AdaptRenderTa
         const [routePathArgs, loadSelectedAppEntry] = selectedAppEntry
         const appContext: AppContext<C> = {...context as C, routePath, routePathArgs}
         const appEntry = await loadSelectedAppEntry()
-        const generator = appEntry(appContext)
+        const appEntryGenerator = appEntry(appContext)
 
+        await renderGenerator(appEntryGenerator)
+    }
+
+    async function renderGenerator(generator: AppEntryGenerator): Promise<void> {
         while (true) {
             const it = await generator.next()
-
-            const appChildren = it.value // Last value is the return value.
 
             if (canceled) {
                 return
             }
 
-            reactRoot.render(
-                Root
-                    ? createElement(Root, {children: appChildren})
-                    : appChildren
-                ,
-            )
-
-            if (it.done) {
-                return
+            if (! it.done) {
+                renderReactRoot(it.value)
+                continue
             }
+
+            if (isIterator(it.value)) {
+                return renderGenerator(it.value)
+            }
+
+            return renderReactRoot(it.value)
         }
+    }
+
+    function renderReactRoot(children: JSX.Element | React.ReactNode): void {
+        if (canceled) {
+            return
+        }
+
+        reactRoot.render(
+            Root
+                ? createElement(Root, {children})
+                : children
+            ,
+        )
     }
 
     async function renderFallback() {
