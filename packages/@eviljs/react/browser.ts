@@ -1,12 +1,16 @@
 import {hasBrowserTouch} from '@eviljs/web/browser.js'
 import {useEffect, useState} from 'react'
 
-export function useBrowserFeaturesClassesProvider() {
+export function useBrowserFeaturesClassesProvider(activeOptional?: undefined | boolean) {
     const features = useBrowserFeatures()
+    const active = activeOptional ?? true
 
     useEffect(() => {
+        if (! active) {
+            return
+        }
+
         const featuresMap = {
-            'no-js': false,
             'has-touch': features.touch,
         }
         const featuresList = Object.entries(featuresMap)
@@ -16,7 +20,7 @@ export function useBrowserFeaturesClassesProvider() {
         document.documentElement.classList.remove(...allClasses)
         document.documentElement.classList.add(...activeClasses)
 
-    }, [features])
+    }, [features, active])
 }
 
 export function useBrowserFeatures() {
