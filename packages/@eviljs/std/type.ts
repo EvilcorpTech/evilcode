@@ -18,6 +18,10 @@ export const Tests = {
     undefined: isUndefined,
 }
 
+export const BooleanLikeTrue = [true, 1, '1', 'yes', 'on', 'true']
+export const BooleanLikeFalse = [false, 0, '0', 'no', 'off', 'false']
+export const BooleanLike = [...BooleanLikeTrue, ...BooleanLikeFalse]
+
 export function kindOf<T extends keyof typeof Tests>(value: unknown, ...tests: Array<T>): undefined | T {
     for (const kind of tests) {
         const test = Tests[kind] as ((value: unknown) => boolean)
@@ -103,7 +107,7 @@ export function isObject(value: unknown): value is Record<PropertyKey, unknown> 
     const proto = Object.getPrototypeOf(value)
 
     if (! proto) {
-        // FIXME: TODO: how to handle Object.create(null)?
+        // Note: We don't handle/care of Object.create(null).
         return false
     }
     if (proto.constructor !== Object) {
@@ -162,11 +166,11 @@ export function asBoolean(value: unknown): undefined | boolean {
 }
 
 export function asBooleanLike(value: unknown): undefined | boolean {
-    switch (value) {
-        case true: case 1: case '1': case 'yes': case 'on': case 'true':
-            return true
-        case false: case 0: case '0': case 'no': case 'off': case 'false':
-            return false
+    if (BooleanLikeTrue.includes(value as any)) {
+        return true
+    }
+    if (BooleanLikeFalse.includes(value as any)) {
+        return false
     }
     return
 }
