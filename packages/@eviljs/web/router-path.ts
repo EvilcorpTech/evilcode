@@ -1,5 +1,5 @@
 import {createReactiveRef} from '@eviljs/std/reactive.js'
-import {areSameRoutes, decodePathRoute, encodeLink, mergeRouteChange, type Router, type RouterOptions, type RouterRouteChangeParams} from './router.js'
+import {areSameRoutes, decodeRouteParams, encodeLink, mergeRouteChange, type Router, type RouterOptions, type RouterRoute, type RouterRouteChangeParams} from './router.js'
 import {asBaseUrl} from './url.js'
 
 export function createPathRouter<S = unknown>(options?: undefined | RouterOptions): Router<S> {
@@ -54,4 +54,17 @@ export function createPathRouter<S = unknown>(options?: undefined | RouterOption
     }
 
     return self
+}
+
+export function decodePathRoute<S>(basePath: string): RouterRoute<S> {
+    const {pathname, search} = window.location
+    const path = basePath
+        ? pathname.slice(basePath.length) // pathname.replace(basePath, '')
+        : pathname
+    const params = decodeRouteParams(
+        search.substring(1) // Without the initial '?'.
+    )
+    const {state} = history
+
+    return {path, params, state}
 }

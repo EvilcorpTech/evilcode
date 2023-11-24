@@ -18,7 +18,7 @@ export function mergeRouteChange<S>(route: RouterRoute<S>, routeChange: RouterRo
 
     return {
         path: changePath || route.path, // changePath can be an empty string.
-        // Params and State, if not provided, must be initialized to undefined.
+        // Params and State, if not provided, must be set to undefined.
         params: changePathParams && changeParams
             // changeParams has precedence over (overwrites) changePathParams.
             ? {...changePathParams, ...changeParams} // Merge.
@@ -26,31 +26,6 @@ export function mergeRouteChange<S>(route: RouterRoute<S>, routeChange: RouterRo
         ,
         state: routeChange.state,
     }
-}
-
-export function decodePathRoute<S>(basePath: string): RouterRoute<S> {
-    const {pathname, search} = window.location
-    const path = basePath
-        ? pathname.slice(basePath.length) // pathname.replace(basePath, '')
-        : pathname
-    const params = decodeRouteParams(
-        search.substring(1) // Without the initial '?'.
-    )
-    const {state} = history
-
-    return {path, params, state}
-}
-
-export function decodeHashRoute<S>(): RouterRoute<S> {
-    const {hash} = window.location
-    const [pathOptional, paramsString] = hash
-        .substring(1) // Without the initial '#'.
-        .split('?')
-    const path = pathOptional || '/' // The empty string is casted to the root path.
-    const params = decodeRouteParams(paramsString)
-    const {state} = history
-
-    return {path, params, state}
 }
 
 export function decodeRouteParams(paramsString: undefined | string): undefined | RouterRouteParams {

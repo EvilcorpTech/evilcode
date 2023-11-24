@@ -1,5 +1,5 @@
 import {createReactiveRef} from '@eviljs/std/reactive.js'
-import {areSameRoutes, decodeHashRoute, encodeLink, mergeRouteChange, type Router, type RouterOptions, type RouterRouteChangeParams} from './router.js'
+import {areSameRoutes, decodeRouteParams, encodeLink, mergeRouteChange, type Router, type RouterOptions, type RouterRoute, type RouterRouteChangeParams} from './router.js'
 
 export function createHashRouter<S = unknown>(options?: undefined | RouterOptions): Router<S> {
     let active = false
@@ -62,4 +62,16 @@ export function createHashRouter<S = unknown>(options?: undefined | RouterOption
     }
 
     return self
+}
+
+export function decodeHashRoute<S>(): RouterRoute<S> {
+    const {hash} = window.location
+    const [pathOptional, paramsString] = hash
+        .substring(1) // Without the initial '#'.
+        .split('?')
+    const path = pathOptional || '/' // The empty string is casted to the root path.
+    const params = decodeRouteParams(paramsString)
+    const {state} = history
+
+    return {path, params, state}
 }
