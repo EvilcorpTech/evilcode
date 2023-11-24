@@ -17,11 +17,15 @@ export const BusContext = defineContext<Bus>('BusContext')
 * )
 */
 export function BusProvider<B extends Bus = Bus>(props: BusProviderProps<B>) {
-    const {children, context: contextOptional} = props
+    const {bus, children, context: contextOptional} = props
     const contextDefault = BusContext as React.Context<undefined | B>
     const Context = contextOptional ?? contextDefault
 
-    const value = useMemo(() => createStdBus() as B, [])
+    const value = useMemo(() => {
+        return ! bus
+            ? createStdBus() as B
+            : bus
+    }, [bus])
 
     return <Context.Provider value={value} children={children}/>
 }
@@ -56,9 +60,7 @@ export function useBusEvent<B extends Bus = Bus>(
     }, [bus, event, observer])
 }
 
-export function createBus<B extends Bus = Bus>(
-    context: React.Context<undefined | B>,
-): BusBound<B> {
+export function createBus<B extends Bus = Bus>(context: React.Context<undefined | B>): BusBound<B> {
     const self: BusBound<B> = {
         BusProvider(props) {
             return <BusProvider context={context} {...props}/>
@@ -78,6 +80,7 @@ export function createBus<B extends Bus = Bus>(
 // Types ///////////////////////////////////////////////////////////////////////
 
 export interface BusProviderProps<B extends Bus = Bus> {
+    bus?: undefined | B
     children?: undefined | React.ReactNode
     context?: undefined | React.Context<undefined | B>
 }
