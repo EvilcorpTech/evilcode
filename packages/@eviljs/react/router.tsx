@@ -2,7 +2,7 @@ import {compute, type Computable} from '@eviljs/std/compute.js'
 import type {Fn} from '@eviljs/std/fn.js'
 import {escapeRegexp} from '@eviljs/std/regexp.js'
 import {asArray, isPromise} from '@eviljs/std/type.js'
-import {exact, matchRoutePattern, testRoutePattern, type RoutePatterns, type RoutePattern} from '@eviljs/web/route.js'
+import {exact, matchRoutePattern, testRoutePattern, type RoutePattern, type RoutePatterns} from '@eviljs/web/route.js'
 import type {Router as RouterManager, RouterRoute, RouterRouteChange, RouterRouteChangeParams, RouterRouteParams} from '@eviljs/web/router.js'
 import {encodeLink} from '@eviljs/web/router.js'
 import {isUrlAbsolute} from '@eviljs/web/url.js'
@@ -15,7 +15,7 @@ export * from '@eviljs/web/route-v2.js'
 export * from '@eviljs/web/route.js'
 export * from '@eviljs/web/router.js'
 
-export const RouterContext = defineContext<Router>('RouterContext')
+export const RouterContext = defineContext<RouterManager>('RouterContext')
 export const RouteMatchContext = defineContext<RouteArgs>('RouteMatchContext')
 export const RouteActiveClassDefault = 'route-active'
 
@@ -30,9 +30,12 @@ export const RouteActiveClassDefault = 'route-active'
 */
 export function RouterProvider(props: RouterProviderProps) {
     const {children, router} = props
-    const value = useRouterCreator(router)
 
-    return <RouterContext.Provider value={value} children={children}/>
+    useEffect(() => {
+        router.start() // Router must not be stopped on unmount.
+    }, [router])
+
+    return <RouterContext.Provider value={router} children={children}/>
 }
 
 /*
@@ -307,20 +310,13 @@ export function Redirect(props: RedirectProps) {
     return children
 }
 
-export function useRouterCreator<S = unknown>(routerAdapter: RouterManager<S>): Router<S> {
-    const [route, setRoute] = useReactiveRef(routerAdapter.route)
+export function useRouterContext<S = unknown>() {
+    return useContext(RouterContext as React.Context<undefined | RouterManager<S>>)
+}
 
-    useEffect(() => {
-        routerAdapter.start()
-
-        setRoute(routerAdapter.route.value)
-
-        function onClean() {
-            routerAdapter.stop()
-        }
-
-        return onClean
-    }, [routerAdapter])
+export function useRouter<S = unknown>(): Router<S> {
+    const routerAdapter = useRouterContext<S>()!
+    const [route] = useReactiveRef(routerAdapter.route)
 
     const readRoute = useCallback(() => {
         return routerAdapter.route.value
@@ -331,8 +327,6 @@ export function useRouterCreator<S = unknown>(routerAdapter: RouterManager<S>): 
         const paramsComputed = compute(params, readRoute().params)
 
         routerAdapter.changeRoute({...otherArgs, params: paramsComputed})
-
-        setRoute(readRoute())
     }, [routerAdapter, readRoute])
 
     const testRoute = useCallback((pattern: RoutePattern) => {
@@ -343,40 +337,23 @@ export function useRouterCreator<S = unknown>(routerAdapter: RouterManager<S>): 
         return matchRoutePattern(route.path, pattern)
     }, [route.path])
 
-    const router = useMemo((): Router<S> => {
-        return {
-            route,
-            readRoute,
-            changeRoute,
-            testRoute,
-            matchRoute,
-            link: routerAdapter.createLink,
-            start: routerAdapter.start,
-            stop: routerAdapter.stop,
-        }
-    }, [
-        routerAdapter,
-        route.path,
-        route.params,
-        route.state,
+    return {
+        route,
         readRoute,
         changeRoute,
         testRoute,
         matchRoute,
-    ])
-
-    return router
-}
-
-export function useRouter() {
-    return useContext(RouterContext)
+        link: routerAdapter.createLink,
+        start: routerAdapter.start,
+        stop: routerAdapter.stop,
+    }
 }
 
 export function useRouteArgs() {
     return useContext(RouteMatchContext)
 }
 
-export function useRouterTransition() {
+export function useRouteTransition() {
     const {route} = useRouter()!
     const toRoute = route.path
     const prevRouteRef = useRef(toRoute)

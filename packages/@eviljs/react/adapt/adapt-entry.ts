@@ -21,8 +21,8 @@ export function selectAppEntryMatch<C extends object = {}>(
 }
 
 export function computeAppEntryResult<C extends object = {}>(
-    context: AppContext<C>,
     entry: AppEntry<C>,
+    context: AppContext<C>,
 ): Promise<React.ReactNode> {
     return computeGeneratorResult(entry(context))
 }

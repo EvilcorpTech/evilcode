@@ -1,10 +1,10 @@
 import {createCssTransition, playTimeline} from '@eviljs/web/animation.js'
 import {useEffect, useMemo, useState} from 'react'
-import {useRouterTransition} from './router.js'
+import {useRouteTransition} from './router.js'
 
 export function useRoutedViewLifecycle(routeRegexp: RegExp) {
     const [viewLifecycle, setViewLifecycle] = useState<ViewLifecycle>('exited')
-    const {fromRoute, toRoute} = useRouterTransition()
+    const {fromRoute, toRoute} = useRouteTransition()
 
     useEffect(() => {
         const toThisView = routeRegexp.test(toRoute)

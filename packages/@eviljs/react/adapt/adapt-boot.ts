@@ -2,35 +2,29 @@ import {computedRef} from '@eviljs/std/reactive.js'
 import type {Router} from '@eviljs/web/router.js'
 import {createRoot} from 'react-dom/client'
 import type {AppContext, AppEntriesList} from './adapt-entry.js'
-import {createReactHydratedRoot, createReactRenderTask} from './adapt-render.js'
+import {createReactHydrateTask, createReactRenderTask} from './adapt-render.js'
 import {RootDefaultId, setupRootElement} from './adapt-root.js'
 
 export async function startApp<C extends object = {}>(args: AdaptOptions<C>) {
+    const {router} = args
     const rootNode = setupRootElement(args.rootElementId ?? RootDefaultId, args.rootElementClasses)
     const shouldHydrate = rootNode.hasChildNodes()
-    const router = args.router
-    const routePathRef = computedRef([router.route], (route) => route.path)
+    const reactRoot = createRoot(rootNode)
+    const routePathRef = computedRef([router.route], route => route.path)
+    const initialRoutePath = routePathRef.value
 
-    const reactRoot = shouldHydrate
-        ? await createReactHydratedRoot({...args, rootNode, routePath: routePathRef.value})
-        : createRoot(rootNode)
+    await shouldHydrate
+        ? createReactHydrateTask({...args, reactRoot, routePath: initialRoutePath})
+        : createReactRenderTask({...args, reactRoot, routePath: initialRoutePath})
 
-    let currentReactRenderTask: undefined | ReturnType<typeof createReactRenderTask>
-    let isFirstRender = true
+    let currentRenderTask: undefined | ReturnType<typeof createReactRenderTask>
 
     router.start()
 
     routePathRef.watch(routePath => {
-        if (shouldHydrate && isFirstRender) {
-            // We skip first render in case we already rendered during hydration.
-            isFirstRender = false
-            return
-        }
-
-        isFirstRender = false
-        currentReactRenderTask?.cancel()
-        currentReactRenderTask = createReactRenderTask({...args, reactRoot, routePath})
-    }, {immediate: true})
+        currentRenderTask?.cancel()
+        currentRenderTask = createReactRenderTask({...args, reactRoot, routePath})
+    })
 }
 
 // Types ///////////////////////////////////////////////////////////////////////

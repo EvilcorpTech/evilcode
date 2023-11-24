@@ -1,11 +1,11 @@
 import {isIterator} from '@eviljs/std/type.js'
 import {createElement} from 'react'
-import {hydrateRoot, type Root as ReactRoot} from 'react-dom/client'
+import type {Root as ReactRoot} from 'react-dom/client'
 import type {AdaptOptions} from './adapt-boot.js'
-import {computeGeneratorResult, selectAppEntryMatch, type AppContext, type AppEntryGenerator} from './adapt-entry.js'
+import {computeAppEntryResult, selectAppEntryMatch, type AppContext, type AppEntryGenerator} from './adapt-entry.js'
 
-export async function createReactHydratedRoot<C extends object = {}>(args: AdaptHydratedTaskOptions<C>): Promise<ReactRoot> {
-    const {context, fallback, entries, Root, routePath} = args
+export async function createReactHydrateTask<C extends object = {}>(args: AdaptHydrateTaskOptions<C>): Promise<void> {
+    const {context, fallback, entries, Root, reactRoot, routePath} = args
 
     const [routePathArgs, loadSelectedAppEntry] = selectAppEntryMatch(routePath, entries) ?? []
     const appContext: AppContext<C> = {...context as C, routePath, routePathArgs}
@@ -15,11 +15,10 @@ export async function createReactHydratedRoot<C extends object = {}>(args: Adapt
             return fallback(appContext)
         }
         const appEntry = await loadSelectedAppEntry()
-        return computeGeneratorResult(appEntry(appContext))
+        return computeAppEntryResult(appEntry, appContext)
     })().catch(error => void console.error(error))
 
-    return hydrateRoot(
-        args.rootNode,
+    reactRoot.render(
         Root
             ? createElement(Root, {children: appChildren})
             : appChildren
@@ -32,7 +31,7 @@ export function createReactRenderTask<C extends object = {}>(args: AdaptRenderTa
 
     let canceled = false
 
-    async function render() {
+    async function render(): Promise<void> {
         const selectedAppEntry = selectAppEntryMatch(routePath, entries)
 
         if (! selectedAppEntry) {
@@ -61,11 +60,9 @@ export function createReactRenderTask<C extends object = {}>(args: AdaptRenderTa
                 continue
             }
 
-            if (isIterator(it.value)) {
-                return renderGenerator(it.value)
-            }
-
-            return renderReactRoot(it.value)
+            return isIterator(it.value)
+                ? renderGenerator(it.value)
+                : renderReactRoot(it.value)
         }
     }
 
@@ -82,7 +79,7 @@ export function createReactRenderTask<C extends object = {}>(args: AdaptRenderTa
         )
     }
 
-    async function renderFallback() {
+    async function renderFallback(): Promise<void> {
         const appContext: AppContext<C> = {...context as C, routePath, routePathArgs: undefined}
         const appChildren = await fallback(appContext)
 
@@ -112,7 +109,5 @@ export interface AdaptRenderTaskOptions<C extends object = {}> extends AdaptOpti
     routePath: string
 }
 
-export interface AdaptHydratedTaskOptions<C extends object = {}> extends AdaptOptions<C> {
-    rootNode: HTMLElement
-    routePath: string
+export interface AdaptHydrateTaskOptions<C extends object = {}> extends AdaptRenderTaskOptions<C> {
 }
