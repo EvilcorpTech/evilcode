@@ -14,7 +14,7 @@ export async function startApp<C extends object = {}>(args: AdaptOptions<C>) {
     const initialRoutePath = routePathRef.value
 
     await shouldHydrate
-        ? createReactHydrateTask({...args, reactRoot, routePath: initialRoutePath})
+        ? createReactHydrateTask({...args, reactRoot, routePath: initialRoutePath, rootNode})
         : createReactRenderTask({...args, reactRoot, routePath: initialRoutePath})
 
     let currentRenderTask: undefined | ReturnType<typeof createReactRenderTask>

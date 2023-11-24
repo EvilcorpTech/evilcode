@@ -5,7 +5,7 @@ import type {AdaptOptions} from './adapt-boot.js'
 import {computeAppEntryResult, selectAppEntryMatch, type AppContext, type AppEntryGenerator} from './adapt-entry.js'
 
 export async function createReactHydrateTask<C extends object = {}>(args: AdaptHydrateTaskOptions<C>): Promise<void> {
-    const {context, fallback, entries, Root, reactRoot, routePath} = args
+    const {context, fallback, entries, Root, reactRoot, rootNode, routePath} = args
 
     const [routePathArgs, loadSelectedAppEntry] = selectAppEntryMatch(routePath, entries) ?? []
     const appContext: AppContext<C> = {...context as C, routePath, routePathArgs}
@@ -18,12 +18,18 @@ export async function createReactHydrateTask<C extends object = {}>(args: AdaptH
         return computeAppEntryResult(appEntry, appContext)
     })().catch(error => void console.error(error))
 
+    // rootNode.style.minHeight = `${rootNode.offsetHeight}px`
+
     reactRoot.render(
         Root
             ? createElement(Root, {children: appChildren})
             : appChildren
         ,
     )
+
+    // setTimeout(() => {
+    //     rootNode.style.minHeight = ''
+    // }, 0)
 }
 
 export function createReactRenderTask<C extends object = {}>(args: AdaptRenderTaskOptions<C>) {
@@ -110,4 +116,5 @@ export interface AdaptRenderTaskOptions<C extends object = {}> extends AdaptOpti
 }
 
 export interface AdaptHydrateTaskOptions<C extends object = {}> extends AdaptRenderTaskOptions<C> {
+    rootNode: HTMLElement
 }
