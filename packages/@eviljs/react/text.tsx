@@ -2,7 +2,7 @@ import {isString} from '@eviljs/std/type.js'
 import {createElement, memo, useMemo} from 'react'
 import type {BoxProps} from './box.js'
 import {classes} from './classes.js'
-import type {MsgValues} from './i18n.js'
+import type {I18nMessageValues} from './i18n.js'
 import {useI18n} from './i18n.js'
 
 export const Text = memo(function Text(props: TextProps) {
@@ -33,6 +33,6 @@ Text.displayName = 'Text'
 // Types ///////////////////////////////////////////////////////////////////////
 
 export interface TextProps extends BoxProps {
-    args?: undefined | MsgValues
+    args?: undefined | I18nMessageValues
     children?: undefined | string
 }

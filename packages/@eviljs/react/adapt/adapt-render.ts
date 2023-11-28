@@ -18,18 +18,12 @@ export async function createReactHydrateTask<C extends object = {}>(args: AdaptH
         return computeAppEntryResult(appEntry, appContext)
     })().catch(error => void console.error(error))
 
-    // rootNode.style.minHeight = `${rootNode.offsetHeight}px`
-
     reactRoot.render(
         Root
             ? createElement(Root, {children: appChildren})
             : appChildren
         ,
     )
-
-    // setTimeout(() => {
-    //     rootNode.style.minHeight = ''
-    // }, 0)
 }
 
 export function createReactRenderTask<C extends object = {}>(args: AdaptRenderTaskOptions<C>) {
