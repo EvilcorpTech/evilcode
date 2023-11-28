@@ -1,4 +1,4 @@
-import type {MsgValues} from '@eviljs/std/i18n.js'
+import type {I18nMessageValues} from '@eviljs/std/i18n.js'
 import {isString} from '@eviljs/std/type.js'
 import type {Accessor, JSX} from 'solid-js'
 import {Show, splitProps} from 'solid-js'
@@ -36,7 +36,7 @@ export function Text(props: TextProps) {
 // Types ///////////////////////////////////////////////////////////////////////
 
 export interface TextProps extends JSX.HTMLAttributes<HTMLElement> {
-    args?: undefined | MsgValues | Accessor<MsgValues>
+    args?: undefined | I18nMessageValues | Accessor<I18nMessageValues>
     children: undefined | string
     tag?: undefined | keyof JSX.IntrinsicElements
 }

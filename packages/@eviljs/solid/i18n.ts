@@ -1,5 +1,5 @@
 import {compute} from '@eviljs/std/compute.js'
-import type {I18n, I18nMessages, I18nSpec, MsgValues} from '@eviljs/std/i18n.js'
+import type {I18n, I18nMessageValues, I18nMessages, I18nSpec} from '@eviljs/std/i18n.js'
 import {createI18n as createStdI18n} from '@eviljs/std/i18n.js'
 import type {Accessor, Setter} from 'solid-js'
 import {createContext, createMemo, createSignal, useContext} from 'solid-js'
@@ -57,15 +57,15 @@ export function createI18n(spec: I18nSpec<string, string, string, string>) {
 
 export function createI18nMessage(
     getId: string | Accessor<string>,
-    getArgs?: undefined | MsgValues | Accessor<MsgValues>,
+    getArgs?: undefined | I18nMessageValues | Accessor<I18nMessageValues>,
 ): Accessor<string>
 export function createI18nMessage(
     getId: undefined | string | Accessor<undefined | string>,
-    getArgs?: undefined | MsgValues | Accessor<MsgValues>,
+    getArgs?: undefined | I18nMessageValues | Accessor<I18nMessageValues>,
 ): Accessor<undefined | string>
 export function createI18nMessage(
     getId: undefined | string | Accessor<undefined | string>,
-    getArgs?: undefined | MsgValues | Accessor<MsgValues>,
+    getArgs?: undefined | I18nMessageValues | Accessor<I18nMessageValues>,
 ): Accessor<undefined | string> {
     const i18n = useI18n()!
 
