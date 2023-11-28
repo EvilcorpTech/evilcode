@@ -1,7 +1,7 @@
 import {escapeRegexp} from './regexp.js'
 import {isArray, isFunction, isObject} from './type.js'
 
-export const DefaultSymbol = '@'
+export const I18nSymbolDefault = '@'
 
 export function createI18n
     <L extends string, L1 extends L, L2 extends L, K extends string>
@@ -25,7 +25,7 @@ export function createI18n
         //     it: {...},
         //     ...
         // }
-        symbol: symbol ?? DefaultSymbol,
+        symbol: symbol ?? I18nSymbolDefault,
         __regexpCache__: {},
         translate(...args) {
             return translate(self, ...args)
@@ -55,7 +55,7 @@ export function translate
     (
         i18n: I18n<L, K>,
         id: K,
-        values?: undefined | MsgValues,
+        values?: undefined | I18nMessageValues,
         options?: undefined | unknown,
     )
 {
@@ -105,7 +105,7 @@ export function format
     (
         i18n: I18n<L, K>,
         template: K,
-        values?: undefined | MsgValues,
+        values?: undefined | I18nMessageValues,
     )
 {
     if (! values) {
@@ -138,14 +138,14 @@ export function format
 
     for (const token in dict) {
         const value = dict[token]
-        const tokenRegexp = regexpFromToken(token, i18n.symbol, i18n.__regexpCache__)
+        const tokenRegexp = i18nRegexpFromToken(token, i18n.symbol, i18n.__regexpCache__)
         string = string.replaceAll(tokenRegexp, String(value))
     }
 
     return string
 }
 
-export function regexpFromToken(token: string, symbol: string, cache: Record<string, RegExp>): RegExp {
+export function i18nRegexpFromToken(token: string, symbol: string, cache: Record<string, RegExp>): RegExp {
     if (! cache[token]) {
         cache[token] = new RegExp(`[${symbol}]{\\s*${escapeRegexp(token)}\\s*}`, 'g')
     }
@@ -173,9 +173,9 @@ export interface I18n<L extends string = string, K extends string = string> {
     messages: I18nMessages<L, K>
     symbol: string
     __regexpCache__: Record<string, RegExp>
-    translate(id: K, values?: undefined | MsgValues, options?: undefined | unknown): string
+    translate(id: K, values?: undefined | I18nMessageValues, options?: undefined | unknown): string
     t(id: TemplateStringsArray, ...substitutions: Array<any>): string
-    format(template: K, values?: undefined | MsgValues): string
+    format(template: K, values?: undefined | I18nMessageValues): string
 }
 
 export interface I18nSpec<L extends string, L1 extends L, L2 extends L, K extends string> {
@@ -188,13 +188,13 @@ export interface I18nSpec<L extends string, L1 extends L, L2 extends L, K extend
 export type I18nMessages<
     L extends string = string,
     K extends string = string,
-> = Record<L, Partial<Record<K, undefined | string | MsgComputer>>>
+> = Record<L, undefined | Record<K, undefined | string | I18nMessageComputable>>
 
-export interface MsgComputer {
+export interface I18nMessageComputable {
     (...args: Array<any>): string
 }
 
-export type MsgValues =
+export type I18nMessageValues =
     | Array<string | number>
     | Record<string | number, string | number>
 

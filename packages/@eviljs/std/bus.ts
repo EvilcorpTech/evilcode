@@ -148,8 +148,8 @@ export function regexpFromEvent(event: BusEvent): RegExp {
 
 export interface Bus {
     observers: BusEventObservers
-    emit(event: BusEvent, payload?: unknown): void
-    emit(args: [event: BusEvent, payload?: unknown]): void
+    emit(event: BusEvent, payload?: any): void
+    emit(args: [event: BusEvent, payload?: any]): void
     emit(...args: BusEventPolymorphicArgs): void
     observe(event: BusEvent, observer: BusEventObserver): Task
     unobserve(event: BusEvent, observer: BusEventObserver): void
@@ -158,8 +158,8 @@ export interface Bus {
 export type BusEvent = string
 export type BusEventObservers = ReactiveAccessor<Record<BusEvent, Array<BusEventObserver>>>
 
-export interface BusEventObserver {
-    (event: BusEvent, matches: RegExpMatchArray, payload: unknown): void
+export interface BusEventObserver<P = any> {
+    (event: BusEvent, matches: RegExpMatchArray, payload: P): void
 }
 
 export type BusEventPolymorphicArgs =
