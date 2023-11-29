@@ -1,11 +1,23 @@
-import type {Fn, FnArgs} from './fn.js'
-import {isArray, isFunction, isString} from './type.js'
+import type {Fn, FnArgs, Task} from './fn.js'
+import {isArray, isFunction, isObject, isString} from './type.js'
 
 export function safeType(type: ArrayConstructor, value: unknown): Array<unknown>
+export function safeType(type: FunctionConstructor, value: unknown): Task<unknown>
+export function safeType(type: ObjectConstructor, value: unknown): Record<PropertyKey, unknown>
 export function safeType(type: StringConstructor, value: unknown): string
-export function safeType(type: ArrayConstructor | StringConstructor, value: unknown) {
+export function safeType(
+    type:
+        | ArrayConstructor
+        | FunctionConstructor
+        | ObjectConstructor
+        | StringConstructor
+    ,
+    value: unknown,
+) {
     switch (type) {
         case Array: return safeArray(value)
+        case Function: return safeFunction(value)
+        case Object: return safeObject(value)
         case String: return safeString(value)
     }
     return // Makes TypeScript happy.
@@ -17,10 +29,16 @@ export function safeArray(value: unknown): Array<unknown> {
     return isArray(value) ? value : []
 }
 
-export function safeFunction<F extends Fn<Array<any>, any>>(value: undefined | F): undefined | F {
+export function safeFunction(value: unknown): undefined | Task<unknown> {
     return isFunction(value)
         ? value
         : undefined
+}
+
+export function safeObject(value: unknown): Record<PropertyKey, unknown> {
+    return isObject(value)
+        ? value
+        : {}
 }
 
 export function safeString<T extends string>(value: T): T
