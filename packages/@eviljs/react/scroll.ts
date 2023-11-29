@@ -1,7 +1,7 @@
-import {useLayoutEffect} from 'react'
+import {useEffect} from 'react'
 
 export function usePageScroll(onScroll: ScrollListener) {
-    useLayoutEffect(() => {
+    useEffect(() => {
         function onPageScroll(event: Event) {
             if (event.target !== event.currentTarget) {
                 return

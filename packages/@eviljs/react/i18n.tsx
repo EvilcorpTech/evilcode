@@ -1,10 +1,10 @@
-import type {I18n, I18nMessages, I18nSpec} from '@eviljs/std/i18n.js'
-import {createI18n} from '@eviljs/std/i18n.js'
+import type {I18n, I18nDefinition, I18nMessageArgValue, I18nMessageArgs, I18nMessageKey, I18nMessages} from '@eviljs/std/i18n.js'
+import {createI18n, t, translate} from '@eviljs/std/i18n.js'
 import {useContext, useMemo, useState} from 'react'
 import {defineContext} from './ctx.js'
 import type {StateSetter} from './state.js'
 
-export type {I18nMessageValues} from '@eviljs/std/i18n.js'
+export type * from '@eviljs/std/i18n.js'
 export const I18nContext = defineContext<I18nManager>('I18nContext')
 
 /*
@@ -25,19 +25,23 @@ export function I18nProvider(props: I18nProviderProps) {
     return <I18nContext.Provider value={value} children={children}/>
 }
 
-export function useI18nCreator(spec: I18nSpec<string, string, string, string>) {
+export function useI18nCreator(spec: I18nDefinition<string, I18nMessageKey>) {
     const [locale, setLocale] = useState(spec.locale)
     const [localeFallback, setLocaleFallback] = useState(spec.localeFallback)
     const [messages, setMessages] = useState(spec.messages)
 
-    const i18n = useMemo((): I18nManager => {
-        const manager = createI18n({...spec, locale, localeFallback, messages})
+    const i18nManager = useMemo((): I18nManager => {
+        const i18n = createI18n({...spec, locale, localeFallback, messages})
 
         return {
-            symbol: manager.symbol,
-            format: manager.format,
-            t: manager.t,
-            translate: manager.translate,
+            __cache__: i18n.__cache__,
+            symbol: i18n.symbol,
+            t(...args) {
+                return t(i18n, ...args)
+            },
+            translate(...args) {
+                return translate(i18n, ...args)
+            },
             get locale() {
                 return locale
             },
@@ -62,14 +66,14 @@ export function useI18nCreator(spec: I18nSpec<string, string, string, string>) {
         }
     }, [locale, localeFallback, messages])
 
-    return i18n
+    return i18nManager
 }
 
-export function useI18n<L extends string = string, K extends string = string>() {
+export function useI18n<L extends string = string, K extends I18nMessageKey = I18nMessageKey>() {
     return useContext(I18nContext) as undefined | I18nManager<L, K>
 }
 
-export function useI18nMsg<T extends object, L extends string = string, K extends string = string>(
+export function useI18nMsg<T extends object, L extends string = string, K extends I18nMessageKey = I18nMessageKey>(
     compute: I18nMsgsComputer<I18nManager<L, K>, T>,
     deps?: undefined | Array<unknown>,
 ) {
@@ -88,7 +92,7 @@ export function useI18nMsg<T extends object, L extends string = string, K extend
 
 // Types ///////////////////////////////////////////////////////////////////////
 
-export interface I18nProviderProps extends I18nSpec<string, string, string, string> {
+export interface I18nProviderProps extends I18nDefinition<string, string> {
     children: undefined | React.ReactNode
 }
 
@@ -96,13 +100,9 @@ export interface I18nMsgsComputer<I, T extends object> {
     (i18n: I): T
 }
 
-export interface I18nManager<L extends string = string, K extends string = string> extends
-    Omit<I18n<L, K>, '__regexpCache__'>,
-    I18nSetters<L, K>
-{
-}
-
-export interface I18nSetters<L extends string = string, K extends string = string> {
+export interface I18nManager<L extends string = string, K extends I18nMessageKey = I18nMessageKey> extends I18n<L, K> {
+    t(strings: TemplateStringsArray, ...substitutions: Array<I18nMessageArgValue>): string
+    translate<KK extends K>(key: KK, values?: undefined | I18nMessageArgs): string | KK
     setLocale: StateSetter<L>
     setLocaleFallback: StateSetter<L>
     setMessages: StateSetter<I18nMessages<L, K>>
