@@ -35,7 +35,7 @@ export const Input = forwardRef(function Input(
         const translateY = fieldHeight - offset * 2 - labelHeight * labelScale
 
         setTranslateY(translateY)
-    }, [fieldRef.current, labelRef.current])
+    }, [Boolean(label)])
 
     return (
         <div
