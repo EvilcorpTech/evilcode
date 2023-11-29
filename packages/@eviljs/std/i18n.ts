@@ -1,41 +1,28 @@
 import {escapeRegexp} from './regexp.js'
-import {isArray, isFunction, isObject} from './type.js'
+import {isFunction, isString} from './type.js'
 
 export const I18nSymbolDefault = '@'
 
-export function createI18n
-    <L extends string, L1 extends L, L2 extends L, K extends string>
-    (spec: I18nSpec<L, L1, L2, K>)
-{
+export function createI18n<L extends string, K extends I18nMessageKey>(spec: I18nDefinition<L, K>) {
     const {locale, localeFallback, messages, symbol} = spec
 
     const self: I18n<L, K> = {
+        __cache__: {},
         locale,
         localeFallback,
         messages,
-        // `messages` must have a structure like this:
+        symbol: symbol ?? I18nSymbolDefault,
+        // `messages` should have a structure like:
         // {
         //     en: {
-        //         'total': '@{ 0 } item of @{ 1 }',
-        //         'count': '@{ current } item of @{ total }',
-        //         'sum'(values) {
-        //             return `${values[0]} item of ${values[1]}`
-        //         },
+        //         0: 'Hello!,
+        //         'msg:1': 'Hello World!,
+        //         'sum': (args) => `${args[0]} item of ${args[1]}`,
+        //         'count': (args) => '@{args.current} item of @{args.total}',
         //     },
-        //     it: {...},
+        //     it: {},
         //     ...
         // }
-        symbol: symbol ?? I18nSymbolDefault,
-        __regexpCache__: {},
-        translate(...args) {
-            return translate(self, ...args)
-        },
-        t(...args) {
-            return t(self, ...args)
-        },
-        format(...args) {
-            return format(self, ...args)
-        },
     }
 
     return self
@@ -47,49 +34,49 @@ export function createI18n
 * EXAMPLE
 *
 * translate(i18n, 'Hello world')
-* translate(i18n, '@{ 0 } items of @{ 1 }', [4, 8])
-* translate(i18n, '@{ count } items of @{ total }', {count: 4, total: 8})
+* translate(i18n, '@{0} items of @{1}', [4, 8])
+* translate(i18n, '@{count} items of @{total}', {count: 4, total: 8})
 */
-export function translate
-    <L extends string = string, K extends string = string>
-    (
-        i18n: I18n<L, K>,
-        id: K,
-        values?: undefined | I18nMessageValues,
-        options?: undefined | unknown,
-    )
-{
+export function translate<K extends I18nMessageKey = I18nMessageKey>(
+    i18n: I18n<string, K>,
+    key: K,
+    values?: undefined | I18nMessageArgs,
+    options?: undefined | unknown,
+): string | K {
     const {locale, localeFallback, messages} = i18n
 
-    if (! id) {
-        return id
-    }
-
     const msg = undefined
-        ?? messages[locale]?.[id]
-        ?? messages[localeFallback]?.[id]
-        ?? id
+        ?? messages[locale]?.[key]
+        ?? messages[localeFallback]?.[key]
+        ?? key
 
-    const text = isFunction(msg)
+    if (isString(msg)) {
+        // We need to interpolate the values inside the string.
+        return format(i18n, msg, values)
+    }
+    if (isFunction(msg)) {
         // The message function handles the interpolation on its own.
-        ? msg(values, options)
-        // The message should be a string. We need to interpolate the values.
-        : i18n.format(msg as K, values)
-
-    return text
+        return msg(values, options) ?? key
+    }
+    return msg as K
 }
 
-export function t
-    <L extends string = string, K extends string = string>
-    (
-        i18n: I18n<L, K>,
-        id: TemplateStringsArray,
-        ...substitutions: Array<unknown>
-    )
-{
-    const template = String.raw(id, ...substitutions)
+/*
+* Translates a string using template syntax.
+*
+* EXAMPLE
+*
+* const tt = t.bind(i18n)
+* tt`Hello World!'
+*/
+export function t(
+    i18n: I18n,
+    strings: TemplateStringsArray,
+    ...substitutions: Array<I18nMessageArgValue>
+): string {
+    const template = String.raw({raw: strings}, ...substitutions)
 
-    return i18n.translate(template as K)
+    return translate(i18n, template)
 }
 
 /*
@@ -97,88 +84,61 @@ export function t
 *
 * EXAMPLE
 *
-* format(i18n, '@{ 0 } items of @{ 1 }', [4, 8])
-* format(i18n, '@{ count } items of @{ total }', {count: 4, total: 8})
+* format(i18n, '@{0} items of @{1}', [4, 8])
+* format(i18n, '@{count} items of @{total}', {count: 4, total: 8})
 */
-export function format
-    <L extends string = string, K extends string = string>
-    (
-        i18n: I18n<L, K>,
-        template: K,
-        values?: undefined | I18nMessageValues,
-    )
-{
-    if (! values) {
+export function format(
+    i18n: I18n,
+    key: string,
+    args?: undefined | I18nMessageArgs,
+): string {
+    if (! args) {
         // There are no arguments to interpolate. Optimization.
-        return template
+        return key
     }
 
-    const dict =
-        isArray(values)
-            // It is an Array. We must convert it to an Object.
-            ? values.reduce((dict, it, idx) => {
-                dict[idx] = it
+    let keyFormatted: string = key
 
-                return dict
-            }, {} as Record<string | number, string | number>)
-        : isObject(values)
-            // Nothing to do.
-            ? values
-        : undefined
-
-    if (! dict) {
-        console.error(
-            '@eviljs/std/i18n.format(i18n, template, ~~values~~):\n'
-            + `values must be Array | Object, given "${values}".`
-        )
-        return template
+    for (const it in args) {
+        // When values is an array, token is the index.
+        // When values is an object, token is the property.
+        const argKey = it as number | string
+        const argValue = args[argKey as any]
+        const argKeyRegexp = i18nRegexpFromToken(argKey, i18n.symbol, i18n.__cache__)
+        keyFormatted = keyFormatted.replaceAll(argKeyRegexp, String(argValue))
     }
 
-    let string: string = template
-
-    for (const token in dict) {
-        const value = dict[token]
-        const tokenRegexp = i18nRegexpFromToken(token, i18n.symbol, i18n.__regexpCache__)
-        string = string.replaceAll(tokenRegexp, String(value))
-    }
-
-    return string
+    return keyFormatted
 }
 
-export function i18nRegexpFromToken(token: string, symbol: string, cache: Record<string, RegExp>): RegExp {
-    if (! cache[token]) {
-        cache[token] = new RegExp(`[${symbol}]{\\s*${escapeRegexp(token)}\\s*}`, 'g')
+export function i18nRegexpFromToken(token: I18nMessageArgKey, symbol: string, cache: Record<string, RegExp>): RegExp {
+    const tokenCached = cache[token]
+
+    if (tokenCached) {
+        return tokenCached
     }
 
-    return cache[token]!
-}
+    const tokenEscaped = isString(token)
+        ? escapeRegexp(token)
+        : token
+    const tokenRegexp = new RegExp(`[${symbol}]{\\s*${tokenEscaped}\\s*}`, 'g')
 
-export function defineI18n<L extends string, L1 extends L, L2 extends L, K extends string>(
-    spec: I18nSpec<L, L1, L2, K>,
-): I18nSpec<L, L1, L2, K> {
-    return spec
-}
+    cache[token] = tokenRegexp
 
-export function defineMessages<L extends string, K extends string>(
-    messages: I18nMessages<L, K>,
-): I18nMessages<L, K> {
-    return messages
+    return tokenRegexp
 }
 
 // Types ///////////////////////////////////////////////////////////////////////
 
-export interface I18n<L extends string = string, K extends string = string> {
+export interface I18n<L extends string = string, K extends I18nMessageKey = I18nMessageKey> {
+    __cache__: Record<string, RegExp>
     locale: L
     localeFallback: L
     messages: I18nMessages<L, K>
     symbol: string
-    __regexpCache__: Record<string, RegExp>
-    translate(id: K, values?: undefined | I18nMessageValues, options?: undefined | unknown): string
-    t(id: TemplateStringsArray, ...substitutions: Array<any>): string
-    format(template: K, values?: undefined | I18nMessageValues): string
 }
 
-export interface I18nSpec<L extends string, L1 extends L, L2 extends L, K extends string> {
+export interface I18nDefinition<L extends string, K extends I18nMessageKey, L1 extends L = L, L2 extends L = L> {
     locale: L1
     localeFallback: L2
     messages: I18nMessages<L, K>
@@ -187,27 +147,34 @@ export interface I18nSpec<L extends string, L1 extends L, L2 extends L, K extend
 
 export type I18nMessages<
     L extends string = string,
-    K extends string = string,
-> = Record<L, undefined | Record<K, undefined | string | I18nMessageComputable>>
+    K extends I18nMessageKey = I18nMessageKey,
+> =
+    Partial<Record<
+        L, // Locale.
+        undefined | Partial<Record<
+            K, // Message Key.
+            undefined | string | I18nMessageComputable
+        >>
+    >>
 
 export interface I18nMessageComputable {
     (...args: Array<any>): string
 }
 
-export type I18nMessageValues =
-    | Array<string | number>
-    | Record<string | number, string | number>
+export type I18nMessageKey = string | number
+export type I18nMessageArgKey = string | number
+export type I18nMessageArgValue = string | number
 
-// interface I18nTemplateKey<K extends string> extends ReadonlyArray<K> {
-//     readonly raw: readonly K[];
-// }
+export type I18nMessageArgs =
+    | Array<I18nMessageArgValue>
+    | Record<I18nMessageArgKey, I18nMessageArgValue>
 
-export type I18nLocaleOf<M extends I18nSpec<string, string, string, string>> =
-    M extends I18nSpec<infer L, any, any, string>
+export type I18nLocaleOf<D extends I18nDefinition<string, string>> =
+    D extends I18nDefinition<infer L, string>
         ? L
         : string
 
-export type I18nKeyOf<M extends I18nSpec<string, string, string, string>> =
-    M extends I18nSpec<string, any, any, infer K>
+export type I18nKeyOf<D extends I18nDefinition<string, string>> =
+    D extends I18nDefinition<string, infer K>
         ? K
         : string
