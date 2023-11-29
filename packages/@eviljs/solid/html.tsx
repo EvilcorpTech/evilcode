@@ -12,7 +12,7 @@ export function Html(props: HtmlProps) {
                 {...otherProps}
                 component={props.tag ?? 'div'}
                 class={classes('Html-2c6a', props.class)}
-                innerHTML={props.children ?? ''}
+                innerHTML={String(props.children ?? '')}
             />
         </Show>
     )
@@ -22,5 +22,5 @@ export function Html(props: HtmlProps) {
 
 export interface HtmlProps extends JSX.HTMLAttributes<HTMLElement> {
     tag?: undefined | keyof JSX.IntrinsicElements
-    children: undefined | string
+    children: undefined | number | string
 }

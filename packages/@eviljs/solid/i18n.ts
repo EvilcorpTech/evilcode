@@ -1,22 +1,23 @@
 import {compute} from '@eviljs/std/compute.js'
-import type {I18n, I18nMessageValues, I18nMessages, I18nSpec} from '@eviljs/std/i18n.js'
-import {createI18n as createStdI18n} from '@eviljs/std/i18n.js'
-import type {Accessor, Setter} from 'solid-js'
-import {createContext, createMemo, createSignal, useContext} from 'solid-js'
+import type {I18n, I18nDefinition, I18nMessageArgValue, I18nMessageArgs, I18nMessageKey, I18nMessages} from '@eviljs/std/i18n.js'
+import {createI18n as createStdI18n, t, translate} from '@eviljs/std/i18n.js'
+import {isDefined} from '@eviljs/std/type.js'
+import {createContext, createMemo, createSignal, useContext, type Accessor, type Setter} from 'solid-js'
 
+export type * from '@eviljs/std/i18n.js'
 export const I18nContext = createContext<Accessor<I18nManager>>()
 
 export function useI18n() {
     return useContext(I18nContext)
 }
 
-export function createI18n(spec: I18nSpec<string, string, string, string>) {
+export function createI18n(spec: I18nDefinition<string, I18nMessageKey>) {
     const [locale, setLocale] = createSignal(spec.locale)
     const [localeFallback, setLocaleFallback] = createSignal(spec.localeFallback)
     const [messages, setMessages] = createSignal(spec.messages)
 
-    const i18n = createMemo((): I18nManager => {
-        const manager = createStdI18n({
+    const i18nManager = createMemo((): I18nManager<string, I18nMessageKey> => {
+        const i18n = createStdI18n({
             ...spec,
             locale: locale(),
             localeFallback: localeFallback(),
@@ -24,10 +25,14 @@ export function createI18n(spec: I18nSpec<string, string, string, string>) {
         })
 
         return {
-            symbol: manager.symbol,
-            format: manager.format,
-            t: manager.t,
-            translate: manager.translate,
+            __cache__: i18n.__cache__,
+            symbol: i18n.symbol,
+            t(...args) {
+                return t(i18n, ...args)
+            },
+            translate(...args) {
+                return translate(i18n, ...args)
+            },
             get locale() {
                 return locale()
             },
@@ -52,29 +57,29 @@ export function createI18n(spec: I18nSpec<string, string, string, string>) {
         }
     }, [locale, localeFallback, messages])
 
-    return i18n
+    return i18nManager
 }
 
 export function createI18nMessage(
-    getId: string | Accessor<string>,
-    getArgs?: undefined | I18nMessageValues | Accessor<I18nMessageValues>,
-): Accessor<string>
+    getKey: I18nMessageKey | Accessor<string | I18nMessageKey>,
+    getArgs?: undefined | I18nMessageArgs | Accessor<I18nMessageArgs>,
+): Accessor<string | I18nMessageKey>
 export function createI18nMessage(
-    getId: undefined | string | Accessor<undefined | string>,
-    getArgs?: undefined | I18nMessageValues | Accessor<I18nMessageValues>,
-): Accessor<undefined | string>
+    getKey: undefined | I18nMessageKey | Accessor<undefined | I18nMessageKey>,
+    getArgs?: undefined | I18nMessageArgs | Accessor<I18nMessageArgs>,
+): Accessor<undefined | string | I18nMessageKey>
 export function createI18nMessage(
-    getId: undefined | string | Accessor<undefined | string>,
-    getArgs?: undefined | I18nMessageValues | Accessor<I18nMessageValues>,
-): Accessor<undefined | string> {
+    getKey: undefined | I18nMessageKey | Accessor<undefined | I18nMessageKey>,
+    getArgs?: undefined | I18nMessageArgs | Accessor<I18nMessageArgs>,
+): Accessor<undefined | string | I18nMessageKey> {
     const i18n = useI18n()!
 
     const message = createMemo(() => {
-        const id = compute(getId)
+        const key = compute(getKey)
         const args = compute(getArgs)
 
-        return id
-            ? i18n().translate(id, args)
+        return isDefined(key)
+            ? i18n().translate(key, args)
             : undefined
     })
 
@@ -85,13 +90,9 @@ export function createI18nMessage(
 
 export type I18nState = I18n<string, string>
 
-export interface I18nManager<L extends string = string, K extends string = string> extends
-    Omit<I18n<L, K>, '__regexpCache__'>,
-    I18nSetters<L, K>
-{
-}
-
-export interface I18nSetters<L extends string = string, K extends string = string> {
+export interface I18nManager<L extends string = string, K extends I18nMessageKey = I18nMessageKey> extends I18n<L, K> {
+    t(strings: TemplateStringsArray, ...substitutions: Array<I18nMessageArgValue>): string
+    translate<KK extends K>(key: KK, values?: undefined | I18nMessageArgs): string | KK
     setLocale: Setter<L>
     setLocaleFallback: Setter<L>
     setMessages: Setter<I18nMessages<L, K>>
