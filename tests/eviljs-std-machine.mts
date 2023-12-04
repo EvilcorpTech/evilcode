@@ -37,7 +37,7 @@ export const MyMachine = defineMachine({
         },
     ],
 
-    log: (newState, oldState, event) => {
+    log(newState, oldState, event) {
     },
 })
 
