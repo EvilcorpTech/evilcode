@@ -1,4 +1,4 @@
-Copyright (c) 2020, Daniele Orlando <info(at)danieleorlando.com>
+Copyright (c) 2024, Daniele Orlando <info(at)danieleorlando.io>
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without modification,

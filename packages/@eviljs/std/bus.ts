@@ -1,6 +1,6 @@
 import {scheduleMicroTaskUsingPromise} from './eventloop.js'
 import type {FnArgs, Task} from './fn.js'
-import {createReactiveAccessor, type ReactiveAccessor} from './reactive.js'
+import {createReactiveAccessor, type ReactiveAccessor} from './reactive-accessor.js'
 import {isArray} from './type.js'
 
 export const EventRegexpCache: Record<BusEvent, RegExp> = {}
@@ -136,12 +136,13 @@ export function exactTemplate(strings: TemplateStringsArray, ...substitutions: A
     return exactString(String.raw({raw: strings}, ...substitutions))
 }
 
-export function regexpFromEvent(event: BusEvent): RegExp {
-    if (! EventRegexpCache[event]) {
-        EventRegexpCache[event] = new RegExp(event)
-    }
+export function busRegexpFromEvent(event: BusEvent): RegExp {
+    const eventCached = EventRegexpCache[event]
+        ?? new RegExp(event)
 
-    return EventRegexpCache[event]!
+    EventRegexpCache[event] ??= eventCached
+
+    return eventCached
 }
 
 // Types ///////////////////////////////////////////////////////////////////////

@@ -1,10 +1,10 @@
 import type {Fn, FnArgs} from './fn.js'
 import {isFunction} from './type.js'
 
-export function compute<T, A extends Array<unknown>>(value: Computable<T, A>, ...args: A) {
-    return isFunction(value)
-        ? value(...args)
-        : value
+export function compute<T, A extends Array<unknown>>(computable: Computable<T, A>, ...args: A) {
+    return isFunction(computable)
+        ? computable(...args)
+        : computable
 }
 
 // Types ///////////////////////////////////////////////////////////////////////

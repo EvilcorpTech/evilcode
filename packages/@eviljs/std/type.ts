@@ -1,12 +1,13 @@
 import type {FnArgs} from './fn.js'
 
-export const Tests = {
+export const TypeTest = {
     array: isArray,
     boolean: isBoolean,
     date: isDate,
     defined: isDefined,
     function: isFunction,
     integer: isInteger,
+    iterator: isIterator,
     none: isNone,
     null: isNull,
     number: isNumber,
@@ -22,9 +23,9 @@ export const BooleanLikeTrue = [true, 1, '1', 'yes', 'on', 'true']
 export const BooleanLikeFalse = [false, 0, '0', 'no', 'off', 'false']
 export const BooleanLike = [...BooleanLikeTrue, ...BooleanLikeFalse]
 
-export function kindOf<T extends keyof typeof Tests>(value: unknown, ...tests: Array<T>): undefined | T {
+export function kindOf<T extends keyof typeof TypeTest>(value: unknown, ...tests: Array<T>): undefined | T {
     for (const kind of tests) {
-        const test = Tests[kind] as ((value: unknown) => boolean)
+        const test = TypeTest[kind] as ((value: unknown) => boolean)
 
         if (test(value)) {
             return kind

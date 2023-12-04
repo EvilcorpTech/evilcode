@@ -7,8 +7,8 @@ export enum LogType {
 
 export const LogTypeDefault = LogType.Debug
 
-export function createLogger<R>(log: (level: LogType, ...args: Payload) => R): Logger<R> & LoggerAttrs {
-    const self: Logger<R> & LoggerAttrs = {
+export function createLogger<R>(log: (type: LogType, ...args: Payload) => R): Logger<R> & LoggerProps {
+    return {
         Type: LogType,
 
         log,
@@ -26,52 +26,50 @@ export function createLogger<R>(log: (level: LogType, ...args: Payload) => R): L
             return log(LogType.Error, ...args)
         },
     }
-
-    return self
 }
 
 export function createConsoleLog(options?: undefined | {
-    adapter?: undefined | Logger<void>
-    levelMin?: undefined | LogType
+    console?: undefined | Logger<void>
+    min?: undefined | LogType
 }) {
-    const adapter = options?.adapter ?? console
-    const levelMin = options?.levelMin ?? LogTypeDefault
+    const logger = options?.console ?? console
+    const min = options?.min ?? LogTypeDefault
 
     function log(type: LogType, ...args: Payload) {
-        return logLevelMinOn(adapter, levelMin, type, ...args)
+        return logLevel(logger, type, min, ...args)
     }
 
     return log
 }
 
-export function logLevelMinOn<R>(
+export function logLevel<R>(
     adapter: Logger<R>,
-    levelMin: LogType,
     type: LogType,
+    min: LogType,
     ...args: Payload
 ): void | R {
-    return (type >= levelMin)
-        ? logOnAdapter(adapter, type, ...args)
+    return (type >= min)
+        ? log(adapter, type, ...args)
         : undefined
 }
 
-export function logOnAdapter<R>(
-    adapter: Logger<R>,
+export function log<R>(
+    logger: Logger<R>,
     type: LogType,
     ...args: Payload
 ): R {
     switch (type as undefined | typeof type) {
         case LogType.Debug:
-            return adapter.debug(...args)
+            return logger.debug(...args)
         case LogType.Info:
-            return adapter.info(...args)
+            return logger.info(...args)
         case LogType.Warn:
-            return adapter.warn(...args)
+            return logger.warn(...args)
         case LogType.Error:
-            return adapter.error(...args)
+            return logger.error(...args)
     }
 
-    return adapter.error(
+    return logger.error(
         '@eviljs/std/logger.logOnAdapter(adapter, ~~type~~, ...args):\n'
         + `type must be ${Object.values(LogType).join(' | ')}, given "${type}".`
     )
@@ -87,7 +85,7 @@ export interface Logger<R = void> {
     error(...args: Payload): R
 }
 
-export interface LoggerAttrs {
+export interface LoggerProps {
     Type: typeof LogType
 }
 

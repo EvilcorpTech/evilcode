@@ -3,10 +3,10 @@ import {isFunction, isString} from './type.js'
 
 export const I18nSymbolDefault = '@'
 
-export function createI18n<L extends string, K extends I18nMessageKey>(spec: I18nDefinition<L, K>) {
+export function createI18n<L extends string, K extends I18nMessageKey>(spec: I18nDefinition<L, K>): I18n<L, K> {
     const {locale, localeFallback, messages, symbol} = spec
 
-    const self: I18n<L, K> = {
+    return {
         __cache__: {},
         locale,
         localeFallback,
@@ -24,8 +24,6 @@ export function createI18n<L extends string, K extends I18nMessageKey>(spec: I18
         //     ...
         // }
     }
-
-    return self
 }
 
 /*
@@ -113,19 +111,11 @@ export function format(
 
 export function i18nRegexpFromToken(token: I18nMessageArgKey, symbol: string, cache: Record<string, RegExp>): RegExp {
     const tokenCached = cache[token]
+        ?? new RegExp(`[${symbol}]{\\s*${escapeRegexp(String(token))}\\s*}`, 'g')
 
-    if (tokenCached) {
-        return tokenCached
-    }
+    cache[token] ??= tokenCached
 
-    const tokenEscaped = isString(token)
-        ? escapeRegexp(token)
-        : token
-    const tokenRegexp = new RegExp(`[${symbol}]{\\s*${tokenEscaped}\\s*}`, 'g')
-
-    cache[token] = tokenRegexp
-
-    return tokenRegexp
+    return tokenCached
 }
 
 // Types ///////////////////////////////////////////////////////////////////////
@@ -174,7 +164,7 @@ export type I18nLocaleOf<D extends I18nDefinition<string, string>> =
         ? L
         : string
 
-export type I18nKeyOf<D extends I18nDefinition<string, string>> =
+export type I18nMessageKeyOf<D extends I18nDefinition<string, string>> =
     D extends I18nDefinition<string, infer K>
         ? K
         : string
