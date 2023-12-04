@@ -7,7 +7,6 @@ export const ContainerContext = defineContext<Container>('ContainerContext')
 /*
 * EXAMPLE
 *
-* const spec = {services}
 * const container = createContainer(spec)
 *
 * export function MyMain(props) {
@@ -24,8 +23,8 @@ export function ContainerProvider(props: ContainerProviderProps) {
     return <ContainerContext.Provider value={value} children={children}/>
 }
 
-export function useContainer<T extends Container = Container>() {
-    return useContext(ContainerContext) as undefined | T
+export function useContainer<T extends Container = Container>(): T {
+    return useContext(ContainerContext)!
 }
 
 // Types ///////////////////////////////////////////////////////////////////////

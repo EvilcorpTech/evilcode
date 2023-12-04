@@ -59,7 +59,7 @@ export function useRender() {
 export function useRenderSignal(): [RenderSignal, Task] {
     const [signal, setSignal] = useState([])
 
-    const notifySignal = useCallback(() => {
+    const notify = useCallback(() => {
         // Don't use -1/1 or !boolean, which don't work on even number of consecutive calls.
         // Don't use ++number, which can overflow Number.MAX_SAFE_INTEGER.
         // [] is faster and memory cheaper
@@ -68,7 +68,7 @@ export function useRenderSignal(): [RenderSignal, Task] {
         setSignal([])
     }, [])
 
-    return [signal, notifySignal]
+    return [signal, notify]
 }
 
 // Types ///////////////////////////////////////////////////////////////////////

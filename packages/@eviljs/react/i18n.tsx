@@ -5,6 +5,7 @@ import {defineContext} from './ctx.js'
 import type {StateSetter} from './state.js'
 
 export type * from '@eviljs/std/i18n.js'
+
 export const I18nContext = defineContext<I18nManager>('I18nContext')
 
 /*
@@ -20,9 +21,9 @@ export const I18nContext = defineContext<I18nManager>('I18nContext')
 */
 export function I18nProvider(props: I18nProviderProps) {
     const {children, ...spec} = props
-    const value = useI18nCreator(spec)
+    const contextValue = useI18nCreator(spec)
 
-    return <I18nContext.Provider value={value} children={children}/>
+    return <I18nContext.Provider value={contextValue} children={children}/>
 }
 
 export function useI18nCreator(spec: I18nDefinition<string, I18nMessageKey>) {
@@ -69,8 +70,8 @@ export function useI18nCreator(spec: I18nDefinition<string, I18nMessageKey>) {
     return i18nManager
 }
 
-export function useI18n<L extends string = string, K extends I18nMessageKey = I18nMessageKey>() {
-    return useContext(I18nContext) as undefined | I18nManager<L, K>
+export function useI18n<L extends string = string, K extends I18nMessageKey = I18nMessageKey>(): I18nManager<L, K> {
+    return useContext(I18nContext)! as unknown as I18nManager<L, K>
 }
 
 export function useI18nMsg<T extends object, L extends string = string, K extends I18nMessageKey = I18nMessageKey>(

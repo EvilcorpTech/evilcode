@@ -1,16 +1,14 @@
+import type {AccessorSync} from '@eviljs/std/accessor.js'
 import {compute} from '@eviljs/std/compute.js'
-import type {ReactiveAccessor, ReactiveObservable, ReactiveRef} from '@eviljs/std/reactive.js'
-import {identity, returnUndefined} from '@eviljs/std/return.js'
-import {useCallback, useEffect, useLayoutEffect, useMemo, useState} from 'react'
+import type {ReactiveObservable} from '@eviljs/std/reactive.js'
+import {useCallback, useEffect, useLayoutEffect, useState} from 'react'
 import {useRenderSignal, type RenderSignal} from './lifecycle.js'
 import type {StateManager, StateSetterArg} from './state.js'
 
-const noopWatch = () => () => {}
-
 export function useReactiveStore<V>(
-    read: ReactiveAccessor<V>['read'],
-    write: ReactiveAccessor<V>['write'],
-    watch: ReactiveAccessor<V>['watch'],
+    read: AccessorSync<V>['read'],
+    write: AccessorSync<V>['write'],
+    watch: ReactiveObservable<V>['watch'],
 ): StateManager<V> {
     const [value, setValue] = useState(read())
 
@@ -22,15 +20,7 @@ export function useReactiveStore<V>(
     }, [read, write])
 
     useEffect(() => {
-        setValue(read())
-
-        const stopWatching = watch((newValue, oldValue) => {
-            setValue(newValue)
-        })
-
-        function onClean() {
-            stopWatching()
-        }
+        const onClean = watch(setValue, {immediate: true})
 
         return onClean
     }, [watch])
@@ -38,41 +28,24 @@ export function useReactiveStore<V>(
     return [value, setReactiveValue]
 }
 
-export function useReactiveAccessor<V>(reactiveAccessor: ReactiveAccessor<V>): StateManager<V>
-export function useReactiveAccessor<V>(reactiveAccessor: undefined | ReactiveAccessor<V>): StateManager<undefined | V>
-export function useReactiveAccessor<V>(reactiveAccessor: undefined | ReactiveAccessor<V>): StateManager<undefined | V> {
-    return useReactiveStore(
-        reactiveAccessor?.read ?? returnUndefined,
-        reactiveAccessor?.write ?? identity,
-        reactiveAccessor?.watch ?? noopWatch,
-    )
-}
+export function useReactiveObservable<V>(reactiveObservable: undefined | ReactiveObservable<V>): RenderSignal {
+    const [signal, notifySignal] = useRenderSignal()
 
-export function useReactiveRef<V>(reactiveRef: ReactiveRef<V>): StateManager<V>
-export function useReactiveRef<V>(reactiveRef: undefined | ReactiveRef<V>): StateManager<undefined | V>
-export function useReactiveRef<V>(reactiveRef: undefined | ReactiveRef<V>): StateManager<undefined | V> {
-    const read = useCallback((): undefined | V => {
-        return reactiveRef?.value
-    }, [reactiveRef])
+    // We use useLayoutEffect (instead of useEffect) to watch the observable
+    // as soon as possible, avoiding missed notifications.
+    useLayoutEffect(() => {
+        const onClean = reactiveObservable?.watch(notifySignal)
 
-    const write = useCallback((value: V): undefined | V => {
-        if (reactiveRef) {
-            reactiveRef.value = value
-        }
-        return reactiveRef?.value
-    }, [reactiveRef])
+        return onClean
+    }, [reactiveObservable])
 
-    return useReactiveStore(
-        read,
-        write,
-        reactiveRef?.watch ?? noopWatch,
-    )
+    return signal
 }
 
 export function useReactiveObservables<V>(reactiveObservables: Array<ReactiveObservable<V>>): RenderSignal {
     const [signal, notifySignal] = useRenderSignal()
 
-    // We use useLayoutEffect, instead of useEffect, to start watching the observables
+    // We use useLayoutEffect (instead of useEffect) to watch the observables
     // as soon as possible, avoiding missed notifications.
     useLayoutEffect(() => {
         const watchers = reactiveObservables.map(it => it.watch(notifySignal))
@@ -85,44 +58,4 @@ export function useReactiveObservables<V>(reactiveObservables: Array<ReactiveObs
     }, [reactiveObservables])
 
     return signal
-}
-
-export function useReactiveAccessors<V>(reactiveAccessors: Array<ReactiveAccessor<V>>): Array<ReactiveAccessor<V>> {
-    const signal = useReactiveObservables(reactiveAccessors)
-
-    const values = useMemo(() => {
-        return reactiveAccessors.slice()
-    }, [reactiveAccessors, signal])
-
-    return values
-}
-
-export function useReactiveRefs<V>(reactiveRefs: Array<ReactiveRef<V>>): Array<ReactiveRef<V>> {
-    const signal = useReactiveObservables(reactiveRefs)
-
-    const values = useMemo(() => {
-        return reactiveRefs.slice()
-    }, [reactiveRefs, signal])
-
-    return values
-}
-
-export function useReactiveAccessorsValues<V>(reactiveAccessors: Array<ReactiveAccessor<V>>): Array<V> {
-    const signal = useReactiveObservables(reactiveAccessors)
-
-    const values = useMemo(() => {
-        return reactiveAccessors.map(it => it.read())
-    }, [reactiveAccessors, signal])
-
-    return values
-}
-
-export function useReactiveRefsValues<V>(reactiveRefs: Array<ReactiveRef<V>>): Array<V> {
-    const signal = useReactiveObservables(reactiveRefs)
-
-    const values = useMemo(() => {
-        return reactiveRefs.map(it => it.value)
-    }, [reactiveRefs, signal])
-
-    return values
 }

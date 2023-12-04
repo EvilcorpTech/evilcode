@@ -18,9 +18,9 @@ export const StoreContext = defineContext<Store<StoreStateGeneric>>('StoreContex
 */
 export function StoreProvider(props: StoreProviderProps<StoreStateGeneric>) {
     const {children, ...spec} = props
-    const value = useStoreCreator(spec)
+    const contextValue = useStoreCreator(spec)
 
-    return <StoreContext.Provider value={value} children={children}/>
+    return <StoreContext.Provider value={contextValue} children={children}/>
 }
 
 export function useStoreCreator<S extends StoreStateGeneric>(spec: StoreDefinition<S>): Store<S> {
@@ -29,8 +29,8 @@ export function useStoreCreator<S extends StoreStateGeneric>(spec: StoreDefiniti
     return useState(createState)
 }
 
-export function useStore<S extends StoreStateGeneric>() {
-    return useContext(StoreContext) as unknown as undefined | Store<S>
+export function useStore<S extends StoreStateGeneric>(): Store<S> {
+    return useContext(StoreContext)! as unknown as Store<S>
 }
 
 // Types ///////////////////////////////////////////////////////////////////////

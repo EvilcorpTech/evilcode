@@ -1,86 +1,49 @@
 import type {AuthAuthenticateOptions, AuthCredentials, AuthInvalidateOptions, AuthValidateOptions} from '@eviljs/web/auth.js'
 import {authenticate, invalidateAuthentication, validateAuthentication} from '@eviljs/web/auth.js'
-import type {Cookie} from '@eviljs/web/cookie.js'
-import type {Fetch} from '@eviljs/web/fetch.js'
 import {throwInvalidResponse} from '@eviljs/web/throw.js'
-import {useCallback, useContext, useEffect, useMemo, useState} from 'react'
+import {useCallback, useMemo, useState} from 'react'
 import {useBusyLock} from './busy.js'
-import {defineContext} from './ctx.js'
-
-export const AuthContext = defineContext<Auth>('AuthContext')
 
 export enum AuthTokenState {
-    Init = 'Initial',
     Missing = 'Missing',
     Validating = 'Validating',
     Valid = 'Valid',
     Invalid = 'Invalid',
 }
 
-/*
-* EXAMPLE
-*
-* const fetch = createFetch({baseUrl: '/api'})
-* const cookie = createCookie()
-* const authenticate = {method, url}
-* const validate = {method, url}
-* const invalidate = {method, url}
-* const options = {authenticate, validate, invalidate}
-*
-* export function MyMain(props) {
-*     return (
-*         <AuthProvider fetch={fetch} cookie={cookie} {...options}>
-*             <Child/>
-*         </AuthProvider>
-*     )
-* }
-*/
-export function AuthProvider(props: AuthProviderProps) {
-    const {children, cookie, fetch, ...options} = props
-    const value = useAuthCreator(fetch, cookie, options)
-
-    return <AuthContext.Provider value={value} children={children}/>
-}
-
-export function useAuthCreator(fetch: Fetch, cookie: Cookie, options?: undefined | AuthOptions) {
-    const authenticateOptions = options?.authenticate
-    const validateOptions = options?.validate
-    const invalidateOptions = options?.invalidate
-    const [token, setToken] = useState(() => cookie.get()) // Reading document.cookie is slow.
-    const [tokenState, setTokenState] = useState(AuthTokenState.Init)
+export function useAuthentication(args: AuthenticationOptions) {
+    const {
+        authenticate: authenticateOptions,
+        validate: validateOptions,
+        invalidate: invalidateOptions,
+    } = args
+    const [tokenState, setTokenState] = useState<AuthTokenState>()
     const {busy, busyLock, busyRelease} = useBusyLock()
 
-    useEffect(() => {
+    const validateToken = useCallback((token: undefined | string) => {
         if (! token) {
             setTokenState(AuthTokenState.Missing)
-            return
-        }
-
-        if (tokenState === AuthTokenState.Valid) {
-            // Token can be already valid as result of the authenticateCredentials().
-            // In this case we must not re-validate it.
             return
         }
 
         setTokenState(AuthTokenState.Validating)
         busyLock()
 
-        validateAuthentication(fetch, token, validateOptions).then(isTokenValid => {
-            setTokenState(isTokenValid
-                ? AuthTokenState.Valid
-                : AuthTokenState.Invalid
-            )
-        })
-        .finally(busyRelease)
-    }, [fetch, validateOptions, token])
+        validateAuthentication(token, validateOptions)
+            .then(tokenIsValid => {
+                setTokenState(tokenIsValid
+                    ? AuthTokenState.Valid
+                    : AuthTokenState.Invalid
+                )
+            })
+            .finally(busyRelease)
+    }, [validateOptions])
 
     const authenticateCredentials = useCallback(async (credentials: AuthCredentials) => {
         busyLock()
         try {
-            const token = await authenticate(fetch, credentials, authenticateOptions)
+            const token = await authenticate(credentials, authenticateOptions)
 
-            cookie.set(token)
-            setToken(token)
             setTokenState(AuthTokenState.Valid)
 
             return token
@@ -88,11 +51,9 @@ export function useAuthCreator(fetch: Fetch, cookie: Cookie, options?: undefined
         finally {
             busyRelease()
         }
-    }, [fetch, cookie, authenticateOptions])
+    }, [authenticateOptions])
 
-    const destroySession = useCallback(async () => {
-        cookie.delete()
-        setToken(undefined)
+    const destroySession = useCallback(async (token: string) => {
         setTokenState(AuthTokenState.Missing)
 
         if (! token) {
@@ -101,52 +62,47 @@ export function useAuthCreator(fetch: Fetch, cookie: Cookie, options?: undefined
 
         busyLock()
         try {
-            const ok = await invalidateAuthentication(fetch, token, invalidateOptions)
+            const ok = await invalidateAuthentication(token, invalidateOptions)
 
             if (! ok) {
                 throwInvalidResponse(
-                    `@eviljs/react/auth.useAuthCreator().destroySession()`
+                    `@eviljs/react/auth.useAuthentication().destroySession()`
                 )
             }
         }
         finally {
             busyRelease()
         }
-    }, [fetch, cookie, invalidateOptions, token])
+    }, [invalidateOptions])
 
     const auth = useMemo(() => {
         const isAuthenticated = tokenState === AuthTokenState.Valid
 
         return {
-            token: isAuthenticated ? token : undefined,
-            savedToken: token,
             tokenState,
             isAuthenticated,
             pending: busy > 0,
-            authenticate: authenticateCredentials,
+            validateToken,
+            authenticateCredentials,
             destroySession,
         }
-    }, [token, tokenState, busy, authenticateCredentials, destroySession])
+    }, [
+        tokenState,
+        busy,
+        validateToken,
+        authenticateCredentials,
+        destroySession,
+    ])
 
     return auth
 }
 
-export function useAuth() {
-    return useContext(AuthContext)
-}
-
 // Types ///////////////////////////////////////////////////////////////////////
 
-export interface AuthProviderProps extends AuthOptions {
-    children: undefined | React.ReactNode
-    cookie: Cookie
-    fetch: Fetch
+export interface AuthenticationOptions {
+    authenticate: AuthAuthenticateOptions
+    invalidate: AuthInvalidateOptions
+    validate: AuthValidateOptions
 }
 
-export interface AuthOptions {
-    authenticate?: undefined | AuthAuthenticateOptions
-    invalidate?: undefined | AuthInvalidateOptions
-    validate?: undefined | AuthValidateOptions
-}
-
-export type Auth = ReturnType<typeof useAuthCreator>
+export type AuthenticationManager = ReturnType<typeof useAuthentication>

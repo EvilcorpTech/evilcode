@@ -1,12 +1,12 @@
-import type {ReducerAction, ReducerArgs, ReducerId} from '@eviljs/std/redux.js'
+import {createReactiveAccessor, type ReactiveAccessor} from '@eviljs/std/reactive-accessor.js'
+import type {ReducerAction} from '@eviljs/std/redux.js'
 import {isArray} from '@eviljs/std/type.js'
-import {useCallback, useContext, useMemo, useRef, useState} from 'react'
+import {useCallback, useMemo} from 'react'
 import {defineContext} from './ctx.js'
 import type {StoreStateGeneric} from './store-v1.js'
+import type {StoreDefinition, StoreDispatch, StoreDispatchPolymorphicArgs} from './store-v2.js'
 
-export * from '@eviljs/std/redux.js'
-
-export const StoreContext = defineContext<Store>('StoreContext')
+export const StoreContext = defineContext<StoreManager>('StoreContext')
 
 /*
 * EXAMPLE
@@ -19,20 +19,24 @@ export const StoreContext = defineContext<Store>('StoreContext')
 *     )
 * }
 */
-export function StoreProvider(props: StoreProviderProps<StoreStateGeneric, ReducerAction>) {
-    const {children, ...spec} = props
+export function StoreProvider<S extends StoreStateGeneric, A extends ReducerAction>(props: StoreProviderProps<S, A>) {
+    const {children, context: contextOptional, ...spec} = props
+    const contextDefault = StoreContext as React.Context<undefined | StoreManager<S, A>>
+    const Context = contextOptional ?? contextDefault
     const contextValue = useStoreCreator(spec)
 
-    return <StoreContext.Provider value={contextValue} children={children}/>
+    return <Context.Provider value={contextValue} children={children}/>
 }
 
 export function useStoreCreator<
     S extends StoreStateGeneric,
     A extends ReducerAction,
->(spec: StoreDefinition<S, A>): Store<S, A> {
+>(spec: StoreDefinition<S, A>): StoreManager<S, A> {
     const {createState, reduce, onDispatch} = spec
-    const [state, setState] = useState(createState)
-    const stateRef = useRef(state)
+
+    const state = useMemo(() => {
+        return createReactiveAccessor(createState())
+    }, [])
 
     const dispatch = useCallback((...polymorphicArgs: StoreDispatchPolymorphicArgs): S => {
         const [id, ...args] = (() => {
@@ -46,54 +50,31 @@ export function useStoreCreator<
             return polymorphicArgs as ReducerAction
         })()
 
-        const oldState = stateRef.current
+        const oldState = state.read()
         const newState = reduce(oldState, ...[id, ...args] as A)
 
         onDispatch?.(id, args, newState, oldState)
 
-        stateRef.current = newState
-
-        setState(newState)
+        state.write(newState)
 
         return newState
     }, [reduce, onDispatch])
 
-    const store = useMemo((): Store<S, A> => {
+    const store = useMemo((): StoreManager<S, A> => {
         return [state, dispatch]
     }, [state, dispatch])
 
     return store
 }
 
-export function useStore<
-    S extends StoreStateGeneric = StoreStateGeneric,
-    A extends ReducerAction = ReducerAction,
->(): Store<S, A> {
-    return useContext(StoreContext)! as unknown as Store<S, A>
-}
-
 // Types ///////////////////////////////////////////////////////////////////////
 
 export interface StoreProviderProps<S extends StoreStateGeneric, A extends ReducerAction> extends StoreDefinition<S, A> {
     children: undefined | React.ReactNode
+    context?: undefined | React.Context<undefined | StoreManager<S, A>>
 }
 
-export interface StoreDefinition<S extends StoreStateGeneric, A extends ReducerAction> {
-    createState(): S
-    reduce(state: S, ...args: A): S
-    onDispatch?: undefined | ((id: ReducerId, args: ReducerArgs, newState: S, oldState: S) => void)
-}
-
-export type Store<
+export type StoreManager<
     S extends StoreStateGeneric = StoreStateGeneric,
     A extends ReducerAction = ReducerAction,
-> = [S, StoreDispatch<S, A>]
-
-export interface StoreDispatch<S extends StoreStateGeneric, A extends ReducerAction = ReducerAction> {
-    (action: A): S
-    (...args: A): S
-}
-
-export type StoreDispatchPolymorphicArgs =
-    | ReducerAction
-    | [ReducerAction]
+> = [ReactiveAccessor<S>, StoreDispatch<S, A>]

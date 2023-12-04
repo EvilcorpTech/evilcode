@@ -7,7 +7,7 @@ import {useI18n} from './i18n.js'
 
 export const Text = memo(function Text(props: TextProps) {
     const {children, className, args, tag, ...otherProps} = props
-    const {translate} = useI18n()!
+    const {translate} = useI18n()
 
     const message = useMemo(() => {
         if (! isString(children)) {

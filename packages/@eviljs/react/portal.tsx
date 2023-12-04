@@ -8,9 +8,9 @@ export const PortalContext = defineContext<StateManager<null | PortalElement>>('
 
 export function PortalProvider(props: PortalProviderProps) {
     const {children} = props
-    const value = usePortalCreator()
+    const contextValue = usePortalCreator()
 
-    return <PortalContext.Provider value={value} children={children}/>
+    return <PortalContext.Provider value={contextValue} children={children}/>
 }
 
 /*

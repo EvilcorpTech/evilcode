@@ -1,27 +1,27 @@
 import {isSome} from '@eviljs/std/type.js'
 import {useMemo} from 'react'
-import {useRouter} from './router.js'
+import {useRouteParams, useRoutePathTest} from './router.js'
 
 export const RoutePathLocaleRegexp = /\/([a-zA-Z]{2})(?:\/|$)/
 
-export function useRoutePathLocale(options?: undefined | UseRoutePathLocaleOptions) {
-    const {matchRoute} = useRouter()!
+export function useRoutePathLocale(options?: undefined | RoutePathLocaleOptions) {
+    const {matchRoutePath} = useRoutePathTest()
 
     const locale = useMemo(() => {
-        const [wholeMatch, routeLocale] = matchRoute(RoutePathLocaleRegexp) ?? []
+        const [wholeMatch, routeLocale] = matchRoutePath(RoutePathLocaleRegexp) ?? []
 
         if (! routeLocale) {
             return
         }
 
         return routeLocale.toLowerCase()
-    }, [matchRoute])
+    }, [matchRoutePath])
 
     return locale
 }
 
-export function useRouteParamLocale(options?: undefined | UseRouteParamsLocaleOptions) {
-    const {route} = useRouter()!
+export function useRouteParamLocale(options?: undefined | RouteParamsLocaleOptions) {
+    const routeParams = useRouteParams()
     const name = options?.name
     const names = options?.names ?? ['lang', 'locale']
 
@@ -29,7 +29,7 @@ export function useRouteParamLocale(options?: undefined | UseRouteParamsLocaleOp
         const keys = [name, ...names].filter(isSome)
 
         for (const key in keys) {
-            const value = route.params?.[key]
+            const value = routeParams?.[key]
 
             if (! value?.trim()) {
                 continue
@@ -39,17 +39,17 @@ export function useRouteParamLocale(options?: undefined | UseRouteParamsLocaleOp
         }
 
         return // Makes TypeScript happy.
-    }, [route.params, name/*, names*/])
+    }, [routeParams, name/*, names*/])
 
     return locale
 }
 
 // Types ///////////////////////////////////////////////////////////////////////
 
-export interface UseRoutePathLocaleOptions {
+export interface RoutePathLocaleOptions {
 }
 
-export interface UseRouteParamsLocaleOptions {
+export interface RouteParamsLocaleOptions {
     name?: undefined | string
     names?: undefined | Array<string>
 }

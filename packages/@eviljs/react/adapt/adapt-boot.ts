@@ -1,4 +1,4 @@
-import {computedRef} from '@eviljs/std/reactive.js'
+import {createComputedRef} from '@eviljs/std/reactive-ref.js'
 import type {Router} from '@eviljs/web/router.js'
 import {createRoot} from 'react-dom/client'
 import type {AppContext, AppEntriesList} from './adapt-entry.js'
@@ -10,7 +10,7 @@ export async function startApp<C extends object = {}>(args: AdaptOptions<C>) {
     const rootNode = setupRootElement(args.rootElementId ?? RootDefaultId, args.rootElementClasses)
     const shouldHydrate = rootNode.hasChildNodes()
     const reactRoot = createRoot(rootNode)
-    const routePathRef = computedRef([router.route], route => route.path)
+    const routePathRef = createComputedRef([router.route], route => route.path)
     const initialRoutePath = routePathRef.value
 
     await shouldHydrate

@@ -1,42 +1,23 @@
 import {compute, type Computable} from '@eviljs/std/compute.js'
-import type {Fn} from '@eviljs/std/fn.js'
+import type {Fn, Task} from '@eviljs/std/fn.js'
 import {escapeRegexp} from '@eviljs/std/regexp.js'
-import {asArray, isPromise} from '@eviljs/std/type.js'
+import {asArray, isPromise, isString} from '@eviljs/std/type.js'
 import {exact, matchRoutePattern, testRoutePattern, type RoutePattern, type RoutePatterns} from '@eviljs/web/route.js'
-import type {Router as RouterManager, RouterRoute, RouterRouteChange, RouterRouteChangeParams, RouterRouteParams} from '@eviljs/web/router.js'
+import type {Router, RouterRoute, RouterRouteChange, RouterRouteChangeParams, RouterRouteParams} from '@eviljs/web/router.js'
 import {encodeLink} from '@eviljs/web/router.js'
 import {isUrlAbsolute} from '@eviljs/web/url.js'
 import {Children, forwardRef, isValidElement, useCallback, useContext, useEffect, useMemo, useRef} from 'react'
 import {classes} from './classes.js'
 import {defineContext} from './ctx.js'
-import {useReactiveRef} from './reactive.js'
+import {useComputedRefValue} from './reactive-ref.js'
+import {RouterContext} from './router-provider.js'
 
 export * from '@eviljs/web/route-v2.js'
 export * from '@eviljs/web/route.js'
 export * from '@eviljs/web/router.js'
+export * from './router-provider.js'
 
-export const RouterContext = defineContext<RouterManager>('RouterContext')
 export const RouteMatchContext = defineContext<RouteArgs>('RouteMatchContext')
-export const RouteActiveClassDefault = 'route-active'
-
-/*
-* EXAMPLE
-*
-* const options = {type, basePath}
-*
-* <RouterProvider options={options}>
-*     <MyApp/>
-* </RouterProvider>
-*/
-export function RouterProvider(props: RouterProviderProps) {
-    const {children, router} = props
-
-    useEffect(() => {
-        router.start() // Router must not be stopped on unmount.
-    }, [router])
-
-    return <RouterContext.Provider value={router} children={children}/>
-}
 
 /*
 * EXAMPLE
@@ -64,11 +45,11 @@ export function RouterProvider(props: RouterProviderProps) {
 */
 export function WhenRoute(props: WhenRouteProps) {
     const {children, is} = props
-    const {matchRoute} = useRouter()!
+    const {matchRoutePath} = useRoutePathTest()
 
     const routeArgs = useMemo((): undefined | RouteArgs => {
         for (const pattern of asArray(is)) {
-            const routeMatches = matchRoute(pattern)
+            const routeMatches = matchRoutePath(pattern)
 
             if (! routeMatches) {
                 continue
@@ -78,7 +59,7 @@ export function WhenRoute(props: WhenRouteProps) {
         }
 
         return // Makes TypeScript happy.
-    }, [is, matchRoute])
+    }, [is, matchRoutePath])
 
     if (! routeArgs) {
         return
@@ -119,7 +100,7 @@ export function WhenRoute(props: WhenRouteProps) {
 */
 export function SwitchRoute(props: SwitchRouteProps) {
     const {children, fallback} = props
-    const {matchRoute, readRoute} = useRouter()!
+    const {routePath, matchRoutePath} = useRoutePathTest()
 
     interface RouteMatch {
         key: undefined | React.Key
@@ -134,7 +115,7 @@ export function SwitchRoute(props: SwitchRouteProps) {
             const candidatePatterns = asArray(candidate.props.is)
 
             for (const pattern of candidatePatterns) {
-                const routeMatches = matchRoute(pattern)
+                const routeMatches = matchRoutePath(pattern)
 
                 if (! routeMatches) {
                     continue
@@ -150,10 +131,10 @@ export function SwitchRoute(props: SwitchRouteProps) {
 
         return {
             key: undefined,
-            child: compute(fallback, readRoute().path),
+            child: compute(fallback, routePath),
             args: [],
         }
-    }, [children, matchRoute, readRoute])
+    }, [children, matchRoutePath, routePath])
 
     const {key, args} = match
     const child = compute(match.child, ...args)
@@ -185,8 +166,6 @@ export const Route = forwardRef(function Route(
     ref: React.ForwardedRef<HTMLAnchorElement>
 ) {
     const {
-        activeClass: activeClassOptional,
-        activeProps,
         activeWhenExact,
         className,
         if: guard,
@@ -196,7 +175,27 @@ export const Route = forwardRef(function Route(
         to,
         ...otherProps
     } = props
-    const {changeRoute, link, route, testRoute} = useRouter()!
+    const {changeRoute, link} = useRouter()
+    const {testRoutePath} = useRoutePathTest()
+    const routePath = useRoutePath()
+    const hrefPath = to ?? routePath
+
+    const href = useMemo(() => {
+        return link(hrefPath, params)
+    }, [hrefPath, params])
+
+    const active = useMemo(() => {
+        if (! to) {
+            return false
+        }
+
+        const pathEscaped = escapeRegexp(to)
+        const pathExact = activeWhenExact
+            ? exact(pathEscaped)
+            : pathEscaped
+
+        return testRoutePath(pathExact)
+    }, [to, testRoutePath])
 
     const onClick = useCallback((event: React.MouseEvent) => {
         if (event.defaultPrevented) {
@@ -229,33 +228,15 @@ export const Route = forwardRef(function Route(
         }
     }, [changeRoute, to, params, state, replaceOptional, guard])
 
-    const isActive = useMemo(() => {
-        if (! to) {
-            return false
-        }
-
-        const pathEscaped = escapeRegexp(to)
-        const pathExact = activeWhenExact
-            ? exact(pathEscaped)
-            : pathEscaped
-
-        return testRoute(pathExact)
-    }, [to, testRoute])
-
-    const activeClass = undefined
-        ?? activeClassOptional
-        ?? activeProps?.className
-        ?? RouteActiveClassDefault
-
     return (
         <a
-            onClick={onClick} // It should be possible to change the onClick behavior.
+            // Overwritable properties.
+            data-active={active}
+            onClick={onClick}
             {...otherProps}
             ref={ref}
-            className={classes(className, {
-                [activeClass]: isActive,
-            })}
-            href={link(to ?? route.path, params)}
+            className={classes('Route-84a4', className)}
+            href={href}
         />
     )
 })
@@ -266,9 +247,9 @@ export const Link = forwardRef(function Link(
     ref: React.ForwardedRef<HTMLAnchorElement>
 ) {
     const {className, params, replace, state, to, ...otherProps} = props
-    const isLink = isUrlAbsolute(to)
+    const isLink = isString(to) && isUrlAbsolute(to)
 
-    if (to && isLink) {
+    if (isLink) {
         return (
             <a
                 target="_blank"
@@ -296,7 +277,7 @@ Link.displayName = 'Link'
 
 export function Redirect(props: RedirectProps) {
     const {children, params, replace: replaceOptional, state, to: path} = props
-    const {changeRoute} = useRouter()!
+    const {changeRoute} = useRouter()
     const replace = replaceOptional ?? true
 
     useEffect(() => {
@@ -305,57 +286,122 @@ export function Redirect(props: RedirectProps) {
         }
 
         changeRoute({path, params, state, replace})
-    })
+    }, [])
 
     return children
 }
 
-export function useRouterContext<S = unknown>() {
-    return useContext(RouterContext as React.Context<undefined | RouterManager<S>>)
+export function useRouterContext<S = unknown>(): undefined | Router<S> {
+    return useContext(RouterContext as React.Context<undefined | Router<S>>)
 }
 
-export function useRouter<S = unknown>(): Router<S> {
-    const routerAdapter = useRouterContext<S>()!
-    const [route] = useReactiveRef(routerAdapter.route)
+export function useRouter<S = unknown>(): RouterManager<S> {
+    const routerContext = useRouterContext<S>()!
 
-    const readRoute = useCallback(() => {
-        return routerAdapter.route.value
-    }, [routerAdapter])
+    const readRoute = useRouteRead<S>()
 
     const changeRoute = useCallback((args: RouterRouteChangeComputable<S>) => {
         const {params, ...otherArgs} = args
         const paramsComputed = compute(params, readRoute().params)
 
-        routerAdapter.changeRoute({...otherArgs, params: paramsComputed})
-    }, [routerAdapter, readRoute])
+        routerContext.changeRoute({...otherArgs, params: paramsComputed})
+    }, [routerContext, readRoute])
 
-    const testRoute = useCallback((pattern: RoutePattern) => {
-        return testRoutePattern(route.path, pattern)
-    }, [route.path])
-
-    const matchRoute = useCallback((pattern: RoutePattern) => {
-        return matchRoutePattern(route.path, pattern)
-    }, [route.path])
+    const link = useRouterLink()
 
     return {
-        route,
-        readRoute,
         changeRoute,
-        testRoute,
-        matchRoute,
-        link: routerAdapter.createLink,
-        start: routerAdapter.start,
-        stop: routerAdapter.stop,
+        link,
+        readRoute,
     }
 }
 
+export function useRouterLink() {
+    const routerContext = useRouterContext()!
+
+    return routerContext.createLink
+}
+
+export function useRoute<S = unknown>(): RouteManager<S> {
+    return {
+        routePath: useRoutePath(),
+        routeParams: useRouteParams(),
+        routeState: useRouteState<S>(),
+        routeArgs: useRouteArgs(),
+    }
+}
+
+export function useRouteRead<S = unknown>(): Task<RouterRoute<S>> {
+    const routerContext = useRouterContext<S>()!
+
+    const readRoute = useCallback(() => {
+        return routerContext.route.value
+    }, [routerContext])
+
+    return readRoute
+}
+
+export function useRoutePath(): RouterRoute['path'] {
+    const routerContext = useRouterContext()!
+
+    const compute = useCallback((route: RouterRoute) => {
+        return route.path
+    }, [])
+
+    const routePath = useComputedRefValue(routerContext.route, compute)
+
+    return routePath
+}
+
+export function useRouteParams(): RouterRoute['params'] {
+    const routerContext = useRouterContext()!
+
+    const compute = useCallback((route: RouterRoute) => {
+        return route.params
+    }, [])
+
+    const routeParams = useComputedRefValue(routerContext.route, compute)
+
+    return routeParams
+}
+
+export function useRouteState<S = unknown>(): RouterRoute<S>['state'] {
+    const routerContext = useRouterContext<S>()!
+
+    const compute = useCallback((route: RouterRoute<S>) => {
+        return route.state
+    }, [])
+
+    const routeState = useComputedRefValue(routerContext.route, compute)
+
+    return routeState
+}
+
 export function useRouteArgs() {
-    return useContext(RouteMatchContext)
+    return useContext(RouteMatchContext)!
+}
+
+export function useRoutePathTest(): RoutePathTester {
+    const routePath = useRoutePath()
+
+    const testRoutePath = useCallback((pattern: RoutePattern) => {
+        return testRoutePattern(routePath, pattern)
+    }, [routePath])
+
+    const matchRoutePath = useCallback((pattern: RoutePattern) => {
+        return matchRoutePattern(routePath, pattern)
+    }, [routePath])
+
+    return {
+        routePath,
+        testRoutePath,
+        matchRoutePath,
+    }
 }
 
 export function useRouteTransition() {
-    const {route} = useRouter()!
-    const toRoute = route.path
+    const routePath = useRoutePath()
+    const toRoute = routePath
     const prevRouteRef = useRef(toRoute)
 
     useEffect(() => {
@@ -382,25 +428,9 @@ function isCaseRouteElement(element: unknown): element is React.ReactElement<Cas
 
 // Types ///////////////////////////////////////////////////////////////////////
 
-export interface RouterProviderProps<S = unknown> {
-    children: undefined | React.ReactNode
-    router: RouterManager<S>
-}
-
 export interface RouteArgsProviderProps {
     children: undefined | React.ReactNode
     value: RouteArgs
-}
-
-export interface Router<S = unknown> {
-    route: RouterRoute<S>
-    readRoute(): RouterRoute<S>
-    changeRoute(args: RouterRouteChangeComputable<S>): void
-    testRoute(pattern: RoutePattern): boolean
-    matchRoute(pattern: RoutePattern): undefined | RegExpMatchArray
-    link(path: string, params?: undefined | RouterRouteChangeParams): string
-    start(): void
-    stop(): void
 }
 
 export interface WhenRouteProps {
@@ -418,8 +448,6 @@ export interface CaseRouteProps extends WhenRouteProps {
 }
 
 export interface RouteProps extends RoutingProps, React.AnchorHTMLAttributes<HTMLAnchorElement> {
-    activeClass?: undefined | string
-    activeProps?: undefined | {className?: undefined | string}
     activeWhenExact?: undefined | boolean
     children: undefined | React.ReactNode
     if?: undefined | Computable<RouteGuardResult>
@@ -437,11 +465,30 @@ export interface RoutingProps extends Omit<RouterRouteChange, 'path'> {
     to?: undefined | RouterRouteChange['path']
 }
 
+export interface RouterManager<S = unknown> {
+    changeRoute(args: RouterRouteChangeComputable<S>): void
+    link(path: string, params?: undefined | RouterRouteChangeParams): string
+    readRoute(): RouterRoute<S>
+}
+
+export interface RouteManager<S = unknown> {
+    routePath: RouterRoute<S>['path']
+    routeParams: RouterRoute<S>['params']
+    routeState: RouterRoute<S>['state']
+    routeArgs: RouteArgs
+}
+
+export interface RoutePathTester {
+    routePath: RouterRoute['path']
+    testRoutePath(pattern: RoutePattern): boolean
+    matchRoutePath(pattern: RoutePattern): undefined | RegExpMatchArray
+}
+
 export interface RouterRouteChangeComputable<S = unknown> extends Omit<RouterRouteChange<S>, 'params'> {
-    params?:
-        | undefined
-        | RouterRouteChangeParams
-        | ((params: RouterRouteParams) => RouterRouteChangeParams)
+    params?: undefined | Computable<
+        undefined | RouterRouteChangeParams,
+        [routeParams: undefined | RouterRouteParams]
+    >
 }
 
 export type RouteMatchChildren =

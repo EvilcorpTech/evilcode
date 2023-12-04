@@ -21,9 +21,9 @@ export const PortalsContext = defineContext<StateManager<Portals>>('PortalsConte
 */
 export function PortalsProvider(props: PortalsProviderProps) {
     const {children} = props
-    const value = usePortalsCreator()
+    const contextValue = usePortalsCreator()
 
-    return <PortalsContext.Provider value={value} children={children}/>
+    return <PortalsContext.Provider value={contextValue} children={children}/>
 }
 
 /*
