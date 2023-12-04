@@ -1,14 +1,15 @@
 import type {BoxProps} from '@eviljs/react/box.js'
 import {Box} from '@eviljs/react/box.js'
-import {Route, useRouter} from '@eviljs/react/router.js'
 import {classes} from '@eviljs/react/classes.js'
+import {Route, useRoute, useRouter} from '@eviljs/react/router.js'
 import {createElement, useEffect, useMemo, useState} from 'react'
 
 export function Showcase(props: ShowcaseProps) {
     const {children, className, ...otherProps} = props
     const [selected, setSelected] = useState('')
     const [search, setSearch] = useState('')
-    const {changeRoute, route} = useRouter()!
+    const {changeRoute} = useRouter()
+    const {routePath, routeParams} = useRoute()
 
     useEffect(() => {
         const defaultShowcase = children[0]
@@ -16,12 +17,12 @@ export function Showcase(props: ShowcaseProps) {
             ? idOfShowcase(defaultShowcase)
             : ''
 
-        setSelected(route.params?.id ?? defaultId)
-    }, [route.params?.id])
+        setSelected(routeParams?.id ?? defaultId)
+    }, [routeParams?.id])
 
     useEffect(() => {
-        setSearch(route.params?.search ?? '')
-    }, [route.params?.search])
+        setSearch(routeParams?.search ?? '')
+    }, [routeParams?.search])
 
     const items = useMemo(() => {
         const matchingItems = children.filter(it =>
@@ -47,7 +48,7 @@ export function Showcase(props: ShowcaseProps) {
                     onChange={event =>
                         changeRoute({
                             params: {
-                                ...route.params,
+                                ...routeParams,
                                 search: event.target.value ?? '',
                             },
                             replace: true,
@@ -63,8 +64,8 @@ export function Showcase(props: ShowcaseProps) {
                         className={classes('item-988a', {
                             selected: idOfShowcase(it) === selected,
                         })}
-                        to={route.path}
-                        params={{...route.params, id: idOfShowcase(it)}}
+                        to={routePath}
+                        params={{...routeParams, id: idOfShowcase(it)}}
                     >
                         {it[0]}
                     </Route>

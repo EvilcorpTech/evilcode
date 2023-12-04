@@ -1,29 +1,26 @@
-import {useAuth, AuthTokenState} from '@eviljs/react/auth.js'
+import {AuthTokenState} from '@eviljs/react/auth.js'
 
 export function AuthBarrier(props: AuthBarrierProps) {
-    const {children, progress, fallback} = props
-    const {tokenState} = useAuth()!
+    const {children, fallback, progress, tokenState} = props
 
-    // We use fragments for typing reasons.
     switch (tokenState) {
-        case AuthTokenState.Validating:
-            // We are waiting the response from the server.
-            return progress
+        // Fast path, from the most common to least common.
         case AuthTokenState.Valid:
-            // Token has been verified and is valid. We can safely continue.
-            return children
+            return children // Token has been verified and is valid. We can safely continue.
         case AuthTokenState.Missing:
         case AuthTokenState.Invalid:
-            // Token is missing or invalid.
-            return fallback
+            return fallback // Token is missing or invalid.
+        case AuthTokenState.Validating:
+            return progress // We are waiting the response from the server.
+        case undefined:
+            return
     }
-
-    return // Makes TypeScript happy.
 }
 
 // Types ///////////////////////////////////////////////////////////////////////
 
 export interface AuthBarrierProps {
+    tokenState: undefined | AuthTokenState
     children: React.ReactNode
     progress: React.ReactNode
     fallback: React.ReactNode

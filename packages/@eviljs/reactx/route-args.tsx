@@ -1,22 +1,22 @@
-import {useRouteArgs, useRouter} from '@eviljs/react/router.js'
+import {useRouteArgs, useRoutePathTest} from '@eviljs/react/router.js'
 import {isArray, isFunction} from '@eviljs/std/type.js'
 import {routeRegexpFromPattern} from '@eviljs/web/route.js'
 import {Children, cloneElement, useMemo} from 'react'
 
 export function RouteArgs(props: RouteArgsProps) {
     const {route, fromProp, guard, children, ...otherProps} = props
-    const {testRoute} = useRouter()!
-    const matches = useRouteArgs()
+    const {testRoutePath} = useRoutePathTest()
+    const routeArgs = useRouteArgs()
 
     const routeIsValid = useMemo(() => {
         if (! guard) {
             return true
         }
         const guardRegexp = routeRegexpFromPattern(guard)
-        const isValid = testRoute(guardRegexp)
+        const isValid = testRoutePath(guardRegexp)
 
         return isValid
-    }, [guard, testRoute])
+    }, [guard, testRoutePath])
 
     if (! children) {
         return
@@ -30,7 +30,7 @@ export function RouteArgs(props: RouteArgsProps) {
 
     const args = fromProp
         ? otherProps[fromProp]
-        : matches
+        : routeArgs
 
     const routedProps = (() => {
         if (isArray(route)) {
