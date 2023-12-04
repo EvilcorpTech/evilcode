@@ -1,0 +1,54 @@
+{
+    "name": "@eviljs/server-ssr",
+    "version": "1.0.0",
+    "type": "module",
+    "files": [
+        "/LICENSE.txt",
+        "/**/*.js",
+        "/**/*.ts"
+    ],
+    "main": "index.js",
+    "scripts": {
+        "build": "tsc --listEmittedFiles",
+        "preversion": "npm run build",
+        "prepack": "npm run build"
+    },
+    "dependencies": {
+        "@eviljs/std": "1",
+        "@eviljs/web": "1",
+        "@types/koa": "2",
+        "@types/koa-compose": "3",
+        "@types/koa-compress": "4",
+        "@types/koa-conditional-get": "2",
+        "@types/koa-etag": "3",
+        "@types/koa-static": "4",
+        "@types/node": "20",
+        "koa": "2",
+        "koa-compress": "5",
+        "koa-conditional-get": "3",
+        "koa-etag": "4",
+        "koa-static": "5",
+        "parse5": "7",
+        "puppeteer": "21",
+        "tslib": "2"
+    },
+    "devDependencies": {
+        "typescript": "5.3"
+    },
+    "author": "Daniele Orlando",
+    "license": "BSD-2-Clause",
+    "description": "An SSR server using Puppeteer",
+    "keywords": [
+        "Node",
+        "SSR",
+        "TypeScript"
+    ],
+    "homepage": "https://github.com/EvilcorpTech/evilcode",
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/EvilcorpTech/evilcode.git"
+    },
+    "bugs": {
+        "url": "https://github.com/EvilcorpTech/evilcode/issues"
+    }
+}
