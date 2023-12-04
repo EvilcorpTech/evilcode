@@ -5,10 +5,11 @@ import {isDefined} from '@eviljs/std/type.js'
 import {createContext, createMemo, createSignal, useContext, type Accessor, type Setter} from 'solid-js'
 
 export type * from '@eviljs/std/i18n.js'
+
 export const I18nContext = createContext<Accessor<I18nManager>>()
 
 export function useI18n() {
-    return useContext(I18nContext)
+    return useContext(I18nContext)!
 }
 
 export function createI18n(spec: I18nDefinition<string, I18nMessageKey>) {
@@ -72,7 +73,7 @@ export function createI18nMessage(
     getKey: undefined | I18nMessageKey | Accessor<undefined | I18nMessageKey>,
     getArgs?: undefined | I18nMessageArgs | Accessor<I18nMessageArgs>,
 ): Accessor<undefined | string | I18nMessageKey> {
-    const i18n = useI18n()!
+    const i18n = useI18n()
 
     const message = createMemo(() => {
         const key = compute(getKey)
