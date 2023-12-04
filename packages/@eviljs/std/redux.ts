@@ -1,7 +1,7 @@
 import {compute} from './compute.js'
 import type {FnArgs} from './fn.js'
 import {areObjectsEqualShallow} from './object.js'
-import type {ValueOf} from './type.js'
+import {isArray, type ValueOf} from './type.js'
 
 export let ReducerUid = 0
 
@@ -23,9 +23,9 @@ export function defineReducerAction<S extends ReducerState, K extends ReducerId,
     }
 }
 
-export function composeReducers<
+export function composeReducersEntries<
     T extends Array<[ReducerId, ReducerTarget<any, any>]>,
->(...reducers: T): CompositeReducerOfList<T> {
+>(reducers: T): CompositeReducerOfEntries<T> {
     function reduce(state: ReducerState, actionId: ReducerId, ...args: ReducerArgs): ReducerState {
         for (const it of reducers) {
             const [reducerId, reducer] = it
@@ -40,10 +40,10 @@ export function composeReducers<
         return state
     }
 
-    return reduce as unknown as CompositeReducerOfList<T>
+    return reduce as unknown as CompositeReducerOfEntries<T>
 }
 
-export function fromActionsDefinitions<S extends ReducerState>(
+export function reducersEntriesFromActions<S extends ReducerState>(
     actions: Record<
         PropertyKey,
         ReducerActionDefinition<S, ReducerId, Array<any>>
@@ -59,6 +59,12 @@ export function patchState<S extends ReducerState>(state: S, statePatch: StoreSt
     return areObjectsEqualShallow(state, mergedState)
         ? state
         : mergedState
+}
+
+export function actionFromPolymorphicArgs(...args: ReducerPolymorphicAction): ReducerAction {
+    return isArray(args[0])
+        ? args[0] as ReducerAction // args is: [[id, ...args]]
+        : args as ReducerAction // args is: [id, ...args]
 }
 
 // Types ///////////////////////////////////////////////////////////////////////
@@ -82,6 +88,8 @@ export type ReducerAction<
     A extends ReducerArgs = ReducerArgs,
 > = [id: K, ...args: A]
 
+export type ReducerPolymorphicAction = ReducerAction | [ReducerAction]
+
 export interface Reducer<
     S extends ReducerState = ReducerState,
     K extends ReducerId = ReducerId,
@@ -97,18 +105,18 @@ export interface ReducerTarget<
     (state: S, ...args: A): S
 }
 
-export type CompositeReducerOfList<L extends Array<[ReducerId, ReducerTarget<any, Array<any>>]>> =
-    (...args: ReducerArgsOfList<L>) => ReducerStateOfList<L>
+export type CompositeReducerOfEntries<L extends Array<[ReducerId, ReducerTarget<any, Array<any>>]>> =
+    (...args: ReducerArgsOfEntries<L>) => ReducerStateOfEntries<L>
 
-export type ReducerStateOfList<L extends Array<[ReducerId, ReducerTarget<any, Array<any>>]>> =
+export type ReducerStateOfEntries<L extends Array<[ReducerId, ReducerTarget<any, Array<any>>]>> =
     L extends Array<[ReducerId, ReducerTarget<infer S, ReducerArgs>]>
         ? S
         : ReducerState
 
-export type ReducerArgsOfList<L extends Array<[ReducerId, ReducerTarget<any, Array<any>>]>> =
-    { [key in keyof L]: ReducerArgsOfListItem<L[key]> }[number]
+export type ReducerArgsOfEntries<L extends Array<[ReducerId, ReducerTarget<any, Array<any>>]>> =
+    { [key in keyof L]: ReducerArgsOfEntry<L[key]> }[number]
 
-export type ReducerArgsOfListItem<I extends [ReducerId, ReducerTarget]> =
+export type ReducerArgsOfEntry<I extends [ReducerId, ReducerTarget]> =
     I extends [infer K, ReducerTarget<infer S, infer A>]
         ? [S, K, ...A]
         : [ReducerState, ReducerId, ...FnArgs]
