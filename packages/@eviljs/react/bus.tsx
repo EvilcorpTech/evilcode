@@ -1,24 +1,20 @@
 import type {Bus, BusEvent, BusEventObserver} from '@eviljs/std/bus.js'
-import {useContext, useEffect} from 'react'
-import {BusContext, BusProvider, type BusProviderProps} from './bus-provider.js'
+import {useEffect} from 'react'
+import {BusProvider, useBusContext, type BusContextOptions, type BusProviderProps} from './bus-provider.js'
 
 export type {Bus, BusEvent, BusEventObserver} from '@eviljs/std/bus.js'
 export * from './bus-provider.js'
 
-export function useBus(
-    contextOptional?: undefined | React.Context<undefined | Bus>,
-): Bus {
-    const contextDefault = BusContext as React.Context<undefined | Bus>
-
-    return useContext(contextOptional ?? contextDefault)!
+export function useBus(options?: undefined | BusContextOptions): Bus {
+    return useBusContext(options)!
 }
 
 export function useBusEvent<P = unknown>(
     event: BusEvent,
     observer: undefined | BusEventObserver<P>,
-    contextOptional?: undefined | React.Context<undefined | Bus>,
+    options?: undefined | BusContextOptions,
 ) {
-    const bus = useBus(contextOptional)
+    const bus = useBusContext(options)!
 
     useEffect(() => {
         if (! observer) {
@@ -35,21 +31,27 @@ export function useBusEvent<P = unknown>(
     }, [bus, event, observer])
 }
 
-export function createBus(context: React.Context<undefined | Bus>): BusBound {
-    const self: BusBound = {
+export function setupBus(options?: undefined | BusContextOptions): BusBound {
+    return {
         BusProvider(props) {
-            return <BusProvider context={context} {...props}/>
+            return (
+                <BusProvider
+                    context={options?.context}
+                    bus={options?.bus}
+                    {...props}
+                />
+            )
+        },
+        useBusContext() {
+            return useBusContext(options)
         },
         useBus() {
-            return useBus(context)
+            return useBus(options)
         },
         useBusEvent(event: BusEvent, observer: undefined | BusEventObserver) {
-            useBusEvent(event, observer, context)
+            useBusEvent(event, observer, options)
         },
     }
-    ;(self.BusProvider as React.FunctionComponent).displayName = 'BusProviderFactory'
-
-    return self
 }
 
 // Types ///////////////////////////////////////////////////////////////////////
@@ -58,6 +60,9 @@ export interface BusBound {
     BusProvider: {
         (props: BusProviderProps): JSX.Element,
     },
+    useBusContext: {
+        (): undefined | Bus
+    }
     useBus: {
         (): Bus
     }

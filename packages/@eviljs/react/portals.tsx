@@ -21,7 +21,7 @@ export const PortalsContext = defineContext<StateManager<Portals>>('PortalsConte
 */
 export function PortalsProvider(props: PortalsProviderProps) {
     const {children} = props
-    const contextValue = usePortalsCreator()
+    const contextValue = useCreatePortals()
 
     return <PortalsContext.Provider value={contextValue} children={children}/>
 }
@@ -89,7 +89,7 @@ export function Teleport(props: TeleportProps) {
     return createPortal(children, portal)
 }
 
-export function usePortalsCreator(): StateManager<Portals> {
+export function useCreatePortals(): StateManager<Portals> {
     const [portals, setPortals] = useState<Portals>({})
 
     return useMemo(() => [portals, setPortals], [portals, setPortals])

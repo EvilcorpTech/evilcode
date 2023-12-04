@@ -19,7 +19,6 @@ export function useMachine<S, E>(reduce: MachineReducer<S, E>, createState: Mach
     return [state, dispatch, readState]
 }
 
-
 // Types ///////////////////////////////////////////////////////////////////////
 
 export type MachineManager<S, E> = [state: S, dispatch: MachineDispatch<S, E>, readState: Task<S>]

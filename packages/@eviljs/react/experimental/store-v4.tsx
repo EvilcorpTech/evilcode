@@ -1,5 +1,6 @@
 import {compute} from '@eviljs/std/compute.js'
 import type {Fn, Task} from '@eviljs/std/fn.js'
+import type {ReducerState} from '@eviljs/std/redux.js'
 import {identity} from '@eviljs/std/return.js'
 import {cloneShallow} from '@eviljs/std/struct.js'
 import {isArray, isObject} from '@eviljs/std/type.js'
@@ -7,10 +8,9 @@ import {useCallback, useContext, useLayoutEffect, useMemo, useRef} from 'react'
 import {defineContext} from '../ctx.js'
 import {useRender} from '../lifecycle.js'
 import type {StateManager, StateSetterArg} from '../state.js'
-import type {StoreStateGeneric} from '../store-v1.js'
 import type {StoreSelector} from '../store.js'
 
-export const StoreContext = defineContext<Store<StoreStateGeneric>>('StoreContext')
+export const StoreContextV4 = defineContext<Store<ReducerState>>('StoreContextV4')
 
 /*
 * EXAMPLE
@@ -23,14 +23,14 @@ export const StoreContext = defineContext<Store<StoreStateGeneric>>('StoreContex
 *     )
 * }
 */
-export function StoreProvider(props: StoreProviderProps<StoreStateGeneric>) {
+export function StoreProviderV4(props: StoreProviderV4Props<ReducerState>) {
     const {children, ...spec} = props
-    const contextValue = useStoreCreator(spec)
+    const contextValue = useCreateStoreV4(spec)
 
-    return <StoreContext.Provider value={contextValue} children={children}/>
+    return <StoreContextV4.Provider value={contextValue} children={children}/>
 }
 
-export function useStoreCreator<S extends StoreStateGeneric>(spec: StoreDefinition<S>): Store<S> {
+export function useCreateStoreV4<S extends ReducerState>(spec: StoreDefinition<S>): Store<S> {
     const {createState, onChange} = spec
     const stateRef = useRef(createState())
     const storeObservers = useMemo(() =>
@@ -105,8 +105,8 @@ export function useStoreCreator<S extends StoreStateGeneric>(spec: StoreDefiniti
     return store
 }
 
-export function useStoreContext<S extends StoreStateGeneric>(): undefined | Store<S> {
-    return useContext(StoreContext) as undefined | Store<S>
+export function useStoreContextV4<S extends ReducerState>(): undefined | Store<S> {
+    return useContext(StoreContextV4) as undefined | Store<S>
 }
 
 /*
@@ -115,11 +115,11 @@ export function useStoreContext<S extends StoreStateGeneric>(): undefined | Stor
 * const [books, setBooks] = useStoreState(state => state.books)
 * const [selectedFood, setSelectedFood] = useStoreState(state => state.food[selectedFoodIndex])
 */
-export function useStoreState<S extends StoreStateGeneric, V>(selectorOptional: StoreSelector<S, V>): StateManager<V>
-export function useStoreState<S extends StoreStateGeneric>(): StateManager<S>
-export function useStoreState<S extends StoreStateGeneric, V>(selectorOptional?: undefined | StoreSelector<S, V>): StateManager<S | V> {
-    const selector = (selectorOptional ?? identity) as StoreSelector<StoreStateGeneric, unknown>
-    const store = useStoreContext<S>()!
+export function useStoreStateV4<S extends ReducerState, V>(selectorOptional: StoreSelector<S, V>): StateManager<V>
+export function useStoreStateV4<S extends ReducerState>(): StateManager<S>
+export function useStoreStateV4<S extends ReducerState, V>(selectorOptional?: undefined | StoreSelector<S, V>): StateManager<S | V> {
+    const selector = (selectorOptional ?? identity) as StoreSelector<ReducerState, unknown>
+    const store = useStoreContextV4<S>()!
     const state = store.stateRef.current
     const path = selectStatePath(state, selector)
     const pathKey = asPathKey(path)
@@ -141,7 +141,7 @@ export function useStoreState<S extends StoreStateGeneric, V>(selectorOptional?:
     return [selectedState, setSelectedState]
 }
 
-export function selectStatePath(state: StoreStateGeneric, selector: StoreSelector<StoreStateGeneric, unknown>): StatePath {
+export function selectStatePath(state: ReducerState, selector: StoreSelector<ReducerState, unknown>): StatePath {
     const path: StatePath = ['/']
 
     if (! isObject(state) && ! isArray(state)) {
@@ -171,7 +171,7 @@ export function selectStateValue<S>(state: S, path: StatePath): unknown {
     return selectedState
 }
 
-export function mutateState<S extends StoreStateGeneric = StoreStateGeneric>(
+export function mutateState<S extends ReducerState = ReducerState>(
     state: S,
     path: StatePath,
     nextValue: StateSetterArg<unknown>
@@ -232,7 +232,7 @@ export function walkState(
     }
 }
 
-export function createStateProxy<S extends StoreStateGeneric>(state: S, onGet: (key: PropertyKey) => void) {
+export function createStateProxy<S extends ReducerState>(state: S, onGet: (key: PropertyKey) => void) {
     const proxy = new Proxy(state, {
         get(obj, prop, proxy): unknown {
             onGet(prop)
@@ -286,16 +286,16 @@ export function addToMapList<K extends PropertyKey, I>(map: Map<K, Array<I>>, ke
 
 // Types ///////////////////////////////////////////////////////////////////////
 
-export interface StoreProviderProps<S extends StoreStateGeneric> extends StoreDefinition<S> {
+export interface StoreProviderV4Props<S extends ReducerState> extends StoreDefinition<S> {
     children: undefined | React.ReactNode
 }
 
-export interface StoreDefinition<S extends StoreStateGeneric> {
+export interface StoreDefinition<S extends ReducerState> {
     createState(): S
     onChange?: undefined | ((args: OnChangeEventArgs) => void)
 }
 
-export interface Store<S extends StoreStateGeneric> {
+export interface Store<S extends ReducerState> {
     stateRef: React.MutableRefObject<S>
     state(): S
     observe(path: StatePath, observer: Task): Task
@@ -305,7 +305,7 @@ export interface Store<S extends StoreStateGeneric> {
 export type StatePath = Array<PropertyKey>
 
 
-export interface OnChangeEventArgs<S extends StoreStateGeneric = StoreStateGeneric> {
+export interface OnChangeEventArgs<S extends ReducerState = ReducerState> {
     state: S,
     stateOld: S
     path: StatePath,

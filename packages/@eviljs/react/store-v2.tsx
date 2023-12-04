@@ -1,12 +1,8 @@
-import type {ReducerAction, ReducerArgs, ReducerId} from '@eviljs/std/redux.js'
-import {isArray} from '@eviljs/std/type.js'
+import {actionFromPolymorphicArgs, type ReducerAction, type ReducerArgs, type ReducerId, type ReducerPolymorphicAction, type ReducerState} from '@eviljs/std/redux.js'
 import {useCallback, useContext, useMemo, useRef, useState} from 'react'
 import {defineContext} from './ctx.js'
-import type {StoreStateGeneric} from './store-v1.js'
 
-export * from '@eviljs/std/redux.js'
-
-export const StoreContext = defineContext<Store>('StoreContext')
+export const StoreContextV2 = defineContext<StoreV2>('StoreContextV2')
 
 /*
 * EXAMPLE
@@ -19,32 +15,23 @@ export const StoreContext = defineContext<Store>('StoreContext')
 *     )
 * }
 */
-export function StoreProvider(props: StoreProviderProps<StoreStateGeneric, ReducerAction>) {
+export function StoreProviderV2(props: StoreProviderV2Props<ReducerState, ReducerAction>) {
     const {children, ...spec} = props
-    const contextValue = useStoreCreator(spec)
+    const contextValue = useCreateStoreV2(spec)
 
-    return <StoreContext.Provider value={contextValue} children={children}/>
+    return <StoreContextV2.Provider value={contextValue} children={children}/>
 }
 
-export function useStoreCreator<
-    S extends StoreStateGeneric,
+export function useCreateStoreV2<
+    S extends ReducerState,
     A extends ReducerAction,
->(spec: StoreDefinition<S, A>): Store<S, A> {
+>(spec: StoreDefinitionV2<S, A>): StoreV2<S, A> {
     const {createState, reduce, onDispatch} = spec
     const [state, setState] = useState(createState)
     const stateRef = useRef(state)
 
-    const dispatch = useCallback((...polymorphicArgs: StoreDispatchPolymorphicArgs): S => {
-        const [id, ...args] = (() => {
-            const [idOrAction] = polymorphicArgs
-
-            if (isArray(idOrAction)) {
-                const [id, ...args] = idOrAction
-                return [id, ...args] as ReducerAction
-            }
-
-            return polymorphicArgs as ReducerAction
-        })()
+    const dispatch = useCallback((...polymorphicArgs: ReducerPolymorphicAction): S => {
+        const [id, ...args] = actionFromPolymorphicArgs(...polymorphicArgs)
 
         const oldState = stateRef.current
         const newState = reduce(oldState, ...[id, ...args] as A)
@@ -58,42 +45,38 @@ export function useStoreCreator<
         return newState
     }, [reduce, onDispatch])
 
-    const store = useMemo((): Store<S, A> => {
+    const store = useMemo((): StoreV2<S, A> => {
         return [state, dispatch]
     }, [state, dispatch])
 
     return store
 }
 
-export function useStore<
-    S extends StoreStateGeneric = StoreStateGeneric,
+export function useStoreV2<
+    S extends ReducerState = ReducerState,
     A extends ReducerAction = ReducerAction,
->(): Store<S, A> {
-    return useContext(StoreContext)! as unknown as Store<S, A>
+>(): StoreV2<S, A> {
+    return useContext(StoreContextV2)! as unknown as StoreV2<S, A>
 }
 
 // Types ///////////////////////////////////////////////////////////////////////
 
-export interface StoreProviderProps<S extends StoreStateGeneric, A extends ReducerAction> extends StoreDefinition<S, A> {
+export interface StoreProviderV2Props<S extends ReducerState, A extends ReducerAction> extends StoreDefinitionV2<S, A> {
     children: undefined | React.ReactNode
 }
 
-export interface StoreDefinition<S extends StoreStateGeneric, A extends ReducerAction> {
+export interface StoreDefinitionV2<S extends ReducerState, A extends ReducerAction> {
     createState(): S
     reduce(state: S, ...args: A): S
     onDispatch?: undefined | ((id: ReducerId, args: ReducerArgs, newState: S, oldState: S) => void)
 }
 
-export type Store<
-    S extends StoreStateGeneric = StoreStateGeneric,
+export type StoreV2<
+    S extends ReducerState = ReducerState,
     A extends ReducerAction = ReducerAction,
-> = [S, StoreDispatch<S, A>]
+> = [S, StoreDispatchV2<S, A>]
 
-export interface StoreDispatch<S extends StoreStateGeneric, A extends ReducerAction = ReducerAction> {
+export interface StoreDispatchV2<S extends ReducerState, A extends ReducerAction = ReducerAction> {
     (action: A): S
     (...args: A): S
 }
-
-export type StoreDispatchPolymorphicArgs =
-    | ReducerAction
-    | [ReducerAction]

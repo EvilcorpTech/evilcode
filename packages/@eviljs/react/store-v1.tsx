@@ -3,7 +3,7 @@ import {useContext, useState} from 'react'
 import {defineContext} from './ctx.js'
 import type {StateManager} from './state.js'
 
-export const StoreContext = defineContext<Store<StoreStateGeneric>>('StoreContext')
+export const StoreContextV1 = defineContext<StoreV1<ReducerState>>('StoreContextV1')
 
 /*
 * EXAMPLE
@@ -16,33 +16,31 @@ export const StoreContext = defineContext<Store<StoreStateGeneric>>('StoreContex
 *     )
 * }
 */
-export function StoreProvider(props: StoreProviderProps<StoreStateGeneric>) {
+export function StoreProviderV1(props: StoreProviderV1Props<ReducerState>) {
     const {children, ...spec} = props
-    const contextValue = useStoreCreator(spec)
+    const contextValue = useStoreCreatorV1(spec)
 
-    return <StoreContext.Provider value={contextValue} children={children}/>
+    return <StoreContextV1.Provider value={contextValue} children={children}/>
 }
 
-export function useStoreCreator<S extends StoreStateGeneric>(spec: StoreDefinition<S>): Store<S> {
+export function useStoreCreatorV1<S extends ReducerState>(spec: StoreDefinitionV1<S>): StoreV1<S> {
     const {createState} = spec
 
     return useState(createState)
 }
 
-export function useStore<S extends StoreStateGeneric>(): Store<S> {
-    return useContext(StoreContext)! as unknown as Store<S>
+export function useStoreV1<S extends ReducerState>(): StoreV1<S> {
+    return useContext(StoreContextV1)! as unknown as StoreV1<S>
 }
 
 // Types ///////////////////////////////////////////////////////////////////////
 
-export interface StoreProviderProps<S extends StoreStateGeneric> extends StoreDefinition<S> {
+export interface StoreProviderV1Props<S extends ReducerState> extends StoreDefinitionV1<S> {
     children: undefined | React.ReactNode
 }
 
-export interface StoreDefinition<S extends StoreStateGeneric> {
+export interface StoreDefinitionV1<S extends ReducerState> {
     createState(): S
 }
 
-export type Store<S extends StoreStateGeneric> = StateManager<S>
-
-export type StoreStateGeneric = ReducerState
+export type StoreV1<S extends ReducerState> = StateManager<S>

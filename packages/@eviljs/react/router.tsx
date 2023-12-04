@@ -3,14 +3,14 @@ import type {Fn, Task} from '@eviljs/std/fn.js'
 import {escapeRegexp} from '@eviljs/std/regexp.js'
 import {asArray, isPromise, isString} from '@eviljs/std/type.js'
 import {exact, matchRoutePattern, testRoutePattern, type RoutePattern, type RoutePatterns} from '@eviljs/web/route.js'
-import type {Router, RouterRoute, RouterRouteChange, RouterRouteChangeParams, RouterRouteParams} from '@eviljs/web/router.js'
+import type {RouterRoute, RouterRouteChange, RouterRouteChangeParams, RouterRouteParams} from '@eviljs/web/router.js'
 import {encodeLink} from '@eviljs/web/router.js'
 import {isUrlAbsolute} from '@eviljs/web/url.js'
 import {Children, forwardRef, isValidElement, useCallback, useContext, useEffect, useMemo, useRef} from 'react'
 import {classes} from './classes.js'
 import {defineContext} from './ctx.js'
 import {useComputedRefValue} from './reactive-ref.js'
-import {RouterContext} from './router-provider.js'
+import {useRouterContext} from './router-provider.js'
 
 export * from '@eviljs/web/route-v2.js'
 export * from '@eviljs/web/route.js'
@@ -289,10 +289,6 @@ export function Redirect(props: RedirectProps) {
     }, [])
 
     return children
-}
-
-export function useRouterContext<S = unknown>(): undefined | Router<S> {
-    return useContext(RouterContext as React.Context<undefined | Router<S>>)
 }
 
 export function useRouter<S = unknown>(): RouterManager<S> {

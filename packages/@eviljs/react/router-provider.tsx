@@ -1,5 +1,5 @@
 import type {Router} from '@eviljs/web/router.js'
-import {useEffect} from 'react'
+import {useContext, useEffect} from 'react'
 import {defineContext} from './ctx.js'
 
 export const RouterContext = defineContext<Router>('RouterContext')
@@ -21,6 +21,10 @@ export function RouterProvider(props: RouterProviderProps) {
     }, [router])
 
     return <RouterContext.Provider value={router} children={children}/>
+}
+
+export function useRouterContext<S = unknown>(): undefined | Router<S> {
+    return useContext(RouterContext as React.Context<undefined | Router<S>>)
 }
 
 // Types ///////////////////////////////////////////////////////////////////////
