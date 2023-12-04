@@ -1,48 +1,9 @@
+import {OneSecondInMs} from '@eviljs/std/date.js'
 import {mapSome} from '@eviljs/std/monad.js'
 import {escapeRegexp} from '@eviljs/std/regexp.js'
-import {isSome} from '@eviljs/std/type.js'
+import {asDate, isSome} from '@eviljs/std/type.js'
 
-export const KeyRegexpCache: Record<string, RegExp> = {}
-
-export function createCookie(key: string, options?: undefined | CookieOptions) {
-    const self: Cookie = {
-        key,
-        get() {
-            return readCookie(self.key)
-        },
-        set(value: string) {
-            return writeCookie(self.key, value, options)
-        },
-        delete() {
-            return deleteCookie(self.key, options)
-        },
-    }
-
-    return self
-}
-
-export function maxAgeInDays(days: number) {
-    const oneSecond = 1
-    const oneMinute = 60 * oneSecond
-    const oneHour = 60 * oneMinute
-    const oneDay = 24 * oneHour
-    const maxAge = days * oneDay
-
-    return maxAge
-}
-
-export function expiresInDays(days: number) {
-    const oneSecond = 1 * 1000 // In milliseconds.
-    const oneMinute = 60 * oneSecond
-    const oneHour = 60 * oneMinute
-    const oneDay = 24 * oneHour
-    const daysMs = days * oneDay
-    const date = new Date()
-    date.setTime(date.getTime() + daysMs)
-    const expires = date.toUTCString()
-
-    return expires
-}
+export const CookieKeyRegexpCache: Record<string, RegExp> = {}
 
 export function readCookie(key: string) {
     if (! document.cookie) {
@@ -50,25 +11,27 @@ export function readCookie(key: string) {
     }
 
     const cookie = document.cookie
-    const regexp = regexpFromKey(key)
+    const regexp = cookieRegexpFromKey(key)
     const matches = cookie.match(regexp)
 
-    if (matches) {
-        return matches[1]
+    if (! matches) {
+        return
     }
 
-    return
+    return matches[1]
 }
 
-export function writeCookie(key: string, val: string, options?: undefined | CookieOptions) {
-    const path = options?.path
-    const maxAge = options?.maxAge
-    const expires = options?.expires
-    const sameSite = options?.sameSite
-    const secure = options?.secure
-    const customParts = options?.custom
+export function writeCookie(args: CookieOptions & {value: string}) {
+    const key = args.key
+    const value = args.value
+    const path = args.path
+    const maxAge = args.maxAge
+    const expires = args.expires
+    const sameSite = args.sameSite
+    const secure = args.secure
+    const customParts = args.custom
     const parts = [
-        `${key}=${val}`,
+        `${key}=${value}`,
         mapSome(path, path => `Path=${path}`),
         mapSome(maxAge, maxAge => `Max-Age=${maxAge}`),
         mapSome(expires, expires => `Expires=${expires}`),
@@ -82,29 +45,49 @@ export function writeCookie(key: string, val: string, options?: undefined | Cook
     document.cookie = cookie
 }
 
-export function deleteCookie(key: string, options?: undefined | CookieOptions) {
-    const expires = 'Thu, 01 Jan 1970 00:00:01 GMT'
+export function deleteCookie(args: CookieOptions) {
+    const value = ''
     const maxAge = 0
+    const expires = 'Thu, 01 Jan 1970 00:00:01 GMT'
 
-    writeCookie(key, '', {...options, maxAge, expires})
+    writeCookie({...args, value, maxAge, expires})
 }
 
-export function cleanCookies(options?: undefined | CookieOptions) {
+export function cleanCookies(args: CookieOptions) {
     const list = document.cookie.split(';')
 
     for (const keyVal of list) {
         const [key] = keyVal.trim().split('=')
 
-        deleteCookie(key!, options)
+        if (! key) {
+            continue
+        }
+
+        deleteCookie({...args, key})
     }
 }
 
-export function regexpFromKey(key: string) {
-    if (! KeyRegexpCache[key]) {
-        KeyRegexpCache[key] = new RegExp(`\\b${escapeRegexp(key)}=([^;]*);?`)
-    }
+export function maxAgeFromDate(dateOrNumber: number | Date) {
+    const dateTime = asDate(dateOrNumber).getTime()
+    const maxAge = dateTime / OneSecondInMs
 
-    return KeyRegexpCache[key]!
+    return maxAge
+}
+
+export function expiresFromDate(dateOrNumber: number | Date) {
+    const date = asDate(dateOrNumber)
+    const expires = date.toUTCString()
+
+    return expires
+}
+
+export function cookieRegexpFromKey(key: string) {
+    const keyCached = CookieKeyRegexpCache[key]
+        ?? new RegExp(`\\b${escapeRegexp(key)}=([^;]*);?`)
+
+    CookieKeyRegexpCache[key] = keyCached
+
+    return keyCached
 }
 
 // Types ///////////////////////////////////////////////////////////////////////
@@ -117,10 +100,11 @@ export interface Cookie {
 }
 
 export interface CookieOptions {
+    key: string
     path?: undefined | string
     maxAge?: undefined | number
     expires?: undefined | string
     sameSite?: undefined | string
     secure?: undefined | boolean
-    custom?: Array<string>
+    custom?: undefined | Array<string>
 }

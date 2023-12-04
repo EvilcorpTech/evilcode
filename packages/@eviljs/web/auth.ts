@@ -1,46 +1,56 @@
 import {compute, type Computable} from '@eviljs/std/compute.js'
-import type {FnArgs} from '@eviljs/std/fn.js'
+import type {Fn, FnArgs} from '@eviljs/std/fn.js'
+import {piping} from '@eviljs/std/pipe.js'
+import {asSafeString} from '@eviljs/std/type-safe.js'
 import {isObject} from '@eviljs/std/type.js'
-import type {Fetch, FetchRequestOptions} from './fetch.js'
-import {HttpMethod, mergeFetchOptions, withRequestJson} from './fetch.js'
+import {usingRequestJson} from './request-json.js'
+import {RequestMethod, creatingRequest} from './request.js'
+import {decodeResponse} from './response.js'
 import {throwInvalidResponse} from './throw.js'
 
-export const AuthDefaultUrl = '/auth'
-export const AuthDefaultFetchOptions: FetchRequestOptions = {}
+export const AuthUrlDefault = '/auth'
 
-export async function authenticate(fetch: Fetch, credentials: AuthCredentials, options?: undefined | AuthAuthenticateOptions) {
-    const method = options?.method ?? HttpMethod.Post
-    const url = compute(options?.url, credentials) ?? AuthDefaultUrl
-    const createRequestBody = options?.requestBody ?? defaultCreateRequestBody
-    const extractResponseError = options?.responseError ?? defaultExtractResponseError
-    const extractResponseToken = options?.responseToken ?? defaultExtractResponseToken
-    const fetchOptions = mergeFetchOptions(
-        compute(options?.options, credentials) ?? AuthDefaultFetchOptions,
-        withRequestJson(createRequestBody(credentials)),
-    )
+export async function authenticate(credentials: AuthCredentials, optionsComputable: AuthAuthenticateOptions): Promise<string> {
+    const {
+        url,
+        method: methodOptional,
+        requestBody: requestBodyOptional,
+        responseError: responseErrorOptional,
+        responseToken: responseTokenOptional,
+        ...requestOptions
+    } = compute(optionsComputable, credentials)
 
-    const response = await fetch.request(method, url, fetchOptions)
+    const method = methodOptional ?? RequestMethod.Post
+    const requestBody = requestBodyOptional ?? createDefaultRequestBody(credentials)
 
-    const responseBody = await (async () => {
-        try {
-            return await response.json() as AuthCredentialsResponse
-        }
-        catch (error) {
-            return throwAuthInvalidResponse('authenticate', AuthMessages.invalidResponseContent())
-        }
-    })()
+    const response = await creatingRequest(method, url, requestOptions)
+        (usingRequestJson(requestBody))
+        (fetch)
+        (promise => promise.catch(error => {
+            return throwAuthInvalidResponse('authenticate', AuthMessages.failedResponse(error))
+        }))
+    ()
 
-    if (! isObject(responseBody)) {
-        return throwAuthInvalidResponse('authenticate', AuthMessages.invalidResponseContent())
-    }
+    const responseBody = await piping(response)
+        (decodeResponse)
+        (promise => promise.catch(error => {
+            return throwAuthInvalidResponse('authenticate', AuthMessages.failedResponseDecoding(error))
+        }))
+    ()
 
     if (! response.ok) {
-        return throwAuthInvalidResponse('authenticate',
-            extractResponseError(responseBody) ?? 'bad_authenticate_without_known_error'
-        )
+        const extractResponseError = responseErrorOptional ?? extractDefaultResponseError
+        const error = extractResponseError(responseBody)
+
+        return throwAuthInvalidResponse('authenticate', AuthMessages.invalidResponseStatusWithError(response, error))
+    }
+
+    if (! isObject(responseBody)) {
+        return throwAuthInvalidResponse('authenticate', AuthMessages.invalidResponseBody(responseBody))
     }
 
     if (response.ok) {
+        const extractResponseToken = responseTokenOptional ?? extractDefaultResponseToken
         const token = extractResponseToken(responseBody)
 
         if (! token) {
@@ -53,22 +63,40 @@ export async function authenticate(fetch: Fetch, credentials: AuthCredentials, o
     return throwAuthInvalidResponse('authenticate', AuthMessages.invalidResponseStatus(response))
 }
 
-export async function validateAuthentication(fetch: Fetch, token: string, options?: undefined | AuthValidateOptions) {
-    const method = options?.method ?? HttpMethod.Get
-    const url = compute(options?.url, token) ?? AuthDefaultUrl
-    const opts = compute(options?.options, token)
+export async function validateAuthentication(token: string, optionsComputable: AuthValidateOptions): Promise<boolean> {
+    const {
+        url,
+        method: methodOptional,
+        ...requestOptions
+    } = compute(optionsComputable, token)
 
-    const response = await fetch.request(method, url, opts)
+    const method = methodOptional ?? RequestMethod.Get
+
+    const response = await creatingRequest(method, url, requestOptions)
+        (fetch)
+        (promise => promise.catch(error => {
+            return throwAuthInvalidResponse('validateAuthentication', AuthMessages.failedResponse(error))
+        }))
+    ()
 
     return response.ok
 }
 
-export async function invalidateAuthentication(fetch: Fetch, token: string, options?: undefined | AuthInvalidateOptions) {
-    const method = options?.method ?? HttpMethod.Delete
-    const url = compute(options?.url, token) ?? AuthDefaultUrl
-    const opts = compute(options?.options, token)
+export async function invalidateAuthentication(token: string, optionsComputable: AuthInvalidateOptions): Promise<boolean> {
+    const {
+        url,
+        method: methodOptional,
+        ...requestOptions
+    } = compute(optionsComputable, token)
 
-    const response = await fetch.request(method, url, opts)
+    const method = methodOptional ?? RequestMethod.Delete
+
+    const response = await creatingRequest(method, url, requestOptions)
+        (fetch)
+        (promise => promise.catch(error => {
+            return throwAuthInvalidResponse('invalidateAuthentication', AuthMessages.failedResponse(error))
+        }))
+    ()
 
     if (! response.ok) {
         return throwAuthInvalidResponse('invalidateAuthentication', AuthMessages.invalidResponseStatus(response))
@@ -77,66 +105,69 @@ export async function invalidateAuthentication(fetch: Fetch, token: string, opti
     return response.ok
 }
 
-export function defaultCreateRequestBody(credentials: AuthCredentials) {
+export function createDefaultRequestBody(credentials: AuthCredentials) {
     return {
         identifier: credentials.identifier,
         secret: credentials.secret,
     }
 }
 
-export function defaultExtractResponseError(body: AuthCredentialsResponse) {
-    return body.error
+export function extractDefaultResponseError(body: unknown) {
+    return body
 }
 
-export function defaultExtractResponseToken(body: AuthCredentialsResponse) {
-    return body.token
+export function extractDefaultResponseToken(body: unknown) {
+    return isObject(body)
+        ? (asSafeString(body.token) || undefined)
+        : undefined
 }
 
-export function throwAuthInvalidResponse(funcName: string, reason: string) {
+export function throwAuthInvalidResponse(fnName: string, reason: string) {
     return throwInvalidResponse(
-        `@eviljs/web/auth.${funcName}() -> ~~Response~~:\n`
+        `@eviljs/web/auth.${fnName}() -> ~~Response~~:\n`
         + reason
     )
 }
 
 export const AuthMessages = {
-    invalidResponseToken(responseBody: any) {
-        return `Response must contain a token inside the JSON body, given "${responseBody}".`
+    failedResponse(error: unknown) {
+        return `Request failed with error "${String(error)}".`
+    },
+    failedResponseDecoding(error: unknown) {
+        return `Response decoding failed with error "${String(error)}".`
+    },
+    invalidResponseBody(responseBody: unknown) {
+        return `Response must have a well formed JSON content, given "${String(responseBody)}".`
     },
     invalidResponseStatus(response: Response) {
         return `Response must have a 2xx status, given "${response.status}" (${response.statusText}).`
     },
-    invalidResponseContent() {
-        return 'Response must have a well formed JSON content.'
+    invalidResponseStatusWithError(response: Response, error: unknown) {
+        return `Response must have a 2xx status, given "${response.status}" (${response.statusText}) with content "${String(error)}".`
+    },
+    invalidResponseToken(responseBody: unknown) {
+        return `Response must contain a token inside the JSON body, given "${responseBody}".`
     },
 }
 
 // Types ///////////////////////////////////////////////////////////////////////
 
-export interface AuthFetchOptions<A extends FnArgs> {
-    url?: undefined | Computable<string, A>
-    method?: undefined | HttpMethod
-    options?: undefined | Computable<FetchRequestOptions, A>
-}
+export type AuthRequestOptions<A extends FnArgs = FnArgs, P extends object = {}> =
+    Computable<
+        RequestInit & P & {url: string},
+        A
+    >
 
-export interface AuthAuthenticateOptions extends AuthFetchOptions<[AuthCredentials]> {
-    requestBody?: undefined | ((credentials: AuthCredentials) => unknown)
-    responseError?: undefined | ((body: unknown) => undefined | string)
-    responseToken?: undefined | ((body: unknown) => undefined | string)
-}
+export type AuthAuthenticateOptions = AuthRequestOptions<[AuthCredentials], {
+    requestBody?: undefined | unknown
+    responseError?: undefined | Fn<[body: unknown], undefined | string | unknown>
+    responseToken?: undefined | Fn<[body: unknown], undefined | string>
+}>
 
-export interface AuthValidateOptions extends AuthFetchOptions<[token: string]> {
-}
-
-export interface AuthInvalidateOptions extends AuthFetchOptions<[token: string]> {
-}
+export type AuthValidateOptions = AuthRequestOptions<[token: string], {}>
+export type AuthInvalidateOptions = AuthRequestOptions<[token: string], {}>
 
 export interface AuthCredentials {
     identifier: string
     secret: string
-}
-
-export interface AuthCredentialsResponse {
-    error?: undefined | string
-    token?: undefined | string
 }

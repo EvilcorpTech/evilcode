@@ -1,17 +1,12 @@
 export const UrlSchemaRegexp = /^([a-zA-Z0-9]+):/ // "http://" "https://" "mailto:" "tel:"
 
-export function isUrlAbsolute(url: string): boolean
-export function isUrlAbsolute(url: undefined | string): undefined | boolean
-export function isUrlAbsolute(url: undefined | string) {
-    if (! url) {
-        return
-    }
+export function isUrlAbsolute(url: string): boolean {
     return false
         || url.startsWith('//')
         || UrlSchemaRegexp.test(url)
 }
 
-export function asBaseUrl(url?: undefined | string) {
+export function asBaseUrl(url?: undefined | string): string {
     if (! url) {
         return ''
     }
@@ -27,7 +22,7 @@ export function asBaseUrl(url?: undefined | string) {
     return url
 }
 
-export function joinUrlPath(...parts: [string, ...Array<string>]) {
+export function joinUrlPath(...parts: [string, ...Array<string>]): string {
     const [firstPart, ...otherParts] = parts
     let path = firstPart
     for (const it of otherParts) {

@@ -1,12 +1,11 @@
-import type {ReactiveRef} from '@eviljs/std/reactive.js'
+import type {ReactiveRef} from '@eviljs/std/reactive-ref.js'
 import {isString} from '@eviljs/std/type.js'
-import type {QueryParams, QueryParamsDict, QueryParamsList} from './query.js'
-import {encodeQueryParamKey, encodeQueryParamValue, encodeQueryParams} from './query.js'
+import {encodeUrlParamKey, encodeUrlParams, encodeUrlParamValue, type UrlParams, type UrlParamsDict, type UrlParamsList} from './url-params.js'
 import {joinUrlPathAndParams} from './url.js'
 
 export function areSameRoutes<S>(firstRoute: RouterRoute<S>, secondRoute: RouterRoute<S>): boolean {
     const samePath = firstRoute.path === secondRoute.path
-    const sameParams = encodeQueryParams(firstRoute.params) === encodeQueryParams(secondRoute.params)
+    const sameParams = encodeUrlParams(firstRoute.params) === encodeUrlParams(secondRoute.params)
     const sameState = firstRoute.state === secondRoute.state
     return samePath && sameParams && sameState
 }
@@ -76,7 +75,7 @@ export function encodeRoute(path: string, params?: undefined | RouterRouteChange
 }
 
 export function encodeRouteParams(params: undefined | RouterRouteChangeParams): string {
-    return encodeQueryParams(params, {
+    return encodeUrlParams(params, {
         encodeKey: encodeRouteParamKey,
         encodeValue: encodeRouteParamValue,
     })
@@ -95,7 +94,7 @@ export function encodeRouteParamKey(key: unknown): string {
         // `?book%3Aid`.
         return key
     }
-    return encodeQueryParamKey(key)
+    return encodeUrlParamKey(key)
 }
 
 /**
@@ -111,7 +110,7 @@ export function encodeRouteParamValue(value: unknown): string {
         // `?redirect=%2Fsome%2Fpath`.
         return value
     }
-    return encodeQueryParamValue(value)
+    return encodeUrlParamValue(value)
 }
 
 /**
@@ -122,7 +121,7 @@ export function flattenRouteParams(routeParams: undefined | RouterRouteChangePar
 export function flattenRouteParams(routeParams: undefined | RouterRouteChangeParams): undefined | RouterRouteParams {
     return routeParams
         ? decodeRouteParams(
-            encodeQueryParams(routeParams) || undefined // Casts '' to undefined.
+            encodeUrlParams(routeParams) || undefined // Casts '' to undefined.
         )
         : undefined
 }
@@ -156,7 +155,7 @@ export interface RouterOptions {
     basePath?: undefined | string
 }
 
-export type RouterRouteParams = undefined | Record<string, string>
+export type RouterRouteParams = Record<string, string>
 
 export interface RouterRouteChange<S = unknown> {
     path?: undefined | string
@@ -165,6 +164,6 @@ export interface RouterRouteChange<S = unknown> {
     replace?: undefined | boolean
 }
 
-export type RouterRouteChangeParams = RouterRouteParams | QueryParams
-export type RouterRouteChangeParamsDict = QueryParamsDict
-export type RouterRouteChangeParamsList = QueryParamsList
+export type RouterRouteChangeParams = RouterRouteParams | UrlParams
+export type RouterRouteChangeParamsDict = UrlParamsDict
+export type RouterRouteChangeParamsList = UrlParamsList

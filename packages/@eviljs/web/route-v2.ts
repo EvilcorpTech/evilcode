@@ -1,5 +1,5 @@
 import type {FnArgs} from '@eviljs/std/fn.js'
-import type {RoutePatterns, RouteArgs} from './route.js'
+import type {RouteArgs, RoutePatterns} from './route.js'
 import type {RouterRouteChangeParamsDict, RouterRouteParams} from './router.js'
 
 export * from './route.js'
@@ -51,9 +51,9 @@ export interface RouteParamCodecOptions<
 > {
     name: N
     encode(this: N, ...args: EA): RouterRouteChangeParamsDict
-    decode(this: N, params: RouterRouteParams, ...args: DA): O
-    pick?: undefined | ((params: RouterRouteParams) => undefined | string)
-    omit?: undefined | ((params: RouterRouteParams) => RouterRouteParams)
+    decode(this: N, params: undefined | RouterRouteParams, ...args: DA): O
+    pick?: undefined | ((params: undefined | RouterRouteParams) => undefined | string)
+    omit?: undefined | ((params: undefined | RouterRouteParams) => undefined | RouterRouteParams)
 }
 
 export interface RouteParamCodec<
@@ -64,7 +64,7 @@ export interface RouteParamCodec<
 > {
     name: N
     encode(...args: EA): RouterRouteChangeParamsDict
-    decode(params: RouterRouteParams, ...args: DA): O
-    pick(params: RouterRouteParams): undefined | string
-    omit(params: RouterRouteParams): RouterRouteParams
+    decode(params: undefined | RouterRouteParams, ...args: DA): O
+    pick(params: undefined | RouterRouteParams): undefined | string
+    omit(params: undefined | RouterRouteParams): undefined | RouterRouteParams
 }

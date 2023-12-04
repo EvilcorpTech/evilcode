@@ -54,11 +54,12 @@ export function routeRegexpFromPattern(pattern: RoutePattern): RegExp {
         return pattern
     }
 
-    if (! RoutePatternRegexpCache[pattern]) {
-        RoutePatternRegexpCache[pattern] = new RegExp(pattern, 'i')
-    }
+    const patternCached = RoutePatternRegexpCache[pattern]
+        ?? new RegExp(pattern, 'i')
 
-    return RoutePatternRegexpCache[pattern]!
+    RoutePatternRegexpCache[pattern] ??= patternCached
+
+    return patternCached
 }
 
 export function encodeRouteArgs(route: string, ...args: RouteArgs) {
