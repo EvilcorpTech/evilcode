@@ -10,7 +10,7 @@ import {
     type StoreDefinition,
     type StoreStatePatch,
 } from '@eviljs/react/store'
-import {Mode} from '~/env/env-apis'
+import {Env} from '~/env/env-specs'
 import {createState, type StoreState} from '~/store/store-apis'
 
 export const StoreActionsSpec = {
@@ -26,7 +26,7 @@ export const StoreSpec: StoreDefinition<StoreState, StoreAction> = {
 }
 
 export function onDispatch(id: ReducerId, args: ReducerArgs, newState: StoreState, oldState: StoreState) {
-    if (Mode === 'production') {
+    if (Env.Mode === 'production') {
         return
     }
 

@@ -10,7 +10,6 @@ export function Header(props: HeaderProps) {
 
     const routes = {
         home: useRoutePathLocalized(RoutePath.Home),
-        admin: useRoutePathLocalized(RoutePath.Admin),
         showcase: useRoutePathLocalized(RoutePath.Showcase),
         example: useRoutePathLocalized(RoutePath.ExampleWithArg),
     }
@@ -18,7 +17,6 @@ export function Header(props: HeaderProps) {
     const menu = [
         {to: routes.home.link(), message: 'Home'},
         {to: routes.showcase.link(), message: 'Showcase'},
-        {to: routes.admin.link(), message: 'Admin'},
         {to: routes.example.link('123'), message: 'Arg'},
     ]
 

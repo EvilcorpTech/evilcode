@@ -4,7 +4,7 @@ import {useStore, useStoreDispatch, useStoreState} from '~/store/store-v3-hooks'
 import {Theme} from '~/theme/theme-apis'
 
 export default defineShowcase('Store v3', (props) => {
-    const [theme, dispatch] = useStore(state => state.theme)!
+    const [theme, dispatch] = useStore(state => state.theme)
 
     return (
         <div className="std-flex std-gap6">
@@ -17,7 +17,7 @@ export default defineShowcase('Store v3', (props) => {
 })
 
 function Comp1() {
-    const dispatch = useStoreDispatch()!
+    const dispatch = useStoreDispatch()
 
     return (
         <div>
@@ -33,8 +33,8 @@ function Comp1() {
 }
 
 function Comp2() {
-    const [theme] = useStoreState(state => state.theme)!
-    const dispatch = useStoreDispatch()!
+    const theme = useStoreState(state => state.theme)
+    const dispatch = useStoreDispatch()
 
     return (
         <div>

@@ -1,12 +1,14 @@
 import {asBaseUrl} from '@eviljs/web/url'
 import Release from '~/release.json'
 
-export const ApiUrl = import.meta.env.APP_API_URL || '/api'
-export const BasePath = asBaseUrl(import.meta.env.APP_BASE_PATH || import.meta.env.BASE_URL) || '/'
-export const Env = import.meta.env.APP_ENV
-export const Mode = import.meta.env.APP_MODE || import.meta.env.MODE
-export const RouterType = import.meta.env.APP_ROUTER_TYPE === 'path' ? 'path' : 'hash'
-export const Version = Release.version
+export const Env = {
+    ApiUrl: import.meta.env.APP_API_URL || '/api',
+    BasePath: asBaseUrl(import.meta.env.APP_BASE_PATH || import.meta.env.BASE_URL) || '/',
+    Env: import.meta.env.APP_ENV,
+    Mode: import.meta.env.APP_MODE || import.meta.env.MODE,
+    RouterType: import.meta.env.APP_ROUTER_TYPE === 'path' ? 'path' : 'hash',
+    Version: Release.version,
+}
 
 declare global {
     interface ImportMeta {

@@ -1,11 +1,5 @@
-import type {I18nManager} from '@eviljs/react/i18n'
-import {useI18n as useCoreI18n} from '@eviljs/react/i18n'
-import type {I18nKeyOf, I18nLocaleOf} from '@eviljs/std/i18n'
-import type {I18nSpec} from './i18n-apis'
+import {useI18n as useStdI18n} from '@eviljs/react/i18n'
+import type {I18nLocale, I18nMessageKey} from '~/i18n/i18n-apis'
 
 export {useI18nMsg} from '@eviljs/react/i18n'
-export const useI18n = useCoreI18n<I18nLocaleOf<I18nSpec>, I18nKeyOf<I18nSpec>>
-
-// Types ///////////////////////////////////////////////////////////////////////
-
-export type I18n = I18nManager<I18nLocaleOf<I18nSpec>, I18nKeyOf<I18nSpec>>
+export const useI18n = useStdI18n<I18nLocale, I18nMessageKey>

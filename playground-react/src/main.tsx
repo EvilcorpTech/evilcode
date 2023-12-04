@@ -3,7 +3,7 @@ import '~/style/index.css'
 import {createContainer} from '@eviljs/std/container'
 import {createRoot} from 'react-dom/client'
 import {ContainerSpec} from '~/container/container-apis'
-import * as Env from '~/env/env-apis'
+import * as Env from '~/env/env-specs'
 import {Root, RootContext, RootIsolate} from '~/root/root'
 import {setupRootElement} from '~/root/root-apis'
 

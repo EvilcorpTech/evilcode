@@ -6,7 +6,7 @@ import {filterStorageState, mergeStorageState, StoreStateVersion} from './store-
 export const Storage: Storage = window.localStorage
 
 export function useStoreStorage() {
-    const [storeState, dispatch] = useStore()!
+    const [storeState, dispatch] = useStore()
 
     useStdStoreStorage(storeState, {
         stateVersion: StoreStateVersion,
