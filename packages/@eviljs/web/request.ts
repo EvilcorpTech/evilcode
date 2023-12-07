@@ -1,8 +1,8 @@
-import {piping, type Io} from '@eviljs/std/pipe.js'
+import {piping, type Io, type PipeContinuation} from '@eviljs/std/pipe.js'
 import {throwInvalidArgument} from '@eviljs/std/throw.js'
 import {isArray, isNone, isObject, type ValueOf} from '@eviljs/std/type.js'
 import {FormDataType, FormUrlType, JsonType, TextType} from './mimetype.js'
-import {isUrlAbsolute, joinUrlPath} from './url.js'
+import {isUrlAbsolute, joinUrlPaths} from './url.js'
 
 export const RequestMethod = {
     Delete: 'delete' as const,
@@ -19,11 +19,19 @@ export const ContentType = {
     Text: TextType,
 }
 
-export function creatingRequest(method: RequestMethod | (string & {}), pathOrUrl: string, options?: undefined | RequestOptions) {
+export function creatingRequest(
+    method: RequestMethod | (string & {}),
+    pathOrUrl: string,
+    options?: undefined | RequestOptions,
+): PipeContinuation<Request> {
     return piping(createRequest(method, pathOrUrl, options))
 }
 
-export function createRequest(method: RequestMethod | (string & {}), pathOrUrl: string, options?: undefined | RequestOptions): Request {
+export function createRequest(
+    method: RequestMethod | (string & {}),
+    pathOrUrl: string,
+    options?: undefined | RequestOptions,
+): Request {
     const {baseUrl, ...requestOptions} = options ?? {}
     const url = joinRequestBasePath(baseUrl, pathOrUrl)
     const request = new Request(url, {...requestOptions, method})
@@ -37,7 +45,7 @@ export function createRequest(method: RequestMethod | (string & {}), pathOrUrl: 
 * @throws TypeError
 **/
 export function usingRequestOptions(options: RequestInit): Io<Request, Request> {
-    return pipingRequest(request => useRequestOptions(request, options))
+    return (request: Request) => useRequestOptions(request, options)
 }
 
 /**
@@ -48,10 +56,6 @@ export function useRequestOptions(request: Request, options: RequestInit): Reque
 }
 
 // Request Utilities ///////////////////////////////////////////////////////////
-
-export function pipingRequest<R>(next: (request: Request) => R): Io<Request, R> {
-    return next
-}
 
 /**
 * @throws TypeError
@@ -86,7 +90,7 @@ export function joinRequestBasePath(baseUrl: undefined | string, path: string): 
     if (isUrlAbsolute(path)) {
         return path
     }
-    return joinUrlPath(baseUrl, path)
+    return joinUrlPaths(baseUrl, path)
 }
 
 /**

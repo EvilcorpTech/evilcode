@@ -1,5 +1,5 @@
 import type {Io} from '@eviljs/std/fn.js'
-import {cloneRequest, mergeRequest, mergeRequestHeaders, pipingRequest, type RequestMethod} from './request.js'
+import {cloneRequest, mergeRequest, mergeRequestHeaders, type RequestMethod} from './request.js'
 
 // Request Method //////////////////////////////////////////////////////////////
 
@@ -7,7 +7,7 @@ import {cloneRequest, mergeRequest, mergeRequestHeaders, pipingRequest, type Req
 * @throws TypeError
 **/
 export function usingRequestMethod(method: RequestMethod | (string & {})): Io<Request, Request> {
-    return pipingRequest(request => useRequestMethod(request, method))
+    return (request: Request) => useRequestMethod(request, method)
 }
 
 /**
@@ -23,7 +23,7 @@ export function useRequestMethod(request: Request, method: RequestMethod | (stri
 * @throws InvalidArgument
 **/
 export function usingRequestHeaders(...headersList: Array<HeadersInit>): Io<Request, Request> {
-    return pipingRequest(request => useRequestHeaders(request, ...headersList))
+    return (request: Request) => useRequestHeaders(request, ...headersList)
 }
 
 /**
@@ -41,7 +41,7 @@ export function useRequestHeaders(request: Request, ...headersList: Array<Header
 * @throws TypeError
 **/
 export function usingRequestBody(body: NonNullable<RequestInit['body']>): Io<Request, Request> {
-    return pipingRequest(request => useRequestBody(request, body))
+    return (request: Request) => useRequestBody(request, body)
 }
 
 /**
@@ -57,7 +57,7 @@ export function useRequestBody(request: Request, body: NonNullable<RequestInit['
 * @throws
 **/
 export function usingRequestCache(cache: NonNullable<RequestInit['cache']>): Io<Request, Request> {
-    return pipingRequest(request => useRequestCache(request, cache))
+    return (request: Request) => useRequestCache(request, cache)
 }
 
 /**
@@ -73,7 +73,7 @@ export function useRequestCache(request: Request, cache: NonNullable<RequestInit
 * @throws
 **/
 export function usingRequestSignal(signal: NonNullable<RequestInit['signal']>): Io<Request, Request> {
-    return pipingRequest(request => useRequestSignal(request, signal))
+    return (request: Request) => useRequestSignal(request, signal)
 }
 
 /**
@@ -89,7 +89,7 @@ export function useRequestSignal(request: Request, signal: NonNullable<RequestIn
 * @throws
 **/
 export function usingRequestPriority(priority: NonNullable<RequestInit['priority']>): Io<Request, Request> {
-    return pipingRequest(request => useRequestPriority(request, priority))
+    return (request: Request) => useRequestPriority(request, priority)
 }
 
 /**

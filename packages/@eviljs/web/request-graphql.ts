@@ -1,19 +1,34 @@
-import {piping, type Io} from '@eviljs/std/pipe.js'
+import {piping, type Io, type PipeContinuation} from '@eviljs/std/pipe.js'
 import {asSafeObject} from '@eviljs/std/type-safe.js'
 import {usingRequestMethod} from './request-init.js'
 import {usingRequestJson} from './request-json.js'
 import {usingRequestParams} from './request-params.js'
-import {ContentType, RequestMethod, pipingRequest, usingRequestOptions} from './request.js'
+import {ContentType, RequestMethod, creatingRequest, usingRequestOptions, type RequestOptions} from './request.js'
 import {decodeResponseJson} from './response.js'
 
+export const GraphqlQueryCommentRegexp = /[#].*/g
+export const GraphqlQueryEmptiesRegexp = /\s+/g
 export const GraphqlQueryLeadingEmptiesRegexp = /\s+([{}])/g
 export const GraphqlQueryTrailingEmptiesRegexp = /([{}])\s+/g
 
 /**
 * @throws TypeError
 **/
+export function creatingRequestGraphqlGet(pathOrUrl: string, options: RequestOptions & {
+    query: string
+    variables?: undefined | GraphqlQueryVariables
+}): PipeContinuation<Request> {
+    const {query, variables, ...requestOptions} = options
+
+    return creatingRequest(RequestMethod.Get, pathOrUrl, requestOptions)
+        (usingRequestGraphqlGet(query, variables))
+}
+
+/**
+* @throws TypeError
+**/
 export function usingRequestGraphqlGet(query: string, variables?: undefined | GraphqlQueryVariables): Io<Request, Request> {
-    return pipingRequest(request => useRequestGraphqlGet(request, query, variables))
+    return (request: Request) => useRequestGraphqlGet(request, query, variables)
 }
 
 /**
@@ -28,9 +43,9 @@ export function useRequestGraphqlGet(request: Request, query: string, variables?
             },
         }))
         (usingRequestParams({
-            query: encodeURIComponent(compressGraphqlQuery(query)),
+            query: compressGraphqlQuery(query),
             variables: variables
-                ? encodeURIComponent(JSON.stringify(variables))
+                ? JSON.stringify(variables)
                 : undefined
             ,
         }))
@@ -40,8 +55,21 @@ export function useRequestGraphqlGet(request: Request, query: string, variables?
 /**
 * @throws TypeError
 **/
+export function creatingRequestGraphqlPost(pathOrUrl: string, options: RequestOptions & {
+    query: string
+    variables?: undefined | GraphqlQueryVariables
+}): PipeContinuation<Request> {
+    const {query, variables, ...requestOptions} = options
+
+    return creatingRequest(RequestMethod.Post, pathOrUrl, requestOptions)
+        (usingRequestGraphqlPost(query, variables))
+}
+
+/**
+* @throws TypeError
+**/
 export function usingRequestGraphqlPost(query: string, variables?: undefined | GraphqlQueryVariables): Io<Request, Request> {
-    return pipingRequest(request => useRequestGraphqlPost(request, query, variables))
+    return (request: Request) => useRequestGraphqlPost(request, query, variables)
 }
 
 /**
@@ -69,6 +97,8 @@ export function useResponseGraphql<V = unknown>(response: Response | Promise<Res
 
 export function compressGraphqlQuery(query: string): string {
     return query
+        .replaceAll(GraphqlQueryCommentRegexp, '')
+        .replaceAll(GraphqlQueryEmptiesRegexp, ' ')
         .replaceAll(GraphqlQueryLeadingEmptiesRegexp, '$1')
         .replaceAll(GraphqlQueryTrailingEmptiesRegexp, '$1')
 }

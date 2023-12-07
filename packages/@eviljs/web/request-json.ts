@@ -1,5 +1,5 @@
 import type {Io} from '@eviljs/std/fn.js'
-import {ContentType, mergeRequest, mergeRequestHeaders, pipingRequest} from './request.js'
+import {ContentType, mergeRequest, mergeRequestHeaders} from './request.js'
 
 export {decodeResponseJson} from './response.js'
 
@@ -7,7 +7,7 @@ export {decodeResponseJson} from './response.js'
 * @throws TypeError | InvalidArgument
 **/
 export function usingRequestJson(body: unknown, headers?: undefined | HeadersInit): Io<Request, Request> {
-    return pipingRequest(request => useRequestJson(request, body, headers))
+    return (request: Request) => useRequestJson(request, body, headers)
 }
 
 /**

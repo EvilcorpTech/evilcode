@@ -1,12 +1,11 @@
 import type {Io} from '@eviljs/std/fn.js'
 import {useRequestHeaders} from './request-init.js'
-import {pipingRequest} from './request.js'
 
 /**
 * @throws
 **/
 export function usingRequestAuthorization(type: RequestAuthorizationType, value: string): Io<Request, Request> {
-    return pipingRequest(request => useRequestAuthorization(request, type, value))
+    return (request: Request) => useRequestAuthorization(request, type, value)
 }
 /**
 * @throws

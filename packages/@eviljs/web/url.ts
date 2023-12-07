@@ -22,7 +22,7 @@ export function asBaseUrl(url?: undefined | string): string {
     return url
 }
 
-export function joinUrlPath(...parts: [string, ...Array<string>]): string {
+export function joinUrlPaths(...parts: [string, ...Array<string>]): string {
     const [firstPart, ...otherParts] = parts
     let path = firstPart
     for (const it of otherParts) {
