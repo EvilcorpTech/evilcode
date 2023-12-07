@@ -3,7 +3,6 @@ import {filterResult} from '@eviljs/std/result.js'
 import {useCallback, useContext} from 'react'
 import {useAsyncIo, type AsyncIoManager} from './async-io.js'
 
-export {asBaseUrl, joinUrlPath} from '@eviljs/web/url.js'
 export {useAsyncIoAggregated as useRequestsAggregated} from './async-io.js'
 
 export function useRequest<A extends FnArgs, R>(asyncTask: FnAsync<A, R>): RequestManager<A, R> {
