@@ -1,4 +1,4 @@
-import {joinUrlPath} from '../packages/@eviljs/web/url.js'
+import {joinUrlPaths} from '../packages/@eviljs/web/url.js'
 
 const tests: Array<[string, [string, string, ...Array<string>]]> = [
     ['/api', ['', 'api']],
@@ -18,6 +18,6 @@ const tests: Array<[string, [string, string, ...Array<string>]]> = [
 ]
 for (const it of tests) {
     const [expected, args] = it
-    const actual = joinUrlPath(...args)
+    const actual = joinUrlPaths(...args)
     console.assert(expected === actual, 'expected:', expected, 'given:', actual, args)
 }
