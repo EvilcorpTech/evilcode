@@ -7,15 +7,16 @@ import type {ServerSsrSettings} from './settings.js'
 
 // Types ///////////////////////////////////////////////////////////////////////
 
-export type KoaContext = KoaParameterizedContext<ServerContextState, ServerContext>
+export type KoaInstance = Koa<ServerSsrContextState, ServerSsrContext>
+export type KoaContext = KoaParameterizedContext<ServerSsrContextState, ServerSsrContext>
 
-export interface ServerContext {
-    koa: Koa<ServerContextState, ServerContext>
+export interface ServerSsrContext {
+    koa: Koa<ServerSsrContextState, ServerSsrContext>
     koaStatic: ReturnType<typeof KoaStatic>
     ssrBrowser: Puppeteer.Browser
     ssrSettings: ServerSsrSettings
 }
 
-export interface ServerContextState {
+export interface ServerSsrContextState {
     connectionId: number
 }

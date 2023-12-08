@@ -9,22 +9,23 @@ import KoaEtag from 'koa-etag'
 import KoaStatic from 'koa-static'
 import Puppeteer from 'puppeteer'
 import {serverMiddleware} from './middleware.js'
-import {type ServerSsrSettings} from './settings.js'
-import type {ServerContext, ServerContextState} from './types.js'
+import type {ServerSsrSettings} from './settings.js'
+import type {ServerSsrContext, ServerSsrContextState} from './types.js'
 
 export let ConnectionCounter = 0
 
-export async function startServer(settings: ServerSsrSettings) {
+export async function startServer(settings: ServerSsrSettings): Promise<ServerSsrContext> {
     const browser = await Puppeteer.launch(settings.puppeteer)
-    const koa = new Koa<ServerContextState, ServerContext>()
+    const koa = new Koa<ServerSsrContextState, ServerSsrContext>()
     const koaStatic = KoaStatic(settings.appDir, settings.koaStatic)
-
-    Object.assign(koa.context, {
+    const serverContext: ServerSsrContext = {
         koa,
         koaStatic,
         ssrBrowser: browser,
         ssrSettings: settings,
-    } satisfies ServerContext)
+    }
+
+    Object.assign(koa.context, serverContext)
 
     koa.on('error', error => {
         console.error('[server] unexpected error', error)
@@ -53,6 +54,9 @@ export async function startServer(settings: ServerSsrSettings) {
     }
     koa.use(KoaConditionalGet())
     koa.use(KoaEtag())
+    settings.koa?.(koa)
     koa.use(serverMiddleware)
     koa.listen(settings.serverPort)
+
+    return serverContext
 }

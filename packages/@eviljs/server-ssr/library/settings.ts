@@ -1,7 +1,10 @@
 import {OneDayInMs, OneHourInMs} from '@eviljs/std/date.js'
+import type {Io} from '@eviljs/std/fn.js'
 import type {ObjectPartial} from '@eviljs/std/type.js'
 import type {Options as KoaStaticOptions} from 'koa-static'
+import {randomBytes} from 'node:crypto'
 import type {Page, PuppeteerLaunchOptions} from 'puppeteer'
+import type {KoaInstance} from './types.js'
 
 export function configureServerSettings(options: ServerSsrOptions): ServerSsrSettings {
     const debug = options?.debug ?? false
@@ -13,6 +16,7 @@ export function configureServerSettings(options: ServerSsrOptions): ServerSsrSet
     return {
         appDir: options?.appDir,
         debug,
+        koa: options?.koa,
         koaStatic: {
             index: 'index.html',
             extensions: ['.html'],
@@ -49,7 +53,9 @@ export function configureServerSettings(options: ServerSsrOptions): ServerSsrSet
         ssrCache: options?.ssrCache ?? true,
         ssrCacheExpires,
         ssrCacheLimit: options?.ssrCacheLimit ?? 1_000,
+        ssrProcessesLimit: options?.ssrProcessesLimit ?? 10, // Every Chrome tab requires about 100mb of memory.
         ssrRefreshParam: options?.ssrRefreshParam ?? 'ssr-refresh',
+        ssrRefreshToken: options?.ssrRefreshToken ?? genToken(6),
         ssrRequestParam: options?.ssrRequestParam ?? 'ssr',
         ssrTransformMainStylePattern: '/asset-main@[^.]+\.css$',
     }
@@ -61,11 +67,19 @@ export const LogIndentation = {
     SubResource: ' '.repeat(3),
 }
 
+export function genToken(length: number): string {
+    const buffer = randomBytes(Math.trunc(length / 2)) // Bytes.
+    const string = buffer.toString('hex') // Bytes x 2 (2 characters for every byte).
+
+    return string.toLowerCase()
+}
+
 // Types ///////////////////////////////////////////////////////////////////////
 
 export interface ServerSsrSettings {
     appDir: string
     debug: boolean
+    koa: undefined | Io<KoaInstance, void>
     koaStatic: KoaStaticOptions
     puppeteer: PuppeteerLaunchOptions
     serverCacheExpires: number
@@ -80,7 +94,9 @@ export interface ServerSsrSettings {
     ssrCache: boolean
     ssrCacheExpires: number
     ssrCacheLimit: number
+    ssrProcessesLimit: number
     ssrRefreshParam: string
+    ssrRefreshToken: string
     ssrRequestParam: string
     ssrTransformMainStylePattern: string | RegExp
 }

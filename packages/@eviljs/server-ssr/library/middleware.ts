@@ -1,10 +1,15 @@
 import {OneSecondInMs} from '@eviljs/std/date.js'
+import {isDefined} from '@eviljs/std/type.js'
 import type Koa from 'koa'
 import {LogIndentation} from './settings.js'
-import {ssr} from './ssr.js'
+import {ssr, type SsrResult} from './ssr.js'
 import type {KoaContext} from './types.js'
 
+const ApiRegexp = /^\/api\//
+const FileRegexp = /.+\.\w+$/
 export let ConnectionCounter = 0
+
+const SsrJobs: Array<Promise<SsrResult>> = []
 
 /*
 * Browser
@@ -67,20 +72,17 @@ export async function serverMiddleware(ctx: KoaContext, next: Koa.Next) {
     const {koaStatic, ssrSettings} = ctx
     ctx.state.connectionId = ++ConnectionCounter
 
-    const isRequestFromSsr = ssrSettings.ssrRequestParam in ctx.query
-    const isRequestOfApi = /^\/api/.test(ctx.path)
-    const isRequestOfStatic = ! isRequestOfApi && /.+\.\w+$/.test(ctx.path)
-    const isRequestOfRoute = ! isRequestOfApi && ! isRequestOfStatic
-    const isRequestOfRouteAllowed = isRequestOfRoute && ssrSettings.ssrAllowedRoutes.includes(ctx.path)
-    const isRequestOfRouteFromSsr = isRequestOfRoute && isRequestFromSsr
-    const isRequestOfRouteToSsr = isRequestOfRouteAllowed && ! isRequestFromSsr
-    const isRequestOfSubResource = false
-        || isRequestOfApi
-        || isRequestOfStatic
-        || isRequestOfRouteFromSsr
-
     const logIndent = LogIndentation.SubResource
 
+    const isRequestHandled = isDefined(ctx.body)
+    if (isRequestHandled) {
+        // The request is already handled by another middleware.
+        console.info(ctx.state.connectionId, '[server] skipping request already handled of', ctx.path, {...ctx.query})
+
+        return next()
+    }
+
+    const isRequestOfApi = ApiRegexp.test(ctx.path)
     if (isRequestOfApi) {
         // The request points to an API endpoint.
         console.info(logIndent, ctx.state.connectionId, '[server] skipping request of API', ctx.path, {...ctx.query})
@@ -88,6 +90,7 @@ export async function serverMiddleware(ctx: KoaContext, next: Koa.Next) {
         return next()
     }
 
+    const isRequestOfStatic = FileRegexp.test(ctx.path)
     if (isRequestOfStatic) {
         // The request points to a static asset file (for example /app.js).
         console.info(logIndent, ctx.state.connectionId, '[server] serving request of StaticFile', ctx.path, {...ctx.query})
@@ -95,29 +98,55 @@ export async function serverMiddleware(ctx: KoaContext, next: Koa.Next) {
         return koaStatic(ctx, next)
     }
 
-    if (isRequestOfRouteFromSsr || (isRequestOfRoute && ! isRequestOfRouteAllowed)) {
-        if (isRequestOfRouteFromSsr) {
-            // The request points to an app routing path (for example /dashboard)
-            // and it comes from SSR (/dashboard?ssr).
-            console.info(logIndent, ctx.state.connectionId, '[server] serving request of RouteEntry (from SSR)', ctx.path, {...ctx.query})
-        }
-        else if (isRequestOfRoute && ! isRequestOfRouteAllowed) {
-            // The request points to an app routing path (for example /article/1)
-            // but it is not eligible for SSR.
-            console.info(ctx.state.connectionId, '[server] serving request of RouteEntry (not SSR)', ctx.path, {...ctx.query})
-        }
+    const isRequestFromSsr = ssrSettings.ssrRequestParam in ctx.query
+    if (isRequestFromSsr) {
+        // The request points to an app routing path (for example /dashboard)
+        // and it comes from SSR (/dashboard?ssr).
+        console.info(logIndent, ctx.state.connectionId, '[server] serving request of Entry Point (from SSR)', ctx.path, {...ctx.query})
 
         ctx.path = '/index.html'
 
         return koaStatic(ctx, next)
     }
 
-    if (isRequestOfRouteToSsr) {
-        // The request points to an app routing path (for example /dashboard)
-        // and it does not come from SSR.
-        console.info(ctx.state.connectionId, '[server] serving request of Route SSR', ctx.path, {...ctx.query})
+    const isRequestOfRouteAllowed = ssrSettings.ssrAllowedRoutes.includes(ctx.path)
+    if (! isRequestOfRouteAllowed) {
+        // The request points to an app routing path (for example /article/1)
+        // but it is not eligible for SSR.
+        console.info(ctx.state.connectionId, '[server] serving request of Entry Point (not SSR)', ctx.path, {...ctx.query})
 
-        const page = await ssr(ctx)
+        ctx.path = '/index.html'
+
+        return koaStatic(ctx, next)
+    }
+
+    // The request points to an app routing path (for example /dashboard),
+    // it is an allowed route and it does not come from SSR.
+    console.info(ctx.state.connectionId, '[server] serving request of Route SSR', ctx.path, {...ctx.query})
+
+    console.info(ctx.state.connectionId, '[server] active jobs', SsrJobs.length)
+
+    if (SsrJobs.length >= ssrSettings.ssrProcessesLimit) {
+        console.info(ctx.state.connectionId, `[server] jobs exceeded the limit of ${ssrSettings.ssrProcessesLimit}. Waiting...`)
+
+        while (SsrJobs.length >= ssrSettings.ssrProcessesLimit) {
+            try {
+                await Promise.race(SsrJobs)
+            }
+            catch (error) {
+                console.error(error)
+            }
+        }
+
+        console.info(ctx.state.connectionId, '[server] a job completed. Continuing...')
+    }
+
+    const ssrJob = ssr(ctx)
+
+    SsrJobs.push(ssrJob)
+
+    try {
+        const page = await ssrJob
 
         if (! page) {
             console.error(ctx.state.connectionId, '[server] ⤷ failed to Server Side Render')
@@ -137,8 +166,15 @@ export async function serverMiddleware(ctx: KoaContext, next: Koa.Next) {
 
         ctx.status = 200 // OK.
         ctx.body = page.body
+    }
+    catch (error) {
+        console.error(error)
+    }
 
-        return next()
+    const ssrJobIdx = SsrJobs.indexOf(ssrJob)
+
+    if (ssrJobIdx >= 0) {
+        SsrJobs.splice(ssrJobIdx, 1)
     }
 
     return next()

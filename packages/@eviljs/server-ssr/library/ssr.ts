@@ -35,7 +35,9 @@ export async function ssrCache(ctx: KoaContext, next: () => Promise<SsrResult>):
 
     const cacheKey = computeCacheKey(ctx)
     const cachedEntry = SsrCache.get(cacheKey)
-    const shouldRefreshCache = ssrSettings.ssrRefreshParam in ctx.query // TODO: check the OTP param value.
+    const shouldRefreshCache = true
+        && ssrSettings.ssrRefreshParam in ctx.query
+        && ctx.query[ssrSettings.ssrRefreshParam] === ssrSettings.ssrRefreshToken
     const isCacheFree = SsrCache.size < ssrSettings.ssrCacheLimit
     const isCacheExpired = Date.now() > (cachedEntry?.expires ?? 0)
 
