@@ -2,6 +2,33 @@ import type {Fn, Io} from '@eviljs/std/fn.js'
 import {throwInvalidArgument} from '@eviljs/std/throw.js'
 import {isArray, isObject, isSome, isString, kindOf} from '@eviljs/std/type.js'
 
+export function joinUrlWithParams(url: string, params: UrlParams, options?: undefined | UrlParamsEncodeOptions): string {
+    const paramsUrl = encodeUrlParams(params, options)
+    const urlWithParams = joinUrlWithParamsString(url, paramsUrl)
+    return urlWithParams
+}
+
+export function joinUrlWithParamsString(url: string, params: undefined | string): string {
+    if (! params) {
+        return url
+    }
+
+    const separator = url.includes('?')
+        ? '&'
+        : '?'
+
+    return url + separator + params
+}
+
+export function joinUrlParams(...paramsList: Array<string>): string {
+    return joinUrlParamsList(paramsList)
+}
+
+export function joinUrlParamsList(paramsList: Array<string>): string {
+    // Without the empty strings.
+    return paramsList.filter(Boolean).join('&')
+}
+
 /**
 * @throws InvalidArgument
 **/
@@ -31,11 +58,11 @@ export function encodeUrlParams(params: undefined | UrlParams, options?: undefin
 /**
 * @throws InvalidArgument
 **/
-export function encodeUrlParamsObject(params: UrlParamsDict, options?: undefined | UrlParamsEncodeOptions) {
+export function encodeUrlParamsObject(params: UrlParamsDict, options?: undefined | UrlParamsEncodeOptions): string {
     const encodeKey = options?.encodeKey ?? encodeUrlParamKey
     const encodeValue = options?.encodeValue ?? encodeUrlParamValue
     const joinParam = options?.joinParam ?? joinUrlParam
-    const joinParts = options?.joinParts ?? joinUrlParamsParts
+    const joinParts = options?.joinParts ?? joinUrlParamsList
 
     const paramsParts = Object.entries(params).map(([key, value]) => {
         const valueType = kindOf(value, 'undefined', 'null')
@@ -60,9 +87,9 @@ export function encodeUrlParamsObject(params: UrlParamsDict, options?: undefined
 /**
 * @throws InvalidArgument
 **/
-export function encodeUrlParamsArray(params: UrlParamsList, options?: undefined | UrlParamsEncodeOptions) {
+export function encodeUrlParamsArray(params: UrlParamsList, options?: undefined | UrlParamsEncodeOptions): string {
     const encodeKey = options?.encodeKey ?? encodeUrlParamKey
-    const joinParts = options?.joinParts ?? joinUrlParamsParts
+    const joinParts = options?.joinParts ?? joinUrlParamsList
 
     const paramsParts = params.map(param => {
         const paramType = kindOf(param, 'undefined', 'null', 'boolean', 'array', 'object')
@@ -131,13 +158,8 @@ export function encodeUrlParamValue(value: unknown): string {
     }
 }
 
-export function joinUrlParam(name: string, value: string) {
+export function joinUrlParam(name: string, value: string): string {
     return `${name}=${value}`
-}
-
-export function joinUrlParamsParts(parts: Array<string>) {
-    // Without the empty strings.
-    return parts.filter(Boolean).join('&')
 }
 
 // Types ///////////////////////////////////////////////////////////////////////

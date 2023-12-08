@@ -26,24 +26,12 @@ export function joinUrlPaths(...parts: [string, ...Array<string>]): string {
     const [firstPart, ...otherParts] = parts
     let path = firstPart
     for (const it of otherParts) {
-        if (! path.endsWith('/')) {
+        if (path.at(-1) !== '/') {
             path += '/'
         }
-        path += it.startsWith('/')
+        path += it[0] === '/'
             ? it.slice(1)
             : it
     }
     return path
-}
-
-export function joinUrlPathAndParams(path: string, params: undefined | string): string {
-    if (! params) {
-        return path
-    }
-
-    const separator = path.includes('?')
-        ? '&'
-        : '?'
-
-    return path + separator + params
 }

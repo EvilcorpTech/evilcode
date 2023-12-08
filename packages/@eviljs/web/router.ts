@@ -1,7 +1,6 @@
 import type {ReactiveRef} from '@eviljs/std/reactive-ref.js'
 import {isString} from '@eviljs/std/type.js'
-import {encodeUrlParamKey, encodeUrlParams, encodeUrlParamValue, type UrlParams, type UrlParamsDict, type UrlParamsList} from './url-params.js'
-import {joinUrlPathAndParams} from './url.js'
+import {encodeUrlParamKey, encodeUrlParams, encodeUrlParamValue, joinUrlWithParamsString, type UrlParams, type UrlParamsDict, type UrlParamsList} from './url-params.js'
 
 export function areSameRoutes<S>(firstRoute: RouterRoute<S>, secondRoute: RouterRoute<S>): boolean {
     const samePath = firstRoute.path === secondRoute.path
@@ -61,7 +60,7 @@ export function encodeLink(url: string, params?: undefined | RouterRouteChangePa
     const [urlPath, urlParams] = url.split('?')
     const paramsString = encodeRouteParams(params)
     const allParams = [urlParams, paramsString].filter(Boolean).join('&')
-    const linkEncoded = joinUrlPathAndParams(urlPath ?? '', allParams)
+    const linkEncoded = joinUrlWithParamsString(urlPath ?? '', allParams)
     return linkEncoded
 }
 
@@ -70,7 +69,7 @@ export function encodeLink(url: string, params?: undefined | RouterRouteChangePa
 **/
 export function encodeRoute(path: string, params?: undefined | RouterRouteChangeParams): string {
     const paramsString = encodeRouteParams(params)
-    const routeEncoded = joinUrlPathAndParams(path, paramsString)
+    const routeEncoded = joinUrlWithParamsString(path, paramsString)
     return routeEncoded
 }
 
