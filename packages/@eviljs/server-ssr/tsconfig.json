@@ -1,8 +1,5 @@
 {
-    "extends": [
-        "../../@eviljs/tsconfig/preset-node.json",
-        "../../@eviljs/tsconfig/with-api-modern-web.json",
-    ],
+    "extends": "../../@eviljs/tsconfig/preset-node.json",
     "include": ["./**/*.ts"],
     "compilerOptions": {
     },
