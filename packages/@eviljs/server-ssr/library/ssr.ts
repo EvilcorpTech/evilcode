@@ -11,7 +11,7 @@ import {mkdir, writeFile} from 'node:fs/promises'
 import {resolve as resolvePath} from 'node:path'
 import {parse, serialize} from 'parse5'
 import {formatTimeAsSeconds} from './datetime.js'
-import {isElement, mappingElement, testingNodeName, type Element} from './parse5-apis.js'
+import {isElement, mappingElement, testingNodeName, type Parse5Element} from './parse5-apis.js'
 import {LogIndentation} from './settings.js'
 import type {KoaContext} from './types.js'
 
@@ -189,7 +189,7 @@ export async function ssrTransform(ctx: KoaContext, result: SsrResult): Promise<
     const externalStyles = piping(document)
         (document => document.childNodes.find(testingNodeName('html')))
         (mappingElement(htmlNode => htmlNode.childNodes.find(testingNodeName('head')), returnUndefined))
-        (mappingElement(headNode => headNode?.childNodes.filter((link): link is Element =>
+        (mappingElement(headNode => headNode?.childNodes.filter((link): link is Parse5Element =>
             true
             && isElement(link)
             && link.nodeName === 'link'
