@@ -2,7 +2,7 @@
     "extends": [
         "./with-api-modern-web.json",
         "./with-check-strict.json",
-        "./with-compile.json",
+        "./with-compile-lib.json",
         "./with-jsx-react.json",
         "./with-module-node.json"
     ],

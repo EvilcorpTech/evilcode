@@ -1,9 +1,15 @@
 {
-    "extends": ["./with-compile.json"],
+    "compileOnSave": true,
     "compilerOptions": {
         "declaration": false,
+        "declarationMap": false,
         "importHelpers": false,
+        "incremental": true,
+        "inlineSourceMap": false,
+        "inlineSources": false,
         "noEmit": true,
+        "noEmitHelpers": false,
+        "skipLibCheck": true,
         "sourceMap": true
     }
 }
