@@ -1,18 +1,12 @@
-import type {Io} from '@eviljs/std/fn.js'
+import {compute, type Computable} from '@eviljs/std/compute.js'
 import {useMemo, useState} from 'react'
 
 export function Awaited<V>(props: AwaitedProps<V>) {
-    const {children, promise, fallback, pending} = props
+    const {children, promise, pending} = props
     const promiseState = useAwaited(promise)
 
     if (! promiseState) {
-        return pending
-    }
-    if (promiseState.stage === 'rejected' && ! fallback) {
-        throw promiseState.error
-    }
-    if (promiseState.stage === 'rejected' && fallback) {
-        return fallback(promiseState.error)
+        return compute(pending)
     }
     if (promiseState.stage === 'fulfilled') {
         return children(promiseState.result)
@@ -36,10 +30,8 @@ export function useAwaited<V>(promise: undefined | Promise<V>): undefined | Awai
             return registry
         }
 
-        promise.then(
-            result => setRegistry(createRegistry(promise, {stage: 'fulfilled', result})),
-            error => setRegistry(createRegistry(promise, {stage: 'rejected', error})),
-        )
+        // Rejection must be handled with an Error Boundary.
+        promise.then(result => setRegistry(createRegistry(promise, {stage: 'fulfilled', result})))
     }, [promise])
 
     if (! promise) {
@@ -53,8 +45,7 @@ export function useAwaited<V>(promise: undefined | Promise<V>): undefined | Awai
 
 export interface AwaitedProps<V> {
     children(result: V): React.ReactNode
-    fallback?: undefined | Io<unknown, undefined | React.ReactNode>
-    pending?: undefined | React.ReactNode
+    pending?: undefined | Computable<React.ReactNode>
     promise: undefined | Promise<V>
 }
 
@@ -64,8 +55,4 @@ export type AwaitedPromiseState<V> =
     | {
         stage: 'fulfilled'
         result: V
-    }
-    | {
-        stage: 'rejected'
-        error: unknown
     }
