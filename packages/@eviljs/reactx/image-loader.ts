@@ -4,10 +4,10 @@ export function ImageLoader(props: ImageLoaderProps): undefined {
     const {items} = props
     const loadingRef = useRef<Array<string>>([])
     const loadedRef = useRef<Array<string>>([])
-    const identifiers = items.map(it => it.src).join('|')
+    const identifiers = items.join('|')
 
-    function onImageLoaded(image: Image, img: HTMLImageElement) {
-        const id = imageId(image)
+    function onImageLoaded(imageUrl: string, img: HTMLImageElement) {
+        const id = imageIdOf(imageUrl)
         const idx = loadingRef.current.indexOf(id)
 
         if (idx === -1) {
@@ -25,7 +25,7 @@ export function ImageLoader(props: ImageLoaderProps): undefined {
 
     useEffect(() => {
         for (const it of items) {
-            const id = imageId(it)
+            const id = imageIdOf(it)
             const isLoading = loadingRef.current.includes(id)
             const isLoaded = ! isLoading && loadedRef.current.includes(id)
 
@@ -44,22 +44,22 @@ export function ImageLoader(props: ImageLoaderProps): undefined {
     }, [identifiers])
 }
 
-export function imageId(image: Image) {
-    return image.src
+export function imageIdOf(imageUrl: string) {
+    return imageUrl
 }
 
-export function createImageLoader(image: Image, onEndObserver?: ImageOnEnd) {
+export function createImageLoader(imageUrl: string, onEndObserver?: ImageOnEnd) {
     const img = document.createElement('img')
 
     function onEnd() {
         img.removeEventListener('load', onEnd)
         img.removeEventListener('error', onEnd)
-        onEndObserver?.(image, img)
+        onEndObserver?.(imageUrl, img)
     }
 
     img.addEventListener('load', onEnd)
     img.addEventListener('error', onEnd)
-    img.src = image.src
+    img.src = imageUrl
     img.style.width = '0'
     img.style.height = '0'
     img.style.opacity = '0'
@@ -88,13 +88,9 @@ export function unmountImageLoader(img: HTMLImageElement) {
 // Types ///////////////////////////////////////////////////////////////////////
 
 export interface ImageLoaderProps {
-    items: Array<Image>
-}
-
-export interface Image {
-    src: string
+    items: Array<string>
 }
 
 export interface ImageOnEnd {
-    (image: Image, img: HTMLImageElement): void
+    (url: string, img: HTMLImageElement): void
 }
