@@ -1,4 +1,4 @@
-import {OneDayInMs, OneHourInMs} from '@eviljs/std/date.js'
+import {OneDayInMs, OneMonthInMs} from '@eviljs/std/date.js'
 import type {Io} from '@eviljs/std/fn.js'
 import type {ObjectPartial} from '@eviljs/std/type.js'
 import type {Options as KoaStaticOptions} from 'koa-static'
@@ -9,7 +9,8 @@ import type {KoaInstance} from './types.js'
 export function configureServerSettings(options: ServerSsrOptions): ServerSsrSettings {
     const debug = options?.debug ?? false
     const serverCompression = options?.serverCompression ?? true
-    const serverCacheExpires = options?.serverCacheExpires ?? OneHourInMs
+    const serverCacheExpires = options?.serverCacheExpires ?? OneMonthInMs
+    const serverEntryCacheExpires = options?.serverEntryCacheExpires ?? OneDayInMs
     const serverPort = options?.serverPort ?? 8000
     const ssrCacheExpires = options?.ssrCacheExpires ?? OneDayInMs
 
@@ -43,6 +44,7 @@ export function configureServerSettings(options: ServerSsrOptions): ServerSsrSet
         },
         serverCacheExpires,
         serverCompression,
+        serverEntryCacheExpires,
         serverPort,
         ssrAllowedOrigins: options?.ssrAllowedOrigins ?? [],
         ssrAllowedResources: options?.ssrAllowedResources ?? ['document', 'script', 'stylesheet', 'xhr', 'fetch', 'other', 'image', 'font'],
@@ -55,7 +57,7 @@ export function configureServerSettings(options: ServerSsrOptions): ServerSsrSet
         ssrCacheLimit: options?.ssrCacheLimit ?? 1_000,
         ssrProcessesLimit: options?.ssrProcessesLimit ?? 10, // Every Chrome tab requires about 100mb of memory.
         ssrRefreshParam: options?.ssrRefreshParam ?? 'ssr-refresh',
-        ssrRefreshToken: options?.ssrRefreshToken ?? genToken(6),
+        ssrRefreshToken: options?.ssrRefreshToken ?? createToken(6),
         ssrRequestParam: options?.ssrRequestParam ?? 'ssr',
         ssrTransformMainStylePattern: '/asset-main@[^.]+\.css$',
     }
@@ -67,7 +69,7 @@ export const LogIndentation = {
     SubResource: ' '.repeat(3),
 }
 
-export function genToken(length: number): string {
+export function createToken(length: number): string {
     const buffer = randomBytes(Math.trunc(length / 2)) // Bytes.
     const string = buffer.toString('hex') // Bytes x 2 (2 characters for every byte).
 
@@ -84,6 +86,7 @@ export interface ServerSsrSettings {
     puppeteer: PuppeteerLaunchOptions
     serverCacheExpires: number
     serverCompression: boolean
+    serverEntryCacheExpires: number
     serverPort: number
     ssrAllowedOrigins: Array<string>
     ssrAllowedResources: Array<string>

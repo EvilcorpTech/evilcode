@@ -161,7 +161,7 @@ export async function serverMiddleware(ctx: KoaContext, next: Koa.Next) {
             ctx.set('Last-Modified', new Date(page.created).toUTCString())
         }
         if (! ctx.response.get('Cache-Control')) {
-            ctx.set('Cache-Control', `max-age=${(ssrSettings.serverCacheExpires / OneSecondInMs)}`)
+            ctx.set('Cache-Control', `max-age=${(ssrSettings.serverEntryCacheExpires / OneSecondInMs)}`)
         }
 
         ctx.status = 200 // OK.
