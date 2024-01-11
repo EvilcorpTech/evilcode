@@ -1,6 +1,6 @@
 import {piping, type Io, type PipeContinuation} from '@eviljs/std/pipe.js'
 import {throwInvalidArgument} from '@eviljs/std/throw.js'
-import {isArray, isNone, isObject, type ValueOf} from '@eviljs/std/type.js'
+import {isArray, isNone, isObject, type StringAutocompleted, type ValueOf} from '@eviljs/std/type.js'
 import {FormDataType, FormUrlType, JsonType, TextType} from './mimetype.js'
 import {isUrlAbsolute, joinUrlPaths} from './url.js'
 
@@ -20,7 +20,7 @@ export const ContentType = {
 }
 
 export function creatingRequest(
-    method: RequestMethod | (string & {}),
+    method: RequestMethodEnum | StringAutocompleted,
     pathOrUrl: string,
     options?: undefined | RequestOptions,
 ): PipeContinuation<Request> {
@@ -28,7 +28,7 @@ export function creatingRequest(
 }
 
 export function createRequest(
-    method: RequestMethod | (string & {}),
+    method: RequestMethodEnum | StringAutocompleted,
     pathOrUrl: string,
     options?: undefined | RequestOptions,
 ): Request {
@@ -134,6 +134,6 @@ export interface RequestOptions extends RequestInit {
     baseUrl?: undefined | string
 }
 
-export type RequestMethod =
+export type RequestMethodEnum =
     | (Lowercase<ValueOf<typeof RequestMethod>> & string)
     | (Uppercase<ValueOf<typeof RequestMethod>> & string)

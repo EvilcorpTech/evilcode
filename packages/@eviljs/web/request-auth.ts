@@ -1,4 +1,5 @@
 import type {Io} from '@eviljs/std/fn.js'
+import type {StringAutocompleted} from '@eviljs/std/type.js'
 import {useRequestHeaders} from './request-init.js'
 
 /**
@@ -22,4 +23,4 @@ export function asRequestAuthorizationHeaders(type: RequestAuthorizationType, va
 
 // Types ///////////////////////////////////////////////////////////////////////
 
-export type RequestAuthorizationType = 'Basic' | 'Bearer' | (string & {})
+export type RequestAuthorizationType = 'Basic' | 'Bearer' | StringAutocompleted

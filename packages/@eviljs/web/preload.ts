@@ -1,4 +1,4 @@
-import {isUndefined} from '@eviljs/std/type.js'
+import {isUndefined, type StringAutocompleted} from '@eviljs/std/type.js'
 import type {JsonType, TextType} from './mimetype.js'
 
 export function exposePreloadHintElement(attrs: PreloadElementAttrs) {
@@ -48,11 +48,7 @@ export function attachPreloadHintElement(element: Node) {
 // Types ///////////////////////////////////////////////////////////////////////
 
 export interface PreloadElementAttrs {
-    as?: undefined
-        | 'fetch'
-        | 'font'
-        | (string & {})
-        // Extend it as needed.
+    as?: undefined | 'fetch' | 'font' | StringAutocompleted // Extend it as needed.
     crossOrigin?: undefined | 'anonymous' | 'use-credentials'
     fetchPriority?: undefined | 'auto' | 'low' | 'high'
     href: string
@@ -62,6 +58,5 @@ export interface PreloadElementAttrs {
         | typeof TextType
         | 'font/woff'
         | 'font/woff2'
-        | (string & {})
-        // Extend it as needed.
+        | StringAutocompleted
 }

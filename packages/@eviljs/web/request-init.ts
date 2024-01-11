@@ -1,19 +1,20 @@
 import type {Io} from '@eviljs/std/fn.js'
-import {cloneRequest, mergeRequest, mergeRequestHeaders, type RequestMethod} from './request.js'
+import type {StringAutocompleted} from '@eviljs/std/type.js'
+import {cloneRequest, mergeRequest, mergeRequestHeaders, type RequestMethodEnum} from './request.js'
 
 // Request Method //////////////////////////////////////////////////////////////
 
 /**
 * @throws TypeError
 **/
-export function usingRequestMethod(method: RequestMethod | (string & {})): Io<Request, Request> {
+export function usingRequestMethod(method: RequestMethodEnum | StringAutocompleted): Io<Request, Request> {
     return (request: Request) => useRequestMethod(request, method)
 }
 
 /**
 * @throws TypeError
 **/
-export function useRequestMethod(request: Request, method: RequestMethod | (string & {})): Request {
+export function useRequestMethod(request: Request, method: RequestMethodEnum | StringAutocompleted): Request {
     return mergeRequest(request, {method})
 }
 
