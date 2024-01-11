@@ -10,6 +10,8 @@ export const Env = {
     Version: Release.version,
 }
 
+// Types ///////////////////////////////////////////////////////////////////////
+
 declare global {
     interface ImportMeta {
         readonly env: ImportMetaEnv

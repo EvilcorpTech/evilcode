@@ -1,4 +1,4 @@
-import {defineShowcase} from '@eviljs/reactx/showcase'
+import {defineShowcase} from '@eviljs/reactx/showcase-v1/showcase'
 import {ensureStringNotEmpty} from '@eviljs/std/assert'
 import {
     awaiting,

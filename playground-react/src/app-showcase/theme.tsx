@@ -1,5 +1,7 @@
-import {defineShowcase} from '@eviljs/reactx/showcase'
-import {ThemeView} from '@eviljs/reactx/theme-view'
+import '@eviljs/reactx/theme-view-v1/theme-view.css'
+
+import {defineShowcase} from '@eviljs/reactx/showcase-v1/showcase'
+import {ThemeView} from '@eviljs/reactx/theme-view-v1/theme-view'
 
 export default defineShowcase('Theme', (props) =>
     <ThemeView/>

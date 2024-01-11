@@ -7,7 +7,7 @@ import Transition from './transition'
 import UndoRedo from './undo-redo'
 import Widgets from './widgets'
 
-export default [
+export const ShowcaseEntries = [
     Theme,
     Widgets,
     Portals,

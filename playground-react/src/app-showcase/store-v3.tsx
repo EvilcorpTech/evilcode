@@ -1,5 +1,5 @@
-import {defineShowcase} from '@eviljs/reactx/showcase'
-import {resetState, setState} from '~/store/store-v3-apis'
+import {defineShowcase} from '@eviljs/reactx/showcase-v1/showcase'
+import {StoreAction} from '~/store/store-v3-apis'
 import {useStore, useStoreDispatch, useStoreState} from '~/store/store-v3-hooks'
 import {Theme} from '~/theme/theme-apis'
 
@@ -23,7 +23,7 @@ function Comp1() {
         <div>
             <button
                 onClick={() => {
-                    dispatch(resetState())
+                    dispatch(StoreAction.resetState())
                 }}
             >
                 Reset
@@ -42,8 +42,8 @@ function Comp2() {
                 type="checkbox"
                 onChange={event => {
                     event.currentTarget.checked
-                        ? dispatch(setState({theme: Theme.Dark}))
-                        : dispatch(setState({theme: Theme.Light}))
+                        ? dispatch(StoreAction.setState({theme: Theme.Dark}))
+                        : dispatch(StoreAction.setState({theme: Theme.Light}))
                 }}
             />
         </div>

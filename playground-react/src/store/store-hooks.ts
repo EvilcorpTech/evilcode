@@ -1,5 +1,5 @@
 import {useStoreStorage as useStdStoreStorage} from '@eviljs/react/store-storage'
-import {setState} from '~/store/store-v3-apis'
+import {StoreAction} from '~/store/store-v3-apis'
 import {useStore} from '~/store/store-v3-hooks'
 import {filterStorageState, mergeStorageState, StoreStateVersion} from './store-apis'
 
@@ -15,7 +15,7 @@ export function useStoreStorage() {
         onLoad(savedState) {
             const nextState = mergeStorageState(storeState, savedState)
 
-            dispatch(setState(nextState))
+            dispatch(StoreAction.setState(nextState))
 
             console.debug('app: store state restored from LocalStorage')
         },

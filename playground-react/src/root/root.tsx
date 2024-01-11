@@ -1,4 +1,4 @@
-import '@eviljs/reactx/showcase/theme-v1.css'
+import '@eviljs/reactx/showcase-v1/showcase-theme-v1.css'
 
 import {ContainerProvider} from '@eviljs/react/container'
 import {I18nProvider} from '@eviljs/react/i18n'

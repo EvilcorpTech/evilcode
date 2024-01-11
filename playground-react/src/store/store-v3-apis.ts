@@ -1,8 +1,8 @@
 import {
-    composeReducers,
+    composeReducersEntries,
     defineReducerAction,
-    fromActionsDefinitions,
     patchState,
+    reducersEntriesFromActions,
     withId,
     type ReducerActionOfDict,
     type ReducerArgs,
@@ -21,8 +21,26 @@ export const StoreActionsSpec = {
 
 export const StoreSpec: StoreDefinition<StoreState, StoreAction> = {
     createState,
-    reduce: composeReducers(...fromActionsDefinitions(StoreActionsSpec)),
+    reduce: composeReducersEntries(reducersEntriesFromActions(StoreActionsSpec)),
     onDispatch,
+}
+
+export const StoreAction = {
+    setState: StoreActionsSpec.SetState.action,
+    resetState: StoreActionsSpec.ResetState.action,
+    setData: StoreActionsSpec.SetData.action,
+}
+
+export function reduceStateReset(state: StoreState): StoreState {
+    return createState()
+}
+
+export function reduceStateSetData(state: StoreState, statePatch: StoreStatePatch<NonNullable<StoreState['data']>>): StoreState {
+    const data = patchState(state.data ?? {}, statePatch)
+
+    return state.data !== data
+        ? {...state, data}
+        : state
 }
 
 export function onDispatch(id: ReducerId, args: ReducerArgs, newState: StoreState, oldState: StoreState) {
@@ -45,22 +63,6 @@ export function onDispatch(id: ReducerId, args: ReducerArgs, newState: StoreStat
     console.debug('id:', id)
     console.debug('args:', args)
     console.groupEnd()
-}
-
-export const setState = StoreActionsSpec.SetState.action
-export const resetState = StoreActionsSpec.ResetState.action
-export const setData = StoreActionsSpec.SetData.action
-
-export function reduceStateReset(state: StoreState): StoreState {
-    return createState()
-}
-
-export function reduceStateSetData(state: StoreState, statePatch: StoreStatePatch<NonNullable<StoreState['data']>>): StoreState {
-    const data = patchState(state.data ?? {}, statePatch)
-
-    return state.data !== data
-        ? {...state, data}
-        : state
 }
 
 // Types ///////////////////////////////////////////////////////////////////////

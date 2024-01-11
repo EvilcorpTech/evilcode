@@ -1,6 +1,6 @@
 import {Transition} from '@eviljs/react/transition'
-import {TransitionAnimator, TransitionEffect} from '@eviljs/react/transition-animator'
-import {defineShowcase} from '@eviljs/reactx/showcase'
+import {defineShowcase} from '@eviljs/reactx/showcase-v1/showcase'
+import {TransitionAnimator, TransitionEffect} from '@eviljs/reactx/transition-animator-v1/transition-animator'
 import {useEffect, useState} from 'react'
 
 export default defineShowcase('Transition', props => {
