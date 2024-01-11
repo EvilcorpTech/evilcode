@@ -6,7 +6,7 @@ import {Dynamic} from 'solid-js/web'
 import {classes} from './classes.js'
 import {createI18nMessage} from './i18n.js'
 
-export function Text(props: TextProps) {
+export function Message(props: MessageProps) {
     const [_, otherProps] = splitProps(props, ['args', 'children', 'tag'])
 
     const message = createI18nMessage(
@@ -35,7 +35,7 @@ export function Text(props: TextProps) {
 
 // Types ///////////////////////////////////////////////////////////////////////
 
-export interface TextProps extends JSX.HTMLAttributes<HTMLElement> {
+export interface MessageProps extends JSX.HTMLAttributes<HTMLElement> {
     args?: undefined | I18nMessageArgs | Accessor<I18nMessageArgs>
     children: undefined | string
     tag?: undefined | keyof JSX.IntrinsicElements
