@@ -1,13 +1,15 @@
-export enum LogType {
-    Debug = 1,
-    Info = 2,
-    Warn = 3,
-    Error = 4,
+import type {ValueOf} from './type.js'
+
+export const LogType = {
+    Debug: 1 as const,
+    Info: 2 as const,
+    Warn: 3 as const,
+    Error: 4 as const,
 }
 
 export const LogTypeDefault = LogType.Debug
 
-export function createLogger<R>(log: (type: LogType, ...args: Payload) => R): Logger<R> & LoggerProps {
+export function createLogger<R>(log: (type: LogTypeEnum, ...args: Payload) => R): Logger<R> & LoggerProps {
     return {
         Type: LogType,
 
@@ -30,12 +32,12 @@ export function createLogger<R>(log: (type: LogType, ...args: Payload) => R): Lo
 
 export function createConsoleLog(options?: undefined | {
     console?: undefined | Logger<void>
-    min?: undefined | LogType
+    min?: undefined | LogTypeEnum
 }) {
     const logger = options?.console ?? console
     const min = options?.min ?? LogTypeDefault
 
-    function log(type: LogType, ...args: Payload) {
+    function log(type: LogTypeEnum, ...args: Payload) {
         return logLevel(logger, type, min, ...args)
     }
 
@@ -44,8 +46,8 @@ export function createConsoleLog(options?: undefined | {
 
 export function logLevel<R>(
     adapter: Logger<R>,
-    type: LogType,
-    min: LogType,
+    type: LogTypeEnum,
+    min: LogTypeEnum,
     ...args: Payload
 ): void | R {
     return (type >= min)
@@ -55,7 +57,7 @@ export function logLevel<R>(
 
 export function log<R>(
     logger: Logger<R>,
-    type: LogType,
+    type: LogTypeEnum,
     ...args: Payload
 ): R {
     switch (type as undefined | typeof type) {
@@ -78,7 +80,7 @@ export function log<R>(
 // Types ///////////////////////////////////////////////////////////////////////
 
 export interface Logger<R = void> {
-    log(type: LogType, ...args: Payload): R
+    log(type: LogTypeEnum, ...args: Payload): R
     debug(...args: Payload): R
     info(...args: Payload): R
     warn(...args: Payload): R
@@ -91,3 +93,5 @@ export interface LoggerProps {
 
 export interface Payload extends Array<unknown> {
 }
+
+export type LogTypeEnum = ValueOf<typeof LogType> & number
