@@ -2,6 +2,7 @@
     "name": "@eviljs/reactx",
     "version": "1.5.0",
     "type": "module",
+    "sideEffects": false,
     "files": [
         "/LICENSE.txt",
         "/**/*.css",

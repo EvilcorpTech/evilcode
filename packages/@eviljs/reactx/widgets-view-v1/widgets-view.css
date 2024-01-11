@@ -1,0 +1,69 @@
+@import '../accordion-v1/accordion.css';
+@import '../aspect-ratio-v1/aspect-ratio.css';
+@import '../button-armored-v1/button-armored.css';
+@import '../button-busy-v1/button-busy-theme-replace.css';
+@import '../button-busy-v1/button-busy-theme-reveal.css';
+@import '../checkbox-v1/checkbox-mark-shape.css';
+@import '../checkbox-v1/checkbox-mark-sign.css';
+@import '../checkbox-v1/checkbox.css';
+@import '../input-v1/input-theme.css';
+@import '../input-v1/input.css';
+@import '../input-v2/input-theme.css';
+@import '../input-v2/input.css';
+@import '../meter-v1/meter.css';
+@import '../notification-badge-v1/notification-badge.css';
+@import '../progress-line-v1/progress-line.css';
+@import '../radio-group-v1/radio-group.css';
+@import '../range-v1/range-theme.css';
+@import '../range-v1/range.css';
+@import '../scrollable-v1/scrollable.css';
+@import '../slider-v1/slider.css';
+@import '../slider-virtual-v1/slider-virtual.css';
+@import '../spinner-v1/spinner.css';
+@import '../spinner-v2/spinner.css';
+@import '../spinner-v3/spinner.css';
+@import '../spinner-v4/spinner.css';
+@import '../table-v1/table.css';
+@import '../tooltip-v1/tooltip.css';
+
+.WidgetsView-a252 {
+    gap: var(--std-gutter8);
+}
+
+.section-0234 {
+    display: flex;
+    align-items: flex-start;
+    align-content: flex-start;
+    flex-wrap: wrap;
+    gap: var(--std-gutter4);
+}
+
+.section-0234.column {
+    flex-direction: column;
+}
+
+.title-74a6 {
+    width: 100%;
+    font-weight: var(--std-text-weight2);
+}
+
+.section-0234 .AccordionList-c2ae {
+    border-radius: var(--std-radius4);
+    overflow: hidden;
+    background-color: var(--std-color-bg2);
+}
+
+.section-0234 .head-ad0d {
+    padding: var(--std-gutter3);
+    border-bottom: 4px solid var(--std-color-bg1);
+    background-color: var(--std-color-bg3);
+    transition: all var(--duration, var(--std-duration2));
+}
+.section-0234 .AccordionItem-de4f.selected .head-ad0d {
+    border-color: var(--std-color-primary-accent);
+}
+
+.section-0234 .content-38aa > * {
+    padding: var(--std-gutter4);
+    color: var(--std-color-primary-fg1);
+}

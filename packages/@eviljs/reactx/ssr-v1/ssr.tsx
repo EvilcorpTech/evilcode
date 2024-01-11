@@ -4,8 +4,8 @@ import {asDefault, type LazyFallback, type LazyLoader} from '@eviljs/react/lazy.
 import type {VoidProps} from '@eviljs/react/type.js'
 import {lazy, Suspense, useLayoutEffect, useRef} from 'react'
 
-export enum SuspenseSsrAttribute {
-    Id = 'data-suspense-id',
+export const SuspenseSsrAttribute = {
+    Id: 'data-suspense-id' as const,
 }
 
 export const SuspendedSsrElements = collectSuspendedSsrElements()

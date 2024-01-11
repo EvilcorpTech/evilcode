@@ -1,0 +1,26 @@
+.Spinner-2a9d {
+    display: inline-block;
+    width: var(--Spinner-size, var(--icon-size, 1em));
+    height: var(--Spinner-size, var(--icon-size, 1em));
+    font-size: var(--Spinner-size, var(--icon-size, 1em));
+    border-radius: var(--Spinner-radius, .1em);
+    opacity: 0;
+    background-color: var(--Spinner-color, currentColor);
+    transition: all var(--std-duration3);
+}
+.Spinner-2a9d[data-active="true"] {
+    opacity: 1;
+    animation: spinner-2a9d var(--Spinner-duration, 2s) infinite ease-in-out;
+}
+
+@keyframes spinner-2a9d {
+    0% {
+        transform: perspective(var(--Spinner-perspective, 1.5em)) rotateX(0deg) rotateY(0deg);
+    }
+    50% {
+        transform: perspective(var(--Spinner-perspective, 1.5em)) rotateX(-180deg) rotateY(0deg);
+    }
+    100% {
+        transform: perspective(var(--Spinner-perspective, 1.5em)) rotateX(-180deg) rotateY(-180deg);
+    }
+}
