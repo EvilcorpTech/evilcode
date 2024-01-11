@@ -151,7 +151,7 @@ export function useAsyncIoAggregated(asyncIoViews: Record<string, AsyncIoView<un
 // Types ///////////////////////////////////////////////////////////////////////
 
 export interface AsyncIoState<R> extends AsyncIoResultState<R> {
-    resource: ResourceMask
+    resource: number
 }
 
 export interface AsyncIoResultState<R> {

@@ -1,14 +1,15 @@
+import type {ValueOf} from '@eviljs/std/type.js'
 import type {AuthAuthenticateOptions, AuthCredentials, AuthInvalidateOptions, AuthValidateOptions} from '@eviljs/web/auth.js'
 import {authenticate, invalidateAuthentication, validateAuthentication} from '@eviljs/web/auth.js'
 import {throwInvalidResponse} from '@eviljs/web/throw.js'
 import {useCallback, useMemo, useState} from 'react'
 import {useBusyLock} from './busy.js'
 
-export enum AuthTokenState {
-    Missing = 'Missing',
-    Validating = 'Validating',
-    Valid = 'Valid',
-    Invalid = 'Invalid',
+export const AuthTokenState = {
+    Missing: 'Missing' as const,
+    Validating: 'Validating' as const,
+    Valid: 'Valid' as const,
+    Invalid: 'Invalid' as const,
 }
 
 export function useAuthentication(args: AuthenticationOptions) {
@@ -17,7 +18,7 @@ export function useAuthentication(args: AuthenticationOptions) {
         validate: validateOptions,
         invalidate: invalidateOptions,
     } = args
-    const [tokenState, setTokenState] = useState<AuthTokenState>()
+    const [tokenState, setTokenState] = useState<AuthTokenStateEnum>()
     const {busy, busyLock, busyRelease} = useBusyLock()
 
     const validateToken = useCallback((token: undefined | string) => {
@@ -106,3 +107,5 @@ export interface AuthenticationOptions {
 }
 
 export type AuthenticationManager = ReturnType<typeof useAuthentication>
+
+export type AuthTokenStateEnum = ValueOf<typeof AuthTokenState> & string

@@ -1,8 +1,9 @@
 import {forwardRef} from 'react'
 import {Box, type BoxProps} from './box.js'
 import {classes} from './classes.js'
+import {displayName} from './display-name.js'
 
-export const Html = forwardRef(function Html<T extends Element = HTMLElement>(
+export const Html = displayName('Html', forwardRef(function Html<T extends Element = HTMLElement>(
     props: HtmlProps,
     ref: React.ForwardedRef<T>
 ) {
@@ -16,11 +17,10 @@ export const Html = forwardRef(function Html<T extends Element = HTMLElement>(
             dangerouslySetInnerHTML={{__html: children ?? ''}}
         />
     )
-}) as (
+})) as (
     & (<T extends Element = HTMLElement>(props: HtmlProps<T>) => JSX.Element)
     & Pick<React.FunctionComponent, 'displayName'>
 )
-Html.displayName = 'Html'
 
 // Types ///////////////////////////////////////////////////////////////////////
 

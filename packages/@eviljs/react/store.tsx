@@ -105,7 +105,7 @@ export function useStoreRead<S extends ReducerState>(options?: undefined | Store
 * const {useStore, useStoreState, useStoreDispatch} = createStore(context)
 */
 export function setupStore<S extends ReducerState, A extends ReducerAction = ReducerAction>(
-    options?: StoreContextOptions<S, A>
+    options?: undefined | StoreContextOptions<S, A>
 ): StoreBound<S, A> {
     return {
         StoreProvider(props) {

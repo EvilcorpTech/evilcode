@@ -9,6 +9,7 @@ import {isUrlAbsolute} from '@eviljs/web/url.js'
 import {Children, forwardRef, isValidElement, useCallback, useContext, useEffect, useMemo, useRef} from 'react'
 import {classes} from './classes.js'
 import {defineContext} from './ctx.js'
+import {displayName} from './display-name.js'
 import {useComputedRefValue} from './reactive-ref.js'
 import {useRouterContext} from './router-provider.js'
 
@@ -161,7 +162,7 @@ export function CaseRoute(props: CaseRouteProps): undefined {
 *     <button>Click</button>
 * </Route>`
 */
-export const Route = forwardRef(function Route(
+export const Route = displayName('Route', forwardRef(function Route(
     props: RouteProps,
     ref: React.ForwardedRef<HTMLAnchorElement>
 ) {
@@ -239,10 +240,9 @@ export const Route = forwardRef(function Route(
             href={href}
         />
     )
-})
-Route.displayName = 'Route'
+}))
 
-export const Link = forwardRef(function Link(
+export const Link = displayName('Link', forwardRef(function Link(
     props: LinkProps,
     ref: React.ForwardedRef<HTMLAnchorElement>
 ) {
@@ -272,8 +272,7 @@ export const Link = forwardRef(function Link(
             replace={replace}
         />
     )
-})
-Link.displayName = 'Link'
+}))
 
 export function Redirect(props: RedirectProps) {
     const {children, params, replace: replaceOptional, state, to: path} = props

@@ -1,4 +1,5 @@
 import {createElement, forwardRef} from 'react'
+import {displayName} from './display-name.js'
 
 /*
 * Renders an element with a dynamic tag.
@@ -9,18 +10,17 @@ import {createElement, forwardRef} from 'react'
 *     {children}
 * </Box>
 */
-export const Box = forwardRef(function Box<T extends Element = HTMLElement>(
+export const Box = displayName('Box', forwardRef(function Box<T extends Element = HTMLElement>(
     props: BoxProps<T>,
     ref: React.ForwardedRef<T>
 ) {
     const {tag, ...otherProps} = props
 
     return createElement(tag ?? 'div', {...otherProps as {}, ref})
-}) as (
+})) as (
     & (<T extends Element = HTMLElement>(props: BoxProps<T>) => JSX.Element)
     & Pick<React.FunctionComponent, 'displayName'>
 )
-Box.displayName = 'Box'
 
 /*
 * Optionally renders an element with a dynamic tag.
@@ -39,7 +39,7 @@ Box.displayName = 'Box'
 *     </OptionalBox>
 * }
 */
-export const BoxOptional = forwardRef(function BoxOptional<T extends Element = HTMLElement>(
+export const BoxOptional = displayName('BoxOptional', forwardRef(function BoxOptional<T extends Element = HTMLElement>(
     props: BoxOptionalProps<T>,
     ref: React.ForwardedRef<T>
 ) {
@@ -50,11 +50,10 @@ export const BoxOptional = forwardRef(function BoxOptional<T extends Element = H
     }
 
     return <Box {...otherProps} ref={ref}/>
-}) as (
+})) as (
     & (<T extends Element = HTMLElement>(props: BoxOptionalProps<T>) => JSX.Element)
     & Pick<React.FunctionComponent, 'displayName'>
 )
-BoxOptional.displayName = 'BoxOptional'
 
 // Types ///////////////////////////////////////////////////////////////////////
 

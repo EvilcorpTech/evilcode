@@ -1,4 +1,4 @@
-import type {I18nMessageKey} from '@eviljs/std/i18n.js'
+import type {I18nMessageArgs, I18nMessageKey} from '@eviljs/std/i18n.js'
 import {useMemo} from 'react'
 import {useI18nContext, type I18nManager} from './i18n-provider.js'
 
@@ -9,7 +9,17 @@ export function useI18n<L extends string = string, K extends I18nMessageKey = I1
     return useI18nContext()!
 }
 
-export function useI18nMsg<T extends object, L extends string = string, K extends I18nMessageKey = I18nMessageKey>(
+export function useI18nMessage<K extends I18nMessageKey = I18nMessageKey>(key: K, args?: undefined | I18nMessageArgs): string | K {
+    const {translate} = useI18n()
+
+    const message = useMemo(() => {
+        return translate(key, args)
+    }, [translate, key, args])
+
+    return message
+}
+
+export function useI18nMessages<T extends object, L extends string = string, K extends I18nMessageKey = I18nMessageKey>(
     compute: I18nMsgsComputer<I18nManager<L, K>, T>,
     deps?: undefined | Array<unknown>,
 ) {

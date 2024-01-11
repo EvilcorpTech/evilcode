@@ -73,7 +73,6 @@ export function Transition(props: TransitionProps) {
 }
 
 const AnimatorMemo = memo(Animator)
-AnimatorMemo.displayName = 'AnimatorMemo'
 
 export function Animator(props: AnimatorProps) {
     const {
