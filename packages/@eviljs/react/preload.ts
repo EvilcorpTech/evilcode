@@ -16,7 +16,7 @@ export function usePreloadHint(attrs: PreloadElementAttrs, activeOptional?: unde
     }, [active])
 }
 
-export function usePreloadTask(task: Task, activeOptional?: undefined | boolean) {
+export function usePreloadTask(task: Task<void | undefined | Task>, activeOptional?: undefined | boolean) {
     const active = activeOptional ?? true
 
     useEffect(() => {
@@ -24,6 +24,6 @@ export function usePreloadTask(task: Task, activeOptional?: undefined | boolean)
             return
         }
 
-        task()
+        return task()
     }, [active])
 }

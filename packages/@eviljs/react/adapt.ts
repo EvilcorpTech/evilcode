@@ -3,7 +3,7 @@ export type {AdaptOptions} from './adapt/adapt-boot.js'
 export {
     computeAppEntryResult,
     computeGeneratorResult,
-    defineAppEntryLoader,
+    defineAppEntry,
     selectAppEntryMatch,
 } from './adapt/adapt-entry.js'
 export type {

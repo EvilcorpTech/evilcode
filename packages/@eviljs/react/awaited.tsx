@@ -5,10 +5,10 @@ export function Awaited<V>(props: AwaitedProps<V>) {
     const {children, promise, pending} = props
     const promiseState = useAwaited(promise)
 
-    if (promiseState?.stage === 'fulfilled') {
-        return children(promiseState.result)
+    if (promiseState?.stage !== 'fulfilled') {
+        return compute(pending)
     }
-    return compute(pending)
+    return children(promiseState.result)
 }
 
 export function useAwaited<V>(promise: undefined | Promise<V>): undefined | AwaitedPromiseState<V> {

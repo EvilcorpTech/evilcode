@@ -3,8 +3,8 @@ import {memoizing} from '@eviljs/std/memo.js'
 import {isIterator} from '@eviljs/std/type.js'
 import {selectRouteMatch, type RoutePatterns} from '@eviljs/web/route.js'
 
-export function defineAppEntryLoader<C extends object = {}>(loader: Task<Promise<AppEntry<C>>>): Task<Promise<AppEntry<C>>> {
-    return memoizing(() => loader())
+export function defineAppEntry<C extends object = {}>(loader: Task<Promise<AppEntry<C>>>): Task<Promise<AppEntry<C>>> {
+    return memoizing(loader)
 }
 
 export function selectAppEntryMatch<C extends object = {}>(
@@ -56,8 +56,8 @@ export type AppEntryYield = AppEntryOutput
 export type AppEntryReturn = AppEntryOutput | AsyncGenerator<AppEntryOutput, AppEntryOutput, void>
 
 export type AppEntriesDefinition<C extends object = {}> = Record<string, {
+    entry: Task<Promise<AppEntry<C>>>
     route: RoutePatterns
-    loader: Task<Promise<AppEntry<C>>>
 }>
 
 export type AppEntriesList<C extends object = {}> = Array<[RoutePatterns, Task<Promise<AppEntry<C>>>]>
