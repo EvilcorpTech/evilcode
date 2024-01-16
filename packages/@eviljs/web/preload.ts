@@ -29,11 +29,12 @@ export function createPreloadHintElement(attrs: PreloadElementAttrs) {
 export function findPreloadHint(attrs: PreloadElementAttrs) {
     const selector = [
         'link',
-        `[rel="${attrs.rel}"]`,
-        `[href="${attrs.href}"]`,
         attrs.as ? `[as="${attrs.as}"]` : undefined,
-        attrs.type ? `[type="${attrs.type}"]` : undefined,
+        attrs.crossOrigin ? `[crossOrigin="${attrs.crossOrigin}"]` : undefined,
         attrs.fetchPriority ? `[fetchPriority="${attrs.fetchPriority}"]` : undefined,
+        `[href="${attrs.href}"]`,
+        `[rel="${attrs.rel}"]`,
+        attrs.type ? `[type="${attrs.type}"]` : undefined,
     ].filter(Boolean).join('')
 
     return document.querySelector(selector) ?? undefined
