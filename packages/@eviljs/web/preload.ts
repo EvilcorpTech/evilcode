@@ -1,29 +1,28 @@
-import {isUndefined, type StringAutocompleted} from '@eviljs/std/type.js'
+import type {Fn} from '@eviljs/std/fn.js'
+import {mapSome} from '@eviljs/std/monad.js'
+import type {StringAutocompleted} from '@eviljs/std/type.js'
 import type {JsonType, TextType} from './mimetype.js'
 
-export function exposePreloadHintElement(attrs: PreloadElementAttrs) {
+export function exposePreloadHintElement(attrs: PreloadElementAttrs, options?: undefined | PreloadElementOptions): Node {
     const hintElement = findPreloadHint(attrs)
 
     if (hintElement) {
-        return
+        return hintElement
     }
 
-    return attachPreloadHintElement(createPreloadHintElement(attrs))
+    const element = createPreloadHintElement(attrs)
+    attachPreloadHintElement(element, options)
+    return element
 }
 
 export function createPreloadHintElement(attrs: PreloadElementAttrs) {
     const element = document.createElement('link')
-
-    for (const attrName in attrs) {
-        const attrValue = attrs[attrName as keyof typeof attrs]
-
-        if (isUndefined(attrValue)) {
-            continue
-        }
-
-        element.setAttribute(attrName, attrValue)
-    }
-
+    mapSome(attrs.as, it => element.setAttribute('as', it))
+    mapSome(attrs.crossOrigin, it => element.setAttribute('crossOrigin', it))
+    mapSome(attrs.fetchPriority, it => element.setAttribute('fetchPriority', it))
+    mapSome(attrs.href, it => element.setAttribute('href', it))
+    mapSome(attrs.rel, it => element.setAttribute('rel', it))
+    mapSome(attrs.type, it => element.setAttribute('type', it))
     return element
 }
 
@@ -40,9 +39,17 @@ export function findPreloadHint(attrs: PreloadElementAttrs) {
     return document.querySelector(selector) ?? undefined
 }
 
-export function attachPreloadHintElement(element: Node) {
+export function attachPreloadHintElement(element: Node, options?: undefined | PreloadElementOptions): void {
+    const attach = options?.attach ?? attachToHeadPrepending
+    attach(element)
+}
+
+export function attachToHeadAppending(element: Node): void {
     document.head.append(element)
-    return element
+}
+
+export function attachToHeadPrepending(element: Node): void {
+    document.head.prepend(element)
 }
 
 // Types ///////////////////////////////////////////////////////////////////////
@@ -59,4 +66,8 @@ export interface PreloadElementAttrs {
         | 'font/woff'
         | 'font/woff2'
         | StringAutocompleted
+}
+
+export interface PreloadElementOptions {
+    attach?: undefined | Fn<[element: Node], void>
 }
