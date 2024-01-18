@@ -1,3 +1,4 @@
+import type {Computable} from '@eviljs/std/compute.js'
 import {OneDayInMs, OneMonthInMs} from '@eviljs/std/date.js'
 import type {Io} from '@eviljs/std/fn.js'
 import type {ObjectPartial} from '@eviljs/std/type.js'
@@ -90,7 +91,7 @@ export interface ServerSsrSettings {
     serverPort: number
     ssrAllowedOrigins: Array<string>
     ssrAllowedResources: Array<string>
-    ssrAllowedRoutes: Array<string>
+    ssrAllowedRoutes: Computable<Array<string>>
     ssrAppUrl: string
     ssrBrowserEvaluate: undefined | string
     ssrBrowserWaitFor: undefined | ((page: Page) => Promise<void>)

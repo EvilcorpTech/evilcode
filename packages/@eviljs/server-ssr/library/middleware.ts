@@ -1,5 +1,8 @@
+import {assertDefined} from '@eviljs/std/assert.js'
+import {compute} from '@eviljs/std/compute.js'
 import {OneSecondInMs} from '@eviljs/std/date.js'
 import {isDefined} from '@eviljs/std/type.js'
+import {asBaseUrl} from '@eviljs/web/url.js'
 import type Koa from 'koa'
 import {LogIndentation} from './settings.js'
 import {ssr, type SsrResult} from './ssr.js'
@@ -7,9 +10,24 @@ import type {KoaContext} from './types.js'
 
 const ApiRegexp = /^\/api\//
 const FileRegexp = /.+\.\w+$/
-export let ConnectionCounter = 0
 
-const SsrJobs: Array<Promise<SsrResult>> = []
+export let ConnectionCounter = 0
+export const SsrJobs: Array<Promise<undefined | SsrResult>> = []
+
+function pushSsrJob(ssrJob: Promise<undefined | SsrResult>) {
+    SsrJobs.push(ssrJob)
+    return ssrJob
+}
+
+function cleanSsrJob(ssrJob: Promise<undefined | SsrResult>) {
+    const ssrJobIdx = SsrJobs.indexOf(ssrJob)
+
+    if (ssrJobIdx === -1) {
+        return
+    }
+
+    SsrJobs.splice(ssrJobIdx, 1)
+}
 
 /*
 * Browser
@@ -74,62 +92,59 @@ export async function serverMiddleware(ctx: KoaContext, next: Koa.Next) {
 
     const logIndent = LogIndentation.SubResource
 
-    const isRequestHandled = isDefined(ctx.body)
-    if (isRequestHandled) {
+    if (isRequestHandled(ctx)) {
         // The request is already handled by another middleware.
-        console.info(ctx.state.connectionId, '[server] skipping request already handled of', ctx.path, {...ctx.query})
+        console.info(ctx.state.connectionId, '[server] skipping request already handled:', ctx.path, {...ctx.query})
 
         return next()
     }
 
-    const isRequestOfApi = ApiRegexp.test(ctx.path)
-    if (isRequestOfApi) {
-        // The request points to an API endpoint.
-        console.info(logIndent, ctx.state.connectionId, '[server] skipping request of API', ctx.path, {...ctx.query})
+    // if (isRequestOfApi(ctx)) {
+    //     // The request points to an API endpoint.
+    //     console.info(logIndent, ctx.state.connectionId, '[server] skipping request of API:', ctx.path, {...ctx.query})
+    //
+    //     return next()
+    // }
 
-        return next()
-    }
-
-    const isRequestOfStatic = FileRegexp.test(ctx.path)
-    if (isRequestOfStatic) {
+    if (isRequestOfFile(ctx)) {
         // The request points to a static asset file (for example /app.js).
-        console.info(logIndent, ctx.state.connectionId, '[server] serving request of StaticFile', ctx.path, {...ctx.query})
+        console.info(logIndent, ctx.state.connectionId, '[server] serving request of Static File:', ctx.path, {...ctx.query})
 
         return koaStatic(ctx, next)
     }
 
-    const isRequestFromSsr = ssrSettings.ssrRequestParam in ctx.query
-    if (isRequestFromSsr) {
-        // The request points to an app routing path (for example /dashboard)
-        // and it comes from SSR (/dashboard?ssr).
-        console.info(logIndent, ctx.state.connectionId, '[server] serving request of Entry Point (from SSR)', ctx.path, {...ctx.query})
+    if (isRequestFromSsr(ctx)) {
+        // The request points to an app routing path (for example /dashboard/)
+        // and it comes from SSR (/dashboard/?ssr).
+        console.info(logIndent, ctx.state.connectionId, '[server] serving request of Entry Point (from SSR):', ctx.path, {...ctx.query})
 
         ctx.path = '/index.html'
 
         return koaStatic(ctx, next)
     }
 
-    const isRequestOfRouteAllowed = ssrSettings.ssrAllowedRoutes.includes(ctx.path)
-    if (! isRequestOfRouteAllowed) {
-        // The request points to an app routing path (for example /article/1)
+    if (! isRequestOfRouteAllowed(ctx)) {
+        // The request points to an app routing path (for example /article/1/)
         // but it is not eligible for SSR.
-        console.info(ctx.state.connectionId, '[server] serving request of Entry Point (not SSR)', ctx.path, {...ctx.query})
+        console.info(ctx.state.connectionId, '[server] serving request of Entry Point (not SSR):', ctx.path, {...ctx.query})
 
         ctx.path = '/index.html'
 
         return koaStatic(ctx, next)
     }
 
-    // The request points to an app routing path (for example /dashboard),
+    // The request points to an app routing path (for example /dashboard/),
     // it is an allowed route and it does not come from SSR.
-    console.info(ctx.state.connectionId, '[server] serving request of Route SSR', ctx.path, {...ctx.query})
+    console.info(ctx.state.connectionId, '[server] serving request of Route SSR:', ctx.path, {...ctx.query})
 
-    console.info(ctx.state.connectionId, '[server] active jobs', SsrJobs.length)
+    console.debug(ctx.state.connectionId, '[server] active jobs:', SsrJobs.length)
 
     if (SsrJobs.length >= ssrSettings.ssrProcessesLimit) {
-        console.info(ctx.state.connectionId, `[server] jobs exceeded the limit of ${ssrSettings.ssrProcessesLimit}. Waiting...`)
+        console.info(ctx.state.connectionId, `[server] jobs exceeded the limit of ${ssrSettings.ssrProcessesLimit}`)
 
         while (SsrJobs.length >= ssrSettings.ssrProcessesLimit) {
+            console.info(ctx.state.connectionId, `[server] waiting ${SsrJobs.length - ssrSettings.ssrProcessesLimit} jobs above the limit`)
+
             try {
                 await Promise.race(SsrJobs)
             }
@@ -141,41 +156,53 @@ export async function serverMiddleware(ctx: KoaContext, next: Koa.Next) {
         console.info(ctx.state.connectionId, '[server] a job completed. Continuing...')
     }
 
-    const ssrJob = ssr(ctx)
-
-    SsrJobs.push(ssrJob)
+    const ssrJob = pushSsrJob(ssr(ctx))
 
     try {
-        const page = await ssrJob
+        const ssrResult = await ssrJob
 
-        if (! page) {
-            console.error(ctx.state.connectionId, '[server] ⤷ failed to Server Side Render')
-
-            ctx.status = 500 // Internal Server Error.
-            ctx.body = '[server] Internal Server Error (ERROR:FA76)'
-
-            return next()
-        }
+        assertDefined(ssrResult, 'ssrResult')
 
         if (! ctx.response.get('Last-Modified')) {
-            ctx.set('Last-Modified', new Date(page.created).toUTCString())
+            ctx.set('Last-Modified', new Date(ssrResult.created).toUTCString())
         }
         if (! ctx.response.get('Cache-Control')) {
             ctx.set('Cache-Control', `max-age=${(ssrSettings.serverEntryCacheExpires / OneSecondInMs)}`)
         }
 
         ctx.status = 200 // OK.
-        ctx.body = page.body
+        ctx.body = ssrResult.body
     }
     catch (error) {
-        console.error(error)
+        console.error(ctx.state.connectionId, '[server] ⤷ failed to Server Side Render due to:', error)
+
+        ctx.status = 500 // Internal Server Error.
+        ctx.body = '[server] Internal Server Error (ERROR:FA76)'
     }
-
-    const ssrJobIdx = SsrJobs.indexOf(ssrJob)
-
-    if (ssrJobIdx >= 0) {
-        SsrJobs.splice(ssrJobIdx, 1)
+    finally {
+        cleanSsrJob(ssrJob)
     }
 
     return next()
+}
+
+export function isRequestHandled(ctx: KoaContext) {
+    return isDefined(ctx.body)
+}
+
+export function isRequestOfApi(ctx: KoaContext) {
+    return ApiRegexp.test(ctx.path)
+}
+
+export function isRequestOfFile(ctx: KoaContext) {
+    return FileRegexp.test(ctx.path)
+}
+
+export function isRequestFromSsr(ctx: KoaContext) {
+    return ctx.ssrSettings.ssrRequestParam in ctx.query
+}
+
+export function isRequestOfRouteAllowed(ctx: KoaContext) {
+    const ssrAllowedRoutes = compute(ctx.ssrSettings.ssrAllowedRoutes).map(asBaseUrl) // Without the trailing slash.
+    return ssrAllowedRoutes.includes(asBaseUrl(ctx.path))
 }

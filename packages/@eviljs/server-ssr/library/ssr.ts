@@ -14,10 +14,11 @@ import {formatTimeAsSeconds} from './datetime.js'
 import {isElement, mappingElement, testingNodeName, type Parse5Element} from './parse5-apis.js'
 import {LogIndentation} from './settings.js'
 import type {KoaContext} from './types.js'
+import {asBaseUrl} from '@eviljs/web/url.js'
 
 export const SsrCache = new Map<string, SsrCacheEntry>()
 
-export async function ssr(ctx: KoaContext): Promise<SsrResult> {
+export async function ssr(ctx: KoaContext): Promise<undefined | SsrResult> {
     return ssrCache(ctx, async () =>
         ssrTransform(ctx,
             await ssrRender(ctx)
@@ -25,12 +26,12 @@ export async function ssr(ctx: KoaContext): Promise<SsrResult> {
     )
 }
 
-export async function ssrCache(ctx: KoaContext, next: () => Promise<SsrResult>): Promise<SsrResult> {
+export async function ssrCache(ctx: KoaContext, ssrTask: () => Promise<undefined | SsrResult>): Promise<undefined | SsrResult> {
     const {ssrSettings} = ctx
 
     if (! ssrSettings.ssrCache) {
         // Cache is disabled. We act as a proxy to the ssr implementation.
-        return next()
+        return ssrTask()
     }
 
     const cacheKey = computeCacheKey(ctx)
@@ -63,7 +64,7 @@ export async function ssrCache(ctx: KoaContext, next: () => Promise<SsrResult>):
         return cachedEntry.result
     }
 
-    const result = await next()
+    const result = await ssrTask()
 
     if (! result) {
         console.warn(logIndent, ctx.state.connectionId, '[server:ssr-cache] no result')
@@ -87,7 +88,7 @@ export async function ssrCache(ctx: KoaContext, next: () => Promise<SsrResult>):
     return result
 }
 
-export async function ssrRender(ctx: KoaContext): Promise<SsrResult> {
+export async function ssrRender(ctx: KoaContext): Promise<undefined | SsrResult> {
     const {ssrBrowser, ssrSettings} = ctx
     const start = Date.now()
 
@@ -159,13 +160,18 @@ export async function ssrRender(ctx: KoaContext): Promise<SsrResult> {
     finally {
         console.info(logIndent, ctx.state.connectionId, '[server:ssr] ⤷ closes page')
 
-        await browserPage.close()
+        try {
+            await browserPage.close()
+        }
+        catch (error) {
+            console.error(logIndent, ctx.state.connectionId, '[server:ssr] ⤷ error closing page')
+        }
     }
 
     return // Makes TypeScript happy.
 }
 
-export async function ssrTransform(ctx: KoaContext, result: SsrResult): Promise<SsrResult> {
+export async function ssrTransform(ctx: KoaContext, result: undefined | SsrResult): Promise<undefined | SsrResult> {
     const {ssrSettings} = ctx
 
     function warnBundlingSkipped(reason: any): undefined {
@@ -310,12 +316,12 @@ export function ssrBaseUrlOf(ctx: KoaContext): string {
 }
 
 export function computeCacheKey(ctx: KoaContext): string {
-    return ctx.path
+    return asBaseUrl(ctx.path) // Without the trailing slash.
 }
 
 // Types ///////////////////////////////////////////////////////////////////////
 
-export type SsrResult = undefined | SsrRenderOutput
+export type SsrResult = SsrRenderOutput
 
 export interface SsrRenderOutput {
     body: string
