@@ -1,5 +1,6 @@
+import {Error, awaiting, catching, catchingError, chain, chaining, logging, mappingError, mappingOptional, mappingSome, piped, piping, trying} from '../packages/@eviljs/std/pipe.js'
+import {identity} from '../packages/@eviljs/std/return.js'
 import {throwError} from '../packages/@eviljs/std/throw.js'
-import {Error, awaiting, catching, catchingError, chain, chaining, logging, mappingError, piped, piping, trying} from '../packages/@eviljs/std/pipe.js'
 
 const subject = {id: 1, name: 'Mike', age: 18}
 
@@ -33,3 +34,9 @@ const r_c2 = await piped(subject)
     .to(catching(error => Error(error)))
     .to(catchingError('BadThingsHappen'))
 .end()
+const r_c3 = piping(undefined)
+    (mappingSome(identity))
+    (mappingOptional(onSome, it => 'No Value'))
+()
+
+function onSome(value: string) { return {title: `Some ${value}` } }
