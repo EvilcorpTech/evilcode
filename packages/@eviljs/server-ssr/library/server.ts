@@ -55,9 +55,8 @@ export async function startServerSsr(settings: ServerSsrSettings): Promise<Serve
     return serverContext
 }
 
-export function startServerHttp1(ctx: ServerSsrContext, port: number) {
+export async function startServerHttp1(port: number, ctx: ServerSsrContext) {
     const serverHttp1 = Http.createServer(ctx.koa.callback())
-    serverHttp1.listen(port)
 
     process.on('SIGINT', () => {
         console.info('[server:http1] terminates server')
@@ -69,5 +68,7 @@ export function startServerHttp1(ctx: ServerSsrContext, port: number) {
         console.error('[server:http1] error', error)
     })
 
-    return [ctx, serverHttp1] satisfies [ServerSsrContext, Http.Server]
+    serverHttp1.listen(port)
+
+    return serverHttp1
 }

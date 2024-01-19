@@ -7,7 +7,7 @@ import {randomBytes} from 'node:crypto'
 import type {Page, PuppeteerLaunchOptions} from 'puppeteer'
 import type {KoaInstance} from './types.js'
 
-export function configureServerSettings(options: ServerSsrOptions): ServerSsrSettings {
+export function configureServerSsrSettings(options: ServerSsrOptions): ServerSsrSettings {
     const debug = options?.debug ?? false
     const serverCompression = options?.serverCompression ?? true
     const serverCacheExpires = options?.serverCacheExpires ?? OneMonthInMs
