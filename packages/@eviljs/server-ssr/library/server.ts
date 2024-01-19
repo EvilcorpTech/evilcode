@@ -15,14 +15,12 @@ import type {ServerSsrContext, ServerSsrContextState} from './types.js'
 
 export let ConnectionCounter = 0
 
-export async function startServer(settings: ServerSsrSettings): Promise<ServerSsrContext> {
+export async function startServerSsr(settings: ServerSsrSettings): Promise<ServerSsrContext> {
     const browser = await Puppeteer.launch(settings.puppeteer)
     const koa = new Koa<ServerSsrContextState, ServerSsrContext>()
     const koaStatic = KoaStatic(settings.appDir, settings.koaStatic)
-    const httpServer = Http.createServer(koa.callback())
 
     const serverContext: ServerSsrContext = {
-        httpServer,
         koa,
         koaStatic,
         ssrBrowser: browser,
@@ -31,25 +29,18 @@ export async function startServer(settings: ServerSsrSettings): Promise<ServerSs
 
     Object.assign(koa.context, serverContext)
 
-    httpServer.on('error', error => {
-        console.error('[server] http error', error)
-        // browser.close()
-        // httpServer.close()
-    })
-
     koa.on('error', error => {
-        console.error('[server] unexpected error', error)
+        console.error('[server:koa] unexpected error', error)
     })
 
     process.on('exit', () => {
-        console.info('[server] closes Puppeteer')
+        console.info('[server:koa] closes Puppeteer')
         browser.close()
     })
 
     process.on('SIGINT', () => {
-        console.info('[server] terminates Puppeteer')
+        console.info('[server:koa] terminates Puppeteer')
         browser.close()
-        httpServer.close()
         process.exit(1)
     })
 
@@ -61,7 +52,22 @@ export async function startServer(settings: ServerSsrSettings): Promise<ServerSs
     settings.koa?.(koa)
     koa.use(serverMiddleware)
 
-    httpServer.listen(settings.serverPort)
-
     return serverContext
+}
+
+export function startServerHttp1(ctx: ServerSsrContext, port: number) {
+    const serverHttp1 = Http.createServer(ctx.koa.callback())
+    serverHttp1.listen(port)
+
+    process.on('SIGINT', () => {
+        console.info('[server:http1] terminates server')
+        serverHttp1.close()
+        process.exit(1)
+    })
+
+    serverHttp1.on('error', error => {
+        console.error('[server:http1] error', error)
+    })
+
+    return [ctx, serverHttp1] satisfies [ServerSsrContext, Http.Server]
 }

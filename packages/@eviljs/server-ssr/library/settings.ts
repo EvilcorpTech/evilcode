@@ -12,7 +12,6 @@ export function configureServerSettings(options: ServerSsrOptions): ServerSsrSet
     const serverCompression = options?.serverCompression ?? true
     const serverCacheExpires = options?.serverCacheExpires ?? OneMonthInMs
     const serverEntryCacheExpires = options?.serverEntryCacheExpires ?? OneDayInMs
-    const serverPort = options?.serverPort ?? 8000
     const ssrCacheExpires = options?.ssrCacheExpires ?? OneDayInMs
 
     return {
@@ -46,11 +45,10 @@ export function configureServerSettings(options: ServerSsrOptions): ServerSsrSet
         serverCacheExpires,
         serverCompression,
         serverEntryCacheExpires,
-        serverPort,
         ssrAllowedOrigins: options?.ssrAllowedOrigins ?? [],
         ssrAllowedResources: options?.ssrAllowedResources ?? ['document', 'script', 'stylesheet', 'xhr', 'fetch', 'other', 'image', 'font'],
         ssrAllowedRoutes: options?.ssrAllowedRoutes ?? [],
-        ssrAppUrl: options?.ssrAppUrl ?? `http://127.0.0.1:${serverPort}`,
+        ssrAppUrl: options?.ssrAppUrl ?? `http://127.0.0.1:8000`,
         ssrBrowserEvaluate: options?.ssrBrowserEvaluate,
         ssrBrowserWaitFor: options?.ssrBrowserWaitFor,
         ssrCache: options?.ssrCache ?? true,
@@ -88,7 +86,6 @@ export interface ServerSsrSettings {
     serverCacheExpires: number
     serverCompression: boolean
     serverEntryCacheExpires: number
-    serverPort: number
     ssrAllowedOrigins: Array<string>
     ssrAllowedResources: Array<string>
     ssrAllowedRoutes: Computable<Array<string>>

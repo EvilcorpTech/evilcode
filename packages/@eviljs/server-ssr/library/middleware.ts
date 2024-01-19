@@ -94,21 +94,21 @@ export async function serverMiddleware(ctx: KoaContext, next: Koa.Next) {
 
     if (isRequestHandled(ctx)) {
         // The request is already handled by another middleware.
-        console.info(ctx.state.connectionId, '[server] skipping request already handled:', ctx.path, {...ctx.query})
+        console.info(ctx.state.connectionId, '[server:koa] skipping request already handled:', ctx.path, {...ctx.query})
 
         return next()
     }
 
     // if (isRequestOfApi(ctx)) {
     //     // The request points to an API endpoint.
-    //     console.info(logIndent, ctx.state.connectionId, '[server] skipping request of API:', ctx.path, {...ctx.query})
+    //     console.info(logIndent, ctx.state.connectionId, '[server:koa] skipping request of API:', ctx.path, {...ctx.query})
     //
     //     return next()
     // }
 
     if (isRequestOfFile(ctx)) {
         // The request points to a static asset file (for example /app.js).
-        console.info(logIndent, ctx.state.connectionId, '[server] serving request of Static File:', ctx.path, {...ctx.query})
+        console.info(logIndent, ctx.state.connectionId, '[server:koa] serving request of Static File:', ctx.path, {...ctx.query})
 
         return koaStatic(ctx, next)
     }
@@ -116,7 +116,7 @@ export async function serverMiddleware(ctx: KoaContext, next: Koa.Next) {
     if (isRequestFromSsr(ctx)) {
         // The request points to an app routing path (for example /dashboard/)
         // and it comes from SSR (/dashboard/?ssr).
-        console.info(logIndent, ctx.state.connectionId, '[server] serving request of Entry Point (from SSR):', ctx.path, {...ctx.query})
+        console.info(logIndent, ctx.state.connectionId, '[server:koa] serving request of Entry Point (from SSR):', ctx.path, {...ctx.query})
 
         ctx.path = '/index.html'
 
@@ -126,7 +126,7 @@ export async function serverMiddleware(ctx: KoaContext, next: Koa.Next) {
     if (! isRequestOfRouteAllowed(ctx)) {
         // The request points to an app routing path (for example /article/1/)
         // but it is not eligible for SSR.
-        console.info(ctx.state.connectionId, '[server] serving request of Entry Point (not SSR):', ctx.path, {...ctx.query})
+        console.info(ctx.state.connectionId, '[server:koa] serving request of Entry Point (not SSR):', ctx.path, {...ctx.query})
 
         ctx.path = '/index.html'
 
@@ -135,15 +135,15 @@ export async function serverMiddleware(ctx: KoaContext, next: Koa.Next) {
 
     // The request points to an app routing path (for example /dashboard/),
     // it is an allowed route and it does not come from SSR.
-    console.info(ctx.state.connectionId, '[server] serving request of Route SSR:', ctx.path, {...ctx.query})
+    console.info(ctx.state.connectionId, '[server:koa] serving request of Route SSR:', ctx.path, {...ctx.query})
 
-    console.debug(ctx.state.connectionId, '[server] active jobs:', SsrJobs.length)
+    console.debug(ctx.state.connectionId, '[server:koa] active jobs:', SsrJobs.length)
 
     if (SsrJobs.length >= ssrSettings.ssrProcessesLimit) {
-        console.info(ctx.state.connectionId, `[server] jobs exceeded the limit of ${ssrSettings.ssrProcessesLimit}`)
+        console.info(ctx.state.connectionId, `[server:koa] jobs exceeded the limit of ${ssrSettings.ssrProcessesLimit}`)
 
         while (SsrJobs.length >= ssrSettings.ssrProcessesLimit) {
-            console.info(ctx.state.connectionId, `[server] waiting ${SsrJobs.length - ssrSettings.ssrProcessesLimit} jobs above the limit`)
+            console.info(ctx.state.connectionId, `[server:koa] waiting ${SsrJobs.length - ssrSettings.ssrProcessesLimit} jobs above the limit`)
 
             try {
                 await Promise.race(SsrJobs)
@@ -153,7 +153,7 @@ export async function serverMiddleware(ctx: KoaContext, next: Koa.Next) {
             }
         }
 
-        console.info(ctx.state.connectionId, '[server] a job completed. Continuing...')
+        console.info(ctx.state.connectionId, '[server:koa] a job completed. Continuing...')
     }
 
     const ssrJob = pushSsrJob(ssr(ctx))
@@ -174,10 +174,10 @@ export async function serverMiddleware(ctx: KoaContext, next: Koa.Next) {
         ctx.body = ssrResult.body
     }
     catch (error) {
-        console.error(ctx.state.connectionId, '[server] ⤷ failed to Server Side Render due to:', error)
+        console.error(ctx.state.connectionId, '[server:koa] ⤷ failed to Server Side Render due to:', error)
 
         ctx.status = 500 // Internal Server Error.
-        ctx.body = '[server] Internal Server Error (ERROR:FA76)'
+        ctx.body = '[server:koa] Internal Server Error (ERROR:FA76)'
     }
     finally {
         cleanSsrJob(ssrJob)
