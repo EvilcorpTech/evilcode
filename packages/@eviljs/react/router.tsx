@@ -110,6 +110,9 @@ export function SwitchRoute(props: SwitchRouteProps) {
     }
 
     const match = useMemo((): RouteMatch => {
+        // Children.toArray() removes not valid children (undefined, null, boolean)
+        // and flatten the children list in case contains arrays, plus remap keys.
+        // Similar to Array.from(children).flat().filter(isValidElement).
         const candidates = Children.toArray(children).filter(isCaseRouteElement)
 
         for (const candidate of candidates) {
