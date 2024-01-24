@@ -24,7 +24,7 @@ export function createReactiveAccessor<V>(
             return currentValue
         }
 
-        const oldValue = currentValue
+        const previousNotifiedValue = currentValue
         currentValue = newValue
 
         // We notify once multiple mutations in the same micro task.
@@ -33,12 +33,22 @@ export function createReactiveAccessor<V>(
         cancelNotification ??= scheduleMicroTaskUsingPromise(() => {
             cancelNotification = undefined
 
-            if (areEqual(currentValue, oldValue)) {
+            if (areEqual(currentValue, previousNotifiedValue)) {
+                // Multiple mutations in the same batch can result in the end value
+                // as the initial one.
+                // EXAMPLE
+                // value = 0; write(1); write(0);
+                // No notification is needed in this case.
                 return
             }
 
+            // We use a stable value as notified value, instead of currentValue,
+            // because an observer could change currentValue as response to a notification.
+            // In this way all observers are notified with a coherent value.
+            const notifiedValue = currentValue
+
             for (const it of observers) {
-                it(currentValue, oldValue)
+                it(notifiedValue, previousNotifiedValue)
             }
         })
 
