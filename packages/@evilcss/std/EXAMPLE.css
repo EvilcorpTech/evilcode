@@ -140,6 +140,7 @@
 @import '@evilcss/std/text-size-material.tags.css' layer(std);
 @import '@evilcss/std/text-size.classes.css' layer(std);
 @import '@evilcss/std/text-size.props.css' layer(std);
+@import '@evilcss/std/text-size.tags.css' layer(std);
 @import '@evilcss/std/text-size(with-accessible).props.css' layer(std);
 @import '@evilcss/std/text-space.classes.css' layer(std);
 @import '@evilcss/std/text-space.props.css' layer(std);
