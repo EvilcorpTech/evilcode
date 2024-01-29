@@ -5,29 +5,13 @@ import {isDefined} from '@eviljs/std/type.js'
 import {asBaseUrl} from '@eviljs/web/url.js'
 import type Koa from 'koa'
 import {LogIndentation} from './settings.js'
-import {ssr, type SsrResult} from './ssr.js'
+import {ssr} from './ssr.js'
 import type {KoaContext} from './types.js'
 
 const ApiRegexp = /^\/api\//
 const FileRegexp = /.+\.\w+$/
 
 export let ConnectionCounter = 0
-export const SsrJobs: Array<Promise<undefined | SsrResult>> = []
-
-function pushSsrJob(ssrJob: Promise<undefined | SsrResult>) {
-    SsrJobs.push(ssrJob)
-    return ssrJob
-}
-
-function cleanSsrJob(ssrJob: Promise<undefined | SsrResult>) {
-    const ssrJobIdx = SsrJobs.indexOf(ssrJob)
-
-    if (ssrJobIdx === -1) {
-        return
-    }
-
-    SsrJobs.splice(ssrJobIdx, 1)
-}
 
 /*
 * Browser
@@ -137,29 +121,8 @@ export async function serverMiddleware(ctx: KoaContext, next: Koa.Next) {
     // it is an allowed route and it does not come from SSR.
     console.info(ctx.state.connectionId, '[server:koa] serving request of Route SSR:', ctx.path, {...ctx.query})
 
-    console.debug(ctx.state.connectionId, '[server:koa] active jobs:', SsrJobs.length)
-
-    if (SsrJobs.length >= ssrSettings.ssrProcessesLimit) {
-        console.info(ctx.state.connectionId, `[server:koa] jobs exceeded the limit of ${ssrSettings.ssrProcessesLimit}`)
-
-        while (SsrJobs.length >= ssrSettings.ssrProcessesLimit) {
-            console.info(ctx.state.connectionId, `[server:koa] waiting ${SsrJobs.length - ssrSettings.ssrProcessesLimit} jobs above the limit`)
-
-            try {
-                await Promise.race(SsrJobs)
-            }
-            catch (error) {
-                console.error(error)
-            }
-        }
-
-        console.info(ctx.state.connectionId, '[server:koa] a job completed. Continuing...')
-    }
-
-    const ssrJob = pushSsrJob(ssr(ctx))
-
     try {
-        const ssrResult = await ssrJob
+        const ssrResult = await ssr(ctx)
 
         assertDefined(ssrResult, 'ssrResult')
 
@@ -178,9 +141,6 @@ export async function serverMiddleware(ctx: KoaContext, next: Koa.Next) {
 
         ctx.status = 500 // Internal Server Error.
         ctx.body = '[server:koa] Internal Server Error (ERROR:FA76)'
-    }
-    finally {
-        cleanSsrJob(ssrJob)
     }
 
     return next()

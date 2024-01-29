@@ -56,7 +56,6 @@ export function configureServerSsrSettings(options: ServerSsrOptions): ServerSsr
         ssrCacheLimit: options?.ssrCacheLimit ?? 1_000,
         ssrProcessesLimit: options?.ssrProcessesLimit ?? 10, // Every Chrome tab requires about 100mb of memory.
         ssrRefreshParam: options?.ssrRefreshParam ?? 'ssr-refresh',
-        ssrRefreshToken: options?.ssrRefreshToken ?? createToken(6),
         ssrRequestParam: options?.ssrRequestParam ?? 'ssr',
         ssrTransformMainStylePattern: '/asset-main@[^.]+\.css$',
     }
@@ -97,7 +96,6 @@ export interface ServerSsrSettings {
     ssrCacheLimit: number
     ssrProcessesLimit: number
     ssrRefreshParam: string
-    ssrRefreshToken: string
     ssrRequestParam: string
     ssrTransformMainStylePattern: string | RegExp
 }

@@ -2,31 +2,91 @@
 // https://github.com/puppeteer/puppeteer/blob/master/docs/api.md#class-page
 // https://developers.google.com/web/tools/puppeteer/articles/ssr
 
+import {OneMinuteInMs} from '@eviljs/std/date.js'
 import {piping} from '@eviljs/std/pipe.js'
 import {returnUndefined} from '@eviljs/std/return.js'
 import {tryCatch} from '@eviljs/std/try.js'
 import {isSome} from '@eviljs/std/type.js'
+import {asBaseUrl} from '@eviljs/web/url.js'
 import {createHash} from 'node:crypto'
 import {mkdir, writeFile} from 'node:fs/promises'
 import {resolve as resolvePath} from 'node:path'
 import {parse, serialize} from 'parse5'
-import {formatTimeAsSeconds} from './datetime.js'
+import {formatTimeAsSeconds, isDateTimeElapsed} from './datetime.js'
 import {isElement, mappingElement, testingNodeName, type Parse5Element} from './parse5-apis.js'
 import {LogIndentation} from './settings.js'
 import type {KoaContext} from './types.js'
-import {asBaseUrl} from '@eviljs/web/url.js'
 
 export const SsrCache = new Map<string, SsrCacheEntry>()
+export const SsrJobs: Array<Promise<undefined | SsrResult>> = []
 
-export async function ssr(ctx: KoaContext): Promise<undefined | SsrResult> {
-    return ssrCache(ctx, async () =>
-        ssrTransform(ctx,
-            await ssrRender(ctx)
-        )
-    )
+function pushSsrJob(ssrJob: Promise<undefined | SsrResult>) {
+    SsrJobs.push(ssrJob)
+    return ssrJob
 }
 
-export async function ssrCache(ctx: KoaContext, ssrTask: () => Promise<undefined | SsrResult>): Promise<undefined | SsrResult> {
+function cleanSsrJob(ssrJob: Promise<undefined | SsrResult>) {
+    const ssrJobIdx = SsrJobs.indexOf(ssrJob)
+
+    if (ssrJobIdx === -1) {
+        return
+    }
+
+    SsrJobs.splice(ssrJobIdx, 1)
+}
+
+async function waitSsrJobsQueue(ctx: KoaContext): Promise<void> {
+    const {ssrSettings} = ctx
+
+    console.debug(LogIndentation.Ssr, ctx.state.connectionId, '[server:ssr] active jobs:', SsrJobs.length)
+
+    if (SsrJobs.length < ssrSettings.ssrProcessesLimit) {
+        return
+    }
+
+    console.info(LogIndentation.Ssr, ctx.state.connectionId, `[server:ssr] jobs exceeded the limit of ${ssrSettings.ssrProcessesLimit}`)
+
+    while (SsrJobs.length >= ssrSettings.ssrProcessesLimit) {
+        console.info(LogIndentation.Ssr, ctx.state.connectionId, `[server:ssr] waiting ${SsrJobs.length - ssrSettings.ssrProcessesLimit} jobs above the limit`)
+
+        try {
+            await Promise.race(SsrJobs)
+        }
+        catch (error) {
+            console.error(error)
+        }
+    }
+
+    console.info(LogIndentation.Ssr, ctx.state.connectionId, '[server:ssr] a job completed. Continuing...')
+}
+
+export async function ssr(ctx: KoaContext): Promise<undefined | SsrResult> {
+    return useSsrCache(ctx, async () => {
+        await waitSsrJobsQueue(ctx)
+
+        const ssrJob = pushSsrJob(computeSsrResult(ctx))
+
+        try {
+            return await ssrJob
+        }
+        finally {
+            cleanSsrJob(ssrJob)
+        }
+    })
+}
+
+async function computeSsrResult(ctx: KoaContext): Promise<undefined | SsrResult> {
+    const ssrRawResult = await useSsrRender(ctx).catch(error =>
+        void console.error(LogIndentation.Ssr, ctx.state.connectionId, '[server:ssr] failed rendering due to', error)
+    )
+    const ssrTransformedResult = await useSsrTransform(ctx, ssrRawResult).catch(error =>
+        void console.error(LogIndentation.Ssr, ctx.state.connectionId, '[server:ssr] failed transforming due to', error)
+    )
+
+    return ssrTransformedResult
+}
+
+export async function useSsrCache(ctx: KoaContext, ssrTask: () => Promise<undefined | SsrResult>): Promise<undefined | SsrResult> {
     const {ssrSettings} = ctx
 
     if (! ssrSettings.ssrCache) {
@@ -36,11 +96,18 @@ export async function ssrCache(ctx: KoaContext, ssrTask: () => Promise<undefined
 
     const cacheKey = computeCacheKey(ctx)
     const cachedEntry = SsrCache.get(cacheKey)
+    const pleaseRefreshCache = (false
+        || ctx.headers['cache-control'] === 'no-cache'
+        || ssrSettings.ssrRefreshParam in ctx.query
+    )
     const shouldRefreshCache = true
-        && ssrSettings.ssrRefreshParam in ctx.query
-        && ctx.query[ssrSettings.ssrRefreshParam] === ssrSettings.ssrRefreshToken
-    const isCacheFree = SsrCache.size < ssrSettings.ssrCacheLimit
-    const isCacheExpired = Date.now() > (cachedEntry?.expires ?? 0)
+        && pleaseRefreshCache
+        && cachedEntry
+        // It must elapse at least 1 minute between cache refresh requests,
+        // avoiding cache invalidation malicious bombing.
+        && isDateTimeElapsed(cachedEntry.result.created, OneMinuteInMs)
+    const cacheIsFree = SsrCache.size < ssrSettings.ssrCacheLimit
+    const cacheIsExpired = Date.now() > (cachedEntry?.expires ?? 0)
 
     const logIndent = LogIndentation.Ssr
 
@@ -48,16 +115,20 @@ export async function ssrCache(ctx: KoaContext, ssrTask: () => Promise<undefined
         // There is not a cached entry.
         console.info(logIndent, ctx.state.connectionId, '[server:ssr-cache] missed')
     }
-    if (cachedEntry && isCacheExpired) {
+    if (cachedEntry && cacheIsExpired) {
         // There is a cached entry but it is expired.
         console.info(logIndent, ctx.state.connectionId, '[server:ssr-cache] expired')
     }
-    if (cachedEntry && ! isCacheExpired && shouldRefreshCache) {
-        // There is a cached entry, it is not expired but we are forced to refresh.
+    if (cachedEntry && ! cacheIsExpired && pleaseRefreshCache && shouldRefreshCache) {
+        // There is a cached entry, it is not expired, wre are requested to refresh it and it is a valid request.
         console.info(logIndent, ctx.state.connectionId, '[server:ssr-cache] refreshing')
     }
-    if (cachedEntry && ! isCacheExpired && ! shouldRefreshCache) {
-        // There is a cached entry, it is not expired and we are not forced to refresh.
+    if (cachedEntry && ! cacheIsExpired && pleaseRefreshCache && ! shouldRefreshCache) {
+        // There is a cached entry, it is not expired, wre are requested to refresh it but it is an invalid request.
+        console.info(logIndent, ctx.state.connectionId, '[server:ssr-cache] not refreshing')
+    }
+    if (cachedEntry && ! cacheIsExpired && ! shouldRefreshCache) {
+        // There is a cached entry, it is not expired and we are not requested to refresh.
         const remainingTime = cachedEntry.expires - Date.now()
         console.info(logIndent, ctx.state.connectionId, `[server:ssr-cache] hit (expires in ${formatTimeAsSeconds(remainingTime)}s)`)
 
@@ -72,11 +143,11 @@ export async function ssrCache(ctx: KoaContext, ssrTask: () => Promise<undefined
         return result
     }
 
-    if (! isCacheFree && ! cachedEntry) {
+    if (! cacheIsFree && ! cachedEntry) {
         // We have no more space for a new cached entry.
         console.info(logIndent, ctx.state.connectionId, '[server:ssr-cache] limit reached')
     }
-    if (isCacheFree || cachedEntry) {
+    if (cacheIsFree || cachedEntry) {
         // We have space for a new entry or the cached entry already exists.
         console.info(logIndent, ctx.state.connectionId, '[server:ssr-cache] saved')
 
@@ -88,7 +159,7 @@ export async function ssrCache(ctx: KoaContext, ssrTask: () => Promise<undefined
     return result
 }
 
-export async function ssrRender(ctx: KoaContext): Promise<undefined | SsrResult> {
+export async function useSsrRender(ctx: KoaContext): Promise<undefined | SsrResult> {
     const {ssrBrowser, ssrSettings} = ctx
     const start = Date.now()
 
@@ -171,7 +242,7 @@ export async function ssrRender(ctx: KoaContext): Promise<undefined | SsrResult>
     return // Makes TypeScript happy.
 }
 
-export async function ssrTransform(ctx: KoaContext, result: undefined | SsrResult): Promise<undefined | SsrResult> {
+export async function useSsrTransform(ctx: KoaContext, result: undefined | SsrResult): Promise<undefined | SsrResult> {
     const {ssrSettings} = ctx
 
     function warnBundlingSkipped(reason: any): undefined {
