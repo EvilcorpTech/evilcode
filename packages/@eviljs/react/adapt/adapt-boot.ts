@@ -1,21 +1,19 @@
 import {createComputedRef} from '@eviljs/std/reactive-ref.js'
 import type {Router} from '@eviljs/web/router.js'
-import {createRoot} from 'react-dom/client'
 import type {AppContext, AppEntriesList} from './adapt-entry.js'
-import {createReactHydrateTask, createReactRenderTask} from './adapt-render.js'
+import {createReactHydrateTask, createReactMountTask, createReactRenderTask} from './adapt-render.js'
 import {RootDefaultId, setupRootElement} from './adapt-root.js'
 
 export async function startApp<C extends object = {}>(args: AdaptOptions<C>) {
     const {router} = args
     const rootNode = setupRootElement(args.rootElementId ?? RootDefaultId, args.rootElementClasses)
     const shouldHydrate = rootNode.hasChildNodes()
-    const reactRoot = createRoot(rootNode)
     const routePathRef = createComputedRef([router.route], route => route.path)
     const initialRoutePath = routePathRef.value
 
-    await shouldHydrate
-        ? createReactHydrateTask({...args, reactRoot, routePath: initialRoutePath, rootNode})
-        : createReactRenderTask({...args, reactRoot, routePath: initialRoutePath})
+    const reactRoot = shouldHydrate
+        ? await createReactHydrateTask({...args, routePath: initialRoutePath, rootNode})
+        : await createReactMountTask({...args, routePath: initialRoutePath, rootNode})
 
     let currentRenderTask: undefined | ReturnType<typeof createReactRenderTask>
 
@@ -23,7 +21,7 @@ export async function startApp<C extends object = {}>(args: AdaptOptions<C>) {
 
     routePathRef.watch(routePath => {
         currentRenderTask?.cancel()
-        currentRenderTask = createReactRenderTask({...args, reactRoot, routePath})
+        currentRenderTask = createReactRenderTask({...args, reactRoot, routePath, rootNode})
     })
 }
 

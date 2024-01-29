@@ -3,40 +3,43 @@ import {classes} from './classes.js'
 import {ErrorBoundary} from './error-boundary.js'
 import type {SvgProps} from './svg.js'
 
-export function lazySuspended<P extends object>(
+export function suspended<P extends object>(
     load: LazyLoader<P>,
-    fallback?: undefined | LazyFallback<P>,
+    Fallback?: undefined | LazyFallback<P>,
 ): React.ComponentType<P> {
     const ComponentLazy = lazy(() => load().then(asDefault)) as unknown as React.ComponentType<P>
 
-    function LazySuspended(props: P) {
+    function SuspendedLazy(props: P) {
         return (
             <Suspense
-                fallback={fallback ? createElement(fallback, props) : undefined}
+                fallback={Fallback ? createElement(Fallback, props) : undefined}
                 children={<ComponentLazy {...props}/>}
             />
         )
     }
-    LazySuspended.displayName = 'LazySuspended'
+    SuspendedLazy.displayName = 'SuspendedLazy'
 
-    return LazySuspended
+    return SuspendedLazy
 }
 
-export function lazySuspendedIcon<P extends SvgProps>(load: LazyLoader<P>, fallbackIconOptional?: undefined | LazyFallback<P>) {
-    const fallbackIcon = fallbackIconOptional ?? FallbackIcon
-    const LazySuspendedIcon = lazySuspended(load, fallbackIcon)
+export function suspendedIcon<P extends SvgProps>(
+    load: LazyLoader<P>,
+    FallbackOptional?: undefined | LazyFallback<P>,
+): React.ComponentType<P> {
+    const FallbackIconComponent = FallbackOptional ?? FallbackIcon
+    const SuspendedLazyIcon = suspended(load, FallbackIconComponent)
 
-    function LazySuspendedIconErrorBounded(props: P) {
+    function ErrorBoundedSuspendedLazyIcon(props: P) {
         // An error loading an icon should not take down an entire app.
         return (
-            <ErrorBoundary fallback={() => createElement(fallbackIcon, props)}>
-                <LazySuspendedIcon {...props}/>
+            <ErrorBoundary fallback={() => createElement(FallbackIconComponent, props)}>
+                <SuspendedLazyIcon {...props}/>
             </ErrorBoundary>
         )
     }
-    LazySuspendedIconErrorBounded.displayName = 'LazySuspendedIconErrorBounded'
+    ErrorBoundedSuspendedLazyIcon.displayName = 'ErrorBoundedSuspendedLazyIcon'
 
-    return LazySuspendedIconErrorBounded
+    return ErrorBoundedSuspendedLazyIcon
 }
 
 export function asDefault<V>(value: V) {

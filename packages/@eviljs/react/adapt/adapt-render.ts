@@ -1,11 +1,12 @@
 import {isIterator} from '@eviljs/std/type.js'
 import {createElement} from 'react'
 import type {Root as ReactRoot} from 'react-dom/client'
+import {createRoot} from 'react-dom/client'
 import type {AdaptOptions} from './adapt-boot.js'
 import {computeAppEntryResult, selectAppEntryMatch, type AppContext, type AppEntryGenerator} from './adapt-entry.js'
 
-export async function createReactHydrateTask<C extends object = {}>(args: AdaptHydrateTaskOptions<C>): Promise<void> {
-    const {context, fallback, entries, Root, reactRoot, rootNode, routePath} = args
+export async function createReactHydrateTask<C extends object = {}>(args: AdaptHydrateTaskOptions<C>): Promise<ReactRoot> {
+    const {context, fallback, entries, Root, rootNode, routePath} = args
 
     const [routePathArgs, loadSelectedAppEntry] = selectAppEntryMatch(routePath, entries) ?? []
     const appContext: AppContext<C> = {...context as C, routePath, routePathArgs}
@@ -18,12 +19,31 @@ export async function createReactHydrateTask<C extends object = {}>(args: AdaptH
         return computeAppEntryResult(appEntry, appContext)
     })().catch(error => void console.error(error))
 
+    const reactRoot = createRoot(rootNode)
     reactRoot.render(
         Root
             ? createElement(Root, {children: appChildren})
             : appChildren
         ,
     )
+    return reactRoot
+
+    // return hydrateRoot(rootNode,
+    //     Root
+    //         ? createElement(Root, {children: appChildren})
+    //         : appChildren
+    //     ,
+    // )
+}
+
+export async function createReactMountTask<C extends object = {}>(args: AdaptMountTaskOptions<C>): Promise<ReactRoot> {
+    const {rootNode} = args
+
+    const reactRoot = createRoot(rootNode)
+
+    await createReactRenderTask({...args, reactRoot})
+
+    return reactRoot
 }
 
 export function createReactRenderTask<C extends object = {}>(args: AdaptRenderTaskOptions<C>) {
@@ -104,11 +124,14 @@ export function createReactRenderTask<C extends object = {}>(args: AdaptRenderTa
 
 // Types ///////////////////////////////////////////////////////////////////////
 
-export interface AdaptRenderTaskOptions<C extends object = {}> extends AdaptOptions<C> {
-    reactRoot: ReactRoot
+export interface AdaptHydrateTaskOptions<C extends object = {}> extends AdaptOptions<C> {
+    rootNode: HTMLElement
     routePath: string
 }
 
-export interface AdaptHydrateTaskOptions<C extends object = {}> extends AdaptRenderTaskOptions<C> {
-    rootNode: HTMLElement
+export interface AdaptMountTaskOptions<C extends object = {}> extends AdaptHydrateTaskOptions<C> {
+}
+
+export interface AdaptRenderTaskOptions<C extends object = {}> extends AdaptMountTaskOptions<C> {
+    reactRoot: ReactRoot
 }
