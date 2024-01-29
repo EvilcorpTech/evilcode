@@ -9,7 +9,6 @@ import {piping} from '@eviljs/std/pipe'
 import type {Container} from '~/container/container-apis'
 import {I18nSpec} from '~/i18n/i18n-apis'
 import {RouterStatic} from '~/router/router-static'
-import {useStoreStorage} from '~/store/store-hooks'
 import {StoreSpec as StoreSpecV3} from '~/store/store-v3-apis'
 import {StoreProvider as StoreProviderV3} from '~/store/store-v3-hooks'
 import {useColorSchemePreference} from '~/theme/theme-hooks'
@@ -37,7 +36,6 @@ export function Root(props: RootProps) {
 
 export function RootIsolate(props: RootIsolateProps): undefined {
     useColorSchemePreference()
-    useStoreStorage()
 }
 
 // Types ///////////////////////////////////////////////////////////////////////

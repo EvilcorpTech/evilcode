@@ -1,7 +1,7 @@
 import './home-view.css'
 
 import {classes} from '@eviljs/react/classes'
-import {Text} from '@eviljs/react/text'
+import {Message} from '@eviljs/react/message'
 import {Header} from '~/ui-widgets/header'
 
 export function HomeView(props: HomeViewProps) {
@@ -14,9 +14,9 @@ export function HomeView(props: HomeViewProps) {
         >
             <Header/>
 
-            <Text tag="h1" className="page-title">
+            <Message tag="h1" className="page-title">
                 Home
-            </Text>
+            </Message>
         </div>
     )
 }
