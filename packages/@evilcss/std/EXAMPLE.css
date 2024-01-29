@@ -109,6 +109,7 @@
 @import '@evilcss/std/reset/tag-a.css' layer(std);
 @import '@evilcss/std/reset/tag-b-strong.css' layer(std);
 @import '@evilcss/std/reset/tag-button.css' layer(std);
+@import '@evilcss/std/reset/tag-h.css' layer(std);
 @import '@evilcss/std/reset/tag-html5-display-block.css' layer(std);
 @import '@evilcss/std/reset/tag-i-em.css' layer(std);
 @import '@evilcss/std/reset/tag-img-picture-svg-video.css' layer(std);
