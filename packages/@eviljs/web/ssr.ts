@@ -1,18 +1,30 @@
-export function saveSsrState(id: string, payload: unknown, options?: undefined | SsrOptions) {
+export function saveSsrState(id: string, payload: unknown, options?: undefined | SsrSaveOptions) {
     if (! payload) {
         return
     }
 
     const inject = options?.inject ?? injectSsrStorageElement
     const ssrStorage = findSsrStorageElement(id) ?? inject(id)
-    const serializedPayload = JSON.stringify(payload)
 
-    ssrStorage.textContent = serializedPayload
+    serializeSsrStateIntoElement(ssrStorage, payload)
 }
 
-export function loadSsrState(id: string, options?: undefined | SsrOptions): unknown {
+export function serializeSsrStateIntoElement(element: Element, payload: unknown) {
+    const serializedPayload = JSON.stringify(payload)
+
+    element.textContent = serializedPayload
+}
+
+export function loadSsrState(id: string, options?: undefined | SsrLoadOptions): unknown {
     const ssrStorage = findSsrStorageElement(id)
-    const serializedPayload = ssrStorage?.textContent?.trim()
+
+    return ssrStorage
+        ? deserializeSsrStateFromElement(ssrStorage)
+        : undefined
+}
+
+export function deserializeSsrStateFromElement(element: Element): unknown {
+    const serializedPayload = element.textContent?.trim()
 
     if (! serializedPayload) {
         return
@@ -21,23 +33,37 @@ export function loadSsrState(id: string, options?: undefined | SsrOptions): unkn
     return JSON.parse(serializedPayload) as unknown
 }
 
-export function findSsrStorageElement(id: string) {
-    const selector = '#' + id
-    return document.querySelector(selector)
+export function findSsrStorageElement(id: string): undefined | Element {
+    const ssrElementsSelector = 'script[type="application/json"][data-type="ssr-data"]'
+    const ssrElements = document.querySelectorAll(ssrElementsSelector)
+    const ssrElement = Array.from(ssrElements).find(it => it.id === id)
+
+    return ssrElement
 }
 
 export function injectSsrStorageElement(id: string) {
-    const el = document.createElement('script')
-    el.id = id
-    el.type = 'application/json'
+    const element = createSsrStorageElement(id)
 
-    document.body.appendChild(el)
+    document.body.appendChild(element)
 
-    return el
+    return element
+}
+
+export function createSsrStorageElement(id: string) {
+    const element = document.createElement('script')
+
+    element.type = 'application/json'
+    element.dataset.type = 'ssr-data'
+    element.id = id
+
+    return element
 }
 
 // Types ///////////////////////////////////////////////////////////////////////
 
-export interface SsrOptions {
+export interface SsrSaveOptions {
     inject?: undefined | ((id: string) => Element)
+}
+
+export interface SsrLoadOptions {
 }
