@@ -15,10 +15,10 @@ export function memoizing<R>(fn: Task<R>): Task<R> {
     return singleton
 }
 
-export function createCache<K, V>() {
+export function createCache<K, V>(): CacheManager<K, V> {
     const cacheMap = new Map<K, V>()
 
-    function use(key: K, computeValue: Io<K, V>) {
+    function use(key: K, computeValue: Io<K, V>): undefined | V {
         if (cacheMap.has(key)) {
             return cacheMap.get(key)
         }
@@ -31,4 +31,11 @@ export function createCache<K, V>() {
     const clear = cacheMap.clear.bind(cacheMap)
 
     return {use, clear}
+}
+
+// Types ///////////////////////////////////////////////////////////////////////
+
+export interface CacheManager<K, V> {
+    use(key: K, computeValue: Io<K, V>): undefined | V
+    clear(): void
 }
