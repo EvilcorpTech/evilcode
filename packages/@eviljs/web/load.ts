@@ -23,8 +23,14 @@ export function loadScript(url: string, options?: undefined | LoadScriptOptions)
             }
             resolve(loader)
         }
-        function onError() {
-            reject(undefined)
+        function onError(...args: [
+            event: Event | string,
+            source?: undefined | string,
+            lineno?: undefined | number,
+            colno?: undefined | number,
+            error?: undefined | Error,
+        ]) {
+            reject(args)
         }
 
         root.appendChild(loader)
