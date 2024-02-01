@@ -1,5 +1,5 @@
 import {compute, type Computable} from '@eviljs/std/compute.js'
-import type {Fn, Task} from '@eviljs/std/fn.js'
+import type {Fn, Io, Task} from '@eviljs/std/fn.js'
 import {escapeRegexp} from '@eviljs/std/regexp.js'
 import {asArray, isPromise, isString} from '@eviljs/std/type.js'
 import {exact, matchRoutePattern, testRoutePattern, type RoutePattern, type RoutePatterns} from '@eviljs/web/route.js'
@@ -10,7 +10,7 @@ import {Children, forwardRef, isValidElement, useCallback, useContext, useEffect
 import {classes} from './classes.js'
 import {defineContext} from './ctx.js'
 import {displayName} from './display-name.js'
-import {useComputedRefValue} from './reactive-ref.js'
+import {useSelectedRefValue} from './reactive-ref.js'
 import {useRouterContext} from './router-provider.js'
 
 export * from '@eviljs/web/route-v2.js'
@@ -341,36 +341,33 @@ export function useRouteRead<S = unknown>(): Task<RouterRoute<S>> {
 
 export function useRoutePath(): RouterRoute['path'] {
     const routerContext = useRouterContext()!
-
-    const compute = useCallback((route: RouterRoute) => {
-        return route.path
-    }, [])
-
-    const routePath = useComputedRefValue(routerContext.route, compute)
+    const routePath = useSelectedRefValue(routerContext.route, RouteSelectors.selectRoutePath)
 
     return routePath
 }
 
-export function useRouteParams(): RouterRoute['params'] {
+export function useRouteParam<R>(selectRouteParam: Io<undefined | RouterRouteParams, R>): R {
     const routerContext = useRouterContext()!
 
-    const compute = useCallback((route: RouterRoute) => {
-        return route.params
-    }, [])
+    const selector = useCallback((route: RouterRoute) => {
+        return selectRouteParam(route.params)
+    }, [selectRouteParam])
 
-    const routeParams = useComputedRefValue(routerContext.route, compute)
+    const selectedRouteParam = useSelectedRefValue(routerContext.route, selector)
+
+    return selectedRouteParam
+}
+
+export function useRouteParams(): RouterRoute['params'] {
+    const routerContext = useRouterContext()!
+    const routeParams = useSelectedRefValue(routerContext.route, RouteSelectors.selectRouteParams)
 
     return routeParams
 }
 
 export function useRouteState<S = unknown>(): RouterRoute<S>['state'] {
     const routerContext = useRouterContext<S>()!
-
-    const compute = useCallback((route: RouterRoute<S>) => {
-        return route.state
-    }, [])
-
-    const routeState = useComputedRefValue(routerContext.route, compute)
+    const routeState = useSelectedRefValue(routerContext.route, RouteSelectors.selectRouteState<S>)
 
     return routeState
 }
@@ -422,6 +419,18 @@ function isCaseRouteElement(element: unknown): element is React.ReactElement<Cas
         return false
     }
     return true
+}
+
+export const RouteSelectors = {
+    selectRoutePath(route: RouterRoute): string {
+        return route.path
+    },
+    selectRouteParams(route: RouterRoute): undefined | RouterRouteParams {
+        return route.params
+    },
+    selectRouteState<S>(route: RouterRoute<S>): undefined | S {
+        return route.state
+    },
 }
 
 // Types ///////////////////////////////////////////////////////////////////////

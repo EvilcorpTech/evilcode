@@ -2,7 +2,7 @@ import type {Io} from '@eviljs/std/fn.js'
 import {type ReactiveAccessor} from '@eviljs/std/reactive-accessor.js'
 import type {ReducerAction, ReducerState} from '@eviljs/std/redux.js'
 import {identity} from '@eviljs/std/return.js'
-import {useEffect, useState} from 'react'
+import {useSelectedAccessorValue} from './reactive-accessor.js'
 import {StoreProvider, useStoreContext, type StoreContextOptions, type StoreManager} from './store-provider.js'
 import type {StoreDefinitionV2, StoreDispatchV2} from './store-v2.js'
 
@@ -62,21 +62,7 @@ export function useStoreState<V, S extends ReducerState>(
 ): S | V {
     const [state] = useStoreContext<S>(options)!
     const selector: Io<S, V | S> = selectorOptional ?? identity
-    const selectedState = selector(state.read())
-    const [signal, setSignal] = useState(selectedState)
-
-    useEffect(() => {
-        const stopWatching = state.watch(
-            (newState, oldState) => setSignal(selector(newState)),
-            {immediate: true},
-        )
-
-        function onClean() {
-            stopWatching()
-        }
-
-        return onClean
-    }, [state, selector])
+    const selectedState = useSelectedAccessorValue(state, selector)
 
     return selectedState
 }

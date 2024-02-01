@@ -1,7 +1,7 @@
 import type {Io} from '@eviljs/std/fn.js'
 import type {ReactiveAccessor} from '@eviljs/std/reactive-accessor.js'
 import {identity, returnUndefined} from '@eviljs/std/return.js'
-import {useMemo} from 'react'
+import {useEffect, useMemo, useState} from 'react'
 import {useReactiveObservable, useReactiveObservables, useReactiveStore} from './reactive.js'
 import type {StateManager} from './state.js'
 
@@ -47,4 +47,30 @@ export function useComputedAccessorValue<V, R>(reactiveAccessor: undefined | Rea
     }, [reactiveAccessor, computer, signal])
 
     return computedValue
+}
+
+export function useSelectedAccessorValue<V, R>(reactiveAccessor: ReactiveAccessor<V>, selector: Io<V, R>): R
+export function useSelectedAccessorValue<V, R>(reactiveAccessor: undefined | ReactiveAccessor<V>, selector: Io<undefined | V, R>): undefined | R
+export function useSelectedAccessorValue<V, R>(reactiveAccessor: undefined | ReactiveAccessor<V>, selector: Io<undefined | V, R>): undefined | R {
+    const selectedValue = selector(reactiveAccessor?.read())
+    const [signal, setSignal] = useState(selectedValue)
+
+    useEffect(() => {
+        if (! reactiveAccessor) {
+            return
+        }
+
+        const stopWatching = reactiveAccessor.watch(
+            newValue => setSignal(selector(newValue)),
+            {immediate: true},
+        )
+
+        function onClean() {
+            stopWatching()
+        }
+
+        return onClean
+    }, [reactiveAccessor, selector])
+
+    return selectedValue
 }

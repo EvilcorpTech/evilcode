@@ -1,5 +1,5 @@
 import type {ReactiveRef} from '@eviljs/std/reactive-ref.js'
-import {useCallback, useMemo} from 'react'
+import {useCallback, useEffect, useMemo, useState} from 'react'
 import {useReactiveObservable, useReactiveObservables, useReactiveStore} from './reactive.js'
 import type {StateManager} from './state.js'
 import type {Io} from '@eviljs/std/fn.js'
@@ -57,4 +57,30 @@ export function useComputedRefValue<V, R>(reactiveRef: undefined | ReactiveRef<V
     }, [reactiveRef, computer, signal])
 
     return computedValue
+}
+
+export function useSelectedRefValue<V, R>(reactiveRef: ReactiveRef<V>, selector: Io<V, R>): R
+export function useSelectedRefValue<V, R>(reactiveRef: undefined | ReactiveRef<V>, selector: Io<undefined | V, R>): undefined | R
+export function useSelectedRefValue<V, R>(reactiveRef: undefined | ReactiveRef<V>, selector: Io<undefined | V, R>): undefined | R {
+    const selectedValue = selector(reactiveRef?.value)
+    const [signal, setSignal] = useState(selectedValue)
+
+    useEffect(() => {
+        if (! reactiveRef) {
+            return
+        }
+
+        const stopWatching = reactiveRef.watch(
+            newValue => setSignal(selector(newValue)),
+            {immediate: true},
+        )
+
+        function onClean() {
+            stopWatching()
+        }
+
+        return onClean
+    }, [reactiveRef, selector])
+
+    return selectedValue
 }
