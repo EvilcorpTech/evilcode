@@ -1,18 +1,20 @@
+export type {RoutePatterns} from '@eviljs/web/route.js'
 export {startApp} from './adapt/adapt-boot.js'
 export type {AdaptOptions} from './adapt/adapt-boot.js'
 export {
     computeAppEntryResult,
     computeGeneratorResult,
     defineAppEntry,
-    selectAppEntryMatch,
+    selectAppEntryMatch
 } from './adapt/adapt-entry.js'
 export type {
     AppContext,
-    AppEntriesDefinition,
     AppEntriesList,
     AppEntry,
+    AppEntryDefinition,
     AppEntryGenerator,
+    AppEntryLoader,
     AppEntryOutput,
     AppEntryReturn,
-    AppEntryYield,
+    AppEntryYield
 } from './adapt/adapt-entry.js'

@@ -8,14 +8,14 @@ import {computeAppEntryResult, selectAppEntryMatch, type AppContext, type AppEnt
 export async function createReactHydrateTask<C extends object = {}>(args: AdaptHydrateTaskOptions<C>): Promise<ReactRoot> {
     const {context, fallback, entries, Root, rootNode, routePath} = args
 
-    const [routePathArgs, loadSelectedAppEntry] = selectAppEntryMatch(routePath, entries) ?? []
+    const [routePathArgs, appEntryDefinition] = selectAppEntryMatch(routePath, entries) ?? []
     const appContext: AppContext<C> = {...context as C, routePath, routePathArgs}
 
     const appChildren = await (async () => {
-        if (! loadSelectedAppEntry) {
+        if (! routePathArgs || ! appEntryDefinition) {
             return fallback(appContext)
         }
-        const appEntry = await loadSelectedAppEntry()
+        const appEntry = await appEntryDefinition.entryLoader()
         return computeAppEntryResult(appEntry, appContext)
     })().catch(error => void console.error(error))
 
@@ -52,16 +52,15 @@ export function createReactRenderTask<C extends object = {}>(args: AdaptRenderTa
     let canceled = false
 
     async function render(): Promise<void> {
-        const selectedAppEntry = selectAppEntryMatch(routePath, entries)
+        const [routePathArgs, appEntryDefinition] = selectAppEntryMatch(routePath, entries) ?? []
 
-        if (! selectedAppEntry) {
+        if (! routePathArgs || ! appEntryDefinition) {
             await renderFallback()
             return
         }
 
-        const [routePathArgs, loadSelectedAppEntry] = selectedAppEntry
+        const appEntry = await appEntryDefinition.entryLoader()
         const appContext: AppContext<C> = {...context as C, routePath, routePathArgs}
-        const appEntry = await loadSelectedAppEntry()
         const appEntryGenerator = appEntry(appContext)
 
         await renderGenerator(appEntryGenerator)
@@ -74,15 +73,16 @@ export function createReactRenderTask<C extends object = {}>(args: AdaptRenderTa
             if (canceled) {
                 return
             }
+            if (it.done && isIterator(it.value)) {
+                return renderGenerator(it.value)
+            }
+            if (it.done && ! isIterator(it.value)) {
+                return renderReactRoot(it.value)
+            }
 
             if (! it.done) {
                 renderReactRoot(it.value)
-                continue
             }
-
-            return isIterator(it.value)
-                ? renderGenerator(it.value)
-                : renderReactRoot(it.value)
         }
     }
 
