@@ -82,12 +82,11 @@ export function expiresFromDate(dateOrNumber: number | Date) {
 }
 
 export function cookieRegexpFromKey(key: string) {
-    const keyCached = CookieKeyRegexpCache[key]
-        ?? new RegExp(`\\b${escapeRegexp(key)}=([^;]*);?`)
+    const regexp = CookieKeyRegexpCache[key] ?? new RegExp(`\\b${escapeRegexp(key)}=([^;]*);?`)
 
-    CookieKeyRegexpCache[key] = keyCached
+    CookieKeyRegexpCache[key] ??= regexp
 
-    return keyCached
+    return regexp
 }
 
 // Types ///////////////////////////////////////////////////////////////////////
