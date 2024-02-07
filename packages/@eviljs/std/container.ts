@@ -9,104 +9,90 @@ export const ContainerInstancesKey = Symbol('ContainerInstances')
 * EXAMPLE
 *
 * const services = {
-*     MyService(container) {
-*         const {MyDep: myDep} = container
-*         return MyService(myDep)
+*     MyService({MyDependency}) {
+*         return MyService(MyDependency)
 *     },
 * }
 *
 * createContainer(services)
 */
-export function createContainer<F extends ContainerFactories>(
-    factories: F,
-    options?: undefined | ContainerOptions,
-): Container<F> {
-    const self: Container<F> = {
-        ...{} as ContainerServicesOf<F>, // For typing purpose.
+export function createContainer<M extends ContainerServicesMap>(
+    factories: ContainerFactoriesOf<M>,
+    state?: undefined,
+): Container<M, undefined>
+export function createContainer<M extends ContainerServicesMap, S = unknown>(
+    factories: ContainerFactoriesOf<M>,
+    state: S,
+): Container<M, S>
+export function createContainer<M extends ContainerServicesMap, S = unknown>(
+    factories: ContainerFactoriesOf<M>,
+    state?: undefined | S,
+): Container<M, undefined | S> {
+    const self: Container<M, undefined | S> = {
+        [ContainerFactoriesKey]: factories,
+        [ContainerInstancesKey]: {} as M,
+        ...{} as M, // For typing purpose.
 
-        [ContainerFactoriesKey]: {} as F,
-        [ContainerInstancesKey]: {} as ContainerServicesOf<F>,
+        state: state,
 
         require(...args) {
-            return ensureDefined(requireService(self, ...args))
-        },
-        register(...args) {
-            return registerService(self, ...args)
+            return ensureDefined(requireContainerService(self, ...args))
         },
     }
 
-    if (factories) {
-        for (const id in factories) {
-            const factory = factories[id]
-
-            if (! factory) {
-                continue
-            }
-
-            self.register(id, factory)
-        }
-        for (const id of Object.getOwnPropertySymbols(factories)) {
-            const factory = factories[id]
-
-            if (! factory) {
-                continue
-            }
-
-            self.register(id, factory)
-        }
+    for (const serviceId of Reflect.ownKeys(factories)) {
+        defineContainerService(self, serviceId as keyof M)
     }
 
     return self
 }
 
-/*
-* Associates a factory function to an id, for later retrieval.
+/**
+* @throws
 *
-* EXAMPLE
-*
-* registerService(container, 'MyService', container => MyService())
-* registerService(container, Symbol(), container => MyService())
-*/
-export function registerService<C extends Container>(
-    container: C,
-    serviceId: ServiceId,
-    serviceFactory: ServiceFactory,
-    options?: undefined | RequireContainerServiceOptions,
-) {
-    container[ContainerFactoriesKey][serviceId] = serviceFactory
-
-    // We define a proxy property that returns the service.
-    Object.defineProperty(container, serviceId, {
-        get: () => ensureDefined(requireService(container, serviceId, options)),
-        configurable: false,
-        enumerable: true,
-    })
-
-    return container
-}
-
-/*
 * Provides a service instance.
 *
 * EXAMPLE
 *
-* requireService(container, 'MyService')
-* requireService(container, 'MyService', {type: 'prototype'})
+* requireContainerService(container, 'MyService')
+* requireContainerService(container, 'MyService', {type: 'prototype'})
 */
-function requireService<T = unknown>(
-    container: Container,
-    serviceId: ServiceId,
-    options?: undefined | RequireContainerServiceOptions,
-): undefined | T {
+function defineContainerService<M extends ContainerServicesMap, S, I extends keyof M>(
+    container: Container<M, S>,
+    serviceId: I,
+): void {
+    // We define a proxy property that returns the service.
+    Object.defineProperty(container, serviceId, {
+        configurable: false,
+        enumerable: true,
+        get() {
+            return requireContainerService(container, serviceId)
+        },
+    })
+}
+
+/**
+* @throws
+*
+* Provides a service instance.
+*
+* EXAMPLE
+*
+* requireContainerService(container, 'MyService')
+* requireContainerService(container, 'MyService', {type: 'prototype'})
+*/
+function requireContainerService<M extends ContainerServicesMap, S, I extends keyof M>(
+    container: Container<M, S>,
+    serviceId: I,
+    options?: undefined | ContainerServiceOptions,
+): M[I] {
     if (options?.type === 'prototype') {
         // A new instance is requested.
-        return createService(container, serviceId)
+        return createContainerService(container, serviceId)
     }
 
-    if (! container[ContainerInstancesKey][serviceId]) {
-        // By default we use a singleton strategy.
-        container[ContainerInstancesKey][serviceId] = createService(container, serviceId)
-    }
+    // By default we use a singleton strategy.
+    container[ContainerInstancesKey][serviceId] ??= createContainerService(container, serviceId)
 
     return container[ContainerInstancesKey][serviceId]
 }
@@ -117,38 +103,43 @@ function requireService<T = unknown>(
 *
 * EXAMPLE
 *
-* createService(container, 'MyService')
+* createContainerService(container, 'MyService')
 * // is the same of
-* requireService(container, 'MyService', {type: 'prototype'})
+* requireContainerService(container, 'MyService', {type: 'prototype'})
 */
-export function createService<T = unknown>(container: Container, serviceId: ServiceId): undefined | T {
+export function createContainerService<M extends ContainerServicesMap, S, I extends keyof M>(
+    container: Container<M, S>,
+    serviceId: I,
+): M[I] {
     const factory = container[ContainerFactoriesKey][serviceId]
-    return factory?.(container)
+    return factory(container)
 }
 
 // Types ///////////////////////////////////////////////////////////////////////
 
-export interface ContainerOptions {
-}
-
-export type Container<F extends ContainerFactories = ContainerFactories> = {
-    [ContainerFactoriesKey]: F
-    [ContainerInstancesKey]: ContainerServicesOf<F>
-    /**
-    * @throws InvalidInput
-    */
-    require: <T = unknown>(id: ServiceId) => T
-    register: (id: ServiceId, service: ServiceFactory) => Container<F>
-} & ContainerServicesOf<F>
-
-export type ContainerFactories = Record<ServiceId, ServiceFactory>
-export type ServiceId = PropertyKey
-export type ServiceFactory = (container: any) => any
-
-export type ContainerServicesOf<F extends ContainerFactories> = {
-    [key in keyof F]: ReturnType<F[key]>
-}
-
-export interface RequireContainerServiceOptions {
+export interface ContainerServiceOptions {
     type?: undefined | 'prototype'
+}
+
+export type Container<M extends ContainerServicesMap = ContainerServicesMap, S = unknown> =
+    & M
+    & ContainerStateProps<S>
+    & {
+        [ContainerFactoriesKey]: ContainerFactoriesOf<M, S>
+        [ContainerInstancesKey]: M
+        /**
+        * @throws InvalidInput
+        */
+        require<K extends keyof M>(id: K, options?: undefined | ContainerServiceOptions): M[K]
+    }
+
+export interface ContainerStateProps<S> {
+    readonly state: S
+}
+
+export type ContainerServiceId = PropertyKey
+export type ContainerServicesMap = object
+
+export type ContainerFactoriesOf<M extends ContainerServicesMap, S = unknown> = {
+    [key in keyof M]: (container: M & ContainerStateProps<S>) => M[key]
 }
