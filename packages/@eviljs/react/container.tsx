@@ -24,7 +24,7 @@ export function ContainerProvider(props: ContainerProviderProps) {
 }
 
 export function useContainer<T extends Container = Container>(): T {
-    return useContext(ContainerContext)!
+    return useContext(ContainerContext as React.Context<undefined | T>)!
 }
 
 // Types ///////////////////////////////////////////////////////////////////////
