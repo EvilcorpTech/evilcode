@@ -1,5 +1,5 @@
 import type {Task} from '@eviljs/std/fn.js'
-import {Future, createFuture} from '@eviljs/std/future.js'
+import {Future, createFuture} from '@eviljs/std/promise-future.js'
 import {createLinearScale, directionOf, distanceBetween} from '@eviljs/std/scale.js'
 
 export {wait} from '@eviljs/std/async.js'
