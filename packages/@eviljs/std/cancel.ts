@@ -3,7 +3,7 @@ import type {Fn, FnArgs, Task} from './fn.js'
 export function cancelable<A extends FnArgs, R>(
     task: Fn<A, R>,
     onCancel?: undefined | Task,
-): CancelableFn<A, R> {
+): FnCancelable<A, R> {
     function run(...args: A): undefined | R {
         if (run.canceled) {
             return
@@ -27,7 +27,7 @@ export function cancelable<A extends FnArgs, R>(
 export function createCancelable<A extends FnArgs, R>(
     task: Fn<A, R>,
     onCancel?: undefined | Task,
-): CancelableTuple<A, R> {
+): CancelableReturn<A, R> {
     const taskCancelable = cancelable(task, onCancel)
 
     return [
@@ -39,10 +39,10 @@ export function createCancelable<A extends FnArgs, R>(
 
 // Types ///////////////////////////////////////////////////////////////////////
 
-export interface CancelableFn<A extends FnArgs = [], R = void> extends Fn<A, undefined | R>, CancelableProtocol {
+export interface FnCancelable<A extends FnArgs = [], R = void> extends Fn<A, undefined | R>, CancelableProtocol {
 }
 
-export type CancelableTuple<A extends FnArgs, R> = [
+export type CancelableReturn<A extends FnArgs, R> = [
     Fn<A, undefined | R>,
     Task,
     Task<boolean>,

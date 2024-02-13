@@ -5,7 +5,3 @@ export function wait(delay: number) {
 
     return promise
 }
-
-export function clonePromise<P>(value: P): Promise<Awaited<P>> {
-    return Promise.resolve(value)
-}

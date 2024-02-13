@@ -106,7 +106,12 @@ export function asFuture<V>(value: V | PromiseLike<V>): Future<Awaited<V>> {
 
         onCancel(onCancel) {
             state.onCancelObservers.push(onCancel)
-            return self
+
+            function offCancel() {
+                state.onCancelObservers = state.onCancelObservers.filter(it => it !== onCancel)
+            }
+
+            return offCancel
         },
     }
 
@@ -121,5 +126,5 @@ export interface Future<V = unknown> extends Promise<V>, CancelableProtocol {
     readonly rejected: boolean
     readonly result: undefined | V
     readonly error: undefined | unknown
-    onCancel(onCancel: Task): this
+    onCancel(onCancel: Task): Task
 }
