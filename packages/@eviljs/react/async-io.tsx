@@ -1,5 +1,5 @@
 import type {Fn, FnArgs} from '@eviljs/std/fn.js'
-import {Future} from '@eviljs/std/future.js'
+import {Future} from '@eviljs/std/promise-future.js'
 import {piping} from '@eviljs/std/pipe.js'
 import type {ResourceMaskView, ResourcePromiseView} from '@eviljs/std/resource.js'
 import {
