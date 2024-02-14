@@ -1,11 +1,11 @@
-import {withPromiseResolvers} from './promise.js'
+import {createPromise} from './promise.js'
 
-export function createPromiseController<V = void>(args: PromiseControllerOptions) {
+export function createPromiseTimed<V = void>(args: PromiseTimedOptions) {
     const {timeout} = args
 
     let completed = false
 
-    const {promise, resolve: resolvePromise, reject: rejectPromise} = withPromiseResolvers<V>()
+    const {promise, resolve: resolvePromise, reject: rejectPromise} = createPromise<V>()
 
     const timeoutId = timeout
         ? setTimeout(onTimeout, timeout)
@@ -29,6 +29,6 @@ export function createPromiseController<V = void>(args: PromiseControllerOptions
 
 // Types ///////////////////////////////////////////////////////////////////////
 
-export interface PromiseControllerOptions {
+export interface PromiseTimedOptions {
     timeout?: undefined | number
 }

@@ -12,8 +12,8 @@ export function isSettledRejected<T>(promise: PromiseSettledResult<T>): promise 
     return promise.status === 'rejected'
 }
 
-// A facade api for the new and not widely supported Promise.withResolvers() native api.
-export function withPromiseResolvers<V = void>() {
+// A facade api for the new and not widely supported Promise.withResolvers().
+export function createPromise<V = void>() {
     let resolve: Fn<[value: V]>
     let reject: Fn<[reason?: any]>
 

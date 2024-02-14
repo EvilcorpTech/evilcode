@@ -27,7 +27,7 @@ export function createBus() {
 
 export function emitBusEvent(reactiveObservers: BusEventObservers, event: BusEvent, payload?: unknown): void
 export function emitBusEvent(reactiveObservers: BusEventObservers, args: [event: BusEvent, payload?: unknown]): void
-export function emitBusEvent(reactiveObservers: BusEventObservers, ...args: BusEventPolymorphicArgs): void
+export function emitBusEvent(reactiveObservers: BusEventObservers, ...polymorphicArgs: BusEventPolymorphicArgs): void
 export function emitBusEvent(reactiveObservers: BusEventObservers, ...polymorphicArgs: BusEventPolymorphicArgs): void {
     const observersMap = reactiveObservers.read()
     const observersToNotify: Array<[Array<BusEventObserver>, RegExpMatchArray]> = []
@@ -112,13 +112,13 @@ export function unobserveBusEvent(reactiveObservers: BusEventObservers, event: B
 export function defineBusEvent<
     const C,
     EI extends FnArgs,
-    EO extends string | [string, unknown],
+    EO extends BusEventDescriptorEmitArgs,
     TI extends FnArgs,
 >(
-    shared: C,
-    define: (shared: C) => BusEventDescriptor<EI, EO, TI>,
+    context: C,
+    define: (context: C) => BusEventDescriptor<EI, EO, TI>,
 ): BusEventDescriptor<EI, EO, TI> {
-    return define(shared)
+    return define(context)
 }
 
 export function exact(pattern: string): string
@@ -172,17 +172,19 @@ export type BusEventPolymorphicArgs =
 
 export interface BusEventDescriptor<
     EI extends FnArgs,
-    EO extends string | [string, unknown],
+    EO extends BusEventDescriptorEmitArgs,
     TI extends FnArgs,
 > {
     event(...args: EI): EO
     topic(...args: TI): string
 }
 
+export type BusEventDescriptorEmitArgs = string | [string] | [string, unknown]
+
 export type BusEventPayloadOf<
     D extends BusEventDescriptor<
         Array<any>,
-        string | [string, unknown],
+        BusEventDescriptorEmitArgs,
         Array<any>
     >
 > =
