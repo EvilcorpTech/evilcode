@@ -75,8 +75,15 @@ export function mergeRequest(request: Request, options: RequestInit): Request {
 /**
 * @throws TypeError
 **/
-export function cloneRequest(request: Request, options: RequestInit): Request {
+export function cloneRequest(request: Request, options?: undefined | RequestInit): Request {
     return new Request(request, options)
+}
+
+/**
+* @throws TypeError
+**/
+export function cloneRequestWithBody(request: Request): Request {
+    return request.clone()
 }
 
 export function asRequestPath(pathOrUrl: string, baseUrl?: undefined | string): string {
