@@ -1,8 +1,19 @@
-.std-self-baseline { align-self: baseline; }
-.std-self-normal { align-self: normal; }
-.std-self-stretch { align-self: stretch; }
-.std-self-start { align-self: flex-start; align-self: start; }
-.std-self-center { align-self: center; }
-.std-self-end { align-self: flex-end; align-self: end; }
-.std-self-self-start { align-self: self-start; }
-.std-self-self-end { align-self: self-end; }
+.std-self-align-baseline { align-self: baseline; }
+.std-self-align-normal { align-self: normal; }
+.std-self-align-stretch { align-self: stretch; }
+.std-self-align-start { align-self: flex-start; align-self: start; }
+.std-self-align-center { align-self: center; }
+.std-self-align-end { align-self: flex-end; align-self: end; }
+.std-self-align-self-start { align-self: self-start; }
+.std-self-align-self-end { align-self: self-end; }
+
+.std-self-justify-baseline { justify-self: baseline; }
+.std-self-justify-normal { justify-self: normal; }
+.std-self-justify-stretch { justify-self: stretch; }
+.std-self-justify-start { justify-self: flex-start; justify-self: start; }
+.std-self-justify-center { justify-self: center; }
+.std-self-justify-end { justify-self: flex-end; justify-self: end; }
+.std-self-justify-left { justify-self: left; }
+.std-self-justify-right { justify-self: right; }
+.std-self-justify-self-start { justify-self: self-start; }
+.std-self-justify-self-end { justify-self: self-end; }
