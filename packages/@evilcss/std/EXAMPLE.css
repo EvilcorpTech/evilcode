@@ -71,7 +71,7 @@
 @import '@evilcss/std/layout-block.css' layer(std);
 @import '@evilcss/std/layout-debug.classes.css' layer(std);
 @import '@evilcss/std/layout-flex-break.classes.css' layer(std);
-@import '@evilcss/std/layout-flex-space.classes.css' layer(std);
+@import '@evilcss/std/layout-flex-child.classes.css' layer(std);
 @import '@evilcss/std/layout-flex-stack.classes.css' layer(std);
 @import '@evilcss/std/layout-flex.classes.css' layer(std);
 @import '@evilcss/std/layout-float.classes.css' layer(std);
@@ -86,6 +86,7 @@
 @import '@evilcss/std/layout-margin-auto.classes.css' layer(std);
 @import '@evilcss/std/layout-margin.classes.css' layer(std);
 @import '@evilcss/std/layout-padding.classes.css' layer(std);
+@import '@evilcss/std/layout-self.classes.css' layer(std);
 @import '@evilcss/std/layout-size.classes.css' layer(std);
 @import '@evilcss/std/layout-width.classes.css' layer(std);
 @import '@evilcss/std/layout-width.props.css' layer(std);

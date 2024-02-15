@@ -9,23 +9,23 @@
 .std-flex-wrap-reverse { flex-wrap: wrap-reverse; }
 
 .std-flex-aligned-stretch { align-content: stretch; }
-.std-flex-aligned-start { align-content: flex-start; }
+.std-flex-aligned-start { align-content: flex-start; align-content: start; }
 .std-flex-aligned-center { align-content: center; }
-.std-flex-aligned-end { align-content: flex-end; }
+.std-flex-aligned-end { align-content: flex-end; align-content: end; }
 .std-flex-aligned-between { align-content: space-between; }
 .std-flex-aligned-around { align-content: space-around; }
 .std-flex-aligned-evenly { align-content: space-evenly; }
 
 .std-flex-justify-stretch { justify-content: stretch; }
-.std-flex-justify-start { justify-content: flex-start; }
+.std-flex-justify-start { justify-content: flex-start; justify-content: start; }
 .std-flex-justify-center { justify-content: center; }
-.std-flex-justify-end { justify-content: flex-end; }
+.std-flex-justify-end { justify-content: flex-end; justify-content: end; }
 .std-flex-justify-between { justify-content: space-between; }
 .std-flex-justify-around { justify-content: space-around; }
 .std-flex-justify-evenly { justify-content: space-evenly; }
 
 .std-flex-align-stretch { align-items: stretch; }
-.std-flex-align-start { align-items: flex-start; }
+.std-flex-align-start { align-items: flex-start; align-items: start; }
 .std-flex-align-center { align-items: center; }
-.std-flex-align-end { align-items: flex-end; }
+.std-flex-align-end { align-items: flex-end; align-items: end; }
 .std-flex-align-baseline { align-items: baseline; }

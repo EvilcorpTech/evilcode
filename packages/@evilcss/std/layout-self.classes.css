@@ -1,0 +1,8 @@
+.std-self-baseline { align-self: baseline; }
+.std-self-normal { align-self: normal; }
+.std-self-stretch { align-self: stretch; }
+.std-self-start { align-self: flex-start; align-self: start; }
+.std-self-center { align-self: center; }
+.std-self-end { align-self: flex-end; align-self: end; }
+.std-self-self-start { align-self: self-start; }
+.std-self-self-end { align-self: self-end; }
