@@ -107,9 +107,11 @@ export function createReactRenderTask<C extends object = {}>(args: AdaptRenderTa
             return
         }
 
-        reactRoot.render(Root
-            ? createElement(Root, {children: appChildren})
-            : appChildren
+        reactRoot.render(
+            Root
+                ? createElement(Root, {children: appChildren})
+                : appChildren
+            ,
         )
     }
 
