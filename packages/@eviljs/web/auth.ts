@@ -1,8 +1,7 @@
 import {compute, type Computable} from '@eviljs/std/compute.js'
 import type {Fn, FnArgs} from '@eviljs/std/fn.js'
 import {piping} from '@eviljs/std/pipe.js'
-import {asSafeString} from '@eviljs/std/type-safe.js'
-import {isObject} from '@eviljs/std/type.js'
+import {asString, isObject} from '@eviljs/std/type.js'
 import {usingRequestJson} from './request-json.js'
 import {RequestMethod, creatingRequest} from './request.js'
 import {decodeResponse} from './response.js'
@@ -118,7 +117,7 @@ export function extractDefaultResponseError(body: unknown) {
 
 export function extractDefaultResponseToken(body: unknown) {
     return isObject(body)
-        ? (asSafeString(body.token) || undefined)
+        ? (asString(body.token) || undefined)
         : undefined
 }
 

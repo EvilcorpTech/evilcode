@@ -1,5 +1,5 @@
 import {piping, type Io, type PipeContinuation} from '@eviljs/std/pipe.js'
-import {asSafeObject} from '@eviljs/std/type-safe.js'
+import {asObject} from '@eviljs/std/type.js'
 import {usingRequestMethod} from './request-init.js'
 import {usingRequestJson} from './request-json.js'
 import {usingRequestParams} from './request-params.js'
@@ -92,7 +92,7 @@ export function useRequestGraphqlPost(request: Request, query: string, variables
 export function useResponseGraphql<V = unknown>(response: Response | Promise<Response>): Promise<V> {
     return Promise.resolve(response)
         .then(decodeResponseJson)
-        .then(it => asSafeObject(it).data as V)
+        .then(it => asObject(it)?.data as V)
 }
 
 export function compressGraphqlQuery(query: string): string {
