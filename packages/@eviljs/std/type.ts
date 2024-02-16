@@ -118,15 +118,17 @@ export function isObject(value: unknown): value is Record<PropertyKey, unknown> 
 }
 
 export function isPromise(value: unknown): value is Promise<unknown> {
-    return value
-        ? (value instanceof Promise)
-        : false
+    if (! value) {
+        return false
+    }
+    return value instanceof Promise
 }
 
 export function isRegExp(value: unknown): value is RegExp {
-    return value
-        ? (value instanceof RegExp)
-        : false
+    if (! value) {
+        return false
+    }
+    return value instanceof RegExp
 }
 
 export function isString(value: unknown): value is string {
@@ -155,15 +157,26 @@ export function asArray<V, T extends unknown[]>(value: V | readonly [...T]): [V]
 export function asArray<V, I>(value: V | Array<I>): [V] | Array<I>
 export function asArray<V>(value: V | Array<V>): Array<V>
 export function asArray<V>(value: V | Array<V>): Array<V> {
-    return isArray(value)
-        ? value as Array<V>
-        : [value] as Array<V>
+    if (! isArray(value)) {
+        return [value] as Array<V>
+    }
+    return value as Array<V>
+}
+
+export function asObject<T extends Record<PropertyKey, unknown>>(value: T): T
+export function asObject(value: unknown): undefined | Record<PropertyKey, unknown>
+export function asObject(value: unknown): undefined | Record<PropertyKey, unknown> {
+    if (! isObject(value)) {
+        return
+    }
+    return value
 }
 
 export function asBoolean(value: unknown): undefined | boolean {
-    return isBoolean(value)
-        ? value
-        : undefined
+    if (! isBoolean(value)) {
+        return
+    }
+    return value
 }
 
 export function asBooleanLike(value: unknown): undefined | boolean {
@@ -202,21 +215,14 @@ export function asNumber(value: unknown): undefined | number {
     if (isNumber(value)) {
         return value
     }
-    if (! isString(value)) {
+    if (isString(value)) {
         // Only strings should be parsed:
         // - null and Arrays would be parsed as 0
         // - Symbols would throws an error
-        return
+        return asNumber(Number(value))
     }
-
-    const result = Number(value)
-
-    if (isNaN(result)) {
-        return
-    }
-    return result
+    return
 }
-
 
 export function asInteger(value: number): number
 export function asInteger(value: unknown): undefined | number
@@ -228,6 +234,40 @@ export function asInteger(value: unknown): undefined | number {
     }
 
     return Math.trunc(numberOptional)
+}
+
+export function asString<const S extends string>(value: S): S
+export function asString(value: None | {}): undefined
+export function asString(value: unknown): undefined | string
+export function asString(value: unknown): undefined | string {
+    if (! isString(value)) {
+        return
+    }
+    return value
+}
+
+export function asStringNotEmpty(value: string): undefined | string
+export function asStringNotEmpty(value: None | {}): undefined
+export function asStringNotEmpty(value: unknown): undefined | string
+export function asStringNotEmpty(value: unknown): undefined | string {
+    return asString(value)?.trim() || undefined
+}
+
+export function asStringLike<const S extends string>(value: S): S
+export function asStringLike(value: boolean | number): string
+export function asStringLike(value: None | {}): undefined
+export function asStringLike(value: unknown): undefined | string
+export function asStringLike(value: unknown): undefined | string {
+    if (isString(value)) {
+        return value
+    }
+    if (isBoolean(value)) {
+        return String(value)
+    }
+    if (isNumber(value)) {
+        return String(value)
+    }
+    return
 }
 
 // Types ///////////////////////////////////////////////////////////////////////
