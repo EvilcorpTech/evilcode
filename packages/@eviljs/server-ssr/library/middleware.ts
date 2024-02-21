@@ -1,6 +1,6 @@
 import {assertDefined} from '@eviljs/std/assert.js'
-import {compute} from '@eviljs/std/compute.js'
 import {OneSecondInMs} from '@eviljs/std/date.js'
+import {compute} from '@eviljs/std/fn.js'
 import {isDefined} from '@eviljs/std/type.js'
 import {asBaseUrl} from '@eviljs/web/url.js'
 import type Koa from 'koa'

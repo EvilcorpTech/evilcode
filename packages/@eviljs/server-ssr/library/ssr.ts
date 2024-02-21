@@ -3,9 +3,7 @@
 // https://developers.google.com/web/tools/puppeteer/articles/ssr
 
 import {OneMinuteInMs} from '@eviljs/std/date.js'
-import {piping} from '@eviljs/std/pipe.js'
-import {returnUndefined} from '@eviljs/std/return.js'
-import {tryCatch} from '@eviljs/std/try.js'
+import {piping, returnUndefined, tryCatch} from '@eviljs/std/fn.js'
 import {isSome} from '@eviljs/std/type.js'
 import {asBaseUrl} from '@eviljs/web/url.js'
 import {createHash} from 'node:crypto'
