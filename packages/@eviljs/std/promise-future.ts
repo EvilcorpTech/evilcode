@@ -1,5 +1,5 @@
-import type {CancelableProtocol} from './cancel.js'
-import type {Task} from './fn.js'
+import type {Task} from './fn-type.js'
+import type {CancelableProtocol} from './fn.js'
 
 export class Future {
     static from<P>(promise: P): Future<Awaited<P>> {

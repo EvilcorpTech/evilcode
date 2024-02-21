@@ -1,4 +1,4 @@
-import type {FnArgs} from './fn.js'
+import type {FnArgs} from './fn-type.js'
 
 export const TypeTest = {
     array: isArray,

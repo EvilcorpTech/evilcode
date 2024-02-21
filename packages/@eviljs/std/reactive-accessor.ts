@@ -1,6 +1,6 @@
 import {createAccessor, type AccessorSync} from './accessor.js'
 import {scheduleMicroTaskUsingPromise} from './eventloop.js'
-import type {Task} from './fn.js'
+import type {Task} from './fn-type.js'
 import type {ReactiveComputed, ReactiveInternals, ReactiveObservable, ReactiveObserver, ReactiveOptions, ReactiveWatchOptions} from './reactive.js'
 import {areEqualIdentity} from './struct.js'
 

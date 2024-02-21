@@ -1,4 +1,4 @@
-import type {Fn, FnArgs, Task} from './fn.js'
+import type {Fn, FnArgs, Task} from './fn-type.js'
 
 export function cancelable<A extends FnArgs, R>(
     task: Fn<A, R>,
@@ -27,7 +27,7 @@ export function cancelable<A extends FnArgs, R>(
 export function createCancelable<A extends FnArgs, R>(
     task: Fn<A, R>,
     onCancel?: undefined | Task,
-): CancelableReturn<A, R> {
+): CreateCancelableReturn<A, R> {
     const taskCancelable = cancelable(task, onCancel)
 
     return [
@@ -42,7 +42,7 @@ export function createCancelable<A extends FnArgs, R>(
 export interface FnCancelable<A extends FnArgs = [], R = void> extends Fn<A, undefined | R>, CancelableProtocol {
 }
 
-export type CancelableReturn<A extends FnArgs, R> = [
+export type CreateCancelableReturn<A extends FnArgs, R> = [
     Fn<A, undefined | R>,
     Task,
     Task<boolean>,

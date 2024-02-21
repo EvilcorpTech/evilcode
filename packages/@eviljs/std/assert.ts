@@ -1,4 +1,4 @@
-import {compute} from './compute.js'
+import {compute} from './fn-compute.js'
 import {StdError, throwError} from './throw.js'
 import type {None} from './type.js'
 import {

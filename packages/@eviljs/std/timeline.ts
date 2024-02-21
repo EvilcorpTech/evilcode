@@ -1,4 +1,4 @@
-import type {TaskAsync} from './fn.js'
+import type {TaskAsync} from './fn-type.js'
 import {throwInvalidArgument} from './throw.js'
 import {isArray, isFunction, isObject} from './type.js'
 

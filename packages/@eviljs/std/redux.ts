@@ -1,5 +1,5 @@
-import {compute} from './compute.js'
-import type {FnArgs} from './fn.js'
+import {compute} from './fn-compute.js'
+import type {FnArgs} from './fn-type.js'
 import {areObjectsEqualShallow} from './object.js'
 import {isArray, type ValueOf} from './type.js'
 

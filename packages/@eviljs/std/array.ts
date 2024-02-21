@@ -1,6 +1,5 @@
 import type {Io} from './fn.js'
-import type {None} from './type.js'
-import {isSome} from './type.js'
+import {isSome, type None} from './type.js'
 
 export function areArraysEqual(firstList: Array<unknown>, secondList: Array<unknown>): boolean {
     if (firstList.length !== secondList.length) {

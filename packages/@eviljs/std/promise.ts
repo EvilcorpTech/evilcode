@@ -1,4 +1,4 @@
-import type {Fn} from './fn.js'
+import type {Fn} from './fn-type.js'
 
 export function clonePromise<P>(value: P): Promise<Awaited<P>> {
     return Promise.resolve(value)

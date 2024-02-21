@@ -34,5 +34,3 @@ export function distanceBetween(x1: number, x2: number) {
 export function directionOf(x1: number, x2: number) {
     return x1 < x2 ? 1 : -1
 }
-
-// Types ///////////////////////////////////////////////////////////////////////

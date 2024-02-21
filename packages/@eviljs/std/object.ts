@@ -1,4 +1,4 @@
-import type {Fn, Io} from './fn.js'
+import type {Fn, Io} from './fn-type.js'
 import {isArray, isDefined, isObject, isUndefined} from './type.js'
 
 export const ObjectPathArrayOpenRegexp = /\[/g

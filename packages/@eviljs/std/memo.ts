@@ -1,41 +1,32 @@
-import type {Io, Task} from './fn.js'
-
-export function memoizing<R>(fn: Task<R>): Task<R> {
-    let executed = false
-    let value: R
-
-    function singleton(): R {
-        if (! executed) {
-            executed = true
-            value = fn()
-        }
-        return value
-    }
-
-    return singleton
-}
+import type {Io} from './fn-type.js'
 
 export function createCache<K, V>(): CacheManager<K, V> {
-    const cacheMap = new Map<K, V>()
+    const cacheMap = new Map<K, undefined | V>()
 
-    function use(key: K, computeValue: Io<K, V>): undefined | V {
-        if (cacheMap.has(key)) {
-            return cacheMap.get(key)
-        }
+    function use(key: K, computeValue: Io<K, V>): V {
+        return useCachedResult(cacheMap, key, computeValue)
+    }
 
+    return {use, map: cacheMap}
+}
+
+export function useCachedResult<K, V>(
+    cacheMap: Map<K, undefined | V>,
+    key: K,
+    computeValue: Io<K, V>,
+): V {
+    const result = cacheMap.get(key) ?? (() => {
         const value = computeValue(key)
         cacheMap.set(key, value)
         return value
-    }
+    })()
 
-    const clear = cacheMap.clear.bind(cacheMap)
-
-    return {use, clear}
+    return result
 }
 
 // Types ///////////////////////////////////////////////////////////////////////
 
 export interface CacheManager<K, V> {
-    use(key: K, computeValue: Io<K, V>): undefined | V
-    clear(): void
+    use(key: K, computeValue: Io<K, V>): V
+    map: Map<K, undefined | V>
 }

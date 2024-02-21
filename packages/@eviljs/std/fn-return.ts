@@ -1,4 +1,4 @@
-export {returnInput as identity}
+export {returnInput as identity, returnVoid as noop}
 
 export function returnInput<V>(input: V): V {
     return input

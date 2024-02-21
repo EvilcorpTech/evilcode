@@ -1,4 +1,4 @@
-import type {FnArgs} from './fn.js'
+import type {FnArgs} from './fn-type.js'
 
 export const CollatorOptionsDefault: Intl.CollatorOptions = {
     numeric: true, // '1' < '2' < '10'.
