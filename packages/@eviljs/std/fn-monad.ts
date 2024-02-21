@@ -39,33 +39,33 @@ export function chaining<V>(chain: Io<V, any>): Io<V, V> {
 
 // Optional ////////////////////////////////////////////////////////////////////
 
-export function mappingOptional<V1, V2, V3>(onSome: Io<NonNullable<V1>, V2>, onNone: Io<None, V3>): Io<None | V1, V2 | V3> {
-    return (input: None | V1) => mapOptional(input, onSome, onNone)
+export function mappingOptional<V1, V2, V3>(onSome: Io<NonNullable<V1>, V2>, onNone: Io<Extract<V1, None>, V3>): Io<V1, V2 | V3> {
+    return (input: V1) => mapOptional(input, onSome, onNone)
 }
 
-export function mapOptional<V1, V2, V3>(input: None | V1, onSome: Io<NonNullable<V1>, V2>, onNone: Io<None, V3>): V2 | V3 {
+export function mapOptional<V1, V2, V3>(input: V1, onSome: Io<NonNullable<V1>, V2>, onNone: Io<Extract<V1, None>, V3>): V2 | V3 {
     return ! isNone(input)
         ? onSome(input as NonNullable<V1>)
-        : onNone(input)
+        : onNone(input as Extract<V1, None>)
 }
 
-export function mappingSome<V1, V2>(onSome: Io<NonNullable<V1>, V2>): Io<None | V1, Extract<V1, None> | V2> {
-    return (input: None | V1) => mapSome(input, onSome)
+export function mappingSome<V1, V2>(onSome: Io<NonNullable<V1>, V2>): Io<V1, V2 | Extract<V1, None>> {
+    return (input: V1) => mapSome(input, onSome)
 }
 
-export function mappingNone<V1, V2>(onNone: Io<None, V2>): Io<V1, Exclude<V1, None> | V2> {
-    return (input: V1) => mapNone(input, onNone)
-}
-
-export function mapSome<V1, V2>(input: None | V1, onSome: Io<NonNullable<V1>, V2>): Extract<V1, None> | V2 {
+export function mapSome<V1, V2>(input: V1, onSome: Io<NonNullable<V1>, V2>): V2 | Extract<V1, None> {
     return ! isNone(input)
         ? onSome(input as NonNullable<V1>)
         : input as Extract<V1, None>
 }
 
-export function mapNone<V1, V2>(input: V1, onNone: Io<None, V2>): Exclude<V1, None> | V2 {
+export function mappingNone<V1, V2>(onNone: Io<Extract<V1, None>, V2>): Io<V1, V2 | Exclude<V1, None>> {
+    return (input: V1) => mapNone(input, onNone)
+}
+
+export function mapNone<V1, V2>(input: V1, onNone: Io<Extract<V1, None>, V2>): V2 | Exclude<V1, None> {
     return isNone(input)
-        ? onNone(input as None)
+        ? onNone(input as Extract<V1, None>)
         : input as Exclude<V1, None>
 }
 
