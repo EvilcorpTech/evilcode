@@ -1,8 +1,8 @@
 import {
-    composeReducers,
+    composeReducersEntries,
     defineReducerAction,
     withId,
-    type CompositeReducerOfList,
+    type CompositeReducerOfEntries,
     type ReducerId,
     type ReducerTarget
 } from '../packages/@eviljs/std/redux.js'
@@ -30,8 +30,8 @@ const listWithLiteralIds = [
     [actionLiteral5.id, actionLiteral5.reducer],
     [actionLiteral6.id, actionLiteral6.reducer],
 ] satisfies Array<[ReducerId, ReducerTarget<any, Array<any>>]>
-type CompositeReducerWithLiteralIds = CompositeReducerOfList<typeof listWithLiteralIds>
-const reducerComposedWithLiteralIds = composeReducers(...listWithLiteralIds)
+type CompositeReducerWithLiteralIds = CompositeReducerOfEntries<typeof listWithLiteralIds>
+const reducerComposedWithLiteralIds = composeReducersEntries(listWithLiteralIds)
 
 const listWithGenericIds: Array<[ReducerId, ReducerTarget<State, Array<any>>]> = [
     [actionGeneric1.id, actionGeneric1.reducer],
@@ -41,8 +41,8 @@ const listWithGenericIds: Array<[ReducerId, ReducerTarget<State, Array<any>>]> =
     [actionGeneric5.id, actionGeneric5.reducer],
     [actionGeneric6.id, actionGeneric6.reducer],
 ]
-type CompositeReducerWithGenericIds = CompositeReducerOfList<typeof listWithGenericIds>
-const reducerComposedWithGenericIds = composeReducers(...listWithGenericIds)
+type CompositeReducerWithGenericIds = CompositeReducerOfEntries<typeof listWithGenericIds>
+const reducerComposedWithGenericIds = composeReducersEntries(listWithGenericIds)
 
 reducerComposedWithLiteralIds(state, 'a', 123, '')
 reducerComposedWithLiteralIds(state, 'b', '', true)

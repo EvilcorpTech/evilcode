@@ -1,4 +1,4 @@
-import {compose} from '../packages/@eviljs/std/compose.js'
+import {compose} from '../packages/@eviljs/std/fn.js'
 
 type State = {prova: number}
 

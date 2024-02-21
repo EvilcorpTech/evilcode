@@ -1,5 +1,4 @@
-import {Error, awaiting, catching, catchingError, chain, chaining, logging, mappingError, mappingOptional, mappingSome, piped, piping, trying} from '../packages/@eviljs/std/pipe.js'
-import {identity} from '../packages/@eviljs/std/return.js'
+import {Error, awaiting, catching, catchingError, chain, chaining, identity, logging, mappingError, mappingOptional, mappingSome, piped, piping, trying} from '../packages/@eviljs/std/fn.js'
 import {throwError} from '../packages/@eviljs/std/throw.js'
 
 const subject = {id: 1, name: 'Mike', age: 18}
