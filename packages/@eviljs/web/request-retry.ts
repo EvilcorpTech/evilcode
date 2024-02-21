@@ -1,7 +1,7 @@
 import {wait} from '@eviljs/std/async.js'
 import {OneSecondInMs} from '@eviljs/std/date.js'
 import type {Fn, Io} from '@eviljs/std/fn.js'
-import {cloneRequestWithBody} from './request.js'
+import {cloneRequestWithBody} from './request-clone.js'
 import {rejectOnResponseError} from './response.js'
 
 /**

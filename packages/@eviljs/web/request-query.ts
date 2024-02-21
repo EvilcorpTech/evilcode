@@ -1,7 +1,7 @@
 import {piping, type Io} from '@eviljs/std/fn.js'
 import {usingRequestHeaders} from './request-init.js'
 import {usingRequestParams} from './request-params.js'
-import type {UrlParams} from './url-params.js'
+import type {UrlParams} from './url.js'
 
 export const QueryRulesParam = 'query'
 export const QueryRulesHeader = 'X-Query'

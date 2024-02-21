@@ -1,5 +1,5 @@
 import type {Io} from '@eviljs/std/fn.js'
-import {joinUrlWithParams, type UrlParams, type UrlParamsEncodeOptions} from './url-params.js'
+import {joinUrlWithParams, type UrlParams, type UrlParamsEncodeOptions} from './url.js'
 
 /**
 * @throws TypeError

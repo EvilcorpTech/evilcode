@@ -1,6 +1,8 @@
 import type {Io} from '@eviljs/std/fn.js'
 import type {StringAutocompleted} from '@eviljs/std/type.js'
-import {cloneRequest, mergeRequest, mergeRequestHeaders, type RequestMethodEnum} from './request.js'
+import {cloneRequest} from './request-clone.js'
+import {mergeRequest, mergeRequestHeaders} from './request-merge.js'
+import type {RequestMethodEnum} from './request-method.js'
 
 // Request Method //////////////////////////////////////////////////////////////
 

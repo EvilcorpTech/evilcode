@@ -1,4 +1,4 @@
-import {ContentType} from './request.js'
+import {FormDataType, FormUrlType, JsonType} from './mimetype.js'
 
 /**
 * @throws
@@ -7,13 +7,13 @@ export async function decodeResponse<T = string | FormData | URLSearchParams | u
     const response = await responsePromise
     const type = response.headers.get('Content-Type')?.toLowerCase()
 
-    if (type && type.startsWith(ContentType.Json)) {
+    if (type && type.startsWith(JsonType)) {
         return decodeResponseJson(response) as Promise<T>
     }
-    if (type && type.startsWith(ContentType.FormData)) {
+    if (type && type.startsWith(FormDataType)) {
         return decodeResponseFormData(response) as Promise<T>
     }
-    if (type && type.startsWith(ContentType.FormUrl)) {
+    if (type && type.startsWith(FormUrlType)) {
         return decodeResponseUrlSearchParams(response) as Promise<T>
     }
     return decodeResponseText(response) as Promise<T>

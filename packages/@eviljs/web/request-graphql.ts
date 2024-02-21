@@ -1,9 +1,11 @@
 import {piping, type Io, type PipeContinuation} from '@eviljs/std/fn.js'
 import {asObject} from '@eviljs/std/type.js'
+import {JsonType} from './mimetype.js'
 import {usingRequestMethod} from './request-init.js'
 import {usingRequestJson} from './request-json.js'
+import {usingRequestOptions} from './request-merge.js'
+import {RequestMethod, creatingRequest, type RequestOptions} from './request-method.js'
 import {usingRequestParams} from './request-params.js'
-import {ContentType, RequestMethod, creatingRequest, usingRequestOptions, type RequestOptions} from './request.js'
 import {decodeResponseJson} from './response.js'
 
 export const GraphqlQueryCommentRegexp = /[#].*/g
@@ -39,7 +41,7 @@ export function useRequestGraphqlGet(request: Request, query: string, variables?
         (usingRequestOptions({
             method: RequestMethod.Get,
             headers: {
-                'Accept': ContentType.Json,
+                'Accept': JsonType,
             },
         }))
         (usingRequestParams({
@@ -81,7 +83,7 @@ export function useRequestGraphqlPost(request: Request, query: string, variables
     return piping(request)
         (usingRequestMethod(RequestMethod.Post))
         (usingRequestJson(body, {
-            'Accept': ContentType.Json,
+            'Accept': JsonType,
         }))
     ()
 }
