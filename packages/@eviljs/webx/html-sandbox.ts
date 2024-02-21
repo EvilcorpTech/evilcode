@@ -1,4 +1,4 @@
-import {tryOrNull} from '@eviljs/std/try.js'
+import {tryOrNull} from '@eviljs/std/fn.js'
 import {onMounted, useEventListener, WebElement} from '@eviljs/web/element.js'
 
 /*
