@@ -1,4 +1,4 @@
-import {Error, awaiting, catching, catchingError, chain, chaining, identity, logging, mappingError, mappingOptional, mappingSome, piped, piping, trying} from '../packages/@eviljs/std/fn.js'
+import {Error, awaiting, catching, catchingError, chain, chaining, logging, mapNone, mapSome, mappingError, mappingNone, mappingOptional, mappingSome, piped, piping, trying} from '../packages/@eviljs/std/fn.js'
 import {throwError} from '../packages/@eviljs/std/throw.js'
 
 const subject = {id: 1, name: 'Mike', age: 18}
@@ -33,9 +33,13 @@ const r_c2 = await piped(subject)
     .to(catching(error => Error(error)))
     .to(catchingError('BadThingsHappen'))
 .end()
-const r_c3 = piping(undefined)
-    (mappingSome(identity))
+const r_c3 = piping(undefined as undefined | number)
+    (mappingSome(it => 'Some' as const))
+    (mappingNone(it => 'None' as const))
+    (it => it)
     (mappingOptional(onSome, it => 'No Value'))
 ()
+const r_c4 = mapSome(undefined as undefined | number, it => String(it))
+const r_c5 = mapNone(undefined as undefined | number, it => 'Hello')
 
-function onSome(value: string) { return {title: `Some ${value}` } }
+function onSome(value: string) { return {title: `onSome ${value}` } }
