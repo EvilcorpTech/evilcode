@@ -1,6 +1,5 @@
-import {compute} from '@eviljs/std/compute.js'
-import type {I18n, I18nDefinition, I18nMessageArgValue, I18nMessageArgs, I18nMessageKey, I18nMessages} from '@eviljs/std/i18n.js'
-import {createI18n as createStdI18n, t, translate} from '@eviljs/std/i18n.js'
+import {compute} from '@eviljs/std/fn.js'
+import {createI18n as createStdI18n, t, translate, type I18n, type I18nDefinition, type I18nMessageArgValue, type I18nMessageArgs, type I18nMessageKey, type I18nMessages} from '@eviljs/std/i18n.js'
 import {isDefined} from '@eviljs/std/type.js'
 import {createContext, createMemo, createSignal, useContext, type Accessor, type Setter} from 'solid-js'
 
