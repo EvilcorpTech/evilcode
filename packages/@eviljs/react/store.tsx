@@ -1,14 +1,13 @@
-import type {Io} from '@eviljs/std/fn.js'
-import {type ReactiveAccessor} from '@eviljs/std/reactive-accessor.js'
+import {identity, type Io} from '@eviljs/std/fn.js'
+import type {ReactiveAccessor} from '@eviljs/std/reactive-accessor.js'
 import type {ReducerAction, ReducerState} from '@eviljs/std/redux.js'
-import {identity} from '@eviljs/std/return.js'
 import {useSelectedAccessorValue} from './reactive-accessor.js'
 import {StoreProvider, useStoreContext, type StoreContextOptions, type StoreManager} from './store-provider.js'
-import type {StoreDefinitionV2, StoreDispatchV2} from './store-v2.js'
+import type {StoreDefinitionV2 as StoreDefinition, StoreDispatchV2 as StoreDispatch} from './store-v2.js'
 
 export * from '@eviljs/std/redux.js'
 export * from './store-provider.js'
-export type {StoreDefinitionV2 as StoreDefinition} from './store-v2.js'
+export type {StoreDefinitionV2 as StoreDefinition, StoreDispatchV2 as StoreDispatch} from './store-v2.js'
 
 /*
 * EXAMPLE
@@ -69,7 +68,7 @@ export function useStoreState<V, S extends ReducerState>(
 
 export function useStoreDispatch<S extends ReducerState, A extends ReducerAction = ReducerAction>(
     options?: undefined | StoreContextOptions<S, A>,
-): StoreDispatchV2<S, A> {
+): StoreDispatch<S, A> {
     const [state, dispatch] = useStoreContext<S, A>(options)!
 
     return dispatch
@@ -123,7 +122,7 @@ export function setupStore<S extends ReducerState, A extends ReducerAction = Red
 
 // Types ///////////////////////////////////////////////////////////////////////
 
-export interface StoreProviderProps<S extends ReducerState, A extends ReducerAction> extends StoreDefinitionV2<S, A> {
+export interface StoreProviderProps<S extends ReducerState, A extends ReducerAction> extends StoreDefinition<S, A> {
     children: undefined | React.ReactNode
     context?: undefined | React.Context<undefined | StoreManager<S, A>>
 }
@@ -132,7 +131,7 @@ export type StoreAccessor<
     V,
     S extends ReducerState = ReducerState,
     A extends ReducerAction = ReducerAction,
-> = [V, StoreDispatchV2<S, A>, StoreReader<S>]
+> = [V, StoreDispatch<S, A>, StoreReader<S>]
 
 export type StoreReader<S extends ReducerState> = ReactiveAccessor<S>['read']
 export type StoreSelector<S extends ReducerState, V> = (state: S) => V
@@ -154,7 +153,7 @@ export interface StoreBound<S extends ReducerState, A extends ReducerAction = Re
         <V>(selector?: undefined | StoreSelector<S, V>): S | V
     }
     useStoreDispatch: {
-        (): StoreDispatchV2<S, A>
+        (): StoreDispatch<S, A>
     }
     useStoreRead: {
         (): ReactiveAccessor<S>['read']

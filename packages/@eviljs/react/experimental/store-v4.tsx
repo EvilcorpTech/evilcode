@@ -1,7 +1,5 @@
-import {compute} from '@eviljs/std/compute.js'
-import type {Fn, Task} from '@eviljs/std/fn.js'
+import {compute, identity, type Fn, type Task} from '@eviljs/std/fn.js'
 import type {ReducerState} from '@eviljs/std/redux.js'
-import {identity} from '@eviljs/std/return.js'
 import {cloneShallow} from '@eviljs/std/struct.js'
 import {isArray, isObject} from '@eviljs/std/type.js'
 import {useCallback, useContext, useLayoutEffect, useMemo, useRef} from 'react'

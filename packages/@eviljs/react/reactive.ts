@@ -1,5 +1,5 @@
 import type {AccessorSync} from '@eviljs/std/accessor.js'
-import {compute} from '@eviljs/std/compute.js'
+import {compute} from '@eviljs/std/fn.js'
 import type {ReactiveObservable} from '@eviljs/std/reactive.js'
 import {useCallback, useEffect, useLayoutEffect, useState} from 'react'
 import {useRenderSignal, type RenderSignal} from './lifecycle.js'

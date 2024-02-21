@@ -1,4 +1,4 @@
-import {compute} from '@eviljs/std/compute.js'
+import {compute} from '@eviljs/std/fn.js'
 import {createHistory} from '@eviljs/std/undoredo.js'
 import {useCallback, useMemo} from 'react'
 import {useRender} from './lifecycle.js'

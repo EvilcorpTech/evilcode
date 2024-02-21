@@ -1,5 +1,4 @@
-import {compute, type Computable} from '@eviljs/std/compute.js'
-import type {Fn, Io, Task} from '@eviljs/std/fn.js'
+import {compute, type Computable, type Fn, type Io, type Task} from '@eviljs/std/fn.js'
 import {escapeRegexp} from '@eviljs/std/regexp.js'
 import {asArray, isPromise, isString} from '@eviljs/std/type.js'
 import {exact, matchRoutePattern, testRoutePattern, type RoutePattern, type RoutePatterns} from '@eviljs/web/route.js'

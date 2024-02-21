@@ -1,5 +1,4 @@
-import type {Task} from '@eviljs/std/fn.js'
-import {memoizing} from '@eviljs/std/memo.js'
+import {memoizing, type Task} from '@eviljs/std/fn.js'
 import {isIterator} from '@eviljs/std/type.js'
 import {selectRouteMatch, type RoutePatterns} from '@eviljs/web/route.js'
 

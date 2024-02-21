@@ -1,6 +1,5 @@
-import type {Io} from '@eviljs/std/fn.js'
+import {identity, returnUndefined, type Io} from '@eviljs/std/fn.js'
 import type {ReactiveAccessor} from '@eviljs/std/reactive-accessor.js'
-import {identity, returnUndefined} from '@eviljs/std/return.js'
 import {useEffect, useMemo, useState} from 'react'
 import {useReactiveObservable, useReactiveObservables, useReactiveStore} from './reactive.js'
 import type {StateManager} from './state.js'

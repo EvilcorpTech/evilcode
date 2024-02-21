@@ -1,10 +1,8 @@
-import {compute} from '@eviljs/std/compute.js'
-import {debounced, throttled, type EventFn} from '@eviljs/std/event.js'
-import type {Fn, FnArgs} from '@eviljs/std/fn.js'
+import {compute, debounced, throttled, type EventTask, type Fn, type FnArgs} from '@eviljs/std/fn.js'
 import {useCallback, useLayoutEffect, useMemo, useRef, useState} from 'react'
 import type {StateInit, StateSetter} from './state.js'
 
-export function useCallbackDebounced<A extends FnArgs>(callback: Fn<A>, delayMs: number): EventFn<A> {
+export function useCallbackDebounced<A extends FnArgs>(callback: Fn<A>, delayMs: number): EventTask<A> {
     const callbackDebounced = useMemo(() => {
         return debounced(callback, delayMs)
     }, [callback, delayMs])
@@ -20,7 +18,7 @@ export function useCallbackDebounced<A extends FnArgs>(callback: Fn<A>, delayMs:
     return callbackDebounced
 }
 
-export function useCallbackThrottled<A extends FnArgs>(callback: Fn<A>, delayMs: number): EventFn<A> {
+export function useCallbackThrottled<A extends FnArgs>(callback: Fn<A>, delayMs: number): EventTask<A> {
     const callbackThrottled = useMemo(() => {
         return throttled(callback, delayMs)
     }, [callback, delayMs])
