@@ -1,5 +1,4 @@
-import type {TryOnError} from '@eviljs/std/try.js'
-import {tryCatch} from '@eviljs/std/try.js'
+import {tryCatch, type TryOnError} from '@eviljs/std/fn.js'
 import {isObject} from '@eviljs/std/type.js'
 import {useEffect, useRef} from 'react'
 

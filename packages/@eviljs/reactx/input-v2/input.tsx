@@ -2,7 +2,7 @@ import {classes} from '@eviljs/react/classes.js'
 import {displayName} from '@eviljs/react/display-name.js'
 import {useMergeRefs} from '@eviljs/react/ref.js'
 import type {VoidProps} from '@eviljs/react/type.js'
-import {identity} from '@eviljs/std/return.js'
+import {identity} from '@eviljs/std/fn.js'
 import {forwardRef, useRef, useState} from 'react'
 
 export function InputLabel(props: InputLabelProps) {
