@@ -1,6 +1,6 @@
 import type {AccessorSync} from '@eviljs/std/accessor.js'
 import {createAccessor} from '@eviljs/std/accessor.js'
-import {tryCatch} from '@eviljs/std/try.js'
+import {tryCatch} from '@eviljs/std/fn.js'
 import {asBoolean, asNumber, isUndefined} from '@eviljs/std/type.js'
 
 export function createBrowserStorageAccessor(

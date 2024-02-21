@@ -1,4 +1,4 @@
-import {piping} from '@eviljs/std/pipe.js'
+import {piping} from '@eviljs/std/fn.js'
 import {RequestMethod, createRequest, type RequestOptions} from './request.js'
 
 export function creatingRequestDelete(pathOrUrl: string, options?: undefined | RequestOptions) {

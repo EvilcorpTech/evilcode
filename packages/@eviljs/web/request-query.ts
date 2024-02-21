@@ -1,4 +1,4 @@
-import {piping, type Io} from '@eviljs/std/pipe.js'
+import {piping, type Io} from '@eviljs/std/fn.js'
 import {usingRequestHeaders} from './request-init.js'
 import {usingRequestParams} from './request-params.js'
 import type {UrlParams} from './url-params.js'

@@ -1,5 +1,5 @@
 import {OneSecondInMs} from '@eviljs/std/date.js'
-import {mapSome} from '@eviljs/std/monad.js'
+import {mapSome} from '@eviljs/std/fn.js'
 import {escapeRegexp} from '@eviljs/std/regexp.js'
 import {asDate, isSome} from '@eviljs/std/type.js'
 

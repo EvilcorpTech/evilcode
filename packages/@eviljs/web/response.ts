@@ -3,23 +3,41 @@ import {ContentType} from './request.js'
 /**
 * @throws
 **/
-export async function decodeResponse(responsePromise: Response | Promise<Response>): Promise<string | FormData | URLSearchParams | unknown> {
+export async function decodeResponse<T = string | FormData | URLSearchParams | unknown>(responsePromise: Response | Promise<Response>): Promise<T> {
     const response = await responsePromise
     const type = response.headers.get('Content-Type')?.toLowerCase()
 
-    if (! type) {
-        return response.text()
+    if (type && type.startsWith(ContentType.Json)) {
+        return decodeResponseJson(response) as Promise<T>
     }
-    if (type.startsWith(ContentType.Json)) {
-        return response.json() as Promise<unknown>
+    if (type && type.startsWith(ContentType.FormData)) {
+        return decodeResponseFormData(response) as Promise<T>
     }
-    if (type.startsWith(ContentType.FormData)) {
-        return response.formData()
+    if (type && type.startsWith(ContentType.FormUrl)) {
+        return decodeResponseUrlSearchParams(response) as Promise<T>
     }
-    if (type.startsWith(ContentType.FormUrl)) {
-        return response.text().then(it => new URLSearchParams(it))
-    }
-    return response.text()
+    return decodeResponseText(response) as Promise<T>
+}
+
+/**
+* @throws
+**/
+export function decodeResponseText(responsePromise: Response | Promise<Response>): Promise<string> {
+    return Promise.resolve(responsePromise).then(it => it.text())
+}
+
+/**
+* @throws
+**/
+export function decodeResponseFormData(responsePromise: Response | Promise<Response>): Promise<FormData> {
+    return Promise.resolve(responsePromise).then(it => it.formData())
+}
+
+/**
+* @throws
+**/
+export function decodeResponseUrlSearchParams(responsePromise: Response | Promise<Response>): Promise<URLSearchParams> {
+    return decodeResponseText(responsePromise).then(it => new URLSearchParams(it))
 }
 
 /**

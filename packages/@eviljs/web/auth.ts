@@ -1,6 +1,4 @@
-import {compute, type Computable} from '@eviljs/std/compute.js'
-import type {Fn, FnArgs} from '@eviljs/std/fn.js'
-import {piping} from '@eviljs/std/pipe.js'
+import {compute, piping, type Computable, type Fn, type FnArgs} from '@eviljs/std/fn.js'
 import {asString, isObject} from '@eviljs/std/type.js'
 import {usingRequestJson} from './request-json.js'
 import {RequestMethod, creatingRequest} from './request.js'

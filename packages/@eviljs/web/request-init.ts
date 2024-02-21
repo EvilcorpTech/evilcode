@@ -7,14 +7,14 @@ import {cloneRequest, mergeRequest, mergeRequestHeaders, type RequestMethodEnum}
 /**
 * @throws TypeError
 **/
-export function usingRequestMethod(method: RequestMethodEnum | StringAutocompleted): Io<Request, Request> {
+export function usingRequestMethod(method: undefined | RequestMethodEnum | StringAutocompleted): Io<Request, Request> {
     return (request: Request) => useRequestMethod(request, method)
 }
 
 /**
 * @throws TypeError
 **/
-export function useRequestMethod(request: Request, method: RequestMethodEnum | StringAutocompleted): Request {
+export function useRequestMethod(request: Request, method: undefined | RequestMethodEnum | StringAutocompleted): Request {
     return mergeRequest(request, {method})
 }
 
@@ -41,14 +41,14 @@ export function useRequestHeaders(request: Request, ...headersList: Array<Header
 /**
 * @throws TypeError
 **/
-export function usingRequestBody(body: NonNullable<RequestInit['body']>): Io<Request, Request> {
+export function usingRequestBody(body: undefined | BodyInit): Io<Request, Request> {
     return (request: Request) => useRequestBody(request, body)
 }
 
 /**
 * @throws TypeError
 **/
-export function useRequestBody(request: Request, body: NonNullable<RequestInit['body']>): Request {
+export function useRequestBody(request: Request, body: undefined | BodyInit): Request {
     return cloneRequest(request, {body})
 }
 
@@ -57,14 +57,14 @@ export function useRequestBody(request: Request, body: NonNullable<RequestInit['
 /**
 * @throws
 **/
-export function usingRequestCache(cache: NonNullable<RequestInit['cache']>): Io<Request, Request> {
+export function usingRequestCache(cache: undefined | RequestCache): Io<Request, Request> {
     return (request: Request) => useRequestCache(request, cache)
 }
 
 /**
 * @throws
 **/
-export function useRequestCache(request: Request, cache: NonNullable<RequestInit['cache']>): Request {
+export function useRequestCache(request: Request, cache: undefined | RequestCache): Request {
     return cloneRequest(request, {cache})
 }
 
@@ -73,14 +73,14 @@ export function useRequestCache(request: Request, cache: NonNullable<RequestInit
 /**
 * @throws
 **/
-export function usingRequestSignal(signal: NonNullable<RequestInit['signal']>): Io<Request, Request> {
+export function usingRequestSignal(signal: undefined | AbortSignal): Io<Request, Request> {
     return (request: Request) => useRequestSignal(request, signal)
 }
 
 /**
 * @throws
 **/
-export function useRequestSignal(request: Request, signal: NonNullable<RequestInit['signal']>): Request {
+export function useRequestSignal(request: Request, signal: undefined | AbortSignal): Request {
     return cloneRequest(request, {signal})
 }
 
@@ -89,22 +89,24 @@ export function useRequestSignal(request: Request, signal: NonNullable<RequestIn
 /**
 * @throws
 **/
-export function usingRequestPriority(priority: NonNullable<RequestInit['priority']>): Io<Request, Request> {
+export function usingRequestPriority(priority: undefined | RequestPriority): Io<Request, Request> {
     return (request: Request) => useRequestPriority(request, priority)
 }
 
 /**
 * @throws
 **/
-export function useRequestPriority(request: Request, priority: NonNullable<RequestInit['priority']>): Request {
+export function useRequestPriority(request: Request, priority: undefined | RequestPriority): Request {
     return cloneRequest(request, {priority})
 }
 
 // Types ///////////////////////////////////////////////////////////////////////
 
+export type RequestPriority = 'auto' | 'low' | 'high'
+
 // FIXME: remove this when TypeScript lib.dom supports it.
 declare global {
     interface RequestInit {
-        priority?: undefined | 'auto' | 'low' | 'high'
+        priority?: undefined | RequestPriority
     }
 }

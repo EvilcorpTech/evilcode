@@ -1,4 +1,4 @@
-import {piping, type Io, type PipeContinuation} from '@eviljs/std/pipe.js'
+import {piping, type Io, type PipeContinuation} from '@eviljs/std/fn.js'
 import {asObject} from '@eviljs/std/type.js'
 import {usingRequestMethod} from './request-init.js'
 import {usingRequestJson} from './request-json.js'

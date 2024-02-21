@@ -1,5 +1,4 @@
-import type {Fn} from '@eviljs/std/fn.js'
-import {mapSome} from '@eviljs/std/monad.js'
+import {mapSome, type Fn} from '@eviljs/std/fn.js'
 import type {StringAutocompleted} from '@eviljs/std/type.js'
 import type {JsonType, TextType} from './mimetype.js'
 

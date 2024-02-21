@@ -27,9 +27,9 @@ export function asRequestOptionsJson(body: unknown, otherHeaders?: undefined | H
             ? mergeRequestHeaders(jsonHeaders, otherHeaders)
             : jsonHeaders
         ,
-        body: body
-            ? JSON.stringify(body)
-            : null
+        ...body
+            ? {body: JSON.stringify(body)}
+            : undefined
         ,
     }
 }

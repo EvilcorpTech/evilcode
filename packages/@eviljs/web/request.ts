@@ -1,6 +1,6 @@
-import {piping, type Io, type PipeContinuation} from '@eviljs/std/pipe.js'
+import {piping, type Io, type PipeContinuation} from '@eviljs/std/fn.js'
 import {throwInvalidArgument} from '@eviljs/std/throw.js'
-import {isArray, isNone, isObject, type StringAutocompleted, type ValueOf} from '@eviljs/std/type.js'
+import {isArray, isNone, isObject, type ObjectPartial, type StringAutocompleted, type ValueOf} from '@eviljs/std/type.js'
 import {FormDataType, FormUrlType, JsonType, TextType} from './mimetype.js'
 import {isUrlAbsolute, joinUrlPaths} from './url.js'
 
@@ -34,7 +34,7 @@ export function createRequest(
 ): Request {
     const {baseUrl, ...requestOptions} = options ?? {}
     const url = joinRequestBasePath(baseUrl, pathOrUrl)
-    const request = new Request(url, {...requestOptions, method})
+    const request = new Request(url, {...requestOptions as RequestInit, method})
 
     return request
 }
@@ -44,14 +44,14 @@ export function createRequest(
 /**
 * @throws TypeError
 **/
-export function usingRequestOptions(options: RequestInit): Io<Request, Request> {
+export function usingRequestOptions(options: ObjectPartial<RequestInit>): Io<Request, Request> {
     return (request: Request) => useRequestOptions(request, options)
 }
 
 /**
 * @throws TypeError
 **/
-export function useRequestOptions(request: Request, options: RequestInit): Request {
+export function useRequestOptions(request: Request, options: ObjectPartial<RequestInit>): Request {
     return mergeRequest(request, options)
 }
 
@@ -60,7 +60,7 @@ export function useRequestOptions(request: Request, options: RequestInit): Reque
 /**
 * @throws TypeError
 **/
-export function mergeRequest(request: Request, options: RequestInit): Request {
+export function mergeRequest(request: Request, options: ObjectPartial<RequestInit>): Request {
     const {headers, ...otherOptions} = options
 
     return cloneRequest(request, {
@@ -75,8 +75,8 @@ export function mergeRequest(request: Request, options: RequestInit): Request {
 /**
 * @throws TypeError
 **/
-export function cloneRequest(request: Request, options?: undefined | RequestInit): Request {
-    return new Request(request, options)
+export function cloneRequest(request: Request, options?: undefined | ObjectPartial<RequestInit>): Request {
+    return new Request(request, options as RequestInit)
 }
 
 /**
@@ -137,7 +137,7 @@ export function mergeRequestHeaders(...headersList: Array<HeadersInit>) {
 
 // Types ///////////////////////////////////////////////////////////////////////
 
-export interface RequestOptions extends RequestInit {
+export interface RequestOptions extends ObjectPartial<RequestInit> {
     baseUrl?: undefined | string
 }
 
