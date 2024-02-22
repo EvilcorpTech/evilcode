@@ -1,5 +1,5 @@
 import type {AccessorSync} from '@eviljs/std/accessor.js'
-import {compute} from '@eviljs/std/fn.js'
+import {call, compute} from '@eviljs/std/fn.js'
 import type {ReactiveObservable} from '@eviljs/std/reactive.js'
 import {useCallback, useEffect, useLayoutEffect, useState} from 'react'
 import {useRenderSignal, type RenderSignal} from './render.js'
@@ -48,10 +48,10 @@ export function useReactiveObservables<V>(reactiveObservables: Array<ReactiveObs
     // We use useLayoutEffect (instead of useEffect) to watch the observables
     // as soon as possible, avoiding missed notifications.
     useLayoutEffect(() => {
-        const watchers = reactiveObservables.map(it => it.watch(notifySignal))
+        const cleaningTasks = reactiveObservables.map(it => it.watch(notifySignal))
 
         function onClean() {
-            watchers.forEach(stopWatching => stopWatching())
+            cleaningTasks.forEach(call)
         }
 
         return onClean

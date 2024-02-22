@@ -48,7 +48,7 @@ export function setupBus(options?: undefined | BusContextOptions): BusBound {
         useBus() {
             return useBus(options)
         },
-        useBusEvent(event: BusEvent, observer: undefined | BusEventObserver) {
+        useBusEvent<P = unknown>(event: BusEvent, observer: undefined | BusEventObserver<P>) {
             useBusEvent(event, observer, options)
         },
     }
