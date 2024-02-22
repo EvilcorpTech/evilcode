@@ -5,9 +5,11 @@
     "files": [
         "/LICENSE.txt",
         "/**/*.js",
-        "/**/*.ts"
+        "/**/*.d.ts",
+        "/**/*.cjs",
+        "/**/*.d.cts"
     ],
-    "main": "./index.js",
+    "main": "./index.cjs",
     "scripts": {
         "build": "tsc --listEmittedFiles",
         "preversion": "npm run build",
