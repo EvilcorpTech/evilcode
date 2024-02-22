@@ -162,9 +162,7 @@ export type BusEvent = string
 export type BusEventPattern = string
 export type BusEventObservers = ReactiveAccessor<Record<BusEventPattern, Array<BusEventObserver>>>
 
-export interface BusEventObserver<P = any> {
-    (event: BusEventPattern, matches: RegExpMatchArray, payload: P): void
-}
+export type BusEventObserver<P = any> = (event: BusEventPattern, matches: RegExpMatchArray, payload: P) => void
 
 export type BusEventPolymorphicArgs =
     | [event: BusEvent, payload?: unknown]
