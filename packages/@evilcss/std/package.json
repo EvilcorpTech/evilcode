@@ -5,7 +5,7 @@
     "files": [
         "/LICENSE.txt",
         "/**/*.css",
-        "/**/*.woff"
+        "/**/*.woff*"
     ],
     "author": "Daniele Orlando",
     "license": "BSD-2-Clause",
