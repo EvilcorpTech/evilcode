@@ -13,7 +13,7 @@ export function createBus() {
             return emitBusEvent(self.observers, ...args)
         },
 
-        observe(event, observer) {
+        observe<P = unknown>(event: BusEvent, observer: BusEventObserver<P>) {
             return observeBusEvent(self.observers, event, observer)
         },
 
@@ -74,7 +74,7 @@ export function emitBusEvent(reactiveObservers: BusEventObservers, ...polymorphi
     })
 }
 
-export function observeBusEvent(reactiveObservers: BusEventObservers, event: BusEventPattern, observer: BusEventObserver): Task {
+export function observeBusEvent(reactiveObservers: BusEventObservers, event: BusEventPattern, observer: BusEventObserver<any>): Task {
     const observers = reactiveObservers.read()
 
     reactiveObservers.write({
@@ -92,7 +92,7 @@ export function observeBusEvent(reactiveObservers: BusEventObservers, event: Bus
     return unobserve
 }
 
-export function unobserveBusEvent(reactiveObservers: BusEventObservers, event: BusEventPattern, observer: BusEventObserver): void {
+export function unobserveBusEvent(reactiveObservers: BusEventObservers, event: BusEventPattern, observer: BusEventObserver<any>): void {
     const observers = reactiveObservers.read()
     const eventObservers = observers[event]
 
@@ -154,15 +154,14 @@ export interface Bus {
     emit(event: BusEvent, payload?: any): void
     emit(args: [event: BusEvent, payload?: any]): void
     emit(...args: BusEventPolymorphicArgs): void
-    observe(event: BusEventPattern, observer: BusEventObserver): Task
-    unobserve(event: BusEventPattern, observer: BusEventObserver): void
+    observe<P = unknown>(event: BusEventPattern, observer: BusEventObserver<P>): Task
+    unobserve(event: BusEventPattern, observer: BusEventObserver<any>): void
 }
 
 export type BusEvent = string
 export type BusEventPattern = string
+export type BusEventObserver<P = unknown> = (event: BusEventPattern, matches: RegExpMatchArray, payload: P) => void
 export type BusEventObservers = ReactiveAccessor<Record<BusEventPattern, Array<BusEventObserver>>>
-
-export type BusEventObserver<P = any> = (event: BusEventPattern, matches: RegExpMatchArray, payload: P) => void
 
 export type BusEventPolymorphicArgs =
     | [event: BusEvent, payload?: unknown]
