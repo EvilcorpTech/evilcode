@@ -4,7 +4,7 @@
     "type": "module",
     "files": [
         "/LICENSE.txt",
-        "/**/*.ts"
+        "/**/*.d.ts"
     ],
     "types": "./index.d.ts",
     "author": "Daniele Orlando",
