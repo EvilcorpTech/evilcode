@@ -1,7 +1,7 @@
 import {compute} from '@eviljs/std/fn.js'
 import {createHistory} from '@eviljs/std/undoredo.js'
 import {useCallback, useMemo} from 'react'
-import {useRender} from './lifecycle.js'
+import {useRender} from './render.js'
 import type {StateSetterArg} from './state.js'
 
 export function useUndoRedo<S>(initState: S | (() => S)) {

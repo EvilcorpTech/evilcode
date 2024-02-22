@@ -2,7 +2,7 @@ import type {AccessorSync} from '@eviljs/std/accessor.js'
 import {compute} from '@eviljs/std/fn.js'
 import type {ReactiveObservable} from '@eviljs/std/reactive.js'
 import {useCallback, useEffect, useLayoutEffect, useState} from 'react'
-import {useRenderSignal, type RenderSignal} from './lifecycle.js'
+import {useRenderSignal, type RenderSignal} from './render.js'
 import type {StateManager, StateSetterArg} from './state.js'
 
 export function useReactiveStore<V>(

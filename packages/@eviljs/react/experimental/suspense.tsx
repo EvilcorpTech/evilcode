@@ -2,7 +2,7 @@ import {compute, type TaskAsync} from '@eviljs/std/fn.js'
 import {createRef, type Ref} from '@eviljs/std/ref.js'
 import {Suspense} from 'react'
 import type {AwaitedProps} from '../awaited.js'
-import {HookProvider} from '../hook.js'
+import {HookProvider} from '../hook-provider.js'
 
 export const SuspensePromiseMap = new WeakMap<SuspensePromiseMapKey, SuspenseStateRef>()
 export const SuspenseTaskMap = new WeakMap<SuspenseTaskMapKey, SuspenseStateRef>()

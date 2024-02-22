@@ -4,7 +4,7 @@ import {cloneShallow} from '@eviljs/std/struct.js'
 import {isArray, isObject} from '@eviljs/std/type.js'
 import {useCallback, useContext, useLayoutEffect, useMemo, useRef} from 'react'
 import {defineContext} from '../ctx.js'
-import {useRender} from '../lifecycle.js'
+import {useRender} from '../render.js'
 import type {StateManager, StateSetterArg} from '../state.js'
 import type {StoreSelector} from '../store.js'
 
