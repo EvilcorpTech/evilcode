@@ -1,3 +1,4 @@
+import {call} from './fn.js'
 import {createReactiveAccessor} from './reactive-accessor.js'
 import type {ReactiveComputed, ReactiveInternals, ReactiveObservable, ReactiveOptions} from './reactive.js'
 import type {Ref} from './ref.js'
@@ -44,7 +45,7 @@ export function createComputedRef<A extends Array<ReactiveRef<any>>, R>(
     )
 
     function clean() {
-        cleanUpList.forEach(clean => clean())
+        cleanUpList.forEach(call)
     }
 
     return {

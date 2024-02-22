@@ -1,5 +1,5 @@
 import type {Task} from './fn-type.js'
-import type {CancelableProtocol} from './fn.js'
+import {call, type CancelableProtocol} from './fn.js'
 
 export class Future {
     static from<P>(promise: P): Future<Awaited<P>> {
@@ -101,7 +101,7 @@ export function asFuture<V>(value: V | PromiseLike<V>): Future<Awaited<V>> {
         cancel() {
             state.canceled = true
 
-            state.onCancelObservers.forEach(it => it())
+            state.onCancelObservers.forEach(call)
         },
 
         onCancel(onCancel) {

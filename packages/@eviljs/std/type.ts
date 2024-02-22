@@ -289,11 +289,11 @@ export type ObjectPartialDeep<T extends object> = {
 
 export type Unsafe<T> =
     T extends None | boolean | number | string | symbol
-        ? None | T
+        ? None | Partial<T>
     : T extends Array<infer I>
-        ? None | Array<Unsafe<I>>
+        ? None | Partial<Array<Unsafe<I>>>
     : T extends object
-        ? None | {[key in keyof T]?: None | Unsafe<T[key]>}
+        ? None | Partial<{[key in keyof T]?: None | Unsafe<T[key]>}>
     : unknown
 
 export type UnsafeObject<T extends object> = NonNullable<Unsafe<T>>
