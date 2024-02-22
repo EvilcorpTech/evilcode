@@ -67,6 +67,7 @@ export interface BusBound {
         (): Bus
     }
     useBusEvent: {
+        <P = unknown>(event: BusEvent, observer: BusEventObserver<P>): void
         <P = unknown>(event: BusEvent, observer: undefined | BusEventObserver<P>): void
     }
 }
