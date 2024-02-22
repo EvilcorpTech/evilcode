@@ -7,8 +7,7 @@
         "/LICENSE.txt",
         "/**/*.css",
         "/**/*.js",
-        "/**/*.ts",
-        "/**/*.tsx"
+        "/**/*.d.ts"
     ],
     "scripts": {
         "build": "babel . --out-dir . --extensions '.ts,.tsx' --ignore '**/*.d.ts','node_modules/**/*' && tsc --listEmittedFiles",
