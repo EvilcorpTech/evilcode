@@ -2,8 +2,9 @@ import {identity, type Io} from '@eviljs/std/fn.js'
 import type {ReactiveAccessor} from '@eviljs/std/reactive-accessor.js'
 import type {ReducerAction, ReducerState} from '@eviljs/std/redux.js'
 import {useSelectedAccessorValue} from './reactive-accessor.js'
-import {StoreProvider, useStoreContext, type StoreContextOptions, type StoreManager} from './store-provider.js'
+import {StoreProvider, useStoreContext, type StoreContextOptions, type StoreManager, type StoreProviderProps} from './store-provider.js'
 import type {StoreDefinitionV2 as StoreDefinition, StoreDispatchV2 as StoreDispatch} from './store-v2.js'
+import type {ObjectPartial} from '@eviljs/std/type.js'
 
 export * from '@eviljs/std/redux.js'
 export * from './store-provider.js'
@@ -121,11 +122,6 @@ export function setupStore<S extends ReducerState, A extends ReducerAction = Red
 }
 
 // Types ///////////////////////////////////////////////////////////////////////
-
-export interface StoreProviderProps<S extends ReducerState, A extends ReducerAction> extends StoreDefinition<S, A> {
-    children: undefined | React.ReactNode
-    context?: undefined | React.Context<undefined | StoreManager<S, A>>
-}
 
 export type StoreAccessor<
     V,

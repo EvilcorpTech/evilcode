@@ -2,7 +2,9 @@ import {createReactiveAccessor, type ReactiveAccessor} from '@eviljs/std/reactiv
 import {actionFromPolymorphicArgs, type ReducerAction, type ReducerPolymorphicAction, type ReducerState} from '@eviljs/std/redux.js'
 import {useContext, useMemo} from 'react'
 import {defineContext} from './ctx.js'
-import type {StoreDefinitionV2, StoreDispatchV2} from './store-v2.js'
+import type {StoreDefinitionV2 as StoreDefinition, StoreDispatchV2 as StoreDispatch} from './store-v2.js'
+
+export type {StoreDefinitionV2 as StoreDefinition, StoreDispatchV2 as StoreDispatch} from './store-v2.js'
 
 export const StoreContext = defineContext<StoreManager>('StoreContext')
 
@@ -41,7 +43,7 @@ export function useStoreContext<S extends ReducerState, A extends ReducerAction 
 export function createStore<
     S extends ReducerState,
     A extends ReducerAction,
->(options: StoreDefinitionV2<S, A>): StoreManager<S, A> {
+>(options: StoreDefinition<S, A>): StoreManager<S, A> {
     const {createState, reduce, onDispatch} = options
 
     const state = createReactiveAccessor(createState())
@@ -65,7 +67,7 @@ export function createStore<
 // Types ///////////////////////////////////////////////////////////////////////
 
 export interface StoreProviderProps<S extends ReducerState, A extends ReducerAction> extends
-    StoreDefinitionV2<S, A>,
+    StoreDefinition<S, A>,
     StoreContextOptions<S, A>
 {
     children: undefined | React.ReactNode
@@ -74,7 +76,7 @@ export interface StoreProviderProps<S extends ReducerState, A extends ReducerAct
 export type StoreManager<
     S extends ReducerState = ReducerState,
     A extends ReducerAction = ReducerAction,
-> = [ReactiveAccessor<S>, StoreDispatchV2<S, A>]
+> = [ReactiveAccessor<S>, StoreDispatch<S, A>]
 
 export interface StoreContextOptions<S extends ReducerState, A extends ReducerAction = ReducerAction> {
     store?: undefined | StoreManager<S, A>
