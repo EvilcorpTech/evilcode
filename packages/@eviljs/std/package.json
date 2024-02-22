@@ -6,7 +6,7 @@
     "files": [
         "/LICENSE.txt",
         "/**/*.js",
-        "/**/*.ts"
+        "/**/*.d.ts"
     ],
     "scripts": {
         "build": "tsc --listEmittedFiles",
