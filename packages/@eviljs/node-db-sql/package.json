@@ -5,7 +5,7 @@
     "files": [
         "/LICENSE.txt",
         "/**/*.js",
-        "/**/*.ts"
+        "/**/*.d.ts"
     ],
     "main": "./index.js",
     "scripts": {
