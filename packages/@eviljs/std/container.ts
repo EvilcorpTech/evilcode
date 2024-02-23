@@ -20,12 +20,12 @@ export function createContainer<M extends ContainerServicesMap>(
     factories: ContainerFactoriesOf<M>,
     state?: undefined,
 ): Container<M, undefined>
-export function createContainer<M extends ContainerServicesMap, S = unknown>(
-    factories: ContainerFactoriesOf<M>,
+export function createContainer<M extends ContainerServicesMap, S = undefined>(
+    factories: ContainerFactoriesOf<M, S>,
     state: S,
 ): Container<M, S>
-export function createContainer<M extends ContainerServicesMap, S = unknown>(
-    factories: ContainerFactoriesOf<M>,
+export function createContainer<M extends ContainerServicesMap, S = undefined>(
+    factories: ContainerFactoriesOf<M, undefined | S>,
     state?: undefined | S,
 ): Container<M, undefined | S> {
     const self: Container<M, undefined | S> = {
@@ -121,7 +121,7 @@ export interface ContainerServiceOptions {
     type?: undefined | 'prototype'
 }
 
-export type Container<M extends ContainerServicesMap = ContainerServicesMap, S = unknown> =
+export type Container<M extends ContainerServicesMap = ContainerServicesMap, S = undefined> =
     & M
     & ContainerStateProps<S>
     & {
@@ -140,6 +140,6 @@ export interface ContainerStateProps<S> {
 export type ContainerServiceId = PropertyKey
 export type ContainerServicesMap = object
 
-export type ContainerFactoriesOf<M extends ContainerServicesMap, S = unknown> = {
+export type ContainerFactoriesOf<M extends ContainerServicesMap, S = undefined> = {
     [key in keyof M]: (container: M & ContainerStateProps<S>) => M[key]
 }
