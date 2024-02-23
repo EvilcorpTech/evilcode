@@ -1,127 +1,185 @@
 import {identity, type Io} from '@eviljs/std/fn.js'
 import type {ReactiveAccessor} from '@eviljs/std/reactive-accessor.js'
+import {createReactiveAccessor} from '@eviljs/std/reactive-accessor.js'
 import type {ReducerAction, ReducerState} from '@eviljs/std/redux.js'
+import {actionFromPolymorphicArgs, type ReducerPolymorphicAction} from '@eviljs/std/redux.js'
+import {useContext, useMemo} from 'react'
+import {defineContext} from './ctx.js'
 import {useSelectedAccessorValue} from './reactive-accessor.js'
-import {StoreProvider, useStoreContext, type StoreContextOptions, type StoreManager, type StoreProviderProps} from './store-provider.js'
 import type {StoreDefinitionV2 as StoreDefinition, StoreDispatchV2 as StoreDispatch} from './store-v2.js'
-import type {ObjectPartial} from '@eviljs/std/type.js'
 
 export * from '@eviljs/std/redux.js'
-export * from './store-provider.js'
 export type {StoreDefinitionV2 as StoreDefinition, StoreDispatchV2 as StoreDispatch} from './store-v2.js'
 
-/*
-* EXAMPLE
-*
-* const [books, dispatch] = useStore(state => state.books)
-* const [selectedFood, dispatch] = useStore(state => state.food[selectedFoodIndex])
-*/
+export function setupStore<S extends ReducerState, A extends ReducerAction = ReducerAction>(
+    options: StoreBoundCase1Options<S, A>,
+): StoreBoundCase1Exports<S, A>
+export function setupStore<S extends ReducerState, A extends ReducerAction = ReducerAction>(
+    options?: undefined | StoreBoundCase2Options<S, A>,
+): StoreBoundCase2Exports<S, A>
+export function setupStore<S extends ReducerState, A extends ReducerAction = ReducerAction>(
+    options?: undefined | StoreBoundCase1Options<S, A> | StoreBoundCase2Options<S, A>,
+): StoreBoundCase1Exports<S, A> | StoreBoundCase2Exports<S, A> {
+    if (options && 'store' in options) {
+        return setupStoreUsingSingleton(options)
+    }
+    return setupStoreUsingContext(options)
+}
+
+export function setupStoreUsingSingleton<S extends ReducerState, A extends ReducerAction = ReducerAction>(
+    options: StoreBoundCase1Options<S, A>,
+): StoreBoundCase1Exports<S, A> {
+    const {store} = options
+
+    return {
+        useStore() {
+            return useStore(store)
+        },
+        useStoreState(selector: any) {
+            return useStoreState(store, selector)
+        },
+        useStoreRead() {
+            return useStoreRead(store)
+        },
+        useStoreDispatch() {
+            return useStoreDispatch(store)
+        },
+    }
+}
+
+export function setupStoreUsingContext<S extends ReducerState, A extends ReducerAction = ReducerAction>(
+    options?: undefined | StoreBoundCase2Options<S, A>,
+): StoreBoundCase2Exports<S, A> {
+    const Context = options?.context ?? defineContext<StoreManager<S, A>>(options?.contextName ?? 'StoreContext')
+
+    return {
+        StoreContext: Context,
+        StoreProvider(props) {
+            return (
+                <Context.Provider value={useStoreProvider(props)}>
+                    {props.children}
+                </Context.Provider>
+            )
+        },
+        useStoreContext() {
+            return useContext(Context)
+        },
+        useStoreProvider: useStoreProvider,
+        useStore() {
+            return useStore(useContext(Context)!)
+        },
+        useStoreState(selector: any) {
+            return useStoreState(useContext(Context)!, selector)
+        },
+        useStoreRead() {
+            return useStoreRead(useContext(Context)!)
+        },
+        useStoreDispatch() {
+            return useStoreDispatch(useContext(Context)!)
+        },
+    }
+}
+
+export function useStoreProvider<S extends ReducerState, A extends ReducerAction>(
+    options: StoreDefinition<S, A>,
+): StoreManager<S, A> {
+    const store = useMemo(() => {
+        return createStore(options)
+    }, [])
+
+    return store
+}
+
+export function createStore<
+    S extends ReducerState,
+    A extends ReducerAction,
+>(options: StoreDefinition<S, A>): StoreManager<S, A> {
+    const {createState, reduce, onDispatch} = options
+
+    const state = createReactiveAccessor(createState())
+
+    function dispatch(...polymorphicArgs: ReducerPolymorphicAction): S {
+        const [id, ...args] = actionFromPolymorphicArgs(...polymorphicArgs)
+
+        const oldState = state.read()
+        const newState = reduce(oldState, ...[id, ...args] as A)
+
+        onDispatch?.(id, args, newState, oldState)
+
+        state.write(newState)
+
+        return newState
+    }
+
+    return [state, dispatch]
+}
+
 export function useStore<S extends ReducerState, A extends ReducerAction = ReducerAction>(
+    store: StoreManager<S, A>,
     selector?: undefined,
-    options?: undefined | StoreContextOptions<S, A>,
 ): StoreAccessor<S, S, A>
 export function useStore<V, S extends ReducerState, A extends ReducerAction = ReducerAction>(
+    store: StoreManager<S, A>,
     selector: StoreSelector<S, V>,
-    options?: undefined | StoreContextOptions<S, A>,
 ): StoreAccessor<V, S, A>
 export function useStore<V, S extends ReducerState, A extends ReducerAction = ReducerAction>(
+    store: StoreManager<S, A>,
     selector?: undefined | StoreSelector<S, V>,
-    options?: undefined | StoreContextOptions<S, A>,
 ): StoreAccessor<V | S, S, A>
 export function useStore<V, S extends ReducerState, A extends ReducerAction = ReducerAction>(
+    store: StoreManager<S, A>,
     selector?: undefined | StoreSelector<S, V>,
-    options?: undefined | StoreContextOptions<S, A>,
 ): StoreAccessor<V | S, S, A> {
-    const dispatch = useStoreDispatch<S, A>(options)
-    const readState = useStoreRead<S>(options)
-    const selectedState = useStoreState<V, S>(selector, options)
+    const dispatch = useStoreDispatch<S, A>(store)
+    const readState = useStoreRead<S>(store)
+    const selectedState = useStoreState<V, S>(store, selector)
 
     return [selectedState, dispatch, readState]
 }
 
-/*
-* EXAMPLE
-* const storeState = useStoreState()
-* const selectedFood = useStoreState(state => state.food[selectedFoodIndex])
-*/
 export function useStoreState<S extends ReducerState>(
+    store: StoreManager<S, any>,
     selectorOptional?: undefined,
-    options?: undefined | StoreContextOptions<S, any>,
 ): S
 export function useStoreState<V, S extends ReducerState>(
+    store: StoreManager<S, any>,
     selector: StoreSelector<S, V>,
-    options?: undefined | StoreContextOptions<S, any>,
 ): V
 export function useStoreState<V, S extends ReducerState>(
+    store: StoreManager<S, any>,
     selectorOptional?: undefined | StoreSelector<S, V>,
-    options?: undefined | StoreContextOptions<S, any>,
 ): S | V
 export function useStoreState<V, S extends ReducerState>(
+    store: StoreManager<S, any>,
     selectorOptional?: undefined | StoreSelector<S, V>,
-    options?: undefined | StoreContextOptions<S, any>,
 ): S | V {
-    const [state] = useStoreContext<S>(options)!
+    const [state] = store
     const selector: Io<S, V | S> = selectorOptional ?? identity
     const selectedState = useSelectedAccessorValue(state, selector)
 
     return selectedState
 }
 
-export function useStoreDispatch<S extends ReducerState, A extends ReducerAction = ReducerAction>(
-    options?: undefined | StoreContextOptions<S, A>,
-): StoreDispatch<S, A> {
-    const [state, dispatch] = useStoreContext<S, A>(options)!
-
-    return dispatch
-}
-
-export function useStoreRead<S extends ReducerState>(options?: undefined | StoreContextOptions<S, any>): StoreReader<S> {
-    const [state] = useStoreContext<S>(options)!
+export function useStoreRead<S extends ReducerState>(store: StoreManager<S, any>): StoreReader<S> {
+    const [state] = store
 
     return state.read
 }
 
-/*
-* EXAMPLE
-*
-* interface State {name: string, age: number}
-* type Action = ['hello', string] | ['sum', number, number]
-*
-* const context = defineContext<StoreManager<State, Action>>('ExampleContextName')
-* const {useStore, useStoreState, useStoreDispatch} = createStore(context)
-*/
-export function setupStore<S extends ReducerState, A extends ReducerAction = ReducerAction>(
-    options?: undefined | StoreContextOptions<S, A>
-): StoreBound<S, A> {
-    return {
-        StoreProvider(props) {
-            return (
-                <StoreProvider
-                    context={options?.context}
-                    store={options?.store}
-                    {...props}
-                />
-            )
-        },
-        useStoreContext() {
-            return useStoreContext(options)
-        },
-        useStore<V>(selector?: undefined | StoreSelector<S, V>) {
-            return useStore(selector, options)
-        },
-        useStoreState<V>(selector?: undefined | StoreSelector<S, V>) {
-            return useStoreState(selector, options)
-        },
-        useStoreRead() {
-            return useStoreRead(options)
-        },
-        useStoreDispatch() {
-            return useStoreDispatch(options)
-        },
-    }
+export function useStoreDispatch<S extends ReducerState, A extends ReducerAction = ReducerAction>(
+    store: StoreManager<S, A>,
+): StoreDispatch<S, A> {
+    const [state, dispatch] = store
+
+    return dispatch
 }
 
 // Types ///////////////////////////////////////////////////////////////////////
+
+export type StoreManager<
+    S extends ReducerState = ReducerState,
+    A extends ReducerAction = ReducerAction,
+> = [ReactiveAccessor<S>, StoreDispatch<S, A>]
 
 export type StoreAccessor<
     V,
@@ -132,13 +190,10 @@ export type StoreAccessor<
 export type StoreReader<S extends ReducerState> = ReactiveAccessor<S>['read']
 export type StoreSelector<S extends ReducerState, V> = (state: S) => V
 
-export interface StoreBound<S extends ReducerState, A extends ReducerAction = ReducerAction> {
-    StoreProvider: {
-        (props: StoreProviderProps<S, A>): JSX.Element,
-    },
-    useStoreContext: {
-        (): undefined | StoreManager<S, A>
-    }
+export interface StoreBoundCase1Options<S extends ReducerState, A extends ReducerAction = ReducerAction> {
+    store: StoreManager<S, A>
+}
+export interface StoreBoundCase1Exports<S extends ReducerState, A extends ReducerAction = ReducerAction> {
     useStore: {
         (selector?: undefined): StoreAccessor<S, S, A>
         <V>(selector: StoreSelector<S, V>): StoreAccessor<V, S, A>
@@ -148,10 +203,27 @@ export interface StoreBound<S extends ReducerState, A extends ReducerAction = Re
         <V>(selector: StoreSelector<S, V>): V
         <V>(selector?: undefined | StoreSelector<S, V>): S | V
     }
+    useStoreRead: {
+        (): ReactiveAccessor<S>['read']
+    }
     useStoreDispatch: {
         (): StoreDispatch<S, A>
     }
-    useStoreRead: {
-        (): ReactiveAccessor<S>['read']
+}
+
+export interface StoreBoundCase2Options<S extends ReducerState, A extends ReducerAction = ReducerAction> {
+    context?: undefined | React.Context<undefined | StoreManager<S, A>>
+    contextName?: undefined | string
+}
+export interface StoreBoundCase2Exports<S extends ReducerState, A extends ReducerAction = ReducerAction> extends StoreBoundCase1Exports<S, A> {
+    StoreContext: React.Context<undefined | StoreManager<S, A>>
+    StoreProvider: {
+        (props: {children: React.ReactNode} & StoreDefinition<S, A>): JSX.Element,
+    },
+    useStoreContext: {
+        (): undefined | StoreManager<S, A>
+    }
+    useStoreProvider: {
+        (options: StoreDefinition<S, A>): StoreManager<S, A>
     }
 }

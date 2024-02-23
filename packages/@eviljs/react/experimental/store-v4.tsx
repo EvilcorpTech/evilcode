@@ -23,13 +23,13 @@ export const StoreContextV4 = defineContext<Store<ReducerState>>('StoreContextV4
 */
 export function StoreProviderV4(props: StoreProviderV4Props<ReducerState>) {
     const {children, ...spec} = props
-    const contextValue = useCreateStoreV4(spec)
+    const contextValue = useStoreV4Provider(spec)
 
     return <StoreContextV4.Provider value={contextValue} children={children}/>
 }
 
-export function useCreateStoreV4<S extends ReducerState>(spec: StoreDefinition<S>): Store<S> {
-    const {createState, onChange} = spec
+export function useStoreV4Provider<S extends ReducerState>(args: StoreDefinition<S>): Store<S> {
+    const {createState, onChange} = args
     const stateRef = useRef(createState())
     const storeObservers = useMemo(() =>
         new Map<string, Array<Task>>()

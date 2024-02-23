@@ -17,16 +17,16 @@ export const StoreContextV2 = defineContext<StoreV2>('StoreContextV2')
 */
 export function StoreProviderV2(props: StoreProviderV2Props<ReducerState, ReducerAction>) {
     const {children, ...spec} = props
-    const contextValue = useCreateStoreV2(spec)
+    const contextValue = useStoreV2Provider(spec)
 
     return <StoreContextV2.Provider value={contextValue} children={children}/>
 }
 
-export function useCreateStoreV2<
+export function useStoreV2Provider<
     S extends ReducerState,
     A extends ReducerAction,
->(spec: StoreDefinitionV2<S, A>): StoreV2<S, A> {
-    const {createState, reduce, onDispatch} = spec
+>(args: StoreDefinitionV2<S, A>): StoreV2<S, A> {
+    const {createState, reduce, onDispatch} = args
     const [state, setState] = useState(createState)
     const stateRef = useRef(state)
 
