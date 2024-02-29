@@ -1,4 +1,4 @@
-import {tryOrNull} from '@eviljs/std/fn.js'
+import {tryOrValue} from '@eviljs/std/fn.js'
 import {onMounted, useEventListener, WebElement} from '@eviljs/web/element.js'
 
 /*
@@ -53,7 +53,7 @@ export function onContentChange(element: HTMLElement) {
 }
 
 export function onHashChange(element: HTMLElement) {
-    const target = tryOrNull(() => {
+    const target = tryOrValue(() => {
         if (! element.shadowRoot) {
             return
         }
@@ -65,7 +65,7 @@ export function onHashChange(element: HTMLElement) {
         const el = element.shadowRoot.querySelector<HTMLElement>(id)
 
         return el
-    })
+    }, undefined)
 
     if (! target) {
         return
