@@ -1,18 +1,11 @@
-import {isSome, type None} from './type.js'
+import type {Io, Task} from './fn-type.js'
 
-export function tryCatch<R>(fn: TryOrFn<R>, onError?: undefined, onEnd?: undefined | (() => void)): undefined | R
-export function tryCatch<R, F>(fn: TryOrFn<R>, onError: TryOnError<F>, onEnd?: undefined | (() => void)): R | F
-export function tryCatch<R, F>(fn: TryOrFn<R>, onError?: undefined | TryOnError<F>, onEnd?: undefined | (() => void)): undefined | R | F
-export function tryCatch<R, F>(
-    fn: TryOrFn<R>,
-    onError?: undefined | TryOnError<F>,
-    onEnd?: undefined | (() => void),
-): undefined | R | F {
+export function tryCatch<R, F>(fn: Task<R>, onError: Io<unknown, F>, onEnd?: undefined | Task): R | F {
     try {
         return fn()
     }
     catch (error) {
-        return onError?.(error)
+        return onError(error)
     }
     finally {
         onEnd?.()
@@ -20,40 +13,12 @@ export function tryCatch<R, F>(
 }
 
 export function tryOrValue<R, F>(
-    fn: TryOrFn<R>,
+    fn: Task<R>,
     fallback: F,
-    onError?: undefined | TryOnError<void>,
+    onError?: undefined | Io<unknown, void>,
 ): R | F {
-    return tryCatch(fn, (error) => {
+    return tryCatch(fn, error => {
         onError?.(error)
         return fallback
     })
 }
-
-export function tryOrNull<R>(
-    fn: TryOrFn<R>,
-    onError?: undefined | TryOnError<void>,
-): R | null {
-    return tryOrValue(fn, null, onError)
-}
-
-export function tryMap<I, R>(
-    items: TryMapArgItems<I>,
-    fn: TryMapArgFn<I, R>,
-    onError?: undefined | TryOnError<void>,
-): Array<R> {
-    if (! items) {
-        return []
-    }
-
-    return items.map((it, idx) =>
-        tryOrNull(() => fn(it, idx), onError)
-    ).filter(isSome)
-}
-
-// Types ///////////////////////////////////////////////////////////////////////
-
-export type TryOnError<R = void> = (error: unknown) => R
-export type TryOrFn<R> = () => R
-export type TryMapArgItems<I> = None | Array<I>
-export type TryMapArgFn<I, R> = (it: I, idx: number) => None | R

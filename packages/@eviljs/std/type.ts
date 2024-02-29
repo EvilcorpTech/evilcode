@@ -275,6 +275,8 @@ export function asStringLike(value: unknown): undefined | string {
 export type None = undefined | null
 export type Some<T> = NonNullable<T>
 
+export type VoidUndefined<T> = T extends void ? undefined : T
+
 export type ObjectComplete<T extends object> = {
     [P in keyof T]-?: Exclude<T[P], undefined>
 }
@@ -300,6 +302,7 @@ export type UnsafeObject<T extends object> = NonNullable<Unsafe<T>>
 
 export type ValueOf<T> = T[keyof T]
 
+// export type ElementOf<A extends Array<unknown>> = A[number]
 export type ElementOf<A extends Array<unknown>> =
     A extends Array<infer T>
         ? T
