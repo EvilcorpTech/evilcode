@@ -63,7 +63,12 @@ export function useBrowserStorageNumber(accessor: BrowserStorageAccessorSync<str
     return useBrowserStorageAccessor(accessor, {
         encode: value => JSON.stringify(value),
         decode: value => value
-            ? asNumber(tryCatch(() => JSON.parse(value) as unknown))
+            ? asNumber(
+                tryCatch(
+                    () => JSON.parse(value) as unknown,
+                    console.warn,
+                )
+            )
             : undefined
         ,
     })
@@ -73,7 +78,12 @@ export function useBrowserStorageBoolean(accessor: BrowserStorageAccessorSync<st
     return useBrowserStorageAccessor(accessor, {
         encode: value => JSON.stringify(value),
         decode: value => value
-            ? asBoolean(tryCatch(() => JSON.parse(value) as unknown))
+            ? asBoolean(
+                tryCatch(
+                    () => JSON.parse(value) as unknown,
+                    console.warn,
+                )
+            )
             : undefined
         ,
     })
