@@ -163,6 +163,15 @@ export function asArray<V>(value: V | Array<V>): Array<V> {
     return value as Array<V>
 }
 
+export function asArrayStrict<V extends Array<unknown>, O>(value: O | [...V]): undefined | V
+export function asArrayStrict(value: unknown): undefined | Array<unknown>
+export function asArrayStrict(value: unknown): undefined | Array<unknown> {
+    if (! isArray(value)) {
+        return
+    }
+    return value
+}
+
 export function asObject<T extends Record<PropertyKey, unknown>>(value: T): T
 export function asObject(value: unknown): undefined | Record<PropertyKey, unknown>
 export function asObject(value: unknown): undefined | Record<PropertyKey, unknown> {
