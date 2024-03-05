@@ -1,4 +1,4 @@
-import {tryCatch, type TryOnError} from '@eviljs/std/fn.js'
+import {noop, tryCatch, type Io} from '@eviljs/std/fn.js'
 import {isObject} from '@eviljs/std/type.js'
 import {useEffect, useRef} from 'react'
 
@@ -55,7 +55,7 @@ export function useStoreStorage<S, L = S>(state: S, options: StoreStorageOptions
             const savedState = onSave?.(state) ?? state
             const payload = {[stateVersion]: savedState}
 
-            function trySaving<F>(onError?: undefined | TryOnError<F>) {
+            function trySaving(onError: Io<unknown, void>) {
                 tryCatch(
                     () => saveJsonToStorage(storage, storageKey, payload),
                     onError,
@@ -72,7 +72,7 @@ export function useStoreStorage<S, L = S>(state: S, options: StoreStorageOptions
 
                 // One more attempt.
                 storage.clear() // But clearing the storage first.
-                trySaving()
+                trySaving(noop)
             })
         }
 
