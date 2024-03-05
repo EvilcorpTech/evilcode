@@ -1,6 +1,6 @@
 import type {AccessorSync} from '@eviljs/std/accessor.js'
 import {createAccessor} from '@eviljs/std/accessor.js'
-import {tryCatch} from '@eviljs/std/fn.js'
+import {tryCatch, type Io} from '@eviljs/std/fn.js'
 import {asBoolean, asNumber, isUndefined} from '@eviljs/std/type.js'
 
 export function createBrowserStorageAccessor(
@@ -31,13 +31,19 @@ export function createBrowserStorageAccessorJson<V = unknown>(
     options?: undefined | BrowserStorageAccessorOptions,
 ): BrowserStorageAccessorSync<V> {
     const accessor = createBrowserStorageAccessor(key, options)
+    const onReadError = options?.onReadError ?? console.warn
 
     function read(): BrowserStorageValue<V> {
         const value = accessor.read()
 
-        return value
-            ? tryCatch(() => JSON.parse(value) as V)
-            : undefined
+        if (! value) {
+            return
+        }
+
+        return tryCatch(
+            () => JSON.parse(value) as V,
+            error => void onReadError(error),
+        )
     }
 
     function write<I extends BrowserStorageValue<V>>(newValue: I): I {
@@ -61,13 +67,21 @@ export function createBrowserStorageAccessorNumber(
     options?: undefined | BrowserStorageAccessorOptions,
 ): BrowserStorageAccessorSync<number> {
     const accessor = createBrowserStorageAccessor(key, options)
+    const onReadError = options?.onReadError ?? console.warn
 
     function read(): BrowserStorageValue<number> {
         const value = accessor.read()
 
-        return value
-            ? asNumber(tryCatch(() => JSON.parse(value) as unknown))
-            : undefined
+        if (! value) {
+            return
+        }
+
+        return asNumber(
+            tryCatch(
+                () => JSON.parse(value) as unknown,
+                error => void onReadError(error),
+            ),
+        )
     }
 
     function write<I extends BrowserStorageValue<number>>(newValue: I): I {
@@ -84,13 +98,21 @@ export function createBrowserStorageAccessorBoolean(
     options?: undefined | BrowserStorageAccessorOptions,
 ): BrowserStorageAccessorSync<boolean> {
     const accessor = createBrowserStorageAccessor(key, options)
+    const onReadError = options?.onReadError ?? console.warn
 
     function read(): BrowserStorageValue<boolean> {
         const value = accessor.read()
 
-        return value
-            ? asBoolean(tryCatch(() => JSON.parse(value) as unknown))
-            : undefined
+        if (! value) {
+            return
+        }
+
+        return asBoolean(
+            tryCatch(
+                () => JSON.parse(value) as unknown,
+                error => void onReadError(error),
+            ),
+        )
     }
 
     function write(newValue: BrowserStorageValue<boolean>): BrowserStorageValue<boolean> {
@@ -111,4 +133,5 @@ export interface BrowserStorageAccessorSync<V = string> extends AccessorSync<Bro
 
 export interface BrowserStorageAccessorOptions {
     storage?: undefined | Storage
+    onReadError?: undefined | Io<unknown, void>
 }
