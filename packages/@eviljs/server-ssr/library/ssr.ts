@@ -252,7 +252,7 @@ export async function useSsrTransform(ctx: KoaContext, result: undefined | SsrRe
         return result
     }
 
-    const document = tryCatch(() => parse(result.body))
+    const document = tryCatch(() => parse(result.body), console.error)
 
     if (! document) {
         warnBundlingSkipped(2)
