@@ -295,10 +295,8 @@ export function ensureEnum<E>(value: unknown, enumValues: Array<E>, ctx?: any): 
 export function ensureEnum<E>(value: unknown, enumValues: Array<E>, ctx?: any) {
     assertArray(enumValues, `${ctx} enum`)
 
-    for (const enumValue of enumValues) {
-        if (value === enumValue) {
-            return value
-        }
+    if (enumValues.includes(value as E)) {
+        return value
     }
 
     return throwAssertTypeError(`one of ${enumValues.join(' | ')}`, value, ctx)
@@ -475,7 +473,7 @@ export function ensureUndefined(value: unknown, ctx?: any): undefined {
 * @throws InvalidInput
 */
 export function ensureOptionalWith<T>(assertion: Assertion<T>, value: undefined | T, ...args: Array<unknown>) {
-    if (! isUndefined(value)) {
+    if (isDefined(value)) {
         return assertion(value, ...args)
     }
 

@@ -158,9 +158,9 @@ export function asArray<V, I>(value: V | Array<I>): [V] | Array<I>
 export function asArray<V>(value: V | Array<V>): Array<V>
 export function asArray<V>(value: V | Array<V>): Array<V> {
     if (! isArray(value)) {
-        return [value] as Array<V>
+        return [value]
     }
-    return value as Array<V>
+    return value
 }
 
 export function asArrayStrict<V extends Array<unknown>, O>(value: O | [...V]): undefined | V
