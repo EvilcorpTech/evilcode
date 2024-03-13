@@ -1,5 +1,5 @@
-import {compute, debounced, throttled, type EventTask, type Fn, type FnArgs} from '@eviljs/std/fn.js'
-import {useCallback, useLayoutEffect, useMemo, useRef, useState} from 'react'
+import {debounced, throttled, type EventTask, type Fn, type FnArgs} from '@eviljs/std/fn.js'
+import {useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState} from 'react'
 import type {StateInit, StateSetter} from './state.js'
 
 export function useCallbackDebounced<A extends FnArgs>(callback: Fn<A>, delayMs: number): EventTask<A> {
@@ -7,7 +7,7 @@ export function useCallbackDebounced<A extends FnArgs>(callback: Fn<A>, delayMs:
         return debounced(callback, delayMs)
     }, [callback, delayMs])
 
-    useLayoutEffect(() => {
+    useEffect(() => {
         function onClean() {
             callbackDebounced.cancel()
         }
@@ -23,7 +23,7 @@ export function useCallbackThrottled<A extends FnArgs>(callback: Fn<A>, delayMs:
         return throttled(callback, delayMs)
     }, [callback, delayMs])
 
-    useLayoutEffect(() => {
+    useEffect(() => {
         function onClean() {
             callbackThrottled.cancel()
         }
@@ -77,23 +77,10 @@ export function useStateThrottled<T>(initialValue: undefined | StateInit<T>, del
     return [value, setValueThrottled]
 }
 
-/*
-* Debounces changes, but it can give immediate priority to some specific values.
-*
-* EXAMPLE
-*
-* const busyStable = useValueDebounced(busyUnstable, 500, busy === true)
-*/
-export function useValueDebounced<V>(
-    input: V,
-    delay: number,
-    isDebounced?: undefined | boolean | ((state: V) => boolean),
-): V
- {
+export function useValueDebounced<V>(input: V, delay: number): V {
     const [output, setOutput] = useState(input)
-    const debounceInput = compute(isDebounced, input) ?? true
 
-    useLayoutEffect(() => {
+    useEffect(() => {
         const timeoutId = setTimeout(() => {
             setOutput(input)
         }, delay)
@@ -104,15 +91,6 @@ export function useValueDebounced<V>(
 
         return onClean
     }, [input])
-
-    if (! debounceInput && input !== output) {
-        // We derive the state, forcing a re-render.
-        setOutput(input)
-    }
-
-    if (! debounceInput) {
-        return input
-    }
 
     return output
 }
