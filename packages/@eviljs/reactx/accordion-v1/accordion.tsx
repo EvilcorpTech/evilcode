@@ -1,6 +1,5 @@
 import {Box, type BoxProps} from '@eviljs/react/box.js'
 import {classes} from '@eviljs/react/classes.js'
-import {asArray} from '@eviljs/std/type.js'
 import {flushStyles} from '@eviljs/web/animation.js'
 import {Children, isValidElement, useCallback, useEffect, useRef, useState} from 'react'
 
@@ -10,7 +9,7 @@ export function AccordionList(props: AccordionListProps) {
     const [selected, setSelected] = useState(initial ?? [])
     const [focused, setFocused] = useState<null | number>(null)
     const maxOpenSections = maxOpen ?? 1
-    const childrenList = asArray(children)
+    const childrenList = Children.toArray(children).filter(isValidElement<AccordionProps>)
 
     function onKeyDown(event: React.KeyboardEvent<HTMLElement>, idx: number) {
         switch (event.key) {
@@ -86,23 +85,17 @@ export function AccordionList(props: AccordionListProps) {
             {...otherProps}
             className={classes('AccordionList-c2ae', className)}
         >
-            {Children.map(children, (it, idx) => {
-                if (! isValidElement(it)) {
-                    return
-                }
-
+            {childrenList.map((child, idx) => {
                 const isSelected = selected.includes(idx)
 
                 return (
                     <AccordionItem
-                        {...it.props}
+                        {...child.props}
                         key={idx}
                         tag="li"
-                        className={classes('item-c3bf', it.props.className, {
-                            selected: isSelected,
-                        })}
+                        className={classes('item-c3bf', child.props.className)}
                         buttonProps={{
-                            ...it.props.buttonProps,
+                            ...child.props.buttonProps,
                             ref(ref) {
                                 itemsRef.current[idx] = ref
                             },
@@ -186,7 +179,8 @@ export function AccordionItem(props: AccordionItemProps) {
     useEffect(() => {
         if (selected) {
             onOpen()
-        } else {
+        }
+        else {
             onClose()
         }
     }, [selected, onOpen, onClose])
@@ -194,9 +188,8 @@ export function AccordionItem(props: AccordionItemProps) {
     return (
         <Box
             {...otherProps}
-            className={classes('AccordionItem-de4f std-flex std-flex-column', className, {
-                'selected': selected,
-            })}
+            className={classes('AccordionItem-de4f std-flex std-flex-column', className)}
+            data-selected={selected}
         >
             <button
                 {...buttonProps}
@@ -220,7 +213,7 @@ export function AccordionItem(props: AccordionItemProps) {
 // Types ///////////////////////////////////////////////////////////////////////
 
 export interface AccordionListProps extends Omit<React.HTMLAttributes<HTMLUListElement>, 'onChange'> {
-    children?: undefined | null | React.ReactElement<AccordionProps> | Array<React.ReactElement<AccordionProps>>
+    children?: undefined | null | React.ReactElement<AccordionProps> | Array<undefined | null | boolean | React.ReactElement<AccordionProps>>
     initial?: undefined | Array<number>
     maxOpen?: undefined | number
     onChange?: undefined | ((list: Array<number>) => void)

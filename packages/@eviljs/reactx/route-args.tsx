@@ -55,14 +55,7 @@ export function RouteArgs(props: RouteArgsProps) {
         return {}
     })()
 
-    return (
-        // We use a fragment for typing reasons.
-        <>
-            {Children.map(children, it =>
-                cloneElement(it, routedProps)
-            )}
-        </>
-    )
+    return Children.map(children, it => cloneElement(it, routedProps))
 }
 
 // Types ///////////////////////////////////////////////////////////////////////

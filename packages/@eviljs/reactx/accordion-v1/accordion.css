@@ -23,9 +23,9 @@
     z-index: 0;
     height: 0px;
     overflow-x: hidden;
-    overflow-y: hidden; /* Fixes an issue on Safari 14 not honoring max-height when overflow-y:auto. */
+    overflow-y: hidden; /* Fixes an issue on Safari 14 not honoring max-height when `overflow-y: auto`. */
     transition: all var(--Accordion-duration, var(--std-duration3));
 }
-.AccordionItem-de4f.selected .content-38aa {
+.AccordionItem-de4f[data-selected="true"] .content-38aa {
     overflow-y: auto;
 }
