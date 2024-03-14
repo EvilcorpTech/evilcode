@@ -27,7 +27,8 @@ export function start(scheduler: Scheduler) {
 
     if (scheduler.immediate) {
         execute(scheduler)
-    } else {
+    }
+    else {
         scheduler.destructor = schedule(scheduler)
     }
 
