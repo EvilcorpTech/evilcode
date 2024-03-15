@@ -9,10 +9,12 @@ export function chain<I>(input: I, ...args: Array<Io<I, void>>): I {
     return input
 }
 
-export function piping<I>(input: I): PipeContinuation<I> {
-    function continuation(): I
-    function continuation<O>(fn: Io<I, O>): PipeContinuation<O>
-    function continuation<O>(fn?: undefined | Io<I, O>): I | PipeContinuation<O> {
+export function piping(): PipeContinuation<undefined>
+export function piping<I>(input: I): PipeContinuation<I>
+export function piping<I>(input?: I): PipeContinuation<undefined | I> {
+    function continuation(): undefined | I
+    function continuation<O>(fn: Io<undefined | I, O>): PipeContinuation<O>
+    function continuation<O>(fn?: Io<undefined | I, O>): undefined | I | PipeContinuation<O> {
         if (! fn) {
             return input
         }
@@ -22,7 +24,9 @@ export function piping<I>(input: I): PipeContinuation<I> {
     return continuation
 }
 
-export function piped<V1>(input: V1) {
+export function piped(): PipeLazy<undefined>
+export function piped<V1>(input: V1): PipeLazy<V1>
+export function piped<V1>(input?: V1): PipeLazy<undefined | V1> {
     const stack: Array<PipeLazyTask> = [identity]
 
     function compute(stack: Array<PipeLazyTask>): unknown {
