@@ -245,8 +245,8 @@ export function asInteger(value: unknown): undefined | number {
     return Math.trunc(numberOptional)
 }
 
-export function asString<const S extends string>(value: S): S
-export function asString(value: None | {}): undefined
+// export function asString<const S extends string>(value: S): S
+export function asString<const S extends string, O>(value: O | S): undefined | S
 export function asString(value: unknown): undefined | string
 export function asString(value: unknown): undefined | string {
     if (! isString(value)) {
@@ -255,16 +255,15 @@ export function asString(value: unknown): undefined | string {
     return value
 }
 
-export function asStringNotEmpty(value: string): undefined | string
-export function asStringNotEmpty(value: None | {}): undefined
-export function asStringNotEmpty(value: unknown): undefined | string
+// export function asStringNotEmpty(value: string): undefined | string
+// export function asStringNotEmpty<O>(value: O | string): undefined | string
+// export function asStringNotEmpty(value: unknown): undefined | string
 export function asStringNotEmpty(value: unknown): undefined | string {
     return asString(value)?.trim() || undefined
 }
 
-export function asStringLike<const S extends string>(value: S): S
-export function asStringLike(value: boolean | number): string
-export function asStringLike(value: None | {}): undefined
+export function asStringLike(value: boolean | number | string): string
+// export function asStringLike<O>(value: O | string): undefined | string
 export function asStringLike(value: unknown): undefined | string
 export function asStringLike(value: unknown): undefined | string {
     if (isString(value)) {
