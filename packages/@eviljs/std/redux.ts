@@ -1,18 +1,66 @@
 import {compute} from './fn-compute.js'
-import type {FnArgs} from './fn-type.js'
+import type {Fn, FnArgs} from './fn-type.js'
 import {areObjectsEqualShallow} from './object.js'
 import {isArray, type ValueOf} from './type.js'
 
 export let ReducerUid = 0
 
+export const ReduxActions = {
+    listReducers<S extends ReduxReducerState>(
+        actionsDefinitions: ReduxActionsDefinitions<S>,
+    ): Array<[ReduxReducerId, ReduxActionReducer<S>]> {
+        return Object.values(actionsDefinitions).map((it): [ReduxReducerId, ReduxActionReducer<S>] =>
+            [it.id, it.reducer]
+        )
+    },
+
+    objectFrom<D extends ReduxActionsDefinitions<ReduxReducerState, ReduxReducerId, Array<any>>>(
+        actionsDefinitions: D,
+    ): {[key in keyof D]: D[key]['action']} {
+        return Object.fromEntries(
+            Object.entries(actionsDefinitions).map(([name, definition]): [string, Fn<FnArgs, [ReduxReducerId, ...FnArgs]>] =>
+                [name, definition.action]
+            )
+        ) as any
+    },
+}
+
+export const ReduxReducer = {
+    fromActions<S extends ReduxReducerState>(
+        actionsDefinitions: ReduxActionsDefinitions<S, ReduxReducerId, Array<any>>,
+    ): ReduxCompositeReducerOfEntries<[ReduxReducerId, ReduxActionReducer<S, FnArgs>][]> {
+        return ReduxReducer.fromReducers(ReduxActions.listReducers(actionsDefinitions))
+    },
+
+    fromReducers<T extends Array<[ReduxReducerId, ReduxActionReducer<any, any>]>>(
+        reducersList: T,
+    ): ReduxCompositeReducerOfEntries<T> {
+        function reduce(state: ReduxReducerState, actionId: ReduxReducerId, ...args: ReduxReducerArgs): ReduxReducerState {
+            for (const it of reducersList) {
+                const [reducerId, reducer] = it
+
+                if (reducerId !== actionId) {
+                    continue
+                }
+
+                return reducer(state, ...args)
+            }
+
+            return state
+        }
+
+        return reduce as unknown as ReduxCompositeReducerOfEntries<T>
+    },
+}
+
 export function withId(name: string) {
     return `#${++ReducerUid} ${name}`
 }
 
-export function defineReducerAction<S extends ReducerState, K extends ReducerId, A extends ReducerArgs>(
+export function defineReduxAction<S extends ReduxReducerState, K extends ReduxReducerId, A extends ReduxReducerArgs>(
     id: K,
     reducer: (state: S, ...args: A) => S,
-): ReducerActionDefinition<S, K, A>
+): ReduxActionDefinition<S, K, A>
 {
     return {
         id,
@@ -23,36 +71,7 @@ export function defineReducerAction<S extends ReducerState, K extends ReducerId,
     }
 }
 
-export function composeReducersEntries<
-    T extends Array<[ReducerId, ReducerTarget<any, any>]>,
->(reducers: T): CompositeReducerOfEntries<T> {
-    function reduce(state: ReducerState, actionId: ReducerId, ...args: ReducerArgs): ReducerState {
-        for (const it of reducers) {
-            const [reducerId, reducer] = it
-
-            if (reducerId !== actionId) {
-                continue
-            }
-
-            return reducer(state, ...args)
-        }
-
-        return state
-    }
-
-    return reduce as unknown as CompositeReducerOfEntries<T>
-}
-
-export function reducersEntriesFromActions<S extends ReducerState>(
-    actions: Record<
-        PropertyKey,
-        ReducerActionDefinition<S, ReducerId, Array<any>>
-    >,
-): Array<[ReducerId, ReducerTarget<S>]> {
-    return Object.values(actions).map((it): [ReducerId, ReducerTarget<S>] => [it.id, it.reducer])
-}
-
-export function patchState<S extends ReducerState>(state: S, statePatch: StoreStatePatch<S>): S {
+export function patchState<S extends ReduxReducerState>(state: S, statePatch: ReduxStatePatch<S>): S {
     const nextState = compute(statePatch, state)
     const mergedState = {...state, ...nextState}
 
@@ -61,72 +80,78 @@ export function patchState<S extends ReducerState>(state: S, statePatch: StoreSt
         : mergedState
 }
 
-export function actionFromPolymorphicArgs(...args: ReducerPolymorphicAction): ReducerAction {
+export function asReduxEvent(...args: ReduxEventPolymorphic): ReduxEvent {
     return isArray(args[0])
-        ? args[0] as ReducerAction // args is: [[id, ...args]]
-        : args as ReducerAction // args is: [id, ...args]
+        ? args[0] as ReduxEvent // args is: [[id, ...args]]
+        : args as ReduxEvent // args is: [id, ...args]
 }
 
 // Types ///////////////////////////////////////////////////////////////////////
 
-export type ReducerState = object
-export type ReducerId = number | string
-export type ReducerArgs = FnArgs
+export type ReduxReducerState = object
+export type ReduxReducerId = number | string
+export type ReduxReducerArgs = FnArgs
 
-export interface ReducerActionDefinition<
-    S extends ReducerState = ReducerState,
-    K extends ReducerId = ReducerId,
-    A extends ReducerArgs = ReducerArgs,
-> {
-    id: K
-    action(...args: A): ReducerAction<K, A>
-    reducer: ReducerTarget<S, A>
-}
-
-export type ReducerAction<
-    K extends ReducerId = ReducerId,
-    A extends ReducerArgs = ReducerArgs,
+export type ReduxEvent<
+    K extends ReduxReducerId = ReduxReducerId,
+    A extends ReduxReducerArgs = ReduxReducerArgs,
 > = [id: K, ...args: A]
 
-export type ReducerPolymorphicAction = ReducerAction | [ReducerAction]
+export type ReduxEventPolymorphic = ReduxEvent | [ReduxEvent]
 
-export interface Reducer<
-    S extends ReducerState = ReducerState,
-    K extends ReducerId = ReducerId,
-    A extends ReducerArgs = ReducerArgs,
+export interface ReduxRootReducer<
+    S extends ReduxReducerState = ReduxReducerState,
+    K extends ReduxReducerId = ReduxReducerId,
+    A extends ReduxReducerArgs = ReduxReducerArgs,
 > {
     (state: S, id: K, ...args: A): S
 }
 
-export interface ReducerTarget<
-    S extends ReducerState = ReducerState,
-    A extends ReducerArgs = ReducerArgs,
+export interface ReduxActionReducer<
+    S extends ReduxReducerState = ReduxReducerState,
+    A extends ReduxReducerArgs = ReduxReducerArgs,
 > {
     (state: S, ...args: A): S
 }
 
-export type CompositeReducerOfEntries<L extends Array<[ReducerId, ReducerTarget<any, Array<any>>]>> =
-    (...args: ReducerArgsOfEntries<L>) => ReducerStateOfEntries<L>
+export type ReduxActionsDefinitions<
+    S extends ReduxReducerState = ReduxReducerState,
+    K extends ReduxReducerId = ReduxReducerId,
+    A extends ReduxReducerArgs = ReduxReducerArgs,
+> = Record<PropertyKey, ReduxActionDefinition<S, K, A>>
 
-export type ReducerStateOfEntries<L extends Array<[ReducerId, ReducerTarget<any, Array<any>>]>> =
-    L extends Array<[ReducerId, ReducerTarget<infer S, ReducerArgs>]>
+export interface ReduxActionDefinition<
+    S extends ReduxReducerState = ReduxReducerState,
+    K extends ReduxReducerId = ReduxReducerId,
+    A extends ReduxReducerArgs = ReduxReducerArgs,
+> {
+    id: K
+    action(...args: A): ReduxEvent<K, A>
+    reducer: ReduxActionReducer<S, A>
+}
+
+export type ReduxCompositeReducerOfEntries<L extends Array<[ReduxReducerId, ReduxActionReducer<any, Array<any>>]>> =
+    (...args: ReduxGlobalReducerArgsOfEntries<L>) => ReduxReducerStateOfEntries<L>
+
+export type ReduxReducerStateOfEntries<L extends Array<[ReduxReducerId, ReduxActionReducer<any, Array<any>>]>> =
+    L extends Array<[ReduxReducerId, ReduxActionReducer<infer S, ReduxReducerArgs>]>
         ? S
-        : ReducerState
+        : ReduxReducerState
 
-export type ReducerArgsOfEntries<L extends Array<[ReducerId, ReducerTarget<any, Array<any>>]>> =
-    { [key in keyof L]: ReducerArgsOfEntry<L[key]> }[number]
+export type ReduxGlobalReducerArgsOfEntries<L extends Array<[ReduxReducerId, ReduxActionReducer<any, Array<any>>]>> =
+    { [key in keyof L]: ReduxGlobalReducerArgsOfEntry<L[key]> }[number]
 
-export type ReducerArgsOfEntry<I extends [ReducerId, ReducerTarget]> =
-    I extends [infer K, ReducerTarget<infer S, infer A>]
+export type ReduxGlobalReducerArgsOfEntry<I extends [ReduxReducerId, ReduxActionReducer]> =
+    I extends [infer K, ReduxActionReducer<infer S, infer A>]
         ? [S, K, ...A]
-        : [ReducerState, ReducerId, ...FnArgs]
+        : [ReduxReducerState, ReduxReducerId, ...FnArgs]
 
-export type ReducerActionOf<R extends ((state: any, ...args: Array<any>) => ReducerState)> =
-    R extends ((state: ReducerState, ...args: infer A) => ReducerState)
+export type ReduxEventOfGlobalReducer<R extends ((state: any, ...args: Array<any>) => ReduxReducerState)> =
+    R extends ((state: ReduxReducerState, ...args: infer A) => ReduxReducerState)
         ? A
-        : [ReducerId, ...ReducerArgs]
+        : [ReduxReducerId, ...ReduxReducerArgs]
 
-export type ReducerActionOfDict<D extends Record<PropertyKey, ReducerActionDefinition<any, ReducerId, Array<any>>>> =
+export type ReduxEventsOfActions<D extends Record<PropertyKey, ReduxActionDefinition<any, ReduxReducerId, Array<any>>>> =
     ReturnType<ValueOf<D>['action']>
 
-export type StoreStatePatch<S extends ReducerState> = Partial<S> | ((prevState: S) => Partial<S>)
+export type ReduxStatePatch<S extends ReduxReducerState> = Partial<S> | ((prevState: S) => Partial<S>)
