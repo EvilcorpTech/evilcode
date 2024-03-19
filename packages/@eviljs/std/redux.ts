@@ -14,7 +14,7 @@ export const ReduxActions = {
         )
     },
 
-    objectFrom<D extends ReduxActionsDefinitions<ReduxReducerState, ReduxReducerId, Array<any>>>(
+    objectFrom<D extends ReduxActionsDefinitions<any, ReduxReducerId, Array<any>>>(
         actionsDefinitions: D,
     ): {[key in keyof D]: D[key]['action']} {
         return Object.fromEntries(
