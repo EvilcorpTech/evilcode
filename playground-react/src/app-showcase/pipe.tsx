@@ -4,6 +4,7 @@ import {
     awaiting,
     catching,
     catchingError,
+    identity,
     mappingEither,
     mappingError,
     mappingErrorValue,
@@ -11,12 +12,11 @@ import {
     mappingPromise,
     mappingResult,
     mappingSome,
+    piping,
     then,
     trying,
-} from '@eviljs/std/monad'
-import {piping} from '@eviljs/std/pipe'
+} from '@eviljs/std/fn'
 import {Error} from '@eviljs/std/result'
-import {identity} from '@eviljs/std/return'
 
 const someResult = piping(undefined as undefined | null | string)
     (mappingNone(it => 'Mario'))

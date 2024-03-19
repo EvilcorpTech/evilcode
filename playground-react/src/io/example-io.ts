@@ -1,4 +1,4 @@
-import {awaiting} from '@eviljs/std/monad'
+import {awaiting} from '@eviljs/std/fn'
 import {asDate, type Unsafe} from '@eviljs/std/type'
 import {usingRequestAuthorization} from '@eviljs/web/request-auth'
 import {creatingRequestGet} from '@eviljs/web/request-method'
