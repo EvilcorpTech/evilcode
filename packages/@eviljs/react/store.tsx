@@ -53,20 +53,22 @@ export function setupStoreUsingContext<S extends ReduxReducerState, A extends Re
     return {
         StoreContext: Context,
         StoreProvider(props) {
+            const {children, ...otherProps} = props
+
             return (
-                <Context.Provider value={useStoreProvider(props)}>
-                    {props.children}
+                <Context.Provider value={useStoreProvider(otherProps)}>
+                    {children}
                 </Context.Provider>
             )
         },
         useStoreContext() {
             return useContext(Context)
         },
-        useStoreProvider: useStoreProvider,
-        useStore() {
-            return useStore(useContext(Context)!)
+        useStoreProvider: useStoreProvider<S, A>,
+        useStore<V>(selector?: undefined | StoreSelector<S, V>) {
+            return useStore(useContext(Context)!, selector)
         },
-        useStoreState(selector: any) {
+        useStoreState<V>(selector?: undefined | StoreSelector<S, V>) {
             return useStoreState(useContext(Context)!, selector)
         },
         useStoreRead() {
