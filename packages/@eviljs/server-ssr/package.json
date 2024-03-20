@@ -29,11 +29,11 @@
         "koa-etag": "4",
         "koa-static": "5",
         "parse5": "7",
-        "puppeteer": "21",
+        "puppeteer": "22",
         "tslib": "2"
     },
     "devDependencies": {
-        "typescript": "5.3"
+        "typescript": "5.4"
     },
     "author": "Daniele Orlando",
     "license": "BSD-2-Clause",
