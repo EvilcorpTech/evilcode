@@ -1,6 +1,6 @@
 {
     "name": "@eviljs/react",
-    "version": "1.29.0",
+    "version": "1.30.0",
     "type": "module",
     "sideEffects": false,
     "files": [
