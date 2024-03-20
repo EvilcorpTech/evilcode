@@ -48,7 +48,7 @@ export function isNull(value: unknown): value is null {
     return value === null
 }
 
-export function isSome<V>(value: None | V): value is V {
+export function isSome<V>(value: void | None | V): value is V {
     return ! isNone(value)
 }
 
