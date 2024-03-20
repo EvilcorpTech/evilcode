@@ -26,7 +26,7 @@
         "react-dom": "17 || 18"
     },
     "devDependencies": {
-        "typescript": "5.3"
+        "typescript": "5.4"
     },
     "author": "Daniele Orlando",
     "license": "BSD-2-Clause",
