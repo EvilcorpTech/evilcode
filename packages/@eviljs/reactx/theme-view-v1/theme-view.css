@@ -4,7 +4,7 @@
     flex-direction: column;
     justify-content: flex-start;
     align-items: center;
-    padding: var(--std-gutter4);
+    padding: var(--ThemeView-padding, var(--std-gutter4));
 }
 
 .grid-1c73 {

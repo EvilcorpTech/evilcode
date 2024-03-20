@@ -22,6 +22,7 @@ export function ThemeView(props: ThemeViewProps) {
                 '--std-color-secondary-h': secondaryAccent[0] * 360 + 'deg',
                 '--std-color-secondary-s': secondaryAccent[1] * 100 + '%',
                 '--std-color-secondary-l': secondaryAccent[2] * 100 + '%',
+                ...otherProps.style,
             } as React.CSSProperties}
         >
             {head}
