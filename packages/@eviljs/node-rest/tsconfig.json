@@ -1,6 +1,0 @@
-{
-    "extends": "../../@eviljs/tsconfig/preset-node.json",
-    "include": ["./**/*.ts"],
-    "compilerOptions": {
-    },
-}
