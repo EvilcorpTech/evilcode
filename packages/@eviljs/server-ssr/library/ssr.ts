@@ -51,7 +51,7 @@ async function waitSsrJobsQueue(ctx: KoaContext): Promise<void> {
             await Promise.race(SsrJobs)
         }
         catch (error) {
-            console.error(error)
+            console.error(LogIndentation.Ssr, ctx.state.connectionId, '[server:ssr] job rejected due to', error)
         }
     }
 
@@ -193,12 +193,12 @@ export async function useSsrRender(ctx: KoaContext): Promise<undefined | SsrResu
             return
         }
 
-        console.info(logIndent, ctx.state.connectionId, '[server:ssr] ‧ loading', request.resourceType(), request.url())
+        console.info(logIndent, ctx.state.connectionId, '[server:ssr] ⇢ loading', request.resourceType(), request.url())
 
         request.continue()
     })
 
-    console.info(logIndent, ctx.state.connectionId, '[server:ssr] ⤷ renders', appUrl.href)
+    console.info(logIndent, ctx.state.connectionId, '[server:ssr] rendering url', appUrl.href)
 
     try {
         await browserPage.goto(appUrl.toString(), {
@@ -210,30 +210,37 @@ export async function useSsrRender(ctx: KoaContext): Promise<undefined | SsrResu
             await ssrSettings.ssrBrowserWaitFor?.(browserPage)
         }
         catch (error) {
-            console.error(error)
+            console.error(logIndent, ctx.state.connectionId, '[server:ssr] error waiting custom condition', error)
+            throw error
         }
 
         if (ssrSettings.ssrBrowserEvaluate) {
-            await browserPage.evaluate(ssrSettings.ssrBrowserEvaluate)
+            try {
+                await browserPage.evaluate(ssrSettings.ssrBrowserEvaluate)
+            }
+            catch (error) {
+                console.error(logIndent, ctx.state.connectionId, '[server:ssr] error evaluatiing custom condition', error)
+                throw error
+            }
         }
 
         const body = await browserPage.content()
 
-        console.info(logIndent, ctx.state.connectionId, `[server:ssr] ⤷ rendered in ${Date.now() - start}ms`)
+        console.info(logIndent, ctx.state.connectionId, `[server:ssr] rendered in ${Date.now() - start}ms`)
 
         return {body, created: Date.now()}
     }
     catch (error) {
-        console.error(logIndent, ctx.state.connectionId, '[server:ssr] ⤷ error navigating page', ctx.path, '\n', error)
+        console.error(logIndent, ctx.state.connectionId, '[server:ssr] error rendering url', ctx.path, '\n', error)
     }
     finally {
-        console.info(logIndent, ctx.state.connectionId, '[server:ssr] ⤷ closes page')
+        console.info(logIndent, ctx.state.connectionId, '[server:ssr] closing page')
 
         try {
             await browserPage.close()
         }
         catch (error) {
-            console.error(logIndent, ctx.state.connectionId, '[server:ssr] ⤷ error closing page')
+            console.error(logIndent, ctx.state.connectionId, '[server:ssr] error closing page')
         }
     }
 

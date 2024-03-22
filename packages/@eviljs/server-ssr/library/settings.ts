@@ -30,7 +30,7 @@ export function configureServerSsrSettings(options: ServerSsrOptions): ServerSsr
         puppeteer: {
             args: ['--no-sandbox', '--disable-setuid-sandbox', '--auto-open-devtools-for-tabs'],
             devtools: debug,
-            headless: debug ? false : 'shell',
+            headless: ! debug,
             defaultViewport: {
                 width: 360,
                 height: 640,
