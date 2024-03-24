@@ -23,7 +23,7 @@ export class InvalidType extends StdError {}
 * @throws InvalidCondition
 */
 export function throwAssertConditionError(message: string) {
-    return throwError({type: InvalidCondition, message})
+    return throwError(new InvalidCondition(message))
 }
 
 /**
@@ -31,7 +31,7 @@ export function throwAssertConditionError(message: string) {
 */
 export function throwAssertTypeError(type: string, value: unknown, ctx?: any) {
     const message = errorMessage(type, value, ctx)
-    return throwError({type: InvalidType, message})
+    return throwError(new InvalidType(message))
 }
 
 // Assertions //////////////////////////////////////////////////////////////////

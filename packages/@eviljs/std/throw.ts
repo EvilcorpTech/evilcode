@@ -11,36 +11,26 @@ export class InvalidInput extends StdError {}
 /**
 * @throws Error
 */
-export function throwError<T extends StdErrorConstructor>(args: ErrorDefinition<T>): never {
-    const {type = StdError, message} = args
-
-    throw new type(message)
+export function throwError<E>(error: E): never {
+    throw error
 }
 
 /**
 * @throws InvalidArgument
 */
 export function throwInvalidArgument(message?: undefined | string) {
-    return throwError({type: InvalidArgument, message})
+    return throwError(new InvalidArgument(message))
 }
 
 /**
 * @throws InvalidInput
 */
 export function throwInvalidInput(message?: undefined | string) {
-    return throwError({type: InvalidInput, message})
+    return throwError(new InvalidInput(message))
 }
 
 // Types ///////////////////////////////////////////////////////////////////////
 
-export interface ErrorDefinition<T extends StdErrorConstructor> {
-    type?: undefined | T
-    message?: undefined | string
-}
-
 export interface StdErrorConstructor {
     new(message?: undefined | string): StdError
-}
-
-export interface StdError extends Error {
 }
