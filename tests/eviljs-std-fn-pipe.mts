@@ -1,4 +1,4 @@
-import {Error, awaiting, catching, catchingError, chain, chaining, logging, mapNone, mapSome, mappingError, mappingNone, mappingOptional, mappingSome, piped, piping, trying} from '../packages/@eviljs/std/fn.js'
+import {asResultError, awaiting, catching, catchingError, chain, chaining, logging, mapNone, mapSome, mappingError, mappingNone, mappingOptional, mappingSome, piped, piping, trying} from '../packages/@eviljs/std/fn.js'
 import {throwError} from '../packages/@eviljs/std/throw.js'
 
 const subject = {id: 1, name: 'Mike', age: 18}
@@ -17,7 +17,7 @@ const r_b2 = piping(subject)
 const r_c1 = piped(subject)
     .to(it => ({...it, name: `${it.name} Tyson`}))
     .to(trying(it => it, error => throwError({message: 'Something wrong happened.'})))
-    .to(it => it.age >= 18 ? it : Error('TooYoung'))
+    .to(it => it.age >= 18 ? it : asResultError('TooYoung'))
     .to(mappingError(error => ({name: error.error, age: 0})))
     .to(chaining(console.log))
     .to(logging(it => `Value is: ${it}`, 'debug'))
@@ -30,7 +30,7 @@ const r_c2 = await piped(subject)
     .to(awaiting(logging()))
     .to(it => it)
     .to(awaiting(it => Promise.resolve(it.name)))
-    .to(catching(error => Error(error)))
+    .to(catching(error => asResultError(error)))
     .to(catchingError('BadThingsHappen'))
 .end()
 const r_c3 = piping(undefined as undefined | number)
