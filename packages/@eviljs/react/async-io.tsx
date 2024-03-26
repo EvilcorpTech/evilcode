@@ -13,8 +13,8 @@ import {
     withoutResourceLoaded,
     withoutResourceLoading,
 } from '@eviljs/std/resource.js'
-import type {Either} from '@eviljs/std/result.js'
-import {Error} from '@eviljs/std/result.js'
+import type {ResultOrError} from '@eviljs/std/result.js'
+import {asResultError} from '@eviljs/std/result.js'
 import {isDefined} from '@eviljs/std/type.js'
 import {useCallback, useRef, useState} from 'react'
 
@@ -81,7 +81,7 @@ export function useAsyncIo<A extends FnArgs, R>(asyncTask: Fn<A, Promise<R>>): A
                 error,
             }))
 
-            return Error(error)
+            return asResultError(error)
         }
     }, [asyncTask])
 
@@ -162,7 +162,7 @@ export interface AsyncIoView<R> extends AsyncIoState<R>, ResourceMaskView, Resou
 }
 
 export interface AsyncIoManager<A extends FnArgs, R> extends AsyncIoView<R> {
-    call(...args: A): Promise<undefined | Either<R>>
+    call(...args: A): Promise<undefined | ResultOrError<R, unknown>>
     cancel(): void
     reset(): void
     resetError(): void
