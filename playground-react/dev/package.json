@@ -20,7 +20,7 @@
         "rollup-plugin-visualizer": "5",
         "tslib": "2.6.2",
         "typescript": "5.4.2",
-        "vite": "5.1.6",
+        "vite": "5.1.7",
         "vite-plugin-checker": "0.6.4",
         "vite-plugin-ejs": "1.7.0"
     },
