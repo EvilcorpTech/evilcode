@@ -11,13 +11,13 @@ import {useCallback, useLayoutEffect, useRef} from 'react'
 *
 *     return (
 *         <OtherComponent
-*             flags={useConstant(['a', 'b', 'c'])}
-*             options={useConstant({a: 1, b: 2, c: 3})}
+*             flags={useConst(['a', 'b', 'c'])}
+*             options={useConst({a: 1, b: 2, c: 3})}
 *         />
 *     )
 * }
 */
-export function useConstant<V>(value: V) {
+export function useConst<V>(value: V) {
     const ref = useRef(value)
     return ref.current
 }
