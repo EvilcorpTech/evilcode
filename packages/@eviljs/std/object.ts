@@ -140,7 +140,26 @@ export function mapObjectValue<K extends PropertyKey, V, RV>(
     return Object.fromEntries(entries.map(mapValue)) as Record<K, RV>
 }
 
-export function omitObjectProps<O extends object, P extends keyof O>(object: O, ...props: Array<P>) {
+export function pickObjectProp<O extends object, P extends keyof O>(object: O, prop: P): Pick<O, P> {
+    return {[prop]: object[prop]} as Pick<O, P>
+}
+
+export function pickObjectProps<O extends object, P extends keyof O>(object: O, ...props: Array<P>): Pick<O, P> {
+    const objectPicked = {} as Record<P, O[P]>
+
+    for (const prop of props) {
+        objectPicked[prop] = object[prop]
+    }
+
+    return objectPicked as Pick<O, P>
+}
+
+export function omitObjectProp<O extends object, P extends keyof O>(object: O, prop: P): Omit<O, P> {
+    const {[prop]: omittedProp, ...otherProps} = object
+    return otherProps
+}
+
+export function omitObjectProps<O extends object, P extends keyof O>(object: O, ...props: Array<P>): Omit<O, P> {
     const objectOmitted = {...object}
 
     for (const prop of props) {

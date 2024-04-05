@@ -1,6 +1,7 @@
 import {identity} from './fn-return.js'
 import {tryCatch} from './fn-try.js'
 import type {Io} from './fn-type.js'
+import {omitObjectProps, pickObjectProps} from './object.js'
 import {asResultError, isResultError, type ResultError, type ResultErrorOf, type ResultOf} from './result.js'
 import {asArray, isNone, isSome, type None} from './type.js'
 
@@ -82,6 +83,16 @@ export function mapBoolean<I, O>(input: boolean, onTrue: Io<true, I>, onFalse: I
     return input
         ? onTrue(input)
         : onFalse(input)
+}
+
+// Object //////////////////////////////////////////////////////////////////////
+
+export function picking<I extends object, P extends keyof I>(props: Array<P>): Io<I, Pick<I, P>> {
+    return input => pickObjectProps(input, ...props)
+}
+
+export function omitting<I extends object, P extends keyof I>(props: Array<P>): Io<I, Omit<I, P>> {
+    return input => omitObjectProps(input, ...props)
 }
 
 // Either: Result | Error //////////////////////////////////////////////////////
