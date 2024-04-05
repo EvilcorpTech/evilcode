@@ -1,73 +1,60 @@
 import {asNumber} from '@eviljs/std/type'
-import {defineRouteParam} from '@eviljs/web/route-v2'
+import {defineRouteParamCodec} from '@eviljs/web/route-v2'
 import {createPageAnchorId} from '~/page/page-anchor-apis'
 
 export const RouteParam = {
-    Auth_redirect: defineRouteParam({
+    Auth_redirect: defineRouteParamCodec({
         name: 'redirect',
         encode(redirectUrl: string) {
-            return {
-                [this]: redirectUrl,
-            }
+            return redirectUrl
         },
-        decode(params): undefined | string {
-            return params?.[this]
+        decode(value): undefined | string {
+            return value
         },
     }),
-    CookieSettings: defineRouteParam({
+    CookieSettings: defineRouteParamCodec({
         name: 'cookies!',
         encode(show: boolean) {
-            return {
-                [this]: show ? null : undefined,
-            }
+            return show ? null : undefined
         },
-        decode(params): boolean {
-            return this in (params ?? {})
+        decode(value): boolean {
+            return true
         },
     }),
-    ChatModal: defineRouteParam({
+    ChatModal: defineRouteParamCodec({
         name: 'chat!',
         encode(show: boolean) {
-            return {
-                [this]: show ? null : undefined,
-            }
+            return show ? null : undefined
         },
-        decode(params): boolean {
-            return this in (params ?? {})
+        decode(value): boolean {
+            return true
         },
     }),
-    Products_search: defineRouteParam({
+    Products_search: defineRouteParamCodec({
         name: 'search-product',
         encode(search: string) {
-            return {
-                [this]: encodeURIComponent(search),
-            }
+            return encodeURIComponent(search)
         },
-        decode(params): undefined | unknown {
-            const value = params?.[this]
+        decode(value): undefined | unknown {
             return value ? decodeURIComponent(value) : value
         },
     }),
-    Products_paginationPage: defineRouteParam({
+    Products_paginationPage: defineRouteParamCodec({
         name: 'page',
         encode(page: number) {
-            return {
-                [this]: page,
-            }
+            return page
         },
-        decode(params): undefined | number {
-            return asNumber(params?.[this])
+        decode(value): undefined | number {
+            return asNumber(value)
         },
     }),
-    PageAnchor: defineRouteParam({
+    PageAnchor: defineRouteParamCodec({
         name: 'anchor',
         encode(id: string) {
-            return {
-                [this]: createPageAnchorId(id),
-            }
+            return createPageAnchorId(id)
         },
-        decode(params): undefined | string {
-            return params?.[this]
+        decode(value): undefined | string {
+            return value
         },
     }),
 }
