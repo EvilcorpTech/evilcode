@@ -1,4 +1,4 @@
-import type {FnArgs} from '@eviljs/std/fn.js'
+import {mapSome} from '@eviljs/std/fn.js'
 import {omitObjectProp, pickObjectProp} from '@eviljs/std/object.js'
 import type {RouteArgs, RoutePatterns} from './route.js'
 import type {RouterRouteParams} from './router.js'
@@ -15,23 +15,23 @@ export function defineRoutePath<A extends RouteArgs = []>(
     }
 }
 
-export function defineRouteParamCodec<const N extends string, EA extends FnArgs, EO extends UrlParamsDictValue, O>(
-    options: RouteParamCodecOptions<N, EA, EO, O>,
-): RouteParamCodec<N, EA, EO, O> {
+export function defineRouteParamCodec<const N extends string, EI, EO extends UrlParamsDictValue, O>(
+    options: RouteParamCodecOptions<N, EI, EO, O>,
+): RouteParamCodec<N, EI, EO, O> {
     const name = options.name
 
     return {
         name: name,
-        encode(...args) {
-            return options.encode(...args)
+        encode(value) {
+            return options.encode(value)
         },
-        encodeAsParams(...args) {
+        encodeAsParams(value) {
             return {
-                [name]: options.encode(...args),
-            } as {[key in N]: EO}
+                [name]: mapSome(value, options.encode),
+            } as {[key in N]: undefined | null | EO}
         },
-        decode(param) {
-            return options.decode(param)
+        decode(valueEncoded) {
+            return options.decode(valueEncoded)
         },
         decodeFromParams(params) {
             if (! params) {
@@ -73,17 +73,17 @@ export interface RoutePathCodec<A extends RouteArgs> {
     encode(...args: A): string
 }
 
-export interface RouteParamCodecOptions<N extends string, EA extends FnArgs, EO extends UrlParamsDictValue, O> {
+export interface RouteParamCodecOptions<N extends string, EI, EO extends UrlParamsDictValue, O> {
     name: N
-    encode(...args: EA): EO
-    decode(param: undefined | string): O
+    encode(value: EI): EO
+    decode(valueEncoded: undefined | string): O
 }
 
-export interface RouteParamCodec<N extends string, EA extends FnArgs, EO extends UrlParamsDictValue, DO> {
+export interface RouteParamCodec<N extends string, EI, EO extends UrlParamsDictValue, DO> {
     name: N
-    encode(...args: EA): EO
-    encodeAsParams(...args: EA): {[key in N]: EO}
-    decode(param: undefined | string): undefined | DO
+    encode(value: EI): EO
+    encodeAsParams(value: undefined | null | EI): {[key in N]: undefined | null | EO}
+    decode(valueEncoded: undefined | string): undefined | DO
     decodeFromParams(params: undefined | RouterRouteParams): undefined | DO
     select(params: undefined | RouterRouteParams): undefined | string
     pick(params: undefined | RouterRouteParams): undefined | RouterRouteParams

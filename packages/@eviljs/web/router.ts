@@ -154,7 +154,7 @@ export interface RouterOptions {
     basePath?: undefined | string
 }
 
-export type RouterRouteParams = Record<string, string>
+export type RouterRouteParams = Record<string, undefined | string>
 
 export interface RouterRouteChange<S = unknown> {
     path?: undefined | string
