@@ -21,9 +21,7 @@ export function useFilter<I, F>(
         return resolveFilteredItemIdx(items ?? NoItems, filteredItems, filteredItemIdx)
     }, [items, filteredItems])
 
-    const onChange = setFilter
-
-    return {filter, filteredItems, itemIdxOf, onChange}
+    return {filter, filteredItems, itemIdxOf, setFilter}
 }
 
 export function resolveFilteredItemIdx<I>(
@@ -50,5 +48,5 @@ export interface FilterManager<I, F> {
     filter: F
     filteredItems: Array<I>
     itemIdxOf(filteredItemIdx: number): undefined | number
-    onChange: StateSetter<F>
+    setFilter: StateSetter<F>
 }
