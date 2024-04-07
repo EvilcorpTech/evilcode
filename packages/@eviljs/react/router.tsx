@@ -2,7 +2,7 @@ import {compute, type Computable, type Fn, type Io, type Task} from '@eviljs/std
 import {escapeRegexp} from '@eviljs/std/regexp.js'
 import {asArray, isPromise, isString} from '@eviljs/std/type.js'
 import {exact, matchRoutePattern, testRoutePattern, type RoutePattern, type RoutePatterns} from '@eviljs/web/route.js'
-import type {RouterRoute, RouterRouteChange, RouterRouteChangeParams, RouterRouteParams} from '@eviljs/web/router.js'
+import type {RouterRoute, RouterRouteChange, RouterRouteChangeParams, RouterRouteChangeParamsDict, RouterRouteParams} from '@eviljs/web/router.js'
 import {encodeLink} from '@eviljs/web/router.js'
 import {isUrlAbsolute} from '@eviljs/web/url.js'
 import {Children, forwardRef, isValidElement, useCallback, useContext, useEffect, useMemo, useRef} from 'react'
@@ -308,6 +308,22 @@ export function useRouter<S = unknown>(): RouterManager<S> {
         link,
         readRoute,
     }
+}
+
+export function useRouteParamsPatch() {
+    const {changeRoute} = useRouter()
+
+    const patchRoute = useCallback((paramsPatch: undefined | RouterRouteChangeParamsDict, replace?: undefined | boolean) => {
+        changeRoute({
+            params: params => ({
+                ...params,
+                ...paramsPatch,
+            }),
+            replace: replace ?? false,
+        })
+    }, [changeRoute])
+
+    return patchRoute
 }
 
 export function useRouterLink() {
