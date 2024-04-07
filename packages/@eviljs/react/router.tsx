@@ -314,6 +314,10 @@ export function useRouteParamsPatch() {
     const {changeRoute} = useRouter()
 
     const patchRoute = useCallback((paramsPatch: undefined | RouterRouteChangeParamsDict, replace?: undefined | boolean) => {
+        if (! paramsPatch) {
+            return
+        }
+
         changeRoute({
             params: params => ({
                 ...params,
