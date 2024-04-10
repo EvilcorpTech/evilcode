@@ -9,9 +9,8 @@ import {asBaseUrl} from '@eviljs/web/url.js'
 import {createHash} from 'node:crypto'
 import {mkdir, writeFile} from 'node:fs/promises'
 import {resolve as resolvePath} from 'node:path'
-import {parse, serialize} from 'parse5'
 import {formatTimeAsSeconds, isDateTimeElapsed} from './datetime.js'
-import {isElement, mappingElement, testingNodeName, type Parse5Element} from './parse5-apis.js'
+import {Parse5, isElement, mappingElement, testingNodeName, type Parse5Element} from './parse5-apis.js'
 import {LogIndentation} from './settings.js'
 import type {KoaContext} from './types.js'
 
@@ -259,7 +258,7 @@ export async function useSsrTransform(ctx: KoaContext, result: undefined | SsrRe
         return result
     }
 
-    const document = tryCatch(() => parse(result.body), console.error)
+    const document = tryCatch(() => Parse5.parse(result.body), console.error)
 
     if (! document) {
         warnBundlingSkipped(2)
@@ -376,7 +375,7 @@ export async function useSsrTransform(ctx: KoaContext, result: undefined | SsrRe
     //     document.head.querySelectorAll('link,script').forEach(it => it.dataset.ssr = '')
     // </script>
 
-    transformedResult.body = serialize(document)
+    transformedResult.body = Parse5.serialize(document)
     transformedResult.body = transformedResult.body.replaceAll(/\n +/g, '\n') // Minifies, compressing leading empty spaces.
 
     return transformedResult

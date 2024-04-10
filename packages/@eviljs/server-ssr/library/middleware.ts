@@ -77,6 +77,8 @@ export async function serverMiddleware(ctx: KoaContext, next: Koa.Next) {
     const logIndent = LogIndentation.SubResource
 
     if (isRequestHandled(ctx)) {
+        ctx.ssrRequestType = 'handled'
+
         // The request is already handled by another middleware.
         console.info(ctx.state.connectionId, '[server:koa] skipping request already handled:', ctx.path, {...ctx.query})
 
@@ -91,6 +93,8 @@ export async function serverMiddleware(ctx: KoaContext, next: Koa.Next) {
     // }
 
     if (isRequestOfFile(ctx)) {
+        ctx.ssrRequestType = 'file'
+
         // The request points to a static asset file (for example /app.js).
         console.info(logIndent, ctx.state.connectionId, '[server:koa] serving request of Static File:', ctx.path, {...ctx.query})
 
@@ -98,6 +102,8 @@ export async function serverMiddleware(ctx: KoaContext, next: Koa.Next) {
     }
 
     if (isRequestFromSsr(ctx)) {
+        ctx.ssrRequestType = 'file'
+
         // The request points to an app routing path (for example /dashboard/)
         // and it comes from SSR (/dashboard/?ssr).
         console.info(logIndent, ctx.state.connectionId, '[server:koa] serving request of Entry Point (from SSR):', ctx.path, {...ctx.query})
@@ -108,6 +114,8 @@ export async function serverMiddleware(ctx: KoaContext, next: Koa.Next) {
     }
 
     if (! isRequestOfRouteAllowed(ctx)) {
+        ctx.ssrRequestType = 'file'
+
         // The request points to an app routing path (for example /article/1/)
         // but it is not eligible for SSR.
         console.info(ctx.state.connectionId, '[server:koa] serving request of Entry Point (not SSR):', ctx.path, {...ctx.query})
@@ -116,6 +124,8 @@ export async function serverMiddleware(ctx: KoaContext, next: Koa.Next) {
 
         return koaStatic(ctx, next)
     }
+
+    ctx.ssrRequestType = 'render'
 
     // The request points to an app routing path (for example /dashboard/),
     // it is an allowed route and it does not come from SSR.

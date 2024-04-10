@@ -7,7 +7,9 @@ import type {ServerSsrSettings} from './settings.js'
 // Types ///////////////////////////////////////////////////////////////////////
 
 export type KoaInstance = Koa<ServerSsrContextState, ServerSsrContext>
-export type KoaContext = KoaParameterizedContext<ServerSsrContextState, ServerSsrContext>
+export type KoaContext = KoaParameterizedContext<ServerSsrContextState, ServerSsrContext> & {
+    ssrRequestType: 'file' | 'handled' | 'render'
+}
 
 export interface ServerSsrContext {
     koa: Koa<ServerSsrContextState, ServerSsrContext>

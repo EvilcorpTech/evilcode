@@ -2,6 +2,8 @@ import type {Io} from '@eviljs/std/fn.js'
 import {isSome} from '@eviljs/std/type.js'
 import type {DefaultTreeAdapterMap} from 'parse5'
 
+export * as Parse5 from 'parse5'
+
 export type Parse5ChildNode = DefaultTreeAdapterMap['childNode']
 export type Parse5Element = DefaultTreeAdapterMap['element']
 
