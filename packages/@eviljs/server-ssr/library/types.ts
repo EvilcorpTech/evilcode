@@ -11,6 +11,8 @@ export type KoaContext = KoaParameterizedContext<ServerSsrContextState, ServerSs
     ssrRequestType: 'file' | 'handled' | 'render'
 }
 
+export type KoaNext = Koa.Next
+
 export interface ServerSsrContext {
     koa: Koa<ServerSsrContextState, ServerSsrContext>
     koaStatic: ReturnType<typeof KoaStatic>

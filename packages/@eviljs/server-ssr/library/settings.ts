@@ -47,13 +47,15 @@ export function configureServerSsrSettings(options: ServerSsrOptions): ServerSsr
         ssrAllowedOrigins: options?.ssrAllowedOrigins ?? [],
         ssrAllowedResources: options?.ssrAllowedResources ?? ['document', 'script', 'stylesheet', 'xhr', 'fetch', 'other', 'image', 'font'],
         ssrAllowedRoutes: options?.ssrAllowedRoutes ?? [],
+        ssrForbiddenRoutesBehavior: options?.ssrForbiddenRoutesBehavior ?? 'serve',
         ssrAppUrl: options?.ssrAppUrl ?? `http://127.0.0.1:8000`,
         ssrBrowserEvaluate: options?.ssrBrowserEvaluate,
         ssrBrowserWaitFor: options?.ssrBrowserWaitFor,
         ssrCache: options?.ssrCache ?? true,
         ssrCacheExpires,
-        ssrCacheLimit: options?.ssrCacheLimit ?? 1_000,
-        ssrProcessesLimit: options?.ssrProcessesLimit ?? 10, // Every Chrome tab requires about 100mb of memory.
+        ssrCacheMemLimit: options?.ssrCacheMemLimit ?? 1_000,
+        ssrProcessesLimitWithHighPriority: options?.ssrProcessesLimitWithHighPriority ?? 10, // Every Chrome tab requires at least 100mb of memory.
+        ssrProcessesLimitWithLowPriority: options?.ssrProcessesLimitWithLowPriority ?? 1, // Every Chrome tab requires at least 100mb of memory.
         ssrRefreshParam: options?.ssrRefreshParam ?? 'ssr-refresh',
         ssrRequestParam: options?.ssrRequestParam ?? 'ssr',
         ssrTransformMainStylePattern: '/asset-main@[^.]+\.css$',
@@ -86,14 +88,16 @@ export interface ServerSsrSettings {
     serverEntryCacheExpires: number
     ssrAllowedOrigins: Array<string>
     ssrAllowedResources: Array<string>
-    ssrAllowedRoutes: Computable<Array<string>>
+    ssrAllowedRoutes: undefined | Computable<undefined | Array<string>>
+    ssrForbiddenRoutesBehavior: 'render-with-low-priority' | 'serve'
     ssrAppUrl: string
     ssrBrowserEvaluate: undefined | string
     ssrBrowserWaitFor: undefined | ((page: Page) => Promise<void>)
     ssrCache: boolean
     ssrCacheExpires: number
-    ssrCacheLimit: number
-    ssrProcessesLimit: number
+    ssrCacheMemLimit: number
+    ssrProcessesLimitWithHighPriority: number
+    ssrProcessesLimitWithLowPriority: number
     ssrRefreshParam: string
     ssrRequestParam: string
     ssrTransformMainStylePattern: string | RegExp

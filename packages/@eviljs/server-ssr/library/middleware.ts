@@ -3,10 +3,10 @@ import {OneSecondInMs} from '@eviljs/std/date.js'
 import {compute} from '@eviljs/std/fn.js'
 import {isDefined} from '@eviljs/std/type.js'
 import {asBaseUrl} from '@eviljs/web/url.js'
-import type Koa from 'koa'
 import {LogIndentation} from './settings.js'
+import {SsrJobPriority} from './ssr-scheduler.js'
 import {ssr} from './ssr.js'
-import type {KoaContext} from './types.js'
+import type {KoaContext, KoaNext} from './types.js'
 
 const ApiRegexp = /^\/api\//
 const FileRegexp = /.+\.\w+$/
@@ -70,43 +70,53 @@ export let ConnectionCounter = 0
 * |
 * END
 */
-export async function serverMiddleware(ctx: KoaContext, next: Koa.Next) {
+export async function serverMiddleware(ctx: KoaContext, next: KoaNext) {
     const {koaStatic, ssrSettings} = ctx
+
     ctx.state.connectionId = ++ConnectionCounter
 
     const logIndent = LogIndentation.SubResource
 
     if (isRequestHandled(ctx)) {
+        // The request is already handled by another middleware.
         ctx.ssrRequestType = 'handled'
 
-        // The request is already handled by another middleware.
-        console.info(ctx.state.connectionId, '[server:koa] skipping request already handled:', ctx.path, {...ctx.query})
+        if (ssrSettings.debug) {
+            console.debug(ctx.state.connectionId, `[server:koa] skipping request already handled "${ctx.path}".`)
+        }
 
         return next()
     }
 
     // if (isRequestOfApi(ctx)) {
-    //     // The request points to an API endpoint.
-    //     console.info(logIndent, ctx.state.connectionId, '[server:koa] skipping request of API:', ctx.path, {...ctx.query})
+    //     // The request points to an API endpoint like `/api/something`.
+    //     ctx.ssrRequestType = 'api'
+    //
+    //     if (ssrSettings.debug) {
+    //         console.debug(logIndent, ctx.state.connectionId, '[server:koa] skipping API:', ctx.path)
+    //     }
     //
     //     return next()
     // }
 
     if (isRequestOfFile(ctx)) {
+        // The request points to a static asset file like `/app.js`.
         ctx.ssrRequestType = 'file'
 
-        // The request points to a static asset file (for example /app.js).
-        console.info(logIndent, ctx.state.connectionId, '[server:koa] serving request of Static File:', ctx.path, {...ctx.query})
+        if (ssrSettings.debug) {
+            console.debug(logIndent, ctx.state.connectionId, `[server:koa] serving static file "${ctx.path}".`)
+        }
 
         return koaStatic(ctx, next)
     }
 
     if (isRequestFromSsr(ctx)) {
+        // The request points to an app routing path like `/dashboard/?ssr`.
         ctx.ssrRequestType = 'file'
 
-        // The request points to an app routing path (for example /dashboard/)
-        // and it comes from SSR (/dashboard/?ssr).
-        console.info(logIndent, ctx.state.connectionId, '[server:koa] serving request of Entry Point (from SSR):', ctx.path, {...ctx.query})
+        if (ssrSettings.debug) {
+            console.debug(logIndent, ctx.state.connectionId, `[server:koa] serving static file entry point due to SSR flag "${ctx.path}".`)
+        }
 
         ctx.path = '/index.html'
 
@@ -114,25 +124,43 @@ export async function serverMiddleware(ctx: KoaContext, next: Koa.Next) {
     }
 
     if (! isRequestOfRouteAllowed(ctx)) {
-        ctx.ssrRequestType = 'file'
+        switch (ctx.ssrSettings.ssrForbiddenRoutesBehavior) {
+            case 'render-with-low-priority': {
+                // The request points to an app routing path like `/page/not-existing`.
+                ctx.ssrRequestType = 'render'
 
-        // The request points to an app routing path (for example /article/1/)
-        // but it is not eligible for SSR.
-        console.info(ctx.state.connectionId, '[server:koa] serving request of Entry Point (not SSR):', ctx.path, {...ctx.query})
+                console.info(ctx.state.connectionId, `[server:koa] server side rendering route with ${SsrJobPriority.Low} priority "${ctx.path}".`)
 
-        ctx.path = '/index.html'
+                return serveSsrRenderRequest(ctx, SsrJobPriority.Low, next)
+            }
+            case 'serve': {
+                // The request points to an app routing path (for example /article/1/)
+                // but it is not eligible for SSR.
+                ctx.ssrRequestType = 'file'
 
-        return koaStatic(ctx, next)
+                console.info(ctx.state.connectionId, `[server:koa] serving static file entry point because SSR is not allowed "${ctx.path}".`)
+
+                ctx.path = '/index.html'
+
+                return koaStatic(ctx, next)
+            }
+        }
     }
-
-    ctx.ssrRequestType = 'render'
 
     // The request points to an app routing path (for example /dashboard/),
     // it is an allowed route and it does not come from SSR.
-    console.info(ctx.state.connectionId, '[server:koa] serving request of Route SSR:', ctx.path, {...ctx.query})
+    ctx.ssrRequestType = 'render'
+
+    console.info(ctx.state.connectionId, `[server:koa] server side rendering route with ${SsrJobPriority.High} priority "${ctx.path}".`)
+
+    return serveSsrRenderRequest(ctx, SsrJobPriority.High, next)
+}
+
+async function serveSsrRenderRequest(ctx: KoaContext, priority: SsrJobPriority, next: KoaNext) {
+    const {ssrSettings} = ctx
 
     try {
-        const ssrResult = await ssr(ctx)
+        const ssrResult = await ssr(ctx, priority)
 
         assertDefined(ssrResult, 'ssrResult')
 
@@ -147,7 +175,7 @@ export async function serverMiddleware(ctx: KoaContext, next: Koa.Next) {
         ctx.body = ssrResult.body
     }
     catch (error) {
-        console.error(ctx.state.connectionId, '[server:koa] ⤷ failed to Server Side Render due to:', error)
+        console.error(ctx.state.connectionId, '[server:koa] ⤷ failed to server side render.', error)
 
         ctx.status = 500 // Internal Server Error.
         ctx.body = '[server:koa] Internal Server Error (ERROR:FA76)'
@@ -173,6 +201,12 @@ export function isRequestFromSsr(ctx: KoaContext) {
 }
 
 export function isRequestOfRouteAllowed(ctx: KoaContext) {
-    const ssrAllowedRoutes = compute(ctx.ssrSettings.ssrAllowedRoutes).map(asBaseUrl) // Without the trailing slash.
+    const allowedRoutes = compute(ctx.ssrSettings.ssrAllowedRoutes)
+
+    if (! allowedRoutes) {
+        return true
+    }
+
+    const ssrAllowedRoutes = allowedRoutes.map(asBaseUrl) // Without the trailing slash.
     return ssrAllowedRoutes.includes(asBaseUrl(ctx.path))
 }

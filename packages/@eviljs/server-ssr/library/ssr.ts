@@ -12,72 +12,29 @@ import {resolve as resolvePath} from 'node:path'
 import {formatTimeAsSeconds, isDateTimeElapsed} from './datetime.js'
 import {Parse5, isElement, mappingElement, testingNodeName, type Parse5Element} from './parse5-apis.js'
 import {LogIndentation} from './settings.js'
+import {scheduleSsrJob, type SsrJobPriority} from './ssr-scheduler.js'
 import type {KoaContext} from './types.js'
 
-export const SsrCache = new Map<string, SsrCacheEntry>()
-export const SsrJobs: Array<Promise<undefined | SsrResult>> = []
+export const SsrMemCache = new Map<string, SsrCacheEntry>()
 
-function pushSsrJob(ssrJob: Promise<undefined | SsrResult>) {
-    SsrJobs.push(ssrJob)
-    return ssrJob
-}
-
-function cleanSsrJob(ssrJob: Promise<undefined | SsrResult>) {
-    const ssrJobIdx = SsrJobs.indexOf(ssrJob)
-
-    if (ssrJobIdx === -1) {
-        return
+export async function ssr(ctx: KoaContext, priority: SsrJobPriority): Promise<undefined | SsrResult> {
+    function onCacheMissing() {
+        return scheduleSsrJob(ctx, priority, runSsrRender)
     }
 
-    SsrJobs.splice(ssrJobIdx, 1)
-}
-
-async function waitSsrJobsQueue(ctx: KoaContext): Promise<void> {
-    const {ssrSettings} = ctx
-
-    console.debug(LogIndentation.Ssr, ctx.state.connectionId, '[server:ssr] active jobs:', SsrJobs.length)
-
-    if (SsrJobs.length < ssrSettings.ssrProcessesLimit) {
-        return
+    function runSsrRender() {
+        return computeSsrResult(ctx)
     }
 
-    console.info(LogIndentation.Ssr, ctx.state.connectionId, `[server:ssr] jobs exceeded the limit of ${ssrSettings.ssrProcessesLimit}`)
-
-    while (SsrJobs.length >= ssrSettings.ssrProcessesLimit) {
-        console.info(LogIndentation.Ssr, ctx.state.connectionId, `[server:ssr] waiting ${SsrJobs.length - ssrSettings.ssrProcessesLimit} jobs above the limit`)
-
-        try {
-            await Promise.race(SsrJobs)
-        }
-        catch (error) {
-            console.error(LogIndentation.Ssr, ctx.state.connectionId, '[server:ssr] job rejected due to', error)
-        }
-    }
-
-    console.info(LogIndentation.Ssr, ctx.state.connectionId, '[server:ssr] a job completed. Continuing...')
-}
-
-export async function ssr(ctx: KoaContext): Promise<undefined | SsrResult> {
-    return useSsrCache(ctx, async () => {
-        await waitSsrJobsQueue(ctx)
-
-        const ssrJob = pushSsrJob(computeSsrResult(ctx))
-
-        try {
-            return await ssrJob
-        }
-        finally {
-            cleanSsrJob(ssrJob)
-        }
-    })
+    return useSsrCache(ctx, onCacheMissing)
 }
 
 async function computeSsrResult(ctx: KoaContext): Promise<undefined | SsrResult> {
     const ssrRawResult = await useSsrRender(ctx).catch(error =>
-        void console.error(LogIndentation.Ssr, ctx.state.connectionId, '[server:ssr] failed rendering due to', error)
+        void console.error(LogIndentation.Ssr, ctx.state.connectionId, '[server:ssr] failed rendering.', error)
     )
     const ssrTransformedResult = await useSsrTransform(ctx, ssrRawResult).catch(error =>
-        void console.error(LogIndentation.Ssr, ctx.state.connectionId, '[server:ssr] failed transforming due to', error)
+        void console.error(LogIndentation.Ssr, ctx.state.connectionId, '[server:ssr] failed transforming.', error)
     )
 
     return ssrTransformedResult
@@ -92,7 +49,7 @@ export async function useSsrCache(ctx: KoaContext, ssrTask: () => Promise<undefi
     }
 
     const cacheKey = computeCacheKey(ctx)
-    const cachedEntry = SsrCache.get(cacheKey)
+    const cachedEntry = SsrMemCache.get(cacheKey)
     const pleaseRefreshCache = (false
         || ctx.headers['cache-control'] === 'no-cache'
         || ssrSettings.ssrRefreshParam in ctx.query
@@ -103,31 +60,31 @@ export async function useSsrCache(ctx: KoaContext, ssrTask: () => Promise<undefi
         // It must elapse at least 1 minute between cache refresh requests,
         // avoiding cache invalidation malicious bombing.
         && isDateTimeElapsed(cachedEntry.result.created, OneMinuteInMs)
-    const cacheIsFree = SsrCache.size < ssrSettings.ssrCacheLimit
+    const cacheIsFree = SsrMemCache.size < ssrSettings.ssrCacheMemLimit
     const cacheIsExpired = Date.now() > (cachedEntry?.expires ?? 0)
 
     const logIndent = LogIndentation.Ssr
 
     if (! cachedEntry) {
         // There is not a cached entry.
-        console.info(logIndent, ctx.state.connectionId, '[server:ssr-cache] missed')
+        console.info(logIndent, ctx.state.connectionId, '[server:ssr-cache] missed.')
     }
     if (cachedEntry && cacheIsExpired) {
         // There is a cached entry but it is expired.
-        console.info(logIndent, ctx.state.connectionId, '[server:ssr-cache] expired')
+        console.info(logIndent, ctx.state.connectionId, '[server:ssr-cache] expired.')
     }
     if (cachedEntry && ! cacheIsExpired && pleaseRefreshCache && shouldRefreshCache) {
         // There is a cached entry, it is not expired, wre are requested to refresh it and it is a valid request.
-        console.info(logIndent, ctx.state.connectionId, '[server:ssr-cache] refreshing')
+        console.info(logIndent, ctx.state.connectionId, '[server:ssr-cache] refreshing.')
     }
     if (cachedEntry && ! cacheIsExpired && pleaseRefreshCache && ! shouldRefreshCache) {
         // There is a cached entry, it is not expired, wre are requested to refresh it but it is an invalid request.
-        console.info(logIndent, ctx.state.connectionId, '[server:ssr-cache] not refreshing')
+        console.info(logIndent, ctx.state.connectionId, '[server:ssr-cache] not refreshing.')
     }
     if (cachedEntry && ! cacheIsExpired && ! shouldRefreshCache) {
         // There is a cached entry, it is not expired and we are not requested to refresh.
         const remainingTime = cachedEntry.expires - Date.now()
-        console.info(logIndent, ctx.state.connectionId, `[server:ssr-cache] hit (expires in ${formatTimeAsSeconds(remainingTime)}s)`)
+        console.info(logIndent, ctx.state.connectionId, `[server:ssr-cache] hit (expires in ${formatTimeAsSeconds(remainingTime)}s).`)
 
         return cachedEntry.result
     }
@@ -135,22 +92,24 @@ export async function useSsrCache(ctx: KoaContext, ssrTask: () => Promise<undefi
     const result = await ssrTask()
 
     if (! result) {
-        console.warn(logIndent, ctx.state.connectionId, '[server:ssr-cache] no result')
+        console.warn(logIndent, ctx.state.connectionId, '[server:ssr-cache] no result.')
 
         return result
     }
 
     if (! cacheIsFree && ! cachedEntry) {
         // We have no more space for a new cached entry.
-        console.info(logIndent, ctx.state.connectionId, '[server:ssr-cache] limit reached')
+        console.warn(logIndent, ctx.state.connectionId, '[server:ssr-cache] limit reached.')
     }
     if (cacheIsFree || cachedEntry) {
         // We have space for a new entry or the cached entry already exists.
-        console.info(logIndent, ctx.state.connectionId, '[server:ssr-cache] saved')
+        if (ssrSettings.debug) {
+            console.debug(logIndent, ctx.state.connectionId, '[server:ssr-cache] saved.')
+        }
 
         const expires = result.created + ssrSettings.ssrCacheExpires
 
-        SsrCache.set(cacheKey, {result, expires})
+        SsrMemCache.set(cacheKey, {result, expires})
     }
 
     return result
@@ -162,12 +121,13 @@ export async function useSsrRender(ctx: KoaContext): Promise<undefined | SsrResu
 
     const logIndent = LogIndentation.Ssr
 
-    console.info(logIndent, ctx.state.connectionId, '[server:ssr] starts page')
-    console.debug(logIndent, ctx.state.connectionId, '[server:ssr] headers are', ctx.req.headers)
-
     const baseUrl = ssrBaseUrlOf(ctx)
     const appUrl = new URL(ctx.path, baseUrl)
     appUrl.searchParams.set(ssrSettings.ssrRequestParam, '')
+
+    if (ssrSettings.debug) {
+        console.debug(logIndent, ctx.state.connectionId, '[server:ssr] starting page.')
+    }
 
     const browserPage = await ssrBrowser.newPage()
 
@@ -178,26 +138,30 @@ export async function useSsrRender(ctx: KoaContext): Promise<undefined | SsrResu
         const isAllowedOrigin = [baseUrl, ...ssrSettings.ssrAllowedOrigins].some(it => request.url().startsWith(it))
 
         if (! isAllowedResource) {
-            console.info(logIndent, ctx.state.connectionId, '[server:ssr] ✕ blocked request type', request.resourceType(), request.url())
+            console.info(logIndent, ctx.state.connectionId, `[server:ssr] ✕ blocked request type "${request.resourceType()}" "${request.url()}".`)
 
             request.abort()
 
             return
         }
         if (! isAllowedOrigin) {
-            console.info(logIndent, ctx.state.connectionId, '[server:ssr] ✕ blocked request origin', request.url())
+            console.info(logIndent, ctx.state.connectionId, `[server:ssr] ✕ blocked request for origin "${request.url()}".`)
 
             request.abort()
 
             return
         }
 
-        console.info(logIndent, ctx.state.connectionId, '[server:ssr] ⇢ loading', request.resourceType(), request.url())
+        if (ssrSettings.debug) {
+            console.debug(logIndent, ctx.state.connectionId, `[server:ssr] ⇢ loading "${request.resourceType()}" "${request.url()}".`)
+        }
 
         request.continue()
     })
 
-    console.info(logIndent, ctx.state.connectionId, '[server:ssr] rendering url', appUrl.href)
+    if (ssrSettings.debug) {
+        console.debug(logIndent, ctx.state.connectionId, `[server:ssr] rendering url "${appUrl.href}".`)
+    }
 
     try {
         await browserPage.goto(appUrl.toString(), {
@@ -209,7 +173,7 @@ export async function useSsrRender(ctx: KoaContext): Promise<undefined | SsrResu
             await ssrSettings.ssrBrowserWaitFor?.(browserPage)
         }
         catch (error) {
-            console.error(logIndent, ctx.state.connectionId, '[server:ssr] error waiting custom condition', error)
+            console.error(logIndent, ctx.state.connectionId, '[server:ssr] error waiting custom condition.', error)
             throw error
         }
 
@@ -218,28 +182,30 @@ export async function useSsrRender(ctx: KoaContext): Promise<undefined | SsrResu
                 await browserPage.evaluate(ssrSettings.ssrBrowserEvaluate)
             }
             catch (error) {
-                console.error(logIndent, ctx.state.connectionId, '[server:ssr] error evaluatiing custom condition', error)
+                console.error(logIndent, ctx.state.connectionId, '[server:ssr] error evaluating custom condition.', error)
                 throw error
             }
         }
 
         const body = await browserPage.content()
 
-        console.info(logIndent, ctx.state.connectionId, `[server:ssr] rendered in ${Date.now() - start}ms`)
+        console.info(logIndent, ctx.state.connectionId, `[server:ssr] rendered in ${Date.now() - start}ms.`)
 
         return {body, created: Date.now()}
     }
     catch (error) {
-        console.error(logIndent, ctx.state.connectionId, '[server:ssr] error rendering url', ctx.path, '\n', error)
+        console.error(logIndent, ctx.state.connectionId, `[server:ssr] error rendering url "${ctx.path}".\n`, error)
     }
     finally {
-        console.info(logIndent, ctx.state.connectionId, '[server:ssr] closing page')
+        if (ssrSettings.debug) {
+            console.debug(logIndent, ctx.state.connectionId, '[server:ssr] closing page.')
+        }
 
         try {
             await browserPage.close()
         }
         catch (error) {
-            console.error(logIndent, ctx.state.connectionId, '[server:ssr] error closing page')
+            console.error(logIndent, ctx.state.connectionId, '[server:ssr] error closing page', error)
         }
     }
 
@@ -249,8 +215,8 @@ export async function useSsrRender(ctx: KoaContext): Promise<undefined | SsrResu
 export async function useSsrTransform(ctx: KoaContext, result: undefined | SsrResult): Promise<undefined | SsrResult> {
     const {ssrSettings} = ctx
 
-    function warnBundlingSkipped(reason: any): undefined {
-        console.warn(LogIndentation.SsrTransform, ctx.state.connectionId, '[server:ssr-transform] skipping stylesheets bundling due to condition', reason)
+    function warnBundlingSkipped(reason: number) {
+        console.warn(LogIndentation.SsrTransform, ctx.state.connectionId, `[server:ssr-transform] skipping stylesheets bundling due to condition "${reason}".`)
     }
 
     if (! result) {
@@ -269,13 +235,21 @@ export async function useSsrTransform(ctx: KoaContext, result: undefined | SsrRe
 
     const externalStyles = piping(document)
         (document => document.childNodes.find(testingNodeName('html')))
-        (mappingElement(htmlNode => htmlNode.childNodes.find(testingNodeName('head')), returnUndefined))
-        (mappingElement(headNode => headNode?.childNodes.filter((link): link is Parse5Element =>
-            true
-            && isElement(link)
-            && link.nodeName === 'link'
-            && link.attrs.some(attr => attr.name === 'rel' && attr.value === 'stylesheet')
-        ), returnUndefined))
+        (mappingElement(
+            htmlNode => htmlNode.childNodes.find(testingNodeName('head')),
+            returnUndefined,
+        ))
+        (mappingElement(
+            headNode =>
+                headNode?.childNodes.filter((link): link is Parse5Element =>
+                    true
+                    && isElement(link)
+                    && link.nodeName === 'link'
+                    && link.attrs.some(attr => attr.name === 'rel' && attr.value === 'stylesheet')
+                )
+            ,
+            returnUndefined,
+        ))
     ()
 
     // The index.css must be untouched, and the other 2 or more stylesheets should be bundled.
@@ -291,7 +265,9 @@ export async function useSsrTransform(ctx: KoaContext, result: undefined | SsrRe
         return result
     }
     if (! otherStyles || otherStyles.length < 2) {
-        warnBundlingSkipped(4)
+        if (ssrSettings.debug) {
+            warnBundlingSkipped(4)
+        }
         // We need at least 2 other external stylesheets for the optimization to take place.
         return result
     }
@@ -354,7 +330,9 @@ export async function useSsrTransform(ctx: KoaContext, result: undefined | SsrRe
     await mkdir(otherStylesBundleDirPath, {recursive: true})
     await writeFile(otherStylesBundlePath, otherStylesBundleContent)
 
-    console.info(LogIndentation.SsrTransform, ctx.state.connectionId, '[server:ssr-transform] bundling stylesheets to', otherStylesBundlePath)
+    if (ssrSettings.debug) {
+        console.debug(LogIndentation.SsrTransform, ctx.state.connectionId, `[server:ssr-transform] bundling stylesheets to "${otherStylesBundlePath}".`)
+    }
 
     otherStyles.forEach(link => link.attrs.push(
         {name: 'disabled', value: ''},
@@ -403,7 +381,7 @@ export interface SsrRenderOutput {
     created: number
 }
 
-interface SsrCacheEntry {
+export interface SsrCacheEntry {
     result: SsrRenderOutput
     expires: number
 }
