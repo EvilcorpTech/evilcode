@@ -2,7 +2,7 @@ export function paginatedRange(
     totalSize: number,
     pageSize: number,
     requestedPage: number,
-): Range {
+): PaginationInfo {
     const pages = Math.ceil(totalSize / pageSize)
     const page = Math.min(requestedPage, pages)
 
@@ -15,7 +15,7 @@ export function paginatedRange(
 
 // Types ///////////////////////////////////////////////////////////////////////
 
-export interface Range {
+export interface PaginationInfo {
     start: number
     end: number
     page: number
