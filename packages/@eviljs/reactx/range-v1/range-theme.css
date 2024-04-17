@@ -30,11 +30,11 @@
     background: var(--std-color-bg1);
     box-shadow: var(--std-shadow1);
 }
-.handle-bd2c.start {
+.handle-bd2c-start {
     border-top-left-radius: 2rem;
     border-bottom-left-radius: 2rem;
 }
-.handle-bd2c.end {
+.handle-bd2c-end {
     border-top-right-radius: 2rem;
     border-bottom-right-radius: 2rem;
 }

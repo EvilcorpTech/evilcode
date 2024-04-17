@@ -7,10 +7,10 @@
     display: flex;
     align-items: center;
 }
-.tail-2c71.start {
+.tail-2c71-start {
     justify-content: flex-end;
 }
-.tail-2c71.end {
+.tail-2c71-end {
     justify-content: flex-start;
 }
 

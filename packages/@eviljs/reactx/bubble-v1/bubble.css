@@ -1,0 +1,111 @@
+.Bubble-85f2 {
+    --Bubble-arrow-size--default: 10px;
+    --Bubble-arrow-width--default: var(--Bubble-arrow-size, var(--Bubble-arrow-size--default));
+    --Bubble-arrow-height--default: var(--Bubble-arrow-size, var(--Bubble-arrow-size--default));
+    --Bubble-background-color--default: var(--std-color-bg4);
+
+    position: relative;
+    background-color: var(--Bubble-background-color, var(--Bubble-background-color--default));
+}
+
+.Bubble-85f2::before {
+    content: '';
+    position: absolute;
+    z-index: 1;
+}
+.Bubble-85f2[data-arrow-position="top"] {
+    margin-top: var(--Bubble-arrow-height, var(--Bubble-arrow-height--default));
+
+    &::before {
+        top: calc(1px + -1 * var(--Bubble-arrow-height, var(--Bubble-arrow-height--default)));
+        left: 50%;
+        transform: translateX(-50%);
+        border-bottom:
+            var(--Bubble-arrow-height, var(--Bubble-arrow-height--default))
+            solid
+            var(--Bubble-background-color, var(--Bubble-background-color--default))
+        ;
+        border-left:
+            var(--Bubble-arrow-width, var(--Bubble-arrow-width--default))
+            solid
+            transparent
+        ;
+        border-right:
+            var(--Bubble-arrow-width, var(--Bubble-arrow-width--default))
+            solid
+            transparent
+        ;
+    }
+}
+.Bubble-85f2[data-arrow-position="bottom"] {
+    margin-bottom: var(--Bubble-arrow-height, var(--Bubble-arrow-height--default));
+
+    &::before {
+        bottom: calc(1px + -1 * var(--Bubble-arrow-height, var(--Bubble-arrow-height--default)));
+        left: 50%;
+        transform: translateX(-50%);
+        border-top:
+            var(--Bubble-arrow-height, var(--Bubble-arrow-height--default))
+            solid
+            var(--Bubble-background-color, var(--Bubble-background-color--default))
+        ;
+        border-left:
+            var(--Bubble-arrow-width, var(--Bubble-arrow-width--default))
+            solid
+            transparent
+        ;
+        border-right:
+            var(--Bubble-arrow-width, var(--Bubble-arrow-width--default))
+            solid
+            transparent
+        ;
+    }
+}
+.Bubble-85f2[data-arrow-position="left"] {
+    margin-left: var(--Bubble-arrow-height, var(--Bubble-arrow-height--default));
+
+    &::before {
+        left: calc(1px + -1 * var(--Bubble-arrow-height, var(--Bubble-arrow-height--default)));
+        top: 50%;
+        transform: translateY(-50%);
+        border-right:
+            var(--Bubble-arrow-height, var(--Bubble-arrow-height--default))
+            solid
+            var(--Bubble-background-color, var(--Bubble-background-color--default))
+        ;
+        border-top:
+            var(--Bubble-arrow-width, var(--Bubble-arrow-width--default))
+            solid
+            transparent
+        ;
+        border-bottom:
+            var(--Bubble-arrow-width, var(--Bubble-arrow-width--default))
+            solid
+            transparent
+        ;
+    }
+}
+.Bubble-85f2[data-arrow-position="right"] {
+    margin-right: var(--Bubble-arrow-height, var(--Bubble-arrow-height--default));
+
+    &::before {
+        right: calc(1px + -1 * var(--Bubble-arrow-height, var(--Bubble-arrow-height--default)));
+        top: 50%;
+        transform: translateY(-50%);
+        border-left:
+            var(--Bubble-arrow-height, var(--Bubble-arrow-height--default))
+            solid
+            var(--Bubble-background-color, var(--Bubble-background-color--default))
+        ;
+        border-top:
+            var(--Bubble-arrow-width, var(--Bubble-arrow-width--default))
+            solid
+            transparent
+        ;
+        border-bottom:
+            var(--Bubble-arrow-width, var(--Bubble-arrow-width--default))
+            solid
+            transparent
+        ;
+    }
+}

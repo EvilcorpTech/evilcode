@@ -1,4 +1,5 @@
 import {classes} from '@eviljs/react/classes.js'
+import {KeyboardKey} from '@eviljs/web/keybinding.js'
 import type {DragPointerEvent, UseDragOptions} from '@eviljs/react/drag.js'
 import {useDrag} from '@eviljs/react/drag.js'
 import {clamp} from '@eviljs/std/math.js'
@@ -75,25 +76,25 @@ export function Range(props: RangeProps) {
         >
             <div
                 ref={refs.start}
-                className="tail-2c71 start"
+                className="tail-2c71 tail-2c71-start"
                 style={{width: `${rangeStart * 100}%`}}
             >
-                <span className="track-7bf1 start">
+                <span className="track-7bf1 track-7bf1-start">
                     {startLine}
                 </span>
                 <button
                     ref={refs.startHandle}
-                    className="handle-bd2c start"
-                    onKeyDown={(event) => {
+                    className="handle-bd2c handle-bd2c-start"
+                    onKeyDown={event => {
                         switch (event.key) {
-                            case 'ArrowLeft': {
+                            case KeyboardKey.ArrowLeft: {
                                 const start = Math.max(0, rangeStart - keyboardStep)
                                 const range = {start, end: rangeEnd}
                                 onChange?.(range)
                                 onChanged?.(range)
                             }
                             break
-                            case 'ArrowRight': {
+                            case KeyboardKey.ArrowRight: {
                                 const start = Math.min(rangeStart + keyboardStep, rangeEnd)
                                 const range = {start, end: rangeEnd}
                                 onChange?.(range)
@@ -115,9 +116,9 @@ export function Range(props: RangeProps) {
                         ? 0
                         : -1
                 }
-                onKeyDown={(event) => {
+                onKeyDown={event => {
                     switch (event.key) {
-                        case 'ArrowLeft': {
+                        case KeyboardKey.ArrowLeft: {
                             const distance = distanceBetween(rangeStart, rangeEnd)
                             const start = Math.max(0, rangeStart - keyboardStep)
                             const end = Math.max(start + distance, rangeEnd - keyboardStep)
@@ -126,7 +127,7 @@ export function Range(props: RangeProps) {
                             onChanged?.(range)
                         }
                         break
-                        case 'ArrowRight': {
+                        case KeyboardKey.ArrowRight: {
                             const distance = distanceBetween(rangeStart, rangeEnd)
                             const end = Math.min(rangeEnd + keyboardStep, 1)
                             const start = Math.min(rangeStart + keyboardStep, end - distance)
@@ -143,22 +144,22 @@ export function Range(props: RangeProps) {
 
             <div
                 ref={refs.end}
-                className="tail-2c71 end"
+                className="tail-2c71 tail-2c71-end"
                 style={{width: `${(1 - rangeEnd) * 100}%`}}
             >
                 <button
                     ref={refs.endHandle}
-                    className="handle-bd2c end"
-                    onKeyDown={(event) => {
+                    className="handle-bd2c handle-bd2c-end"
+                    onKeyDown={event => {
                         switch (event.key) {
-                            case 'ArrowLeft': {
+                            case KeyboardKey.ArrowLeft: {
                                 const end = Math.max(rangeStart, rangeEnd - keyboardStep)
                                 const range = {start: rangeStart, end}
                                 onChange?.(range)
                                 onChanged?.(range)
                             }
                             break
-                            case 'ArrowRight': {
+                            case KeyboardKey.ArrowRight: {
                                 const end = Math.min(rangeEnd + keyboardStep, 1)
                                 const range = {start: rangeStart, end}
                                 onChange?.(range)
@@ -170,7 +171,7 @@ export function Range(props: RangeProps) {
                 >
                     {endHandle || <>&#124;&#124;</>}
                 </button>
-                <span className="track-7bf1 end">
+                <span className="track-7bf1 track-7bf1-end">
                     {endLine}
                 </span>
             </div>
@@ -209,54 +210,6 @@ export function RangeNumeric(props: RangeNumericProps) {
     const endClamped = Math.min(end, max)
     const rangeStart = distanceBetween(min, startClamped) / distanceBetween(min, max)
     const rangeEnd = distanceBetween(min, endClamped) / distanceBetween(min, max)
-
-    return (
-        <Range
-            {...otherProps}
-            start={rangeStart}
-            end={rangeEnd}
-            onChange={onRangeChange}
-            onChanged={onRangeChanged}
-        />
-    )
-}
-
-export function RangeTime(props: RangeTimeProps) {
-    const {start, end, min, max, onChange, onChanged, ...otherProps} = props
-
-    const onRangeChange = useCallback((range: Range) => {
-        if (isNone(min) || isNone(max)) {
-            return
-        }
-
-        const datesRange = computeTimeRange(min, max, range)
-
-        onChange?.(datesRange)
-    }, [onChange, min, max])
-
-    const onRangeChanged = useCallback((range: Range) => {
-        if (isNone(min) || isNone(max)) {
-            return
-        }
-
-        const datesRange = computeTimeRange(min, max, range)
-
-        onChanged?.(datesRange)
-    }, [onChanged, min, max])
-
-
-    if (isNone(min) || isNone(max) || isNone(start) || isNone(end)) {
-        return
-    }
-
-    const minTime = min.getTime()
-    const maxTime = max.getTime()
-    const startTime = start.getTime()
-    const endTime = end.getTime()
-    const startTimeClamped = Math.max(startTime, minTime)
-    const endTimeClamped = Math.min(endTime, maxTime)
-    const rangeStart = distanceBetween(minTime, startTimeClamped) / distanceBetween(minTime, maxTime)
-    const rangeEnd = distanceBetween(minTime, endTimeClamped) / distanceBetween(minTime, maxTime)
 
     return (
         <Range
@@ -368,14 +321,6 @@ export function computeNumericRange(min: number, max: number, range: Range) {
     return {start, end}
 }
 
-export function computeTimeRange(min: Date, max: Date, range: Range) {
-    const numbersRange = computeNumericRange(min.getTime(), max.getTime(), range)
-    const start = new Date(numbersRange.start)
-    const end = new Date(numbersRange.end)
-
-    return {start, end}
-}
-
 // Types ///////////////////////////////////////////////////////////////////////
 
 export interface RangeProps extends Omit<React.HTMLAttributes<HTMLDivElement>, 'onChange'> {
@@ -393,15 +338,6 @@ export interface RangeProps extends Omit<React.HTMLAttributes<HTMLDivElement>, '
 export interface RangeNumericProps extends RangeProps {
     min: undefined | number
     max: undefined | number
-}
-
-export interface RangeTimeProps extends Omit<RangeProps, 'start' | 'end' | 'onChange' | 'onChanged'> {
-    start: undefined | Date
-    end: undefined | Date
-    min: undefined | Date
-    max: undefined | Date
-    onChange?: undefined | RangeObserver<Date>
-    onChanged?: undefined | RangeObserver<Date>
 }
 
 export type RangeStartState = [RangeRects, DragPointerEvent]
