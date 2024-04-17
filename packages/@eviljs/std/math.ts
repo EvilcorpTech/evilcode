@@ -26,9 +26,9 @@ export function average<I>(items: Array<number> | Array<I>, getter?: undefined |
     return total / items.length
 }
 
-export function minMax(items: Array<number>, getter?: undefined): MaybeMinMax;
-export function minMax<I>(items: Array<I>, getter: NumberGetter<I>): MaybeMinMax;
-export function minMax<I>(items: Array<number> | Array<I>, getter?: undefined | NumberGetter<I>): MaybeMinMax {
+export function minMax(items: Array<number>, getter?: undefined): MinMaxMaybe;
+export function minMax<I>(items: Array<I>, getter: NumberGetter<I>): MinMaxMaybe;
+export function minMax<I>(items: Array<number> | Array<I>, getter?: undefined | NumberGetter<I>): MinMaxMaybe {
     let min: undefined | number = undefined
     let max: undefined | number = undefined
 
@@ -70,6 +70,6 @@ export function isBetween(a: number, value: number, b: number) {
 
 // Types ///////////////////////////////////////////////////////////////////////
 
-export type MaybeMinMax = [undefined, undefined] | MinMax
+export type MinMaxMaybe = [undefined, undefined] | MinMax
 export type MinMax = [number, number]
 export type NumberGetter<I> = (it: I) => number
