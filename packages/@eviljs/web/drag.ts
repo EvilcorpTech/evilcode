@@ -1,45 +1,68 @@
 import {isNumber} from '@eviljs/std/type.js'
 
-export function attachDragListeners(element: DragElement, listeners: DragListeners) {
-    function onPointerMove(event: MouseEvent | TouchEvent) {
-        if (event.type === 'touchmove' && event.cancelable) {
-            // Prevents the touchmove event from moving/scrolling the page on touch devices.
-            event.preventDefault()
-        }
-        listeners.onPointerMove(asDragPointerEvent(event))
+export function attachDragDraggingListeners(element: DragElement, options: DragListeners) {
+    const eventOptions = {capture: true, passive: true} satisfies AddEventListenerOptions
+
+    const listeners = {
+        // Move ////////////////////////////////////////////////////////////////
+        onMouseMoveOptions: eventOptions,
+        onMouseMove(event: MouseEvent) {
+            options.onPointerMove(asDragPointerEvent(event))
+        },
+        onTouchMoveOptions: {...eventOptions, passive: false},
+        onTouchMove(event: TouchEvent) {
+            if (event.cancelable) {
+                event.preventDefault() // Prevents the 'touchmove' event from moving/scrolling the page on touch devices.
+            }
+            options.onPointerMove(asDragPointerEvent(event))
+        },
+        // End /////////////////////////////////////////////////////////////////
+        onMouseUpOptions: eventOptions,
+        onMouseUp(event: MouseEvent) {
+            options.onPointerEnd(asDragPointerEvent(event))
+        },
+        onPointerUpOptions: eventOptions,
+        onPointerUp(event: PointerEvent) {
+            options.onPointerEnd(asDragPointerEvent(event))
+        },
+        onTouchEndOptions: eventOptions,
+        onTouchEnd(event: TouchEvent) {
+            options.onPointerEnd(asDragPointerEvent(event))
+        },
+        // Cancel //////////////////////////////////////////////////////////////
+        // onMouseDownOptions: eventOptions,
+        // onMouseDown(event: MouseEvent) {
+        //     // Non primary mouse button (right, middle) click.
+        //     options.onPointerCancel(asDragPointerEvent(event))
+        // },
+        // onMouseLeaveOptions: eventOptions,
+        // onMouseLeave(event: MouseEvent) {
+        //     options.onPointerCancel(asDragPointerEvent(event))
+        // },
+        onTouchCancelOptions: {...eventOptions, passive: false},
+        onTouchCancel(event: TouchEvent) {
+            options.onPointerCancel(asDragPointerEvent(event))
+        },
     }
 
-    function onPointerEnd(event: MouseEvent | TouchEvent) {
-        listeners.onPointerEnd(asDragPointerEvent(event))
-    }
-
-    function onPointerCancel(event: MouseEvent | TouchEvent) {
-        if (event.target !== event.currentTarget) {
-            return
-        }
-        if (event.type === 'touchcancel') {
-            event.preventDefault() // On touchcancel, prevents firing the mouseleave event too.
-        }
-        listeners.onPointerCancel(asDragPointerEvent(event))
-    }
-
-    element.addEventListener('mousemove', onPointerMove, {capture: true, passive: true})
-    element.addEventListener('touchmove', onPointerMove, {capture: true, passive: false})
-    element.addEventListener('mousedown', onPointerEnd, {capture: true, passive: true}) // Non primary mouse button (right, middle) click.
-    element.addEventListener('mouseup', onPointerEnd, {capture: true, passive: true})
-    element.addEventListener('pointerup', onPointerEnd, {capture: true, passive: true})
-    element.addEventListener('touchend', onPointerEnd, {capture: true, passive: true})
-    element.addEventListener('mouseleave', onPointerCancel, {capture: true, passive: true})
-    element.addEventListener('touchcancel', onPointerCancel, {capture: true, passive: false})
+    element.addEventListener('mousemove', listeners.onMouseMove, listeners.onMouseMoveOptions)
+    element.addEventListener('touchmove', listeners.onTouchMove, listeners.onTouchMoveOptions)
+    element.addEventListener('mouseup', listeners.onMouseUp, listeners.onMouseUpOptions)
+    element.addEventListener('pointerup', listeners.onPointerUp, listeners.onPointerUpOptions)
+    element.addEventListener('touchend', listeners.onTouchEnd, listeners.onTouchEndOptions)
+    // element.addEventListener('mousedown', listeners.onMouseDown, listeners.onMouseDownOptions)
+    // element.addEventListener('mouseleave', listeners.onMouseLeave, listeners.onMouseLeaveOptions)
+    element.addEventListener('touchcancel', listeners.onTouchCancel, listeners.onTouchCancelOptions)
 
     function onClean() {
-        element.removeEventListener('mousemove', onPointerMove, true)
-        element.removeEventListener('touchmove', onPointerMove, true)
-        element.removeEventListener('mouseup', onPointerEnd, true)
-        element.removeEventListener('pointerup', onPointerEnd, true)
-        element.removeEventListener('touchend', onPointerEnd, true)
-        element.removeEventListener('mouseleave', onPointerCancel, true)
-        element.removeEventListener('touchcancel', onPointerCancel, true)
+        element.removeEventListener('mousemove', listeners.onMouseMove, listeners.onMouseMoveOptions.capture)
+        element.removeEventListener('touchmove', listeners.onTouchMove, listeners.onTouchMoveOptions.capture)
+        element.removeEventListener('mouseup', listeners.onMouseUp, listeners.onMouseUpOptions.capture)
+        element.removeEventListener('pointerup', listeners.onPointerUp, listeners.onPointerUpOptions.capture)
+        element.removeEventListener('touchend', listeners.onTouchEnd, listeners.onTouchEndOptions.capture)
+        // element.removeEventListener('mousedown', listeners.onMouseDown, listeners.onMouseDownOptions.capture)
+        // element.removeEventListener('mouseleave', listeners.onMouseLeave, listeners.onMouseLeaveOptions.capture)
+        element.removeEventListener('touchcancel', listeners.onTouchCancel, listeners.onTouchCancelOptions.capture)
     }
 
     return onClean
