@@ -1,6 +1,6 @@
 import {
     asDragPointerEvent,
-    attachDragListeners,
+    attachDragDraggingListeners,
     initMoveState,
     initResizeState,
     initScrollState,
@@ -76,7 +76,7 @@ export function useDrag<S, P>(targetRef: DragElementRef<DragMoveElement>, option
             event.preventDefault()
         }
 
-        const removeListeners = attachDragListeners(document.documentElement, {
+        const removeListeners = attachDragDraggingListeners(document.documentElement, {
             onPointerMove,
             onPointerEnd,
             onPointerCancel,
@@ -94,18 +94,18 @@ export function useDrag<S, P>(targetRef: DragElementRef<DragMoveElement>, option
     }, [onPointerMove, onPointerEnd, onPointerCancel, options?.onStart])
 
     useEffect(() => {
-        if (! targetRef.current) {
+        const target = targetRef.current as null | HTMLElement
+
+        if (! target) {
             return
         }
-
-        const target = targetRef.current as HTMLElement
 
         function preventDefaultAction(event: Event) {
             if (! stateRef.current.progressState) {
                 // No dragging happened. We should not prevent the default action.
                 return
             }
-            // some dragging happened. We should prevent the default action.
+            // Some dragging happened. We should prevent the default action.
             event.preventDefault()
         }
 
@@ -114,9 +114,9 @@ export function useDrag<S, P>(targetRef: DragElementRef<DragMoveElement>, option
         target.addEventListener('touchstart', onPointerStart, {capture: true, passive: true})
 
         function onClean() {
-            target.removeEventListener('click', preventDefaultAction, true)
-            target.removeEventListener('mousedown', onPointerStart, true)
-            target.removeEventListener('touchstart', onPointerStart, true)
+            target!.removeEventListener('click', preventDefaultAction, true)
+            target!.removeEventListener('mousedown', onPointerStart, true)
+            target!.removeEventListener('touchstart', onPointerStart, true)
         }
 
         return onClean
