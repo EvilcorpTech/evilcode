@@ -8,12 +8,13 @@
         "build-watch": "(nx run-many --target build --skip-nx-cache || true) && nx watch --all run-many -- npm run build"
     },
     "devDependencies": {
-        "nx": "17.2.8",
-        "pnpm": "8.14.0"
+        "nx": "18.2.4",
+        "pnpm": "9.0.1"
     },
     "engines": {
         "node": ">= 16",
         "npm": ">= 7",
-        "pnpm": "8"
-    }
+        "pnpm": "9"
+    },
+    "packageManager": "pnpm@9.0.1"
 }
