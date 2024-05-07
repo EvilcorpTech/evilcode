@@ -21,6 +21,24 @@ export function filterSome<I>(list: Array<None | I>): Array<I> {
     return list.filter(isSome)
 }
 
+export function splitArray<I>(list: Array<I>, filter: Io<I, boolean>): [Array<I>, Array<I>] {
+    const trueList: Array<I> = []
+    const falseList: Array<I> = []
+
+    for (const it of list) {
+        const result = filter(it)
+
+        if (result) {
+            trueList.push(it)
+        }
+        else {
+            falseList.push(it)
+        }
+    }
+
+    return [trueList, falseList]
+}
+
 export function mappingWith<I, R>(mapItem: (it: I, idx: number) => R) {
     function mapList(list: Array<I>) {
         return list.map(mapItem)
