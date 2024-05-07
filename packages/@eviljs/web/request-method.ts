@@ -3,11 +3,11 @@ import type {ObjectPartial, StringAutocompleted, ValueOf} from '@eviljs/std/type
 import {joinRequestBasePath} from './request-merge.js'
 
 export const RequestMethod = {
-    Delete: 'delete' as const,
-    Get: 'get' as const,
-    Patch: 'patch' as const,
-    Post: 'post' as const,
-    Put: 'put' as const,
+    Delete: 'DELETE' as const,
+    Get: 'GET' as const,
+    Patch: 'PATCH' as const, // Patch must be uppercase or fetch() fails.
+    Post: 'POST' as const,
+    Put: 'PUT' as const,
 }
 
 export function creatingRequest(

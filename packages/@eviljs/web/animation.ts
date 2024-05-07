@@ -19,7 +19,7 @@ export const SpringScaleDistance = SpringDistance
 export const SpringScaleMass = SpringMass
 export const SpringScaleStiffness = SpringStiffness
 
-export function flushStyles(...elements: Array<HTMLElement>) {
+export function flushStyles(...elements: [HTMLElement, ...Array<HTMLElement>]) {
     for (const element of elements) {
         // Forces styles computation.
         // Void prevents Chrome from skipping the evaluation of the expression.
@@ -28,7 +28,7 @@ export function flushStyles(...elements: Array<HTMLElement>) {
     }
 }
 
-export function requestStylesFlush(...elements: Array<HTMLElement>): Promise<void> {
+export function requestStylesFlush(...elements: [HTMLElement, ...Array<HTMLElement>]): Promise<void> {
     let taskId: undefined | ReturnType<typeof requestAnimationFrame>
 
     const promise = createFuture<void>((resolve, reject) => {
