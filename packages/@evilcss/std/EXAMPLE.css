@@ -69,6 +69,7 @@
 @import '@evilcss/std/icon-size.props.css' layer(std);
 @import '@evilcss/std/icon.classes.css' layer(std);
 @import '@evilcss/std/layout-block.css' layer(std);
+@import '@evilcss/std/layout-box.css' layer(std);
 @import '@evilcss/std/layout-debug.classes.css' layer(std);
 @import '@evilcss/std/layout-flex-break.classes.css' layer(std);
 @import '@evilcss/std/layout-flex-child.classes.css' layer(std);
