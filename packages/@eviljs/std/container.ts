@@ -141,5 +141,5 @@ export type ContainerServiceId = PropertyKey
 export type ContainerServicesMap = object
 
 export type ContainerFactoriesOf<M extends ContainerServicesMap, S = undefined> = {
-    [key in keyof M]: (container: M & ContainerStateProps<S>) => M[key]
+    [key in keyof M]: (container: Container<M, S>) => M[key]
 }
