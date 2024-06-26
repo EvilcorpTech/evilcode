@@ -1,4 +1,6 @@
-import {asResultError, awaiting, catching, catchingError, chain, chaining, logging, mapNone, mapSome, mappingError, mappingNone, mappingOptional, mappingSome, piped, piping, trying} from '../packages/@eviljs/std/fn.js'
+import {awaiting, catching, catchingError, chaining, logging, mapNone, mapSome, mappingNone, mappingOptional, mappingResultError, mappingSome, trying} from '../packages/@eviljs/std/fn-monad.js'
+import {chain, piped, piping} from '../packages/@eviljs/std/fn-pipe.js'
+import {asResultError} from '../packages/@eviljs/std/result.js'
 import {throwError} from '../packages/@eviljs/std/throw.js'
 
 const subject = {id: 1, name: 'Mike', age: 18}
@@ -18,7 +20,7 @@ const r_c1 = piped(subject)
     .to(it => ({...it, name: `${it.name} Tyson`}))
     .to(trying(it => it, error => throwError({message: 'Something wrong happened.'})))
     .to(it => it.age >= 18 ? it : asResultError('TooYoung'))
-    .to(mappingError(error => ({name: error.error, age: 0})))
+    .to(mappingResultError(error => ({name: error.error, age: 0})))
     .to(chaining(console.log))
     .to(logging(it => `Value is: ${it}`, 'debug'))
     .to(it => `${it.name} ${it.age} years old!`)

@@ -1,4 +1,4 @@
-import {asArray} from '../packages/@eviljs/std/type.js'
+import {asArray} from '../packages/@eviljs/std/type-as.js'
 
 // export function asArray<V, I>(value: V | I):
 //     V extends Array<infer I> ? // [T] | T[] | Array<T>
