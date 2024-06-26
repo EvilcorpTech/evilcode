@@ -1,6 +1,8 @@
-import type {Io} from '@eviljs/std/fn.js'
+import type {Io} from '@eviljs/std/fn-type.js'
 import type {Ref} from '@eviljs/std/ref.js'
-import {asArray, isArray, isBoolean, isNone, isNull, isNumber, isString, isUndefined, type StringAutocompleted} from '@eviljs/std/type.js'
+import {asArray} from '@eviljs/std/type-as.js'
+import {isArray, isBoolean, isNone, isNull, isNumber, isString, isUndefined} from '@eviljs/std/type-is.js'
+import type {StringAutocompleted} from '@eviljs/std/type.js'
 import {classes, type Classes} from './classes.js'
 
 export {createRef} from '@eviljs/std/ref.js'

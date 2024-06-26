@@ -1,6 +1,6 @@
 import {createReactiveRef} from '@eviljs/std/reactive-ref.js'
 import {areSameRoutes, decodeRouteParams, encodeLink, mergeRouteChange, type Router, type RouterOptions, type RouterRoute, type RouterRouteChangeParams} from './router.js'
-import {asBaseUrl} from './url.js'
+import {asBaseUrl} from './url-path.js'
 
 export function createPathRouter<S = unknown>(options?: undefined | RouterOptions): Router<S> {
     const basePath = asBaseUrl(options?.basePath)

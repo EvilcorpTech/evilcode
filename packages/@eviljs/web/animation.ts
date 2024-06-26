@@ -1,4 +1,4 @@
-import type {Task} from '@eviljs/std/fn.js'
+import type {Task} from '@eviljs/std/fn-type.js'
 import {Future, createFuture} from '@eviljs/std/promise-future.js'
 import {createLinearScale, directionOf, distanceBetween} from '@eviljs/std/scale.js'
 

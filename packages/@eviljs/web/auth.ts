@@ -1,7 +1,11 @@
-import {compute, piping, type Computable, type Fn, type FnArgs} from '@eviljs/std/fn.js'
-import {asString, isObject} from '@eviljs/std/type.js'
-import {RequestMethod, creatingRequest, usingRequestJson} from './request.js'
-import {decodeResponse} from './response.js'
+import {compute, type Computable} from '@eviljs/std/fn-compute.js'
+import {piping} from '@eviljs/std/fn-pipe.js'
+import type {Fn, FnArgs} from '@eviljs/std/fn-type.js'
+import {asString} from '@eviljs/std/type-as.js'
+import {isObject} from '@eviljs/std/type-is.js'
+import {usingRequestJson} from './request-json.js'
+import {RequestMethod, creatingRequest} from './request-method.js'
+import {decodeResponseBody} from './response.js'
 import {throwInvalidResponse} from './throw.js'
 
 export const AuthUrlDefault = '/auth'
@@ -28,7 +32,7 @@ export async function authenticate(credentials: AuthCredentials, optionsComputab
     ()
 
     const responseBody = await piping(response)
-        (decodeResponse)
+        (decodeResponseBody)
         (promise => promise.catch(error => {
             return throwAuthInvalidResponse('authenticate', AuthMessages.failedResponseDecoding(error))
         }))

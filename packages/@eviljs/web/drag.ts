@@ -1,4 +1,4 @@
-import {isNumber} from '@eviljs/std/type.js'
+import {isNumber} from '@eviljs/std/type-is.js'
 
 export function attachDragDraggingListeners(element: DragElement, options: DragListeners) {
     const eventOptions = {capture: true, passive: true} satisfies AddEventListenerOptions

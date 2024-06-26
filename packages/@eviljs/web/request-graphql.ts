@@ -1,12 +1,13 @@
-import {piping, type Io, type PipeContinuation} from '@eviljs/std/fn.js'
-import {asObject} from '@eviljs/std/type.js'
+import {piping, type PipeContinuation} from '@eviljs/std/fn-pipe.js'
+import type {Io} from '@eviljs/std/fn-type.js'
+import {asObject} from '@eviljs/std/type-as.js'
 import {JsonType} from './mimetype.js'
 import {usingRequestMethod} from './request-init.js'
 import {usingRequestJson} from './request-json.js'
 import {usingRequestOptions} from './request-merge.js'
 import {RequestMethod, creatingRequest, type RequestOptions} from './request-method.js'
 import {usingRequestParams} from './request-params.js'
-import {decodeResponseJson} from './response.js'
+import {decodeResponseBodyAsJson} from './response.js'
 
 export const GraphqlQueryCommentRegexp = /[#].*/g
 export const GraphqlQueryEmptiesRegexp = /\s+/g
@@ -93,7 +94,7 @@ export function useRequestGraphqlPost(request: Request, query: string, variables
 **/
 export function useResponseGraphql<V = unknown>(response: Response | Promise<Response>): Promise<V> {
     return Promise.resolve(response)
-        .then(decodeResponseJson)
+        .then(decodeResponseBodyAsJson)
         .then(it => asObject(it)?.data as V)
 }
 

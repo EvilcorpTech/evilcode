@@ -1,6 +1,6 @@
 import {wait} from '@eviljs/std/async.js'
 import {OneSecondInMs} from '@eviljs/std/date.js'
-import type {Fn, Io} from '@eviljs/std/fn.js'
+import type {Fn, Io} from '@eviljs/std/fn-type.js'
 import {cloneRequestWithBody} from './request-clone.js'
 
 /**
@@ -47,6 +47,33 @@ export function useFetchRetry(request: Request, options?: undefined | FetchRetry
     // We need to clone the request otherwise a TypeError is raised due to used body.
     // `new Request(request)` does not work; we need `request.clone()`.
     return executor(cloneRequestWithBody(request)).then(assert).catch(retry)
+}
+
+/**
+* EXAMPLE
+*
+* const retryOptions: FetchRetryOptions = {
+*     assert: rejectOnServerRecoverableStatus,
+*     delay: 3_000,
+*     delayFactor: 2,
+*     times: 2,
+* }
+*/
+export async function rejectOnServerRecoverableStatus(responsePromise: Response | Promise<Response>): Promise<Response> {
+    const response = await responsePromise
+
+    // Selects response errors eligible for retrying.
+    switch (response.status) {
+        case 408: // Request Timeout
+        case 429: // Too Many Requests
+        case 502: // Bad Gateway
+        case 503: // Service Unavailable
+        case 504: // Gateway Timeout
+        case 507: // Insufficient Storage
+            throw response
+    }
+
+    return response
 }
 
 // Types ///////////////////////////////////////////////////////////////////////

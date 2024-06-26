@@ -1,8 +1,8 @@
-import type {Io} from '@eviljs/std/fn.js'
+import type {Io} from '@eviljs/std/fn-type.js'
 import {JsonType} from './mimetype.js'
 import {mergeRequest, mergeRequestHeaders} from './request-merge.js'
 
-export {decodeResponseJson} from './response.js'
+export {decodeResponseBodyAsJson} from './response.js'
 
 /**
 * @throws TypeError | InvalidArgument

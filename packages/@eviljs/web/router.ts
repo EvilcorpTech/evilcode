@@ -1,6 +1,14 @@
 import type {ReactiveRef} from '@eviljs/std/reactive-ref.js'
-import {isString} from '@eviljs/std/type.js'
-import {encodeUrlParamKey, encodeUrlParams, encodeUrlParamValue, joinUrlWithParamsString, type UrlParams, type UrlParamsDict, type UrlParamsList} from './url.js'
+import {isString} from '@eviljs/std/type-is.js'
+import {
+    encodeUrlParamKey,
+    encodeUrlParamValue,
+    encodeUrlParams,
+    joinUrlWithParamsString,
+    type UrlParams,
+    type UrlParamsDict,
+    type UrlParamsList,
+} from './url-params.js'
 
 export function areSameRoutes<S>(firstRoute: RouterRoute<S>, secondRoute: RouterRoute<S>): boolean {
     const samePath = firstRoute.path === secondRoute.path

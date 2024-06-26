@@ -1,4 +1,4 @@
-import {piping, type PipeContinuation} from '@eviljs/std/fn.js'
+import {piping, type PipeContinuation} from '@eviljs/std/fn-pipe.js'
 import type {ObjectPartial, StringAutocompleted, ValueOf} from '@eviljs/std/type.js'
 import {joinRequestBasePath} from './request-merge.js'
 
@@ -11,14 +11,14 @@ export const RequestMethod = {
 }
 
 export function creatingRequest(
-    method: RequestMethodEnum | StringAutocompleted,
+    method: RequestMethodEnum,
     pathOrUrl: string,
     options?: undefined | RequestOptions,
 ): PipeContinuation<Request> {
     return piping(createRequest(method, pathOrUrl, options))
 }
 export function createRequest(
-    method: RequestMethodEnum | StringAutocompleted,
+    method: RequestMethodEnum,
     pathOrUrl: string,
     options?: undefined | RequestOptions,
 ): Request {
@@ -70,6 +70,4 @@ export interface RequestOptions extends ObjectPartial<RequestInit> {
     baseUrl?: undefined | string
 }
 
-export type RequestMethodEnum =
-    | (Lowercase<ValueOf<typeof RequestMethod>> & string)
-    | (Uppercase<ValueOf<typeof RequestMethod>> & string)
+export type RequestMethodEnum = (ValueOf<typeof RequestMethod>) | StringAutocompleted

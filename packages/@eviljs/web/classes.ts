@@ -1,5 +1,5 @@
+import {isObject} from '@eviljs/std/type-is.js'
 import type {None} from '@eviljs/std/type.js'
-import {isObject} from '@eviljs/std/type.js'
 
 export function classes(...args: Array<Classes>) {
     // Implementation based on these benchmarks:

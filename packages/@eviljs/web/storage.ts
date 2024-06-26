@@ -1,7 +1,8 @@
-import type {AccessorSync} from '@eviljs/std/accessor.js'
-import {createAccessor} from '@eviljs/std/accessor.js'
-import {tryCatch, type Io} from '@eviljs/std/fn.js'
-import {asBoolean, asNumber, isUndefined} from '@eviljs/std/type.js'
+import {tryCatch} from '@eviljs/std/fn-try.js'
+import type {Io} from '@eviljs/std/fn-type.js'
+import {createReadWrite, type RwSync} from '@eviljs/std/rw.js'
+import {asBoolean, asNumber} from '@eviljs/std/type-as.js'
+import {isUndefined} from '@eviljs/std/type-is.js'
 
 export function createBrowserStorageAccessor(
     key: string,
@@ -23,7 +24,7 @@ export function createBrowserStorageAccessor(
         return newValue
     }
 
-    return createAccessor(read, write)
+    return createReadWrite(read, write)
 }
 
 export function createBrowserStorageAccessorJson<V = unknown>(
@@ -52,7 +53,7 @@ export function createBrowserStorageAccessorJson<V = unknown>(
         return newValue
     }
 
-    return createAccessor(read, write)
+    return createReadWrite(read, write)
 }
 
 export function createBrowserStorageAccessorString(
@@ -90,7 +91,7 @@ export function createBrowserStorageAccessorNumber(
         return newValue
     }
 
-    return createAccessor(read, write)
+    return createReadWrite(read, write)
 }
 
 export function createBrowserStorageAccessorBoolean(
@@ -121,14 +122,14 @@ export function createBrowserStorageAccessorBoolean(
         return newValue
     }
 
-    return createAccessor(read, write)
+    return createReadWrite(read, write)
 }
 
 // Types ///////////////////////////////////////////////////////////////////////
 
 export type BrowserStorageValue<V = string> = undefined | V
 
-export interface BrowserStorageAccessorSync<V = string> extends AccessorSync<BrowserStorageValue<V>> {
+export interface BrowserStorageAccessorSync<V = string> extends RwSync<BrowserStorageValue<V>> {
 }
 
 export interface BrowserStorageAccessorOptions {

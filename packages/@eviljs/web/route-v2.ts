@@ -1,4 +1,4 @@
-import {mapSome} from '@eviljs/std/fn.js'
+import {mapSome} from '@eviljs/std/fn-monad.js'
 import {omitObjectProp, pickObjectProp} from '@eviljs/std/object.js'
 import type {RouteArgs, RoutePatterns} from './route.js'
 import type {RouterRouteParams} from './router.js'

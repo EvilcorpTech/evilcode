@@ -1,8 +1,10 @@
-import type {Io} from '@eviljs/std/fn.js'
+import type {Io} from '@eviljs/std/fn-type.js'
 import {throwInvalidArgument} from '@eviljs/std/throw.js'
-import {isArray, isNone, isObject, type ObjectPartial} from '@eviljs/std/type.js'
+import {isArray, isNone, isObject} from '@eviljs/std/type-is.js'
+import type {ObjectPartial} from '@eviljs/std/type.js'
 import {cloneRequest} from './request-clone.js'
-import {isUrlAbsolute, joinUrlPaths} from './url.js'
+import {joinUrlPaths} from './url-path.js'
+import {isUrlAbsolute} from './url.js'
 
 /**
 * @throws TypeError
