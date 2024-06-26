@@ -1,4 +1,4 @@
-import {asBooleanLike} from '@eviljs/std/type.js'
+import {asBooleanLike} from '@eviljs/std/type-as.js'
 import VitePluginReact from '@vitejs/plugin-react'
 import Fs from 'node:fs'
 import Path from 'node:path'
