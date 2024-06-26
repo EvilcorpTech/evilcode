@@ -1,4 +1,4 @@
-import {isFunction} from '@eviljs/std/type.js'
+import {isFunction} from '@eviljs/std/type-is.js'
 import Repl from 'repl'
 
 export function ShellService(container: ShellContainer) {
