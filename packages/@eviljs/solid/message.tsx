@@ -1,5 +1,5 @@
 import type {I18nMessageArgs} from '@eviljs/std/i18n.js'
-import {isString} from '@eviljs/std/type.js'
+import {isString} from '@eviljs/std/type-is.js'
 import type {Accessor, JSX} from 'solid-js'
 import {Show, splitProps} from 'solid-js'
 import {Dynamic} from 'solid-js/web'
