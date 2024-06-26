@@ -1,4 +1,5 @@
-import {piping, type Fn, type FnArgs} from '@eviljs/std/fn.js'
+import {piping} from '@eviljs/std/fn-pipe.js'
+import type {Fn, FnArgs} from '@eviljs/std/fn-type.js'
 import {Future} from '@eviljs/std/promise-future.js'
 import type {ResourceMaskView, ResourcePromiseView} from '@eviljs/std/resource.js'
 import {
@@ -15,7 +16,7 @@ import {
 } from '@eviljs/std/resource.js'
 import type {ResultOrError} from '@eviljs/std/result.js'
 import {asResultError} from '@eviljs/std/result.js'
-import {isDefined} from '@eviljs/std/type.js'
+import {isDefined} from '@eviljs/std/type-is.js'
 import {useCallback, useRef, useState} from 'react'
 
 export function useAsyncIo<A extends FnArgs, R>(asyncTask: Fn<A, Promise<R>>): AsyncIoManager<A, R> {

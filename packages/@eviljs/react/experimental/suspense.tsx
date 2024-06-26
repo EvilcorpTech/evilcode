@@ -1,4 +1,5 @@
-import {compute, type TaskAsync} from '@eviljs/std/fn.js'
+import {compute} from '@eviljs/std/fn-compute.js'
+import type {TaskAsync} from '@eviljs/std/fn-type.js'
 import {createRef, type Ref} from '@eviljs/std/ref.js'
 import {Suspense} from 'react'
 import type {AwaitedProps} from '../awaited.js'

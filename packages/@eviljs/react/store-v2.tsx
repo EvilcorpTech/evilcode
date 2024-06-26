@@ -26,7 +26,7 @@ export function useStoreV2Provider<
     S extends ReduxReducerState,
     A extends ReduxEvent,
 >(args: StoreDefinitionV2<S, A>): StoreV2<S, A> {
-    const {createState, reduce, onDispatch} = args
+    const {createState, reduce, observer} = args
     const [state, setState] = useState(createState)
     const stateRef = useRef(state)
 
@@ -36,14 +36,14 @@ export function useStoreV2Provider<
         const oldState = stateRef.current
         const newState = reduce(oldState, ...[id, ...args] as A)
 
-        onDispatch?.(id, args, newState, oldState)
-
         stateRef.current = newState
 
         setState(newState)
 
+        observer?.(id, args, newState, oldState)
+
         return newState
-    }, [reduce, onDispatch])
+    }, [reduce, observer])
 
     const store = useMemo((): StoreV2<S, A> => {
         return [state, dispatch]
@@ -68,7 +68,7 @@ export interface StoreProviderV2Props<S extends ReduxReducerState, A extends Red
 export interface StoreDefinitionV2<S extends ReduxReducerState, A extends ReduxEvent> {
     createState(): S
     reduce(state: S, ...args: A): S
-    onDispatch?: undefined | ((id: ReduxReducerId, args: ReduxReducerArgs, newState: S, oldState: S) => void)
+    observer?: undefined | StoreV2Observer<S>
 }
 
 export type StoreV2<
@@ -80,3 +80,5 @@ export interface StoreDispatchV2<S extends ReduxReducerState, A extends ReduxEve
     (action: A): S
     (...args: A): S
 }
+
+export type StoreV2Observer<S extends ReduxReducerState> = (id: ReduxReducerId, args: ReduxReducerArgs, newState: S, oldState: S) => void

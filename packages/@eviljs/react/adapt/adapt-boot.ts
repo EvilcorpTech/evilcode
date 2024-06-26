@@ -1,4 +1,5 @@
-import {createComputedRef} from '@eviljs/std/reactive-ref.js'
+import {createReactiveComputed} from '@eviljs/std/reactive-compute.js'
+import {watchReactive} from '@eviljs/std/reactive.js'
 import type {Router} from '@eviljs/web/router.js'
 import type {AppContext, AppEntriesList} from './adapt-entry.js'
 import {createReactHydrateTask, createReactMountTask, createReactRenderTask} from './adapt-render.js'
@@ -8,8 +9,8 @@ export async function startApp<C extends object = {}>(args: AdaptOptions<C>) {
     const {router} = args
     const rootNode = setupRootElement(args.rootElementId ?? RootDefaultId, args.rootElementClasses)
     const shouldHydrate = rootNode.hasChildNodes()
-    const routePathRef = createComputedRef([router.route], route => route.path)
-    const initialRoutePath = routePathRef.value
+    const routePathComputed = createReactiveComputed([router.route], route => route.path)
+    const initialRoutePath = routePathComputed.value
 
     const reactRoot = shouldHydrate
         ? await createReactHydrateTask({...args, routePath: initialRoutePath, rootNode})
@@ -19,7 +20,7 @@ export async function startApp<C extends object = {}>(args: AdaptOptions<C>) {
 
     router.start()
 
-    routePathRef.watch(routePath => {
+    const stopWatching = watchReactive(routePathComputed, routePath => {
         currentRenderTask?.cancel()
         currentRenderTask = createReactRenderTask({...args, reactRoot, routePath, rootNode})
     })

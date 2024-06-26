@@ -1,4 +1,4 @@
-import {asArray} from '@eviljs/std/type.js'
+import {asArray} from '@eviljs/std/type-as.js'
 import {useEffect} from 'react'
 
 export function useKey(key: Key, handler: KeyHandler, options?: undefined | UseKeyOptions) {

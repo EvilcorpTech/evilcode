@@ -1,6 +1,8 @@
-import {compute, type Computable, type Fn, type Io, type Task} from '@eviljs/std/fn.js'
+import {compute, type Computable} from '@eviljs/std/fn-compute.js'
+import type {Fn, Io, Task} from '@eviljs/std/fn-type.js'
 import {escapeRegexp} from '@eviljs/std/regexp.js'
-import {asArray, isPromise, isString} from '@eviljs/std/type.js'
+import {asArray} from '@eviljs/std/type-as.js'
+import {isPromise, isString} from '@eviljs/std/type-is.js'
 import {exact, matchRoutePattern, testRoutePattern, type RoutePattern, type RoutePatterns} from '@eviljs/web/route.js'
 import type {RouterRoute, RouterRouteChange, RouterRouteChangeParams, RouterRouteChangeParamsDict, RouterRouteParams} from '@eviljs/web/router.js'
 import {encodeLink} from '@eviljs/web/router.js'
@@ -9,7 +11,7 @@ import {Children, forwardRef, isValidElement, useCallback, useContext, useEffect
 import {classes} from './classes.js'
 import {defineContext} from './ctx.js'
 import {displayName} from './display-name.js'
-import {useSelectedRefValue} from './reactive-ref.js'
+import {useReactiveSelect} from './reactive.js'
 import {useRouterContext} from './router-provider.js'
 
 export * from '@eviljs/web/route-v2.js'
@@ -357,7 +359,7 @@ export function useRouteRead<S = unknown>(): Task<RouterRoute<S>> {
 
 export function useRoutePath(): RouterRoute['path'] {
     const routerContext = useRouterContext()!
-    const routePath = useSelectedRefValue(routerContext.route, RouteSelectors.selectRoutePath)
+    const routePath = useReactiveSelect(routerContext.route, RouteSelectors.selectRoutePath)
 
     return routePath
 }
@@ -369,21 +371,21 @@ export function useRouteParam<R>(selectRouteParam: Io<undefined | RouterRoutePar
         return selectRouteParam(route.params)
     }, [selectRouteParam])
 
-    const selectedRouteParam = useSelectedRefValue(routerContext.route, selector)
+    const selectedRouteParam = useReactiveSelect(routerContext.route, selector)
 
     return selectedRouteParam
 }
 
 export function useRouteParams(): RouterRoute['params'] {
     const routerContext = useRouterContext()!
-    const routeParams = useSelectedRefValue(routerContext.route, RouteSelectors.selectRouteParams)
+    const routeParams = useReactiveSelect(routerContext.route, RouteSelectors.selectRouteParams)
 
     return routeParams
 }
 
 export function useRouteState<S = unknown>(): RouterRoute<S>['state'] {
     const routerContext = useRouterContext<S>()!
-    const routeState = useSelectedRefValue(routerContext.route, RouteSelectors.selectRouteState<S>)
+    const routeState = useReactiveSelect(routerContext.route, RouteSelectors.selectRouteState<S>)
 
     return routeState
 }

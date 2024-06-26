@@ -1,4 +1,4 @@
-import type {FnArgs, FnAsync} from '@eviljs/std/fn.js'
+import type {FnArgs, FnAsync} from '@eviljs/std/fn-type.js'
 import {resultOf} from '@eviljs/std/result.js'
 import {useCallback} from 'react'
 import {useAsyncIo, type AsyncIoManager} from './async-io.js'

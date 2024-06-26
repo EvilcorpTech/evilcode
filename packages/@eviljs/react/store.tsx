@@ -1,13 +1,15 @@
-import {identity, type Io} from '@eviljs/std/fn.js'
-import {createReactiveAccessor, type ReactiveAccessor} from '@eviljs/std/reactive-accessor.js'
+import {identity} from '@eviljs/std/fn-return.js'
+import type {Io} from '@eviljs/std/fn-type.js'
+import {createReactive, readReactive, writeReactive, type ReactiveProtocol} from '@eviljs/std/reactive.js'
 import {asReduxEvent, type ReduxEvent, type ReduxEventPolymorphic, type ReduxReducerState} from '@eviljs/std/redux.js'
-import {useContext, useMemo} from 'react'
+import type {RwSync} from '@eviljs/std/rw.js'
+import {useCallback, useContext, useMemo} from 'react'
 import {defineContext} from './ctx.js'
-import {useSelectedAccessorValue} from './reactive-accessor.js'
+import {useReactiveSelect} from './reactive.js'
 import type {StoreDefinitionV2 as StoreDefinition, StoreDispatchV2 as StoreDispatch} from './store-v2.js'
 
 export * from '@eviljs/std/redux.js'
-export type {StoreDefinitionV2 as StoreDefinition, StoreDispatchV2 as StoreDispatch} from './store-v2.js'
+export type {StoreDefinitionV2 as StoreDefinition, StoreDispatchV2 as StoreDispatch, StoreV2Observer as StoreObserver} from './store-v2.js'
 
 export function setupStore<S extends ReduxReducerState, A extends ReduxEvent = ReduxEvent>(
     options: StoreBoundCase1Options<S, A>,
@@ -94,19 +96,19 @@ export function createStore<
     S extends ReduxReducerState,
     A extends ReduxEvent,
 >(options: StoreDefinition<S, A>): StoreManager<S, A> {
-    const {createState, reduce, onDispatch} = options
+    const {createState, reduce, observer} = options
 
-    const state = createReactiveAccessor(createState())
+    const state = createReactive(createState())
 
     function dispatch(...polymorphicArgs: ReduxEventPolymorphic): S {
         const [id, ...args] = asReduxEvent(...polymorphicArgs)
 
-        const oldState = state.read()
+        const oldState = readReactive(state)
         const newState = reduce(oldState, ...[id, ...args] as A)
 
-        onDispatch?.(id, args, newState, oldState)
+        writeReactive(state, newState)
 
-        state.write(newState)
+        observer?.(id, args, newState, oldState)
 
         return newState
     }
@@ -155,7 +157,7 @@ export function useStoreState<V, S extends ReduxReducerState>(
 ): S | V {
     const [state] = store
     const selector: Io<S, V | S> = selectorOptional ?? identity
-    const selectedState = useSelectedAccessorValue(state, selector)
+    const selectedState = useReactiveSelect(state, selector)
 
     return selectedState
 }
@@ -163,7 +165,11 @@ export function useStoreState<V, S extends ReduxReducerState>(
 export function useStoreRead<S extends ReduxReducerState>(store: StoreManager<S, any>): StoreReader<S> {
     const [state] = store
 
-    return state.read
+    const read = useCallback(() => {
+        return readReactive(state)
+    }, [state])
+
+    return read
 }
 
 export function useStoreDispatch<S extends ReduxReducerState, A extends ReduxEvent = ReduxEvent>(
@@ -179,7 +185,7 @@ export function useStoreDispatch<S extends ReduxReducerState, A extends ReduxEve
 export type StoreManager<
     S extends ReduxReducerState = ReduxReducerState,
     A extends ReduxEvent = ReduxEvent,
-> = [ReactiveAccessor<S>, StoreDispatch<S, A>]
+> = [ReactiveProtocol<S>, StoreDispatch<S, A>]
 
 export type StoreAccessor<
     V,
@@ -187,7 +193,7 @@ export type StoreAccessor<
     A extends ReduxEvent = ReduxEvent,
 > = [V, StoreDispatch<S, A>, StoreReader<S>]
 
-export type StoreReader<S extends ReduxReducerState> = ReactiveAccessor<S>['read']
+export type StoreReader<S extends ReduxReducerState> = RwSync<S>['read']
 export type StoreSelector<S extends ReduxReducerState, V> = (state: S) => V
 
 export interface StoreBoundCase1Options<S extends ReduxReducerState, A extends ReduxEvent = ReduxEvent> {
@@ -204,7 +210,7 @@ export interface StoreBoundCase1Exports<S extends ReduxReducerState, A extends R
         <V>(selector?: undefined | StoreSelector<S, V>): S | V
     }
     useStoreRead: {
-        (): ReactiveAccessor<S>['read']
+        (): RwSync<S>['read']
     }
     useStoreDispatch: {
         (): StoreDispatch<S, A>

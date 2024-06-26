@@ -1,5 +1,5 @@
-import type {FnArgs} from '@eviljs/std/fn-type.js'
-import {useCallback, useLayoutEffect, useRef} from 'react'
+import type {Fn, FnArgs} from '@eviljs/std/fn-type.js'
+import {useCallback, useLayoutEffect, useMemo, useRef} from 'react'
 
 /*
 * Used to provide a constant value.
@@ -20,6 +20,15 @@ import {useCallback, useLayoutEffect, useRef} from 'react'
 export function useConst<V>(value: V) {
     const ref = useRef(value)
     return ref.current
+}
+
+/*
+* useMemo(fn, deps) but with inverted arguments (deps, fn) and deps as function arguments.
+*/
+export function useComputed<A extends Array<unknown>, R>(deps: A, computed: Fn<A, R>): R {
+    return useMemo(() => {
+        return computed(...deps)
+    }, deps)
 }
 
 /*

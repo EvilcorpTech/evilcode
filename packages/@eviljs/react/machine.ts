@@ -1,4 +1,4 @@
-import type {Io, Task} from '@eviljs/std/fn.js'
+import type {Task, Io} from '@eviljs/std/fn-type.js'
 import {useCallback, useRef, useState} from 'react'
 
 export function useMachine<S, E>(reduce: MachineReducer<S, E>, createState: MachineInitState<S>): MachineManager<S, E> {

@@ -1,7 +1,9 @@
-import {createAccessor} from '@eviljs/std/accessor.js'
 import {scheduleMacroTaskUsingTimeout} from '@eviljs/std/eventloop.js'
-import {identity, tryCatch, type Io, type Task} from '@eviljs/std/fn.js'
-import {asBoolean, asNumber} from '@eviljs/std/type.js'
+import {identity} from '@eviljs/std/fn-return.js'
+import {tryCatch} from '@eviljs/std/fn-try.js'
+import type {Io, Task} from '@eviljs/std/fn-type.js'
+import {createReadWrite} from '@eviljs/std/rw.js'
+import {asBoolean, asNumber} from '@eviljs/std/type-as.js'
 import type {BrowserStorageAccessorSync, BrowserStorageValue} from '@eviljs/web/storage.js'
 import {useCallback, useMemo, useRef, useState} from 'react'
 
@@ -46,7 +48,7 @@ export function useBrowserStorageAccessor<V = string, S = string>(
     }, [])
 
     const accessorManager = useMemo(() => {
-        return createAccessor(read, write)
+        return createReadWrite(read, write)
     }, [read, write])
 
     return accessorManager

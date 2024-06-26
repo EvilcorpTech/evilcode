@@ -1,4 +1,4 @@
-import {isIterator} from '@eviljs/std/type.js'
+import {isIterator} from '@eviljs/std/type-is.js'
 import {createElement} from 'react'
 import type {Root as ReactRoot} from 'react-dom/client'
 import {createRoot} from 'react-dom/client'
@@ -73,15 +73,19 @@ export function createReactRenderTask<C extends object = {}>(args: AdaptRenderTa
             if (canceled) {
                 return
             }
-            if (it.done && isIterator(it.value)) {
-                return renderGenerator(it.value)
-            }
-            if (it.done && ! isIterator(it.value)) {
-                return renderReactRoot(it.value)
-            }
 
             if (! it.done) {
                 renderReactRoot(it.value)
+                continue
+            }
+
+            if (it.done && ! isIterator(it.value)) {
+                renderReactRoot(it.value)
+                return
+            }
+            if (it.done && isIterator(it.value)) {
+                await renderGenerator(it.value)
+                return
             }
         }
     }

@@ -1,8 +1,9 @@
-import {asArray, isSome, isString, isUndefined} from '@eviljs/std/type.js'
+import {asArray} from '@eviljs/std/type-as.js'
+import {isSome, isString, isUndefined} from '@eviljs/std/type-is.js'
 import {flushStyles} from '@eviljs/web/animation.js'
 import {
-    cloneElement,
     Fragment,
+    cloneElement,
     isValidElement,
     memo,
     useCallback,

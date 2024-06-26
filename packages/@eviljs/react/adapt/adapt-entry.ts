@@ -1,5 +1,6 @@
-import {memoizing, type Task} from '@eviljs/std/fn.js'
-import {isIterator} from '@eviljs/std/type.js'
+import {memoizing} from '@eviljs/std/fn-memo.js'
+import type {Task} from '@eviljs/std/fn-type.js'
+import {isIterator} from '@eviljs/std/type-is.js'
 import {selectRouteMatch, type RoutePatterns} from '@eviljs/web/route.js'
 
 export function defineAppEntry<C extends object = {}>(loader: Task<Promise<AppEntry<C>>>): AppEntryLoader<C> {
@@ -58,6 +59,6 @@ export type AppEntryLoader<C extends object = {}> = Task<Promise<AppEntry<C>>>
 export type AppEntryGenerator = AsyncGenerator<AppEntryYield, AppEntryReturn, void>
 export type AppEntryOutput = JSX.Element | React.ReactNode
 export type AppEntryYield = AppEntryOutput
-export type AppEntryReturn = AppEntryOutput | AsyncGenerator<AppEntryOutput, AppEntryOutput, void>
+export type AppEntryReturn = AppEntryOutput | AsyncGenerator<AppEntryOutput, AppEntryReturn, void>
 
 export type AppEntriesList<C extends object = {}, O extends object = {}> = Array<AppEntryDefinition<C, O>>

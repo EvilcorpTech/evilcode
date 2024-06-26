@@ -1,4 +1,4 @@
-import type {Task} from '@eviljs/std/fn.js'
+import type {Task} from '@eviljs/std/fn-type.js'
 import {exposePreloadHintElement, type PreloadElementAttrs, type PreloadElementOptions} from '@eviljs/web/preload.js'
 import {useEffect} from 'react'
 
