@@ -7,6 +7,7 @@
         "incremental": true,
         "inlineSourceMap": false,
         "inlineSources": false,
+        "isolatedModules": true,
         "noEmit": false,
         "noEmitHelpers": false,
         "skipLibCheck": true,
