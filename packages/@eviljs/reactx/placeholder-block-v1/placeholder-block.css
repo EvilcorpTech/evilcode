@@ -1,0 +1,4 @@
+.PlaceholderBlock-e79a {
+    min-height: var(--PlaceholderBlock-height, 1em);
+    background-color: var(--PlaceholderBlock-background, var(--std-color-bg4));
+}

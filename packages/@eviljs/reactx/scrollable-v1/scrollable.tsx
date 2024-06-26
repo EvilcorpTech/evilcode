@@ -4,7 +4,7 @@ import {classes} from '@eviljs/react/classes.js'
 import {displayName} from '@eviljs/react/display-name.js'
 import {useScrollHorizontal} from '@eviljs/react/drag.js'
 import {mergingRefs} from '@eviljs/react/ref.js'
-import {isUndefined} from '@eviljs/std/type.js'
+import {isUndefined} from '@eviljs/std/type-is.js'
 import {forwardRef, useMemo, useRef} from 'react'
 
 export const Scrollable = displayName('Scrollable', forwardRef(function Scrollable(

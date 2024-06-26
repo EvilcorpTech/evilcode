@@ -3,7 +3,7 @@ import {displayName} from '@eviljs/react/display-name.js'
 import {useCallbackThrottled} from '@eviljs/react/event.js'
 import {mergingRefs} from '@eviljs/react/ref.js'
 import {useResizeObserver} from '@eviljs/react/resize-observer.js'
-import {isFunction} from '@eviljs/std/type.js'
+import {isFunction} from '@eviljs/std/type-is.js'
 import {forwardRef, useCallback, useLayoutEffect, useMemo, useRef, useState} from 'react'
 
 export const SliderVirtual = displayName('SliderVirtual', forwardRef(function SliderVirtual<I>(

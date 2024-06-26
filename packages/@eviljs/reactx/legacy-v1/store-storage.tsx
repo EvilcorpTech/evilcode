@@ -1,5 +1,7 @@
-import {noop, tryCatch, type Io} from '@eviljs/std/fn.js'
-import {isObject} from '@eviljs/std/type.js'
+import {noop} from '@eviljs/std/fn-return.js'
+import {tryCatch} from '@eviljs/std/fn-try.js'
+import type {Io} from '@eviljs/std/fn-type.js'
+import {isObject} from '@eviljs/std/type-is.js'
 import {useEffect, useRef} from 'react'
 
 export const StoreStorageDefaultAdapter = globalThis.localStorage

@@ -2,8 +2,10 @@ import {classes} from '@eviljs/react/classes.js'
 import {displayName} from '@eviljs/react/display-name.js'
 import {useMergeRefs} from '@eviljs/react/ref.js'
 import type {VoidProps} from '@eviljs/react/type.js'
-import {identity} from '@eviljs/std/fn.js'
+import {identity} from '@eviljs/std/fn-return.js'
 import {forwardRef, useRef, useState} from 'react'
+
+export {decoratingElement, decoratingElementAfter, decoratingElementBefore} from '@eviljs/react/children.js'
 
 export function InputLabel(props: InputLabelProps) {
     const {children, className, labelClass, title, ...otherProps} = props
@@ -106,26 +108,6 @@ export const SecretInput = displayName('SecretInput', forwardRef(function Secret
         />
     )
 }))
-
-export function decoratingStart(children: React.ReactNode) {
-    return decoratingSides({start: children})
-}
-
-export function decoratingEnd(children: React.ReactNode) {
-    return decoratingSides({end: children})
-}
-
-export function decoratingSides(sides: {start?: React.ReactNode, end?: React.ReactNode}) {
-    function decorator(element: React.ReactNode) {
-        return <>
-            {sides?.start}
-            {element}
-            {sides?.end}
-        </>
-    }
-
-    return decorator
-}
 
 // Types ///////////////////////////////////////////////////////////////////////
 

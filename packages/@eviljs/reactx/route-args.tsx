@@ -1,5 +1,5 @@
 import {useRouteArgs, useRoutePathTest} from '@eviljs/react/router.js'
-import {isArray, isFunction} from '@eviljs/std/type.js'
+import {isArray, isFunction} from '@eviljs/std/type-is.js'
 import {routeRegexpFromPattern} from '@eviljs/web/route.js'
 import {Children, cloneElement, useMemo} from 'react'
 
