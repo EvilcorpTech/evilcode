@@ -3,9 +3,11 @@
 // https://developers.google.com/web/tools/puppeteer/articles/ssr
 
 import {OneMinuteInMs} from '@eviljs/std/date.js'
-import {piping, returnUndefined, tryCatch} from '@eviljs/std/fn.js'
-import {isSome} from '@eviljs/std/type.js'
-import {asBaseUrl} from '@eviljs/web/url.js'
+import {piping} from '@eviljs/std/fn-pipe.js'
+import {returnUndefined} from '@eviljs/std/fn-return.js'
+import {tryCatch} from '@eviljs/std/fn-try.js'
+import {isSome} from '@eviljs/std/type-is.js'
+import {asBaseUrl} from '@eviljs/web/url-path.js'
 import {createHash} from 'node:crypto'
 import {mkdir, writeFile} from 'node:fs/promises'
 import {resolve as resolvePath} from 'node:path'

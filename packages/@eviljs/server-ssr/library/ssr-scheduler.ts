@@ -1,5 +1,5 @@
-import type {TaskAsync} from '@eviljs/std/fn.js'
-import {Scheduler} from './scheduler.js'
+import type {TaskAsync} from '@eviljs/std/fn-type.js'
+import {AsyncTasksQueue, createAsyncTasksQueue, type AsyncTasksQueueState} from '@eviljs/std/lab/async-tasks-queue.js'
 import type {SsrResult} from './ssr.js'
 import type {KoaContext} from './types.js'
 
@@ -9,11 +9,11 @@ export enum SsrJobPriority {
 }
 
 export const SsrJobsQueue = {
-    highPriority: new Scheduler<undefined | SsrResult>(),
-    lowPriority: new Scheduler<undefined | SsrResult>(),
+    highPriority: createAsyncTasksQueue<undefined | SsrResult>(),
+    lowPriority: createAsyncTasksQueue<undefined | SsrResult>(),
 }
 
-export function getSsrJobsQueue(priority: SsrJobPriority): Scheduler<undefined | SsrResult> {
+export function getSsrJobsQueue(priority: SsrJobPriority): AsyncTasksQueueState<undefined | SsrResult> {
     switch (priority) {
         case SsrJobPriority.High:
             return SsrJobsQueue.highPriority
@@ -38,7 +38,6 @@ export function scheduleSsrJob(
     priority: SsrJobPriority,
     job: TaskAsync<undefined | SsrResult>,
 ): Promise<undefined | SsrResult> {
-
     const jobsQueue = getSsrJobsQueue(priority)
     const jobsLimit = getSsrJobsLimit(ctx, priority)
 
@@ -46,5 +45,8 @@ export function scheduleSsrJob(
         jobsQueue.limit = jobsLimit
     }
 
-    return getSsrJobsQueue(priority).scheduleTask(job)
+    const queue = getSsrJobsQueue(priority)
+    const promise = AsyncTasksQueue.enqueueTask(queue, job)
+
+    return promise
 }

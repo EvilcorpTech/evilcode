@@ -1,5 +1,6 @@
 import {OneDayInMs, OneMonthInMs} from '@eviljs/std/date.js'
-import type {Computable, Io} from '@eviljs/std/fn.js'
+import type {Computable} from '@eviljs/std/fn-compute.js'
+import type {Io} from '@eviljs/std/fn-type.js'
 import type {ObjectPartial} from '@eviljs/std/type.js'
 import type {Options as KoaStaticOptions} from 'koa-static'
 import {randomBytes} from 'node:crypto'

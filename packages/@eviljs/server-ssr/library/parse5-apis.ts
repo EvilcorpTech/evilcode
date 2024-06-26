@@ -1,5 +1,5 @@
 import type {Io} from '@eviljs/std/fn.js'
-import {isSome} from '@eviljs/std/type.js'
+import {isSome} from '@eviljs/std/type-is.js'
 import type {DefaultTreeAdapterMap} from 'parse5'
 
 export * as Parse5 from 'parse5'
