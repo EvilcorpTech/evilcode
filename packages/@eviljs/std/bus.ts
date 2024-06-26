@@ -1,13 +1,13 @@
 import {scheduleMicroTaskUsingPromise} from './eventloop.js'
-import type {FnArgs, Task} from './fn.js'
-import {createReactiveAccessor, type ReactiveAccessor} from './reactive-accessor.js'
-import {isArray} from './type.js'
+import type {FnArgs, Task} from './fn-type.js'
+import {createReactive, readReactive, writeReactive, type ReactiveProtocol} from './reactive.js'
+import {isArray} from './type-is.js'
 
 export const BusEventRegexpCache: Record<BusEventPattern, RegExp> = {}
 
 export function createBus() {
     const self: Bus = {
-        observers: createReactiveAccessor({}),
+        observers: createReactive({}),
 
         emit(...args: BusEventPolymorphicArgs) {
             return emitBusEvent(self.observers, ...args)
@@ -29,7 +29,7 @@ export function emitBusEvent(reactiveObservers: BusEventObservers, event: BusEve
 export function emitBusEvent(reactiveObservers: BusEventObservers, args: [event: BusEvent, payload?: unknown]): void
 export function emitBusEvent(reactiveObservers: BusEventObservers, ...polymorphicArgs: BusEventPolymorphicArgs): void
 export function emitBusEvent(reactiveObservers: BusEventObservers, ...polymorphicArgs: BusEventPolymorphicArgs): void {
-    const observersMap = reactiveObservers.read()
+    const observersMap = readReactive(reactiveObservers)
     const observersToNotify: Array<[Array<BusEventObserver>, RegExpMatchArray]> = []
 
     const [emittedEvent, emittedPayload] = (() => {
@@ -75,12 +75,12 @@ export function emitBusEvent(reactiveObservers: BusEventObservers, ...polymorphi
 }
 
 export function observeBusEvent(reactiveObservers: BusEventObservers, event: BusEventPattern, observer: BusEventObserver<any>): Task {
-    const observers = reactiveObservers.read()
+    const observersMap = readReactive(reactiveObservers)
 
-    reactiveObservers.write({
-        ...observers,
+    writeReactive(reactiveObservers, {
+        ...observersMap,
         [event]: [
-            ...observers[event] ?? [],
+            ...observersMap[event] ?? [],
             observer,
         ],
     })
@@ -93,8 +93,8 @@ export function observeBusEvent(reactiveObservers: BusEventObservers, event: Bus
 }
 
 export function unobserveBusEvent(reactiveObservers: BusEventObservers, event: BusEventPattern, observer: BusEventObserver<any>): void {
-    const observers = reactiveObservers.read()
-    const eventObservers = observers[event]
+    const observersMap = readReactive(reactiveObservers)
+    const eventObservers = observersMap[event]
 
     if (! eventObservers) {
         return
@@ -103,8 +103,8 @@ export function unobserveBusEvent(reactiveObservers: BusEventObservers, event: B
         return
     }
 
-    reactiveObservers.write({
-        ...observers,
+    writeReactive(reactiveObservers, {
+        ...observersMap,
         [event]: eventObservers.filter(it => it !== observer),
     })
 }
@@ -161,7 +161,7 @@ export interface Bus {
 export type BusEvent = string
 export type BusEventPattern = string
 export type BusEventObserver<P = unknown> = (event: BusEventPattern, matches: RegExpMatchArray, payload: P) => void
-export type BusEventObservers = ReactiveAccessor<Record<BusEventPattern, Array<BusEventObserver>>>
+export type BusEventObservers = ReactiveProtocol<Record<BusEventPattern, Array<BusEventObserver>>>
 
 export type BusEventPolymorphicArgs =
     | [event: BusEvent, payload?: unknown]

@@ -1,5 +1,6 @@
+import {identity} from './fn-return.js'
 import {MonadTag, type Monad} from './monad.js'
-import {isObject} from './type.js'
+import {isObject} from './type-is.js'
 
 export const ResultErrorTagId = 'error'
 
@@ -29,8 +30,12 @@ export function resultErrorOf<R>(result: R): undefined | ResultErrorOf<R>['error
         : undefined
 }
 
-export function splitResult<R>(result: R): [undefined | ResultOf<R>, undefined | ResultErrorOf<R>['error']] {
+export function splitResultOrError<R>(result: R): [undefined | ResultOf<R>, undefined | ResultErrorOf<R>['error']] {
     return [resultOf(result), resultErrorOf(result)]
+}
+
+export function asResultOrError<V>(promise: Promise<V>): Promise<ResultOrError<V, unknown>> {
+    return promise.then(identity, asResultError)
 }
 
 // Types ///////////////////////////////////////////////////////////////////////

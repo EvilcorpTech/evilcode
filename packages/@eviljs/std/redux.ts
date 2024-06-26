@@ -1,6 +1,8 @@
-import {compute, type Fn, type FnArgs} from './fn.js'
+import {compute} from './fn-compute.js'
+import type {Fn, FnArgs} from './fn-type.js'
 import {areObjectsEqualShallow} from './object.js'
-import {isArray, type ValueOf} from './type.js'
+import {isArray} from './type-is.js'
+import type {ValueOf} from './type.js'
 
 export let ReducerUid = 0
 

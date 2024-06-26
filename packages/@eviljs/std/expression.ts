@@ -1,16 +1,6 @@
-import {
-    assertFunctionOptional,
-    assertObject,
-    ensureArray,
-    ensureBoolean,
-    ensureFunction,
-    ensureInteger,
-    ensureNumber,
-    ensureString,
-    ensureStringOptional,
-    throwAssertTypeError,
-} from './assert.js'
 import {getObjectPath} from './object.js'
+import {assertFunctionOptional, assertObject} from './type-assert.js'
+import {ensureArray, ensureBoolean, ensureFunction, ensureInteger, ensureNumber, ensureString, ensureStringOptional, throwAssertTypeError} from './type-ensure.js'
 import {isArray, isFunction, isNone, type None} from './type.js'
 
 export function evaluateExp<C extends Ctx, R>(ctx: C, exp: Exp<C, R>) {

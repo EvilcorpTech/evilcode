@@ -1,4 +1,4 @@
-import {piping} from './fn.js'
+import {piping} from './fn-pipe.js'
 
 export function defineMachine<S, E, P extends object = {}>(
     args: MachineDefinitionOptions<S, E> & P,

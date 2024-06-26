@@ -9,12 +9,12 @@ import {
     type ReactiveProtocol,
     type ReactiveWatchOptions,
 } from './reactive.js'
-import type {Ref} from './ref.js'
+import type {RwSync} from './rw.js'
 
-export function createReactiveRef<V>(
+export function createReactiveStore<V>(
     value: V,
     options?: undefined | ReactiveOptions<NoInfer<V>>,
-): ReactiveRef<V> {
+): ReactiveStore<V> {
     const reactive = createReactive(value, options)
 
     function read(): V {
@@ -29,20 +29,11 @@ export function createReactiveRef<V>(
         return watchReactive(reactive, observer, options)
     }
 
-    return {
-        ...reactive,
-        get value() {
-            return read()
-        },
-        set value(value) {
-            write(value)
-        },
-        watch,
-    }
+    return {...reactive, read, write, watch}
 }
 
 // Types ///////////////////////////////////////////////////////////////////////
 
-export interface ReactiveRef<V> extends Ref<V>, ReactiveProtocol<V> {
+export interface ReactiveStore<V> extends RwSync<V>, ReactiveProtocol<V> {
     watch(observer: ReactiveObserver<V>, options?: undefined | ReactiveWatchOptions): Task
 }

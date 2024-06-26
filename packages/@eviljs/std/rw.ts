@@ -5,20 +5,20 @@
 // {...accessor} or
 // {value, read, write} = accessor
 // with consequent loss of reactivity and bugs.
-export function createAccessor<V>(read: () => Promise<V>, write: (value: V) => Promise<V>): AccessorAsync<V>
-export function createAccessor<V>(read: () => V, write: (value: V) => V): AccessorSync<V>
-export function createAccessor<V>(read: () => V, write: (value: V) => V): AccessorSync<V> | AccessorAsync<V> {
+export function createReadWrite<V>(read: () => Promise<V>, write: (value: V) => Promise<V>): RwAsync<V>
+export function createReadWrite<V>(read: () => V, write: (value: V) => V): RwSync<V>
+export function createReadWrite<V>(read: () => V, write: (value: V) => V): RwSync<V> | RwAsync<V> {
     return {read, write}
 }
 
 // Types ///////////////////////////////////////////////////////////////////////
 
-export interface AccessorSync<V> {
+export interface RwSync<V> {
     read(): V
     write(value: V): V
 }
 
-export interface AccessorAsync<V> {
+export interface RwAsync<V> {
     read(): Promise<V>
     write(value: V): Promise<V>
 }

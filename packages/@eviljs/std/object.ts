@@ -1,5 +1,6 @@
 import type {Fn, Io} from './fn-type.js'
-import {isArray, isDefined, isObject, isUndefined} from './type.js'
+import {isArray, isDefined, isObject, isUndefined} from './type-is.js'
+import type {ObjectComplete, Prettify} from './type.js'
 
 export const ObjectPathArrayOpenRegexp = /\[/g
 export const ObjectPathArrayCloseRegexp = /\]/g
@@ -169,7 +170,7 @@ export function omitObjectProps<O extends object, P extends keyof O>(object: O, 
     return objectOmitted as Omit<O, P>
 }
 
-export function omitObjectPropsUndefined<O extends object>(object: O) {
+export function omitObjectPropsUndefined<O extends object>(object: O): Prettify<Partial<ObjectComplete<O>>> {
     const objectOmitted = {...object}
 
     for (const prop in objectOmitted) {
@@ -178,7 +179,7 @@ export function omitObjectPropsUndefined<O extends object>(object: O) {
         }
     }
 
-    return objectOmitted
+    return objectOmitted as Prettify<Partial<ObjectComplete<O>>>
 }
 
 export function objectFromEntry<K extends PropertyKey, V>(

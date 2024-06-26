@@ -1,6 +1,7 @@
-import {assertStringNotEmpty, ensureOptionalWith, throwAssertTypeError} from './assert.js'
 import {isBetween} from './math.js'
-import {isDefined, isString} from './type.js'
+import {assertStringNotEmpty} from './type-assert.js'
+import {ensureOptionalWith, throwAssertTypeError} from './type-ensure.js'
+import {isDefined, isString} from './type-is.js'
 
 export const OneSecondInMs = 1_000
 export const OneMinuteInMs = 60 * OneSecondInMs

@@ -1,4 +1,4 @@
-import {isDefined, isUndefined} from './type.js'
+import {isDefined, isUndefined} from './type-is.js'
 
 export function clamp(min: number, value: number, max: number) {
     return Math.min(max, Math.max(min, value))

@@ -1,4 +1,4 @@
-import {isArray, isObject} from './type.js'
+import {isArray, isObject} from './type-is.js'
 
 export function areEqualIdentity<T>(a: T, b: T) {
     return a === b

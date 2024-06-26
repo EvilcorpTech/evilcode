@@ -1,6 +1,6 @@
 import type {TaskAsync} from './fn-type.js'
 import {throwInvalidArgument} from './throw.js'
-import {isArray, isFunction, isObject} from './type.js'
+import {isArray, isFunction, isObject} from './type-is.js'
 
 export function playTimeline(timeline: TimelineAsync): Promise<unknown> {
     if (isFunction(timeline)) {

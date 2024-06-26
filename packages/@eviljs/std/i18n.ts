@@ -1,5 +1,5 @@
 import {escapeRegexp} from './regexp.js'
-import {isFunction, isString} from './type.js'
+import {isFunction, isString} from './type-is.js'
 
 export const I18nSymbolDefault = '@'
 

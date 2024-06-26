@@ -1,4 +1,5 @@
-import {createCancelable, type Task} from './fn.js'
+import {createCancelable} from './fn-cancel.js'
+import type {Task} from './fn-type.js'
 
 export function scheduleMicroTaskUsingPromise(task: Task): Task {
     const [taskCancelable, cancelTask] = createCancelable(task)

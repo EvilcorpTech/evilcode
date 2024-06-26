@@ -1,4 +1,4 @@
-import {ensureDefined} from './assert.js'
+import {ensureDefined} from './type-ensure.js'
 
 export const ContainerFactoriesKey = Symbol('ContainerFactories')
 export const ContainerInstancesKey = Symbol('ContainerInstances')

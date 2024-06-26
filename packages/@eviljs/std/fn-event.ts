@@ -1,5 +1,5 @@
 import type {Fn, FnArgs, Task} from './fn-type.js'
-import {isDefined, isUndefined} from './type.js'
+import {isDefined, isUndefined} from './type-is.js'
 
 export function debounced<A extends FnArgs>(task: Fn<A>, delay: number): EventTask<A> {
     interface State {
