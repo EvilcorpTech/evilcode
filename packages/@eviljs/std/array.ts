@@ -14,7 +14,8 @@ export function firstOf<I>(list: Array<I>): undefined | I {
 }
 
 export function lastOf<I>(list: Array<I>): undefined | I {
-    return list.at(-1)
+    return list[list.length - 1]
+    // return list.at(-1) // Not supported by Safari 14.
 }
 
 export function filterSome<I>(list: Array<void | None | I>): Array<I> {

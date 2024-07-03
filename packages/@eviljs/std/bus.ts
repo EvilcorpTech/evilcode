@@ -1,4 +1,5 @@
 import {scheduleMicroTaskUsingPromise} from './eventloop.js'
+import {call} from './fn-call.js'
 import type {FnArgs, Task} from './fn-type.js'
 import {createReactive, readReactive, writeReactive, type ReactiveProtocol} from './reactive.js'
 import {isArray} from './type-is.js'
@@ -32,7 +33,7 @@ export function emitBusEvent(reactiveObservers: BusEventObservers, ...polymorphi
     const observersMap = readReactive(reactiveObservers)
     const observersToNotify: Array<[Array<BusEventObserver>, RegExpMatchArray]> = []
 
-    const [emittedEvent, emittedPayload] = (() => {
+    const [emittedEvent, emittedPayload] = call(() => {
         const [eventOrArgs, payload] = polymorphicArgs
 
         if (isArray(eventOrArgs)) {
@@ -40,7 +41,7 @@ export function emitBusEvent(reactiveObservers: BusEventObservers, ...polymorphi
         }
 
         return [eventOrArgs, payload]
-    })()
+    })
 
     for (const eventPattern in observersMap) {
         const observers = observersMap[eventPattern]
