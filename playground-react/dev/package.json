@@ -12,23 +12,23 @@
         "serve": "npx http-server@latest ../build -a 0.0.0.0 -p 8000"
     },
     "dependencies": {
-        "@types/node": "20.11.30",
-        "@vitejs/plugin-react": "4.2.1",
-        "postcss": "8.4.37",
-        "postcss-import": "16.0.1",
-        "postcss-preset-env": "9.5.2",
+        "@types/node": "20",
+        "@vitejs/plugin-react": "4",
+        "postcss": "8",
+        "postcss-import": "16",
+        "postcss-preset-env": "9",
         "rollup-plugin-visualizer": "5",
-        "tslib": "2.6.2",
-        "typescript": "5.4.2",
-        "vite": "5.1.6",
-        "vite-plugin-checker": "0.6.4",
-        "vite-plugin-ejs": "1.7.0"
+        "tslib": "2",
+        "typescript": "5.5",
+        "vite": "5",
+        "vite-plugin-checker": "0",
+        "vite-plugin-ejs": "1"
     },
     "devDependencies": {
-        "pnpm": "8.15.5"
+        "pnpm": "9"
     },
     "engines": {
-        "node": ">= 16",
-        "pnpm": ">= 8"
+        "node": ">= 18",
+        "pnpm": ">= 9"
     }
 }
