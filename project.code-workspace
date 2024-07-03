@@ -5,6 +5,6 @@
         },
     ],
     "settings": {
-        "typescript.tsdk": "./playground-react/dev/node_modules/typescript/lib",
+        "typescript.tsdk": "./packages/node_modules/.pnpm/typescript@5.5.2/node_modules/typescript/lib",
     },
 }
