@@ -16,14 +16,17 @@ export function asBaseUrl(url?: undefined | string): string {
 
 export function joinUrlPaths(...parts: [string, ...Array<string>]): string {
     const [firstPart, ...otherParts] = parts
-    let path = firstPart
-    for (const it of otherParts) {
-        if (path.at(-1) !== '/') {
-            path += '/'
-        }
-        path += it[0] === '/'
-            ? it.slice(1)
-            : it
+
+    let joinedPath = firstPart
+
+    for (const part of otherParts) {
+        const pathEndsWithSlash = joinedPath[joinedPath.length - 1] === '/'
+        const partStartsWithStash = part[0] === '/'
+
+        joinedPath += ''
+            + (pathEndsWithSlash ? '' : '/')
+            + (partStartsWithStash ? part.slice(1) : part)
     }
-    return path
+
+    return joinedPath
 }
