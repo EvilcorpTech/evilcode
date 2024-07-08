@@ -8,14 +8,22 @@ export const SuspenseSsrAttribute = {
     Id: 'data-suspense-id' as const,
 }
 
-export const SuspendedSsrElements = collectSuspendedSsrElements()
+export const SuspendedSsrElements: Map<string, {
+    id: undefined | string
+    tag: string
+    attributes: Array<Attr>
+    content: string
+}> = collectSuspendedSsrElements()
 
-export const LazySuspendedSsrNames = new Set<string>()
+export const LazySuspendedSsrNames: Set<string> = new Set()
 
 export function lazySuspendedSsr<P extends object, F extends P>(
     load: LazyLoader<P>,
     fallback?: undefined | LazyFallback<F>,
-) {
+): React.ComponentType<
+    & Omit<P, keyof SuspenseSsrHtmlAttributes>
+    & LazySuspendedSsrProps
+> {
     const ComponentLazy = lazy(() => load().then(asDefault)) as unknown as React.ComponentType<P>
 
     function LazySuspendedSsr(props: Omit<P, keyof SuspenseSsrHtmlAttributes> & LazySuspendedSsrProps) {
@@ -40,7 +48,7 @@ export function lazySuspendedSsr<P extends object, F extends P>(
     return LazySuspendedSsr
 }
 
-export function SuspenseSsr(props: SuspenseSsrProps) {
+export function SuspenseSsr(props: SuspenseSsrProps): JSX.Element {
     const {ssrId, fallback, children} = props
     const elementSsr = SuspendedSsrElements.get(ssrId)
 
@@ -61,7 +69,7 @@ export function SuspenseSsr(props: SuspenseSsrProps) {
     )
 }
 
-export function BarrierSsr(props: BarrierSsrProps) {
+export function BarrierSsr(props: BarrierSsrProps): React.ReactNode {
     const {ssrId, if: guard, fallback, children} = props
     const elementSsr = SuspendedSsrElements.get(ssrId)
 
@@ -81,7 +89,7 @@ export function BarrierSsr(props: BarrierSsrProps) {
     return children(withSuspenseSsrAttributes(ssrId))
 }
 
-export function SsrRender(props: SsrRenderProps) {
+export function SsrRender(props: SsrRenderProps): JSX.Element {
     const {attributes, children, className, ...otherProps} = props
     const elementRef = useRef<Element>(null)
 
@@ -119,7 +127,7 @@ export function SsrRender(props: SsrRenderProps) {
     )
 }
 
-export function ssrIdOf(attrs: SuspenseSsrHtmlAttributes) {
+export function ssrIdOf(attrs: SuspenseSsrHtmlAttributes): string {
     return attrs[SuspenseSsrAttribute.Id]
 }
 
@@ -129,7 +137,14 @@ export function withSuspenseSsrAttributes(id: string): SuspenseSsrHtmlAttributes
     }
 }
 
-export function collectSuspendedSsrElements() {
+export function collectSuspendedSsrElements():
+    Map<string, {
+        id: undefined | string
+        tag: string
+        attributes: Array<Attr>
+        content: string
+    }>
+{
     const attrId = SuspenseSsrAttribute.Id
 
     return new Map(

@@ -3,8 +3,8 @@ import {displayName} from '@eviljs/react/display-name.js'
 import {useMergeRefs} from '@eviljs/react/ref.js'
 import {forwardRef, useLayoutEffect, useMemo, useRef, useState} from 'react'
 
-export const Input = displayName('Input', forwardRef(function Input(
-    props: InputProps,
+export const Input: React.ComponentType<InputProps> = displayName('Input', forwardRef(function Input(
+    props: Omit<InputProps, 'ref'>,
     ref: React.ForwardedRef<HTMLInputElement>
 ) {
     const {className, type, label, placeholder, value, autoComplete, autoFocus, tabIndex, onChange, ...otherProps} = props
@@ -77,7 +77,7 @@ export const Input = displayName('Input', forwardRef(function Input(
 
 // Types ///////////////////////////////////////////////////////////////////////
 
-export interface InputProps extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'onChange'> {
+export interface InputProps extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'onChange'>, React.RefAttributes<HTMLInputElement> {
     type?: undefined | React.HTMLInputTypeAttribute
     label?: undefined | string
     value?: undefined | string

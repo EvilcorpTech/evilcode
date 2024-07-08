@@ -1,6 +1,6 @@
 import {classes} from '@eviljs/react/classes.js'
 
-export function ExampleIcon(props: ExampleIconProps) {
+export function ExampleIcon(props: ExampleIconProps): JSX.Element {
     const {className, ...otherProps} = props
 
     return (

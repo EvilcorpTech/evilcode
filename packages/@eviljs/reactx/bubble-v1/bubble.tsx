@@ -1,9 +1,7 @@
-import './bubble.css'
-
 import {Box, type BoxProps} from '@eviljs/react/box.js'
 import {classes} from '@eviljs/react/classes.js'
 
-export function Bubble(props: BubbleProps) {
+export function Bubble(props: BubbleProps): JSX.Element {
   const {className, arrowPosition, ...otherProps} = props
 
   return (

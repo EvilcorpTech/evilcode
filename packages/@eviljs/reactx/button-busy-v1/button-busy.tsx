@@ -1,6 +1,6 @@
 import {classes} from '@eviljs/react/classes.js'
 
-export function ButtonBusy(props: ButtonBusyProps) {
+export function ButtonBusy(props: ButtonBusyProps): JSX.Element {
     const {className, busy, children, spinner, ...otherProps} = props
 
     return (

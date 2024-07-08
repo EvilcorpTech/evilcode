@@ -1,3 +1,4 @@
+import type {Task} from '@eviljs/std/fn-type.js'
 import {useEffect, useRef} from 'react'
 
 export function ImageLoader(props: ImageLoaderProps): undefined {
@@ -44,11 +45,11 @@ export function ImageLoader(props: ImageLoaderProps): undefined {
     }, [identifiers])
 }
 
-export function imageIdOf(imageUrl: string) {
+export function imageIdOf(imageUrl: string): string {
     return imageUrl
 }
 
-export function createImageLoader(imageUrl: string, onEndObserver?: ImageOnEnd) {
+export function createImageLoader(imageUrl: string, onEndObserver?: ImageOnEnd): HTMLImageElement {
     const img = document.createElement('img')
 
     function onEnd() {
@@ -71,7 +72,7 @@ export function createImageLoader(imageUrl: string, onEndObserver?: ImageOnEnd) 
     return img
 }
 
-export function mountImageLoader(img: HTMLImageElement) {
+export function mountImageLoader(img: HTMLImageElement): Task {
     document.body.appendChild(img)
 
     function onClean() {
@@ -81,7 +82,7 @@ export function mountImageLoader(img: HTMLImageElement) {
     return onClean
 }
 
-export function unmountImageLoader(img: HTMLImageElement) {
+export function unmountImageLoader(img: HTMLImageElement): void {
     document.body.removeChild(img)
 }
 

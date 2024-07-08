@@ -4,7 +4,7 @@ import {createElement} from 'react'
 
 export const HtmlSandboxTag = 'html-sandbox'
 
-export function HtmlSandbox(props: HtmlSandboxProps) {
+export function HtmlSandbox(props: HtmlSandboxProps): JSX.Element {
     const {children, className, tag, ...otherProps} = props
 
     return (
@@ -15,7 +15,9 @@ export function HtmlSandbox(props: HtmlSandboxProps) {
     )
 }
 
-export function defineHtmlSandbox(tag = HtmlSandboxTag) {
+export function defineHtmlSandbox(tagOptional?: undefined| string): void {
+    const tag = tagOptional ?? HtmlSandboxTag
+
     if (! customElements.get(tag)) { // HMR Compatibility.
         customElements.define(tag, HtmlSandboxElement)
     }

@@ -3,7 +3,7 @@ import {classes} from '@eviljs/react/classes.js'
 import {Route, useRoute, useRouter} from '@eviljs/react/router.js'
 import {createElement, useEffect, useMemo, useState} from 'react'
 
-export function Showcase(props: ShowcaseProps) {
+export function Showcase(props: ShowcaseProps): JSX.Element {
     const {children, className, ...otherProps} = props
     const [selected, setSelected] = useState('')
     const [search, setSearch] = useState('')
@@ -82,7 +82,7 @@ export function defineShowcase(title: string, component: React.ComponentType): S
     return [title, component]
 }
 
-export function idOfShowcase(item: ShowcaseModel) {
+export function idOfShowcase(item: ShowcaseModel): string {
     const [title] = item
     return title
 }

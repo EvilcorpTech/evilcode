@@ -4,12 +4,12 @@ import type {Io} from '@eviljs/std/fn-type.js'
 import {isObject} from '@eviljs/std/type-is.js'
 import {useEffect, useRef} from 'react'
 
-export const StoreStorageDefaultAdapter = globalThis.localStorage
+export const StoreStorageDefaultAdapter: Storage = globalThis.localStorage
 export const StoreStorageDefaultDebounce = 1000
 export const StoreStorageDefaultKey = '@eviljs/react/store-storage.state'
 export const StoreStorageDefaultVersion = '1'
 
-export function useStoreStorage<S, L = S>(state: S, options: StoreStorageOptions<S, L>) {
+export function useStoreStorage<S, L = S>(state: S, options: StoreStorageOptions<S, L>): void {
     const {onLoad, onMissing, onSave} = options
     const debounce = options.debounce ?? StoreStorageDefaultDebounce
     const stateVersion = options.stateVersion ?? StoreStorageDefaultVersion
@@ -92,7 +92,7 @@ export function useStoreStorage<S, L = S>(state: S, options: StoreStorageOptions
 /**
 * @throws DOMException
 */
-export function saveJsonToStorage(storage: Storage, key: string, payload: unknown) {
+export function saveJsonToStorage(storage: Storage, key: string, payload: unknown): void {
     if (! payload) {
         return
     }

@@ -64,7 +64,7 @@ export const SliderVirtual = displayName('SliderVirtual', forwardRef(function Sl
     )
 })) as (<I>(props: SliderVirtualProps<I>) => JSX.Element)
 
-export function computeVirtualState<I>(spec: VirtualSpec<I>) {
+export function computeVirtualState<I>(spec: VirtualSpec<I>): Array<VirtualChild<I>> {
     const {
         items,
         selectedItem: selectedItemOptional,

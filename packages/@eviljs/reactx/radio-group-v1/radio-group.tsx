@@ -3,7 +3,7 @@ import {useMemo} from 'react'
 
 export let RadioGroupId = 0
 
-export function RadioGroup(props: RadioGroupProps) {
+export function RadioGroup(props: RadioGroupProps): JSX.Element {
     const {className, items, selected, onChange, ...otherProps} = props
 
     const id = useMemo(() => {

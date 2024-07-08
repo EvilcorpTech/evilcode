@@ -7,7 +7,7 @@ import {mergingRefs} from '@eviljs/react/ref.js'
 import {isUndefined} from '@eviljs/std/type-is.js'
 import {forwardRef, useMemo, useRef} from 'react'
 
-export const Scrollable = displayName('Scrollable', forwardRef(function Scrollable(
+export const Scrollable: React.ComponentType<ScrollableProps> = displayName('Scrollable', forwardRef(function Scrollable(
     props: ScrollableProps,
     ref: React.ForwardedRef<HTMLElement>
 ) {

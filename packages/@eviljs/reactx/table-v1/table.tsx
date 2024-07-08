@@ -30,8 +30,8 @@ import {forwardRef, isValidElement} from 'react'
 *     </TableBody>
 * </Table>
 */
-export const Table = displayName('Table', forwardRef(function Table(
-    props: TableProps,
+export const Table: React.ComponentType<TableProps> = displayName('Table', forwardRef(function Table(
+    props: Omit<TableProps, 'ref'>,
     ref: React.ForwardedRef<HTMLDivElement>,
 ) {
     const {
@@ -79,8 +79,8 @@ export const Table = displayName('Table', forwardRef(function Table(
     )
 }))
 
-export const TableHead = displayName('TableHead', forwardRef(function TableHead(
-    props: TableHeadProps,
+export const TableHead: React.ComponentType<TableHeadProps> = displayName('TableHead', forwardRef(function TableHead(
+    props: Omit<TableHeadProps, 'ref'>,
     ref: React.ForwardedRef<HTMLTableSectionElement>,
 ) {
     const {children, className, rowProps, ...otherProps} = props
@@ -103,8 +103,8 @@ export const TableHead = displayName('TableHead', forwardRef(function TableHead(
     )
 }))
 
-export const TableColumn = displayName('TableColumn', forwardRef(function TableColumn(
-    props: TableColumnProps,
+export const TableColumn: React.ComponentType<TableColumnProps> = displayName('TableColumn', forwardRef(function TableColumn(
+    props: Omit<TableColumnProps, 'ref'>,
     ref: React.ForwardedRef<HTMLTableCellElement>,
 ) {
     const {children, className, innerProps, ...otherProps} = props
@@ -125,8 +125,8 @@ export const TableColumn = displayName('TableColumn', forwardRef(function TableC
     )
 }))
 
-export const TableBody = displayName('TableBody', forwardRef(function TableBody(
-    props: TableBodyProps,
+export const TableBody: React.ComponentType<TableBodyProps> = displayName('TableBody', forwardRef(function TableBody(
+    props: Omit<TableBodyProps, 'ref'>,
     ref: React.ForwardedRef<HTMLTableSectionElement>,
 ) {
     const {children, className, ...otherProps} = props
@@ -144,8 +144,8 @@ export const TableBody = displayName('TableBody', forwardRef(function TableBody(
     )
 }))
 
-export const TableRow = displayName('TableRow', forwardRef(function TableRow(
-    props: TableRowProps,
+export const TableRow: React.ComponentType<TableRowProps> = displayName('TableRow', forwardRef(function TableRow(
+    props: Omit<TableRowProps, 'ref'>,
     ref: React.ForwardedRef<HTMLTableRowElement>,
 ) {
     const {children, className, ...otherProps} = props
@@ -163,8 +163,8 @@ export const TableRow = displayName('TableRow', forwardRef(function TableRow(
     )
 }))
 
-export const TableCell = displayName('TableCell', forwardRef(function TableCell(
-    props: TableCellProps,
+export const TableCell: React.ComponentType<TableCellProps> = displayName('TableCell', forwardRef(function TableCell(
+    props: Omit<TableCellProps, 'ref'>,
     ref: React.ForwardedRef<HTMLTableCellElement>,
 ) {
     const {children, className, innerProps, ...otherProps} = props
@@ -185,7 +185,7 @@ export const TableCell = displayName('TableCell', forwardRef(function TableCell(
     )
 }))
 
-export function elementTypeTestFor<T extends React.JSXElementConstructor<any>>(type: T) {
+export function elementTypeTestFor<T extends React.JSXElementConstructor<any>>(type: T): (element: React.ReactNode) => void {
     function test(element: React.ReactNode) {
         return isElementOfType(element, type)
     }
@@ -205,7 +205,7 @@ export function isElementOfType<T extends React.JSXElementConstructor<any>>(
 
 // Types ///////////////////////////////////////////////////////////////////////
 
-export interface TableProps extends React.HTMLAttributes<HTMLDivElement> {
+export interface TableProps extends React.HTMLAttributes<HTMLDivElement>, React.RefAttributes<HTMLDivElement> {
     footer?: undefined | React.ReactNode
     header?: undefined | React.ReactNode
     scrollerProps?: undefined | React.HTMLAttributes<HTMLDivElement>

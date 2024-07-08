@@ -7,7 +7,7 @@ import {isNone} from '@eviljs/std/type-is.js'
 import {KeyboardKey} from '@eviljs/web/keybinding.js'
 import {useCallback, useEffect, useMemo, useRef, useState} from 'react'
 
-export function Range(props: RangeProps) {
+export function Range(props: RangeProps): JSX.Element {
     const {
         className,
         start,
@@ -179,7 +179,7 @@ export function Range(props: RangeProps) {
     )
 }
 
-export function RangeNumeric(props: RangeNumericProps) {
+export function RangeNumeric(props: RangeNumericProps): undefined | JSX.Element {
     const {start, end, min, max, onChange, onChanged, ...otherProps} = props
 
     const onRangeChange = useCallback((range: Range) => {
@@ -313,7 +313,7 @@ export function computeRangeRatio(
     return {start: startRatio, end: endRatio}
 }
 
-export function computeNumericRange(min: number, max: number, range: Range) {
+export function computeNumericRange(min: number, max: number, range: Range): Range<number> {
     const distance = distanceBetween(min, max)
     const start = min + (distance * range.start)
     const end = min + (distance * range.end)

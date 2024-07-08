@@ -7,7 +7,7 @@ import {forwardRef, useRef, useState} from 'react'
 
 export {decoratingElement, decoratingElementAfter, decoratingElementBefore} from '@eviljs/react/children.js'
 
-export function InputLabel(props: InputLabelProps) {
+export function InputLabel(props: InputLabelProps): JSX.Element {
     const {children, className, labelClass, title, ...otherProps} = props
 
     return (
@@ -24,8 +24,8 @@ export function InputLabel(props: InputLabelProps) {
     )
 }
 
-export const Input = displayName('Input', forwardRef(function Input(
-    props: InputProps,
+export const Input: React.ComponentType<InputProps> = displayName('Input', forwardRef(function Input(
+    props: Omit<InputProps, 'ref'>,
     ref: React.ForwardedRef<HTMLInputElement>
 ) {
     const {className, decorate, hostClass, hostProps, hostStyle, onChange, ...otherProps} = props
@@ -54,8 +54,8 @@ export const Input = displayName('Input', forwardRef(function Input(
     )
 }))
 
-export const TextInput = displayName('TextInput', forwardRef(function TextInput(
-    props: TextInputProps,
+export const TextInput: React.ComponentType<TextInputProps> = displayName('TextInput', forwardRef(function TextInput(
+    props: Omit<TextInputProps, 'ref'>,
     ref: React.ForwardedRef<HTMLInputElement>
 ) {
     const {className, ...otherProps} = props
@@ -70,8 +70,8 @@ export const TextInput = displayName('TextInput', forwardRef(function TextInput(
     )
 }))
 
-export const SecretInput = displayName('SecretInput', forwardRef(function SecretInput(
-    props: SecretInputProps,
+export const SecretInput: React.ComponentType<SecretInputProps> = displayName('SecretInput', forwardRef(function SecretInput(
+    props: Omit<SecretInputProps, 'ref'>,
     ref: React.ForwardedRef<HTMLInputElement>
 ) {
     const {buttonClass, buttonProps, buttonStyle, className, decorate, hideIcon, showIcon, ...otherProps} = props
@@ -116,7 +116,7 @@ export interface InputLabelProps extends Omit<React.HTMLAttributes<HTMLDivElemen
     labelClass?: string
 }
 
-export interface InputProps extends VoidProps<Omit<React.InputHTMLAttributes<HTMLInputElement>, 'onChange'>> {
+export interface InputProps extends VoidProps<Omit<React.InputHTMLAttributes<HTMLInputElement>, 'onChange'>>, React.RefAttributes<HTMLInputElement> {
     decorate?: undefined | ((input: React.ReactNode) => React.ReactNode)
     hostClass?: undefined | string
     hostProps?: undefined | React.HTMLAttributes<HTMLElement>

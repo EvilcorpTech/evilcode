@@ -3,7 +3,7 @@ import {classes} from '@eviljs/react/classes.js'
 import {flushStyles} from '@eviljs/web/animation.js'
 import {Children, isValidElement, useCallback, useEffect, useRef, useState} from 'react'
 
-export function AccordionList(props: AccordionListProps) {
+export function AccordionList(props: AccordionListProps): JSX.Element {
     const {className, children, initial, maxOpen, onChange, ...otherProps} = props
     const itemsRef = useRef<Array<null | HTMLButtonElement>>([])
     const [selected, setSelected] = useState(initial ?? [])
@@ -113,7 +113,7 @@ export function AccordionList(props: AccordionListProps) {
     )
 }
 
-export function Accordion(props: AccordionProps) {
+export function Accordion(props: AccordionProps): JSX.Element {
     const {onToggle, ...otherProps} = props
     const [selected, setSelected] = useState(false)
 
@@ -130,7 +130,7 @@ export function Accordion(props: AccordionProps) {
     )
 }
 
-export function AccordionItem(props: AccordionItemProps) {
+export function AccordionItem(props: AccordionItemProps): JSX.Element {
     const {
         buttonProps,
         contentProps,

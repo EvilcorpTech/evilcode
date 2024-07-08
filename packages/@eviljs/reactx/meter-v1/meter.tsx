@@ -1,6 +1,6 @@
 import {classes} from '@eviljs/react/classes.js'
 
-export function Meter(props: MeterProps) {
+export function Meter(props: MeterProps): JSX.Element {
     const {className, value, ...otherProps} = props
 
     return (

@@ -5,7 +5,7 @@ import {times} from '@eviljs/std/iter.js'
 import {Fragment, useEffect, useRef, useState} from 'react'
 import {ExampleIcon as Icon} from '../icon-example/icon-example-v2.js'
 
-export function ThemeView(props: ThemeViewProps) {
+export function ThemeView(props: ThemeViewProps): JSX.Element {
     const {className, head, children, ...otherProps} = props
     const [primaryAccent, setPrimaryAccent] = useState<Hsl>([0, 0, 0])
     const [secondaryAccent, setSecondaryAccent] = useState<Hsl>([0, 0, 0])
@@ -54,7 +54,7 @@ export function ThemeView(props: ThemeViewProps) {
     )
 }
 
-export function Picker(props: PickerProps) {
+export function Picker(props: PickerProps): JSX.Element {
     const {onPrimaryChange, onSecondaryChange, onThemeChange} = props
     const primaryRef = useRef<HTMLInputElement | null>(null)
     const secondaryRef = useRef<HTMLInputElement | null>(null)
@@ -105,7 +105,7 @@ export function Picker(props: PickerProps) {
     )
 }
 
-export function Colors() {
+export function Colors(): JSX.Element {
     return (
         <div className="std-flex std-flex-column std-flex-justify-center">
             <div className="std-flex">
@@ -283,7 +283,7 @@ export function Colors() {
     )
 }
 
-export function Typography() {
+export function Typography(): JSX.Element {
     return (
         <div className="std-flex std-flex-column std-flex-align-start">
             <label className="text-8fa3 std-text-display1 std-color-primary-fg1">Display 1</label>
@@ -306,7 +306,7 @@ export function Typography() {
     )
 }
 
-export function TextHeight() {
+export function TextHeight(): JSX.Element {
     return (
         <div className="std-flex std-flex-justify-center std-flex-wrap std-gap3">
             {['0', '1', '2', '3', '4', '5', '6'].map(it =>
@@ -325,7 +325,7 @@ export function TextHeight() {
     )
 }
 
-export function TextSpace() {
+export function TextSpace(): JSX.Element {
     return (
         <div className="std-flex std-flex-column std-flex-justify-center std-gap3">
             {['-2', '-1', '', '1', '2'].map((it, idx) =>
@@ -339,7 +339,7 @@ export function TextSpace() {
     )
 }
 
-export function Gutters() {
+export function Gutters(): JSX.Element {
     return (
         <div className="std-flex std-flex-column std-flex-justify-center">
             {times(10).map(it =>
@@ -355,7 +355,7 @@ export function Gutters() {
     )
 }
 
-export function Contrast(props: {theme: 'dark' | 'light'}) {
+export function Contrast(props: {theme: 'dark' | 'light'}): JSX.Element {
     return (
         <div
             className="layout-1e33 std-flex std-gap6"
@@ -471,7 +471,7 @@ export function Contrast(props: {theme: 'dark' | 'light'}) {
     )
 }
 
-export function Buttons() {
+export function Buttons(): JSX.Element {
     return (
         <div className="buttons-45cb std-flex std-flex-column std-flex-justify-center std-flex-align-center std-flex-wrap">
             <div>
@@ -493,7 +493,7 @@ export function Buttons() {
     )
 }
 
-export function Transitions() {
+export function Transitions(): JSX.Element {
     return (
         <div className="std-flex std-flex-justify-center std-flex-align-center std-flex-wrap">
             {times(5).map(it =>
@@ -509,7 +509,7 @@ export function Transitions() {
     )
 }
 
-export function Icons() {
+export function Icons(): JSX.Element {
     return (
         <div className="std-flex std-flex-row std-flex-justify-center std-flex-align-end std-flex-aligned-center std-flex-wrap">
             {times(10).map(it =>
@@ -523,7 +523,7 @@ export function Icons() {
     )
 }
 
-export function Radiuses() {
+export function Radiuses(): JSX.Element {
     return (
         <div className="std-flex std-flex-justify-center std-flex-align-center std-flex-wrap">
             {times(4).map(it =>
@@ -538,7 +538,7 @@ export function Radiuses() {
     )
 }
 
-export function Shadows() {
+export function Shadows(): JSX.Element {
     return (
         <div className="std-flex std-flex-center std-flex-align-center std-flex-wrap std-width-m">
             <label className="shadow-t9a2 std-shadow-soft">Soft</label>
@@ -573,13 +573,13 @@ export function readThemeColor(type: string): Hsl {
     return [h, s, l]
 }
 
-export function computeHslFromHexColor(hex: string) {
+export function computeHslFromHexColor(hex: string): Hsl {
     const rgb = rgbFromHexString(hex)
     const hsl = hslFromRgb(...rgb)
     return hsl
 }
 
-export function computeHexFromHslColor(hsl: Hsl) {
+export function computeHexFromHslColor(hsl: Hsl): string {
     const rgb = rgbFromHsl(...hsl)
     const hex = rgbToHexString(...rgb)
     return hex
@@ -588,7 +588,7 @@ export function computeHexFromHslColor(hsl: Hsl) {
 // Types ///////////////////////////////////////////////////////////////////////
 
 export interface ThemeViewProps extends React.HTMLAttributes<HTMLDivElement> {
-    head?: React.ReactNode
+    head?: undefined | React.ReactNode
 }
 
 export interface PickerProps {

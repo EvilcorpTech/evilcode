@@ -1,6 +1,6 @@
 import {classes} from '@eviljs/react/classes.js'
 
-export function NotificationBadge(props: NotificationBadgeProps) {
+export function NotificationBadge(props: NotificationBadgeProps): JSX.Element {
     const {children, className, value, ...otherProps} = props
 
     return (

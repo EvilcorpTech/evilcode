@@ -1,6 +1,6 @@
 import {classes} from '@eviljs/react/classes.js'
 
-export function Spinner(props: SpinnerProps) {
+export function Spinner(props: SpinnerProps): JSX.Element {
     const {active, className, ...otherProps} = props
 
     return (

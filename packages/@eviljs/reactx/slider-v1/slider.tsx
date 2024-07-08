@@ -9,7 +9,7 @@ export const SliderDirection = {
     ColumnReverse: 'column-reverse' as const,
 }
 
-export function Slider(props: SliderProps) {
+export function Slider(props: SliderProps): JSX.Element {
     const {className, children, selected, direction, ...otherProps} = props
     const childrenList = asArray(children)
 
@@ -39,16 +39,14 @@ export function Slider(props: SliderProps) {
     )
 }
 
-export function Slide(props: SlideProps) {
-    const {children, className, ...otherProps} = props
+export function Slide(props: SlideProps): JSX.Element {
+    const {className, ...otherProps} = props
 
     return (
         <div
             {...otherProps}
             className={classes('Slide-0eab', className)}
-        >
-            {children}
-        </div>
+        />
     )
 }
 

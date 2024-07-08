@@ -1,7 +1,7 @@
 import {classes} from '@eviljs/react/classes.js'
 import {useCallback, useState} from 'react'
 
-export function ButtonArmored(props: ButtonArmoredProps) {
+export function ButtonArmored(props: ButtonArmoredProps): JSX.Element {
     const {children, className, ...otherProps} = props
     const [armored, setArmored] = useState(false)
 

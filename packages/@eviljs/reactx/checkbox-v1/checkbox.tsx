@@ -2,7 +2,7 @@ import {classes} from '@eviljs/react/classes.js'
 import {asBooleanString} from '@eviljs/web/aria.js'
 import {cloneElement, isValidElement} from 'react'
 
-export function Checkbox(props: CheckboxProps) {
+export function Checkbox(props: CheckboxProps): JSX.Element {
     const {className, children, checked, disabled, onChange, ...otherProps} = props
     const enabled = ! disabled
 

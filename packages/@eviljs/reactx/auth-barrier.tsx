@@ -1,6 +1,6 @@
 import {AuthTokenState, type AuthTokenStateEnum} from '@eviljs/react/auth.js'
 
-export function AuthBarrier(props: AuthBarrierProps) {
+export function AuthBarrier(props: AuthBarrierProps): React.ReactNode {
     const {children, fallback, progress, tokenState} = props
 
     switch (tokenState) {
