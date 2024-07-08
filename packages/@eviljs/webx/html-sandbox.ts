@@ -34,12 +34,12 @@ export class HtmlSandbox extends WebElement {
         useEventListener(this, window, 'hashchange', onHashChange.bind(this, this))
     }
 
-    override connectedCallback() {
+    override connectedCallback(): void {
         onContentChange(this)
     }
 }
 
-export function onContentChange(element: HTMLElement) {
+export function onContentChange(element: HTMLElement): void {
     if (! element.shadowRoot) {
         return
     }
@@ -52,7 +52,7 @@ export function onContentChange(element: HTMLElement) {
     onHashChange(element)
 }
 
-export function onHashChange(element: HTMLElement) {
+export function onHashChange(element: HTMLElement): void {
     const target = tryOrValue(() => {
         if (! element.shadowRoot) {
             return
@@ -62,9 +62,9 @@ export function onHashChange(element: HTMLElement) {
         }
 
         const id = window.location.hash
-        const el = element.shadowRoot.querySelector<HTMLElement>(id)
+        const shadowElement = element.shadowRoot.querySelector<HTMLElement>(id)
 
-        return el
+        return shadowElement
     }, undefined)
 
     if (! target) {
