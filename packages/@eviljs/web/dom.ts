@@ -25,3 +25,9 @@ export function addEventListener(
 
     return clean
 }
+
+export function removeChildren(element: Element): void {
+    while (element.lastChild) {
+        element.lastChild.remove()
+    }
+}

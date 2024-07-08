@@ -4,6 +4,7 @@ import {asArray} from '@eviljs/std/type-as.js'
 import {isArray, isBoolean, isNone, isNull, isNumber, isString, isUndefined} from '@eviljs/std/type-is.js'
 import type {StringAutocompleted} from '@eviljs/std/type.js'
 import {classes, type Classes} from './classes.js'
+import {removeChildren} from './dom.js'
 
 export {createRef} from '@eviljs/std/ref.js'
 export type {Ref} from '@eviljs/std/ref.js'
@@ -134,11 +135,11 @@ export function asRenderEventListener<E>(args: RenderEventHandler<E>): RenderEve
     return asArray(args) as RenderEventHandlerTuple<E>
 }
 
-export function setAttribute(element: RenderElement, property: string, value: boolean | number | string) {
+export function setAttribute(element: RenderElement, property: string, value: boolean | number | string): void {
     element.setAttribute(property, String(value))
 }
 
-export function setDataset(element: RenderElement, dataset: RenderDatasetAttribute) {
+export function setDataset(element: RenderElement, dataset: RenderDatasetAttribute): void {
     for (const key in dataset) {
         const value = dataset[key]
 
@@ -154,11 +155,11 @@ export function setDataset(element: RenderElement, dataset: RenderDatasetAttribu
     }
 }
 
-export function setClass(element: RenderElement, value: Classes) {
+export function setClass(element: RenderElement, value: Classes): void {
     setAttribute(element, 'class', classes(value))
 }
 
-export function setChildren(element: RenderElement, children: RenderChildren) {
+export function setChildren(element: RenderElement, children: RenderChildren): void {
     if (isUndefined(children)) {
         return
     }
@@ -193,29 +194,23 @@ export function setChildren(element: RenderElement, children: RenderChildren) {
     }
 }
 
-export function setRef(element: RenderElement, ref: Ref<undefined | RenderElement>) {
+export function setRef(element: RenderElement, ref: Ref<undefined | RenderElement>): void {
     ref.value = element
 }
 
-export function toggleAttribute(element: RenderElement, property: string, value?: undefined | boolean) {
+export function toggleAttribute(element: RenderElement, property: string, value?: undefined | boolean): void {
     element.toggleAttribute(property, value)
 }
 
-export function attachEvent(element: RenderElement, event: string, handler: RenderEventHandler<any>) {
+export function attachEvent(element: RenderElement, event: string, handler: RenderEventHandler<any>): void {
     updateEvent(element, event, handler)
 }
 
-export function removeChildren(element: RenderElement) {
-    while (element.lastChild) {
-        element.lastChild.remove()
-    }
-}
-
 export const RenderUpdateProperties = {
-    children: (element: RenderElement, property: string, value: RenderChildren) => setChildren(element, value),
-    class: (element: RenderElement, property: string, value: Classes) => setClass(element, value),
-    dataset: (element: RenderElement, property: string, value: RenderDatasetAttribute) => setDataset(element, value),
-    ref: (element: RenderElement, property: string, value: Ref<undefined | RenderElement>) => setRef(element, value),
+    children: (element: RenderElement, property: string, value: RenderChildren): void => setChildren(element, value),
+    class: (element: RenderElement, property: string, value: Classes): void => setClass(element, value),
+    dataset: (element: RenderElement, property: string, value: RenderDatasetAttribute): void => setDataset(element, value),
+    ref: (element: RenderElement, property: string, value: Ref<undefined | RenderElement>): void => setRef(element, value),
 }
 
 // Types ///////////////////////////////////////////////////////////////////////

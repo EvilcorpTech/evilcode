@@ -105,24 +105,24 @@ export async function invalidateAuthentication(token: string, optionsComputable:
     return response.ok
 }
 
-export function createDefaultRequestBody(credentials: AuthCredentials) {
+export function createDefaultRequestBody(credentials: AuthCredentials): AuthCredentials {
     return {
         identifier: credentials.identifier,
         secret: credentials.secret,
     }
 }
 
-export function extractDefaultResponseError(body: unknown) {
+export function extractDefaultResponseError(body: unknown): unknown {
     return body
 }
 
-export function extractDefaultResponseToken(body: unknown) {
+export function extractDefaultResponseToken(body: unknown): undefined | string {
     return isObject(body)
         ? (asString(body.token) || undefined)
         : undefined
 }
 
-export function throwAuthInvalidResponse(fnName: string, reason: string) {
+export function throwAuthInvalidResponse(fnName: string, reason: string): never {
     return throwInvalidResponse(
         `@eviljs/web/auth.${fnName}() -> ~~Response~~:\n`
         + reason

@@ -38,7 +38,7 @@ export function mergeRequest(request: Request, options: ObjectPartial<RequestIni
 /**
 * @throws InvalidArgument
 **/
-export function mergeRequestHeaders(...headersList: Array<HeadersInit>) {
+export function mergeRequestHeaders(...headersList: Array<HeadersInit>): Record<string, string> {
     const headersMap: Record<string, string> = {}
 
     for (const headers of headersList) {

@@ -15,7 +15,7 @@ export function useRequestAuthorization(request: Request, type: RequestAuthoriza
     return useRequestHeaders(request, asRequestAuthorizationHeaders(type, value))
 }
 
-export function asRequestAuthorizationHeaders(type: RequestAuthorizationType, value: string) {
+export function asRequestAuthorizationHeaders(type: RequestAuthorizationType, value: string): Record<string, string> {
     return {
         Authorization: `${type} ${value}`,
     } satisfies HeadersInit

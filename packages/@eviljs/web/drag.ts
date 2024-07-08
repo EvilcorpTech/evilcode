@@ -1,6 +1,7 @@
+import type {Task} from '@eviljs/std/fn-type.js'
 import {isNumber} from '@eviljs/std/type-is.js'
 
-export function attachDragDraggingListeners(element: DragElement, options: DragListeners) {
+export function attachDragDraggingListeners(element: DragElement, options: DragListeners): Task {
     const eventOptions = {capture: true, passive: true} satisfies AddEventListenerOptions
 
     const listeners = {
@@ -100,7 +101,11 @@ export function initMoveState(element: DragMoveElement, event: DragPointerEvent,
     }
 }
 
-export function initMoveAbsoluteState(element: HTMLElement, event: DragPointerEvent, options?: undefined | DragMoveOptions<HTMLElement>) {
+export function initMoveAbsoluteState(
+    element: HTMLElement,
+    event: DragPointerEvent,
+    options?: undefined | DragMoveOptions<HTMLElement>,
+): DragMoveStateInit<HTMLElement, HTMLElement> {
     const initialLeft = element.offsetLeft
     const initialTop = element.offsetTop
     const minLeft = options?.minLeft ?? (options?.bound
@@ -129,10 +134,14 @@ export function initMoveAbsoluteState(element: HTMLElement, event: DragPointerEv
         minTop,
         maxTop,
         moveRatio,
-    } satisfies Partial<DragMoveState<HTMLElement, HTMLElement>>
+    }
 }
 
-export function initMoveTransformState(element: HTMLElement, event: DragPointerEvent, options?: undefined | DragMoveOptions<HTMLElement>) {
+export function initMoveTransformState(
+    element: HTMLElement,
+    event: DragPointerEvent,
+    options?: undefined | DragMoveOptions<HTMLElement>,
+): DragMoveStateInit<HTMLElement, HTMLElement> {
     const [translateX, translateY] = getComputedTransform(element).slice(-2)
     const initialLeft = translateX ?? 0
     const initialTop = translateY ?? 0
@@ -164,10 +173,14 @@ export function initMoveTransformState(element: HTMLElement, event: DragPointerE
         minTop,
         maxTop,
         moveRatio,
-    } satisfies Partial<DragMoveState<HTMLElement, HTMLElement>>
+    }
 }
 
-export function initMoveSvgState(element: SVGGraphicsElement, event: DragPointerEvent, options?: undefined | DragMoveOptions<SVGGraphicsElement>) {
+export function initMoveSvgState(
+    element: SVGGraphicsElement,
+    event: DragPointerEvent,
+    options?: undefined | DragMoveOptions<SVGGraphicsElement>,
+): DragMoveStateInit<HTMLElement, HTMLElement> {
     const svg = element.ownerSVGElement!
     const moveRatio =
         (svg.viewBox.baseVal.width || svg.clientWidth)
@@ -203,7 +216,7 @@ export function initMoveSvgState(element: SVGGraphicsElement, event: DragPointer
         minTop,
         maxTop,
         moveRatio,
-    } satisfies Partial<DragMoveState<SVGGraphicsElement, SVGGraphicsElement>>
+    }
 }
 
 export function move(state: DragMoveState<DragMoveElement, DragMoveElement>, event: DragPointerEvent): undefined | DragMoveChange {
@@ -305,7 +318,7 @@ export function computeMove(state: DragMoveState<DragMoveElement, DragMoveElemen
     return // Makes TypeScript happy.
 }
 
-export function computeMoveHorizontal(state: DragMoveState<DragMoveElement, DragMoveElement>, event: DragPointerEvent) {
+export function computeMoveHorizontal(state: DragMoveState<DragMoveElement, DragMoveElement>, event: DragPointerEvent): number {
     const {initialLeft, initialX, minLeft, maxLeft, moveRatio} = state
     const deltaX = (event.clientX - initialX) * moveRatio
     const nextLeft = initialLeft + deltaX
@@ -319,7 +332,7 @@ export function computeMoveHorizontal(state: DragMoveState<DragMoveElement, Drag
     return nextLeft
 }
 
-export function computeMoveVertical(state: DragMoveState<DragMoveElement, DragMoveElement>, event: DragPointerEvent) {
+export function computeMoveVertical(state: DragMoveState<DragMoveElement, DragMoveElement>, event: DragPointerEvent): number {
     const {initialTop, initialY, minTop, maxTop, moveRatio} = state
     const deltaY = (event.clientY - initialY) * moveRatio
     const nextTop = initialTop + deltaY
@@ -333,7 +346,7 @@ export function computeMoveVertical(state: DragMoveState<DragMoveElement, DragMo
     return nextTop
 }
 
-export function getComputedTransform(element: HTMLElement) {
+export function getComputedTransform(element: HTMLElement): Array<number> {
     const {transform} = getComputedStyle(element)
 
     if (! transform || transform === 'none') {
@@ -389,7 +402,7 @@ export function initResizeState(element: DragResizeElement, event: DragPointerEv
     }
 }
 
-export function resize(state: DragResizeState, event: DragPointerEvent) {
+export function resize(state: DragResizeState, event: DragPointerEvent): undefined | DragResizeChange {
     const size = computeResize(state, event)
 
     if (! size) {
@@ -435,7 +448,7 @@ export function computeResize(state: DragResizeState, event: DragPointerEvent): 
     return // Makes TypeScript happy.
 }
 
-export function computeResizeHorizontal(state: DragResizeState, event: DragPointerEvent) {
+export function computeResizeHorizontal(state: DragResizeState, event: DragPointerEvent): number {
     const {horizontalDirection, initialWidth, initialX, minWidth, maxWidth} = state
     const deltaX = (event.clientX - initialX) * horizontalDirection
     const nextWidth = initialWidth + deltaX
@@ -449,7 +462,7 @@ export function computeResizeHorizontal(state: DragResizeState, event: DragPoint
     return nextWidth
 }
 
-export function computeResizeVertical(state: DragResizeState, event: DragPointerEvent) {
+export function computeResizeVertical(state: DragResizeState, event: DragPointerEvent): number {
     const {verticalDirection, initialHeight, initialY, minHeight, maxHeight} = state
     const deltaY = (event.clientY - initialY) * verticalDirection
     const nextHeight = initialHeight + deltaY
@@ -480,7 +493,11 @@ export function asDragPointerEvent(event: MouseEvent | TouchEvent): DragPointerE
 
 // Scroll //////////////////////////////////////////////////////////////////////
 
-export function initScrollState<E extends DragScrollElement>(element: E, event: DragPointerEvent, options?: undefined | DragScrollOptions): DragScrollState<E> {
+export function initScrollState<E extends DragScrollElement>(
+    element: E,
+    event: DragPointerEvent,
+    options?: undefined | DragScrollOptions,
+): DragScrollState<E> {
     const horizontal = Boolean(options?.horizontal && element.scrollWidth)
     const vertical = Boolean(options?.vertical && element.scrollHeight)
     const initialX = event.clientX
@@ -545,7 +562,7 @@ export function computeScroll<E extends DragScrollElement>(state: DragScrollStat
     return // Makes TypeScript happy.
 }
 
-export function computeScrollHorizontal<E extends DragScrollElement>(state: DragScrollState<E>, event: DragPointerEvent) {
+export function computeScrollHorizontal<E extends DragScrollElement>(state: DragScrollState<E>, event: DragPointerEvent): number {
     const {initialScrollLeft, initialX} = state
     const deltaX = event.clientX - initialX
     const nextLeft = initialScrollLeft - deltaX
@@ -553,7 +570,7 @@ export function computeScrollHorizontal<E extends DragScrollElement>(state: Drag
     return nextLeft
 }
 
-export function computeScrollVertical<E extends DragScrollElement>(state: DragScrollState<E>, event: DragPointerEvent) {
+export function computeScrollVertical<E extends DragScrollElement>(state: DragScrollState<E>, event: DragPointerEvent): number {
     const {initialScrollTop, initialY} = state
     const deltaY = event.clientY - initialY
     const nextTop = initialScrollTop - deltaY
@@ -607,19 +624,22 @@ export interface DragState<E, O extends DragOptions> {
     options?: undefined | O
 }
 
-export interface DragMoveState<E extends DragMoveElement, B extends DragMoveElement> extends DragState<E, DragMoveOptions<B>> {
+export interface DragMoveStateInit<E extends DragMoveElement, B extends DragMoveElement> {
+    initialLeft: number
+    initialTop: number
+    minLeft: undefined | number
+    maxLeft: undefined | number
+    minTop: undefined | number
+    maxTop: undefined | number
+    moveRatio: number
+}
+
+export interface DragMoveState<E extends DragMoveElement, B extends DragMoveElement> extends DragState<E, DragMoveOptions<B>>, DragMoveStateInit<E, B> {
     strategy: DragMoveStrategy
     horizontal: boolean
     vertical: boolean
     initialX: number
     initialY: number
-    initialLeft: number
-    initialTop: number
-    minLeft?: undefined | number
-    maxLeft?: undefined | number
-    minTop?: undefined | number
-    maxTop?: undefined | number
-    moveRatio: number
 }
 
 export interface DragResizeState extends DragState<DragResizeElement, DragResizeOptions> {

@@ -1,4 +1,4 @@
-export function hasBrowserTouch() {
+export function hasBrowserTouch(): boolean {
     if (window.ontouchstart) {
         return true
     }

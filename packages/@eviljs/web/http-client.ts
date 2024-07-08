@@ -122,7 +122,7 @@ export async function decodeResponseOrReject<O>(
 * can't be used to cast a known value (for example `Response`) to a different
 * value (for example `Unsafe<?>`).
 */
-export function castingUnknown<O>(fn: Io<any, O>) {
+export function castingUnknown<O>(fn: Io<any, O>): (<I>(input: I) => unknown extends I ? O : unknown) {
     function cast<I>(input: I): unknown extends I ? O : unknown {
         return fn(input as any)
     }

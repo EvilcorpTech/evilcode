@@ -6,7 +6,7 @@ import {isSome} from '@eviljs/std/type-is.js'
 
 export const CookieKeyRegexpCache: Record<string, RegExp> = {}
 
-export function readCookie(key: string) {
+export function readCookie(key: string): undefined | string {
     if (! document.cookie) {
         return
     }
@@ -22,7 +22,7 @@ export function readCookie(key: string) {
     return matches[1]
 }
 
-export function writeCookie(args: CookieOptions & {value: string}) {
+export function writeCookie(args: CookieOptions & {value: string}): void {
     const key = args.key
     const value = args.value
     const path = args.path
@@ -46,7 +46,7 @@ export function writeCookie(args: CookieOptions & {value: string}) {
     document.cookie = cookie
 }
 
-export function deleteCookie(args: CookieOptions) {
+export function deleteCookie(args: CookieOptions): void {
     const value = ''
     const maxAge = 0
     const expires = 'Thu, 01 Jan 1970 00:00:01 GMT'
@@ -54,7 +54,7 @@ export function deleteCookie(args: CookieOptions) {
     writeCookie({...args, value, maxAge, expires})
 }
 
-export function cleanCookies(args: CookieOptions) {
+export function cleanCookies(args: CookieOptions): void {
     const list = document.cookie.split(';')
 
     for (const keyVal of list) {
@@ -68,21 +68,21 @@ export function cleanCookies(args: CookieOptions) {
     }
 }
 
-export function maxAgeFromDate(dateOrNumber: number | Date) {
+export function maxAgeFromDate(dateOrNumber: number | Date): number {
     const dateTime = asDate(dateOrNumber).getTime()
     const maxAge = dateTime / OneSecondInMs
 
     return maxAge
 }
 
-export function expiresFromDate(dateOrNumber: number | Date) {
+export function expiresFromDate(dateOrNumber: number | Date): string {
     const date = asDate(dateOrNumber)
     const expires = date.toUTCString()
 
     return expires
 }
 
-export function cookieRegexpFromKey(key: string) {
+export function cookieRegexpFromKey(key: string): RegExp {
     const regexp = CookieKeyRegexpCache[key] ?? new RegExp(`\\b${escapeRegexp(key)}=([^;]*);?`)
 
     CookieKeyRegexpCache[key] ??= regexp

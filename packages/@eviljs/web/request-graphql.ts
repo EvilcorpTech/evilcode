@@ -9,10 +9,10 @@ import {RequestMethod, creatingRequest, type RequestOptions} from './request-met
 import {usingRequestParams} from './request-params.js'
 import {decodeResponseBodyAsJson} from './response.js'
 
-export const GraphqlQueryCommentRegexp = /[#].*/g
-export const GraphqlQueryEmptiesRegexp = /\s+/g
-export const GraphqlQueryLeadingEmptiesRegexp = /\s+([{}])/g
-export const GraphqlQueryTrailingEmptiesRegexp = /([{}])\s+/g
+export const GraphqlQueryCommentRegexp: RegExp = /[#].*/g
+export const GraphqlQueryEmptiesRegexp: RegExp = /\s+/g
+export const GraphqlQueryLeadingEmptiesRegexp: RegExp = /\s+([{}])/g
+export const GraphqlQueryTrailingEmptiesRegexp: RegExp = /([{}])\s+/g
 
 /**
 * @throws TypeError

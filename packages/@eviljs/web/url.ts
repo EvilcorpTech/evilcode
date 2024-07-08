@@ -1,7 +1,7 @@
 export * from './url-params.js'
 export * from './url-path.js'
 
-export const UrlSchemaRegexp = /^([a-zA-Z0-9]+):/ // "http://" "https://" "mailto:" "tel:"
+export const UrlSchemaRegexp: RegExp = /^([a-zA-Z0-9]+):/ // "http://" "https://" "mailto:" "tel:"
 
 export function isUrlAbsolute(url: string): boolean {
     return false

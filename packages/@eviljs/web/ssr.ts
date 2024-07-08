@@ -1,4 +1,4 @@
-export function saveSsrState(id: string, payload: unknown, options?: undefined | SsrSaveOptions) {
+export function saveSsrState(id: string, payload: unknown, options?: undefined | SsrSaveOptions): void {
     if (! payload) {
         return
     }
@@ -9,7 +9,7 @@ export function saveSsrState(id: string, payload: unknown, options?: undefined |
     serializeSsrStateIntoElement(ssrStorage, payload)
 }
 
-export function serializeSsrStateIntoElement(element: Element, payload: unknown) {
+export function serializeSsrStateIntoElement(element: Element, payload: unknown): void {
     const serializedPayload = JSON.stringify(payload)
 
     element.textContent = serializedPayload
@@ -41,7 +41,7 @@ export function findSsrStorageElement(id: string): undefined | Element {
     return ssrElement
 }
 
-export function injectSsrStorageElement(id: string) {
+export function injectSsrStorageElement(id: string): HTMLScriptElement {
     const element = createSsrStorageElement(id)
 
     document.body.appendChild(element)
@@ -49,7 +49,7 @@ export function injectSsrStorageElement(id: string) {
     return element
 }
 
-export function createSsrStorageElement(id: string) {
+export function createSsrStorageElement(id: string): HTMLScriptElement {
     const element = document.createElement('script')
 
     element.type = 'application/json'

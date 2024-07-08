@@ -1,29 +1,27 @@
-const WebElementState = Symbol('WebElementState')
-
 export class WebElement extends HTMLElement {
-    [WebElementState]: {
-        mounted: Array<Function>
-        unmounted: Array<Function>
+    #hooksState: WebElementHooksState = {
+        mounted: [],
+        unmounted: [],
     }
 
-    constructor() {
-        super()
+    // constructor() {
+    //     super()
+    // }
 
-        this[WebElementState] = {mounted: [], unmounted: []}
+    connectedCallback(): void {
+        runTasksQueue(this.#hooksState.mounted)
     }
 
-    connectedCallback() {
-        runTasksQueue(this[WebElementState].mounted)
+    disconnectedCallback(): void {
+        runTasksQueue(this.#hooksState.unmounted)
+
+        this.#hooksState.unmounted = []
     }
 
-    disconnectedCallback() {
-        runTasksQueue(this[WebElementState].unmounted)
-
-        this[WebElementState].unmounted = []
+    getHooksState(): WebElementHooksState {
+        return this.#hooksState
     }
 }
-
-// Lifecycles //////////////////////////////////////////////////////////////////
 
 export function onMounted(element: WebElement, fn: OnMountedFn): void {
     const unmountedTask = fn()
@@ -32,7 +30,7 @@ export function onMounted(element: WebElement, fn: OnMountedFn): void {
         return
     }
 
-    element[WebElementState].unmounted.push(unmountedTask)
+    element.getHooksState().unmounted.push(unmountedTask)
 }
 
 export function onUnmounted(element: WebElement, fn: OnUnmountedFn): void {
@@ -60,13 +58,18 @@ export function useEventListener(element: WebElement, target: Window | Document 
 
 // Tools ///////////////////////////////////////////////////////////////////////
 
-export function runTasksQueue(queue: Array<Function>) {
+export function runTasksQueue(queue: Array<Function>): void {
     for (const it of queue) {
         it()
     }
 }
 
 // Types ///////////////////////////////////////////////////////////////////////
+
+export interface WebElementHooksState {
+    mounted: Array<Function>
+    unmounted: Array<Function>
+}
 
 export interface OnMountedFn {
     (): Function | void

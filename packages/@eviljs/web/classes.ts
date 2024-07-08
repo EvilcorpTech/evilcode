@@ -1,7 +1,7 @@
 import {isObject} from '@eviljs/std/type-is.js'
 import type {None} from '@eviljs/std/type.js'
 
-export function classes(...args: Array<Classes>) {
+export function classes(...args: Array<Classes>): string {
     // Implementation based on these benchmarks:
     // https://jsperf.app/xiboxo/5
     // https://jsperf.app/zuleqe/1

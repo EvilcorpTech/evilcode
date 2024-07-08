@@ -6,20 +6,20 @@ export {wait} from '@eviljs/std/async.js'
 export {playTimeline} from '@eviljs/std/timeline.js'
 export type {TimelineAsync, TimelineParallel, TimelineSequence, TimelineTask} from '@eviljs/std/timeline.js'
 
-export const SpringPrecision = 200
-export const SpringSnapping = 1 / SpringPrecision
+export const SpringPrecision: number = 200
+export const SpringSnapping: number = 1 / SpringPrecision
 
-export const SpringDamping = .6
-export const SpringDistance = 10
-export const SpringMass = .15
-export const SpringStiffness = 1
+export const SpringDamping: number = .6
+export const SpringDistance: number = 10
+export const SpringMass: number = .15
+export const SpringStiffness: number = 1
 
-export const SpringScaleDamping = SpringDamping
-export const SpringScaleDistance = SpringDistance
-export const SpringScaleMass = SpringMass
-export const SpringScaleStiffness = SpringStiffness
+export const SpringScaleDamping: number = SpringDamping
+export const SpringScaleDistance: number = SpringDistance
+export const SpringScaleMass: number = SpringMass
+export const SpringScaleStiffness: number = SpringStiffness
 
-export function flushStyles(...elements: [HTMLElement, ...Array<HTMLElement>]) {
+export function flushStyles(...elements: [HTMLElement, ...Array<HTMLElement>]): void {
     for (const element of elements) {
         // Forces styles computation.
         // Void prevents Chrome from skipping the evaluation of the expression.
@@ -51,7 +51,7 @@ export function requestStylesFlush(...elements: [HTMLElement, ...Array<HTMLEleme
 export function playCssTransition<T extends HTMLElement, S1 = void, S2 = void>(
     target: T,
     hooks: AnimationCssHooks<T, S1, S2>,
-) {
+): Promise<void> {
     const setupReturn = hooks.setup?.(target)
 
     if (hooks.setup) {
@@ -79,7 +79,7 @@ export function playCssTransition<T extends HTMLElement, S1 = void, S2 = void>(
 export function createCssTransition<S1, S2, T extends HTMLElement>(
     target: T,
     hooks: AnimationCssHooks<T, S1, S2>,
-) {
+): Task<Promise<void>> {
     function play() {
         return playCssTransition(target, hooks)
     }
@@ -87,7 +87,7 @@ export function createCssTransition<S1, S2, T extends HTMLElement>(
     return play
 }
 
-export function createSpringAnimation(options: SpringAnimationOptions) {
+export function createSpringAnimation(options: SpringAnimationOptions): Task<Promise<void>> {
     let promise: undefined | Future<void>
 
     function loop(initialTime: number, done: Task, wasSnapped = false) {
@@ -138,7 +138,12 @@ export function createSpringAnimation(options: SpringAnimationOptions) {
     return play
 }
 
-export function createSpringScaleAnimation(finalScale: number, initialScale = 1, options?: undefined | Partial<SpringAnimationOptions>) {
+export function createSpringScaleAnimation(
+    finalScale: number,
+    initialScaleOptional?: undefined | number,
+    options?: undefined | Partial<SpringAnimationOptions>,
+): (element: HTMLElement, direction: 'forwards' | 'backward') => Promise<void> {
+    const initialScale = initialScaleOptional ?? 1
     const animationDistance = options?.distance ?? SpringScaleDistance
     const scaleDistance = distanceBetween(initialScale, finalScale)
     const scaleDirection = directionOf(initialScale, finalScale)
@@ -157,7 +162,7 @@ export function createSpringScaleAnimation(finalScale: number, initialScale = 1,
     //    | /     —
     // -5 |/
 
-    function play(el: HTMLElement, direction: 'forward' | 'backward') {
+    function play(element: HTMLElement, direction: 'forwards' | 'backward') {
         const animate = createSpringAnimation({
             damping: SpringScaleDamping,
             mass: SpringScaleMass,
@@ -168,15 +173,15 @@ export function createSpringScaleAnimation(finalScale: number, initialScale = 1,
                 options?.onTick?.(position, tick)
 
                 const scaleFactor = mapPositionToScale(position)
-                const scale = direction === 'forward'
+                const scale = direction === 'forwards'
                     ? scaleFactor
                     : -scaleFactor + inverseDistance // Inverted and translated back.
                 const clampedScale = Math.max(scale, 0)
 
-                el.style.zIndex = direction === 'forward'
+                element.style.zIndex = direction === 'forwards'
                     ? '1'
                     : ''
-                el.style.transform = `scale(${clampedScale})`
+                element.style.transform = `scale(${clampedScale})`
             },
         })
 
@@ -186,7 +191,7 @@ export function createSpringScaleAnimation(finalScale: number, initialScale = 1,
     return play
 }
 
-export function computeDampedSimpleHarmonicMotion(time: number, options: SpringOptions) {
+export function computeDampedSimpleHarmonicMotion(time: number, options: SpringOptions): number {
     const damping = options.damping ?? SpringDamping
     const distance = options.distance ?? SpringDistance
     const mass = options.mass ?? SpringMass
@@ -218,7 +223,7 @@ export function computeDampedSimpleHarmonicMotion(time: number, options: SpringO
     return position
 }
 
-export function scheduleAnimationTask(task: Function) {
+export function scheduleAnimationTask(task: Function): void {
     requestAnimationFrame(() => task())
 }
 

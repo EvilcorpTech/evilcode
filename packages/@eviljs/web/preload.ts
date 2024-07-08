@@ -15,7 +15,7 @@ export function exposePreloadHintElement(attrs: PreloadElementAttrs, options?: u
     return element
 }
 
-export function createPreloadHintElement(attrs: PreloadElementAttrs) {
+export function createPreloadHintElement(attrs: PreloadElementAttrs): HTMLLinkElement {
     const element = document.createElement('link')
     mapSome(attrs.as, it => element.setAttribute('as', it))
     mapSome(attrs.crossOrigin, it => element.setAttribute('crossOrigin', it))
@@ -26,7 +26,7 @@ export function createPreloadHintElement(attrs: PreloadElementAttrs) {
     return element
 }
 
-export function findPreloadHint(attrs: PreloadElementAttrs) {
+export function findPreloadHint(attrs: PreloadElementAttrs): undefined | HTMLLinkElement {
     const selector = [
         'link',
         attrs.as ? `[as="${attrs.as}"]` : undefined,
@@ -37,7 +37,7 @@ export function findPreloadHint(attrs: PreloadElementAttrs) {
         attrs.type ? `[type="${attrs.type}"]` : undefined,
     ].filter(Boolean).join('')
 
-    return document.querySelector(selector) ?? undefined
+    return document.querySelector<HTMLLinkElement>(selector) ?? undefined
 }
 
 export function attachPreloadHintElement(element: Node, options?: undefined | PreloadElementOptions): void {

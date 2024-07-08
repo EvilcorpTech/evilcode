@@ -2,7 +2,7 @@ import {compileRoutePattern, cleanRoutePattern, routeRegexpFromPattern, exact} f
 
 // An opening round bracket, not followed by an opening or closing round bracket,
 // followed by a closing round bracket.
-export const CapturingGroupRegexp = /\([^()]+\)/
+export const CapturingGroupRegexp: RegExp = /\([^()]+\)/
 
 /*
 * Creates a Route. Used mostly for type checking.
@@ -58,7 +58,7 @@ export function createSimpleRoute<
 *
 * computeRoutePath('/book/(\\w+)/(\\w+)', 'abc', 123) === '/book/abc/123'
 */
-export function computeRoutePath(patternStr: string, ...args: Array<string | number>) {
+export function computeRoutePath(patternStr: string, ...args: Array<string | number>): string {
     let path = patternStr
 
     for (const arg of args) {

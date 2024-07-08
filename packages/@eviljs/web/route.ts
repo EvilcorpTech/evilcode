@@ -12,10 +12,10 @@ export const MatchArg = '([^/]+)'
 export const RouteArgPlaceholder = '{arg}'
 
 export const RoutePatternRegexpCache: Record<string, RegExp> = {}
-export const RoutePatternEmptyRegexp = /^$/
-export const RoutePatternEmptiesRegexp = /[\n ]/g
-export const RoutePatternRepeatingSlashRegexp = /\/\/+/g
-export const RoutePatternTrailingSlashRegexp = /\/$/
+export const RoutePatternEmptyRegexp: RegExp = /^$/
+export const RoutePatternEmptiesRegexp: RegExp = /[\n ]/g
+export const RoutePatternRepeatingSlashRegexp: RegExp = /\/\/+/g
+export const RoutePatternTrailingSlashRegexp: RegExp = /\/$/
 
 export function exact(pattern: string): string
 export function exact(strings: TemplateStringsArray, ...substitutions: Array<unknown>): string
@@ -63,11 +63,11 @@ export function routeRegexpFromPattern(pattern: RoutePattern): RegExp {
     return regexp
 }
 
-export function encodeRouteArgs(route: string, ...args: RouteArgs) {
+export function encodeRouteArgs(route: string, ...args: RouteArgs): string {
     return replaceRouteArgPlaceholderWithValues(route, RouteArgPlaceholder, args)
 }
 
-export function replaceRouteArgPlaceholderWithValues(template: string, argPlaceholder: string, argValues: RouteArgs) {
+export function replaceRouteArgPlaceholderWithValues(template: string, argPlaceholder: string, argValues: RouteArgs): string {
     let output = template
 
     for (const arg of argValues) {
@@ -77,7 +77,7 @@ export function replaceRouteArgPlaceholderWithValues(template: string, argPlaceh
     return output
 }
 
-export function replaceRouteArgPlaceholderWithValue(template: string, argPlaceholder: string, argValue: ElementOf<RouteArgs>) {
+export function replaceRouteArgPlaceholderWithValue(template: string, argPlaceholder: string, argValue: ElementOf<RouteArgs>): string {
     return template.replaceAll(argPlaceholder, String(argValue))
 }
 
