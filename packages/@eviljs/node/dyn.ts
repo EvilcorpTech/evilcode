@@ -7,7 +7,7 @@ import Fs from 'fs'
 *
 * requireAll('/abs/path/to/dir')
 */
-export function requireAll(dir: string) {
+export function requireAll(dir: string): undefined | Array<RequireAllEntry> {
     if (! dir.startsWith('/')) {
         throw 'Directory path must be absolute. Given: ' + dir
     }
@@ -71,7 +71,7 @@ export function requireAll(dir: string) {
 *
 * importApis('/abs/path/to/dir')
 */
-export function importApis(dir: string) {
+export function importApis(dir: string): undefined | Record<string, unknown> {
     const imports = requireAll(dir)
 
     const apis = imports?.reduce((set, it) => {
@@ -92,18 +92,21 @@ export function importApis(dir: string) {
 * const api = buildApi().withPath(__dirname).add('myApi1').add('myApi2').end()
 * const api = buildApi(otherApi, {path: __dirname}).add('myApi1').add('myApi2').end()
 */
-export function buildApi(baseApis?: Record<string, unknown>, buildOptions?: BuildApiOptions) {
+export function buildApi(
+    baseApis?: undefined | Record<string, unknown>,
+    buildOptions?: undefined | BuildApiOptions,
+): DynApiBuilderContinuation {
     const apis: Record<string, unknown> = {...baseApis}
 
     let basePath = buildOptions?.path
 
-    const self = {
+    const self: DynApiBuilderContinuation = {
         withPath(path: string) {
             basePath = path
 
             return self
         },
-        add(module: string, options?: BuildApiOptions) {
+        add(module: string, options?: undefined | BuildApiOptions) {
             const dir = options?.path ?? basePath
             const name = Path.basename(module)
             const modulePath = dir
@@ -135,4 +138,10 @@ export interface RequireAllEntry {
     name: string
     ext: string
     exports: unknown
+}
+
+export interface DynApiBuilderContinuation {
+    withPath(path: string): DynApiBuilderContinuation
+    add(module: string, options?: BuildApiOptions): DynApiBuilderContinuation
+    end(): Record<string, unknown>
 }

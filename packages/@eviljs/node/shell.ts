@@ -1,7 +1,7 @@
 import {isFunction} from '@eviljs/std/type-is.js'
 import Repl from 'repl'
 
-export function ShellService(container: ShellContainer) {
+export function ShellService(container: ShellContainer): Repl.REPLServer {
     const {ShellSpec: shellSpec} = container
 
     const spec = {
@@ -15,7 +15,7 @@ export function ShellService(container: ShellContainer) {
     return createShell(spec)
 }
 
-export function createShell(spec?: ShellSpec) {
+export function createShell(spec?: undefined | ShellSpec): Repl.REPLServer {
     const services = spec?.services ?? {}
     const self = {} as Record<string, any>
 
