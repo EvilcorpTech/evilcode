@@ -1,3 +1,4 @@
+import type {Io} from '@eviljs/std/fn-type.js'
 import {useCallback} from 'react'
 
 /*
@@ -14,7 +15,7 @@ import {useCallback} from 'react'
 *     )
 * }
 */
-export function useMergeState<S extends object>(setState: StateSetter<S>) {
+export function useMergeState<S extends object>(setState: StateSetter<S>): Io<Partial<S>, void> {
     const patchState = useCallback((statePatch: Partial<S>) => {
         setState(mergingState(statePatch))
     }, [setState])
@@ -35,7 +36,7 @@ export function useMergeState<S extends object>(setState: StateSetter<S>) {
 *     )
 * }
 */
-export function mergingState<S extends object>(statePatch: Partial<S>) {
+export function mergingState<S extends object>(statePatch: Partial<S>): Io<S, S> {
     function mergeState(state: S): S {
         return {...state, ...statePatch}
     }

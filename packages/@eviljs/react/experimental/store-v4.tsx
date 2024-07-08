@@ -10,7 +10,7 @@ import {useRender} from '../render.js'
 import type {StateManager, StateSetterArg} from '../state.js'
 import type {StoreSelector} from '../store.js'
 
-export const StoreContextV4 = defineContext<Store<ReduxReducerState>>('StoreContextV4')
+export const StoreContextV4: React.Context<undefined | Store<ReduxReducerState>> = defineContext<Store<ReduxReducerState>>('StoreContextV4')
 
 /*
 * EXAMPLE
@@ -23,7 +23,7 @@ export const StoreContextV4 = defineContext<Store<ReduxReducerState>>('StoreCont
 *     )
 * }
 */
-export function StoreProviderV4(props: StoreProviderV4Props<ReduxReducerState>) {
+export function StoreProviderV4(props: StoreProviderV4Props<ReduxReducerState>): JSX.Element {
     const {children, ...spec} = props
     const contextValue = useStoreV4Provider(spec)
 
@@ -202,7 +202,7 @@ export function walkState(
     state: any,
     path: StatePath,
     onNode: (state: any, key: PropertyKey, value: any, info: {leaf: boolean}) => void,
-) {
+): void {
     let stateHead: any = state
     let pathIndex = 0
 
@@ -232,7 +232,7 @@ export function walkState(
     }
 }
 
-export function createStateProxy<S extends ReduxReducerState>(state: S, onGet: (key: PropertyKey) => void) {
+export function createStateProxy<S extends ReduxReducerState>(state: S, onGet: (key: PropertyKey) => void): S {
     const proxy = new Proxy(state, {
         get(obj, prop, proxy): unknown {
             onGet(prop)
@@ -259,11 +259,11 @@ export function createStateProxy<S extends ReduxReducerState>(state: S, onGet: (
     return proxy
 }
 
-export function asPathKey(path: StatePath) {
+export function asPathKey(path: StatePath): string {
     return '/' + path.slice(1).map(it => String(it).replaceAll('/', '_')).join('/')
 }
 
-export function forEachPath(path: StatePath, fn: Fn<[StatePath], unknown>) {
+export function forEachPath(path: StatePath, fn: Fn<[StatePath], unknown>): void {
     for (let idx = 0, pathSize = path.length; idx < pathSize; ++idx) {
         const pathSegment = path.slice(0, idx + 1)
         fn(pathSegment)

@@ -4,7 +4,7 @@ import {useState, useCallback} from 'react'
 /*
 * Used to force the rendering of a component.
 */
-export function useRender() {
+export function useRender(): Task {
     const [signal, render] = useRenderSignal()
 
     return render

@@ -1,7 +1,7 @@
 import type {Task} from '@eviljs/std/fn-type.js'
 import {useEffect, useLayoutEffect, useRef} from 'react'
 
-export function useMountEffect(effect: Task) {
+export function useMountEffect(effect: Task): void {
     useEffect(effect, [])
 }
 
@@ -23,7 +23,7 @@ export function useMountEffect(effect: Task) {
 *     }, [])
 * }
 */
-export function useMountedRef() {
+export function useMountedRef(): React.MutableRefObject<boolean> {
     const mountedRef = useRef(true)
 
     // We use useLayoutEffect() instead of useEffect() because in React 17

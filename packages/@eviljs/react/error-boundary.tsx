@@ -7,11 +7,11 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
         return {hasError: true, error}
     }
 
-    override componentDidCatch(error: unknown, errorInfo: unknown) {
+    override componentDidCatch(error: unknown, errorInfo: unknown): void {
         this.props.onError?.(error, errorInfo)
     }
 
-    override render() {
+    override render(): React.ReactNode {
         const {children, fallback} = this.props
 
         if (this.state.hasError) {

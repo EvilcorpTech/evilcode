@@ -2,7 +2,7 @@ import {asReduxEvent, type ReduxEvent, type ReduxEventPolymorphic, type ReduxRed
 import {useCallback, useContext, useMemo, useRef, useState} from 'react'
 import {defineContext} from './ctx.js'
 
-export const StoreContextV2 = defineContext<StoreV2>('StoreContextV2')
+export const StoreContextV2: React.Context<undefined | StoreV2> = defineContext<StoreV2>('StoreContextV2')
 
 /*
 * EXAMPLE
@@ -15,7 +15,7 @@ export const StoreContextV2 = defineContext<StoreV2>('StoreContextV2')
 *     )
 * }
 */
-export function StoreProviderV2(props: StoreProviderV2Props<ReduxReducerState, ReduxEvent>) {
+export function StoreProviderV2(props: StoreProviderV2Props<ReduxReducerState, ReduxEvent>): JSX.Element {
     const {children, ...spec} = props
     const contextValue = useStoreV2Provider(spec)
 

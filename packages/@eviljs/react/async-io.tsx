@@ -138,14 +138,20 @@ export function useAsyncIo<A extends FnArgs, R>(asyncTask: Fn<A, Promise<R>>): A
     }
 }
 
-export function useAsyncIoAggregated(asyncIoViews: Record<string, AsyncIoView<unknown>>) {
+export function useAsyncIoAggregated(asyncIoViews: Record<string, AsyncIoView<unknown>>): {
+    errors: Array<unknown>
+    outputs: Array<unknown>
+    pending: boolean
+    rejected: boolean
+    hasError: boolean
+} {
     const pending = Object.values(asyncIoViews).some(it => it.pending)
     const rejected = Object.values(asyncIoViews).some(it => it.rejected)
     const outputs = Object.values(asyncIoViews).map(it => it.output)
     const errors = Object.values(asyncIoViews).map(it => it.error).filter(isDefined)
     const hasError = errors.length > 0
 
-    return {errors, hasError, outputs, pending, rejected}
+    return {errors, outputs, pending, rejected, hasError}
 }
 
 // Types ///////////////////////////////////////////////////////////////////////

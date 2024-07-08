@@ -1,6 +1,6 @@
 import {useCallback, useState} from 'react'
 
-export function useBusyLock(initial?: undefined | number) {
+export function useBusyLock(initial?: undefined | number): BusyLockManager {
     const [busy, setBusy] = useState(initial ?? 0)
     const isBusy = busy > 0
 
@@ -12,4 +12,14 @@ export function useBusyLock(initial?: undefined | number) {
     }, [])
 
     return {busy, isBusy, busyLock, busyRelease, setBusy}
+}
+
+// Types ///////////////////////////////////////////////////////////////////////
+
+export interface BusyLockManager {
+    busy: number
+    isBusy: boolean
+    busyLock(): void
+    busyRelease(): void
+    setBusy: React.Dispatch<React.SetStateAction<number>>
 }

@@ -13,7 +13,7 @@ import {useContext, useMemo, useState} from 'react'
 import {defineContext} from './ctx.js'
 import type {StateSetter} from './state.js'
 
-export const I18nContext = defineContext<I18nManager>('I18nContext')
+export const I18nContext: React.Context<undefined | I18nManager<string, I18nMessageKey>> = defineContext<I18nManager>('I18nContext')
 
 /*
 * EXAMPLE
@@ -26,14 +26,14 @@ export const I18nContext = defineContext<I18nManager>('I18nContext')
 *     )
 * }
 */
-export function I18nProvider(props: I18nProviderProps) {
+export function I18nProvider(props: I18nProviderProps): JSX.Element {
     const {children, ...spec} = props
     const contextValue = useI18nProvider(spec)
 
     return <I18nContext.Provider value={contextValue} children={children}/>
 }
 
-export function useI18nProvider(spec: I18nDefinition<string, I18nMessageKey>) {
+export function useI18nProvider(spec: I18nDefinition<string, I18nMessageKey>): I18nManager {
     const [locale, setLocale] = useState(spec.locale)
     const [localeFallback, setLocaleFallback] = useState(spec.localeFallback)
     const [messages, setMessages] = useState(spec.messages)

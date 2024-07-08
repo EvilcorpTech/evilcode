@@ -1,7 +1,7 @@
 import {hasBrowserTouch} from '@eviljs/web/browser.js'
 import {useEffect, useState} from 'react'
 
-export function useBrowserFeaturesClassesProvider(activeOptional?: undefined | boolean) {
+export function useBrowserFeaturesClassesProvider(activeOptional?: undefined | boolean): void {
     const features = useBrowserFeatures()
     const active = activeOptional ?? true
 
@@ -23,7 +23,7 @@ export function useBrowserFeaturesClassesProvider(activeOptional?: undefined | b
     }, [features, active])
 }
 
-export function useBrowserFeatures() {
+export function useBrowserFeatures(): BrowserFeatures {
     const [features, setFeatures] = useState(listBrowserFeatures)
 
     useEffect(() => {

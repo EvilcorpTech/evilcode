@@ -12,7 +12,7 @@ export const AuthTokenState = {
     Invalid: 'Invalid' as const,
 }
 
-export function useAuthentication(args: AuthenticationOptions) {
+export function useAuthentication(args: AuthenticationOptions): AuthenticationManager {
     const {
         authenticate: authenticateOptions,
         validate: validateOptions,
@@ -106,6 +106,13 @@ export interface AuthenticationOptions {
     validate: AuthValidateOptions
 }
 
-export type AuthenticationManager = ReturnType<typeof useAuthentication>
+export interface AuthenticationManager {
+    tokenState: undefined | AuthTokenStateEnum
+    isAuthenticated: boolean
+    pending: boolean
+    validateToken: (token: undefined | string) => void
+    authenticateCredentials: (credentials: AuthCredentials) => Promise<string>
+    destroySession: (token: string) => Promise<void>
+}
 
 export type AuthTokenStateEnum = ValueOf<typeof AuthTokenState> & string

@@ -20,14 +20,14 @@ import {defineContext} from './ctx.js'
 
 const DisplayNoneStyle: React.CSSProperties = {display: 'none'}
 
-export const TransitionContext = defineContext<TransitionContext>('TransitionContext')
+export const TransitionContext: React.Context<undefined | TransitionContext> = defineContext<TransitionContext>('TransitionContext')
 export const TransitionTimeoutDefault = 2_000
 
-export function useTransitionContext() {
+export function useTransitionContext(): undefined | TransitionContext {
     return useContext(TransitionContext)
 }
 
-export function Transition(props: TransitionProps) {
+export function Transition(props: TransitionProps): JSX.Element {
     const {
         children,
         className, classPrefix,
@@ -75,7 +75,7 @@ export function Transition(props: TransitionProps) {
 
 const AnimatorMemo = memo(Animator)
 
-export function Animator(props: AnimatorProps) {
+export function Animator(props: AnimatorProps): JSX.Element {
     const {
         className,
         classPrefix,
@@ -718,7 +718,7 @@ export function createInOutTasks(args: {
     )
 }
 
-export function filterTaskObservers(action: TransitionTaskAction, observers: undefined | TransitionObservers) {
+export function filterTaskObservers(action: TransitionTaskAction, observers: undefined | TransitionObservers): undefined | TransitionObservers {
     switch (action) {
         case 'mount':
             return {
@@ -817,28 +817,28 @@ export function isValidChild(children: TransitionChildren): children is Transiti
     return isValidElement(children)
 }
 
-export function areSameChildren(a?: undefined | TransitionElement, b?: undefined | TransitionElement) {
-    if (! a && ! b) {
+export function areSameChildren(first?: undefined | TransitionElement, second?: undefined | TransitionElement): boolean {
+    if (! first && ! second) {
         return true
     }
-    if (! a || ! b) {
+    if (! first || ! second) {
         return false
     }
 
-    const sameType = a.type === b.type
-    const sameKey = a.key === b.key
+    const sameType = first.type === second.type
+    const sameKey = first.key === second.key
 
     return sameType && sameKey
 }
 
-export function findAnimatorElement(handleElement: null | HTMLElement) {
+export function findAnimatorElement(handleElement: null | HTMLElement): undefined | Element {
     return handleElement?.previousElementSibling ?? undefined
 }
 
 export function isValidAnimatorEvent(
     event: AnimatorCompletionEvent,
     target: undefined | TransitionEventTarget,
-) {
+): boolean {
     // Note: in case no target is provided, any event must be considered valid.
 
     if (! target) {
@@ -867,7 +867,7 @@ export function isValidAnimatorEvent(
     return false
 }
 
-export function areTasksCompleted(tasks: TransitionTasksGroupSelected) {
+export function areTasksCompleted(tasks: TransitionTasksGroupSelected): boolean {
     // Render tasks are implicitly completed. Mount/unmount tasks must complete.
     return tasks.every(it => it.completed)
 }

@@ -3,7 +3,7 @@ import {useContext, useState} from 'react'
 import {defineContext} from './ctx.js'
 import type {StateManager} from './state.js'
 
-export const StoreContextV1 = defineContext<StoreV1<ReduxReducerState>>('StoreContextV1')
+export const StoreContextV1: React.Context<undefined | StoreV1<ReduxReducerState>> = defineContext<StoreV1<ReduxReducerState>>('StoreContextV1')
 
 /*
 * EXAMPLE
@@ -16,7 +16,7 @@ export const StoreContextV1 = defineContext<StoreV1<ReduxReducerState>>('StoreCo
 *     )
 * }
 */
-export function StoreProviderV1(props: StoreProviderV1Props<ReduxReducerState>) {
+export function StoreProviderV1(props: StoreProviderV1Props<ReduxReducerState>): JSX.Element {
     const {children, ...spec} = props
     const contextValue = useStoreCreatorV1(spec)
 

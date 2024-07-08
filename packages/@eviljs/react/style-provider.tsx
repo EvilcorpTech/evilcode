@@ -1,7 +1,7 @@
 import {useContext, useMemo} from 'react'
 import {defineContext} from './ctx.js'
 
-export const StyleContext = defineContext<StyleContextValue>('StyleContext')
+export const StyleContext: React.Context<undefined | StyleContextValue> = defineContext<StyleContextValue>('StyleContext')
 
 export function useStyleContext(): undefined | StyleContextValue {
     return useContext(StyleContext)
@@ -16,7 +16,7 @@ export function useStyleContext(): undefined | StyleContextValue {
 *     </StyleProvider>
 * )
 */
-export function StyleProvider(props: StyleProviderProps) {
+export function StyleProvider(props: StyleProviderProps): JSX.Element {
     const {attach: attachOptional, children, clean: cleanOptional} = props
     const attach: StyleDelegate = attachOptional ?? attachStyleInsideHead
     const clean: undefined | StyleDelegate = cleanOptional !== false

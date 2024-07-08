@@ -35,7 +35,10 @@ export function useCallbackThrottled<A extends FnArgs>(callback: Fn<A>, delayMs:
     return callbackThrottled
 }
 
-export function useCallbackDelayed(callback: Function, delayMs: number, ) {
+export function useCallbackDelayed(callback: Function, delayMs: number): {
+    start(): void
+    cancel(): void
+} {
     const taskRef = useRef<ReturnType<typeof setTimeout>>()
 
     const cancel = useCallback(() => {

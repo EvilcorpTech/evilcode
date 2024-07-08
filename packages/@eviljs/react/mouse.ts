@@ -6,7 +6,7 @@ export function useOnClickOutside(
     selectorList: string | Array<string>,
     onClickOutside: Task,
     options?: undefined | OnClickOutsideOptions,
-) {
+): void {
     const active = options?.active ?? true
 
     useEffect(() => {

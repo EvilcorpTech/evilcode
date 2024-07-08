@@ -1,8 +1,9 @@
 import {createCssTransition, playTimeline} from '@eviljs/web/animation.js'
 import {useEffect, useMemo, useState} from 'react'
 import {useRouteTransition} from './router.js'
+import type {StateManager} from './state.js'
 
-export function useRoutedViewLifecycle(routeRegexp: RegExp) {
+export function useRoutedViewLifecycle(routeRegexp: RegExp): StateManager<ViewLifecycle> {
     const [viewLifecycle, setViewLifecycle] = useState<ViewLifecycle>('exited')
     const {fromRoute, toRoute} = useRouteTransition()
 
@@ -28,7 +29,7 @@ export function useRoutedViewLifecycle(routeRegexp: RegExp) {
         }
     }, [fromRoute, toRoute])
 
-    return [viewLifecycle, setViewLifecycle] as const
+    return [viewLifecycle, setViewLifecycle]
 }
 
 /*
@@ -43,7 +44,14 @@ export function useRoutedViewLifecycle(routeRegexp: RegExp) {
 * }
 * return <div style={style}>...</div>
 */
-export function useRoutedViewAnimation(routeRegexp: RegExp, enterOptional?: Animator, exitOptional?: Animator) {
+export function useRoutedViewAnimation(
+    routeRegexp: RegExp,
+    enterOptional?: undefined | Animator,
+    exitOptional?: undefined | Animator,
+): {
+    viewLifecycle: ViewLifecycle
+    style: React.CSSProperties
+} {
     const [viewLifecycle, setViewLifecycle] = useRoutedViewLifecycle(routeRegexp)
     const enter = enterOptional ?? (() => Promise.resolve())
     const exit = exitOptional ?? (() => Promise.resolve())
@@ -87,15 +95,15 @@ export function useRoutedViewAnimation(routeRegexp: RegExp, enterOptional?: Anim
     return {viewLifecycle, style}
 }
 
-export function playFadeInAnimation(selector: string, options?: {transform?: string}) {
-    const el = getViewElement(selector)
+export function playFadeInAnimation(selector: string, options?: {transform?: string}): Promise<unknown> {
+    const element = getViewElement(selector)
 
-    if (! el) {
+    if (! element) {
         return Promise.resolve()
     }
 
     const transform = options?.transform ?? ''
-    const animation = createCssTransition(el, {
+    const animation = createCssTransition(element, {
         setup(el) {
             el.style.transition = 'none'
             el.style.transform = transform
@@ -114,14 +122,14 @@ export function playFadeInAnimation(selector: string, options?: {transform?: str
     return playTimeline(animation)
 }
 
-export function playFadeOutAnimation(selector: string) {
-    const el = getViewElement(selector)
+export function playFadeOutAnimation(selector: string): Promise<unknown> {
+    const element = getViewElement(selector)
 
-    if (! el) {
+    if (! element) {
         return Promise.resolve()
     }
 
-    const animation = createCssTransition(el, {
+    const animation = createCssTransition(element, {
         play(el) {
             el.style.transition = 'all var(--std-duration2)'
             el.style.opacity = '0'
@@ -132,17 +140,17 @@ export function playFadeOutAnimation(selector: string) {
     return playTimeline(animation)
 }
 
-export function getViewElement(selector: string) {
-    const el = document.querySelector<HTMLElement>(selector)
+export function getViewElement(selector: string): undefined | HTMLElement {
+    const element = document.querySelector<HTMLElement>(selector)
 
-    if (! el) {
+    if (! element) {
         console.warn(
             '@eviljs/react/routed-view.getViewElement(~~selector~~)\n'
             + `missing view's animated element "${selector}".`
         )
     }
 
-    return el
+    return element ?? undefined
 }
 
 // Types ///////////////////////////////////////////////////////////////////////

@@ -5,13 +5,13 @@ import {Suspense} from 'react'
 import type {AwaitedProps} from '../awaited.js'
 import {HookProvider} from '../hook-provider.js'
 
-export const SuspensePromiseMap = new WeakMap<SuspensePromiseMapKey, SuspenseStateRef>()
-export const SuspenseTaskMap = new WeakMap<SuspenseTaskMapKey, SuspenseStateRef>()
+export const SuspensePromiseMap: WeakMap<SuspensePromiseMapKey, SuspenseStateRef> = new WeakMap()
+export const SuspenseTaskMap: WeakMap<SuspenseTaskMapKey, SuspenseStateRef> = new WeakMap()
 type SuspensePromiseMapKey<V = any> = Promise<V>
 type SuspenseTaskMapKey<V = any> = () => Promise<V>
 type SuspenseStateRef<V = any> = Ref<SuspenseState<V>>
 
-export function Suspended<V>(props: SuspendedProps<V>) {
+export function Suspended<V>(props: SuspendedProps<V>): React.ReactNode {
     const {children, promise, pending} = props
 
     if (! promise) {

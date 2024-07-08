@@ -2,9 +2,9 @@ import {isSome} from '@eviljs/std/type-is.js'
 import {useMemo} from 'react'
 import {useRouteParams, useRoutePathTest} from './router.js'
 
-export const RoutePathLocaleRegexp = /\/([a-zA-Z]{2})(?:\/|$)/
+export const RoutePathLocaleRegexp: RegExp = /\/([a-zA-Z]{2})(?:\/|$)/
 
-export function useRoutePathLocale(options?: undefined | RoutePathLocaleOptions) {
+export function useRoutePathLocale(options?: undefined | RoutePathLocaleOptions): undefined | string {
     const {matchRoutePath} = useRoutePathTest()
 
     const locale = useMemo(() => {
@@ -20,7 +20,7 @@ export function useRoutePathLocale(options?: undefined | RoutePathLocaleOptions)
     return locale
 }
 
-export function useRouteParamLocale(options?: undefined | RouteParamsLocaleOptions) {
+export function useRouteParamLocale(options?: undefined | RouteParamsLocaleOptions): undefined | string {
     const routeParams = useRouteParams()
     const name = options?.name
     const names = options?.names ?? ['lang', 'locale']

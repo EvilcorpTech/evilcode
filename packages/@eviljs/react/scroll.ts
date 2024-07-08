@@ -1,6 +1,6 @@
 import {useEffect} from 'react'
 
-export function usePageScroll(onScroll: ScrollListener) {
+export function usePageScroll(onScroll: ScrollListener): void {
     useEffect(() => {
         function onPageScroll(event: Event) {
             if (event.target !== event.currentTarget) {

@@ -4,7 +4,7 @@ import {useCallback, useMemo} from 'react'
 import {useRender} from './render.js'
 import type {StateSetterArg} from './state.js'
 
-export function useUndoRedo<S>(initState: S | (() => S)) {
+export function useUndoRedo<S>(initState: S | (() => S)): UndoRedoManager<S> {
     const render = useRender()
 
     function withRenderEffect<A extends Array<unknown>>(fn: (...args: A) => S) {
@@ -38,4 +38,15 @@ export function useUndoRedo<S>(initState: S | (() => S)) {
     const {state, redoStack, undoStack} = history
 
     return {state, redoStack, undoStack, onUndo, onRedo, onSave}
+}
+
+// Types ///////////////////////////////////////////////////////////////////////
+
+export interface UndoRedoManager<S> {
+    state: S
+    redoStack: Array<S>
+    undoStack: Array<S>
+    onUndo(): S
+    onRedo(): S
+    onSave(state: StateSetterArg<S>): S
 }

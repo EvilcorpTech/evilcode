@@ -22,7 +22,9 @@ export function useI18nMessage<K extends I18nMessageKey = I18nMessageKey>(key: K
 export function useI18nMessages<T extends object, L extends string = string, K extends I18nMessageKey = I18nMessageKey>(
     compute: I18nMsgsComputer<I18nManager<L, K>, T>,
     deps?: undefined | Array<unknown>,
-) {
+): T & {
+    $i18n: I18nManager<L, K>
+} {
     const i18n = useI18n()! as I18nManager<L, K>
     const {locale, localeFallback, messages} = i18n
 

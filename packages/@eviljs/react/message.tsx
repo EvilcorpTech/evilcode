@@ -4,7 +4,7 @@ import {classes} from './classes.js'
 import {useI18nMessage, type I18nMessageArgs, type I18nMessageKey} from './i18n.js'
 import type {VoidProps} from './type.js'
 
-export const Message = memo(function Message(props: MessageProps) {
+export const Message: React.ComponentType<MessageProps> = memo(function Message(props: MessageProps) {
     const {children, className, args, tag, ...otherProps} = props
     const message = useI18nMessage(children, args)
 
@@ -17,7 +17,7 @@ export const Message = memo(function Message(props: MessageProps) {
     )
 })
 
-export function Translate(props: TranslateProps) {
+export function Translate(props: TranslateProps): React.ReactNode {
     const {children, args} = props
     const message = useI18nMessage(children, args)
 

@@ -42,18 +42,18 @@ export function suspendedIcon<P extends SvgProps>(
     return ErrorBoundedSuspendedLazyIcon
 }
 
-export function asDefault<V>(value: V) {
+export function asDefault<V>(value: V): {default: V} {
     return {default: value}
 }
 
-export function exportingDefault<E, V>(getDefaultExport: (allExports: E) => V) {
+export function exportingDefault<E, V>(getDefaultExport: (exports: E) => V): (exports: E) => {default: V} {
     function exportDefault(allExports: E) {
         return asDefault(getDefaultExport(allExports))
     }
     return exportDefault
 }
 
-export function FallbackIcon(props: SvgProps) {
+export function FallbackIcon(props: SvgProps): JSX.Element {
     const {className, ...otherProps} = props
 
     return (

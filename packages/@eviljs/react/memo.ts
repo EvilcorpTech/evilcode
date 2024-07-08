@@ -17,7 +17,7 @@ import {useCallback, useLayoutEffect, useMemo, useRef} from 'react'
 *     )
 * }
 */
-export function useConst<V>(value: V) {
+export function useConst<V>(value: V): V {
     const ref = useRef(value)
     return ref.current
 }
@@ -48,7 +48,7 @@ export function useComputed<A extends Array<unknown>, R>(deps: A, computed: Fn<A
 *     )
 * }
 */
-export function useClosure<A extends FnArgs, R>(closure: (...args: A) => R) {
+export function useClosure<A extends FnArgs, R>(closure: (...args: A) => R): (...args: A) => R {
     const closureRef = useRef(closure)
 
     useLayoutEffect(() => {

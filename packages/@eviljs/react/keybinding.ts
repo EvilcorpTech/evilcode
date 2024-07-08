@@ -1,7 +1,7 @@
 import {asArray} from '@eviljs/std/type-as.js'
 import {useEffect} from 'react'
 
-export function useKey(key: Key, handler: KeyHandler, options?: undefined | UseKeyOptions) {
+export function useKey(key: Key, handler: KeyHandler, options?: undefined | UseKeyOptions): void {
     useEffect(() => {
         const keys = asArray(key)
         const el: GlobalEventHandlers = options?.ref?.current ?? document

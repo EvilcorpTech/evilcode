@@ -46,7 +46,10 @@ export async function createReactMountTask<C extends object = {}>(args: AdaptMou
     return reactRoot
 }
 
-export function createReactRenderTask<C extends object = {}>(args: AdaptRenderTaskOptions<C>) {
+export function createReactRenderTask<C extends object = {}>(args: AdaptRenderTaskOptions<C>): {
+    cancel(): void
+    promise: Promise<void>
+} {
     const {context, fallback, entries, reactRoot, Root, routePath} = args
 
     let canceled = false

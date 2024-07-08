@@ -20,7 +20,7 @@
 *     )
 * }
 */
-export function HookProvider<V>(props: HookProviderProps<V>) {
+export function HookProvider<V>(props: HookProviderProps<V>): React.ReactNode {
     const {children, use} = props
 
     const value = use()

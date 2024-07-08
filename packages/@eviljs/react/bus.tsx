@@ -59,7 +59,7 @@ export function useBusProvider(): Bus {
     return bus
 }
 
-export function useBusEvent<P = unknown>(bus: Bus, event: BusEvent, observer: undefined | BusEventObserver<P>) {
+export function useBusEvent<P = unknown>(bus: Bus, event: BusEvent, observer: undefined | BusEventObserver<P>): void {
     useEffect(() => {
         if (! observer) {
             return

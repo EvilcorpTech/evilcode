@@ -4,9 +4,9 @@ import {Box, type BoxProps} from './box.js'
 import {defineContext} from './ctx.js'
 import type {StateManager} from './state.js'
 
-export const PortalContext = defineContext<StateManager<null | PortalElement>>('PortalContext')
+export const PortalContext: React.Context<undefined | StateManager<null | PortalElement>> = defineContext<StateManager<null | PortalElement>>('PortalContext')
 
-export function PortalProvider(props: PortalProviderProps) {
+export function PortalProvider(props: PortalProviderProps): JSX.Element {
     const {children} = props
     const contextValue = usePortalProvider()
 
@@ -28,7 +28,7 @@ export function PortalProvider(props: PortalProviderProps) {
 *     )
 * }
 */
-export function Portal(props: PortalProps) {
+export function Portal(props: PortalProps): JSX.Element {
     const [, setPortal] = useContext(PortalContext)!
 
     return <Box {...props} ref={setPortal}/>
@@ -49,7 +49,7 @@ export function Portal(props: PortalProps) {
 *     }/>
 * )
 */
-export function Teleport(props: TeleportProps) {
+export function Teleport(props: TeleportProps): undefined | React.ReactPortal {
     const {children} = props
     const [portal] = useContext(PortalContext)!
 

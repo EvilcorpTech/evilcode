@@ -5,7 +5,7 @@ export function setupRootElement(id: string, classes?: undefined | Array<string>
     return findRootElement(id) ?? attachRootElement(createRootElement(id, classes))
 }
 
-export function attachRootElement(element: HTMLElement) {
+export function attachRootElement<E extends HTMLElement>(element: E): E {
     document.body.prepend(element)
     return element
 }

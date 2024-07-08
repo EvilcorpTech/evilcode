@@ -28,7 +28,7 @@ export function resolveFilteredItemIdx<I>(
     items: Array<I>,
     filteredItems: Array<I>,
     filteredItemIdx: number,
-) {
+): undefined | number {
     const filteredItem = filteredItems[filteredItemIdx]
 
     if (! filteredItem) {

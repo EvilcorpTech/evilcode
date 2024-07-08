@@ -7,7 +7,11 @@ export function usePictureInPicture(
         onExit?: undefined | (() => void)
         onError?: undefined | (() => void)
     },
-) {
+): {
+    enter(): void
+    exit(): void
+    toggle(): void
+} {
     const {onEnter, onError, onExit} = options ?? {}
 
     useEffect(() => {

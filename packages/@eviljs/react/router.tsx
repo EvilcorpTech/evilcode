@@ -19,7 +19,7 @@ export * from '@eviljs/web/route.js'
 export * from '@eviljs/web/router.js'
 export * from './router-provider.js'
 
-export const RouteMatchContext = defineContext<RouteArgs>('RouteMatchContext')
+export const RouteMatchContext: React.Context<undefined | RouteArgs> = defineContext<RouteArgs>('RouteMatchContext')
 
 /*
 * EXAMPLE
@@ -45,7 +45,7 @@ export const RouteMatchContext = defineContext<RouteArgs>('RouteMatchContext')
 *     }
 * </WhenRoute>
 */
-export function WhenRoute(props: WhenRouteProps) {
+export function WhenRoute(props: WhenRouteProps): undefined | JSX.Element {
     const {children, is} = props
     const {matchRoutePath} = useRoutePathTest()
 
@@ -100,7 +100,7 @@ export function WhenRoute(props: WhenRouteProps) {
 *     </CaseRoute>
 * </SwitchRoute>
 */
-export function SwitchRoute(props: SwitchRouteProps) {
+export function SwitchRoute(props: SwitchRouteProps): JSX.Element {
     const {children, fallback} = props
     const {routePath, matchRoutePath} = useRoutePathTest()
 
@@ -163,8 +163,8 @@ export function CaseRoute(props: CaseRouteProps): undefined {
 *     <button>Click</button>
 * </Route>`
 */
-export const Route = displayName('Route', forwardRef(function Route(
-    props: RouteProps,
+export const Route: React.ComponentType<RouteProps> = displayName('Route', forwardRef(function Route(
+    props: Omit<RouteProps, 'ref'>,
     ref: React.ForwardedRef<HTMLAnchorElement>
 ) {
     const {
@@ -243,8 +243,8 @@ export const Route = displayName('Route', forwardRef(function Route(
     )
 }))
 
-export const Link = displayName('Link', forwardRef(function Link(
-    props: LinkProps,
+export const Link: React.ComponentType<LinkProps> = displayName('Link', forwardRef(function Link(
+    props: Omit<LinkProps, 'ref'>,
     ref: React.ForwardedRef<HTMLAnchorElement>
 ) {
     const {className, params, replace, state, to, ...otherProps} = props
@@ -275,7 +275,7 @@ export const Link = displayName('Link', forwardRef(function Link(
     )
 }))
 
-export function Redirect(props: RedirectProps) {
+export function Redirect(props: RedirectProps): React.ReactNode {
     const {children, params, replace: replaceOptional, state, to: path} = props
     const {changeRoute} = useRouter()
     const replace = replaceOptional ?? true
@@ -312,7 +312,7 @@ export function useRouter<S = unknown>(): RouterManager<S> {
     }
 }
 
-export function useRouteParamsPatch() {
+export function useRouteParamsPatch(): (paramsPatch: undefined | RouterRouteChangeParamsDict, replace?: undefined | boolean) => void {
     const {changeRoute} = useRouter()
 
     const patchRoute = useCallback((paramsPatch: undefined | RouterRouteChangeParamsDict, replace?: undefined | boolean) => {
@@ -332,7 +332,7 @@ export function useRouteParamsPatch() {
     return patchRoute
 }
 
-export function useRouterLink() {
+export function useRouterLink(): (path: string, params?: undefined | RouterRouteChangeParams) => string {
     const routerContext = useRouterContext()!
 
     return routerContext.createLink
@@ -390,7 +390,7 @@ export function useRouteState<S = unknown>(): RouterRoute<S>['state'] {
     return routeState
 }
 
-export function useRouteArgs() {
+export function useRouteArgs(): RouteArgs {
     return useContext(RouteMatchContext)!
 }
 
@@ -412,7 +412,10 @@ export function useRoutePathTest(): RoutePathTester {
     }
 }
 
-export function useRouteTransition() {
+export function useRouteTransition(): {
+    fromRoute: string
+    toRoute: string
+} {
     const routePath = useRoutePath()
     const toRoute = routePath
     const prevRouteRef = useRef(toRoute)
@@ -472,13 +475,13 @@ export interface CaseRouteProps extends WhenRouteProps {
     key?: undefined | React.Key
 }
 
-export interface RouteProps extends RoutingProps, React.AnchorHTMLAttributes<HTMLAnchorElement> {
+export interface RouteProps extends RoutingProps, React.AnchorHTMLAttributes<HTMLAnchorElement>, React.RefAttributes<HTMLAnchorElement> {
     activeWhenExact?: undefined | boolean
     children: undefined | React.ReactNode
     if?: undefined | Computable<RouteGuardResult>
 }
 
-export interface LinkProps extends RoutingProps, React.AnchorHTMLAttributes<HTMLAnchorElement> {
+export interface LinkProps extends RoutingProps, React.AnchorHTMLAttributes<HTMLAnchorElement>, React.RefAttributes<HTMLAnchorElement> {
     children: undefined | React.ReactNode
 }
 

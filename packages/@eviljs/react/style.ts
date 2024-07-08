@@ -3,7 +3,7 @@ import {useStyleContext} from './style-provider.js'
 
 export * from './style-provider.js'
 
-export function useStyle(style: string) {
+export function useStyle(style: string): void {
     const stylesManager = useStyleContext()!
 
     useInsertionEffect(() => {

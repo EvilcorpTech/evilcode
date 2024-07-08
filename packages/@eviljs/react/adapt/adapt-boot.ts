@@ -5,7 +5,7 @@ import type {AppContext, AppEntriesList} from './adapt-entry.js'
 import {createReactHydrateTask, createReactMountTask, createReactRenderTask} from './adapt-render.js'
 import {RootDefaultId, setupRootElement} from './adapt-root.js'
 
-export async function startApp<C extends object = {}>(args: AdaptOptions<C>) {
+export async function startApp<C extends object = {}>(args: AdaptOptions<C>): Promise<void> {
     const {router} = args
     const rootNode = setupRootElement(args.rootElementId ?? RootDefaultId, args.rootElementClasses)
     const shouldHydrate = rootNode.hasChildNodes()

@@ -62,7 +62,7 @@ export function useReactiveList<A extends Array<ReactiveProtocol<any>>>(
 export function useReactiveMemo<A extends Array<ReactiveProtocol<any>>, V>(
     reactives: readonly [...A],
     computer: (...args: ReactiveValuesOf<A>) => V
-) {
+): V {
     const signal = useReactiveSignals(reactives)
 
     const computedValue = useMemo(() => {
@@ -157,19 +157,19 @@ export function useReactiveSignals(
     return signal
 }
 
-export function ReactiveState<V>(props: ReactiveStateProps<V>) {
+export function ReactiveState<V>(props: ReactiveStateProps<V>): React.ReactNode {
     const {children, from} = props
 
     return children(useReactiveState(from))
 }
 
-export function ReactiveValue<V>(props: ReactiveValueProps<V>) {
+export function ReactiveValue<V>(props: ReactiveValueProps<V>): React.ReactNode {
     const {children, of} = props
 
     return children(useReactiveState(of)[0])
 }
 
-export function ReactiveValues<A extends Array<ReactiveProtocol<any>>>(props: ReactiveValuesProps<A>) {
+export function ReactiveValues<A extends Array<ReactiveProtocol<any>>>(props: ReactiveValuesProps<A>): React.ReactNode {
     const {children, of} = props
 
     return children(useReactiveValues(of))

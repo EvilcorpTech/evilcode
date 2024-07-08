@@ -4,7 +4,7 @@ import {useEffect} from 'react'
 
 export type {PreloadElementAttrs} from '@eviljs/web/preload.js'
 
-export function usePreloadHint(attrs: PreloadElementAttrs, options?: undefined | UsePreloadHintOptions) {
+export function usePreloadHint(attrs: PreloadElementAttrs, options?: undefined | UsePreloadHintOptions): void {
     const active = options?.active ?? true
 
     useEffect(() => {
@@ -16,7 +16,7 @@ export function usePreloadHint(attrs: PreloadElementAttrs, options?: undefined |
     }, [active])
 }
 
-export function usePreloadTask(task: Task<void | undefined | Task>, activeOptional?: undefined | boolean) {
+export function usePreloadTask(task: Task<void | undefined | Task>, activeOptional?: undefined | boolean): void {
     const active = activeOptional ?? true
 
     useEffect(() => {

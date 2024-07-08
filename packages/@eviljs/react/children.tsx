@@ -1,22 +1,22 @@
-export function decoratingElement(sides: {
+export function decoratingElement(args: {
     before?: undefined | React.ReactNode
     after?: undefined | React.ReactNode
-}) {
-    function decorator(element: React.ReactNode) {
+}): (children: React.ReactNode) => JSX.Element {
+    function decorator(children: React.ReactNode) {
         return <>
-            {sides?.before}
-            {element}
-            {sides?.after}
+            {args?.before}
+            {children}
+            {args?.after}
         </>
     }
 
     return decorator
 }
 
-export function decoratingElementBefore(children: React.ReactNode) {
+export function decoratingElementBefore(children: React.ReactNode): (children: React.ReactNode) => JSX.Element {
     return decoratingElement({before: children})
 }
 
-export function decoratingElementAfter(children: React.ReactNode) {
+export function decoratingElementAfter(children: React.ReactNode): (children: React.ReactNode) => JSX.Element {
     return decoratingElement({after: children})
 }

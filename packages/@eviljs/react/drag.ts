@@ -30,7 +30,9 @@ export type {DragMoveChange, DragOptions, DragPointerEvent} from '@eviljs/web/dr
 // even when the event listener is detached, due to the Synthetic Event global
 // listener always monitoring the mouse movement.
 
-export function useDrag<S, P>(targetRef: DragElementRef<DragMoveElement>, options?: undefined | UseDragOptions<S, P>) {
+export function useDrag<S, P>(targetRef: DragElementRef<DragMoveElement>, options?: undefined | UseDragOptions<S, P>): {
+    dragging: boolean
+} {
     const [dragging, setDragging] = useState<boolean>(false)
     const stateRef = useRef<UseDragState<S, P>>({})
 
@@ -137,7 +139,9 @@ export function useDrag<S, P>(targetRef: DragElementRef<DragMoveElement>, option
     return {dragging}
 }
 
-export function useMove(targetRef: DragElementRef<DragMoveElement>, options?: undefined | UseMoveOptions) {
+export function useMove(targetRef: DragElementRef<DragMoveElement>, options?: undefined | UseMoveOptions): {
+    moving: boolean
+} {
     const onStart = useCallback((event: DragPointerEvent) => {
         if (! targetRef.current) {
             return
@@ -174,7 +178,9 @@ export function useMove(targetRef: DragElementRef<DragMoveElement>, options?: un
     return {moving: dragging}
 }
 
-export function useResize(targetRef: DragElementRef<DragResizeElement>, options?: undefined | UseResizeOptions) {
+export function useResize(targetRef: DragElementRef<DragResizeElement>, options?: undefined | UseResizeOptions): {
+    resizing: boolean
+} {
     const onStart = useCallback((event: DragPointerEvent) => {
         if (! targetRef.current) {
             return
@@ -209,7 +215,9 @@ export function useResize(targetRef: DragElementRef<DragResizeElement>, options?
     return {resizing: dragging}
 }
 
-export function useScrollHorizontal<E extends HTMLElement>(targetRef: React.RefObject<E>, options?: undefined | UseScrollOptions<E>) {
+export function useScrollHorizontal<E extends HTMLElement>(targetRef: React.RefObject<E>, options?: undefined | UseScrollOptions<E>): {
+    scrolling: boolean
+} {
     const onStart = useCallback((event: DragPointerEvent) => {
         if (! targetRef.current) {
             return

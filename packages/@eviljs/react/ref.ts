@@ -16,7 +16,7 @@ export function usePreviousValueRef<T>(value: T): React.MutableRefObject<undefin
     return oldValueRef
 }
 
-export function useMergeRefs<V>(...refs: Array<None | RefHandler<null | V>>) {
+export function useMergeRefs<V>(...refs: Array<void | None | RefHandler<null | V>>): (element: null | V) => void {
     const onRef = useMemo(() => {
         return mergingRefs(...refs)
     }, refs)
@@ -24,7 +24,7 @@ export function useMergeRefs<V>(...refs: Array<None | RefHandler<null | V>>) {
     return onRef
 }
 
-export function mergingRefs<V>(...refs: Array<None | RefHandler<null | V>>) {
+export function mergingRefs<V>(...refs: Array<void | None | RefHandler<null | V>>): (element: null | V) => void {
     function onRef(element: null | V) {
         for (const ref of refs) {
             setRef(ref, element)
@@ -33,7 +33,7 @@ export function mergingRefs<V>(...refs: Array<None | RefHandler<null | V>>) {
     return onRef
 }
 
-export function setRef<V>(ref: None | RefHandler<V>, value: V): void {
+export function setRef<V>(ref: void | None | RefHandler<V>, value: V): void {
     if (isNone(ref)) {
         return
     }
