@@ -15,7 +15,7 @@ export function filter<I>(list: Array<I>, test: Io<I, boolean>): Array<I> {
     return list.filter(test)
 }
 
-export function testingNodeName(nodeName: string) {
+export function testingNodeName(nodeName: string): (node: Parse5ChildNode) => boolean {
     function testNodeName(node: Parse5ChildNode) {
         return node.nodeName === nodeName
     }

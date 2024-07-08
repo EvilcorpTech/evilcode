@@ -1,4 +1,4 @@
-export function formatTimeAsSeconds(datetime: number) {
+export function formatTimeAsSeconds(datetime: number): number {
     return Math.round(datetime / 1000)
 }
 

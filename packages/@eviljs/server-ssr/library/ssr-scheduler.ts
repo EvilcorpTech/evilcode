@@ -1,6 +1,6 @@
 import type {TaskAsync} from '@eviljs/std/fn-type.js'
 import {AsyncTasksQueue, createAsyncTasksQueue, type AsyncTasksQueueState} from '@eviljs/std/lab/async-tasks-queue.js'
-import type {SsrResult} from './ssr.js'
+import type {SsrRenderOutput, SsrResult} from './ssr-apis.js'
 import type {KoaContext} from './types.js'
 
 export enum SsrJobPriority {
@@ -8,7 +8,10 @@ export enum SsrJobPriority {
     Low = 1,
 }
 
-export const SsrJobsQueue = {
+export const SsrJobsQueue: {
+    highPriority: AsyncTasksQueueState<undefined | SsrRenderOutput>
+    lowPriority: AsyncTasksQueueState<undefined | SsrRenderOutput>
+} = {
     highPriority: createAsyncTasksQueue<undefined | SsrResult>(),
     lowPriority: createAsyncTasksQueue<undefined | SsrResult>(),
 }

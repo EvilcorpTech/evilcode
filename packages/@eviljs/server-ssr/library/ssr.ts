@@ -14,10 +14,11 @@ import {resolve as resolvePath} from 'node:path'
 import {formatTimeAsSeconds, isDateTimeElapsed} from './datetime.js'
 import {Parse5, isElement, mappingElement, testingNodeName, type Parse5Element} from './parse5-apis.js'
 import {LogIndentation} from './settings.js'
+import type {SsrCacheEntry, SsrResult} from './ssr-apis.js'
 import {scheduleSsrJob, type SsrJobPriority} from './ssr-scheduler.js'
 import type {KoaContext} from './types.js'
 
-export const SsrMemCache = new Map<string, SsrCacheEntry>()
+export const SsrMemCache: Map<string, SsrCacheEntry> = new Map()
 
 export async function ssr(ctx: KoaContext, priority: SsrJobPriority): Promise<undefined | SsrResult> {
     function onCacheMissing() {
@@ -372,18 +373,4 @@ export function ssrBaseUrlOf(ctx: KoaContext): string {
 
 export function computeCacheKey(ctx: KoaContext): string {
     return asBaseUrl(ctx.path) // Without the trailing slash.
-}
-
-// Types ///////////////////////////////////////////////////////////////////////
-
-export type SsrResult = SsrRenderOutput
-
-export interface SsrRenderOutput {
-    body: string
-    created: number
-}
-
-export interface SsrCacheEntry {
-    result: SsrRenderOutput
-    expires: number
 }

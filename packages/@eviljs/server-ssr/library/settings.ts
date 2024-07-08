@@ -63,7 +63,11 @@ export function configureServerSsrSettings(options: ServerSsrOptions): ServerSsr
     }
 }
 
-export const LogIndentation = {
+export const LogIndentation: {
+    Ssr: string
+    SsrTransform: string
+    SubResource: string
+} = {
     Ssr: ' '.repeat(1),
     SsrTransform: ' '.repeat(1),
     SubResource: ' '.repeat(3),

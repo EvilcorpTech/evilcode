@@ -55,7 +55,7 @@ export async function startServerSsr(settings: ServerSsrSettings): Promise<Serve
     return serverContext
 }
 
-export async function startServerHttp1(port: number, ctx: ServerSsrContext) {
+export async function startServerHttp1(port: number, ctx: ServerSsrContext): Promise<ReturnType<typeof Http.createServer>> {
     const serverHttp1 = Http.createServer(ctx.koa.callback())
 
     process.on('SIGINT', () => {

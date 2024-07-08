@@ -70,7 +70,7 @@ export let ConnectionCounter = 0
 * |
 * END
 */
-export async function serverMiddleware(ctx: KoaContext, next: KoaNext) {
+export async function serverMiddleware(ctx: KoaContext, next: KoaNext): Promise<unknown> {
     const {koaStatic, ssrSettings} = ctx
 
     ctx.state.connectionId = ++ConnectionCounter
@@ -156,7 +156,7 @@ export async function serverMiddleware(ctx: KoaContext, next: KoaNext) {
     return serveSsrRenderRequest(ctx, SsrJobPriority.High, next)
 }
 
-async function serveSsrRenderRequest(ctx: KoaContext, priority: SsrJobPriority, next: KoaNext) {
+async function serveSsrRenderRequest(ctx: KoaContext, priority: SsrJobPriority, next: KoaNext): Promise<unknown> {
     const {ssrSettings} = ctx
 
     try {
@@ -184,23 +184,23 @@ async function serveSsrRenderRequest(ctx: KoaContext, priority: SsrJobPriority, 
     return next()
 }
 
-export function isRequestHandled(ctx: KoaContext) {
+export function isRequestHandled(ctx: KoaContext): boolean {
     return isDefined(ctx.body)
 }
 
-export function isRequestOfApi(ctx: KoaContext) {
+export function isRequestOfApi(ctx: KoaContext): boolean {
     return ApiRegexp.test(ctx.path)
 }
 
-export function isRequestOfFile(ctx: KoaContext) {
+export function isRequestOfFile(ctx: KoaContext): boolean {
     return FileRegexp.test(ctx.path)
 }
 
-export function isRequestFromSsr(ctx: KoaContext) {
+export function isRequestFromSsr(ctx: KoaContext): boolean {
     return ctx.ssrSettings.ssrRequestParam in ctx.query
 }
 
-export function isRequestOfRouteAllowed(ctx: KoaContext) {
+export function isRequestOfRouteAllowed(ctx: KoaContext): boolean {
     const allowedRoutes = compute(ctx.ssrSettings.ssrAllowedRoutes)
 
     if (! allowedRoutes) {
