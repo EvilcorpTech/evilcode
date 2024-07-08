@@ -3,7 +3,7 @@ import {Show, splitProps} from 'solid-js'
 import {Dynamic} from 'solid-js/web'
 import {classes} from './classes.js'
 
-export function Html(props: HtmlProps) {
+export function Html(props: HtmlProps): JSX.Element {
     const [_, otherProps] = splitProps(props, ['tag'])
 
     return (

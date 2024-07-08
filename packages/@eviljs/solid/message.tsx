@@ -6,7 +6,7 @@ import {Dynamic} from 'solid-js/web'
 import {classes} from './classes.js'
 import {createI18nMessage} from './i18n.js'
 
-export function Message(props: MessageProps) {
+export function Message(props: MessageProps): JSX.Element {
     const [_, otherProps] = splitProps(props, ['args', 'children', 'tag'])
 
     const message = createI18nMessage(

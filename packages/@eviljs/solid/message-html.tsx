@@ -1,11 +1,11 @@
 import {isString} from '@eviljs/std/type-is.js'
-import {splitProps} from 'solid-js'
+import {splitProps, type JSX} from 'solid-js'
 import {classes} from './classes.js'
 import {Html} from './html.jsx'
 import {createI18nMessage} from './i18n.js'
 import type {MessageProps} from './message.jsx'
 
-export function MessageHtml(props: MessageHtmlProps) {
+export function MessageHtml(props: MessageHtmlProps): JSX.Element {
     const [_, otherProps] = splitProps(props, ['args', 'children'])
 
     const message = createI18nMessage(

@@ -1,17 +1,17 @@
 import {compute} from '@eviljs/std/fn-compute.js'
 import {createI18n as createStdI18n, t, translate, type I18n, type I18nDefinition, type I18nMessageArgValue, type I18nMessageArgs, type I18nMessageKey, type I18nMessages} from '@eviljs/std/i18n.js'
 import {isDefined} from '@eviljs/std/type-is.js'
-import {createContext, createMemo, createSignal, useContext, type Accessor, type Setter} from 'solid-js'
+import {createContext, createMemo, createSignal, useContext, type Accessor, type Context, type Setter} from 'solid-js'
 
 export type * from '@eviljs/std/i18n.js'
 
-export const I18nContext = createContext<Accessor<I18nManager>>()
+export const I18nContext: Context<undefined | Accessor<I18nManager<string, I18nMessageKey>>> = createContext<Accessor<I18nManager>>()
 
-export function useI18n() {
+export function useI18n(): Accessor<I18nManager<string, I18nMessageKey>> {
     return useContext(I18nContext)!
 }
 
-export function createI18n(spec: I18nDefinition<string, I18nMessageKey>) {
+export function createI18n(spec: I18nDefinition<string, I18nMessageKey>): Accessor<I18nManager<string, I18nMessageKey>> {
     const [locale, setLocale] = createSignal(spec.locale)
     const [localeFallback, setLocaleFallback] = createSignal(spec.localeFallback)
     const [messages, setMessages] = createSignal(spec.messages)
