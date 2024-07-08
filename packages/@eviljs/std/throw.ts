@@ -18,14 +18,14 @@ export function throwError<E>(error: E): never {
 /**
 * @throws InvalidArgument
 */
-export function throwInvalidArgument(message?: undefined | string) {
+export function throwInvalidArgument(message?: undefined | string): never {
     return throwError(new InvalidArgument(message))
 }
 
 /**
 * @throws InvalidInput
 */
-export function throwInvalidInput(message?: undefined | string) {
+export function throwInvalidInput(message?: undefined | string): never {
     return throwError(new InvalidInput(message))
 }
 

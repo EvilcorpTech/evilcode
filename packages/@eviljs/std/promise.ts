@@ -5,7 +5,7 @@ export function clonePromise<P>(value: P): Promise<Awaited<P>> {
 }
 
 // A facade api for the new and not yed widely supported Promise.withResolvers().
-export function createPromise<V = void>() {
+export function createPromise<V = void>(): ReturnType<typeof Promise.withResolvers<V>> {
     let resolve: Fn<[value: V | PromiseLike<V>]>
     let reject: Fn<[reason?: any]>
 

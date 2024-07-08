@@ -1,7 +1,6 @@
 import {ensureDefined} from './type-ensure.js'
 
-export const ContainerFactoriesKey = Symbol('ContainerFactories')
-export const ContainerInstancesKey = Symbol('ContainerInstances')
+export const ContainerInternalsKey: unique symbol = Symbol('ContainerInternals')
 
 /*
 * Creates a container instance.
@@ -29,8 +28,10 @@ export function createContainer<M extends ContainerServicesMap, S = undefined>(
     state?: undefined | S,
 ): Container<M, undefined | S> {
     const self: Container<M, undefined | S> = {
-        [ContainerFactoriesKey]: factories,
-        [ContainerInstancesKey]: {} as M,
+        [ContainerInternalsKey]: {
+            factories,
+            instances: {} as M,
+        },
         ...{} as M, // For typing purpose.
 
         state: state,
@@ -45,6 +46,10 @@ export function createContainer<M extends ContainerServicesMap, S = undefined>(
     }
 
     return self
+}
+
+export function getContainerInternals<M extends ContainerServicesMap, S>(container: Container<M, S>): ContainerInternals<M, S> {
+    return container[ContainerInternalsKey]!
 }
 
 /**
@@ -91,10 +96,12 @@ function requireContainerService<M extends ContainerServicesMap, S, I extends ke
         return createContainerService(container, serviceId)
     }
 
-    // By default we use a singleton strategy.
-    container[ContainerInstancesKey][serviceId] ??= createContainerService(container, serviceId)
+    const ctx = getContainerInternals(container)
 
-    return container[ContainerInstancesKey][serviceId]
+    // By default we use a singleton strategy.
+    ctx.instances[serviceId] ??= createContainerService(container, serviceId)
+
+    return ctx.instances[serviceId]
 }
 
 /*
@@ -111,7 +118,8 @@ export function createContainerService<M extends ContainerServicesMap, S, I exte
     container: Container<M, S>,
     serviceId: I,
 ): M[I] {
-    const factory = container[ContainerFactoriesKey][serviceId]
+    const ctx = getContainerInternals(container)
+    const factory = ctx.factories[serviceId]
     return factory(container)
 }
 
@@ -125,13 +133,17 @@ export type Container<M extends ContainerServicesMap = ContainerServicesMap, S =
     & M
     & ContainerStateProps<S>
     & {
-        [ContainerFactoriesKey]: ContainerFactoriesOf<M, S>
-        [ContainerInstancesKey]: M
+        [key: symbol]: ContainerInternals<M, S>
         /**
         * @throws InvalidInput
         */
         require<K extends keyof M>(id: K, options?: undefined | ContainerServiceOptions): M[K]
     }
+
+export interface ContainerInternals<M extends ContainerServicesMap = ContainerServicesMap, S = undefined> {
+    factories: ContainerFactoriesOf<M, S>
+    instances: M
+}
 
 export interface ContainerStateProps<S> {
     readonly state: S

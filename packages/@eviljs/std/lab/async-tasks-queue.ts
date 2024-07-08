@@ -28,7 +28,7 @@ export const AsyncTasksQueue = {
         return promise
     },
 
-    tryConsumingQueue(self: AsyncTasksQueueState<any>) {
+    tryConsumingQueue(self: AsyncTasksQueueState<any>): void {
         self.queueLock ??= scheduleMacroTaskUsingTimeout(() => {
             self.queueLock = undefined
 

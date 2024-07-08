@@ -1,3 +1,4 @@
+import type {FnArgs} from './fn-type.js'
 import type {ValueOf} from './type.js'
 
 export const LogType = {
@@ -7,24 +8,24 @@ export const LogType = {
     Error: 4 as const,
 }
 
-export const LogTypeDefault = LogType.Debug
+export const LogTypeDefault: 1 = LogType.Debug
 
-export function createLogger<R>(log: (type: LogTypeEnum, ...args: Payload) => R): Logger<R> & LoggerProps {
+export function createLogger<R>(log: (type: LogTypeEnum, ...args: FnArgs) => R): Logger<R> & LoggerProps {
     return {
         Type: LogType,
 
         log,
 
-        debug(...args: Payload) {
+        debug(...args: FnArgs) {
             return log(LogType.Debug, ...args)
         },
-        info(...args: Payload) {
+        info(...args: FnArgs) {
             return log(LogType.Info, ...args)
         },
-        warn(...args: Payload) {
+        warn(...args: FnArgs) {
             return log(LogType.Warn, ...args)
         },
-        error(...args: Payload) {
+        error(...args: FnArgs) {
             return log(LogType.Error, ...args)
         },
     }
@@ -33,11 +34,11 @@ export function createLogger<R>(log: (type: LogTypeEnum, ...args: Payload) => R)
 export function createConsoleLog(options?: undefined | {
     console?: undefined | Logger<void>
     min?: undefined | LogTypeEnum
-}) {
+}): (type: LogTypeEnum, ...args: FnArgs) => void {
     const logger = options?.console ?? console
     const min = options?.min ?? LogTypeDefault
 
-    function log(type: LogTypeEnum, ...args: Payload) {
+    function log(type: LogTypeEnum, ...args: FnArgs) {
         return logLevel(logger, type, min, ...args)
     }
 
@@ -48,7 +49,7 @@ export function logLevel<R>(
     adapter: Logger<R>,
     type: LogTypeEnum,
     min: LogTypeEnum,
-    ...args: Payload
+    ...args: FnArgs
 ): void | R {
     return (type >= min)
         ? log(adapter, type, ...args)
@@ -58,7 +59,7 @@ export function logLevel<R>(
 export function log<R>(
     logger: Logger<R>,
     type: LogTypeEnum,
-    ...args: Payload
+    ...args: FnArgs
 ): R {
     switch (type as undefined | typeof type) {
         case LogType.Debug:
@@ -80,18 +81,15 @@ export function log<R>(
 // Types ///////////////////////////////////////////////////////////////////////
 
 export interface Logger<R = void> {
-    log(type: LogTypeEnum, ...args: Payload): R
-    debug(...args: Payload): R
-    info(...args: Payload): R
-    warn(...args: Payload): R
-    error(...args: Payload): R
+    log(type: LogTypeEnum, ...args: FnArgs): R
+    debug(...args: FnArgs): R
+    info(...args: FnArgs): R
+    warn(...args: FnArgs): R
+    error(...args: FnArgs): R
 }
 
 export interface LoggerProps {
     Type: typeof LogType
-}
-
-export interface Payload extends Array<unknown> {
 }
 
 export type LogTypeEnum = ValueOf<typeof LogType> & number

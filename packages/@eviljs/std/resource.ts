@@ -2,11 +2,11 @@ import {hasBitmaskFlag, omitBitmaskFlag, withBitmaskFlag} from './bitmask.js'
 
 export const ResourceMask = {
     Initial: 0,
-    Required: 1<<0,
-    Loading: 1<<1,
-    Loaded: 1<<2,
-    Failed: 1<<3,
-    Expired: 1<<4,
+    Required: 1<<0 as number,
+    Loading: 1<<1 as number,
+    Loaded: 1<<2 as number,
+    Failed: 1<<3 as number,
+    Expired: 1<<4 as number,
 }
 
 export function asResourceView(mask: number): ResourceMaskView {

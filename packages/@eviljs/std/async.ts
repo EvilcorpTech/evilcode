@@ -1,5 +1,5 @@
-export function wait(delay: number) {
-    const promise = new Promise((resolve) =>
+export function wait(delay: number): Promise<void> {
+    const promise = new Promise<void>((resolve) =>
         setTimeout(resolve, delay)
     )
 

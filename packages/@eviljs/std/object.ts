@@ -2,8 +2,8 @@ import type {Fn, Io} from './fn-type.js'
 import {isArray, isDefined, isObject, isUndefined} from './type-is.js'
 import type {ObjectComplete, Prettify} from './type.js'
 
-export const ObjectPathArrayOpenRegexp = /\[/g
-export const ObjectPathArrayCloseRegexp = /\]/g
+export const ObjectPathArrayOpenRegexp: RegExp = /\[/g
+export const ObjectPathArrayCloseRegexp: RegExp = /\]/g
 export const ObjectPathCache: Record<string, Array<string | number>> = {}
 
 export function isObjectEmpty(object: object): boolean {
@@ -192,7 +192,7 @@ export function objectFromEntry<K extends PropertyKey, V>(
         : {}
 }
 
-export function getObjectPath(root: ObjectRoot, path: ObjectPath) {
+export function getObjectPath(root: ObjectRoot, path: ObjectPath): unknown {
     const parts = isArray(path)
         ? path
         : fromObjectPathToParts(path)
@@ -209,7 +209,7 @@ export function getObjectPath(root: ObjectRoot, path: ObjectPath) {
     return node
 }
 
-export function fromObjectPathToParts(path: string) {
+export function fromObjectPathToParts(path: string): Array<number | string> {
     if (! ObjectPathCache[path]) {
         ObjectPathCache[path] = path
             .replace(ObjectPathArrayOpenRegexp, '.#')

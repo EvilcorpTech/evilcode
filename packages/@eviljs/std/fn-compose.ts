@@ -1,6 +1,6 @@
 import type {Io} from './fn-type.js'
 
-export function compose<I, O = I>(fn: Io<I, O>) {
+export function compose<I, O = I>(fn: Io<I, O>): Composition<I, O> {
     return createComposer<I, I, O>([], fn)
 }
 

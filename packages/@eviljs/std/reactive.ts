@@ -2,7 +2,7 @@ import {scheduleMicroTaskUsingPromise} from './eventloop.js'
 import type {Task} from './fn-type.js'
 import {areEqualIdentity} from './struct.js'
 
-export const ReactiveStateSymbol = Symbol('ReactiveState')
+export const ReactiveStateSymbol: unique symbol = Symbol('ReactiveState')
 
 export function createReactive<V>(
     value: V,
@@ -20,7 +20,7 @@ export function createReactive<V>(
 }
 
 export function getReactiveState<V>(reactive: ReactiveProtocol<V>): ReactiveState<V> {
-    return reactive[ReactiveStateSymbol]
+    return reactive[ReactiveStateSymbol]!
 }
 
 export function readReactive<V>(reactive: ReactiveProtocol<V>): V {
@@ -100,7 +100,7 @@ export function watchReactive<V>(
 // Types ///////////////////////////////////////////////////////////////////////
 
 export interface ReactiveProtocol<V> {
-    [ReactiveStateSymbol]: ReactiveState<V>
+    [key: symbol]: ReactiveState<V>
 }
 
 export interface ReactiveState<V> {

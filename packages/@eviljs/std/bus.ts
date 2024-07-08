@@ -6,7 +6,7 @@ import {isArray} from './type-is.js'
 
 export const BusEventRegexpCache: Record<BusEventPattern, RegExp> = {}
 
-export function createBus() {
+export function createBus(): Bus {
     const self: Bus = {
         observers: createReactive({}),
 

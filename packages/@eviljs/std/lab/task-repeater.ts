@@ -24,7 +24,7 @@ export function createTaskRepeater(
     return self
 }
 
-export function startTaskRepeater(self: TaskRepeater) {
+export function startTaskRepeater(self: TaskRepeater): Task {
     if (self.running) {
         // Already running. We have nothing to do.
         return self.stop
@@ -42,14 +42,14 @@ export function startTaskRepeater(self: TaskRepeater) {
     return self.stop
 }
 
-export function stopTaskRepeater(self: TaskRepeater) {
+export function stopTaskRepeater(self: TaskRepeater): void {
     self.running = false
 
     self.clean()
     self.clean = noop
 }
 
-export function scheduleTaskRepeaterTask(self: TaskRepeater) {
+export function scheduleTaskRepeaterTask(self: TaskRepeater): Task {
     if (! self.running) {
         return noop
         // Loop has been stopped. We must not reschedule a new execution.
@@ -64,7 +64,7 @@ export function scheduleTaskRepeaterTask(self: TaskRepeater) {
     return clean
 }
 
-export function executeTaskRepeaterTask(self: TaskRepeater) {
+export function executeTaskRepeaterTask(self: TaskRepeater): void {
     const result = self.task()
     const promise = Promise.resolve(result)
 
@@ -81,8 +81,8 @@ export interface TaskRepeater {
     delay: number
     immediate: boolean
     running: boolean
-    task: Task
-    clean: Task
+    task(): void
+    clean(): void
     start(): void
     stop(): void
 }

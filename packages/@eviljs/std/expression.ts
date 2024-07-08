@@ -3,7 +3,7 @@ import {assertFunctionOptional, assertObject} from './type-assert.js'
 import {ensureArray, ensureBoolean, ensureFunction, ensureInteger, ensureNumber, ensureString, ensureStringOptional, throwAssertTypeError} from './type-ensure.js'
 import {isArray, isFunction, isNone, type None} from './type.js'
 
-export function evaluateExp<C extends Ctx, R>(ctx: C, exp: Exp<C, R>) {
+export function evaluateExp<C extends Ctx, R>(ctx: C, exp: Exp<C, R>): R {
     if (! isFunction(exp)) {
         return exp
     }
@@ -126,7 +126,7 @@ export function has(ctx: Ctx | CtxWithArgs, listExp: Exp<Ctx, Array<unknown>>, t
 * lookup({$}, 'info.title') => 'Moby Dick'
 * lookup({$, resolvers}, 'info.title') => 'MOBY DICK'
 */
-export function lookup(ctx: CtxWithResolver, pathExp: Exp<Ctx, string>) {
+export function lookup(ctx: CtxWithResolver, pathExp: Exp<Ctx, string>): unknown {
     const {$, resolvers} = ctx
     assertObject($)
     const path = ensureString(evaluateExp(ctx, pathExp))
@@ -151,7 +151,7 @@ export function lookup(ctx: CtxWithResolver, pathExp: Exp<Ctx, string>) {
 * const tree = ['operator', ...args]
 * const result = evaluateTree(operators, tree)
 */
-export function evaluateTree(operators: Record<PropertyKey, Operator>, tree: Tree, ctx: Ctx) {
+export function evaluateTree(operators: Record<PropertyKey, Operator>, tree: Tree, ctx: Ctx): unknown {
     const exp = compileTree(operators, tree)
     const result = evaluateExp(ctx, exp)
     return result

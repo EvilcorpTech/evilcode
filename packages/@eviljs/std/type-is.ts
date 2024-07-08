@@ -1,9 +1,9 @@
 import type {FnArgs} from './fn-type.js'
 import type {None} from './type.js'
 
-export const BooleanLikeTrue = [true, 1, '1', 'yes', 'on', 'true']
-export const BooleanLikeFalse = [false, 0, '0', 'no', 'off', 'false']
-export const BooleanLike = [...BooleanLikeTrue, ...BooleanLikeFalse]
+export const BooleanLikeTrue = [true, 1, '1', 'yes', 'on', 'true'] as const
+export const BooleanLikeFalse = [false, 0, '0', 'no', 'off', 'false'] as const
+export const BooleanLike = [...BooleanLikeTrue, ...BooleanLikeFalse] as [...typeof BooleanLikeTrue, ...typeof BooleanLikeFalse]
 
 export function isDefined<V>(value: void | undefined | V): value is V {
     return ! isUndefined(value)

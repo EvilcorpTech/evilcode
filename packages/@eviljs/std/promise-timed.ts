@@ -1,6 +1,11 @@
+import type {Fn} from './fn-type.js'
 import {createPromise} from './promise.js'
 
-export function createPromiseTimed<V = void>(args: PromiseTimedOptions) {
+export function createPromiseTimed<V = void>(args: PromiseTimedOptions): {
+    promise: Promise<V>
+    resolve: (value: V) => void
+    reject: Fn<[reason?: any]>
+} {
     const {timeout} = args
 
     let completed = false

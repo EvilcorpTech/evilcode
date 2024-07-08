@@ -1,10 +1,10 @@
 import {isDefined, isUndefined} from './type-is.js'
 
-export function clamp(min: number, value: number, max: number) {
+export function clamp(min: number, value: number, max: number): number {
     return Math.min(max, Math.max(min, value))
 }
 
-export function round(value: number, round: number) {
+export function round(value: number, round: number): number {
     return Math.trunc(value / round) * round
 }
 
@@ -60,7 +60,7 @@ export function readItemNumber<I>(it: number | I, getter?: undefined | NumberGet
         : it as number
 }
 
-export function isBetween(a: number, value: number, b: number) {
+export function isBetween(a: number, value: number, b: number): boolean {
     return (
         false
         || (a <= value && value <= b)

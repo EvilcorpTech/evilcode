@@ -14,15 +14,15 @@ export const CollatorOptionsDefault: Intl.CollatorOptions = {
 export function sortingOn<I, R extends undefined | number | string>(
     getter: (item: I) => R,
     collatorOptional?: undefined | Intl.Collator | Intl.CollatorOptions,
-) {
+): (first: I, second: I) => number {
     const collator = collatorOptional instanceof Intl.Collator
         ? collatorOptional
         : new Intl.Collator(undefined, {...CollatorOptionsDefault, ...collatorOptional})
 
-    function onSort(a: I, b: I) {
+    function onSort(first: I, second: I): number {
         return collator.compare(
-            String(getter(a) ?? ''),
-            String(getter(b) ?? ''),
+            String(getter(first) ?? ''),
+            String(getter(second) ?? ''),
         )
     }
 
@@ -37,7 +37,7 @@ export function sortingOn<I, R extends undefined | number | string>(
 */
 export function inverting<A extends FnArgs>(
     fn: (...args: A) => number,
-) {
+): (...args: A) => number {
     function invert(...args: A) {
         return -1 * fn(...args)
     }

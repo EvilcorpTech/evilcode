@@ -3,23 +3,23 @@ import {assertStringNotEmpty} from './type-assert.js'
 import {ensureOptionalWith, throwAssertTypeError} from './type-ensure.js'
 import {isDefined, isString} from './type-is.js'
 
-export const OneSecondInMs = 1_000
-export const OneMinuteInMs = 60 * OneSecondInMs
-export const OneHourInMs = 60 * OneMinuteInMs
-export const OneDayInMs = 24 * OneHourInMs
-export const OneWeekInMs = 7 * OneDayInMs
-export const OneMonthInMs = 30 * OneDayInMs
-export const OneYearInMs = 365 * OneDayInMs
+export const OneSecondInMs: number = 1_000
+export const OneMinuteInMs: number = 60 * OneSecondInMs
+export const OneHourInMs: number = 60 * OneMinuteInMs
+export const OneDayInMs: number = 24 * OneHourInMs
+export const OneWeekInMs: number = 7 * OneDayInMs
+export const OneMonthInMs: number = 30 * OneDayInMs
+export const OneYearInMs: number = 365 * OneDayInMs
 
 export function dateNow(): Date {
     return new Date()
 }
 
-export function cloneDate(date: Date) {
+export function cloneDate(date: Date): Date {
     return new Date(date.getTime())
 }
 
-export function isTimeBetween(from: undefined | DateNumber, date: DateNumber, to: undefined | DateNumber) {
+export function isTimeBetween(from: undefined | DateNumber, date: DateNumber, to: undefined | DateNumber): boolean {
     const fromDefined = isDefined(from)
     const toDefined = isDefined(to)
 
@@ -38,11 +38,11 @@ export function isTimeBetween(from: undefined | DateNumber, date: DateNumber, to
     return false
 }
 
-export function isDateBetween(from: undefined | Date, date: Date, to: undefined | Date) {
+export function isDateBetween(from: undefined | Date, date: Date, to: undefined | Date): Boolean {
     return isTimeBetween(from?.getTime(), date.getTime(), to?.getTime())
 }
 
-export function roundTimeToSeconds(time: DateNumber) {
+export function roundTimeToSeconds(time: DateNumber): number {
     return Math.trunc(time / 1_000) * 1_000
 }
 

@@ -1,4 +1,4 @@
-import type {Fn, FnArgs, Task} from './fn-type.js'
+import type {Fn, FnArgs} from './fn-type.js'
 import {isDefined, isUndefined} from './type-is.js'
 
 export function debounced<A extends FnArgs>(task: Fn<A>, delay: number): EventTask<A> {
@@ -141,8 +141,8 @@ export function throttled<A extends FnArgs>(task: Fn<A>, delay: number): EventTa
 // Types ///////////////////////////////////////////////////////////////////////
 
 export interface EventTask<A extends FnArgs = [], R = void> extends Fn<A, R> {
-    cancel: Task
-    disable: Task
-    enable: Task
+    cancel(): void
+    disable(): void
+    enable(): void
     readonly enabled: boolean
 }

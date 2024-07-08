@@ -40,8 +40,8 @@ export function splitArray<I>(list: Array<I>, filter: Io<I, boolean>): [Array<I>
     return [trueList, falseList]
 }
 
-export function mappingWith<I, R>(mapItem: (it: I, idx: number) => R) {
-    function mapList(list: Array<I>) {
+export function mappingWith<I, R>(mapItem: (it: I, idx: number) => R): (list: Array<I>) => Array<R> {
+    function mapList(list: Array<I>): Array<R> {
         return list.map(mapItem)
     }
 
@@ -105,7 +105,7 @@ export function intersectBy<I, K>(keyOf: Io<I, K>, ...lists: Array<Array<I>>): A
     return intersectionList
 }
 
-export function asMatrix<I>(list: Array<I>, size: number) {
+export function asMatrix<I>(list: Array<I>, size: number): Array<Array<I>> {
     return list.reduce((rows, key, index) => {
         if ((index % size) === 0) {
             rows.push([key])

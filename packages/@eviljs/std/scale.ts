@@ -1,7 +1,9 @@
+import type {Io} from './fn-type.js'
+
 /**
 * The linear scale returns NaN if input/output interval has same start and end values.
 */
-export function createLinearScale(inputInterval: [number, number], outputInterval: [number, number]) {
+export function createLinearScale(inputInterval: [number, number], outputInterval: [number, number]): Io<number, number> {
     const [inputStart, inputEnd] = inputInterval
     const [outputStart, outputEnd] = outputInterval
 
@@ -28,10 +30,10 @@ export function createLinearScale(inputInterval: [number, number], outputInterva
     return map
 }
 
-export function distanceBetween(x1: number, x2: number) {
+export function distanceBetween(x1: number, x2: number): number {
     return Math.abs(x1 - x2)
 }
 
-export function directionOf(x1: number, x2: number) {
+export function directionOf(x1: number, x2: number): number {
     return x1 < x2 ? 1 : -1
 }

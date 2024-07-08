@@ -9,7 +9,7 @@ export function rgbFromHexString(rgbHex: string): Rgb {
     return [r, g, b]
 }
 
-export function rgbToHexString(r: number, g: number, b: number) {
+export function rgbToHexString(r: number, g: number, b: number): string {
     let rx = Math.round(r).toString(16)
     let gx = Math.round(g).toString(16)
     let bx = Math.round(b).toString(16)

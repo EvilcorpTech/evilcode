@@ -1,4 +1,4 @@
-export function getMapValue<K, V>(map: Map<K, undefined | V>, key: K, init: () => V) {
+export function getMapValue<K, V>(map: Map<K, undefined | V>, key: K, init: () => V): V {
     function initMapValue(): V {
         const value: V = init()
 

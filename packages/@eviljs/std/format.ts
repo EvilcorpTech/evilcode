@@ -1,4 +1,5 @@
-export function formatBigNumber(bigNumber: number, fractionDigits = 0) {
+export function formatBigNumber(bigNumber: number, fractionDigitsOptional?: undefined | number): string {
+    const fractionDigits = fractionDigitsOptional ?? 0
     const unit =
         bigNumber >= 1_000 && bigNumber < 1_000_000 ? 'K'
         : bigNumber >= 1_000_000 && bigNumber < 1_000_000_000 ? 'M'

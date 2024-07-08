@@ -1,4 +1,4 @@
-export function times(count: number) {
+export function times(count: number): Array<number> {
     return Array(count).fill(undefined).map((nil, idx) => idx)
 }
 
@@ -10,7 +10,7 @@ export function times(count: number) {
 * for (const it of iterate(10)) {
 * }
 */
-export function* iterate(times: number) {
+export function* iterate(times: number): Generator<number, void, never> {
     let idx = 0
     while (idx < times) {
         yield idx

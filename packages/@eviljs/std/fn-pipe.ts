@@ -39,12 +39,12 @@ export function piped<V1>(input?: V1): PipeLazy<undefined | V1> {
 export function createPipeLazy(
     stack: Array<PipeLazyTask>,
     compute: Io<Array<PipeLazyTask>, unknown>,
-) {
-    const self = {
+): PipeLazy<any> {
+    const self: PipeLazy<any> = {
         get __stack__() {
             return stack
         },
-        to(fn: Io<unknown, unknown>) {
+        to(fn) {
             return createPipeLazy([...stack, fn], compute)
         },
         end() {

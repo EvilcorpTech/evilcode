@@ -18,7 +18,7 @@ export function call<A extends FnArgs, R>(fn: Fn<A, R>, ...args: A): R {
 // callbacksList.forEach(calling(arg1, arg2))
 // // same of
 // callbacksList.forEach(it => it(arg1, arg2))
-export function calling<A extends FnArgs>(...args: A) {
+export function calling<A extends FnArgs>(...args: A): <R>(fn: Fn<A, R>) => R {
     function caller<R>(fn: Fn<A, R>): R {
         return fn(...args)
     }
