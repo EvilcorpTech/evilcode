@@ -38,7 +38,7 @@ export function isTimeBetween(from: undefined | DateNumber, date: DateNumber, to
     return false
 }
 
-export function isDateBetween(from: undefined | Date, date: Date, to: undefined | Date): Boolean {
+export function isDateBetween(from: undefined | Date, date: Date, to: undefined | Date): boolean {
     return isTimeBetween(from?.getTime(), date.getTime(), to?.getTime())
 }
 
