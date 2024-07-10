@@ -1,20 +1,21 @@
 {
     "scripts": {
-        "init": "npx pnpm@$(npm pkg get devDependencies.pnpm | tr -d '\"') install",
-        "check-outdated": "npx pnpm@$(npm pkg get devDependencies.pnpm | tr -d '\"') outdated --recursive",
+        "init": "corepack pnpm install",
+        "check-outdated": "corepack pnpm outdated --recursive",
         "upgrade": "npx npm-upgrade@latest && npm run init",
-        "update": "npx pnpm@$(npm pkg get devDependencies.pnpm | tr -d '\"') update --recursive",
+        "update": "corepack pnpm update --recursive",
         "build": "nx run-many --target build",
-        "build-watch": "(nx run-many --target build --skip-nx-cache || true) && nx watch --all run-many -- npm run build"
+        "build-watch": "(nx run-many --target build --skip-nx-cache || true) && nx watch --all run-many -- npm run build",
+        "nx": "nx",
+        "pnpm": "corepack pnpm"
     },
     "devDependencies": {
-        "nx": "19.3.2",
-        "pnpm": "9.4.0"
+        "nx": "19.4.2",
+        "pnpm": "9.5.0"
     },
     "engines": {
-        "node": ">= 16",
-        "npm": ">= 7",
+        "node": ">= 20",
         "pnpm": "9"
     },
-    "packageManager": "pnpm@9.0.1"
+    "packageManager": "pnpm@9.5.0"
 }

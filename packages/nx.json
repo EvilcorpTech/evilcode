@@ -1,7 +1,7 @@
 {
     "$schema": "./node_modules/nx/schemas/nx-schema.json",
     "cacheDirectory": "./node_modules/.cache/nx",
-    "targets": {
+    "targetDefaults": {
         "build": {
             "outputs": [
                 "{projectRoot}/**/*.css",

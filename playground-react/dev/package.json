@@ -1,7 +1,7 @@
 {
     "type": "module",
     "scripts": {
-        "init": "npx pnpm@$(npm pkg get devDependencies.pnpm | tr -d '\"') install",
+        "init": "corepack pnpm install",
         "upgrade": "npx npm-upgrade@latest && npm run init",
         "check": "npm run check-ts && npm run check-circular",
         "check-ts": "tsc --noEmit --project ..",
@@ -23,12 +23,5 @@
         "vite": "5",
         "vite-plugin-checker": "0",
         "vite-plugin-ejs": "1"
-    },
-    "devDependencies": {
-        "pnpm": "9"
-    },
-    "engines": {
-        "node": ">= 18",
-        "pnpm": ">= 9"
     }
 }

@@ -1,7 +1,7 @@
 {
     "type": "module",
     "scripts": {
-        "init": "npx --yes pnpm@$(npm --prefix dev pkg get devDependencies.pnpm | tr -d '\"') install && npm --prefix dev run init",
+        "init": "corepack pnpm install && npm --prefix dev run init",
         "upgrade": "npx npm-upgrade@latest && npm --prefix dev run upgrade && npm run init",
         "check": "npm --prefix dev run check",
         "build": "npm --prefix dev run build",
@@ -24,7 +24,11 @@
         "react-dom": "18"
     },
     "devDependencies": {
-        "@eviljs/tsconfig": "link:../packages/@eviljs/tsconfig",
-        "pnpm": "9.4.0"
-    }
+        "@eviljs/tsconfig": "link:../packages/@eviljs/tsconfig"
+    },
+    "engines": {
+        "node": ">= 20",
+        "pnpm": "9"
+    },
+    "packageManager": "pnpm@9.5.0"
 }
