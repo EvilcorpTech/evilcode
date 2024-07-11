@@ -163,9 +163,9 @@ export function CaseRoute(props: CaseRouteProps): undefined {
 *     <button>Click</button>
 * </Route>`
 */
-export const Route: React.ComponentType<RouteProps> = displayName('Route', forwardRef(function Route(
+export const Route = displayName('Route', forwardRef(function Route(
     props: Omit<RouteProps, 'ref'>,
-    ref: React.ForwardedRef<HTMLAnchorElement>
+    ref: React.ForwardedRef<HTMLAnchorElement>,
 ) {
     const {
         activeWhenExact,
@@ -241,11 +241,11 @@ export const Route: React.ComponentType<RouteProps> = displayName('Route', forwa
             href={href}
         />
     )
-}))
+})) as React.FunctionComponent<RouteProps>
 
-export const Link: React.ComponentType<LinkProps> = displayName('Link', forwardRef(function Link(
+export const Link = displayName('Link', forwardRef(function Link(
     props: Omit<LinkProps, 'ref'>,
-    ref: React.ForwardedRef<HTMLAnchorElement>
+    ref: React.ForwardedRef<HTMLAnchorElement>,
 ) {
     const {className, params, replace, state, to, ...otherProps} = props
     const isLink = isString(to) && isUrlAbsolute(to)
@@ -273,7 +273,7 @@ export const Link: React.ComponentType<LinkProps> = displayName('Link', forwardR
             replace={replace}
         />
     )
-}))
+})) as React.FunctionComponent<LinkProps>
 
 export function Redirect(props: RedirectProps): React.ReactNode {
     const {children, params, replace: replaceOptional, state, to: path} = props

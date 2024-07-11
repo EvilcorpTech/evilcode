@@ -15,7 +15,7 @@ import {
     withoutResourceLoading,
 } from '@eviljs/std/resource.js'
 import type {ResultOrError} from '@eviljs/std/result.js'
-import {asResultError} from '@eviljs/std/result.js'
+import {ResultError} from '@eviljs/std/result.js'
 import {isDefined} from '@eviljs/std/type-is.js'
 import {useCallback, useRef, useState} from 'react'
 
@@ -82,7 +82,7 @@ export function useAsyncIo<A extends FnArgs, R>(asyncTask: Fn<A, Promise<R>>): A
                 error,
             }))
 
-            return asResultError(error)
+            return ResultError(error)
         }
     }, [asyncTask])
 
