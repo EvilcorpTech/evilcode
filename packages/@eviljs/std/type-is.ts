@@ -66,7 +66,7 @@ export function isInteger(value: unknown): value is number {
     return Number.isInteger(value as any)
 }
 
-export function isObject(value: unknown): value is Record<PropertyKey, unknown> {
+export function isObject<T extends object = Record<PropertyKey, unknown>>(value: unknown): value is T {
     if (! value) {
         return false
     }
