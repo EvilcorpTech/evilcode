@@ -1,6 +1,6 @@
 import {awaiting, catching, catchingError, chaining, logging, mapNone, mapSome, mappingNone, mappingOptional, mappingResultError, mappingSome, trying} from '../packages/@eviljs/std/fn-monad.js'
 import {chain, piped, piping} from '../packages/@eviljs/std/fn-pipe.js'
-import {asResultError} from '../packages/@eviljs/std/result.js'
+import {ResultError} from '../packages/@eviljs/std/result.js'
 import {throwError} from '../packages/@eviljs/std/throw.js'
 
 const subject = {id: 1, name: 'Mike', age: 18}
@@ -19,7 +19,7 @@ const r_b2 = piping(subject)
 const r_c1 = piped(subject)
     .to(it => ({...it, name: `${it.name} Tyson`}))
     .to(trying(it => it, error => throwError({message: 'Something wrong happened.'})))
-    .to(it => it.age >= 18 ? it : asResultError('TooYoung'))
+    .to(it => it.age >= 18 ? it : ResultError('TooYoung'))
     .to(mappingResultError(error => ({name: error.error, age: 0})))
     .to(chaining(console.log))
     .to(logging(it => `Value is: ${it}`, 'debug'))
@@ -32,7 +32,7 @@ const r_c2 = await piped(subject)
     .to(awaiting(logging()))
     .to(it => it)
     .to(awaiting(it => Promise.resolve(it.name)))
-    .to(catching(error => asResultError(error)))
+    .to(catching(error => ResultError(error)))
     .to(catchingError('BadThingsHappen'))
 .end()
 const r_c3 = piping(undefined as undefined | number)
