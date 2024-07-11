@@ -24,9 +24,9 @@ export function InputLabel(props: InputLabelProps): JSX.Element {
     )
 }
 
-export const Input: React.ComponentType<InputProps> = displayName('Input', forwardRef(function Input(
+export const Input = displayName('Input', forwardRef(function Input(
     props: Omit<InputProps, 'ref'>,
-    ref: React.ForwardedRef<HTMLInputElement>
+    ref: React.ForwardedRef<HTMLInputElement>,
 ) {
     const {className, decorate, hostClass, hostProps, hostStyle, onChange, ...otherProps} = props
     const inputRef = useRef<HTMLInputElement>(null)
@@ -52,11 +52,11 @@ export const Input: React.ComponentType<InputProps> = displayName('Input', forwa
             )}
         </div>
     )
-}))
+})) as React.FunctionComponent<InputProps>
 
-export const TextInput: React.ComponentType<TextInputProps> = displayName('TextInput', forwardRef(function TextInput(
+export const TextInput = displayName('TextInput', forwardRef(function TextInput(
     props: Omit<TextInputProps, 'ref'>,
-    ref: React.ForwardedRef<HTMLInputElement>
+    ref: React.ForwardedRef<HTMLInputElement>,
 ) {
     const {className, ...otherProps} = props
 
@@ -68,11 +68,11 @@ export const TextInput: React.ComponentType<TextInputProps> = displayName('TextI
             className={classes('TextInput-1330', className)}
         />
     )
-}))
+})) as React.FunctionComponent<TextInputProps>
 
-export const SecretInput: React.ComponentType<SecretInputProps> = displayName('SecretInput', forwardRef(function SecretInput(
+export const SecretInput = displayName('SecretInput', forwardRef(function SecretInput(
     props: Omit<SecretInputProps, 'ref'>,
-    ref: React.ForwardedRef<HTMLInputElement>
+    ref: React.ForwardedRef<HTMLInputElement>,
 ) {
     const {buttonClass, buttonProps, buttonStyle, className, decorate, hideIcon, showIcon, ...otherProps} = props
     const [visible, setVisible] = useState(false)
@@ -107,7 +107,7 @@ export const SecretInput: React.ComponentType<SecretInputProps> = displayName('S
             </>}
         />
     )
-}))
+})) as React.FunctionComponent<SecretInputProps>
 
 // Types ///////////////////////////////////////////////////////////////////////
 

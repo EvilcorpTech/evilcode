@@ -2,7 +2,7 @@ import {classes} from '@eviljs/react/classes.js'
 import {displayName} from '@eviljs/react/display-name.js'
 import {forwardRef} from 'react'
 
-export const Button: React.ComponentType<ButtonProps> = displayName('Button', forwardRef(function Button(
+export const Button = displayName('Button', forwardRef(function Button(
     props: Omit<ButtonProps, 'ref'>,
     ref: React.ForwardedRef<HTMLButtonElement>,
 ) {
@@ -15,7 +15,7 @@ export const Button: React.ComponentType<ButtonProps> = displayName('Button', fo
             className={classes('Button-db00 std-button std-text-button', className)}
         />
     )
-}))
+})) as React.FunctionComponent<ButtonProps>
 
 // Types ///////////////////////////////////////////////////////////////////////
 
