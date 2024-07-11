@@ -2,7 +2,7 @@ import {awaiting} from '@eviljs/std/fn'
 import {asDate, type Unsafe} from '@eviljs/std/type'
 import {usingRequestAuthorization} from '@eviljs/web/request-auth'
 import {creatingRequestGet} from '@eviljs/web/request-method'
-import {decodeResponseJson} from '@eviljs/web/response'
+import {decodeResponseBodyAsJson} from '@eviljs/web/response'
 import {Env} from '~/env/env-specs'
 import type {DateString, IdString, UrlString} from '~/type/type-apis'
 
@@ -10,7 +10,7 @@ export async function readAccount(token: string): Promise<ReadAccountIoOutput> {
     return creatingRequestGet('/account', {baseUrl: Env.ApiUrl})
         (usingRequestAuthorization('Bearer', token))
         (fetch)
-        (decodeResponseJson<ReadAccountIoResponse>)
+        (decodeResponseBodyAsJson<ReadAccountIoResponse>)
         (awaiting(ReadAccountIoCodec.decodeResponse))
     ()
 }

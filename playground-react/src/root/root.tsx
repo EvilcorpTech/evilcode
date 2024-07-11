@@ -9,7 +9,7 @@ import type {MyContainer} from '~/container/container-apis'
 import {MyContainerContext} from '~/container/container-hooks'
 import {I18nSpec} from '~/i18n/i18n-apis'
 import {RouterStatic} from '~/router/router-static'
-import {MyStoreProvider as MyStoreProviderV3, MyStoreSpec as StoreSpecV3} from '~/store/store-v3'
+import {MyStoreProvider, MyStoreSpec} from '~/store/store'
 import {useColorSchemePreference} from '~/theme/theme-hooks'
 
 export function RootContext(props: RootContextProps) {
@@ -22,7 +22,7 @@ export function RootContext(props: RootContextProps) {
         (it => PortalProvider({children: it}))
         (it => PortalsProvider({children: it}))
         (it => RouterProvider({children: it, router: Router}))
-        (it => MyStoreProviderV3({children: it, ...StoreSpecV3}))
+        (it => MyStoreProvider({children: it, ...MyStoreSpec}))
     ()
 }
 

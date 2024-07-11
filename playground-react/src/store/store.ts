@@ -9,7 +9,7 @@ import {
     type ReduxReducerArgs,
     type ReduxReducerId,
     type ReduxStatePatch,
-    type StoreDefinition
+    type StoreDefinition,
 } from '@eviljs/react/store'
 import {Env} from '~/env/env-specs'
 import {createState, type StoreState} from '~/store/store-state'
@@ -38,14 +38,14 @@ export const MyStoreActionsSpec = {
 export const MyStoreSpec: StoreDefinition<StoreState, ReduxEvent> = {
     createState,
     reduce: ReduxReducer.fromActions(MyStoreActionsSpec),
-    onDispatch,
+    observer: storeObserver,
 }
 
 export const MyStore = {
     Action: ReduxActions.objectFrom(MyStoreActionsSpec),
 }
 
-export function onDispatch(id: ReduxReducerId, args: ReduxReducerArgs, newState: StoreState, oldState: StoreState) {
+export function storeObserver(id: ReduxReducerId, args: ReduxReducerArgs, newState: StoreState, oldState: StoreState) {
     if (Env.Mode === 'production') {
         return
     }

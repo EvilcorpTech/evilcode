@@ -6,6 +6,5 @@
         "paths": {
             "~/*": ["./*"]
         },
-        "tsBuildInfoFile": "./node_modules/.cache/tsbuildinfo",
     },
 }
