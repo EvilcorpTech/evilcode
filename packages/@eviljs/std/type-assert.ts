@@ -1,5 +1,30 @@
 import {compute} from './fn-compute.js'
-import {ensureArray, ensureArrayOptional, ensureBoolean, ensureBooleanOptional, ensureDate, ensureDateOptional, ensureDefined, ensureEnum, ensureEnumOptional, ensureFunction, ensureFunctionOptional, ensureInteger, ensureIntegerOptional, ensureNumber, ensureNumberOptional, ensureObject, ensureObjectOptional, ensureSome, ensureString, ensureStringNotEmpty, ensureStringNotEmptyOptional, ensureStringOptional, ensureUndefined, throwAssertConditionError} from './type-ensure.js'
+import {
+    ensureArray,
+    ensureArrayOptional,
+    ensureBoolean,
+    ensureBooleanOptional,
+    ensureDate,
+    ensureDateOptional,
+    ensureDefined,
+    ensureEnum,
+    ensureEnumOptional,
+    ensureFunction,
+    ensureFunctionOptional,
+    ensureInteger,
+    ensureIntegerOptional,
+    ensureNumber,
+    ensureNumberOptional,
+    ensureObject,
+    ensureObjectOptional,
+    ensureSome,
+    ensureString,
+    ensureStringNotEmpty,
+    ensureStringNotEmptyOptional,
+    ensureStringOptional,
+    ensureUndefined,
+    throwAssertConditionError,
+} from './type-ensure.js'
 
 // Assertions //////////////////////////////////////////////////////////////////
 

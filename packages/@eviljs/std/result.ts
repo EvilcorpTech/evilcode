@@ -4,7 +4,7 @@ import {isObject} from './type-is.js'
 
 export const ResultErrorTagId = 'error'
 
-export function asResultError<E>(error: E): ResultError<E> {
+export function ResultError<E>(error: E): ResultError<E> {
     return {
         [MonadTag]: ResultErrorTagId,
         error,
@@ -35,7 +35,7 @@ export function splitResultOrError<R>(result: R): [undefined | ResultOf<R>, unde
 }
 
 export function asResultOrError<V>(promise: Promise<V>): Promise<ResultOrError<V, unknown>> {
-    return promise.then(identity, asResultError)
+    return promise.then(identity, ResultError)
 }
 
 // Types ///////////////////////////////////////////////////////////////////////

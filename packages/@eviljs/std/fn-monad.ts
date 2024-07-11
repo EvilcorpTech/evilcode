@@ -2,7 +2,7 @@ import {identity} from './fn-return.js'
 import {tryCatch} from './fn-try.js'
 import type {Io} from './fn-type.js'
 import {omitObjectProps, pickObjectProps} from './object.js'
-import {asResultError, isResultError, type ResultError, type ResultErrorOf, type ResultOf} from './result.js'
+import {ResultError, isResultError, type ResultErrorOf, type ResultOf} from './result.js'
 import {asArray} from './type-as.js'
 import {isNone, isSome} from './type-is.js'
 import type {None} from './type.js'
@@ -42,7 +42,7 @@ export function chaining<V>(chain: Io<V, any>): Io<V, V> {
 
 // Optional ////////////////////////////////////////////////////////////////////
 
-export function mappingOptional<I, II extends I, O1, O2>(onSome: Io<NonNullable<II>, O1>, onNone: Io<Extract<I, None>, O2>): Io<I, O1 | O2>
+export function mappingOptional<I, II extends I, O1, O2>(onSome: Io<NonNullable<II>, O1>, onNone: Io<Extract<II, None>, O2>): Io<I, O1 | O2>
 export function mappingOptional<I, O1, O2>(onSome: Io<NonNullable<I>, O1>, onNone: Io<Extract<I, None>, O2>): Io<I, O1 | O2> {
     return (input: I) => mapOptional(input, onSome, onNone)
 }
@@ -99,7 +99,8 @@ export function omitting<I extends object, P extends keyof I>(props: Array<P>): 
 
 // Result | Error //////////////////////////////////////////////////////////////
 
-export function mappingResultOrError<I, II extends I, O1, O2>(onResult: Io<ResultOf<II>, O1>, onError: Io<ResultErrorOf<I>, O2>): Io<I, O1 | O2>
+export function mappingResultOrError<I, O1, O2>(onResult: Io<ResultOf<I>, O1>, onError: Io<ResultErrorOf<I>, O2>): Io<I, O1 | O2>
+export function mappingResultOrError<I, II extends I, O1, O2>(onResult: Io<ResultOf<II>, O1>, onError: Io<ResultErrorOf<II>, O2>): Io<I, O1 | O2>
 export function mappingResultOrError<I, O1, O2>(onResult: Io<ResultOf<I>, O1>, onError: Io<ResultErrorOf<I>, O2>): Io<I, O1 | O2> {
     return (input: I) => mapResultOrError(input, onResult, onError)
 }
@@ -110,34 +111,37 @@ export function mapResultOrError<I, O1, O2>(input: I, onResult: Io<ResultOf<I>, 
         : mapResultError(input as ResultErrorOf<I>, onError) as O2
 }
 
-export function mappingResult<I, II extends I, O>(onResult: Io<ResultOf<II>, O>): Io<I, ResultErrorOf<I> | O>
-export function mappingResult<I, O>(onResult: Io<ResultOf<I>, O>): Io<I, ResultErrorOf<I> | O> {
+export function mappingResult<I, O>(onResult: Io<ResultOf<I>, O>): Io<I, O | ResultErrorOf<I>>
+export function mappingResult<I, II extends I, O>(onResult: Io<ResultOf<II>, O>): Io<I, O | ResultErrorOf<II>>
+export function mappingResult<I, O>(onResult: Io<ResultOf<I>, O>): Io<I, O | ResultErrorOf<I>> {
     return (input: I) => mapResult(input, onResult)
 }
 
-export function mapResult<I, O>(input: I, onResult: Io<ResultOf<I>, O>): ResultErrorOf<I> | O {
+export function mapResult<I, O>(input: I, onResult: Io<ResultOf<I>, O>): O | ResultErrorOf<I> {
     return ! isResultError(input)
         ? onResult(input as ResultOf<I>)
         : input as ResultErrorOf<I>
 }
 
-export function mappingResultError<I, II extends I, O>(onError: Io<ResultErrorOf<II>, O>): Io<I, ResultOf<I> | O>
-export function mappingResultError<I, O>(onError: Io<ResultErrorOf<I>, O>): Io<I, ResultOf<I> | O> {
+export function mappingResultError<I, O>(onError: Io<ResultErrorOf<I>, O>): Io<I, O | ResultOf<I>>
+export function mappingResultError<I, II extends I, O>(onError: Io<ResultErrorOf<II>, O>): Io<I, O | ResultOf<I>>
+export function mappingResultError<I, O>(onError: Io<ResultErrorOf<I>, O>): Io<I, O | ResultOf<I>> {
     return (input: I) => mapResultError(input, onError)
 }
 
-export function mapResultError<I, O>(input: I, onError: Io<ResultErrorOf<I>, O>): ResultOf<I> | O {
+export function mapResultError<I, O>(input: I, onError: Io<ResultErrorOf<I>, O>): O | ResultOf<I> {
     return isResultError(input)
         ? onError(input as ResultErrorOf<I>)
         : input as ResultOf<I>
 }
 
-export function mappingResultErrorValue<I, II extends I, O>(onError: Io<ResultErrorOf<II>['error'], O>): Io<I, ResultOf<I> | O>
-export function mappingResultErrorValue<I, O>(onError: Io<ResultErrorOf<I>['error'], O>): Io<I, ResultOf<I> | O> {
+export function mappingResultErrorValue<I, O>(onError: Io<ResultErrorOf<I>['error'], O>): Io<I, O | ResultOf<I>>
+export function mappingResultErrorValue<I, II extends I, O>(onError: Io<ResultErrorOf<II>['error'], O>): Io<I, O | ResultOf<I>>
+export function mappingResultErrorValue<I, O>(onError: Io<ResultErrorOf<I>['error'], O>): Io<I, O | ResultOf<I>> {
     return (input: I) => mapResultErrorValue(input, onError)
 }
 
-export function mapResultErrorValue<I, O>(input: I, onError: Io<ResultErrorOf<I>['error'], O>): ResultOf<I> | O {
+export function mapResultErrorValue<I, O>(input: I, onError: Io<ResultErrorOf<I>['error'], O>): O | ResultOf<I> {
     return isResultError(input)
         ? onError(input.error as ResultErrorOf<I>['error'])
         : input as ResultOf<I>
@@ -189,5 +193,5 @@ export function catching<I, O>(onCatch: Io<unknown, O | Promise<O>>): Io<Promise
 export function catchingError<I>(error?: None | never): Io<Promise<I>, Promise<I | ResultError<unknown>>>
 export function catchingError<I, O>(error: O): Io<Promise<I>, Promise<I | ResultError<O>>>
 export function catchingError<I, O>(errorOptional?: O): Io<Promise<I>, Promise<I | ResultError<O>>> {
-    return (input: Promise<I>) => input.catch(error => asResultError(errorOptional ?? error))
+    return (input: Promise<I>) => input.catch(error => ResultError(errorOptional ?? error))
 }

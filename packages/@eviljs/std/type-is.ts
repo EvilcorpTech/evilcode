@@ -1,5 +1,5 @@
 import type {FnArgs} from './fn-type.js'
-import type {None} from './type.js'
+import type {None} from './type-types.js'
 
 export const BooleanLikeTrue = [true, 1, '1', 'yes', 'on', 'true'] as const
 export const BooleanLikeFalse = [false, 0, '0', 'no', 'off', 'false'] as const

@@ -1,6 +1,6 @@
 import {StdError, throwError} from './throw.js'
 import {isArray, isBoolean, isDate, isDefined, isFunction, isInteger, isNone, isNumber, isObject, isSome, isString, isUndefined} from './type-is.js'
-import type {None} from './type.js'
+import type {None} from './type-types.js'
 
 export class InvalidCondition extends StdError {}
 export class InvalidType extends StdError {}
