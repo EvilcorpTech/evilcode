@@ -42,8 +42,7 @@ export function chaining<V>(chain: Io<V, any>): Io<V, V> {
 
 // Optional ////////////////////////////////////////////////////////////////////
 
-export function mappingOptional<I, II extends I, O1, O2>(onSome: Io<NonNullable<II>, O1>, onNone: Io<Extract<II, None>, O2>): Io<I, O1 | O2>
-export function mappingOptional<I, O1, O2>(onSome: Io<NonNullable<I>, O1>, onNone: Io<Extract<I, None>, O2>): Io<I, O1 | O2> {
+export function mappingOptional<I, O1, O2>(onSome: Io<NonNullable<NoInfer<I>>, O1>, onNone: Io<Extract<NoInfer<I>, None>, O2>): Io<I, O1 | O2> {
     return (input: I) => mapOptional(input, onSome, onNone)
 }
 
@@ -53,8 +52,7 @@ export function mapOptional<I, O1, O2>(input: I, onSome: Io<NonNullable<I>, O1>,
         : onNone(input as Extract<I, None>)
 }
 
-export function mappingSome<I, II extends I, O>(onSome: Io<NonNullable<II>, O>): Io<I, O | Extract<I, None>>
-export function mappingSome<I, O>(onSome: Io<NonNullable<I>, O>): Io<I, O | Extract<I, None>> {
+export function mappingSome<I, O>(onSome: Io<NoInfer<I>, O>): Io<I, O | Extract<I, None>> {
     return (input: I) => mapSome(input, onSome)
 }
 
@@ -64,8 +62,7 @@ export function mapSome<I, O>(input: I, onSome: Io<NonNullable<I>, O>): O | Extr
         : input as Extract<I, None>
 }
 
-export function mappingNone<I, II extends I, O>(onNone: Io<Extract<II, None>, O>): Io<I, O | Exclude<I, void | None>>
-export function mappingNone<I, O>(onNone: Io<Extract<I, None>, O>): Io<I, O | Exclude<I, void | None>> {
+export function mappingNone<I, O>(onNone: Io<Extract<NoInfer<I>, None>, O>): Io<I, O | Exclude<I, void | None>> {
     return (input: I) => mapNone(input, onNone)
 }
 
@@ -77,11 +74,11 @@ export function mapNone<I, O>(input: I, onNone: Io<Extract<I, None>, O>): O | Ex
 
 // Boolean /////////////////////////////////////////////////////////////////////
 
-export function mappingBoolean<I, O>(onTrue: Io<true, I>, onFalse: Io<false, O>): Io<boolean, I | O> {
+export function mappingBoolean<O1, O2>(onTrue: Io<true, O1>, onFalse: Io<false, O2>): Io<boolean, O1 | O2> {
     return input => mapBoolean(input, onTrue, onFalse)
 }
 
-export function mapBoolean<I, O>(input: boolean, onTrue: Io<true, I>, onFalse: Io<false, O>): I | O {
+export function mapBoolean<O1, O2>(input: boolean, onTrue: Io<true, O1>, onFalse: Io<false, O2>): O1 | O2 {
     return input
         ? onTrue(input)
         : onFalse(input)
@@ -99,8 +96,6 @@ export function omitting<I extends object, P extends keyof I>(props: Array<P>): 
 
 // Result | Error //////////////////////////////////////////////////////////////
 
-export function mappingResultOrError<I, O1, O2>(onResult: Io<ResultOf<I>, O1>, onError: Io<ResultErrorOf<I>, O2>): Io<I, O1 | O2>
-export function mappingResultOrError<I, II extends I, O1, O2>(onResult: Io<ResultOf<II>, O1>, onError: Io<ResultErrorOf<II>, O2>): Io<I, O1 | O2>
 export function mappingResultOrError<I, O1, O2>(onResult: Io<ResultOf<I>, O1>, onError: Io<ResultErrorOf<I>, O2>): Io<I, O1 | O2> {
     return (input: I) => mapResultOrError(input, onResult, onError)
 }
@@ -111,8 +106,6 @@ export function mapResultOrError<I, O1, O2>(input: I, onResult: Io<ResultOf<I>, 
         : mapResultError(input as ResultErrorOf<I>, onError) as O2
 }
 
-export function mappingResult<I, O>(onResult: Io<ResultOf<I>, O>): Io<I, O | ResultErrorOf<I>>
-export function mappingResult<I, II extends I, O>(onResult: Io<ResultOf<II>, O>): Io<I, O | ResultErrorOf<II>>
 export function mappingResult<I, O>(onResult: Io<ResultOf<I>, O>): Io<I, O | ResultErrorOf<I>> {
     return (input: I) => mapResult(input, onResult)
 }
@@ -123,9 +116,7 @@ export function mapResult<I, O>(input: I, onResult: Io<ResultOf<I>, O>): O | Res
         : input as ResultErrorOf<I>
 }
 
-export function mappingResultError<I, O>(onError: Io<ResultErrorOf<I>, O>): Io<I, O | ResultOf<I>>
-export function mappingResultError<I, II extends I, O>(onError: Io<ResultErrorOf<II>, O>): Io<I, O | ResultOf<I>>
-export function mappingResultError<I, O>(onError: Io<ResultErrorOf<I>, O>): Io<I, O | ResultOf<I>> {
+export function mappingResultError<I, O>(onError: Io<ResultErrorOf<I>, O>): Io<I, ResultOf<I> | O> {
     return (input: I) => mapResultError(input, onError)
 }
 
@@ -135,21 +126,19 @@ export function mapResultError<I, O>(input: I, onError: Io<ResultErrorOf<I>, O>)
         : input as ResultOf<I>
 }
 
-export function mappingResultErrorValue<I, O>(onError: Io<ResultErrorOf<I>['error'], O>): Io<I, O | ResultOf<I>>
-export function mappingResultErrorValue<I, II extends I, O>(onError: Io<ResultErrorOf<II>['error'], O>): Io<I, O | ResultOf<I>>
 export function mappingResultErrorValue<I, O>(onError: Io<ResultErrorOf<I>['error'], O>): Io<I, O | ResultOf<I>> {
     return (input: I) => mapResultErrorValue(input, onError)
 }
 
 export function mapResultErrorValue<I, O>(input: I, onError: Io<ResultErrorOf<I>['error'], O>): O | ResultOf<I> {
     return isResultError(input)
-        ? onError(input.error as ResultErrorOf<I>['error'])
+        ? onError(input.error)
         : input as ResultOf<I>
 }
 
 // Exception ///////////////////////////////////////////////////////////////////
 
-export function trying<I, O1, O2>(onTry: Io<I, O1>, onCatch: Io<unknown, O2>): Io<I, O1 | O2> {
+export function trying<I, O1, O2>(onTry: Io<NoInfer<I>, O1>, onCatch: Io<unknown, O2>): Io<I, O1 | O2> {
     return (input: I) => tryCatch(() => onTry(input), onCatch)
 }
 
@@ -158,16 +147,16 @@ export function trying<I, O1, O2>(onTry: Io<I, O1>, onCatch: Io<unknown, O2>): I
 /*
 * The safest API, requiring to handle the error.
 */
-export function mappingPromise<I, O1, O2>(onThen: Io<I, O1 | Promise<O1>>, onCatch: Io<unknown, O2 | Promise<O2>>): Io<Promise<I>, Promise<O1 | O2>> {
+export function mappingPromise<I, O1, O2>(onThen: Io<NoInfer<I>, O1 | Promise<O1>>, onCatch: Io<unknown, O2 | Promise<O2>>): Io<Promise<I>, Promise<O1 | O2>> {
     return (input: Promise<I>) => input.then(onThen).catch(onCatch)
 }
 
 /*
 * Sugar API, for easy prototyping.
 */
-export function then<I, O1>(onThen: Io<I, O1 | Promise<O1>>, onCatch?: never): Io<Promise<I>, Promise<O1>>
-export function then<I, O1, O2>(onThen: Io<I, O1 | Promise<O1>>, onCatch: Io<unknown, O2 | Promise<O2>>): Io<Promise<I>, Promise<O1 | O2>>
-export function then<I, O1, O2>(onThen: Io<I, O1 | Promise<O1>>, onCatch?: Io<unknown, O2 | Promise<O2>>): Io<Promise<I>, Promise<O1 | O2>> {
+export function then<I, O1>(onThen: Io<NoInfer<I>, O1 | Promise<O1>>, onCatch?: never): Io<Promise<I>, Promise<O1>>
+export function then<I, O1, O2>(onThen: Io<NoInfer<I>, O1 | Promise<O1>>, onCatch: Io<unknown, O2 | Promise<O2>>): Io<Promise<I>, Promise<O1 | O2>>
+export function then<I, O1, O2>(onThen: Io<NoInfer<I>, O1 | Promise<O1>>, onCatch?: Io<unknown, O2 | Promise<O2>>): Io<Promise<I>, Promise<O1 | O2>> {
     return ! onCatch
         ? (input: Promise<I>) => input.then(onThen)
         : (input: Promise<I>) => input.then(onThen).catch(onCatch)
@@ -176,7 +165,7 @@ export function then<I, O1, O2>(onThen: Io<I, O1 | Promise<O1>>, onCatch?: Io<un
 /*
 * Utility API, mapping the fulfillment.
 */
-export function awaiting<I, O>(onThen: Io<I, O | Promise<O>>): Io<Promise<I>, Promise<O>> {
+export function awaiting<I, O>(onThen: Io<NoInfer<I>, O | Promise<O>>): Io<Promise<I>, Promise<O>> {
     return (input: Promise<I>) => input.then(onThen)
 }
 

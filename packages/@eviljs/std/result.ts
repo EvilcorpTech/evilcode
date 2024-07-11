@@ -4,7 +4,7 @@ import {isObject} from './type-is.js'
 
 export const ResultErrorTagId = 'error'
 
-export function ResultError<E>(error: E): ResultError<E> {
+export function ResultError<const E>(error: E): ResultError<E> {
     return {
         [MonadTag]: ResultErrorTagId,
         error,
