@@ -5,6 +5,7 @@
         "alwaysStrict": true,
         "exactOptionalPropertyTypes": true,
         "forceConsistentCasingInFileNames": true,
+        "isolatedModules": true,
         "noEmitOnError": true,
         "noErrorTruncation": true,
         "noImplicitAny": true,

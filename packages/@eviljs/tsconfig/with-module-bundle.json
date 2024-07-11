@@ -1,9 +1,0 @@
-{
-    "compilerOptions": {
-        "allowSyntheticDefaultImports": true,
-        "module": "esnext",
-        "moduleDetection": "auto",
-        "moduleResolution": "bundler",
-        "resolveJsonModule": true
-    }
-}

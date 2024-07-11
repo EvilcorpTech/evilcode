@@ -1,12 +1,16 @@
 {
     "extends": [
-        "./with-api-modern-web.json",
         "./with-check-strict.json",
-        "./with-compile-lib.json",
-        "./with-jsx-solid.json",
-        "./with-module-node.json"
+        "./with-lib.json"
     ],
     "compilerOptions": {
-        "emitDeclarationOnly": true
+        "emitDeclarationOnly": true,
+        "jsx": "preserve",
+        "jsxImportSource": "solid-js",
+        "lib": ["esnext", "dom", "dom.iterable", "webworker"],
+        "module": "nodenext",
+        "moduleDetection": "auto",
+        "moduleResolution": "nodenext",
+        "target": "esnext"
     }
 }

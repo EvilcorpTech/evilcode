@@ -1,11 +1,17 @@
 {
     "extends": [
-        "./with-api-modern-web.json",
-        "./with-check-strict.json",
-        "./with-compile-app.json",
-        "./with-jsx-react.json",
-        "./with-module-bundle.json"
+        "./with-check-strict.json"
     ],
     "compilerOptions": {
+        "allowSyntheticDefaultImports": true,
+        "jsx": "react-jsx",
+        "lib": ["esnext", "dom", "dom.iterable", "webworker"],
+        "module": "esnext",
+        "moduleDetection": "auto",
+        "moduleResolution": "bundler",
+        "noEmit": true,
+        "resolveJsonModule": true,
+        "skipLibCheck": true,
+        "target": "esnext"
     }
 }

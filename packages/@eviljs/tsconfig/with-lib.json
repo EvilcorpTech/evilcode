@@ -1,15 +1,13 @@
 {
-    "compileOnSave": true,
     "compilerOptions": {
-        "declaration": false,
+        "declaration": true,
         "declarationMap": false,
-        "importHelpers": false,
+        "importHelpers": true,
         "incremental": true,
         "inlineSourceMap": false,
         "inlineSources": false,
-        "noEmit": true,
-        "noEmitHelpers": false,
+        "isolatedDeclarations": true,
         "skipLibCheck": true,
-        "sourceMap": true
+        "sourceMap": false
     }
 }

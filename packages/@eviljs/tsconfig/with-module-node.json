@@ -1,8 +1,0 @@
-{
-    "compilerOptions": {
-        "allowSyntheticDefaultImports": true,
-        "module": "nodenext",
-        "moduleDetection": "auto",
-        "moduleResolution": "nodenext"
-    }
-}

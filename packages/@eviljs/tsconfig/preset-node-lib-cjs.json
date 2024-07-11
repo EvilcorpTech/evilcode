@@ -4,10 +4,12 @@
         "./with-lib.json"
     ],
     "compilerOptions": {
+        "esModuleInterop": true,
+        "importHelpers": true,
         "lib": ["esnext", "dom", "dom.iterable", "webworker"],
-        "module": "nodenext",
+        "module": "commonjs",
         "moduleDetection": "auto",
-        "moduleResolution": "nodenext",
+        "moduleResolution": "node10",
         "target": "esnext"
     }
 }
