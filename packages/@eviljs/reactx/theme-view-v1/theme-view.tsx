@@ -1,14 +1,13 @@
 import {classes} from '@eviljs/react/classes.js'
-import type {Hsl} from '@eviljs/std/color.js'
-import {hslFromRgb, rgbFromHexString, rgbFromHsl, rgbToHexString} from '@eviljs/std/color.js'
+import {colorHslFromRgbHexString, colorRgbHexStringFromHsl, type ColorHslDict} from '@eviljs/std/color.js'
 import {times} from '@eviljs/std/iter.js'
 import {Fragment, useEffect, useRef, useState} from 'react'
 import {ExampleIcon as Icon} from '../icon-example/icon-example-v2.js'
 
 export function ThemeView(props: ThemeViewProps): JSX.Element {
     const {className, head, children, ...otherProps} = props
-    const [primaryAccent, setPrimaryAccent] = useState<Hsl>([0, 0, 0])
-    const [secondaryAccent, setSecondaryAccent] = useState<Hsl>([0, 0, 0])
+    const [primaryAccent, setPrimaryAccent] = useState<ColorHslDict>({h: 0, s: 0, l: 0})
+    const [secondaryAccent, setSecondaryAccent] = useState<ColorHslDict>({h: 0, s: 0, l: 0})
     const [theme, setTheme] = useState<'light' | 'dark'>('light')
 
     return (
@@ -16,12 +15,12 @@ export function ThemeView(props: ThemeViewProps): JSX.Element {
             {...otherProps}
             className={classes('ThemeView-t2eb', `std-root std-theme-${theme} std-text std-color-theme std-background-theme std-width-xl`, className)}
             style={{
-                '--std-color-primary-h': primaryAccent[0] * 360 + 'deg',
-                '--std-color-primary-s': primaryAccent[1] * 100 + '%',
-                '--std-color-primary-l': primaryAccent[2] * 100 + '%',
-                '--std-color-secondary-h': secondaryAccent[0] * 360 + 'deg',
-                '--std-color-secondary-s': secondaryAccent[1] * 100 + '%',
-                '--std-color-secondary-l': secondaryAccent[2] * 100 + '%',
+                '--std-color-primary-h': primaryAccent.h * 360 + 'deg',
+                '--std-color-primary-s': primaryAccent.s * 100 + '%',
+                '--std-color-primary-l': primaryAccent.l * 100 + '%',
+                '--std-color-secondary-h': secondaryAccent.h * 360 + 'deg',
+                '--std-color-secondary-s': secondaryAccent.s * 100 + '%',
+                '--std-color-secondary-l': secondaryAccent.l * 100 + '%',
                 ...otherProps.style,
             } as React.CSSProperties}
         >
@@ -62,8 +61,8 @@ export function Picker(props: PickerProps): JSX.Element {
     useEffect(() => {
         const primaryAccent = readThemeColor('std-color-primary')
         const secondaryAccent = readThemeColor('std-color-secondary')
-        primaryRef.current!.value = computeHexFromHslColor(primaryAccent)
-        secondaryRef.current!.value = computeHexFromHslColor(secondaryAccent)
+        primaryRef.current!.value = colorRgbHexStringFromHsl(primaryAccent)
+        secondaryRef.current!.value = colorRgbHexStringFromHsl(secondaryAccent)
 
         onPrimaryChange(primaryAccent)
         onSecondaryChange(secondaryAccent)
@@ -75,7 +74,7 @@ export function Picker(props: PickerProps): JSX.Element {
                 ref={primaryRef}
                 className="picker-t8c2"
                 type="color"
-                onChange={event => onPrimaryChange(computeHslFromHexColor(event.target.value))}
+                onChange={event => onPrimaryChange(colorHslFromRgbHexString(event.target.value))}
             />
             <i className="std-space-h5"/>
             <label>Theme</label>
@@ -84,7 +83,7 @@ export function Picker(props: PickerProps): JSX.Element {
                 ref={secondaryRef}
                 className="picker-t8c2"
                 type="color"
-                onChange={event => onSecondaryChange(computeHslFromHexColor(event.target.value))}
+                onChange={event => onSecondaryChange(colorHslFromRgbHexString(event.target.value))}
             />
 
             <i className="std-space-h5"/>
@@ -562,7 +561,7 @@ export function Shadows(): JSX.Element {
     )
 }
 
-export function readThemeColor(type: string): Hsl {
+export function readThemeColor(type: string): ColorHslDict {
     const el = document.body
     const hProp = window.getComputedStyle(el).getPropertyValue(`--${type}-h`)
     const sProp = window.getComputedStyle(el).getPropertyValue(`--${type}-s`)
@@ -570,19 +569,7 @@ export function readThemeColor(type: string): Hsl {
     const h = Number(hProp.replace('deg', '')) / 360
     const s = Number(sProp.replace('%', '')) / 100
     const l = Number(lProp.replace('%', '')) / 100
-    return [h, s, l]
-}
-
-export function computeHslFromHexColor(hex: string): Hsl {
-    const rgb = rgbFromHexString(hex)
-    const hsl = hslFromRgb(...rgb)
-    return hsl
-}
-
-export function computeHexFromHslColor(hsl: Hsl): string {
-    const rgb = rgbFromHsl(...hsl)
-    const hex = rgbToHexString(...rgb)
-    return hex
+    return {h, s, l}
 }
 
 // Types ///////////////////////////////////////////////////////////////////////
@@ -592,7 +579,7 @@ export interface ThemeViewProps extends React.HTMLAttributes<HTMLDivElement> {
 }
 
 export interface PickerProps {
-    onPrimaryChange(hsl: Hsl): void
-    onSecondaryChange(hsl: Hsl): void
+    onPrimaryChange(hsl: ColorHslDict): void
+    onSecondaryChange(hsl: ColorHslDict): void
     onThemeChange(theme: 'light' | 'dark'): void
 }
