@@ -1,6 +1,7 @@
 {
     "extends": [
-        "./with-check-strict.json"
+        "./with-check-strict.json",
+        "./with-app.json"
     ],
     "compilerOptions": {
         "allowSyntheticDefaultImports": true,
@@ -9,9 +10,7 @@
         "module": "esnext",
         "moduleDetection": "auto",
         "moduleResolution": "bundler",
-        "noEmit": true,
         "resolveJsonModule": true,
-        "skipLibCheck": true,
         "target": "esnext"
     }
 }

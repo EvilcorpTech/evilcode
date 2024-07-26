@@ -1,9 +1,8 @@
 {
     "compilerOptions": {
-        "declaration": true,
         "importHelpers": true,
         "incremental": true,
-        "isolatedDeclarations": true,
+        "noEmit": true,
         "noErrorTruncation": true,
         "skipLibCheck": true
     }
