@@ -1,15 +1,6 @@
 {
     "$schema": "./node_modules/nx/schemas/nx-schema.json",
     "cacheDirectory": "./node_modules/.cache/nx",
-    "targetDefaults": {
-        "build": {
-            "outputs": [
-                "{projectRoot}/**/*.css",
-                "{projectRoot}/**/*.d.ts",
-                "{projectRoot}/**/*.js"
-            ]
-        }
-    },
     "tasksRunnerOptions": {
         "default": {
             "runner": "nx/tasks-runners/default",
@@ -17,6 +8,21 @@
                 "cacheableOperations": ["build"],
                 "useDaemonProcess": false
             }
+        }
+    },
+    "targetDefaults": {
+        "build": {
+            "dependsOn": ["^build"],
+            "inputs": [
+                "{workspaceRoot}/package.json",
+                "{workspaceRoot}/pnpm-lock.yaml",
+                "{projectRoot}/**/*.ts",
+                "!{projectRoot}/**/*.d.ts"
+            ],
+            "outputs": [
+                "{projectRoot}/**/*.d.ts",
+                "{projectRoot}/**/*.js"
+            ]
         }
     }
 }
