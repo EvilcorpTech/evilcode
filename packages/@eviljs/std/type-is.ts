@@ -111,6 +111,7 @@ export function isIterator(value: unknown):
         | AsyncGenerator<unknown, unknown, unknown>
 {
     return true
+        // && value instanceof Iterator // FIXME: when TypeScript supports it.
         && Boolean(value)
         && (value instanceof Object)
         && ('next' in value)
