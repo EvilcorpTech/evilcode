@@ -1,0 +1,13 @@
+{
+    "folders": [
+        {
+            "path": ".",
+        },
+    ],
+    "settings": {
+        "files.exclude": {
+            "build/**/*": true,
+        },
+        "typescript.tsdk": "./dev/node_modules/typescript/lib",
+    },
+}
