@@ -1,11 +1,1 @@
-/packages/.nx/
-/packages/@evil*/**/*.cjs
-/packages/@evil*/**/*.d.cts
-/packages/@evil*/**/*.d.mts
-/packages/@evil*/**/*.d.ts
-/packages/@evil*/**/*.js
-/packages/@evil*/**/*.mjs
-node_modules/
-package-lock.json
-pnpm-lock.yaml
-tsconfig.tsbuildinfo
+.DS_Store

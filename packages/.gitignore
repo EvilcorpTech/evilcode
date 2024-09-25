@@ -1,0 +1,17 @@
+node_modules/
+package-lock.json
+pnpm-lock.yaml
+
+/.nx/
+.tsbuildinfo
+tsconfig.tsbuildinfo
+
+/@eviljs/*/cjs/
+/@eviljs/*/esm/
+/@eviljs/**/*.cjs
+/@eviljs/**/*.d.cts
+/@eviljs/**/*.d.mts
+/@eviljs/**/*.d.ts
+/@eviljs/**/*.js
+/@eviljs/**/*.map
+/@eviljs/**/*.mjs
