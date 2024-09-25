@@ -3,13 +3,13 @@ import {piping} from './fn-pipe.js'
 export function defineMachine<S, E, P extends object = {}>(
     args: MachineDefinitionOptions<S, E> & P,
 ): MachineDefinition<S, E> & Omit<P, keyof MachineDefinitionOptions<S, E>> {
-    const {createState, reduce, log, pipeline, ...otherProps} = args
+    const {createState, effect, pipeline, reduce, ...otherProps} = args
 
     function reduceMachine(oldState: S, event: E) {
         return piping(oldState)
             (newState => reduce(newState, event))
             (newState => pipeline?.reduce((state, transform) => transform(state, oldState, event), newState) ?? newState)
-            (newState => (log?.(newState, oldState, event), newState))
+            (newState => (effect?.(newState, oldState, event), newState))
         ()
     }
 
@@ -22,7 +22,7 @@ export interface MachineDefinitionOptions<S, E> {
     createState(): S
     reduce(state: S, event: E): S
     pipeline?: undefined | Array<MachinePipelineTransformer<S, E>>
-    log?: undefined | MachineLogger<S, E>
+    effect?: undefined | MachineLogger<S, E>
 }
 
 export interface MachineDefinition<S, E> {
