@@ -1,6 +1,6 @@
-import {classes} from '@eviljs/react/classes.js'
-import {displayName} from '@eviljs/react/display-name.js'
-import {useMergeRefs} from '@eviljs/react/ref.js'
+import {classes} from '@eviljs/react/classes'
+import {displayName} from '@eviljs/react/display-name'
+import {useMergeRefs} from '@eviljs/react/ref'
 import {forwardRef, useLayoutEffect, useMemo, useRef, useState} from 'react'
 
 export const Input = displayName('Input', forwardRef(function Input(

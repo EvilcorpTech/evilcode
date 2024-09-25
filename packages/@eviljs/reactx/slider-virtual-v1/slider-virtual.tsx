@@ -1,9 +1,9 @@
-import {classes} from '@eviljs/react/classes.js'
-import {displayName} from '@eviljs/react/display-name.js'
-import {useCallbackThrottled} from '@eviljs/react/event.js'
-import {mergingRefs} from '@eviljs/react/ref.js'
-import {useResizeObserver} from '@eviljs/react/resize-observer.js'
-import {isFunction} from '@eviljs/std/type-is.js'
+import {classes} from '@eviljs/react/classes'
+import {displayName} from '@eviljs/react/display-name'
+import {useCallbackThrottled} from '@eviljs/react/event'
+import {mergingRefs} from '@eviljs/react/ref'
+import {useResizeObserver} from '@eviljs/react/resize-observer'
+import {isFunction} from '@eviljs/std/type-is'
 import {forwardRef, useCallback, useLayoutEffect, useMemo, useRef, useState} from 'react'
 
 export const SliderVirtual = displayName('SliderVirtual', forwardRef(function SliderVirtual<I>(

@@ -1,10 +1,10 @@
-import type {Task} from '@eviljs/std/fn-type.js'
-import {Future, createFuture} from '@eviljs/std/promise-future.js'
-import {createLinearScale, directionOf, distanceBetween} from '@eviljs/std/scale.js'
+import type {Task} from '@eviljs/std/fn-type'
+import {Future, createFuture} from '@eviljs/std/promise-future'
+import {createLinearScale, directionOf, distanceBetween} from '@eviljs/std/scale'
 
-export {wait} from '@eviljs/std/async.js'
-export {playTimeline} from '@eviljs/std/timeline.js'
-export type {TimelineAsync, TimelineParallel, TimelineSequence, TimelineTask} from '@eviljs/std/timeline.js'
+export {wait} from '@eviljs/std/async'
+export {playTimeline} from '@eviljs/std/timeline'
+export type {TimelineAsync, TimelineParallel, TimelineSequence, TimelineTask} from '@eviljs/std/timeline'
 
 export const SpringPrecision: number = 200
 export const SpringSnapping: number = 1 / SpringPrecision

@@ -1,6 +1,6 @@
-import {wait} from '@eviljs/std/async.js'
-import {OneSecondInMs} from '@eviljs/std/date.js'
-import type {Fn, Io} from '@eviljs/std/fn-type.js'
+import {wait} from '@eviljs/std/async'
+import {OneSecondInMs} from '@eviljs/std/date'
+import type {Fn, Io} from '@eviljs/std/fn-type'
 import {cloneRequestWithBody} from './request-clone.js'
 
 /**

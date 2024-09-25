@@ -1,13 +1,13 @@
-import type {Io} from '@eviljs/std/fn-type.js'
-import type {Ref} from '@eviljs/std/ref.js'
-import {asArray} from '@eviljs/std/type-as.js'
-import {isArray, isBoolean, isNone, isNull, isNumber, isString, isUndefined} from '@eviljs/std/type-is.js'
-import type {StringAutocompleted} from '@eviljs/std/type.js'
+import type {Io} from '@eviljs/std/fn-type'
+import type {Ref} from '@eviljs/std/ref'
+import {asArray} from '@eviljs/std/type-as'
+import {isArray, isBoolean, isNone, isNull, isNumber, isString, isUndefined} from '@eviljs/std/type-is'
+import type {StringAutocompleted} from '@eviljs/std/type'
 import {classes, type Classes} from './classes.js'
 import {removeChildren} from './dom.js'
 
-export {createRef} from '@eviljs/std/ref.js'
-export type {Ref} from '@eviljs/std/ref.js'
+export {createRef} from '@eviljs/std/ref'
+export type {Ref} from '@eviljs/std/ref'
 
 export function createElement<E extends RenderElement>(
     tag: string,

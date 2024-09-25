@@ -1,5 +1,5 @@
-import type {Task} from '@eviljs/std/fn-type.js'
-import {asArray} from '@eviljs/std/type-as.js'
+import type {Task} from '@eviljs/std/fn-type'
+import {asArray} from '@eviljs/std/type-as'
 import {useEffect} from 'react'
 
 export function useOnClickOutside(

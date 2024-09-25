@@ -2,12 +2,12 @@
 // https://github.com/puppeteer/puppeteer/blob/master/docs/api.md#class-page
 // https://developers.google.com/web/tools/puppeteer/articles/ssr
 
-import {OneMinuteInMs} from '@eviljs/std/date.js'
-import {piping} from '@eviljs/std/fn-pipe.js'
-import {returnUndefined} from '@eviljs/std/fn-return.js'
-import {tryCatch} from '@eviljs/std/fn-try.js'
-import {isSome} from '@eviljs/std/type-is.js'
-import {asBaseUrl} from '@eviljs/web/url-path.js'
+import {OneMinuteInMs} from '@eviljs/std/date'
+import {piping} from '@eviljs/std/fn-pipe'
+import {returnUndefined} from '@eviljs/std/fn-return'
+import {tryCatch} from '@eviljs/std/fn-try'
+import {isSome} from '@eviljs/std/type-is'
+import {asBaseUrl} from '@eviljs/web/url-path'
 import {createHash} from 'node:crypto'
 import {mkdir, writeFile} from 'node:fs/promises'
 import {resolve as resolvePath} from 'node:path'

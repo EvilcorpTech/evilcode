@@ -1,4 +1,4 @@
-import {compute, type Computable} from '@eviljs/std/fn-compute.js'
+import {compute, type Computable} from '@eviljs/std/fn-compute'
 import {useLayoutEffect, useState} from 'react'
 
 export function Awaited<V>(props: AwaitedProps<V>): React.ReactNode {

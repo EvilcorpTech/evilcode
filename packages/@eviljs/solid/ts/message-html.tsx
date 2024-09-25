@@ -1,4 +1,4 @@
-import {isString} from '@eviljs/std/type-is.js'
+import {isString} from '@eviljs/std/type-is'
 import {splitProps, type JSX} from 'solid-js'
 import {classes} from './classes.js'
 import {Html} from './html.jsx'

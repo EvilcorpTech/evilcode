@@ -1,6 +1,6 @@
-import {Box, type BoxProps} from '@eviljs/react/box.js'
-import type {VoidProps} from '@eviljs/react/type.js'
-import {classes} from '@eviljs/web/classes.js'
+import {Box, type BoxProps} from '@eviljs/react/box'
+import type {VoidProps} from '@eviljs/react/type'
+import {classes} from '@eviljs/web/classes'
 
 export function PlaceholderBlock(props: PlaceholderBlockProps): JSX.Element {
     const {className, height, style, width, ...otherProps} = props

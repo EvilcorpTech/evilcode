@@ -1,5 +1,5 @@
-import type {Io} from '@eviljs/std/fn-type.js'
-import type {StringAutocompleted} from '@eviljs/std/type.js'
+import type {Io} from '@eviljs/std/fn-type'
+import type {StringAutocompleted} from '@eviljs/std/type'
 import {useRequestHeaders} from './request-init.js'
 
 /**

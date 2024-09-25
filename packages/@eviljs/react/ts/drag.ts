@@ -20,11 +20,11 @@ import {
     type DragScrollChange,
     type DragScrollOptions,
     type DragScrollState,
-} from '@eviljs/web/drag.js'
+} from '@eviljs/web/drag'
 import {useCallback, useEffect, useRef, useState} from 'react'
 
-export {asDragPointerEvent} from '@eviljs/web/drag.js'
-export type {DragMoveChange, DragOptions, DragPointerEvent} from '@eviljs/web/drag.js'
+export {asDragPointerEvent} from '@eviljs/web/drag'
+export type {DragMoveChange, DragOptions, DragPointerEvent} from '@eviljs/web/drag'
 
 // React events handlers are slow, and React.onMouseMove leads to high cpu usage
 // even when the event listener is detached, due to the Synthetic Event global

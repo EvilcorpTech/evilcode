@@ -1,8 +1,8 @@
-import {createContainer, type Container, type ContainerFactoriesOf, type ContainerServicesMap} from '@eviljs/std/container.js'
+import {createContainer, type Container, type ContainerFactoriesOf, type ContainerServicesMap} from '@eviljs/std/container'
 import {useContext, useMemo} from 'react'
 import {defineContext} from './ctx.js'
 
-export {createContainer, type ContainerServiceOptions, type ContainerStateProps} from '@eviljs/std/container.js'
+export {createContainer, type ContainerServiceOptions, type ContainerStateProps} from '@eviljs/std/container'
 
 export function setupContainer<M extends ContainerServicesMap, S = undefined>(
     options: ContainerBoundCase1Options<M, S>,

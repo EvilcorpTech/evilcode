@@ -1,4 +1,4 @@
-import type {Io} from '@eviljs/std/fn-type.js'
+import type {Io} from '@eviljs/std/fn-type'
 import {JsonType} from './mimetype.js'
 import {mergeRequest, mergeRequestHeaders} from './request-merge.js'
 

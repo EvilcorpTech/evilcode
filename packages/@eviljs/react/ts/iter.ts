@@ -1,1 +1,1 @@
-export {times} from '@eviljs/std/iter.js'
+export {times} from '@eviljs/std/iter'

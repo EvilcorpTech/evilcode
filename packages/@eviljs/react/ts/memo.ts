@@ -1,4 +1,4 @@
-import type {Fn, FnArgs} from '@eviljs/std/fn-type.js'
+import type {Fn, FnArgs} from '@eviljs/std/fn-type'
 import {useCallback, useLayoutEffect, useMemo, useRef} from 'react'
 
 /*

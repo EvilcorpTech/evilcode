@@ -1,4 +1,4 @@
-import {classes} from '@eviljs/react/classes.js'
+import {classes} from '@eviljs/react/classes'
 
 export function Tooltip(props: TooltipProps): undefined | JSX.Element {
     const {children, className, content, contentClass, position, ...otherProps} = props

@@ -1,6 +1,6 @@
-import {useRouteArgs, useRoutePathTest} from '@eviljs/react/router.js'
-import {isArray, isFunction} from '@eviljs/std/type-is.js'
-import {routeRegexpFromPattern} from '@eviljs/web/route.js'
+import {useRouteArgs, useRoutePathTest} from '@eviljs/react/router'
+import {isArray, isFunction} from '@eviljs/std/type-is'
+import {routeRegexpFromPattern} from '@eviljs/web/route'
 import {Children, cloneElement, useMemo} from 'react'
 
 export function RouteArgs(props: RouteArgsProps): undefined | JSX.Element | React.ReactNode {

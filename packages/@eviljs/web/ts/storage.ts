@@ -1,8 +1,8 @@
-import {tryCatch} from '@eviljs/std/fn-try.js'
-import type {Io} from '@eviljs/std/fn-type.js'
-import {createReadWrite, type RwSync} from '@eviljs/std/rw.js'
-import {asBoolean, asNumber} from '@eviljs/std/type-as.js'
-import {isUndefined} from '@eviljs/std/type-is.js'
+import {tryCatch} from '@eviljs/std/fn-try'
+import type {Io} from '@eviljs/std/fn-type'
+import {createReadWrite, type RwSync} from '@eviljs/std/rw'
+import {asBoolean, asNumber} from '@eviljs/std/type-as'
+import {isUndefined} from '@eviljs/std/type-is'
 
 export function createBrowserStorageAccessor(
     key: string,

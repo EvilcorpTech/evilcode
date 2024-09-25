@@ -1,10 +1,10 @@
-import {Box, type BoxProps} from '@eviljs/react/box.js'
-import {useBrowserFeatures} from '@eviljs/react/browser.js'
-import {classes} from '@eviljs/react/classes.js'
-import {displayName} from '@eviljs/react/display-name.js'
-import {useScrollHorizontal} from '@eviljs/react/drag.js'
-import {mergingRefs} from '@eviljs/react/ref.js'
-import {isUndefined} from '@eviljs/std/type-is.js'
+import {Box, type BoxProps} from '@eviljs/react/box'
+import {useBrowserFeatures} from '@eviljs/react/browser'
+import {classes} from '@eviljs/react/classes'
+import {displayName} from '@eviljs/react/display-name'
+import {useScrollHorizontal} from '@eviljs/react/drag'
+import {mergingRefs} from '@eviljs/react/ref'
+import {isUndefined} from '@eviljs/std/type-is'
 import {forwardRef, useMemo, useRef} from 'react'
 
 export const Scrollable: React.ComponentType<ScrollableProps> = displayName('Scrollable', forwardRef(function Scrollable(

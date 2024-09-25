@@ -1,4 +1,4 @@
-import type {RouteArgs, RoutePathCodec} from '@eviljs/web/route-v2.js'
+import type {RouteArgs, RoutePathCodec} from '@eviljs/web/route-v2'
 import {useCallback} from 'react'
 import {useI18n} from './i18n.js'
 

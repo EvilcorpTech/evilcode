@@ -1,6 +1,6 @@
-import {asArray} from '@eviljs/std/type-as.js'
-import {isSome, isString, isUndefined} from '@eviljs/std/type-is.js'
-import {flushStyles} from '@eviljs/web/animation.js'
+import {asArray} from '@eviljs/std/type-as'
+import {isSome, isString, isUndefined} from '@eviljs/std/type-is'
+import {flushStyles} from '@eviljs/web/animation'
 import {
     Fragment,
     cloneElement,

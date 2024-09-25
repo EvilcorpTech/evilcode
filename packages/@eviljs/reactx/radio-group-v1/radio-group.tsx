@@ -1,4 +1,4 @@
-import {classes} from '@eviljs/react/classes.js'
+import {classes} from '@eviljs/react/classes'
 import {useMemo} from 'react'
 
 export let RadioGroupId = 0

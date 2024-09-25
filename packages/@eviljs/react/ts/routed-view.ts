@@ -1,4 +1,4 @@
-import {createCssTransition, playTimeline} from '@eviljs/web/animation.js'
+import {createCssTransition, playTimeline} from '@eviljs/web/animation'
 import {useEffect, useMemo, useState} from 'react'
 import {useRouteTransition} from './router.js'
 import type {StateManager} from './state.js'

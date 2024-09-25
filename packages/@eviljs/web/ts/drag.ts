@@ -1,5 +1,5 @@
-import type {Task} from '@eviljs/std/fn-type.js'
-import {isNumber} from '@eviljs/std/type-is.js'
+import type {Task} from '@eviljs/std/fn-type'
+import {isNumber} from '@eviljs/std/type-is'
 
 export function attachDragDraggingListeners(element: DragElement, options: DragListeners): Task {
     const eventOptions = {capture: true, passive: true} satisfies AddEventListenerOptions

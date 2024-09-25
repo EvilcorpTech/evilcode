@@ -1,8 +1,8 @@
-import type {Task} from '@eviljs/std/fn-type.js'
-import {exposePreloadHintElement, type PreloadElementAttrs, type PreloadElementOptions} from '@eviljs/web/preload.js'
+import type {Task} from '@eviljs/std/fn-type'
+import {exposePreloadHintElement, type PreloadElementAttrs, type PreloadElementOptions} from '@eviljs/web/preload'
 import {useEffect} from 'react'
 
-export type {PreloadElementAttrs} from '@eviljs/web/preload.js'
+export type {PreloadElementAttrs} from '@eviljs/web/preload'
 
 export function usePreloadHint(attrs: PreloadElementAttrs, options?: undefined | UsePreloadHintOptions): void {
     const active = options?.active ?? true

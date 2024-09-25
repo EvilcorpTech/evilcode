@@ -1,4 +1,4 @@
-import {throwError, StdError} from '@eviljs/std/throw.js'
+import {throwError, StdError} from '@eviljs/std/throw'
 
 export class InvalidResponse extends StdError {}
 

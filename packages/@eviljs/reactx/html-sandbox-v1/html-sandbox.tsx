@@ -1,5 +1,5 @@
-import {classes} from '@eviljs/react/classes.js'
-import {HtmlSandbox as HtmlSandboxElement} from '@eviljs/webx/html-sandbox.js'
+import {classes} from '@eviljs/react/classes'
+import {HtmlSandbox as HtmlSandboxElement} from '@eviljs/webx/html-sandbox'
 import {createElement} from 'react'
 
 export const HtmlSandboxTag = 'html-sandbox'

@@ -1,7 +1,7 @@
-import type {Io, Task} from '@eviljs/std/fn-type.js'
-import {asArray} from '@eviljs/std/type-as.js'
-import {isArray, isRegExp} from '@eviljs/std/type-is.js'
-import type {ElementOf} from '@eviljs/std/type.js'
+import type {Io, Task} from '@eviljs/std/fn-type'
+import {asArray} from '@eviljs/std/type-as'
+import {isArray, isRegExp} from '@eviljs/std/type-is'
+import type {ElementOf} from '@eviljs/std/type'
 
 export const MatchStart = '^'
 export const MatchEnd = '(?:/)?$'

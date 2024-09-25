@@ -1,5 +1,5 @@
-import {classes} from '@eviljs/react/classes.js'
-import {times} from '@eviljs/std/iter.js'
+import {classes} from '@eviljs/react/classes'
+import {times} from '@eviljs/std/iter'
 import {useState} from 'react'
 import {Accordion, AccordionList} from '../accordion-v1/accordion.js'
 import {ButtonArmored} from '../button-armored-v1/button-armored.js'

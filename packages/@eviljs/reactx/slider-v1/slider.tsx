@@ -1,6 +1,6 @@
-import {classes} from '@eviljs/react/classes.js'
-import {asArray} from '@eviljs/std/type-as.js'
-import type {ValueOf} from '@eviljs/std/type.js'
+import {classes} from '@eviljs/react/classes'
+import {asArray} from '@eviljs/std/type-as'
+import type {ValueOf} from '@eviljs/std/type'
 
 export const SliderDirection = {
     Row: 'row' as const,

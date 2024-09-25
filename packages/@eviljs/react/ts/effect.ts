@@ -1,4 +1,4 @@
-import type {Fn, Task} from '@eviljs/std/fn-type.js'
+import type {Fn, Task} from '@eviljs/std/fn-type'
 import {useEffect, useRef} from 'react'
 
 /*

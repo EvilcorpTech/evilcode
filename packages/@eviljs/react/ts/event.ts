@@ -1,5 +1,5 @@
-import {debounced, throttled, type EventTask} from '@eviljs/std/fn-event.js'
-import type {Fn, FnArgs} from '@eviljs/std/fn-type.js'
+import {debounced, throttled, type EventTask} from '@eviljs/std/fn-event'
+import type {Fn, FnArgs} from '@eviljs/std/fn-type'
 import {useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState} from 'react'
 import type {StateInit, StateSetter} from './state.js'
 

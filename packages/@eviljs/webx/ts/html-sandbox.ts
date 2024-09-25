@@ -1,5 +1,5 @@
-import {tryOrValue} from '@eviljs/std/fn-try.js'
-import {onMounted, useEventListener, WebElement} from '@eviljs/web/element.js'
+import {tryOrValue} from '@eviljs/std/fn-try'
+import {onMounted, useEventListener, WebElement} from '@eviljs/web/element'
 
 /*
 * EXAMPLE

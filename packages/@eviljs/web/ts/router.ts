@@ -1,5 +1,5 @@
-import type {ReactiveRef} from '@eviljs/std/reactive-ref.js'
-import {isString} from '@eviljs/std/type-is.js'
+import type {ReactiveRef} from '@eviljs/std/reactive-ref'
+import {isString} from '@eviljs/std/type-is'
 import {
     encodeUrlParamKey,
     encodeUrlParamValue,

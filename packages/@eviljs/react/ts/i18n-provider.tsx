@@ -8,7 +8,7 @@ import {
     type I18nMessageArgs,
     type I18nMessageKey,
     type I18nMessages,
-} from '@eviljs/std/i18n.js'
+} from '@eviljs/std/i18n'
 import {useContext, useMemo, useState} from 'react'
 import {defineContext} from './ctx.js'
 import type {StateSetter} from './state.js'

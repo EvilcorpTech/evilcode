@@ -1,7 +1,7 @@
-import type {ValueOf} from '@eviljs/std/type.js'
-import type {AuthAuthenticateOptions, AuthCredentials, AuthInvalidateOptions, AuthValidateOptions} from '@eviljs/web/auth.js'
-import {authenticate, invalidateAuthentication, validateAuthentication} from '@eviljs/web/auth.js'
-import {throwInvalidResponse} from '@eviljs/web/throw.js'
+import type {ValueOf} from '@eviljs/std/type'
+import type {AuthAuthenticateOptions, AuthCredentials, AuthInvalidateOptions, AuthValidateOptions} from '@eviljs/web/auth'
+import {authenticate, invalidateAuthentication, validateAuthentication} from '@eviljs/web/auth'
+import {throwInvalidResponse} from '@eviljs/web/throw'
 import {useCallback, useMemo, useState} from 'react'
 import {useBusyLock} from './busy.js'
 

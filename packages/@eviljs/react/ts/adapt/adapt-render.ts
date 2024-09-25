@@ -1,4 +1,4 @@
-import {isIterator} from '@eviljs/std/type-is.js'
+import {isIterator} from '@eviljs/std/type-is'
 import {createElement} from 'react'
 import type {Root as ReactRoot} from 'react-dom/client'
 import {createRoot} from 'react-dom/client'

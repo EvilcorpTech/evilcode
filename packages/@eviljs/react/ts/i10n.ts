@@ -1,4 +1,4 @@
-import {isSome} from '@eviljs/std/type-is.js'
+import {isSome} from '@eviljs/std/type-is'
 import {useMemo} from 'react'
 import {useRouteParams, useRoutePathTest} from './router.js'
 

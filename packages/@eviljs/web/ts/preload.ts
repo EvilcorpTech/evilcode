@@ -1,6 +1,6 @@
-import {mapSome} from '@eviljs/std/fn-monad.js'
-import type {Fn} from '@eviljs/std/fn-type.js'
-import type {StringAutocompleted} from '@eviljs/std/type.js'
+import {mapSome} from '@eviljs/std/fn-monad'
+import type {Fn} from '@eviljs/std/fn-type'
+import type {StringAutocompleted} from '@eviljs/std/type'
 import type {JsonType, TextType} from './mimetype.js'
 
 export function exposePreloadHintElement(attrs: PreloadElementAttrs, options?: undefined | PreloadElementOptions): Node {

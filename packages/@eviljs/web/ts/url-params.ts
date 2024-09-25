@@ -1,7 +1,7 @@
-import type {Fn, Io} from '@eviljs/std/fn-type.js'
-import {throwInvalidArgument} from '@eviljs/std/throw.js'
-import {isArray, isObject, isSome, isString} from '@eviljs/std/type-is.js'
-import {kindOf} from '@eviljs/std/type-kind.js'
+import type {Fn, Io} from '@eviljs/std/fn-type'
+import {throwInvalidArgument} from '@eviljs/std/throw'
+import {isArray, isObject, isSome, isString} from '@eviljs/std/type-is'
+import {kindOf} from '@eviljs/std/type-kind'
 
 export function joinUrlWithParams(url: string, params: UrlParams, options?: undefined | UrlParamsEncodeOptions): string {
     const paramsUrl = encodeUrlParams(params, options)

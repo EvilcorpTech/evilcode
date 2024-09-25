@@ -1,10 +1,10 @@
-import {scheduleMacroTaskUsingTimeout} from '@eviljs/std/eventloop.js'
-import {identity} from '@eviljs/std/fn-return.js'
-import {tryCatch} from '@eviljs/std/fn-try.js'
-import type {Io, Task} from '@eviljs/std/fn-type.js'
-import {createReadWrite} from '@eviljs/std/rw.js'
-import {asBoolean, asNumber} from '@eviljs/std/type-as.js'
-import type {BrowserStorageAccessorSync, BrowserStorageValue} from '@eviljs/web/storage.js'
+import {scheduleMacroTaskUsingTimeout} from '@eviljs/std/eventloop'
+import {identity} from '@eviljs/std/fn-return'
+import {tryCatch} from '@eviljs/std/fn-try'
+import type {Io, Task} from '@eviljs/std/fn-type'
+import {createReadWrite} from '@eviljs/std/rw'
+import {asBoolean, asNumber} from '@eviljs/std/type-as'
+import type {BrowserStorageAccessorSync, BrowserStorageValue} from '@eviljs/web/storage'
 import {useCallback, useMemo, useRef, useState} from 'react'
 
 export function useBrowserStorageAccessor<V = string>(

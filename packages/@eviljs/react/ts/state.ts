@@ -1,4 +1,4 @@
-import type {Io} from '@eviljs/std/fn-type.js'
+import type {Io} from '@eviljs/std/fn-type'
 import {useCallback} from 'react'
 
 /*

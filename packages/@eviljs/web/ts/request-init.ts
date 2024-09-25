@@ -1,4 +1,4 @@
-import type {Io} from '@eviljs/std/fn-type.js'
+import type {Io} from '@eviljs/std/fn-type'
 import {cloneRequest} from './request-clone.js'
 import {mergeRequest, mergeRequestHeaders} from './request-merge.js'
 import type {RequestMethodEnum} from './request-method.js'

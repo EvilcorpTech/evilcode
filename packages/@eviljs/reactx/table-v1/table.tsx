@@ -1,6 +1,6 @@
-import {classes} from '@eviljs/react/classes.js'
-import {displayName} from '@eviljs/react/display-name.js'
-import {asArray} from '@eviljs/std/type-as.js'
+import {classes} from '@eviljs/react/classes'
+import {displayName} from '@eviljs/react/display-name'
+import {asArray} from '@eviljs/std/type-as'
 import type {ComponentProps} from 'react'
 import {forwardRef, isValidElement} from 'react'
 

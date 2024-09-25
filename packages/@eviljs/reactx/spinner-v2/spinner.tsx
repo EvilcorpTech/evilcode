@@ -1,4 +1,4 @@
-import {classes} from '@eviljs/react/classes.js'
+import {classes} from '@eviljs/react/classes'
 
 export function Spinner(props: SpinnerProps): JSX.Element {
     const {active, className, ...otherProps} = props

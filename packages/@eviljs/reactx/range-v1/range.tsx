@@ -1,10 +1,10 @@
-import {classes} from '@eviljs/react/classes.js'
-import type {DragPointerEvent, UseDragOptions} from '@eviljs/react/drag.js'
-import {useDrag} from '@eviljs/react/drag.js'
-import {clamp} from '@eviljs/std/math.js'
-import {distanceBetween} from '@eviljs/std/scale.js'
-import {isNone} from '@eviljs/std/type-is.js'
-import {KeyboardKey} from '@eviljs/web/keybinding.js'
+import {classes} from '@eviljs/react/classes'
+import type {DragPointerEvent, UseDragOptions} from '@eviljs/react/drag'
+import {useDrag} from '@eviljs/react/drag'
+import {clamp} from '@eviljs/std/math'
+import {distanceBetween} from '@eviljs/std/scale'
+import {isNone} from '@eviljs/std/type-is'
+import {KeyboardKey} from '@eviljs/web/keybinding'
 import {useCallback, useEffect, useMemo, useRef, useState} from 'react'
 
 export function Range(props: RangeProps): JSX.Element {

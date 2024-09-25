@@ -1,4 +1,4 @@
-export type {RoutePatterns} from '@eviljs/web/route.js'
+export type {RoutePatterns} from '@eviljs/web/route'
 export {startApp} from './adapt/adapt-boot.js'
 export type {AdaptOptions} from './adapt/adapt-boot.js'
 export {

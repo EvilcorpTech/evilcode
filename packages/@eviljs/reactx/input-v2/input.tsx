@@ -1,11 +1,11 @@
-import {classes} from '@eviljs/react/classes.js'
-import {displayName} from '@eviljs/react/display-name.js'
-import {useMergeRefs} from '@eviljs/react/ref.js'
-import type {VoidProps} from '@eviljs/react/type.js'
-import {identity} from '@eviljs/std/fn-return.js'
+import {classes} from '@eviljs/react/classes'
+import {displayName} from '@eviljs/react/display-name'
+import {useMergeRefs} from '@eviljs/react/ref'
+import type {VoidProps} from '@eviljs/react/type'
+import {identity} from '@eviljs/std/fn-return'
 import {forwardRef, useRef, useState} from 'react'
 
-export {decoratingElement, decoratingElementAfter, decoratingElementBefore} from '@eviljs/react/children.js'
+export {decoratingElement, decoratingElementAfter, decoratingElementBefore} from '@eviljs/react/children'
 
 export function InputLabel(props: InputLabelProps): JSX.Element {
     const {children, className, labelClass, title, ...otherProps} = props

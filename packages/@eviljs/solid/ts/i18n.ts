@@ -1,9 +1,9 @@
-import {compute} from '@eviljs/std/fn-compute.js'
-import {createI18n as createStdI18n, t, translate, type I18n, type I18nDefinition, type I18nMessageArgValue, type I18nMessageArgs, type I18nMessageKey, type I18nMessages} from '@eviljs/std/i18n.js'
-import {isDefined} from '@eviljs/std/type-is.js'
+import {compute} from '@eviljs/std/fn-compute'
+import {createI18n as createStdI18n, t, translate, type I18n, type I18nDefinition, type I18nMessageArgValue, type I18nMessageArgs, type I18nMessageKey, type I18nMessages} from '@eviljs/std/i18n'
+import {isDefined} from '@eviljs/std/type-is'
 import {createContext, createMemo, createSignal, useContext, type Accessor, type Context, type Setter} from 'solid-js'
 
-export type * from '@eviljs/std/i18n.js'
+export type * from '@eviljs/std/i18n'
 
 export const I18nContext: Context<undefined | Accessor<I18nManager<string, I18nMessageKey>>> = createContext<Accessor<I18nManager>>()
 

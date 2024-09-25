@@ -1,5 +1,5 @@
-import type {TaskAsync} from '@eviljs/std/fn-type.js'
-import {AsyncTasksQueue, createAsyncTasksQueue, type AsyncTasksQueueState} from '@eviljs/std/lab/async-tasks-queue.js'
+import type {TaskAsync} from '@eviljs/std/fn-type'
+import {AsyncTasksQueue, createAsyncTasksQueue, type AsyncTasksQueueState} from '@eviljs/std/lab/async-tasks-queue'
 import type {SsrRenderOutput, SsrResult} from './ssr-apis.js'
 import type {KoaContext} from './types.js'
 

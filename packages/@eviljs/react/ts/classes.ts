@@ -1,1 +1,1 @@
-export * from '@eviljs/web/classes.js'
+export * from '@eviljs/web/classes'

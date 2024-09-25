@@ -1,5 +1,5 @@
-import {classes} from '@eviljs/react/classes.js'
-import {asBooleanString} from '@eviljs/web/aria.js'
+import {classes} from '@eviljs/react/classes'
+import {asBooleanString} from '@eviljs/web/aria'
 
 export function Switch(props: SwitchProps): JSX.Element {
     const {className, checked, onChange, ...otherProps} = props

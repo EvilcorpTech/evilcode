@@ -1,4 +1,4 @@
-import {classes} from '@eviljs/react/classes.js'
+import {classes} from '@eviljs/react/classes'
 import type {CheckboxModel} from './checkbox.js'
 
 export function CheckboxMark(props: CheckboxMarkProps): JSX.Element {

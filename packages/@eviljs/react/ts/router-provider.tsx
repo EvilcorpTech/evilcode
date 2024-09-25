@@ -1,4 +1,4 @@
-import type {Router} from '@eviljs/web/router.js'
+import type {Router} from '@eviljs/web/router'
 import {useContext, useEffect} from 'react'
 import {defineContext} from './ctx.js'
 

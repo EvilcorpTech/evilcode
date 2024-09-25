@@ -1,6 +1,6 @@
-import {Box, type BoxProps} from '@eviljs/react/box.js'
-import {classes} from '@eviljs/react/classes.js'
-import type {ValueOf} from '@eviljs/std/type.js'
+import {Box, type BoxProps} from '@eviljs/react/box'
+import {classes} from '@eviljs/react/classes'
+import type {ValueOf} from '@eviljs/std/type'
 
 export const TransitionEffect = {
     Fade: 'std-transition-fade' as const,

@@ -1,5 +1,5 @@
-import {Box, type BoxProps} from '@eviljs/react/box.js'
-import {classes} from '@eviljs/react/classes.js'
+import {Box, type BoxProps} from '@eviljs/react/box'
+import {classes} from '@eviljs/react/classes'
 
 export function AspectRatio(props: AspectRatioProps): JSX.Element {
     const {className, width, height, style, ...otherProps} = props

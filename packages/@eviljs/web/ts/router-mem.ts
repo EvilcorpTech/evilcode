@@ -1,4 +1,4 @@
-import {createReactiveRef} from '@eviljs/std/reactive-ref.js'
+import {createReactiveRef} from '@eviljs/std/reactive-ref'
 import {areSameRoutes, encodeLink, mergeRouteChange, type Router, type RouterOptions, type RouterRouteChangeParams, type RouterRouteParams} from './router.js'
 
 export function createMemoryRouter<S = unknown>(options?: undefined | RouterMemoryOptions<S>): Router<S> {

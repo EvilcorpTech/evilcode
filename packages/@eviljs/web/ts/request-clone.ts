@@ -1,4 +1,4 @@
-import type {ObjectPartial} from '@eviljs/std/type.js'
+import type {ObjectPartial} from '@eviljs/std/type'
 
 /**
 * @throws TypeError

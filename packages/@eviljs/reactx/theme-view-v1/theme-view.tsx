@@ -1,6 +1,6 @@
-import {classes} from '@eviljs/react/classes.js'
-import {colorHslFromRgbHexString, colorRgbHexStringFromHsl, type ColorHslDict} from '@eviljs/std/color.js'
-import {times} from '@eviljs/std/iter.js'
+import {classes} from '@eviljs/react/classes'
+import {colorHslFromRgbHexString, colorRgbHexStringFromHsl, type ColorHslDict} from '@eviljs/std/color'
+import {times} from '@eviljs/std/iter'
 import {Fragment, useEffect, useRef, useState} from 'react'
 import {ExampleIcon as Icon} from '../icon-example/icon-example-v2.js'
 

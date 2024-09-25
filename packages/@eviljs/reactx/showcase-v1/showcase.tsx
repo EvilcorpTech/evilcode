@@ -1,6 +1,6 @@
-import {Box, type BoxProps} from '@eviljs/react/box.js'
-import {classes} from '@eviljs/react/classes.js'
-import {Route, useRoute, useRouter} from '@eviljs/react/router.js'
+import {Box, type BoxProps} from '@eviljs/react/box'
+import {classes} from '@eviljs/react/classes'
+import {Route, useRoute, useRouter} from '@eviljs/react/router'
 import {createElement, useEffect, useMemo, useState} from 'react'
 
 export function Showcase(props: ShowcaseProps): JSX.Element {

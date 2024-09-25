@@ -1,4 +1,4 @@
-import {hasBrowserTouch} from '@eviljs/web/browser.js'
+import {hasBrowserTouch} from '@eviljs/web/browser'
 import {useEffect, useState} from 'react'
 
 export function useBrowserFeaturesClassesProvider(activeOptional?: undefined | boolean): void {

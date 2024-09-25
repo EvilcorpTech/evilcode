@@ -1,5 +1,5 @@
-import {classes} from '@eviljs/react/classes.js'
-import {displayName} from '@eviljs/react/display-name.js'
+import {classes} from '@eviljs/react/classes'
+import {displayName} from '@eviljs/react/display-name'
 import {forwardRef} from 'react'
 
 export const Button = displayName('Button', forwardRef(function Button(

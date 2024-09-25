@@ -1,4 +1,4 @@
-import type {ReduxReducerState} from '@eviljs/std/redux.js'
+import type {ReduxReducerState} from '@eviljs/std/redux'
 import {useContext, useState} from 'react'
 import {defineContext} from './ctx.js'
 import type {StateManager} from './state.js'

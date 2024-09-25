@@ -1,14 +1,14 @@
-import {identity} from '@eviljs/std/fn-return.js'
-import type {Io} from '@eviljs/std/fn-type.js'
-import {createReactive, readReactive, writeReactive, type ReactiveProtocol} from '@eviljs/std/reactive.js'
-import {asReduxEvent, type ReduxEvent, type ReduxEventPolymorphic, type ReduxReducerState} from '@eviljs/std/redux.js'
-import type {RwSync} from '@eviljs/std/rw.js'
+import {identity} from '@eviljs/std/fn-return'
+import type {Io} from '@eviljs/std/fn-type'
+import {createReactive, readReactive, writeReactive, type ReactiveProtocol} from '@eviljs/std/reactive'
+import {asReduxEvent, type ReduxEvent, type ReduxEventPolymorphic, type ReduxReducerState} from '@eviljs/std/redux'
+import type {RwSync} from '@eviljs/std/rw'
 import {useCallback, useContext, useMemo} from 'react'
 import {defineContext} from './ctx.js'
 import {useReactiveSelect} from './reactive.js'
 import type {StoreDefinitionV2 as StoreDefinition, StoreDispatchV2 as StoreDispatch} from './store-v2.js'
 
-export * from '@eviljs/std/redux.js'
+export * from '@eviljs/std/redux'
 export type {StoreDefinitionV2 as StoreDefinition, StoreDispatchV2 as StoreDispatch, StoreV2Observer as StoreObserver} from './store-v2.js'
 
 export function setupStore<S extends ReduxReducerState, A extends ReduxEvent = ReduxEvent>(

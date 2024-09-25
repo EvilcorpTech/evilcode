@@ -1,7 +1,7 @@
-import {memoizing} from '@eviljs/std/fn-memo.js'
-import type {Task} from '@eviljs/std/fn-type.js'
-import {isIterator} from '@eviljs/std/type-is.js'
-import {selectRouteMatch, type RoutePatterns} from '@eviljs/web/route.js'
+import {memoizing} from '@eviljs/std/fn-memo'
+import type {Task} from '@eviljs/std/fn-type'
+import {isIterator} from '@eviljs/std/type-is'
+import {selectRouteMatch, type RoutePatterns} from '@eviljs/web/route'
 
 export function defineAppEntry<C extends object = {}>(loader: Task<Promise<AppEntry<C>>>): AppEntryLoader<C> {
     return memoizing(loader)

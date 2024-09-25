@@ -1,8 +1,8 @@
-import type {I18nMessageArgs, I18nMessageKey} from '@eviljs/std/i18n.js'
+import type {I18nMessageArgs, I18nMessageKey} from '@eviljs/std/i18n'
 import {useMemo} from 'react'
 import {useI18nContext, type I18nManager} from './i18n-provider.js'
 
-export type * from '@eviljs/std/i18n.js'
+export type * from '@eviljs/std/i18n'
 export * from './i18n-provider.js'
 
 export function useI18n<L extends string = string, K extends I18nMessageKey = I18nMessageKey>(): I18nManager<L, K> {

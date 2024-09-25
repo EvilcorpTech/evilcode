@@ -1,8 +1,8 @@
-import {OneSecondInMs} from '@eviljs/std/date.js'
-import {mapSome} from '@eviljs/std/fn-monad.js'
-import {escapeRegexp} from '@eviljs/std/regexp.js'
-import {asDate} from '@eviljs/std/type-as.js'
-import {isSome} from '@eviljs/std/type-is.js'
+import {OneSecondInMs} from '@eviljs/std/date'
+import {mapSome} from '@eviljs/std/fn-monad'
+import {escapeRegexp} from '@eviljs/std/regexp'
+import {asDate} from '@eviljs/std/type-as'
+import {isSome} from '@eviljs/std/type-is'
 
 export const CookieKeyRegexpCache: Record<string, RegExp> = {}
 

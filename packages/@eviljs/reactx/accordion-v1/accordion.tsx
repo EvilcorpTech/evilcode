@@ -1,6 +1,6 @@
-import {Box, type BoxProps} from '@eviljs/react/box.js'
-import {classes} from '@eviljs/react/classes.js'
-import {flushStyles} from '@eviljs/web/animation.js'
+import {Box, type BoxProps} from '@eviljs/react/box'
+import {classes} from '@eviljs/react/classes'
+import {flushStyles} from '@eviljs/web/animation'
 import {Children, isValidElement, useCallback, useEffect, useRef, useState} from 'react'
 
 export function AccordionList(props: AccordionListProps): JSX.Element {

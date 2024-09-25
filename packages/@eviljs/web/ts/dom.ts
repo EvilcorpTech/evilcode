@@ -1,4 +1,4 @@
-import type {Task} from '@eviljs/std/fn-type.js'
+import type {Task} from '@eviljs/std/fn-type'
 
 export function addEventListener<K extends keyof AbortSignalEventMap>(emitter: AbortSignal, name: K, listener: (event: AbortSignalEventMap[K]) => void, options?: undefined | AddEventListenerOptions): Task
 export function addEventListener<K extends keyof EventSourceEventMap>(emitter: EventSource, name: K, listener: (event: EventSourceEventMap[K]) => void, options?: undefined | AddEventListenerOptions): Task

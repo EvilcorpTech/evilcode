@@ -1,5 +1,5 @@
-import {isFunction, isNone, isObject} from '@eviljs/std/type-is.js'
-import type {None, Writable} from '@eviljs/std/type.js'
+import {isFunction, isNone, isObject} from '@eviljs/std/type-is'
+import type {None, Writable} from '@eviljs/std/type'
 import {useLayoutEffect, useMemo, useRef} from 'react'
 
 export function usePreviousValueRef<T>(value: T): React.MutableRefObject<undefined | T> {
