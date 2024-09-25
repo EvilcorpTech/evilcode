@@ -2,14 +2,16 @@
     "name": "@eviljs/webpack-html-style-inline-plugin",
     "version": "0.5.0",
     "type": "commonjs",
+    "sideEffects": false,
     "files": [
         "/LICENSE.txt",
-        "/**/*.js",
-        "/**/*.d.ts",
-        "/**/*.cjs",
-        "/**/*.d.cts"
+        "/README.md",
+        "/cjs/**/*.js",
+        "/cjs/**/*.d.ts",
+        "/cjs/**/*.map",
+        "/ts/**/*.ts"
     ],
-    "main": "./index.cjs",
+    "main": "./cjs/index.js",
     "scripts": {
         "build": "tsc --listEmittedFiles",
         "preversion": "npm run build",

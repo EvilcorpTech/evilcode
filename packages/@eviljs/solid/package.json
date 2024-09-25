@@ -5,12 +5,17 @@
     "sideEffects": false,
     "files": [
         "/LICENSE.txt",
-        "/**/*.css",
-        "/**/*.js",
-        "/**/*.d.ts"
+        "/esm/**/*.js",
+        "/esm/**/*.d.ts",
+        "/esm/**/*.map",
+        "/ts/**/*.ts",
+        "/ts/**/*.tsx"
     ],
+    "exports": {
+        "./*": "./esm/*.js"
+    },
     "scripts": {
-        "build": "babel . --out-dir . --extensions '.ts,.tsx' --ignore '**/*.d.ts','node_modules/**/*' && tsc --listEmittedFiles",
+        "build": "babel ./ts/ --out-dir ./esm/ --extensions '.ts,.tsx' --ignore '**/*.d.ts','node_modules/**/*' && tsc --listEmittedFiles",
         "preversion": "npm run build",
         "prepack": "npm run build"
     },

@@ -1,6 +1,5 @@
 {
     "extends": "../../@eviljs/tsconfig/preset-solid-lib.json",
-    "include": ["./**/*.ts", "./**/*.tsx"],
     "compilerOptions": {
     },
 }

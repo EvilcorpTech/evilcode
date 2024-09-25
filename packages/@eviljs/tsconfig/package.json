@@ -2,6 +2,7 @@
     "name": "@eviljs/tsconfig",
     "version": "1.6.0",
     "type": "module",
+    "sideEffects": false,
     "files": [
         "/LICENSE.txt",
         "/**/*.json"

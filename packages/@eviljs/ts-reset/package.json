@@ -2,6 +2,7 @@
     "name": "@eviljs/ts-reset",
     "version": "1.3.0",
     "type": "module",
+    "sideEffects": false,
     "files": [
         "/LICENSE.txt",
         "/**/*.d.ts"

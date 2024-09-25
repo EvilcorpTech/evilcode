@@ -5,10 +5,15 @@
     "sideEffects": false,
     "files": [
         "/LICENSE.txt",
-        "/**/*.css",
-        "/**/*.js",
-        "/**/*.d.ts"
+        "/esm/**/*.js",
+        "/esm/**/*.d.ts",
+        "/esm/**/*.map",
+        "/ts/**/*.ts",
+        "/ts/**/*.tsx"
     ],
+    "exports": {
+        "./*": "./esm/*.js"
+    },
     "scripts": {
         "build": "tsc --listEmittedFiles",
         "preversion": "npm run build",

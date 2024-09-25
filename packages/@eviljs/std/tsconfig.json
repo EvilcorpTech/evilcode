@@ -1,6 +1,5 @@
 {
     "extends": "../../@eviljs/tsconfig/preset-web-lib.json",
-    "include": ["./**/*.ts"],
     "compilerOptions": {
     },
 }

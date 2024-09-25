@@ -1,6 +1,12 @@
 {
     "extends": "../../@eviljs/tsconfig/preset-react-lib.json",
     "include": ["./**/*.ts", "./**/*.tsx"],
+    "exclude": ["./**/*.d.ts"],
     "compilerOptions": {
+        "baseUrl": ".",
+        "declarationMap": false,
+        "outDir": ".",
+        "rootDir": ".",
+        "sourceMap": false,
     },
 }

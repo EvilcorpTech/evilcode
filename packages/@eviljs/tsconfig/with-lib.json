@@ -1,6 +1,12 @@
 {
-    "include": ["${configDir}/ts/**/*.ts"],
+    "include": [
+        "${configDir}/ts/**/*.ts",
+        "${configDir}/ts/**/*.cts",
+        "${configDir}/ts/**/*.mts",
+        "${configDir}/ts/**/*.tsx"
+    ],
     "compilerOptions": {
+        "baseUrl": "./ts",
         "declaration": true,
         "declarationMap": true,
         "importHelpers": true,
@@ -11,8 +17,10 @@
         "moduleResolution": "nodenext",
         "noErrorTruncation": true,
         "outDir": "${configDir}/esm",
+        "rootDir": "${configDir}/ts",
         "skipLibCheck": true,
         "sourceMap": true,
-        "target": "esnext"
+        "target": "esnext",
+        "tsBuildInfoFile": "${configDir}/node_modules/.cache/tsbuildinfo"
     }
 }

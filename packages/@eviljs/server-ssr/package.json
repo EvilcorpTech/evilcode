@@ -2,12 +2,18 @@
     "name": "@eviljs/server-ssr",
     "version": "1.19.0",
     "type": "module",
+    "sideEffects": false,
     "files": [
         "/LICENSE.txt",
-        "/**/*.js",
-        "/**/*.d.ts"
+        "/esm/**/*.js",
+        "/esm/**/*.d.ts",
+        "/esm/**/*.map",
+        "/ts/**/*.ts"
     ],
-    "main": "index.js",
+    "main": "/esm/index.js",
+    "exports": {
+        ".": "./esm/index.js"
+    },
     "scripts": {
         "build": "tsc --listEmittedFiles",
         "preversion": "npm run build",

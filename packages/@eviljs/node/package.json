@@ -2,11 +2,17 @@
     "name": "@eviljs/node",
     "version": "1.7.0",
     "type": "module",
+    "sideEffects": false,
     "files": [
         "/LICENSE.txt",
-        "/**/*.js",
-        "/**/*.d.ts"
+        "/esm/**/*.js",
+        "/esm/**/*.d.ts",
+        "/esm/**/*.map",
+        "/ts/**/*.ts"
     ],
+    "exports": {
+        "./*": "./esm/*.js"
+    },
     "scripts": {
         "build": "tsc --listEmittedFiles",
         "preversion": "npm run build",

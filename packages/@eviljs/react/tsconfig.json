@@ -1,6 +1,5 @@
 {
     "extends": "../../@eviljs/tsconfig/preset-react-lib.json",
-    "include": ["./**/*.ts", "./**/*.tsx"],
     "compilerOptions": {
     },
 }

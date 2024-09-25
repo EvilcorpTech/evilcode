@@ -12,16 +12,22 @@
     },
     "targetDefaults": {
         "build": {
+            "cache": true,
             "dependsOn": ["^build"],
             "inputs": [
                 "{workspaceRoot}/package.json",
                 "{workspaceRoot}/pnpm-lock.yaml",
+                "{projectRoot}/package.json",
+                "{projectRoot}/tsconfig.json",
                 "{projectRoot}/**/*.ts",
-                "!{projectRoot}/**/*.d.ts"
+                "{projectRoot}/**/*.tsx",
+                "{projectRoot}/ts/**/*",
+                "!{projectRoot}/cjs/**/*",
+                "!{projectRoot}/esm/**/*"
             ],
             "outputs": [
-                "{projectRoot}/**/*.d.ts",
-                "{projectRoot}/**/*.js"
+                "{projectRoot}/cjs/**/*",
+                "{projectRoot}/esm/**/*"
             ]
         }
     }
