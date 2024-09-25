@@ -3,6 +3,7 @@
 @import '../button-armored-v1/button-armored.css';
 @import '../button-busy-v1/button-busy-theme-replace.css';
 @import '../button-busy-v1/button-busy-theme-reveal.css';
+@import '../button-v1/button.css';
 @import '../checkbox-v1/checkbox-mark-shape.css';
 @import '../checkbox-v1/checkbox-mark-sign.css';
 @import '../checkbox-v1/checkbox.css';
@@ -23,6 +24,7 @@
 @import '../spinner-v2/spinner.css';
 @import '../spinner-v3/spinner.css';
 @import '../spinner-v4/spinner.css';
+@import '../switch-v1/switch.css';
 @import '../table-v1/table.css';
 @import '../tooltip-v1/tooltip.css';
 
