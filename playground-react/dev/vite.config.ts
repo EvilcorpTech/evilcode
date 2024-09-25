@@ -11,7 +11,6 @@ const __filename = Url.fileURLToPath(import.meta.url)
 const __dirname = Path.dirname(__filename)
 
 const PackagesAbsolutePath = Fs.realpathSync(Path.resolve('..', '..', 'packages'))
-const PnpmAbsolutePath = Fs.realpathSync(Path.resolve('node_modules', '.pnpm')) // Needed when 'node_modules' is a symbolic link.
 
 export default defineConfig(async (ctx): Promise<UserConfig> => {
     const viteDir = Path.resolve(__dirname)
@@ -87,7 +86,7 @@ export default defineConfig(async (ctx): Promise<UserConfig> => {
             host: process.env.DEV_ADDR || 'localhost',
             port: parseInt(process.env.DEV_PORT || '8000'),
             fs: {
-                allow: ['.', PnpmAbsolutePath, PackagesAbsolutePath],
+                allow: ['.', PackagesAbsolutePath],
             },
         },
     }

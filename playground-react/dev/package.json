@@ -12,14 +12,14 @@
         "serve": "npx http-server@latest ../build -a 0.0.0.0 -p 8000"
     },
     "dependencies": {
-        "@types/node": "20",
+        "@types/node": "22",
         "@vitejs/plugin-react": "4",
         "postcss": "8",
         "postcss-import": "16",
-        "postcss-preset-env": "9",
+        "postcss-preset-env": "10",
         "rollup-plugin-visualizer": "5",
         "tslib": "2",
-        "typescript": "5.5",
+        "typescript": "5.6",
         "vite": "5",
         "vite-plugin-checker": "0",
         "vite-plugin-ejs": "1"
