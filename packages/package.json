@@ -7,13 +7,11 @@
         "build": "nx run-many --target build",
         "build-watch": "(nx run-many --target build --skip-nx-cache || true) && nx watch --all run-many -- npm run build"
     },
+    "packageManager": "pnpm@9.11.0",
     "devDependencies": {
-        "nx": "19.5.3",
-        "pnpm": "9.6.0"
+        "nx": "19.8.1"
     },
-    "packageManager": "pnpm@9.6.0",
     "engines": {
-        "node": ">= 20",
-        "pnpm": "9"
+        "node": ">= 20"
     }
 }
