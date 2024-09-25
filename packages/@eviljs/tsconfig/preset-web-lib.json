@@ -4,10 +4,6 @@
         "./with-lib.json"
     ],
     "compilerOptions": {
-        "lib": ["esnext", "dom", "dom.iterable", "webworker"],
-        "module": "nodenext",
-        "moduleDetection": "auto",
-        "moduleResolution": "nodenext",
-        "target": "esnext"
+        "lib": ["esnext", "dom", "dom.iterable", "webworker"]
     }
 }

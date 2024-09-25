@@ -1,18 +1,11 @@
 {
     "extends": [
-        "./with-check-strict.json"
+        "./with-check-strict.json",
+        "./with-bundler.json"
     ],
     "compilerOptions": {
-        "allowSyntheticDefaultImports": true,
         "jsx": "preserve",
         "jsxImportSource": "solid-js",
-        "lib": ["esnext", "dom", "dom.iterable", "webworker"],
-        "module": "esnext",
-        "moduleDetection": "auto",
-        "moduleResolution": "bundler",
-        "noEmit": true,
-        "resolveJsonModule": true,
-        "skipLibCheck": true,
-        "target": "esnext"
+        "lib": ["esnext", "dom", "dom.iterable", "webworker"]
     }
 }

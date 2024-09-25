@@ -4,13 +4,10 @@
         "./with-lib.json"
     ],
     "compilerOptions": {
+        "allowSyntheticDefaultImports": true,
         "emitDeclarationOnly": true,
         "jsx": "preserve",
         "jsxImportSource": "solid-js",
-        "lib": ["esnext", "dom", "dom.iterable", "webworker"],
-        "module": "nodenext",
-        "moduleDetection": "auto",
-        "moduleResolution": "nodenext",
-        "target": "esnext"
+        "lib": ["esnext", "dom", "dom.iterable", "webworker"]
     }
 }

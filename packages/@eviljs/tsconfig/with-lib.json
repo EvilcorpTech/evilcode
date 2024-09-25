@@ -1,13 +1,18 @@
 {
+    "include": ["${configDir}/ts/**/*.ts"],
     "compilerOptions": {
         "declaration": true,
-        "declarationMap": false,
+        "declarationMap": true,
         "importHelpers": true,
         "incremental": true,
-        "inlineSourceMap": false,
-        "inlineSources": false,
         "isolatedDeclarations": true,
+        "module": "nodenext",
+        "moduleDetection": "auto",
+        "moduleResolution": "nodenext",
+        "noErrorTruncation": true,
+        "outDir": "${configDir}/esm",
         "skipLibCheck": true,
-        "sourceMap": false
+        "sourceMap": true,
+        "target": "esnext"
     }
 }

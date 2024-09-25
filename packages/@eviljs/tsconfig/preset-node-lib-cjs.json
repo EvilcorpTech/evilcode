@@ -1,15 +1,10 @@
 {
     "extends": [
-        "./with-check-strict.json",
-        "./with-lib.json"
+        "./preset-node-lib.json"
     ],
     "compilerOptions": {
-        "esModuleInterop": true,
-        "importHelpers": true,
-        "lib": ["esnext", "dom", "dom.iterable", "webworker"],
         "module": "commonjs",
-        "moduleDetection": "auto",
         "moduleResolution": "node10",
-        "target": "esnext"
+        "outDir": "${configDir}/cjs"
     }
 }
