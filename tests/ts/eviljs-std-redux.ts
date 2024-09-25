@@ -4,8 +4,8 @@ import {
     withId,
     type ReduxActionReducer,
     type ReduxCompositeReducerOfEntries,
-    type ReduxReducerId
-} from '../packages/@eviljs/std/redux.js'
+    type ReduxReducerId,
+} from '@eviljs/std/redux'
 
 type State = {state: number}
 const state = {state: 1}
@@ -57,5 +57,7 @@ reducerComposedWithGenericIds(state, 'd')
 reducerComposedWithGenericIds(state, 'e')
 reducerComposedWithGenericIds(state, 'a', null, false, '')
 
+// @ts-expect-error
 reducerComposedWithLiteralIds(state, 'f')
+// @ts-expect-error
 reducerComposedWithLiteralIds(state, 'a', null, false, '')

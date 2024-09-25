@@ -1,4 +1,4 @@
-import {joinUrlPaths} from '../packages/@eviljs/web/url.js'
+import {joinUrlPaths} from '@eviljs/web/url'
 
 const tests: Array<[string, [string, string, ...Array<string>]]> = [
     ['/api', ['', 'api']],

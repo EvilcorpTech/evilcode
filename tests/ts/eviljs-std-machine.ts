@@ -1,4 +1,4 @@
-import {defineMachine} from '../packages/@eviljs/std/machine.js'
+import {defineMachine} from '@eviljs/std/machine'
 
 enum StateType {
     Init = 'init',
@@ -10,7 +10,7 @@ enum EventType {
     Delete = 'delete',
 }
 
-export const MyMachine = defineMachine({
+const MyMachine = defineMachine({
     StateType,
     EventType,
 
@@ -37,7 +37,7 @@ export const MyMachine = defineMachine({
         },
     ],
 
-    log(newState, oldState, event) {
+    effect(newState, oldState, event) {
     },
 })
 

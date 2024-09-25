@@ -16,12 +16,12 @@ import {
     mappingSome,
     then,
     trying,
-} from '../packages/@eviljs/std/fn-monad.js'
-import {chain, piped, piping} from '../packages/@eviljs/std/fn-pipe.js'
-import {identity} from '../packages/@eviljs/std/fn-return.js'
-import {ResultError} from '../packages/@eviljs/std/result.js'
-import {throwError} from '../packages/@eviljs/std/throw.js'
-import {ensureStringNotEmpty} from '../packages/@eviljs/std/type-ensure.js'
+} from '@eviljs/std/fn-monad'
+import {chain, piped, piping} from '@eviljs/std/fn-pipe'
+import {identity} from '@eviljs/std/fn-return'
+import {ResultError} from '@eviljs/std/result'
+import {throwError} from '@eviljs/std/throw'
+import {ensureStringNotEmpty} from '@eviljs/std/type-ensure'
 
 const subject = {id: 1, name: 'Mike', age: 18}
 

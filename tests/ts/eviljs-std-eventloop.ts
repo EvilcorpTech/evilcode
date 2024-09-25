@@ -1,4 +1,4 @@
-import {scheduleMacroTaskUsingMessageChannel, scheduleMacroTaskUsingPostMessage, scheduleMacroTaskUsingTimeout, scheduleMicroTaskUsingMutationObserver, scheduleMicroTaskUsingPromise} from '../packages/@eviljs/std/eventloop.js'
+import {scheduleMacroTaskUsingMessageChannel, scheduleMacroTaskUsingPostMessage, scheduleMacroTaskUsingTimeout, scheduleMicroTaskUsingMutationObserver, scheduleMicroTaskUsingPromise} from '@eviljs/std/eventloop'
 
 console.log('Group 1')
 scheduleMicroTaskUsingPromise(() => console.log('[Micro] Promise (1)'))

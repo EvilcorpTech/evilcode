@@ -1,0 +1,27 @@
+{
+    "type": "module",
+    "scripts": {
+        "init": "corepack pnpm install",
+        "build": "tsc --listEmittedFiles",
+        "check": "tsc --noEmit "
+    },
+    "packageManager": "pnpm@9.11.0",
+    "dependencies": {
+        "@evilcss/std": "link:../packages/@evilcss/std",
+        "@evilcss/ui": "link:../packages/@evilcss/ui",
+        "@eviljs/react": "link:../packages/@eviljs/react",
+        "@eviljs/reactx": "link:../packages/@eviljs/reactx",
+        "@eviljs/std": "link:../packages/@eviljs/std",
+        "@eviljs/ts-reset": "link:../packages/@eviljs/ts-reset",
+        "@eviljs/web": "link:../packages/@eviljs/web",
+        "@eviljs/webx": "link:../packages/@eviljs/webx",
+        "tslib": "2"
+    },
+    "devDependencies": {
+        "@eviljs/tsconfig": "link:../packages/@eviljs/tsconfig",
+        "typescript": "5.6"
+    },
+    "engines": {
+        "node": ">= 18"
+    }
+}
