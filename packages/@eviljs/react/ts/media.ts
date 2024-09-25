@@ -31,8 +31,7 @@ export function useMediaQuery(query: string): boolean {
         }
     }, [mediaQuery])
 
-    return undefined
-        ?? queryMatches[query] // Most updated result, if available, on media change.
+    return queryMatches[query] // Most updated result, if available, on media change.
         ?? mediaQuery?.matches // Immediate correct result, on query string change.
         ?? false // Server side, no media query should match.
 }

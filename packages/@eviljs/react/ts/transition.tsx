@@ -172,9 +172,10 @@ export function Animator(props: AnimatorProps): JSX.Element {
     }, [taskEvents, taskAction, onAnimated])
 
     const childClass = useMemo(() => {
-        const animatorClass = undefined
-            ?? className?.(taskAction, taskLifecycle)
+        const animatorClass = (
+            className?.(taskAction, taskLifecycle)
             ?? computeAnimatorClasses(taskAction, taskLifecycle, classPrefix)
+        )
 
         return classes(taskChild.props.className, animatorClass)
     }, [taskAction, taskLifecycle, taskChild.props.className, className, classPrefix])
@@ -470,8 +471,8 @@ export function reduceTransitionQueue(state: TransitionState): TransitionState {
 export function createSelectedTask(task: TransitionTaskQueued, keys: Array<string>): TransitionTaskSelected {
     return {
         ...task,
-        key: undefined
-            ?? task.key?.(keys) // We use the task computed key, if any.
+        key:
+            task.key?.(keys) // We use the task computed key, if any.
             ?? String(task.taskId) // As fallback, we use a unique key.
         ,
         completed: task.action === 'render'

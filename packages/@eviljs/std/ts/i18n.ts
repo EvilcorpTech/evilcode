@@ -43,10 +43,11 @@ export function translate<K extends I18nMessageKey = I18nMessageKey>(
 ): string | K {
     const {locale, localeFallback, messages} = i18n
 
-    const msg = undefined
-        ?? messages[locale]?.[key]
+    const msg: I18nMessageKey | I18nMessageComputable = (
+        messages[locale]?.[key]
         ?? messages[localeFallback]?.[key]
         ?? key
+    )
 
     if (isString(msg)) {
         // We need to interpolate the values inside the string.
