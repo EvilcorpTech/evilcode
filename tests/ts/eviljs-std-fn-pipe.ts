@@ -68,6 +68,7 @@ const subject = {id: 1, name: 'Mike', age: 18}
 .end()}
 
 {const result = piping(undefined as undefined | null | string)
+    (mappingSome(it => it.toLowerCase()))
     (mappingNone(it => 'Mario'))
     (mappingSome(it => ({name: `Super ${it}`, age: 21})))
 ()}
