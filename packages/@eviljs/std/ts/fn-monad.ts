@@ -52,7 +52,7 @@ export function mapOptional<I, O1, O2>(input: I, onSome: Io<NonNullable<I>, O1>,
         : onNone(input as Extract<I, None>)
 }
 
-export function mappingSome<I, O>(onSome: Io<NoInfer<I>, O>): Io<I, O | Extract<I, None>> {
+export function mappingSome<I, O>(onSome: Io<NonNullable<NoInfer<I>>, O>): Io<I, O | Extract<I, None>> {
     return (input: I) => mapSome(input, onSome)
 }
 
