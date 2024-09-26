@@ -1,10 +1,20 @@
 {
     "extends": [
         "./with-check-strict.json",
-        "./with-bundler.json"
+        "./with-api-web.json"
     ],
     "compilerOptions": {
+        "allowSyntheticDefaultImports": true,
+        "incremental": true,
         "jsx": "react-jsx",
-        "lib": ["esnext", "dom", "dom.iterable", "webworker"]
+        "module": "esnext",
+        "moduleDetection": "auto",
+        "moduleResolution": "bundler",
+        "noEmit": true,
+        "noErrorTruncation": true,
+        "resolveJsonModule": true,
+        "skipLibCheck": true,
+        "target": "esnext",
+        "tsBuildInfoFile": "${configDir}/node_modules/.cache/tsbuildinfo"
     }
 }

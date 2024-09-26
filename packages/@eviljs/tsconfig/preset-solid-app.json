@@ -1,11 +1,9 @@
 {
     "extends": [
-        "./with-check-strict.json",
-        "./with-bundler.json"
+        "./preset-react-app.json"
     ],
     "compilerOptions": {
         "jsx": "preserve",
-        "jsxImportSource": "solid-js",
-        "lib": ["esnext", "dom", "dom.iterable", "webworker"]
+        "jsxImportSource": "solid-js"
     }
 }

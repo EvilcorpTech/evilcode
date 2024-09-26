@@ -1,11 +1,9 @@
 {
     "extends": [
-        "./with-check-strict.json",
-        "./with-lib.json"
+        "./preset-web-lib.json"
     ],
     "compilerOptions": {
         "allowSyntheticDefaultImports": true,
-        "jsx": "react-jsx",
-        "lib": ["esnext", "dom", "dom.iterable", "webworker"]
+        "jsx": "react-jsx"
     }
 }

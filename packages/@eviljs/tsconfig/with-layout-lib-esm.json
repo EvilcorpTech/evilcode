@@ -1,0 +1,15 @@
+{
+    "include": [
+        "${configDir}/ts/**/*.ts",
+        "${configDir}/ts/**/*.cts",
+        "${configDir}/ts/**/*.mts",
+        "${configDir}/ts/**/*.tsx"
+    ],
+    "compilerOptions": {
+        "baseUrl": "./ts",
+        "declarationMap": true,
+        "outDir": "${configDir}/esm",
+        "rootDir": "${configDir}/ts",
+        "sourceMap": true
+    }
+}

@@ -1,9 +1,20 @@
 {
     "extends": [
         "./with-check-strict.json",
-        "./with-lib.json"
+        "./with-api-web.json",
+        "./with-layout-lib-esm.json"
     ],
     "compilerOptions": {
-        "lib": ["esnext", "dom", "dom.iterable", "webworker"]
+        "declaration": true,
+        "importHelpers": true,
+        "incremental": true,
+        "isolatedDeclarations": true,
+        "module": "nodenext",
+        "moduleDetection": "auto",
+        "moduleResolution": "nodenext",
+        "noErrorTruncation": true,
+        "skipLibCheck": true,
+        "target": "esnext",
+        "tsBuildInfoFile": "${configDir}/node_modules/.cache/tsbuildinfo"
     }
 }

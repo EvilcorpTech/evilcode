@@ -1,13 +1,11 @@
 {
     "extends": [
-        "./with-check-strict.json",
-        "./with-lib.json"
+        "./preset-web-lib.json"
     ],
     "compilerOptions": {
         "allowSyntheticDefaultImports": true,
         "emitDeclarationOnly": true,
         "jsx": "preserve",
-        "jsxImportSource": "solid-js",
-        "lib": ["esnext", "dom", "dom.iterable", "webworker"]
+        "jsxImportSource": "solid-js"
     }
 }
