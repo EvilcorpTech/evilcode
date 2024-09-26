@@ -4,26 +4,38 @@ import {I18nProvider} from '@eviljs/react/i18n'
 import {Portal, PortalProvider} from '@eviljs/react/portal'
 import {PortalsProvider} from '@eviljs/react/portals'
 import {RouterProvider} from '@eviljs/react/router'
-import {piping} from '@eviljs/std/fn'
-import type {MyContainer} from '~/container/container-apis'
-import {MyContainerContext} from '~/container/container-hooks'
+import {StyleProvider} from '@eviljs/react/style-provider'
+import {DemoBusProvider} from '~/bus/bus-hooks'
+import type {DemoContainer} from '~/container/container-apis'
+import {DemoContainerContext} from '~/container/container-hooks'
 import {I18nSpec} from '~/i18n/i18n-apis'
 import {RouterStatic} from '~/router/router-static'
-import {MyStoreProvider, MyStoreSpec} from '~/store/store'
+import {DemoStoreProvider, DemoStoreSpec} from '~/store/store'
 import {useColorSchemePreference} from '~/theme/theme-hooks'
 
 export function RootContext(props: RootContextProps) {
     const {children, container} = props
     const {Router} = container
 
-    return piping(children)
-        (it => MyContainerContext.Provider({children: it, value: container}))
-        (it => I18nProvider({children: it, ...I18nSpec}))
-        (it => PortalProvider({children: it}))
-        (it => PortalsProvider({children: it}))
-        (it => RouterProvider({children: it, router: Router}))
-        (it => MyStoreProvider({children: it, ...MyStoreSpec}))
-    ()
+    return (
+        <DemoContainerContext.Provider value={container}>
+            <DemoStoreProvider {...DemoStoreSpec}>
+                <DemoBusProvider>
+                    <I18nProvider {...I18nSpec}>
+                        <StyleProvider>
+                            <RouterProvider router={Router}>
+                                <PortalProvider>
+                                    <PortalsProvider>
+                                        {children}
+                                    </PortalsProvider>
+                                </PortalProvider>
+                            </RouterProvider>
+                        </StyleProvider>
+                    </I18nProvider>
+                </DemoBusProvider>
+            </DemoStoreProvider>
+        </DemoContainerContext.Provider>
+    )
 }
 
 export function Root(props: RootProps) {
@@ -41,7 +53,7 @@ export function RootIsolate(props: RootIsolateProps): undefined {
 
 export interface RootContextProps {
     children: React.ReactNode
-    container: MyContainer
+    container: DemoContainer
 }
 
 export interface RootProps {

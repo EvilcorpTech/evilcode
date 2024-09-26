@@ -1,12 +1,12 @@
 import {setupContainer} from '@eviljs/react/container'
-import type {MyContainerServices, MyContainerState} from './container-specs'
+import type {DemoContainerServices, DemoContainerState} from './container-specs'
 
-export type {MyContainer} from './container-apis'
+export type {DemoContainer} from './container-apis'
 
 export const {
-    ContainerContext: MyContainerContext,
-    ContainerProvider: MyContainerProvider,
-    useContainerContext: useMyContainerContext,
-    useContainerProvider: useMyContainerProvider,
-    useContainer: useMyContainer,
-  } = setupContainer<MyContainerServices, MyContainerState>({ contextName: 'MyContainerContext' })
+    ContainerContext: DemoContainerContext,
+    ContainerProvider: DemoContainerProvider,
+    useContainerContext: useDemoContainerContext,
+    useContainerProvider: useDemoContainerProvider,
+    useContainer: useDemoContainer,
+} = setupContainer<DemoContainerServices, DemoContainerState>({ contextName: 'DemoContainerContext' })

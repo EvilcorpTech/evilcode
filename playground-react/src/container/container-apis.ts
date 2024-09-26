@@ -1,10 +1,10 @@
 import {createContainer, type Container} from '@eviljs/std/container'
-import {MyContainerSpec, type MyContainerServices, type MyContainerState} from './container-specs'
+import {DemoContainerSpec, type DemoContainerServices, type DemoContainerState} from './container-specs'
 
-export function createMyContainer(state: MyContainerState): MyContainer {
-    return createContainer(MyContainerSpec, state)
+export function createDemoContainer(state: DemoContainerState): DemoContainer {
+    return createContainer(DemoContainerSpec, state)
 }
 
 // Types ///////////////////////////////////////////////////////////////////////
 
-export type MyContainer = Container<MyContainerServices, MyContainerState>
+export type DemoContainer = Container<DemoContainerServices, DemoContainerState>

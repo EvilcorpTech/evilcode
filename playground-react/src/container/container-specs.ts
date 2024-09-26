@@ -4,11 +4,11 @@ import {createHashRouter} from '@eviljs/web/router-hash'
 import {createPathRouter} from '@eviljs/web/router-path'
 import {Env} from '~/env/env-specs'
 
-export const MyContainerSpec = {
-    Logger({}: MyContainerServices) {
+export const DemoContainerSpec = {
+    Logger({}: DemoContainerServices) {
         return createLogger(createConsoleLog())
     },
-    Router({}: MyContainerServices) {
+    Router({}: DemoContainerServices) {
         return Env.RouterType === 'path'
             ? createPathRouter({basePath: Env.BasePath})
             : createHashRouter({basePath: Env.BasePath})
@@ -17,10 +17,10 @@ export const MyContainerSpec = {
 
 // Types ///////////////////////////////////////////////////////////////////////
 
-export interface MyContainerServices {
+export interface DemoContainerServices {
     Logger: Logger & LoggerProps
     Router: Router
 }
 
-export interface MyContainerState {
+export interface DemoContainerState {
 }

@@ -1,9 +1,9 @@
 import {defineShowcase} from '@eviljs/reactx/showcase-v1/showcase'
-import {MyStore, useMyStore, useMyStoreDispatch, useMyStoreState} from '~/store/store'
+import {DemoStore, useDemoStore, useDemoStoreDispatch, useDemoStoreState} from '~/store/store'
 import {Theme} from '~/theme/theme-apis'
 
 export default defineShowcase('Store', (props) => {
-    const [theme, dispatch] = useMyStore(state => state.theme)
+    const [theme, dispatch] = useDemoStore(state => state.theme)
 
     return (
         <div className="std-flex std-gap6">
@@ -16,13 +16,13 @@ export default defineShowcase('Store', (props) => {
 })
 
 function Comp1() {
-    const dispatch = useMyStoreDispatch()
+    const dispatch = useDemoStoreDispatch()
 
     return (
         <div>
             <button
                 onClick={() => {
-                    dispatch(MyStore.Action.resetState())
+                    dispatch(DemoStore.Action.resetState())
                 }}
             >
                 Reset
@@ -32,8 +32,8 @@ function Comp1() {
 }
 
 function Comp2() {
-    const theme = useMyStoreState(state => state.theme)
-    const dispatch = useMyStoreDispatch()
+    const theme = useDemoStoreState(state => state.theme)
+    const dispatch = useDemoStoreDispatch()
 
     return (
         <div>
@@ -41,8 +41,8 @@ function Comp2() {
                 type="checkbox"
                 onChange={event => {
                     event.currentTarget.checked
-                        ? dispatch(MyStore.Action.setState({theme: Theme.Dark}))
-                        : dispatch(MyStore.Action.setState({theme: Theme.Light}))
+                        ? dispatch(DemoStore.Action.setState({theme: Theme.Dark}))
+                        : dispatch(DemoStore.Action.setState({theme: Theme.Light}))
                 }}
             />
         </div>

@@ -14,7 +14,7 @@ import {
 import {Env} from '~/env/env-specs'
 import {createState, type StoreState} from '~/store/store-state'
 
-export const MyStoreActionsSpec = {
+export const DemoStoreActionsSpec = {
     setState: defineReduxAction(withId('setState'), patchState<StoreState>),
 
     resetState: defineReduxAction(withId('resetState'), (
@@ -35,14 +35,14 @@ export const MyStoreActionsSpec = {
     }),
 }
 
-export const MyStoreSpec: StoreDefinition<StoreState, ReduxEvent> = {
+export const DemoStoreSpec: StoreDefinition<StoreState, ReduxEvent> = {
     createState,
-    reduce: ReduxReducer.fromActions(MyStoreActionsSpec),
+    reduce: ReduxReducer.fromActions(DemoStoreActionsSpec),
     observer: storeObserver,
 }
 
-export const MyStore = {
-    Action: ReduxActions.objectFrom(MyStoreActionsSpec),
+export const DemoStore = {
+    Action: ReduxActions.objectFrom(DemoStoreActionsSpec),
 }
 
 export function storeObserver(id: ReduxReducerId, args: ReduxReducerArgs, newState: StoreState, oldState: StoreState) {
@@ -68,14 +68,14 @@ export function storeObserver(id: ReduxReducerId, args: ReduxReducerArgs, newSta
 }
 
 export const {
-    StoreContext: MyStoreContext,
-    StoreProvider: MyStoreProvider,
-    useStore: useMyStore,
-    useStoreContext: useMyStoreContext,
-    useStoreDispatch: useMyStoreDispatch,
-    useStoreProvider: useMyStoreProvider,
-    useStoreRead: useMyStoreRead,
-    useStoreState: useMyStoreState,
+    StoreContext: DemoStoreContext,
+    StoreProvider: DemoStoreProvider,
+    useStore: useDemoStore,
+    useStoreContext: useDemoStoreContext,
+    useStoreDispatch: useDemoStoreDispatch,
+    useStoreProvider: useDemoStoreProvider,
+    useStoreRead: useDemoStoreRead,
+    useStoreState: useDemoStoreState,
 } = setupStore<StoreState>({
-    contextName: 'MyStoreContext',
+    contextName: 'DemoStoreContext',
 })
