@@ -68,8 +68,8 @@
 @import '@evilcss/std/icon-size.classes.css' layer(std);
 @import '@evilcss/std/icon-size.props.css' layer(std);
 @import '@evilcss/std/icon.classes.css' layer(std);
-@import '@evilcss/std/layout-block.css' layer(std);
-@import '@evilcss/std/layout-box.css' layer(std);
+@import '@evilcss/std/layout-block.classes.css' layer(std);
+@import '@evilcss/std/layout-box.classes.css' layer(std);
 @import '@evilcss/std/layout-debug.classes.css' layer(std);
 @import '@evilcss/std/layout-flex-break.classes.css' layer(std);
 @import '@evilcss/std/layout-flex-child.classes.css' layer(std);
@@ -82,7 +82,7 @@
 @import '@evilcss/std/layout-gutter-space.classes.css' layer(std);
 @import '@evilcss/std/layout-gutter-spacing.classes.css' layer(std);
 @import '@evilcss/std/layout-gutter.props.css' layer(std);
-@import '@evilcss/std/layout-inline.css' layer(std);
+@import '@evilcss/std/layout-inline.classes.css' layer(std);
 @import '@evilcss/std/layout-layer.classes.css' layer(std);
 @import '@evilcss/std/layout-margin-auto.classes.css' layer(std);
 @import '@evilcss/std/layout-margin.classes.css' layer(std);
