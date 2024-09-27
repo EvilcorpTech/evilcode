@@ -1,6 +1,6 @@
 import type {RouteArgs, RoutePathCodec} from '@eviljs/web/route-v2'
 import {useCallback} from 'react'
-import {useI18n} from './i18n.js'
+import {useTranslator} from './translator.js'
 
 export function useRoutePath<A extends RouteArgs>(routeSpec: RoutePathCodec<A>): RouteManager<A> {
     return {
@@ -13,7 +13,7 @@ export function useRoutePathLocalized<A extends RouteArgs>(
     routeSpec: RoutePathCodec<[string, ...A]>,
 ): RouteManager<A> {
     const routePath = useRoutePath(routeSpec)
-    const {locale} = useI18n()!
+    const {locale} = useTranslator()!
 
     const link = useCallback((...args: A): string => {
         return routePath.link(locale, ...args)

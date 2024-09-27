@@ -40,7 +40,7 @@ export function compileRoutePattern(pattern: RoutePattern): RegExp {
         return pattern
     }
 
-    return routeRegexpFromPattern(cleanRoutePattern(pattern))
+    return buildRouteRegexp(cleanRoutePattern(pattern))
 }
 
 export function cleanRoutePattern(pattern: string): string {
@@ -51,7 +51,7 @@ export function cleanRoutePattern(pattern: string): string {
         .replace(RoutePatternEmptyRegexp, '/')
 }
 
-export function routeRegexpFromPattern(pattern: RoutePattern): RegExp {
+export function buildRouteRegexp(pattern: RoutePattern): RegExp {
     if (isRegExp(pattern)) {
         return pattern
     }
@@ -82,11 +82,11 @@ export function replaceRouteArgPlaceholderWithValue(template: string, argPlaceho
 }
 
 export function testRoutePattern(routePath: string, pattern: RoutePattern): boolean {
-    return routeRegexpFromPattern(pattern).test(routePath)
+    return buildRouteRegexp(pattern).test(routePath)
 }
 
 export function matchRoutePattern(routePath: string, pattern: RoutePattern): undefined | RegExpMatchArray {
-    return routePath.match(routeRegexpFromPattern(pattern)) ?? undefined
+    return routePath.match(buildRouteRegexp(pattern)) ?? undefined
 }
 
 export function matchRoutePatterns(routePath: string, patterns: RoutePatterns): undefined | RegExpMatchArray {

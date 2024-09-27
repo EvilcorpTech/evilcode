@@ -1,9 +1,9 @@
 import {escapeRegexp} from './regexp.js'
 import {isFunction, isString} from './type-is.js'
 
-export const I18nSymbolDefault = '@'
+export const TranslatorSymbolDefault = '@'
 
-export function createI18n<L extends string, K extends I18nMessageKey>(spec: I18nDefinition<L, K>): I18n<L, K> {
+export function createTranslator<L extends string, K extends TranslatorMessageKey>(spec: TranslatorDefinition<L, K>): Translator<L, K> {
     const {locale, localeFallback, messages, symbol} = spec
 
     return {
@@ -11,7 +11,7 @@ export function createI18n<L extends string, K extends I18nMessageKey>(spec: I18
         locale,
         localeFallback,
         messages,
-        symbol: symbol ?? I18nSymbolDefault,
+        symbol: symbol ?? TranslatorSymbolDefault,
         // `messages` should have a structure like:
         // {
         //     en: {
@@ -31,19 +31,19 @@ export function createI18n<L extends string, K extends I18nMessageKey>(spec: I18
 *
 * EXAMPLE
 *
-* translate(i18n, 'Hello world')
-* translate(i18n, '@{0} items of @{1}', [4, 8])
-* translate(i18n, '@{count} items of @{total}', {count: 4, total: 8})
+* translate(translator, 'Hello world')
+* translate(translator, '@{0} items of @{1}', [4, 8])
+* translate(translator, '@{count} items of @{total}', {count: 4, total: 8})
 */
-export function translate<K extends I18nMessageKey = I18nMessageKey>(
-    i18n: I18n<string, K>,
+export function translate<K extends TranslatorMessageKey = TranslatorMessageKey>(
+    translator: Translator<string, K>,
     key: K,
-    values?: undefined | I18nMessageArgs,
+    values?: undefined | TranslatorMessageArgs,
     options?: undefined | unknown,
 ): string | K {
-    const {locale, localeFallback, messages} = i18n
+    const {locale, localeFallback, messages} = translator
 
-    const msg: I18nMessageKey | I18nMessageComputable = (
+    const msg: TranslatorMessageKey | TranslatorMessageComputable = (
         messages[locale]?.[key]
         ?? messages[localeFallback]?.[key]
         ?? key
@@ -51,7 +51,7 @@ export function translate<K extends I18nMessageKey = I18nMessageKey>(
 
     if (isString(msg)) {
         // We need to interpolate the values inside the string.
-        return format(i18n, msg, values)
+        return format(translator, msg, values)
     }
     if (isFunction(msg)) {
         // The message function handles the interpolation on its own.
@@ -65,17 +65,17 @@ export function translate<K extends I18nMessageKey = I18nMessageKey>(
 *
 * EXAMPLE
 *
-* const tt = t.bind(i18n)
+* const tt = t.bind(translator)
 * tt`Hello World!'
 */
 export function t(
-    i18n: I18n,
+    translator: Translator,
     strings: TemplateStringsArray,
-    ...substitutions: Array<I18nMessageArgValue>
+    ...substitutions: Array<TranslatorMessageArgValue>
 ): string {
     const template = String.raw({raw: strings}, ...substitutions)
 
-    return translate(i18n, template)
+    return translate(translator, template)
 }
 
 /*
@@ -83,13 +83,13 @@ export function t(
 *
 * EXAMPLE
 *
-* format(i18n, '@{0} items of @{1}', [4, 8])
-* format(i18n, '@{count} items of @{total}', {count: 4, total: 8})
+* format(translator, '@{0} items of @{1}', [4, 8])
+* format(translator, '@{count} items of @{total}', {count: 4, total: 8})
 */
 export function format(
-    i18n: I18n,
+    translator: Translator,
     key: string,
-    args?: undefined | I18nMessageArgs,
+    args?: undefined | TranslatorMessageArgs,
 ): string {
     if (! args) {
         // There are no arguments to interpolate. Optimization.
@@ -103,14 +103,14 @@ export function format(
         // When values is an object, token is the property.
         const argKey = it as number | string
         const argValue = args[argKey as any]
-        const argKeyRegexp = i18nRegexpFromToken(argKey, i18n.symbol, i18n.__cache__)
+        const argKeyRegexp = buildTranslatorRegexp(argKey, translator.symbol, translator.__cache__)
         keyFormatted = keyFormatted.replaceAll(argKeyRegexp, String(argValue))
     }
 
     return keyFormatted
 }
 
-export function i18nRegexpFromToken(token: I18nMessageArgKey, symbol: string, cache: Record<string, RegExp>): RegExp {
+export function buildTranslatorRegexp(token: TranslatorMessageArgKey, symbol: string, cache: Record<string, RegExp>): RegExp {
     const tokenCached = cache[token]
         ?? new RegExp(`[${symbol}]{\\s*${escapeRegexp(String(token))}\\s*}`, 'g')
 
@@ -121,51 +121,53 @@ export function i18nRegexpFromToken(token: I18nMessageArgKey, symbol: string, ca
 
 // Types ///////////////////////////////////////////////////////////////////////
 
-export interface I18n<L extends string = string, K extends I18nMessageKey = I18nMessageKey> {
+export interface Translator<L extends string = string, K extends TranslatorMessageKey = TranslatorMessageKey> {
     __cache__: Record<string, RegExp>
     locale: L
     localeFallback: L
-    messages: I18nMessages<L, K>
+    messages: TranslatorMessages<L, K>
     symbol: string
 }
 
-export interface I18nDefinition<L extends string, K extends I18nMessageKey, L1 extends L = L, L2 extends L = L> {
+export interface TranslatorDefinition<L extends string, K extends TranslatorMessageKey, L1 extends L = L, L2 extends L = L> {
     locale: L1
     localeFallback: L2
-    messages: I18nMessages<L, K>
+    messages: TranslatorMessages<L, K>
     symbol?: undefined | string
 }
 
-export type I18nMessages<
+export type TranslatorGeneric = Translator<string, string>
+
+export type TranslatorMessages<
     L extends string = string,
-    K extends I18nMessageKey = I18nMessageKey,
+    K extends TranslatorMessageKey = TranslatorMessageKey,
 > =
     Partial<Record<
         L, // Locale.
         undefined | Partial<Record<
             K, // Message Key.
-            undefined | string | I18nMessageComputable
+            undefined | string | TranslatorMessageComputable
         >>
     >>
 
-export interface I18nMessageComputable {
+export interface TranslatorMessageComputable {
     (...args: Array<any>): string
 }
 
-export type I18nMessageKey = string | number
-export type I18nMessageArgKey = string | number
-export type I18nMessageArgValue = string | number
+export type TranslatorMessageKey = string | number
+export type TranslatorMessageArgKey = string | number
+export type TranslatorMessageArgValue = string | number
 
-export type I18nMessageArgs =
-    | Array<I18nMessageArgValue>
-    | Record<I18nMessageArgKey, I18nMessageArgValue>
+export type TranslatorMessageArgs =
+    | Array<TranslatorMessageArgValue>
+    | Record<TranslatorMessageArgKey, TranslatorMessageArgValue>
 
-export type I18nLocaleOf<D extends I18nDefinition<string, string>> =
-    D extends I18nDefinition<infer L, string>
+export type TranslatorLocaleOf<D extends TranslatorDefinition<string, string>> =
+    D extends TranslatorDefinition<infer L, string>
         ? L
         : string
 
-export type I18nMessageKeyOf<D extends I18nDefinition<string, string>> =
-    D extends I18nDefinition<string, infer K>
+export type TranslatorMessageKeyOf<D extends TranslatorDefinition<string, string>> =
+    D extends TranslatorDefinition<string, infer K>
         ? K
         : string

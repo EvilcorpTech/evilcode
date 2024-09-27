@@ -1,15 +1,15 @@
-import type {I18nMessageArgs} from '@eviljs/std/i18n'
+import type {TranslatorMessageArgs} from '@eviljs/std/translator'
 import {isString} from '@eviljs/std/type-is'
 import type {Accessor, JSX} from 'solid-js'
 import {Show, splitProps} from 'solid-js'
 import {Dynamic} from 'solid-js/web'
 import {classes} from './classes.js'
-import {createI18nMessage} from './i18n.js'
+import {createTranslatorMessage} from './translator.js'
 
 export function Message(props: MessageProps): JSX.Element {
     const [_, otherProps] = splitProps(props, ['args', 'children', 'tag'])
 
-    const message = createI18nMessage(
+    const message = createTranslatorMessage(
         () => isString(props.children)
             ? props.children
             : undefined
@@ -36,7 +36,7 @@ export function Message(props: MessageProps): JSX.Element {
 // Types ///////////////////////////////////////////////////////////////////////
 
 export interface MessageProps extends JSX.HTMLAttributes<HTMLElement> {
-    args?: undefined | I18nMessageArgs | Accessor<I18nMessageArgs>
+    args?: undefined | TranslatorMessageArgs | Accessor<TranslatorMessageArgs>
     children: undefined | string
     tag?: undefined | keyof JSX.IntrinsicElements
 }

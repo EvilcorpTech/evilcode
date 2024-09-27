@@ -12,7 +12,7 @@ export function readCookie(key: string): undefined | string {
     }
 
     const cookie = document.cookie
-    const regexp = cookieRegexpFromKey(key)
+    const regexp = buildCookieRegexp(key)
     const matches = cookie.match(regexp)
 
     if (! matches) {
@@ -82,7 +82,7 @@ export function expiresFromDate(dateOrNumber: number | Date): string {
     return expires
 }
 
-export function cookieRegexpFromKey(key: string): RegExp {
+export function buildCookieRegexp(key: string): RegExp {
     const regexp = CookieKeyRegexpCache[key] ?? new RegExp(`\\b${escapeRegexp(key)}=([^;]*);?`)
 
     CookieKeyRegexpCache[key] ??= regexp

@@ -50,7 +50,7 @@ export function emitBusEvent(reactiveObservers: BusEventObservers, ...polymorphi
             continue
         }
 
-        const eventRegexp = busEventRegexpFromPattern(eventPattern)
+        const eventRegexp = buildBusEventRegexp(eventPattern)
         const eventMatches = emittedEvent.match(eventRegexp)
 
         if (! eventMatches) {
@@ -140,7 +140,7 @@ export function exactTemplate(strings: TemplateStringsArray, ...substitutions: A
     return exactString(String.raw({raw: strings}, ...substitutions))
 }
 
-export function busEventRegexpFromPattern(pattern: BusEventPattern): RegExp {
+export function buildBusEventRegexp(pattern: BusEventPattern): RegExp {
     const regexp = BusEventRegexpCache[pattern] ?? new RegExp(pattern)
 
     BusEventRegexpCache[pattern] ??= regexp

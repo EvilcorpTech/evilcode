@@ -1,12 +1,12 @@
 import {createElement, memo} from 'react'
 import type {BoxProps} from './box.js'
 import {classes} from './classes.js'
-import {useI18nMessage, type I18nMessageArgs, type I18nMessageKey} from './i18n.js'
+import {useTranslatorMessage, type TranslatorMessageArgs, type TranslatorMessageKey} from './translator.js'
 import type {VoidProps} from './type.js'
 
 export const Message: React.ComponentType<MessageProps> = memo(function Message(props: MessageProps) {
     const {children, className, args, tag, ...otherProps} = props
-    const message = useI18nMessage(children, args)
+    const message = useTranslatorMessage(children, args)
 
     return (
         createElement(tag ?? 'span', {
@@ -19,7 +19,7 @@ export const Message: React.ComponentType<MessageProps> = memo(function Message(
 
 export function Translate(props: TranslateProps): React.ReactNode {
     const {children, args} = props
-    const message = useI18nMessage(children, args)
+    const message = useTranslatorMessage(children, args)
 
     return message
 }
@@ -30,6 +30,6 @@ export interface MessageProps extends VoidProps<BoxProps>, TranslateProps {
 }
 
 export interface TranslateProps {
-    args?: undefined | I18nMessageArgs
-    children: I18nMessageKey
+    args?: undefined | TranslatorMessageArgs
+    children: TranslatorMessageKey
 }
