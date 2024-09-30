@@ -8,7 +8,7 @@ import {useRequestBody, usingRequestHeaders} from './request-init.js'
 import {useRequestJson} from './request-json.js'
 import {RequestMethod, creatingRequest, type RequestMethodEnum} from './request-method.js'
 import {usingRequestParams} from './request-params.js'
-import {usingFetchRetry, type FetchRetryOptions} from './request-retry.js'
+import {usingRequestRetry, type RequestRetryOptions} from './request-retry.js'
 import {decodeResponseBody, rejectOnResponseError} from './response.js'
 import type {UrlParams} from './url-params.js'
 
@@ -22,7 +22,7 @@ export const HttpClient = {
             (params ? usingRequestParams(params) : identity)
             (usingRequestPayload(body))
             (encoder ? encoder : identity)
-            (usingFetchRetry(retry))
+            (usingRequestRetry(retry))
             (decoder ? awaiting(decoder) : (identity as Io<Promise<Response>, Promise<O>>))
         ()
     },
@@ -151,7 +151,7 @@ export interface HttpClientRequestOptions {
     headers?: undefined | HeadersInit
     method: RequestMethodEnum
     params?: undefined | UrlParams
-    retry?: undefined | FetchRetryOptions
+    retry?: undefined | RequestRetryOptions
     url: string
 }
 

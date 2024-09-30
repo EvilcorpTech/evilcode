@@ -6,9 +6,9 @@ import {cloneRequestWithBody} from './request-clone.js'
 /**
 * @throws
 **/
-export function usingFetchRetry(options?: undefined | FetchRetryOptions): Io<Request, Promise<Response>> {
+export function usingRequestRetry(options?: undefined | RequestRetryOptions): Io<Request, Promise<Response>> {
     function continuation(request: Request): Promise<Response> {
-        return useFetchRetry(request, options)
+        return useRequestRetry(request, options)
     }
 
     return continuation
@@ -16,8 +16,8 @@ export function usingFetchRetry(options?: undefined | FetchRetryOptions): Io<Req
 /**
 * @throws
 **/
-export function useFetchRetry(request: Request, options?: undefined | FetchRetryOptions): Promise<Response> {
-    const executor = options?.fetch ?? fetch
+export function useRequestRetry(request: Request, options?: undefined | RequestRetryOptions): Promise<Response> {
+    const executor: Io<Request, Promise<Response>> = options?.executor ?? fetch
     const assert = options?.assert ?? Promise.resolve<Response>
     const times = options?.times ?? 3
     const delay = options?.delay ?? OneSecondInMs
@@ -37,7 +37,7 @@ export function useFetchRetry(request: Request, options?: undefined | FetchRetry
 
         await wait(delay)
 
-        return useFetchRetry(request, {
+        return useRequestRetry(request, {
             ...options,
             times: times - 1,
             delay: Math.min(delayMax, delay * delayFactor),
@@ -45,14 +45,14 @@ export function useFetchRetry(request: Request, options?: undefined | FetchRetry
     }
 
     // We need to clone the request otherwise a TypeError is raised due to used body.
-    // `new Request(request)` does not work; we need `request.clone()`.
+    // `new Request(request)` doesn't work; we need `request.clone()`.
     return executor(cloneRequestWithBody(request)).then(assert).catch(retry)
 }
 
 /**
 * EXAMPLE
 *
-* const retryOptions: FetchRetryOptions = {
+* const retryOptions: RequestRetryOptions = {
 *     assert: rejectOnServerRecoverableStatus,
 *     delay: 3_000,
 *     delayFactor: 2,
@@ -78,7 +78,7 @@ export async function rejectOnServerRecoverableStatus(responsePromise: Response 
 
 // Types ///////////////////////////////////////////////////////////////////////
 
-export interface FetchRetryOptions {
+export interface RequestRetryOptions {
     /**
     * @throws
     **/
@@ -86,7 +86,7 @@ export interface FetchRetryOptions {
     delay?: undefined | number // In milliseconds.
     delayFactor?: undefined | number
     delayMax?: undefined | number // In milliseconds.
-    fetch?: undefined | Io<Request, Promise<Response>>
+    executor?: undefined | Io<Request, Promise<Response>>
     onError?: undefined | Fn<[error: unknown], void>
     times?: undefined | number
 }
