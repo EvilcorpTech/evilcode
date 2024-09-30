@@ -136,7 +136,7 @@ export interface TranslatorDefinition<L extends string, K extends TranslatorMess
     symbol?: undefined | string
 }
 
-export type TranslatorGeneric = Translator<string, string>
+export type TranslatorGeneric = Translator<string, TranslatorMessageKey>
 
 export type TranslatorMessages<
     L extends string = string,
