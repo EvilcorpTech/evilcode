@@ -22,8 +22,12 @@ for pkg; do
     pkg_name=$(npm --prefix "$pkg" pkg get name | tr -d '"')
 
     $Npm --prefix "$pkg" run --if-present build
-    $Git -C "$pkg" add --all .
-    $Git -C "$pkg" commit --edit --message "($pkg_name) "
+
+    dirty=$($Git -C "$pkg" status --porcelain . | tail -n1)
+    if test -n "$dirty"; then
+        $Git -C "$pkg" add --all .
+        $Git -C "$pkg" commit --edit --message "($pkg_name) "
+    fi
 
     "$Dir/tools/package-publish" "$pkg"
 
