@@ -69,7 +69,7 @@ export const Input = displayName('Input', forwardRef(function Input(
                 placeholder={placeholder}
                 onFocus={() => setFocus(true)}
                 onBlur={() => setFocus(false)}
-                onChange={event => onChange?.(event.currentTarget.value)}
+                onChange={event => onChange?.(event.currentTarget.value, event)}
             />
         </div>
     )
@@ -84,5 +84,5 @@ export interface InputProps extends Omit<React.InputHTMLAttributes<HTMLInputElem
     autoComplete?: undefined | string
     autoFocus?: undefined | boolean
     tabIndex?: undefined | number
-    onChange?: undefined | ((event: string) => void)
+    onChange?: undefined | ((value: string, event: React.ChangeEvent<HTMLInputElement>) => void)
 }

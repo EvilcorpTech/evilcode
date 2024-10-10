@@ -47,7 +47,7 @@ export const Input = displayName('Input', forwardRef(function Input(
                     {...otherProps}
                     ref={useMergeRefs(inputRef, ref)}
                     className={classes('input-2d2b', className)}
-                    onChange={event => onChange?.(event.currentTarget.value)}
+                    onChange={event => onChange?.(event.currentTarget.value, event)}
                 />
             )}
         </div>
@@ -121,7 +121,7 @@ export interface InputProps extends VoidProps<Omit<React.InputHTMLAttributes<HTM
     hostClass?: undefined | string
     hostProps?: undefined | React.HTMLAttributes<HTMLElement>
     hostStyle?: undefined | React.CSSProperties
-    onChange?: undefined | ((event: string) => void)
+    onChange?: undefined | ((value: string, event: React.ChangeEvent<HTMLInputElement>) => void)
 }
 
 export interface TextInputProps extends InputProps {

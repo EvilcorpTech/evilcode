@@ -192,7 +192,6 @@ export function WidgetsView(props: WidgetsViewProps): JSX.Element {
                 </Tooltip>
             </div>
 
-
             <div className="section-0234">
                 <h6 className="title-74a6">Slider</h6>
 

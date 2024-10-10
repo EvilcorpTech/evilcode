@@ -1,6 +1,6 @@
 import {useRouteArgs, useRoutePathTest} from '@eviljs/react/router'
 import {isArray, isFunction} from '@eviljs/std/type-is'
-import {buildRouteRegexp} from '@eviljs/web/route'
+import {compileRoutePatternRegexp} from '@eviljs/web/route'
 import {Children, cloneElement, useMemo} from 'react'
 
 export function RouteArgs(props: RouteArgsProps): undefined | JSX.Element | React.ReactNode {
@@ -12,7 +12,7 @@ export function RouteArgs(props: RouteArgsProps): undefined | JSX.Element | Reac
         if (! guard) {
             return true
         }
-        const guardRegexp = buildRouteRegexp(guard)
+        const guardRegexp = compileRoutePatternRegexp(guard)
         const isValid = testRoutePath(guardRegexp)
 
         return isValid
