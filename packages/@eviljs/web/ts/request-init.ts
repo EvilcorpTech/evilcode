@@ -1,7 +1,19 @@
+import {mapSome} from '@eviljs/std/fn-monad'
 import type {Io} from '@eviljs/std/fn-type'
 import {cloneRequest} from './request-clone.js'
 import {mergeRequest, mergeRequestHeaders} from './request-merge.js'
 import type {RequestMethodEnum} from './request-method.js'
+
+export function asFormData(data: Record<string, string | Blob | File>): FormData {
+    const formData = new FormData()
+
+    for (const key in data) {
+        const value = data[key]
+        mapSome(value, value => formData.append(key, value))
+    }
+
+    return formData
+}
 
 // Request Method //////////////////////////////////////////////////////////////
 
@@ -99,15 +111,4 @@ export function usingRequestPriority(priority: undefined | RequestPriority): Io<
 **/
 export function useRequestPriority(request: Request, priority: undefined | RequestPriority): Request {
     return cloneRequest(request, {priority})
-}
-
-// Types ///////////////////////////////////////////////////////////////////////
-
-export type RequestPriority = 'auto' | 'low' | 'high'
-
-// FIXME: remove this when TypeScript lib.dom supports it.
-declare global {
-    interface RequestInit {
-        priority?: undefined | RequestPriority
-    }
 }
