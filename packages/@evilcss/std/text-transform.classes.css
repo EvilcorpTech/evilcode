@@ -1,3 +1,5 @@
-.std-text-capitalize { text-transform: capitalize; }
 .std-text-lowercase { text-transform: lowercase; }
 .std-text-uppercase { text-transform: uppercase; }
+.std-text-capitalize { text-transform: capitalize; }
+.std-text-capitalize-first::first-letter, /* Element must be block or inline-block. */
+.std-text-capitalize-first ::first-letter { text-transform: capitalize; }
