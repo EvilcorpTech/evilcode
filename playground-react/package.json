@@ -9,7 +9,7 @@
         "preview": "npm --prefix dev run preview",
         "serve": "npm --prefix dev run serve"
     },
-    "packageManager": "pnpm@9.11.0",
+    "packageManager": "pnpm@9.12.1",
     "dependencies": {
         "@evilcss/std": "link:../packages/@evilcss/std",
         "@evilcss/ui": "link:../packages/@evilcss/ui",
