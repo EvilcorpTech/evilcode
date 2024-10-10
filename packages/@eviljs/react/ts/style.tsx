@@ -1,11 +1,7 @@
-import {useContext, useMemo} from 'react'
+import {useContext, useInsertionEffect, useMemo} from 'react'
 import {defineContext} from './ctx.js'
 
 export const StyleContext: React.Context<undefined | StyleContextValue> = defineContext<StyleContextValue>('StyleContext')
-
-export function useStyleContext(): undefined | StyleContextValue {
-    return useContext(StyleContext)
-}
 
 /*
 * EXAMPLE
@@ -68,6 +64,24 @@ export function StyleProvider(props: StyleProviderProps): JSX.Element {
     }, [])
 
     return <StyleContext.Provider value={contextValue} children={children}/>
+}
+
+export function useStyleContext(): undefined | StyleContextValue {
+    return useContext(StyleContext)
+}
+
+export function useStyle(style: string): void {
+    const stylesManager = useStyleContext()!
+
+    useInsertionEffect(() => {
+        stylesManager.useStyle(style)
+
+        function onClean() {
+            stylesManager.cleanStyle(style)
+        }
+
+        return onClean
+    }, [stylesManager, style])
 }
 
 export function computeSimpleFastHash(string: string): string {

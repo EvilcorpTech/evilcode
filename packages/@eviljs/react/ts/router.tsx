@@ -4,7 +4,7 @@ import {escapeRegexp} from '@eviljs/std/regexp'
 import {asArray} from '@eviljs/std/type-as'
 import {isPromise, isString} from '@eviljs/std/type-is'
 import {exact, matchRoutePattern, testRoutePattern, type RoutePattern, type RoutePatterns} from '@eviljs/web/route'
-import type {RouterRoute, RouterRouteChange, RouterRouteChangeParams, RouterRouteChangeParamsDict, RouterRouteParams} from '@eviljs/web/router'
+import type {Router, RouterRoute, RouterRouteChange, RouterRouteChangeParams, RouterRouteChangeParamsDict, RouterRouteParams} from '@eviljs/web/router'
 import {encodeLink} from '@eviljs/web/router'
 import {isUrlAbsolute} from '@eviljs/web/url'
 import {Children, forwardRef, isValidElement, useCallback, useContext, useEffect, useMemo, useRef} from 'react'
@@ -12,14 +12,33 @@ import {classes} from './classes.js'
 import {defineContext} from './ctx.js'
 import {displayName} from './display-name.js'
 import {useReactiveSelect} from './reactive.js'
-import {useRouterContext} from './router-provider.js'
 
-export * from '@eviljs/web/route-v2'
 export * from '@eviljs/web/route'
+export * from '@eviljs/web/route-param'
+export * from '@eviljs/web/route-path'
 export * from '@eviljs/web/router'
-export * from './router-provider.js'
 
+export const RouterContext: React.Context<undefined | Router> = defineContext<Router>('RouterContext')
 export const RouteMatchContext: React.Context<undefined | RouteArgs> = defineContext<RouteArgs>('RouteMatchContext')
+
+/*
+* EXAMPLE
+*
+* const options = {type, basePath}
+*
+* <RouterProvider options={options}>
+*     <MyApp/>
+* </RouterProvider>
+*/
+export function RouterProvider(props: RouterProviderProps): JSX.Element {
+    const {children, router} = props
+
+    useEffect(() => {
+        router.start() // Router must not be stopped on unmount.
+    }, [router])
+
+    return <RouterContext.Provider value={router} children={children}/>
+}
 
 /*
 * EXAMPLE
@@ -30,7 +49,7 @@ export const RouteMatchContext: React.Context<undefined | RouteArgs> = defineCon
 * <WhenRoute is="^/book">
 *     <h1>/book*</h1>
 * </WhenRoute>
-* <WhenRoute is={MatchStart+'/book'+MatchEnd}>
+* <WhenRoute is={`${MatchStart}/book${MatchEnd}`}>
 *     <h1>/book exact</h1>
 * </WhenRoute>
 * <WhenRoute is={exact('/book')}>
@@ -39,7 +58,7 @@ export const RouteMatchContext: React.Context<undefined | RouteArgs> = defineCon
 * <WhenRoute is={new RegExp('^/book(?:/)?$', 'i')}>
 *     <h1>/book</h1>
 * </WhenRoute>
-* <WhenRoute is={`${MatchStart}/book/${Arg}/${Arg}${MatchEnd}`}>
+* <WhenRoute is={exact('/book/${Arg}/${Arg}${MatchEnd}')}>
 *     {(arg1, arg2) =>
 *         <h1>/book/{arg1}/{arg2}</h1>
 *     }
@@ -83,7 +102,7 @@ export function WhenRoute(props: WhenRouteProps): undefined | JSX.Element {
 *             <h1>/book/{arg1}/{arg2}</h1>
 *         )}
 *     </CaseRoute>
-*     <CaseRoute is={MatchStart+'/book'+MatchEnd}>
+*     <CaseRoute is={`${MatchStart}/book${MatchEnd}`}>
 *         <h1>/book exact</h1>
 *     </CaseRoute>
 *     <CaseRoute is={exact('/book')}>
@@ -168,7 +187,7 @@ export const Route = displayName('Route', forwardRef(function Route(
     ref: React.ForwardedRef<HTMLAnchorElement>,
 ) {
     const {
-        activeWhenExact,
+        activeExact,
         className,
         if: guard,
         params,
@@ -192,11 +211,9 @@ export const Route = displayName('Route', forwardRef(function Route(
         }
 
         const pathEscaped = escapeRegexp(to)
-        const pathExact = activeWhenExact
-            ? exact(pathEscaped)
-            : pathEscaped
+        const pathPattern = activeExact ? exact(pathEscaped) : pathEscaped
 
-        return testRoutePath(pathExact)
+        return testRoutePath(pathPattern)
     }, [to, testRoutePath])
 
     const onClick = useCallback((event: React.MouseEvent) => {
@@ -289,6 +306,10 @@ export function Redirect(props: RedirectProps): React.ReactNode {
     }, [])
 
     return children
+}
+
+export function useRouterContext<S = unknown>(): undefined | Router<S> {
+    return useContext(RouterContext as React.Context<undefined | Router<S>>)
 }
 
 export function useRouter<S = unknown>(): RouterManager<S> {
@@ -456,6 +477,16 @@ export const RouteSelectors = {
 
 // Types ///////////////////////////////////////////////////////////////////////
 
+export interface RouterProviderProps<S = unknown> {
+    children: undefined | React.ReactNode
+    router: Router<S>
+}
+
+export interface RouterProviderProps<S = unknown> {
+    children: undefined | React.ReactNode
+    router: Router<S>
+}
+
 export interface RouteArgsProviderProps {
     children: undefined | React.ReactNode
     value: RouteArgs
@@ -476,7 +507,7 @@ export interface CaseRouteProps extends WhenRouteProps {
 }
 
 export interface RouteProps extends RoutingProps, React.AnchorHTMLAttributes<HTMLAnchorElement>, React.RefAttributes<HTMLAnchorElement> {
-    activeWhenExact?: undefined | boolean
+    activeExact?: undefined | boolean
     children: undefined | React.ReactNode
     if?: undefined | Computable<RouteGuardResult>
 }
