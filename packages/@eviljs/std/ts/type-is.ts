@@ -110,10 +110,15 @@ export function isIterator(value: unknown):
         | AsyncIterator<unknown, unknown, unknown>
         | AsyncGenerator<unknown, unknown, unknown>
 {
-    return true
-        // && value instanceof Iterator // FIXME: when TypeScript supports it.
-        && Boolean(value)
-        && (value instanceof Object)
+    if (! value) {
+        return false
+    }
+    if (globalThis.Iterator && (value instanceof Iterator)) {
+        return true
+    }
+    return (
+        (value instanceof Object)
         && ('next' in value)
         && isFunction(value.next)
+    )
 }

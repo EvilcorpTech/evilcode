@@ -11,6 +11,10 @@ export function ResultError<const E>(error: E): ResultError<E> {
     }
 }
 
+export function isResult<R>(result: unknown): result is ResultOf<R> {
+    return ! isResultError(result)
+}
+
 export function isResultError(result: unknown): result is ResultError<unknown> {
     return true
         && isObject(result)
