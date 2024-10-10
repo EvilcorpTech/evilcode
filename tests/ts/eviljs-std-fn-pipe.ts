@@ -42,7 +42,6 @@ const subject = {id: 1, name: 'Mike', age: 18}
     (mappingSome((it: Array<string>) => it))
 ()}
 
-
 {const result = piped(subject)
     .to(it => ({...it, name: `${it.name} Tyson`}))
     .to(trying(it => it, error => throwError({message: 'Something wrong happened.'})))

@@ -93,7 +93,6 @@ export default defineShowcase('Transition', props => {
     )
 })
 
-
 function Starter(props: {
     children: (state: boolean, counter: number) => React.ReactNode
     interval?: undefined | number

@@ -1,23 +1,15 @@
 import './header.css'
 
 import {classes} from '@eviljs/react/classes'
-import {useRoutePathLocalized} from '@eviljs/react/route'
 import {Route} from '@eviljs/react/router'
-import {RoutePath} from '~/route/route-paths'
 
 export function Header(props: HeaderProps) {
-    const {children, className, ...otherProps} = props
-
-    const routes = {
-        home: useRoutePathLocalized(RoutePath.Home),
-        showcase: useRoutePathLocalized(RoutePath.Showcase),
-        example: useRoutePathLocalized(RoutePath.ExampleWithArg),
-    }
+    const {className, ...otherProps} = props
 
     const menu = [
-        {to: routes.home.link(), message: 'Home'},
-        {to: routes.showcase.link(), message: 'Showcase'},
-        {to: routes.example.link('123'), message: 'Arg'},
+        {to: '/', message: 'Home'},
+        {to: '/en/showcase', message: 'Showcase'},
+        {to: '/example/123', message: 'Arg'},
     ]
 
     return (
@@ -35,7 +27,7 @@ export function Header(props: HeaderProps) {
                             <Route
                                 className="route-d291"
                                 to={it.to}
-                                activeWhenExact
+                                activeExact
                             >
                                 {it.message}
                             </Route>

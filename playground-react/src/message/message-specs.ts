@@ -1,14 +1,14 @@
-import type {TranslatorDefinition} from '@eviljs/std/translator'
+import type {MsgDefinition} from '@eviljs/std/msg'
 import {DemoLocaleDefault, DemoLocaleFallback, type DemoLocale} from '~/l10n/locale-services'
 import en from '~/messages/en'
 import it from '~/messages/it'
 
-export const TranslatorDefaultMessages = {it, en}
+export const MsgDefaultMessages = {it, en}
 
-export const TranslatorSpec: TranslatorDefinition<DemoLocale, DemoMessageKey> = {
+export const MsgSpec: MsgDefinition<DemoLocale, DemoMessageKey> = {
     locale: DemoLocaleDefault,
     localeFallback: DemoLocaleFallback,
-    messages: TranslatorDefaultMessages,
+    messages: MsgDefaultMessages,
 }
 
 // Types ///////////////////////////////////////////////////////////////////////

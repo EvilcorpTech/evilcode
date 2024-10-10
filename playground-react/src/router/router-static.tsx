@@ -1,10 +1,9 @@
-import {CaseRoute, SwitchRoute} from '@eviljs/react/router'
+import {CaseRoute, exact, MatchArg, SwitchRoute} from '@eviljs/react/router'
 import type {VoidProps} from '@eviljs/react/type'
 import {Showcase} from '@eviljs/reactx/showcase-v1/showcase'
 import {NotFoundView} from '~/app-404/404-view'
 import {HomeView} from '~/app-home/home-view'
 import {ShowcaseEntries} from '~/app-showcase/all'
-import {RoutePath} from '~/route/route-paths'
 import {Header} from '~/ui-widgets/header'
 
 export function RouterStatic(props: RouterStaticProps) {
@@ -12,16 +11,16 @@ export function RouterStatic(props: RouterStaticProps) {
 
     return (
         <SwitchRoute fallback={<NotFoundView/>}>
-            <CaseRoute is={RoutePath.Home.patterns}>
+            <CaseRoute is={[exact`/`, exact`/en`, exact`/it`]}>
                 <HomeView/>
             </CaseRoute>
-            <CaseRoute is={RoutePath.Showcase.patterns}>
+            <CaseRoute is={[exact`/en/showcase`, exact`/it/showcase`]}>
                 <div>
                     <Header/>
                     <Showcase children={ShowcaseEntries}/>
                 </div>
             </CaseRoute>
-            <CaseRoute is={RoutePath.ExampleWithArg.patterns} children={id =>
+            <CaseRoute is={exact`/showcase/${MatchArg}`} children={id =>
                 <div>
                     <Header/>
                     <h1>Route ID {id}</h1>

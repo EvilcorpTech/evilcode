@@ -3,15 +3,15 @@ import '@eviljs/reactx/showcase-v1/showcase-theme-v1.css'
 import {Portal, PortalProvider} from '@eviljs/react/portal'
 import {PortalsProvider} from '@eviljs/react/portals'
 import {RouterProvider} from '@eviljs/react/router'
-import {StyleProvider} from '@eviljs/react/style-provider'
-import {TranslatorProvider} from '@eviljs/react/translator'
+import {StyleProvider} from '@eviljs/react/style'
+import {MessageProvider} from '@eviljs/react/message'
 import {DemoBusProvider} from '~/bus/bus-hooks'
 import type {DemoContainer} from '~/container/container-apis'
 import {DemoContainerContext} from '~/container/container-hooks'
 import {RouterStatic} from '~/router/router-static'
 import {DemoStoreProvider, DemoStoreSpec} from '~/store/store'
 import {useColorSchemePreference} from '~/theme/theme-hooks'
-import {TranslatorSpec} from '~/translator/translator-specs'
+import {MsgSpec} from '~/message/message-specs'
 
 export function RootContext(props: RootContextProps) {
     const {children, container} = props
@@ -21,7 +21,7 @@ export function RootContext(props: RootContextProps) {
         <DemoContainerContext.Provider value={container}>
             <DemoStoreProvider {...DemoStoreSpec}>
                 <DemoBusProvider>
-                    <TranslatorProvider {...TranslatorSpec}>
+                    <MessageProvider {...MsgSpec}>
                         <StyleProvider>
                             <RouterProvider router={Router}>
                                 <PortalProvider>
@@ -31,7 +31,7 @@ export function RootContext(props: RootContextProps) {
                                 </PortalProvider>
                             </RouterProvider>
                         </StyleProvider>
-                    </TranslatorProvider>
+                    </MessageProvider>
                 </DemoBusProvider>
             </DemoStoreProvider>
         </DemoContainerContext.Provider>
