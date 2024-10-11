@@ -150,6 +150,7 @@
 @import '@evilcss/std/text-transform.classes.css' layer(std);
 @import '@evilcss/std/text-weight.classes.css' layer(std);
 @import '@evilcss/std/text-weight.props.css' layer(std);
+@import '@evilcss/std/text-wrap.classes.css' layer(std);
 @import '@evilcss/std/text.classes.css' layer(std);
 @import '@evilcss/std/transition/fade.classes.css' layer(std);
 @import '@evilcss/std/transition/leak.classes.css' layer(std);
