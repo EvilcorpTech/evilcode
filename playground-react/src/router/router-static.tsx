@@ -20,7 +20,7 @@ export function RouterStatic(props: RouterStaticProps) {
                     <Showcase children={ShowcaseEntries}/>
                 </div>
             </CaseRoute>
-            <CaseRoute is={exact`/showcase/${MatchArg}`} children={id =>
+            <CaseRoute is={exact`/example/${MatchArg}`} children={id =>
                 <div>
                     <Header/>
                     <h1>Route ID {id}</h1>
