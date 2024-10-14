@@ -1,3 +1,5 @@
+import {deserializeStruct, serializeStruct} from '@eviljs/std/serial'
+
 export function saveSsrState(id: string, payload: unknown, options?: undefined | SsrSaveOptions): void {
     if (! payload) {
         return
@@ -6,31 +8,40 @@ export function saveSsrState(id: string, payload: unknown, options?: undefined |
     const inject = options?.inject ?? injectSsrStorageElement
     const ssrStorage = findSsrStorageElement(id) ?? inject(id)
 
-    serializeSsrStateIntoElement(ssrStorage, payload)
+    serializeSsrStateIntoElement(ssrStorage, payload, options?.serializer)
 }
 
-export function serializeSsrStateIntoElement(element: Element, payload: unknown): void {
-    const serializedPayload = JSON.stringify(payload)
+export function serializeSsrStateIntoElement(
+    element: Element,
+    payload: unknown,
+    serializerOptional?: undefined | SsrPayloadSerializer,
+): void {
+    const serialize: SsrPayloadSerializer = serializerOptional ?? serializeStruct
 
-    element.textContent = serializedPayload
+    element.textContent = serialize(payload) ?? null
 }
 
 export function loadSsrState(id: string, options?: undefined | SsrLoadOptions): unknown {
     const ssrStorage = findSsrStorageElement(id)
 
     return ssrStorage
-        ? deserializeSsrStateFromElement(ssrStorage)
+        ? deserializeSsrStateFromElement(ssrStorage, options?.deserializer)
         : undefined
 }
 
-export function deserializeSsrStateFromElement(element: Element): unknown {
-    const serializedPayload = element.textContent?.trim()
+export function deserializeSsrStateFromElement(
+    element: Element,
+    deserializerOptional?: undefined | SsrPayloadDeserializer,
+): unknown {
+    const payloadSerialized = element.textContent?.trim()
 
-    if (! serializedPayload) {
+    if (! payloadSerialized) {
         return
     }
 
-    return JSON.parse(serializedPayload) as unknown
+    const deserialize: SsrPayloadDeserializer = deserializerOptional ?? deserializeStruct
+
+    return deserialize(payloadSerialized)
 }
 
 export function findSsrStorageElement(id: string): undefined | Element {
@@ -63,7 +74,17 @@ export function createSsrStorageElement(id: string): HTMLScriptElement {
 
 export interface SsrSaveOptions {
     inject?: undefined | ((id: string) => Element)
+    serializer?: undefined | SsrPayloadSerializer
 }
 
 export interface SsrLoadOptions {
+    deserializer?: undefined | SsrPayloadDeserializer
+}
+
+export interface SsrPayloadSerializer {
+    (payload: unknown): undefined | string
+}
+
+export interface SsrPayloadDeserializer {
+    (payloadSerialized: string): unknown
 }

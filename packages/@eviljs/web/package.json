@@ -5,24 +5,25 @@
     "sideEffects": false,
     "files": [
         "/LICENSE.txt",
-        "/esm/**/*.js",
-        "/esm/**/*.d.ts",
-        "/esm/**/*.map",
-        "/ts/**/*.ts"
+        "/esm/",
+        "/ts/"
     ],
     "exports": {
         "./*": "./esm/*.js"
     },
     "scripts": {
+        "clean": "rm -rf ./esm/ || true; rm -rf ./node_modules/.cache/ || true",
         "build": "tsc --listEmittedFiles",
-        "preversion": "npm run build",
-        "prepack": "npm run build"
+        "test": "tsc --project ./tests && npx --yes tsx --test",
+        "prepack": "npm run clean; npm run build && npm run test",
+        "preversion": "npm run build && npm run test"
     },
     "dependencies": {
         "@eviljs/std": "1",
         "tslib": "2"
     },
     "devDependencies": {
+        "@types/node": "22",
         "typescript": "5.6"
     },
     "author": "Daniele Orlando",
