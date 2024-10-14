@@ -6,16 +6,15 @@
     "files": [
         "/LICENSE.txt",
         "/README.md",
-        "/cjs/**/*.js",
-        "/cjs/**/*.d.ts",
-        "/cjs/**/*.map",
-        "/ts/**/*.ts"
+        "/cjs/",
+        "/ts/"
     ],
     "main": "./cjs/index.js",
     "scripts": {
+        "clean": "rm -rf ./cjs/ || true; rm -rf ./node_modules/.cache/ || true",
         "build": "tsc --listEmittedFiles",
-        "preversion": "npm run build",
-        "prepack": "npm run build"
+        "prepack": "npm run clean; npm run build",
+        "preversion": "npm run build"
     },
     "dependencies": {
         "@types/node": "22",

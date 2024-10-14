@@ -5,18 +5,17 @@
     "sideEffects": false,
     "files": [
         "/LICENSE.txt",
-        "/esm/**/*.js",
-        "/esm/**/*.d.ts",
-        "/esm/**/*.map",
-        "/ts/**/*.ts"
+        "/esm/",
+        "/ts/"
     ],
     "exports": {
         "./*": "./esm/*.js"
     },
     "scripts": {
+        "clean": "rm -rf ./esm/ || true; rm -rf ./node_modules/.cache/ || true",
         "build": "tsc --listEmittedFiles",
-        "preversion": "npm run build",
-        "prepack": "npm run build"
+        "prepack": "npm run clean; npm run build",
+        "preversion": "npm run build"
     },
     "dependencies": {
         "@eviljs/std": "1",
