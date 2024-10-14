@@ -285,22 +285,15 @@ export function Colors(): JSX.Element {
 export function Typography(): JSX.Element {
     return (
         <div className="std-flex std-flex-column std-flex-align-start">
-            <label className="text-8fa3 std-text-display1 std-color-primary-fg1">Display 1</label>
-            <label className="text-8fa3 std-text-display2 std-color-primary-fg1">Display 2</label>
-            <label className="text-8fa3 std-text-h1 std-color-primary-fg2">Headline 1</label>
-            <label className="text-8fa3 std-text-h2 std-color-primary-fg2">Headline 2</label>
-            <label className="text-8fa3 std-text-h3 std-color-primary-fg2">Headline 3</label>
-            <label className="text-8fa3 std-text-h4 std-color-primary-fg2">Headline 4</label>
-            <label className="text-8fa3 std-text-h5 std-color-primary-fg2">Headline 5</label>
-            <label className="text-8fa3 std-text-h6 std-color-primary-fg2">Headline 6</label>
-            <label className="text-8fa3 std-text-subtitle1 std-color-primary-fg3">Subtitle 1</label>
-            <label className="text-8fa3 std-text-subtitle2 std-color-primary-fg3">Subtitle 2</label>
-            <label className="text-8fa3 std-text-overline">Overline</label>
-            <label className="text-8fa3 std-text-caption">Caption</label>
-            <label className="text-8fa3 std-text-button">Button</label>
-            <label className="text-8fa3 std-text-body1">Body 1</label>
-            <label className="text-8fa3 std-text-body2">Body 2</label>
-            <label className="text-8fa3 std-text-small">Small</label>
+            {times(13).reverse().map(idx =>
+                <label
+                    key={idx}
+                    className={classes('text-8fa3', `std-text-size${idx+1}`)}
+                >
+                    Text Size {idx + 1}
+                </label>
+
+            )}
         </div>
     )
 }
@@ -308,7 +301,7 @@ export function Typography(): JSX.Element {
 export function TextHeight(): JSX.Element {
     return (
         <div className="std-flex std-flex-justify-center std-flex-wrap std-gap3">
-            {['0', '1', '2', '3', '4', '5', '6'].map(it =>
+            {times(7).map(it =>
                 <Fragment key={it}>
                     <p className={`std-text-height${it}`} style={{maxWidth: '10rem'}}>
                         Text height <b>{it}</b>

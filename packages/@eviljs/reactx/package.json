@@ -9,10 +9,14 @@
         "/**/*.js",
         "/**/*.d.ts"
     ],
+    "exports": {
+        "./*": "./*"
+    },
     "scripts": {
+        "clean": "rm -rf ./node_modules/.cache/ || true",
         "build": "tsc --listEmittedFiles",
-        "preversion": "npm run build",
-        "prepack": "npm run build"
+        "prepack": "npm run clean; npm run build",
+        "preversion": "npm run build"
     },
     "dependencies": {
         "@eviljs/react": "1",
