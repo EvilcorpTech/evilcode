@@ -1,4 +1,19 @@
 import {asArray} from '@eviljs/std/type-as'
+import {expectType} from '@eviljs/std/type-expect'
+import {describe, test} from 'node:test'
+
+describe('@eviljs/std/type-as', (ctx) => {
+    test('asArray()', (ctx) => {
+        expectType<[number]>(asArray([] as any as (number | [number])))
+        expectType<number[]>(asArray([] as any as (number | number[])))
+        expectType<Array<number>>(asArray([] as any as (number | Array<number>)))
+        expectType<readonly [number]>(asArray([] as any as (number | readonly [number])))
+        expectType<readonly number[]>(asArray([] as any as (number | readonly number[])))
+        expectType<readonly number[]>(asArray([] as any as (number | ReadonlyArray<number>)))
+        expectType<[number, ...Array<unknown>]>(asArray([] as any as (number | [number, string])))
+        expectType<Array<number|string>>(asArray([] as any as (number | [number, string])))
+    })
+})
 
 // export function asArray<V, I>(value: V | I):
 //     V extends Array<infer I> ? // [T] | T[] | Array<T>
@@ -14,26 +29,3 @@ import {asArray} from '@eviljs/std/type-as'
 // export function asArray<V, T extends unknown[]>(value: V | readonly [...T]): [V] | readonly [...T]
 // export function asArray<V, I>(value: V | readonly I[]): [V] | readonly I[]
 // export function asArray<V, I>(value: V | I[]): V[] | I[]
-
-const a1 = asArray([] as any as (number | [number]))
-const b1: [number] = a1
-
-const a2 = asArray([] as any as (number | number[]))
-const b2: number[] = a2
-
-const a3 = asArray([] as any as (number | Array<number>))
-const b3: Array<number> = a3
-
-const a4 = asArray([] as any as (number | readonly [number]))
-const b4: readonly [number] = a4
-
-const a5 = asArray([] as any as (number | readonly number[]))
-const b5: readonly number[] = a5
-
-const a6 = asArray([] as any as (number | ReadonlyArray<number>))
-const b6: readonly number[] = a6
-
-const a7 = asArray([] as any as (number | [number, string]))
-const b71: [number, ...Array<unknown>] = a7
-const b72: Array<number|string> = a7
-// const b73: [number] = a7

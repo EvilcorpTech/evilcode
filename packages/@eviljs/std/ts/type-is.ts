@@ -66,6 +66,25 @@ export function isInteger(value: unknown): value is number {
     return Number.isInteger(value as any)
 }
 
+export function isIterator(value: unknown):
+    value is
+        | Iterator<unknown, unknown, unknown>
+        | AsyncIterator<unknown, unknown, unknown>
+        | AsyncGenerator<unknown, unknown, unknown>
+{
+    if (! value) {
+        return false
+    }
+    if (globalThis.Iterator && (value instanceof Iterator)) {
+        return true
+    }
+    return (
+        (value instanceof Object)
+        && ('next' in value)
+        && isFunction(value.next)
+    )
+}
+
 export function isObject<T extends object = Record<PropertyKey, unknown>>(value: unknown): value is T {
     if (! value) {
         return false
@@ -104,21 +123,18 @@ export function isString(value: unknown): value is string {
     return typeof value === 'string' || value instanceof String
 }
 
-export function isIterator(value: unknown):
-    value is
-        | Iterator<unknown, unknown, unknown>
-        | AsyncIterator<unknown, unknown, unknown>
-        | AsyncGenerator<unknown, unknown, unknown>
-{
+export function isSymbol(value: unknown): value is Symbol {
     if (! value) {
         return false
     }
-    if (globalThis.Iterator && (value instanceof Iterator)) {
-        return true
+
+    const proto = Object.getPrototypeOf(value)
+
+    if (! proto) {
+        return false
     }
-    return (
-        (value instanceof Object)
-        && ('next' in value)
-        && isFunction(value.next)
-    )
+    if (proto.constructor !== Symbol) {
+        return false
+    }
+    return true
 }

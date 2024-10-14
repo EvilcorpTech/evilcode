@@ -1,4 +1,4 @@
-import {getObjectPath} from './object.js'
+import {fromObjectPathToParts, getObjectPath} from './object.js'
 import {assertFunctionOptional, assertObject} from './type-assert.js'
 import {ensureArray, ensureBoolean, ensureFunction, ensureInteger, ensureNumber, ensureString, ensureStringOptional, throwAssertTypeError} from './type-ensure.js'
 import {isArray, isFunction, isNone, type None} from './type.js'
@@ -138,7 +138,7 @@ export function lookup(ctx: CtxWithResolver, pathExp: Exp<Ctx, string>): unknown
         return resolver($, path)
     }
     // There is not a resolver for the path. We use the getter.
-    return getObjectPath($, path)
+    return getObjectPath($, fromObjectPathToParts(path))
 }
 
 // Evaluation Tree /////////////////////////////////////////////////////////////

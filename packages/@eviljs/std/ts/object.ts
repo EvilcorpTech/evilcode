@@ -1,10 +1,8 @@
 import type {Fn, Io} from './fn-type.js'
-import {isArray, isDefined, isObject, isUndefined} from './type-is.js'
+import {isDefined, isUndefined} from './type-is.js'
 import type {ObjectComplete, Prettify} from './type.js'
 
-export const ObjectPathArrayOpenRegexp: RegExp = /\[/g
-export const ObjectPathArrayCloseRegexp: RegExp = /\]/g
-export const ObjectPathCache: Record<string, Array<string | number>> = {}
+export * from './object-path.js'
 
 export function isObjectEmpty(object: object): boolean {
     for (const it in object) {
@@ -192,38 +190,6 @@ export function objectFromEntry<K extends PropertyKey, V>(
         : {}
 }
 
-export function getObjectPath(root: ObjectRoot, path: ObjectPath): unknown {
-    const parts = isArray(path)
-        ? path
-        : fromObjectPathToParts(path)
-
-    let node = root as unknown
-
-    for (const part of parts) {
-        if (! isObject(node) && ! isArray(node)) {
-            return
-        }
-        node = node[part as any]
-    }
-
-    return node
-}
-
-export function fromObjectPathToParts(path: string): Array<number | string> {
-    if (! ObjectPathCache[path]) {
-        ObjectPathCache[path] = path
-            .replace(ObjectPathArrayOpenRegexp, '.#')
-            .replace(ObjectPathArrayCloseRegexp, '')
-            .split('.')
-            .map(it =>
-                it.startsWith('#')
-                    ? Number(it.slice(1))
-                    : it
-            )
-    }
-    return ObjectPathCache[path]!
-}
-
 /*
 * Stores an item inside an object, returning the object. Useful when used inside
 * an Array.reduce() function.
@@ -266,6 +232,3 @@ export function indexingBy<
 
 export type ObjectKeyMapper<K, V, R> = (key: K, value: V) => R
 export type ObjectValueMapper<V, K, R> = (value: V, key: K) => R
-
-export type ObjectRoot = Record<PropertyKey, unknown> | Array<unknown>
-export type ObjectPath = string | Array<string | number>

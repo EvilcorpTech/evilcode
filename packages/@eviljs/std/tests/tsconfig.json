@@ -1,0 +1,16 @@
+{
+    "extends": "../tsconfig.json",
+    "include": ["${configDir}/**/*.ts"],
+    "compilerOptions": {
+        "baseUrl": null,
+        "declaration": null,
+        "declarationMap": null,
+        "incremental": null,
+        "isolatedDeclarations": null,
+        "noEmit": true,
+        "outDir": null,
+        "rootDir": null,
+        "sourceMap": null,
+        "tsBuildInfoFile": null
+    }
+}

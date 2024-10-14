@@ -1,6 +1,7 @@
 export * from './type-as.js'
 export * from './type-assert.js'
 export * from './type-ensure.js'
+export * from './type-expect.js'
 export * from './type-is.js'
 export * from './type-kind.js'
 export * from './type-types.js'
