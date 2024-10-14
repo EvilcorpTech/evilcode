@@ -4,8 +4,10 @@
         "check-outdated": "corepack pnpm outdated --recursive",
         "upgrade": "npx npm-upgrade@latest && npm run init",
         "update": "corepack pnpm update --recursive",
+        "clean": "nx run-many --target clean",
         "build": "nx run-many --target build",
-        "build-watch": "(nx run-many --target build --skip-nx-cache || true) && nx watch --all run-many -- npm run build"
+        "build-watch": "(nx run-many --target build --skip-nx-cache || true) && nx watch --all run-many -- npm run build",
+        "test": "nx run-many --target test"
     },
     "packageManager": "pnpm@9.12.1",
     "devDependencies": {
