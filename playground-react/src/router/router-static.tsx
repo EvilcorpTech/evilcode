@@ -1,6 +1,6 @@
 import {CaseRoute, exact, MatchArg, SwitchRoute} from '@eviljs/react/router'
 import type {VoidProps} from '@eviljs/react/type'
-import {Showcase} from '@eviljs/reactx/showcase-v1/showcase'
+import {Showcase} from '@eviljs/reactx/showcase-v1/showcase.js'
 import {NotFoundView} from '~/app-404/404-view'
 import {HomeView} from '~/app-home/home-view'
 import {ShowcaseEntries} from '~/app-showcase/all'

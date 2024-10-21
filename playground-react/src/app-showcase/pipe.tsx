@@ -1,4 +1,4 @@
-import {defineShowcase} from '@eviljs/reactx/showcase-v1/showcase'
+import {defineShowcase} from '@eviljs/reactx/showcase-v1/showcase.js'
 import {
     awaiting,
     catching,

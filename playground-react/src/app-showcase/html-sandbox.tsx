@@ -1,5 +1,5 @@
-import {HtmlSandbox, defineHtmlSandbox} from '@eviljs/reactx/html-sandbox-v1/html-sandbox'
-import {defineShowcase} from '@eviljs/reactx/showcase-v1/showcase'
+import {HtmlSandbox, defineHtmlSandbox} from '@eviljs/reactx/html-sandbox-v1/html-sandbox.js'
+import {defineShowcase} from '@eviljs/reactx/showcase-v1/showcase.js'
 import {useState} from 'react'
 
 defineHtmlSandbox()

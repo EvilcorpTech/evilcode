@@ -2,9 +2,9 @@ import '@eviljs/reactx/input-v1/input-theme.css'
 import '@eviljs/reactx/input-v1/input.css'
 
 import {useUndoRedo} from '@eviljs/react/undoredo'
-import {Button} from '@eviljs/reactx/button-v1/button'
-import {Input} from '@eviljs/reactx/input-v1/input'
-import {defineShowcase} from '@eviljs/reactx/showcase-v1/showcase'
+import {Button} from '@eviljs/reactx/button-v1/button.js'
+import {Input} from '@eviljs/reactx/input-v1/input.js'
+import {defineShowcase} from '@eviljs/reactx/showcase-v1/showcase.js'
 
 export default defineShowcase('Undo Redo', (props) => {
     const history = useUndoRedo({message: ''})

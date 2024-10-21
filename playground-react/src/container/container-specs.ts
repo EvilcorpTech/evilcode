@@ -1,4 +1,4 @@
-import {createConsoleLog, createLogger, type Logger, type LoggerProps} from '@eviljs/std/logger'
+import {createConsoleLog, createLogger, type Logger, type LoggerProps} from '@eviljs/std/log'
 import type {Router} from '@eviljs/web/router'
 import {createHashRouter} from '@eviljs/web/router-hash'
 import {createPathRouter} from '@eviljs/web/router-path'

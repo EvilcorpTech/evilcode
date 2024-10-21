@@ -1,4 +1,4 @@
-import {defineShowcase} from '@eviljs/reactx/showcase-v1/showcase'
+import {defineShowcase} from '@eviljs/reactx/showcase-v1/showcase.js'
 import {DemoStore, useDemoStore, useDemoStoreDispatch, useDemoStoreState} from '~/store/store'
 import {Theme} from '~/theme/theme-apis'
 
