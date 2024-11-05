@@ -8,15 +8,17 @@ import {createRoot, type Root as ReactRoot} from 'react-dom/client'
 import {computeAppEntryResult, selectAppEntryMatch, type AppContext, type AppEntriesList, type AppEntryGenerator} from './adapt-entry.js'
 import {RootDefaultId, setupRootElement} from './adapt-root.js'
 
-export async function startApp<C extends object = {}>(
-    args: AdaptAppOptions<C>,
-): Promise<{root: ReactRoot, clean: Task, stop: Task}> {
+export async function startApp<C extends object = object>(args: AdaptAppOptions<C>): Promise<{
+    root: ReactRoot
+    clean: Task
+    stop: Task
+}> {
     const {router} = args
     const rootNode = setupRootElement(args.rootElementId ?? RootDefaultId, args.rootElementClasses)
     const routePathComputed = createReactiveComputed([router.route], route => route.path)
     const initialRoutePath = routePathComputed.value
 
-    const reactRoot = await mountAppRoot({...args, rootNode, routePath: initialRoutePath})
+    const reactRoot = await mountAppRoot({...args as AdaptAppOptions<any>, rootNode, routePath: initialRoutePath})
 
     let currentRenderTask: undefined | ReturnType<typeof runAppRenderTask>
 
@@ -24,7 +26,7 @@ export async function startApp<C extends object = {}>(
 
     const stopWatching = watchReactive(routePathComputed, routePath => {
         currentRenderTask?.cancel()
-        currentRenderTask = runAppRenderTask({...args, rootNode, reactRoot, routePath})
+        currentRenderTask = runAppRenderTask({...args as AdaptAppOptions<any>, rootNode, reactRoot, routePath})
     })
 
     function stop() {
@@ -39,7 +41,7 @@ export async function startApp<C extends object = {}>(
     return {root: reactRoot, clean: clean, stop: stop}
 }
 
-export async function mountAppRoot<C extends object = {}>(args: AdaptHydratedRootOptions<C>): Promise<ReactRoot> {
+export async function mountAppRoot(args: AdaptHydratedRootOptions): Promise<ReactRoot> {
     const {rootNode} = args
     const shouldHydrate = rootNode.hasChildNodes()
 
@@ -48,10 +50,10 @@ export async function mountAppRoot<C extends object = {}>(args: AdaptHydratedRoo
         : createAppMountedRoot(args)
 }
 
-export async function createAppHydratedRoot<C extends object = {}>(args: AdaptHydratedRootOptions<C>): Promise<ReactRoot> {
+export async function createAppHydratedRoot(args: AdaptHydratedRootOptions): Promise<ReactRoot> {
     const {context, fallback, entries, RootComponent, rootNode, routePath} = args
     const [routePathArgs, appEntryDefinition] = selectAppEntryMatch(routePath, entries) ?? []
-    const appContext: AppContext<C> = {...context as C, routePath, routePathArgs}
+    const appContext: AppContext = {...context, routePath, routePathArgs}
 
     async function loadAppEntryResult() {
         if (! routePathArgs || ! appEntryDefinition) {
@@ -73,7 +75,7 @@ export async function createAppHydratedRoot<C extends object = {}>(args: AdaptHy
     return reactRoot
 }
 
-export async function createAppMountedRoot<C extends object = {}>(args: AdaptMountedRootOptions<C>): Promise<ReactRoot> {
+export async function createAppMountedRoot(args: AdaptMountedRootOptions): Promise<ReactRoot> {
     const {rootNode} = args
 
     const reactRoot = createRoot(rootNode)
@@ -83,7 +85,7 @@ export async function createAppMountedRoot<C extends object = {}>(args: AdaptMou
     return reactRoot
 }
 
-export function runAppRenderTask<C extends object = {}>(args: AdaptRenderTaskOptions<C>): {
+export function runAppRenderTask(args: AdaptRenderTaskOptions): {
     cancel(): void
     promise: Promise<void>
 } {
@@ -95,14 +97,14 @@ export function runAppRenderTask<C extends object = {}>(args: AdaptRenderTaskOpt
         const [routePathArgs, appEntryDefinition] = selectAppEntryMatch(routePath, entries) ?? []
 
         if (! routePathArgs || ! appEntryDefinition) {
-            const appContext: AppContext<C> = {...context as C, routePath, routePathArgs: undefined}
+            const appContext: AppContext = {...context, routePath, routePathArgs: undefined}
             const appChildren = await fallback(appContext)
             renderReactRoot(createAppRootElement({RootComponent, children: appChildren}))
             return
         }
 
         const appEntry = await appEntryDefinition.entryLoader()
-        const appContext: AppContext<C> = {...context as C, routePath, routePathArgs}
+        const appContext: AppContext = {...context, routePath, routePathArgs}
 
         await renderGenerator(appEntry(appContext))
     }
@@ -158,9 +160,9 @@ export function createAppRootElement(args: AdaptAppRootOptions): JSX.Element | R
 
 // Types ///////////////////////////////////////////////////////////////////////
 
-export interface AdaptAppOptions<C extends object = {}> {
+export interface AdaptAppOptions<C extends object = object> {
     context?: undefined | C
-    entries: AppEntriesList<C>
+    entries: AppEntriesList<object, C>
     fallback: (context: AppContext<C>) => JSX.Element | React.ReactNode | Promise<JSX.Element | React.ReactNode>
     rootElementId?: undefined | string
     rootElementClasses?: undefined | Array<string>
@@ -168,18 +170,18 @@ export interface AdaptAppOptions<C extends object = {}> {
     router: Router
 }
 
-export interface AdaptHydratedRootOptions<C extends object = {}> extends AdaptAppOptions<C> {
+export interface AdaptHydratedRootOptions extends AdaptAppOptions {
     rootNode: HTMLElement
     routePath: string
 }
 
-export interface AdaptMountedRootOptions<C extends object = {}> extends AdaptHydratedRootOptions<C> {
+export interface AdaptMountedRootOptions extends AdaptHydratedRootOptions {
 }
 
-export interface AdaptRenderTaskOptions<C extends object = {}> extends AdaptMountedRootOptions<C> {
+export interface AdaptRenderTaskOptions extends AdaptMountedRootOptions {
     reactRoot: ReactRoot
 }
 
-export interface AdaptAppRootOptions extends Pick<AdaptAppOptions<{}>, 'RootComponent'> {
+export interface AdaptAppRootOptions extends Pick<AdaptAppOptions, 'RootComponent'> {
     children: JSX.Element | React.ReactNode
 }
