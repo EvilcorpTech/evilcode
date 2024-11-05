@@ -8,6 +8,7 @@ import {usingRequestOptions} from './request-merge.js'
 import {RequestMethod, creatingRequest, type RequestOptions} from './request-method.js'
 import {usingRequestParams} from './request-params.js'
 import {decodeResponseBodyAsJson} from './response.js'
+import type {UrlParams} from './url-params.js'
 
 export const GraphqlQueryCommentRegexp: RegExp = /[#].*/g
 export const GraphqlQueryEmptiesRegexp: RegExp = /\s+/g
@@ -45,13 +46,7 @@ export function useRequestGraphqlGet(request: Request, query: string, variables?
                 'Accept': JsonType,
             },
         }))
-        (usingRequestParams({
-            query: compressGraphqlQuery(query),
-            variables: variables
-                ? JSON.stringify(variables)
-                : undefined
-            ,
-        }))
+        (usingRequestParams(createGraphqlGetParams(query, variables)))
     ()
 }
 
@@ -96,6 +91,19 @@ export function useResponseGraphql<V = unknown>(response: Response | Promise<Res
     return Promise.resolve(response)
         .then(decodeResponseBodyAsJson)
         .then(it => asObject(it)?.data as V)
+}
+
+export function createGraphqlGetParams(
+    query: string,
+    variables?: undefined | GraphqlQueryVariables,
+): UrlParams {
+    return {
+        query: compressGraphqlQuery(query),
+        variables: variables
+            ? JSON.stringify(variables)
+            : undefined
+        ,
+    }
 }
 
 export function compressGraphqlQuery(query: string): string {

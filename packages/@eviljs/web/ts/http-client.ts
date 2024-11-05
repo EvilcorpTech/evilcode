@@ -3,7 +3,7 @@ import {piping} from '@eviljs/std/fn-pipe'
 import {identity} from '@eviljs/std/fn-return'
 import type {Io} from '@eviljs/std/fn-type'
 import {usingRequestAuthorization} from './request-auth.js'
-import {usingRequestHeaders} from './request-init.js'
+import {usingRequestCache, usingRequestHeaders, usingRequestSignal} from './request-init.js'
 import {RequestMethod, creatingRequest, type RequestMethodEnum} from './request-method.js'
 import {usingRequestParams} from './request-params.js'
 import {usingRequestPayload} from './request-payload.js'
@@ -15,12 +15,27 @@ export {asFormData} from './request-init.js'
 
 export const HttpClient = {
     Request<O = Response>(args: HttpClientBaseOptions<Response, O>): Promise<NoInfer<O>> {
-        const {authToken, baseUrl, body, decoder, encoder, headers, method, params, retry, url} = args
+        const {
+            authToken,
+            baseUrl,
+            body,
+            cache,
+            decoder,
+            encoder,
+            headers,
+            method,
+            params,
+            retry,
+            signal,
+            url,
+        } = args
 
         return creatingRequest(method, url, {baseUrl})
+            (params ? usingRequestParams(params) : identity)
+            (cache ? usingRequestCache(cache) : identity)
+            (signal ? usingRequestSignal(signal) : identity)
             (authToken ? usingRequestAuthorization('Bearer', authToken) : identity)
             (headers ? usingRequestHeaders(headers) : identity)
-            (params ? usingRequestParams(params) : identity)
             (usingRequestPayload(body))
             (encoder ? encoder : identity)
             (usingRequestRetry(retry))
@@ -58,7 +73,6 @@ export const HttpClient = {
         })
     },
 }
-
 
 export function createResponseDecoder(): Io<Response | Promise<Response>, Promise<unknown>>
 export function createResponseDecoder<O>(contentDecoder: Io<unknown, O | Promise<O>>): Io<Response | Promise<Response>, Promise<O>>
@@ -101,11 +115,13 @@ export interface HttpClientRequestOptions {
     authToken?: undefined | string
     baseUrl?: undefined | string
     body?: undefined | Parameters<typeof usingRequestPayload>[0]
+    cache?: undefined | RequestCache
     encoder?: undefined | Io<Request, Request>
     headers?: undefined | HeadersInit
     method: RequestMethodEnum
     params?: undefined | UrlParams
     retry?: undefined | RequestRetryOptions
+    signal?: undefined | AbortSignal
     url: string
 }
 

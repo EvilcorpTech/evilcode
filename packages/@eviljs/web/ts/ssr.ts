@@ -1,4 +1,7 @@
+import {mapSome} from '@eviljs/std/fn-monad'
 import {deserializeStruct, serializeStruct} from '@eviljs/std/serial'
+
+export {deserializeStruct as deserializeSsrState, serializeStruct as serializeSsrState} from '@eviljs/std/serial'
 
 export function saveSsrState(id: string, payload: unknown, options?: undefined | SsrSaveOptions): void {
     if (! payload) {
@@ -8,10 +11,10 @@ export function saveSsrState(id: string, payload: unknown, options?: undefined |
     const inject = options?.inject ?? injectSsrStorageElement
     const ssrStorage = findSsrStorageElement(id) ?? inject(id)
 
-    serializeSsrStateIntoElement(ssrStorage, payload, options?.serializer)
+    serializeSsrStateIntoStorageElement(ssrStorage, payload, options?.serializer)
 }
 
-export function serializeSsrStateIntoElement(
+export function serializeSsrStateIntoStorageElement(
     element: Element,
     payload: unknown,
     serializerOptional?: undefined | SsrPayloadSerializer,
@@ -25,23 +28,18 @@ export function loadSsrState(id: string, options?: undefined | SsrLoadOptions): 
     const ssrStorage = findSsrStorageElement(id)
 
     return ssrStorage
-        ? deserializeSsrStateFromElement(ssrStorage, options?.deserializer)
+        ? deserializeSsrStateFromStorageElement(ssrStorage, options?.deserializer)
         : undefined
 }
 
-export function deserializeSsrStateFromElement(
+export function deserializeSsrStateFromStorageElement(
     element: Element,
-    deserializerOptional?: undefined | SsrPayloadDeserializer,
+    deserializeOptional?: undefined | SsrPayloadDeserializer,
 ): unknown {
-    const payloadSerialized = element.textContent?.trim()
+    const deserialize: SsrPayloadDeserializer = deserializeOptional ?? deserializeStruct
+    const payloadSerialized = readSsrStateFromStorageElement(element)
 
-    if (! payloadSerialized) {
-        return
-    }
-
-    const deserialize: SsrPayloadDeserializer = deserializerOptional ?? deserializeStruct
-
-    return deserialize(payloadSerialized)
+    return mapSome(payloadSerialized, deserialize)
 }
 
 export function findSsrStorageElement(id: string): undefined | Element {
@@ -68,6 +66,10 @@ export function createSsrStorageElement(id: string): HTMLScriptElement {
     element.id = id
 
     return element
+}
+
+export function readSsrStateFromStorageElement(element: Element): undefined | string {
+    return element.textContent?.trim() || undefined
 }
 
 // Types ///////////////////////////////////////////////////////////////////////
