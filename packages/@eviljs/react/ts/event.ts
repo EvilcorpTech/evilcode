@@ -39,7 +39,7 @@ export function useCallbackDelayed(callback: Function, delayMs: number): {
     start(): void
     cancel(): void
 } {
-    const taskRef = useRef<ReturnType<typeof setTimeout>>()
+    const taskRef = useRef<undefined | ReturnType<typeof setTimeout>>(undefined)
 
     const cancel = useCallback(() => {
         if (! taskRef.current) {

@@ -24,7 +24,7 @@ export function useBrowserStorageAccessor<V = string, S = string>(
     // Reading from LocalStorage is slow, so we must wrap value access.
     const [initialValue, render] = useState(() => decode(accessor.read()))
     const valueRef = useRef(initialValue)
-    const cancelWriteTaskRef = useRef<Task>()
+    const cancelWriteTaskRef = useRef<undefined | Task>(undefined)
 
     const read = useCallback((): BrowserStorageValue<S | V> => {
         return valueRef.current

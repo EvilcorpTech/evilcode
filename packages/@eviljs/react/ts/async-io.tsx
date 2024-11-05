@@ -25,7 +25,7 @@ export function useAsyncIo<A extends FnArgs, R>(asyncTask: Fn<A, Promise<R>>): A
         output: undefined,
         error: undefined,
     })
-    const taskRef = useRef<undefined | Future<R>>()
+    const taskRef = useRef<undefined | Future<R>>(undefined)
 
     const call = useCallback(async (...args: A) => {
         // We automatically cancel previous task.

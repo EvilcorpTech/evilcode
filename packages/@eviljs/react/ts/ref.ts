@@ -3,7 +3,7 @@ import type {None, Writable} from '@eviljs/std/type'
 import {useLayoutEffect, useMemo, useRef} from 'react'
 
 export function usePreviousValueRef<T>(value: T): React.MutableRefObject<undefined | T> {
-    const oldValueRef = useRef<T>()
+    const oldValueRef = useRef<undefined | T>(undefined)
 
     useLayoutEffect(() => {
         function onClean() {

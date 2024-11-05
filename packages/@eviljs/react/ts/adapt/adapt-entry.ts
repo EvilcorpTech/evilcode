@@ -10,8 +10,8 @@ export function defineAppEntry<C extends object = {}>(loader: Task<Promise<AppEn
 export function selectAppEntryMatch<C extends object = {}>(
     routePath: string,
     entriesList: AppEntriesList<C>,
-): undefined | [RegExpMatchArray, AppEntryDefinition<C>] {
-    const routeMatches = entriesList.map((it): [RoutePatterns, AppEntryDefinition<C>] => [it.routePatterns, it])
+): undefined | [RegExpMatchArray, AppEntryDefinition<{}, C>] {
+    const routeMatches = entriesList.map((it): [RoutePatterns, AppEntryDefinition<{}, C>] => [it.routePatterns, it])
     const [routePathMatches, entryDefinition] = selectRouteMatch(routePath, routeMatches) ?? []
 
     if (! routePathMatches || ! entryDefinition) {
@@ -44,15 +44,15 @@ export async function computeGeneratorResult(generator: AppEntryGenerator): Prom
 
 // Types ///////////////////////////////////////////////////////////////////////
 
-export type AppContext<C extends object = {}> = {
+export type AppContext<C extends object = {}> = C & {
     routePath: string
     routePathArgs: undefined | RegExpMatchArray
-} & C
+}
 
-export type AppEntryDefinition<C extends object = {}, O extends object = {}> = {
+export type AppEntryDefinition<D extends object = {}, C extends object = {}> = D & {
     routePatterns: RoutePatterns
     entryLoader: AppEntryLoader<C>
-} & O
+}
 
 export type AppEntry<C extends object = {}> = (context: AppContext<C>) => AppEntryGenerator
 export type AppEntryLoader<C extends object = {}> = Task<Promise<AppEntry<C>>>
@@ -61,4 +61,4 @@ export type AppEntryOutput = JSX.Element | React.ReactNode
 export type AppEntryYield = AppEntryOutput
 export type AppEntryReturn = AppEntryOutput | AsyncGenerator<AppEntryOutput, AppEntryReturn, void>
 
-export type AppEntriesList<C extends object = {}, O extends object = {}> = Array<AppEntryDefinition<C, O>>
+export type AppEntriesList<D extends object = {}, C extends object = {}> = Array<AppEntryDefinition<D, C>>

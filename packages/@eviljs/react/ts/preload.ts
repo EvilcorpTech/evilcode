@@ -1,6 +1,5 @@
-import type {Task} from '@eviljs/std/fn-type'
 import {exposePreloadHintElement, type PreloadElementAttrs, type PreloadElementOptions} from '@eviljs/web/preload'
-import {useEffect} from 'react'
+import {useEffect, type EffectCallback} from 'react'
 
 export type {PreloadElementAttrs} from '@eviljs/web/preload'
 
@@ -16,7 +15,7 @@ export function usePreloadHint(attrs: PreloadElementAttrs, options?: undefined |
     }, [active])
 }
 
-export function usePreloadTask(task: Task<void | undefined | Task>, activeOptional?: undefined | boolean): void {
+export function usePreloadTask(effect: EffectCallback, activeOptional?: undefined | boolean): void {
     const active = activeOptional ?? true
 
     useEffect(() => {
@@ -24,7 +23,7 @@ export function usePreloadTask(task: Task<void | undefined | Task>, activeOption
             return
         }
 
-        return task()
+        return effect()
     }, [active])
 }
 
