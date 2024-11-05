@@ -1,16 +1,16 @@
 import type {Io} from './fn-type.js'
 
-export function createCache<K, V>(): CacheManager<K, V> {
+export function createCache<K, V>(): Cache<K, V> {
     const cacheMap = new Map<K, undefined | V>()
 
     function use(key: K, computeValue: Io<K, V>): V {
-        return useCachedResult(cacheMap, key, computeValue)
+        return computeCacheResult(cacheMap, key, computeValue)
     }
 
     return {use, map: cacheMap}
 }
 
-export function useCachedResult<K, V>(
+export function computeCacheResult<K, V>(
     cacheMap: Map<K, undefined | V>,
     key: K,
     computeValue: Io<K, V>,
@@ -26,7 +26,7 @@ export function useCachedResult<K, V>(
 
 // Types ///////////////////////////////////////////////////////////////////////
 
-export interface CacheManager<K, V> {
+export interface Cache<K, V> {
     use(key: K, computeValue: Io<K, V>): V
     map: Map<K, undefined | V>
 }
