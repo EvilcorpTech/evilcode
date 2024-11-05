@@ -28,8 +28,8 @@ export function Range(props: RangeProps): JSX.Element {
         centerHandle: useRef<HTMLButtonElement>(null),
         end: useRef<HTMLDivElement>(null),
         endHandle: useRef<HTMLButtonElement>(null),
-        onChange: useRef<RangeObserver>(),
-        onChanged: useRef<RangeObserver>(),
+        onChange: useRef<undefined | RangeObserver>(undefined),
+        onChanged: useRef<undefined | RangeObserver>(undefined),
     }
     const [dragRange, setDragRange] = useState<Range>()
     const dragStartOptions = useMemo(() => createDragOptions(refs, 'start'), [])

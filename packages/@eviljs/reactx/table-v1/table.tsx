@@ -48,6 +48,7 @@ export const Table: React.ComponentType<TableProps> = displayName('Table', forwa
     const childrenList = asArray(children) as Array<React.ReactNode>
     const tableHead = childrenList.find(elementTypeTestFor(TableHead))
     const tableBody = childrenList.find(elementTypeTestFor(TableBody))
+    const tableFoot = childrenList.find(elementTypeTestFor(TableFoot))
 
     return (
         <div
@@ -69,6 +70,7 @@ export const Table: React.ComponentType<TableProps> = displayName('Table', forwa
                 >
                     {tableHead}
                     {tableBody}
+                    {tableFoot}
                 </table>
 
                 {tableFooter}
@@ -100,6 +102,30 @@ export const TableHead: React.ComponentType<TableHeadProps> = displayName('Table
                 {columns}
             </tr>
         </thead>
+    )
+}))
+
+export const TableFoot: React.ComponentType<TableFootProps> = displayName('TableFoot', forwardRef(function TableFoot(
+    props: Omit<TableFootProps, 'ref'>,
+    ref: React.ForwardedRef<HTMLTableSectionElement>,
+) {
+    const {children, className, rowProps, ...otherProps} = props
+    const childrenList = asArray(children ?? []) as Array<React.ReactNode>
+    const columns = childrenList.filter(elementTypeTestFor(TableColumn))
+
+    return (
+        <tfoot
+            {...otherProps}
+            ref={ref}
+            className={classes('TableFoot-92cd', className)}
+        >
+            <tr
+                {...rowProps}
+                className={classes('TableColumns-a6dc', rowProps?.className)}
+            >
+                {columns}
+            </tr>
+        </tfoot>
     )
 }))
 
@@ -215,6 +241,10 @@ export interface TableProps extends React.HTMLAttributes<HTMLDivElement>, React.
 }
 
 export interface TableHeadProps extends React.HTMLAttributes<HTMLElement>, React.RefAttributes<HTMLTableSectionElement> {
+    rowProps?: undefined | React.HTMLAttributes<HTMLTableRowElement>
+}
+
+export interface TableFootProps extends React.HTMLAttributes<HTMLElement>, React.RefAttributes<HTMLTableSectionElement> {
     rowProps?: undefined | React.HTMLAttributes<HTMLTableRowElement>
 }
 
