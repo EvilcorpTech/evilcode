@@ -1,5 +1,6 @@
 import {createElement, forwardRef} from 'react'
 import {displayName} from './display-name.js'
+import type {Props} from './props.js'
 
 /*
 * Renders an element with a dynamic tag.
@@ -11,7 +12,7 @@ import {displayName} from './display-name.js'
 * </Box>
 */
 export const Box = displayName('Box', forwardRef(function Box<T extends Element = HTMLElement>(
-    props: BoxProps<T>,
+    props: Props<BoxProps<T>>,
     ref: React.ForwardedRef<T>
 ) {
     const {tag, ...otherProps} = props
@@ -40,7 +41,7 @@ export const Box = displayName('Box', forwardRef(function Box<T extends Element 
 * }
 */
 export const BoxOptional = displayName('BoxOptional', forwardRef(function BoxOptional<T extends Element = HTMLElement>(
-    props: BoxOptionalProps<T>,
+    props: Props<BoxOptionalProps<T>>,
     ref: React.ForwardedRef<T>
 ) {
     const {if: guard, ...otherProps} = props

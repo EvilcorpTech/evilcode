@@ -1,5 +1,5 @@
 import {classes} from './classes.js'
-import type {VoidProps} from './props.js'
+import type {ElementProps, Props, VoidProps} from './props.js'
 
 export function defineSvg(definitionProps: SvgDefinitionProps): React.ComponentType<SvgProps> {
     const {
@@ -10,7 +10,7 @@ export function defineSvg(definitionProps: SvgDefinitionProps): React.ComponentT
         ...otherDefinitionProps
     } = definitionProps
 
-    function Svg(props: SvgProps) {
+    function Svg(props: Props<SvgProps>) {
         const {className, ...otherProps} = props
 
         return (
@@ -33,10 +33,10 @@ export function defineSvg(definitionProps: SvgDefinitionProps): React.ComponentT
 
 // Types ///////////////////////////////////////////////////////////////////////
 
-export interface SvgDefinitionProps extends React.SVGAttributes<SVGSVGElement> {
+export interface SvgDefinitionProps extends ElementProps<'svg'> {
     name?: undefined | string
     viewBox: string
 }
 
-export interface SvgProps extends VoidProps<React.SVGAttributes<SVGSVGElement>> {
+export interface SvgProps extends VoidProps<ElementProps<'svg'>> {
 }

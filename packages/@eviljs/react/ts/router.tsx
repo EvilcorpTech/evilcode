@@ -11,6 +11,7 @@ import {Children, forwardRef, isValidElement, useCallback, useContext, useEffect
 import {classes} from './classes.js'
 import {defineContext} from './ctx.js'
 import {displayName} from './display-name.js'
+import type {ElementProps, Props, RefElementOf} from './props.js'
 import {useReactiveSelect} from './reactive.js'
 
 export * from '@eviljs/web/route'
@@ -30,7 +31,7 @@ export const RouteMatchContext: React.Context<undefined | RouteArgs> = defineCon
 *     <MyApp/>
 * </RouterProvider>
 */
-export function RouterProvider(props: RouterProviderProps): JSX.Element {
+export function RouterProvider(props: Props<RouterProviderProps>): JSX.Element {
     const {children, router} = props
 
     useEffect(() => {
@@ -64,7 +65,7 @@ export function RouterProvider(props: RouterProviderProps): JSX.Element {
 *     }
 * </WhenRoute>
 */
-export function WhenRoute(props: WhenRouteProps): undefined | JSX.Element {
+export function WhenRoute(props: Props<WhenRouteProps>): undefined | JSX.Element {
     const {children, is} = props
     const {matchRoutePath} = useRoutePathTest()
 
@@ -119,7 +120,7 @@ export function WhenRoute(props: WhenRouteProps): undefined | JSX.Element {
 *     </CaseRoute>
 * </SwitchRoute>
 */
-export function SwitchRoute(props: SwitchRouteProps): JSX.Element {
+export function SwitchRoute(props: Props<SwitchRouteProps>): JSX.Element {
     const {children, fallback} = props
     const {routePath, matchRoutePath} = useRoutePathTest()
 
@@ -163,7 +164,7 @@ export function SwitchRoute(props: SwitchRouteProps): JSX.Element {
     return <RouteMatchContext.Provider key={key} value={args} children={child}/>
 }
 
-export function CaseRoute(props: CaseRouteProps): undefined {
+export function CaseRoute(props: Props<CaseRouteProps>): undefined {
 }
 
 /*
@@ -183,8 +184,8 @@ export function CaseRoute(props: CaseRouteProps): undefined {
 * </Route>`
 */
 export const Route = displayName('Route', forwardRef(function Route(
-    props: Omit<RouteProps, 'ref'>,
-    ref: React.ForwardedRef<HTMLAnchorElement>,
+    props: Props<RouteProps>,
+    ref: React.ForwardedRef<RefElementOf<RouteProps>>,
 ) {
     const {
         activeExact,
@@ -261,8 +262,8 @@ export const Route = displayName('Route', forwardRef(function Route(
 })) as React.FunctionComponent<RouteProps>
 
 export const Link = displayName('Link', forwardRef(function Link(
-    props: Omit<LinkProps, 'ref'>,
-    ref: React.ForwardedRef<HTMLAnchorElement>,
+    props: Props<LinkProps>,
+    ref: React.ForwardedRef<RefElementOf<LinkProps>>,
 ) {
     const {className, params, replace, state, to, ...otherProps} = props
     const isLink = isString(to) && isUrlAbsolute(to)
@@ -292,7 +293,7 @@ export const Link = displayName('Link', forwardRef(function Link(
     )
 })) as React.FunctionComponent<LinkProps>
 
-export function Redirect(props: RedirectProps): React.ReactNode {
+export function Redirect(props: Props<RedirectProps>): React.ReactNode {
     const {children, params, replace: replaceOptional, state, to: path} = props
     const {changeRoute} = useRouter()
     const replace = replaceOptional ?? true
@@ -506,13 +507,13 @@ export interface CaseRouteProps extends WhenRouteProps {
     key?: undefined | React.Key
 }
 
-export interface RouteProps extends RoutingProps, React.AnchorHTMLAttributes<HTMLAnchorElement>, React.RefAttributes<HTMLAnchorElement> {
+export interface RouteProps extends RoutingProps, ElementProps<'a'> {
     activeExact?: undefined | boolean
     children: undefined | React.ReactNode
     if?: undefined | Computable<RouteGuardResult>
 }
 
-export interface LinkProps extends RoutingProps, React.AnchorHTMLAttributes<HTMLAnchorElement>, React.RefAttributes<HTMLAnchorElement> {
+export interface LinkProps extends RoutingProps, ElementProps<'a'> {
     children: undefined | React.ReactNode
 }
 
