@@ -1,5 +1,5 @@
 import {classes} from './classes.js'
-import type {VoidProps} from './type.js'
+import type {VoidProps} from './props.js'
 
 export function defineSvg(definitionProps: SvgDefinitionProps): React.ComponentType<SvgProps> {
     const {

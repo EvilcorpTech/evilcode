@@ -13,8 +13,8 @@ import {createElement, memo, useContext, useMemo, useState} from 'react'
 import type {BoxProps} from './box.js'
 import {classes} from './classes.js'
 import {defineContext} from './ctx.js'
+import type {VoidProps} from './props.js'
 import type {StateSetter} from './state.js'
-import type {VoidProps} from './type.js'
 
 export type * from '@eviljs/std/msg'
 
