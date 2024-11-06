@@ -1,6 +1,7 @@
 import {classes} from '@eviljs/react/classes'
+import type {ElementProps, Props} from '@eviljs/react/props'
 
-export function Meter(props: MeterProps): JSX.Element {
+export function Meter(props: Props<MeterProps>): JSX.Element {
     const {className, value, ...otherProps} = props
 
     return (
@@ -19,6 +20,6 @@ export function Meter(props: MeterProps): JSX.Element {
 
 // Types ///////////////////////////////////////////////////////////////////////
 
-export interface MeterProps extends React.HTMLAttributes<HTMLDivElement> {
+export interface MeterProps extends ElementProps<'div'> {
     value: number
 }

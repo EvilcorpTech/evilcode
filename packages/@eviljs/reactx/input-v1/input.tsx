@@ -1,11 +1,12 @@
 import {classes} from '@eviljs/react/classes'
 import {displayName} from '@eviljs/react/display-name'
+import type {ElementProps, Props, RefElementOf} from '@eviljs/react/props'
 import {useMergeRefs} from '@eviljs/react/ref'
 import {forwardRef, useLayoutEffect, useMemo, useRef, useState} from 'react'
 
 export const Input = displayName('Input', forwardRef(function Input(
-    props: Omit<InputProps, 'ref'>,
-    ref: React.ForwardedRef<HTMLInputElement>,
+    props: Props<InputProps>,
+    ref: React.ForwardedRef<RefElementOf<InputProps>>,
 ) {
     const {className, type, label, placeholder, value, autoComplete, autoFocus, tabIndex, onChange, ...otherProps} = props
     const [focus, setFocus] = useState(false)
@@ -77,7 +78,7 @@ export const Input = displayName('Input', forwardRef(function Input(
 
 // Types ///////////////////////////////////////////////////////////////////////
 
-export interface InputProps extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'onChange'>, React.RefAttributes<HTMLInputElement> {
+export interface InputProps extends Omit<ElementProps<'input'>, 'onChange'> {
     type?: undefined | React.HTMLInputTypeAttribute
     label?: undefined | string
     value?: undefined | string

@@ -1,6 +1,7 @@
 import {classes} from '@eviljs/react/classes'
+import type {ElementProps, Props} from '@eviljs/react/props'
 
-export function Tooltip(props: TooltipProps): undefined | JSX.Element {
+export function Tooltip(props: Props<TooltipProps>): undefined | JSX.Element {
     const {children, className, content, contentClass, position, ...otherProps} = props
 
     if (! children) {
@@ -27,7 +28,7 @@ export function Tooltip(props: TooltipProps): undefined | JSX.Element {
 
 // Types ///////////////////////////////////////////////////////////////////////
 
-export interface TooltipProps extends Omit<React.HTMLAttributes<HTMLElement>, 'content'>, TooltipModel {
+export interface TooltipProps extends Omit<ElementProps<'div'>, 'content'>, TooltipModel {
 }
 
 export interface TooltipModel {

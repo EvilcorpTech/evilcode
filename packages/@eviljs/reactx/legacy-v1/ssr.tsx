@@ -1,7 +1,7 @@
 import {Box, type BoxProps} from '@eviljs/react/box'
 import {classes} from '@eviljs/react/classes'
 import {asDefault, type LazyFallback, type LazyLoader} from '@eviljs/react/lazy'
-import type {VoidProps} from '@eviljs/react/type'
+import type {VoidProps} from '@eviljs/react/props'
 import {lazy, Suspense, useLayoutEffect, useRef} from 'react'
 
 export const SuspenseSsrAttribute = {

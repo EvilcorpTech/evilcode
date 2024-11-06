@@ -1,6 +1,7 @@
 import {classes} from '@eviljs/react/classes'
+import type {ElementProps, Props} from '@eviljs/react/props'
 
-export function NotificationBadge(props: NotificationBadgeProps): JSX.Element {
+export function NotificationBadge(props: Props<NotificationBadgeProps>): JSX.Element {
     const {children, className, value, ...otherProps} = props
 
     return (
@@ -17,6 +18,6 @@ export function NotificationBadge(props: NotificationBadgeProps): JSX.Element {
 
 // Types ///////////////////////////////////////////////////////////////////////
 
-export interface NotificationBadgeProps extends React.HTMLAttributes<HTMLElement> {
+export interface NotificationBadgeProps extends ElementProps<'div'> {
     value: number | string
 }

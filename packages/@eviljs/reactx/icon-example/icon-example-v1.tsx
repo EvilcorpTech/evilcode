@@ -1,6 +1,7 @@
 import {classes} from '@eviljs/react/classes'
+import type {ElementProps, Props} from '@eviljs/react/props'
 
-export function ExampleIcon(props: ExampleIconProps): JSX.Element {
+export function ExampleIcon(props: Props<ExampleIconProps>): JSX.Element {
     const {className, ...otherProps} = props
 
     return (
@@ -30,5 +31,5 @@ export function ExampleIcon(props: ExampleIconProps): JSX.Element {
 
 // Types ///////////////////////////////////////////////////////////////////////
 
-export interface ExampleIconProps extends React.SVGAttributes<SVGSVGElement> {
+export interface ExampleIconProps extends ElementProps<'svg'> {
 }

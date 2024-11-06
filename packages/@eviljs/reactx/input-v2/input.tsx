@@ -1,13 +1,13 @@
 import {classes} from '@eviljs/react/classes'
 import {displayName} from '@eviljs/react/display-name'
+import type {ElementProps, Props, RefElementOf, VoidProps} from '@eviljs/react/props'
 import {useMergeRefs} from '@eviljs/react/ref'
-import type {VoidProps} from '@eviljs/react/type'
 import {identity} from '@eviljs/std/fn-return'
 import {forwardRef, useRef, useState} from 'react'
 
 export {decoratingElement, decoratingElementAfter, decoratingElementBefore} from '@eviljs/react/children'
 
-export function InputLabel(props: InputLabelProps): JSX.Element {
+export function InputLabel(props: Props<InputLabelProps>): JSX.Element {
     const {children, className, labelClass, title, ...otherProps} = props
 
     return (
@@ -25,8 +25,8 @@ export function InputLabel(props: InputLabelProps): JSX.Element {
 }
 
 export const Input = displayName('Input', forwardRef(function Input(
-    props: Omit<InputProps, 'ref'>,
-    ref: React.ForwardedRef<HTMLInputElement>,
+    props: Props<InputProps>,
+    ref: React.ForwardedRef<RefElementOf<InputProps>>,
 ) {
     const {className, decorate, hostClass, hostProps, hostStyle, onChange, ...otherProps} = props
     const inputRef = useRef<HTMLInputElement>(null)
@@ -55,8 +55,8 @@ export const Input = displayName('Input', forwardRef(function Input(
 })) as React.FunctionComponent<InputProps>
 
 export const TextInput = displayName('TextInput', forwardRef(function TextInput(
-    props: Omit<TextInputProps, 'ref'>,
-    ref: React.ForwardedRef<HTMLInputElement>,
+    props: Props<TextInputProps>,
+    ref: React.ForwardedRef<RefElementOf<TextInputProps>>,
 ) {
     const {className, ...otherProps} = props
 
@@ -71,8 +71,8 @@ export const TextInput = displayName('TextInput', forwardRef(function TextInput(
 })) as React.FunctionComponent<TextInputProps>
 
 export const SecretInput = displayName('SecretInput', forwardRef(function SecretInput(
-    props: Omit<SecretInputProps, 'ref'>,
-    ref: React.ForwardedRef<HTMLInputElement>,
+    props: Props<SecretInputProps>,
+    ref: React.ForwardedRef<RefElementOf<SecretInputProps>>,
 ) {
     const {buttonClass, buttonProps, buttonStyle, className, decorate, hideIcon, showIcon, ...otherProps} = props
     const [visible, setVisible] = useState(false)
@@ -111,15 +111,15 @@ export const SecretInput = displayName('SecretInput', forwardRef(function Secret
 
 // Types ///////////////////////////////////////////////////////////////////////
 
-export interface InputLabelProps extends Omit<React.HTMLAttributes<HTMLDivElement>, 'title' | 'labelClass'> {
+export interface InputLabelProps extends Omit<ElementProps<'div'>, 'title' | 'labelClass'> {
     title: React.ReactNode
     labelClass?: string
 }
 
-export interface InputProps extends VoidProps<Omit<React.InputHTMLAttributes<HTMLInputElement>, 'onChange'>>, React.RefAttributes<HTMLInputElement> {
+export interface InputProps extends Omit<VoidProps<ElementProps<'input'>>, 'onChange'> {
     decorate?: undefined | ((input: React.ReactNode) => React.ReactNode)
     hostClass?: undefined | string
-    hostProps?: undefined | React.HTMLAttributes<HTMLElement>
+    hostProps?: undefined | ElementProps<'div'>
     hostStyle?: undefined | React.CSSProperties
     onChange?: undefined | ((value: string, event: React.ChangeEvent<HTMLInputElement>) => void)
 }
@@ -130,7 +130,7 @@ export interface TextInputProps extends InputProps {
 export interface SecretInputProps extends InputProps {
     buttonClass?: undefined | string
     buttonStyle?: undefined | React.CSSProperties
-    buttonProps?: undefined | VoidProps<React.ButtonHTMLAttributes<HTMLButtonElement>>
+    buttonProps?: undefined | VoidProps<ElementProps<'button'>>
     showIcon: React.ReactNode
     hideIcon: React.ReactNode
 }

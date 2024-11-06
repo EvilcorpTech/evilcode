@@ -1,14 +1,15 @@
 import {classes} from '@eviljs/react/classes'
 import {displayName} from '@eviljs/react/display-name'
 import {useCallbackThrottled} from '@eviljs/react/event'
+import type {ElementProps, Props, RefElementOf} from '@eviljs/react/props'
 import {mergingRefs} from '@eviljs/react/ref'
 import {useResizeObserver} from '@eviljs/react/resize-observer'
 import {isFunction} from '@eviljs/std/type-is'
 import {forwardRef, useCallback, useLayoutEffect, useMemo, useRef, useState} from 'react'
 
 export const SliderVirtual = displayName('SliderVirtual', forwardRef(function SliderVirtual<I>(
-    props: SliderVirtualProps<I>,
-    ref: React.ForwardedRef<HTMLElement>,
+    props: Props<SliderVirtualProps<I>>,
+    ref: React.ForwardedRef<RefElementOf<SliderVirtualProps<I>>>,
 ) {
     const {
         children,
@@ -217,10 +218,7 @@ export function styleOfChild<I>(child: VirtualChild<I>): React.CSSProperties {
 
 // Types ///////////////////////////////////////////////////////////////////////
 
-export interface SliderVirtualProps<I> extends
-    Omit<React.HTMLAttributes<HTMLElement>, 'children' | 'onSelect'>,
-    React.RefAttributes<HTMLElement>
-{
+export interface SliderVirtualProps<I> extends Omit<ElementProps<'div'>, 'children' | 'onSelect'> {
     // align: undefined | 'start' | 'center' | 'end'
     children: (item: I, idx: number) => React.ReactElement
     // direction: undefined | 'horizontal' | 'vertical'

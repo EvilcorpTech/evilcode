@@ -1,6 +1,7 @@
 import {classes} from '@eviljs/react/classes'
+import type {ElementProps, Props} from '@eviljs/react/props'
 
-export function ButtonBusy(props: ButtonBusyProps): JSX.Element {
+export function ButtonBusy(props: Props<ButtonBusyProps>): JSX.Element {
     const {className, busy, children, spinner, ...otherProps} = props
 
     return (
@@ -22,7 +23,7 @@ export function ButtonBusy(props: ButtonBusyProps): JSX.Element {
 
 // Types ///////////////////////////////////////////////////////////////////////
 
-export interface ButtonBusyProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+export interface ButtonBusyProps extends ElementProps<'button'> {
     busy?: boolean
     spinner: React.ReactElement
 }

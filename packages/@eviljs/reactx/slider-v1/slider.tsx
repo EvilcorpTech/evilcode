@@ -1,6 +1,7 @@
 import {classes} from '@eviljs/react/classes'
-import {asArray} from '@eviljs/std/type-as'
+import type {ElementProps, Props} from '@eviljs/react/props'
 import type {ValueOf} from '@eviljs/std/type'
+import {asArray} from '@eviljs/std/type-as'
 
 export const SliderDirection = {
     Row: 'row' as const,
@@ -9,7 +10,7 @@ export const SliderDirection = {
     ColumnReverse: 'column-reverse' as const,
 }
 
-export function Slider(props: SliderProps): JSX.Element {
+export function Slider(props: Props<SliderProps>): JSX.Element {
     const {className, children, selected, direction, ...otherProps} = props
     const childrenList = asArray(children)
 
@@ -39,7 +40,7 @@ export function Slider(props: SliderProps): JSX.Element {
     )
 }
 
-export function Slide(props: SlideProps): JSX.Element {
+export function Slide(props: Props<SlideProps>): JSX.Element {
     const {className, ...otherProps} = props
 
     return (
@@ -81,13 +82,13 @@ export function computeSlideStyle(args: {
 
 // Types ///////////////////////////////////////////////////////////////////////
 
-export interface SliderProps extends React.HTMLAttributes<HTMLDivElement> {
+export interface SliderProps extends ElementProps<'div'> {
     children: Array<React.ReactNode>
     selected: number
     direction?: undefined | SliderDirectionEnum
 }
 
-export interface SlideProps extends React.HTMLAttributes<HTMLElement> {
+export interface SlideProps extends ElementProps<'div'> {
 }
 
 export type SliderDirectionEnum = ValueOf<typeof SliderDirection> & string

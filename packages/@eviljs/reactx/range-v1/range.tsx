@@ -1,13 +1,14 @@
 import {classes} from '@eviljs/react/classes'
 import type {DragPointerEvent, UseDragOptions} from '@eviljs/react/drag'
 import {useDrag} from '@eviljs/react/drag'
+import type {ElementProps, Props} from '@eviljs/react/props'
 import {clamp} from '@eviljs/std/math'
 import {distanceBetween} from '@eviljs/std/scale'
 import {isNone} from '@eviljs/std/type-is'
 import {KeyboardKey} from '@eviljs/web/keybinding'
 import {useCallback, useEffect, useMemo, useRef, useState} from 'react'
 
-export function Range(props: RangeProps): JSX.Element {
+export function Range(props: Props<RangeProps>): JSX.Element {
     const {
         className,
         start,
@@ -179,7 +180,7 @@ export function Range(props: RangeProps): JSX.Element {
     )
 }
 
-export function RangeNumeric(props: RangeNumericProps): undefined | JSX.Element {
+export function RangeNumeric(props: Props<RangeNumericProps>): undefined | JSX.Element {
     const {start, end, min, max, onChange, onChanged, ...otherProps} = props
 
     const onRangeChange = useCallback((range: Range) => {
@@ -323,7 +324,7 @@ export function computeNumericRange(min: number, max: number, range: Range): Ran
 
 // Types ///////////////////////////////////////////////////////////////////////
 
-export interface RangeProps extends Omit<React.HTMLAttributes<HTMLDivElement>, 'onChange'> {
+export interface RangeProps extends Omit<ElementProps<'div'>, 'onChange'> {
     start: undefined | number
     startHandle?: undefined | React.ReactNode
     startLine?: undefined | React.ReactNode

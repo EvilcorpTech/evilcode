@@ -1,9 +1,10 @@
 import {classes} from '@eviljs/react/classes'
+import type {ElementProps, Props} from '@eviljs/react/props'
 import {useMemo} from 'react'
 
 export let RadioGroupId = 0
 
-export function RadioGroup(props: RadioGroupProps): JSX.Element {
+export function RadioGroup(props: Props<RadioGroupProps>): JSX.Element {
     const {className, items, selected, onChange, ...otherProps} = props
 
     const id = useMemo(() => {
@@ -44,7 +45,7 @@ export function RadioGroup(props: RadioGroupProps): JSX.Element {
 
 // Types ///////////////////////////////////////////////////////////////////////
 
-export interface RadioGroupProps extends Omit<React.HTMLAttributes<HTMLElement>, 'onChange'> {
+export interface RadioGroupProps extends Omit<ElementProps<'div'>, 'onChange'> {
     selected?: undefined | null | string
     items?: undefined | null | Array<{
         value: string

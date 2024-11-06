@@ -1,7 +1,8 @@
 import {classes} from '@eviljs/react/classes'
+import type {ElementProps, Props} from '@eviljs/react/props'
 import {asBooleanString} from '@eviljs/web/aria'
 
-export function Switch(props: SwitchProps): JSX.Element {
+export function Switch(props: Props<SwitchProps>): JSX.Element {
     const {className, checked, onChange, ...otherProps} = props
 
     return (
@@ -23,7 +24,7 @@ export function Switch(props: SwitchProps): JSX.Element {
 
 // Types ///////////////////////////////////////////////////////////////////////
 
-export interface SwitchProps extends Omit<React.ButtonHTMLAttributes<HTMLButtonElement>, 'onChange'> {
+export interface SwitchProps extends Omit<ElementProps<'button'>, 'onChange'> {
     checked?: undefined | boolean
     onChange?: undefined | ((value: boolean) => void)
 }

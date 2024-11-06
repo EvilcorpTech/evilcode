@@ -1,5 +1,6 @@
 import {classes} from '@eviljs/react/classes'
 import {displayName} from '@eviljs/react/display-name'
+import type {ElementProps, Props, RefElementOf} from '@eviljs/react/props'
 import {asArray} from '@eviljs/std/type-as'
 import type {ComponentProps} from 'react'
 import {forwardRef, isValidElement} from 'react'
@@ -30,9 +31,9 @@ import {forwardRef, isValidElement} from 'react'
 *     </TableBody>
 * </Table>
 */
-export const Table: React.ComponentType<TableProps> = displayName('Table', forwardRef(function Table(
-    props: Omit<TableProps, 'ref'>,
-    ref: React.ForwardedRef<HTMLDivElement>,
+export const Table = displayName('Table', forwardRef(function Table(
+    props: Props<TableProps>,
+    ref: React.ForwardedRef<RefElementOf<TableProps>>,
 ) {
     const {
         children,
@@ -79,11 +80,11 @@ export const Table: React.ComponentType<TableProps> = displayName('Table', forwa
             {footer}
         </div>
     )
-}))
+})) as React.FunctionComponent<TableProps>
 
-export const TableHead: React.ComponentType<TableHeadProps> = displayName('TableHead', forwardRef(function TableHead(
-    props: Omit<TableHeadProps, 'ref'>,
-    ref: React.ForwardedRef<HTMLTableSectionElement>,
+export const TableHead = displayName('TableHead', forwardRef(function TableHead(
+    props: Props<TableHeadProps>,
+    ref: React.ForwardedRef<RefElementOf<TableHeadProps>>,
 ) {
     const {children, className, rowProps, ...otherProps} = props
     const childrenList = asArray(children ?? []) as Array<React.ReactNode>
@@ -103,11 +104,11 @@ export const TableHead: React.ComponentType<TableHeadProps> = displayName('Table
             </tr>
         </thead>
     )
-}))
+})) as React.FunctionComponent<TableHeadProps>
 
-export const TableFoot: React.ComponentType<TableFootProps> = displayName('TableFoot', forwardRef(function TableFoot(
-    props: Omit<TableFootProps, 'ref'>,
-    ref: React.ForwardedRef<HTMLTableSectionElement>,
+export const TableFoot = displayName('TableFoot', forwardRef(function TableFoot(
+    props: Props<TableFootProps>,
+    ref: React.ForwardedRef<RefElementOf<TableFootProps>>,
 ) {
     const {children, className, rowProps, ...otherProps} = props
     const childrenList = asArray(children ?? []) as Array<React.ReactNode>
@@ -127,11 +128,11 @@ export const TableFoot: React.ComponentType<TableFootProps> = displayName('Table
             </tr>
         </tfoot>
     )
-}))
+})) as React.FunctionComponent<TableFootProps>
 
-export const TableColumn: React.ComponentType<TableColumnProps> = displayName('TableColumn', forwardRef(function TableColumn(
-    props: Omit<TableColumnProps, 'ref'>,
-    ref: React.ForwardedRef<HTMLTableCellElement>,
+export const TableColumn = displayName('TableColumn', forwardRef(function TableColumn(
+    props: Props<TableColumnProps>,
+    ref: React.ForwardedRef<RefElementOf<TableColumnProps>>,
 ) {
     const {children, className, innerProps, ...otherProps} = props
 
@@ -149,11 +150,11 @@ export const TableColumn: React.ComponentType<TableColumnProps> = displayName('T
             </div>
         </th>
     )
-}))
+})) as React.FunctionComponent<TableColumnProps>
 
-export const TableBody: React.ComponentType<TableBodyProps> = displayName('TableBody', forwardRef(function TableBody(
-    props: Omit<TableBodyProps, 'ref'>,
-    ref: React.ForwardedRef<HTMLTableSectionElement>,
+export const TableBody = displayName('TableBody', forwardRef(function TableBody(
+    props: Props<TableBodyProps>,
+    ref: React.ForwardedRef<RefElementOf<TableBodyProps>>,
 ) {
     const {children, className, ...otherProps} = props
     const childrenList = asArray(children ?? []) as Array<React.ReactNode>
@@ -168,11 +169,11 @@ export const TableBody: React.ComponentType<TableBodyProps> = displayName('Table
             {rows}
         </tbody>
     )
-}))
+})) as React.FunctionComponent<TableBodyProps>
 
-export const TableRow: React.ComponentType<TableRowProps> = displayName('TableRow', forwardRef(function TableRow(
-    props: Omit<TableRowProps, 'ref'>,
-    ref: React.ForwardedRef<HTMLTableRowElement>,
+export const TableRow = displayName('TableRow', forwardRef(function TableRow(
+    props: Props<TableRowProps>,
+    ref: React.ForwardedRef<RefElementOf<TableRowProps>>,
 ) {
     const {children, className, ...otherProps} = props
     const childrenList = asArray(children ?? []) as Array<React.ReactNode>
@@ -187,11 +188,11 @@ export const TableRow: React.ComponentType<TableRowProps> = displayName('TableRo
             {cells}
         </tr>
     )
-}))
+})) as React.FunctionComponent<TableRowProps>
 
-export const TableCell: React.ComponentType<TableCellProps> = displayName('TableCell', forwardRef(function TableCell(
-    props: Omit<TableCellProps, 'ref'>,
-    ref: React.ForwardedRef<HTMLTableCellElement>,
+export const TableCell = displayName('TableCell', forwardRef(function TableCell(
+    props: Props<TableCellProps>,
+    ref: React.ForwardedRef<RefElementOf<TableCellProps>>,
 ) {
     const {children, className, innerProps, ...otherProps} = props
 
@@ -209,7 +210,7 @@ export const TableCell: React.ComponentType<TableCellProps> = displayName('Table
             </div>
         </td>
     )
-}))
+})) as React.FunctionComponent<TableCellProps>
 
 export function elementTypeTestFor<T extends React.JSXElementConstructor<any>>(type: T): (element: React.ReactNode) => void {
     function test(element: React.ReactNode) {
@@ -222,42 +223,39 @@ export function elementTypeTestFor<T extends React.JSXElementConstructor<any>>(t
 export function isElementOfType<T extends React.JSXElementConstructor<any>>(
     element: React.ReactNode,
     type: T,
-): element is React.ReactElement<ComponentProps<T>, T>
-{
-    return true
-        && isValidElement(element)
-        && element.type === type
+): element is React.ReactElement<ComponentProps<T>, T> {
+    return isValidElement(element) && element.type === type
 }
 
 // Types ///////////////////////////////////////////////////////////////////////
 
-export interface TableProps extends React.HTMLAttributes<HTMLDivElement>, React.RefAttributes<HTMLDivElement> {
+export interface TableProps extends ElementProps<'div'> {
     footer?: undefined | React.ReactNode
     header?: undefined | React.ReactNode
-    scrollerProps?: undefined | React.HTMLAttributes<HTMLDivElement>
+    scrollerProps?: undefined | ElementProps<'div'>
     tableFooter?: undefined | React.ReactNode
     tableHeader?: undefined | React.ReactNode
-    tableProps?: undefined | React.TableHTMLAttributes<HTMLTableElement>
+    tableProps?: undefined | ElementProps<'table'>
 }
 
-export interface TableHeadProps extends React.HTMLAttributes<HTMLElement>, React.RefAttributes<HTMLTableSectionElement> {
-    rowProps?: undefined | React.HTMLAttributes<HTMLTableRowElement>
+export interface TableHeadProps extends ElementProps<'thead'> {
+    rowProps?: undefined | ElementProps<'tr'>
 }
 
-export interface TableFootProps extends React.HTMLAttributes<HTMLElement>, React.RefAttributes<HTMLTableSectionElement> {
-    rowProps?: undefined | React.HTMLAttributes<HTMLTableRowElement>
+export interface TableFootProps extends ElementProps<'tfoot'> {
+    rowProps?: undefined | ElementProps<'tr'>
 }
 
-export interface TableColumnProps extends React.ThHTMLAttributes<HTMLTableCellElement>, React.RefAttributes<HTMLTableCellElement> {
-    innerProps?: undefined | React.HTMLAttributes<HTMLDivElement>
+export interface TableColumnProps extends ElementProps<'th'> {
+    innerProps?: undefined | ElementProps<'div'>
 }
 
-export interface TableBodyProps extends React.HTMLAttributes<HTMLElement>, React.RefAttributes<HTMLTableSectionElement> {
+export interface TableBodyProps extends ElementProps<'tbody'> {
 }
 
-export interface TableRowProps extends React.HTMLAttributes<HTMLTableRowElement>, React.RefAttributes<HTMLTableRowElement> {
+export interface TableRowProps extends ElementProps<'tr'> {
 }
 
-export interface TableCellProps extends React.ThHTMLAttributes<HTMLTableCellElement>, React.RefAttributes<HTMLTableCellElement> {
-    innerProps?: undefined | React.HTMLAttributes<HTMLDivElement>
+export interface TableCellProps extends ElementProps<'th'> {
+    innerProps?: undefined | ElementProps<'div'>
 }

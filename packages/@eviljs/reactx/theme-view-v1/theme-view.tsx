@@ -1,10 +1,11 @@
 import {classes} from '@eviljs/react/classes'
+import type {ElementProps, Props} from '@eviljs/react/props'
 import {colorHslFromRgbHexString, colorRgbHexStringFromHsl, type ColorHslDict} from '@eviljs/std/color'
 import {times} from '@eviljs/std/iter'
 import {Fragment, useEffect, useRef, useState} from 'react'
 import {ExampleIcon as Icon} from '../icon-example/icon-example-v2.js'
 
-export function ThemeView(props: ThemeViewProps): JSX.Element {
+export function ThemeView(props: Props<ThemeViewProps>): JSX.Element {
     const {className, head, children, ...otherProps} = props
     const [primaryAccent, setPrimaryAccent] = useState<ColorHslDict>({h: 0, s: 0, l: 0})
     const [secondaryAccent, setSecondaryAccent] = useState<ColorHslDict>({h: 0, s: 0, l: 0})
@@ -53,7 +54,7 @@ export function ThemeView(props: ThemeViewProps): JSX.Element {
     )
 }
 
-export function Picker(props: PickerProps): JSX.Element {
+export function Picker(props: Props<PickerProps>): JSX.Element {
     const {onPrimaryChange, onSecondaryChange, onThemeChange} = props
     const primaryRef = useRef<HTMLInputElement | null>(null)
     const secondaryRef = useRef<HTMLInputElement | null>(null)
@@ -567,7 +568,7 @@ export function readThemeColor(type: string): ColorHslDict {
 
 // Types ///////////////////////////////////////////////////////////////////////
 
-export interface ThemeViewProps extends React.HTMLAttributes<HTMLDivElement> {
+export interface ThemeViewProps extends ElementProps<'div'> {
     head?: undefined | React.ReactNode
 }
 

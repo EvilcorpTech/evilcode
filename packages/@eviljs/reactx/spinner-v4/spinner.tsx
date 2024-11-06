@@ -1,6 +1,7 @@
 import {classes} from '@eviljs/react/classes'
+import type {ElementProps, Props} from '@eviljs/react/props'
 
-export function Spinner(props: SpinnerProps): JSX.Element {
+export function Spinner(props: Props<SpinnerProps>): JSX.Element {
     const {active, className, ...otherProps} = props
 
     return (
@@ -21,6 +22,6 @@ export function Spinner(props: SpinnerProps): JSX.Element {
 
 // Types ///////////////////////////////////////////////////////////////////////
 
-export interface SpinnerProps extends React.HTMLAttributes<HTMLElement> {
+export interface SpinnerProps extends ElementProps<'div'> {
     active: boolean
 }

@@ -1,4 +1,5 @@
 import {classes} from '@eviljs/react/classes'
+import type {ElementProps} from '@eviljs/react/props'
 import {useCallback, useState} from 'react'
 
 export function ButtonArmored(props: ButtonArmoredProps): JSX.Element {
@@ -27,7 +28,7 @@ export function ButtonArmored(props: ButtonArmoredProps): JSX.Element {
 
 // Types ///////////////////////////////////////////////////////////////////////
 
-export interface ButtonArmoredProps extends Omit<React.HTMLAttributes<HTMLDivElement>, 'children'> {
+export interface ButtonArmoredProps extends Omit<ElementProps<'div'>, 'children'> {
     children(props: ButtonArmoredChildrenProps): React.ReactNode
 }
 

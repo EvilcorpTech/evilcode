@@ -1,4 +1,5 @@
 import {classes} from '@eviljs/react/classes'
+import type {ElementProps, Props} from '@eviljs/react/props'
 import {times} from '@eviljs/std/iter'
 import {useState} from 'react'
 import {Accordion, AccordionList} from '../accordion-v1/accordion.js'
@@ -22,7 +23,7 @@ import {Spinner as SpinnerV4} from '../spinner-v4/spinner.js'
 import {Switch} from '../switch-v1/switch.js'
 import {Tooltip} from '../tooltip-v1/tooltip.js'
 
-export function WidgetsView(props: WidgetsViewProps): JSX.Element {
+export function WidgetsView(props: Props<WidgetsViewProps>): JSX.Element {
     const {className} = props
     const [busy, setBusy] = useState(false)
     const [checkbox, setCheckbox] = useState(false)
@@ -241,5 +242,5 @@ export const Lorem = 'Lorem ipsum is simply dummy text of the printing and types
 
 // Types ///////////////////////////////////////////////////////////////////////
 
-export interface WidgetsViewProps extends React.HTMLAttributes<HTMLDivElement> {
+export interface WidgetsViewProps extends ElementProps<'div'> {
 }

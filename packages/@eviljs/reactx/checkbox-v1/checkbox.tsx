@@ -1,8 +1,9 @@
 import {classes} from '@eviljs/react/classes'
+import type {ElementProps, Props} from '@eviljs/react/props'
 import {asBooleanString} from '@eviljs/web/aria'
 import {cloneElement, isValidElement} from 'react'
 
-export function Checkbox(props: CheckboxProps): JSX.Element {
+export function Checkbox(props: Props<CheckboxProps>): JSX.Element {
     const {className, children, checked, disabled, onChange, ...otherProps} = props
     const enabled = ! disabled
 
@@ -32,7 +33,7 @@ export function Checkbox(props: CheckboxProps): JSX.Element {
 
 // Types ///////////////////////////////////////////////////////////////////////
 
-export interface CheckboxProps extends CheckboxModel, Omit<React.ButtonHTMLAttributes<HTMLButtonElement>, 'onChange'> {
+export interface CheckboxProps extends Omit<ElementProps<'button'>, 'onChange'>, CheckboxModel {
     onChange?: undefined | ((value: boolean) => void)
 }
 

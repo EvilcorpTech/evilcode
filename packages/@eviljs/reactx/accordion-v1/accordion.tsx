@@ -1,9 +1,10 @@
 import {Box, type BoxProps} from '@eviljs/react/box'
 import {classes} from '@eviljs/react/classes'
+import type {ElementProps, Props} from '@eviljs/react/props'
 import {flushStyles} from '@eviljs/web/animation'
 import {Children, isValidElement, useCallback, useEffect, useRef, useState} from 'react'
 
-export function AccordionList(props: AccordionListProps): JSX.Element {
+export function AccordionList(props: Props<AccordionListProps>): JSX.Element {
     const {className, children, initial, maxOpen, onChange, ...otherProps} = props
     const itemsRef = useRef<Array<null | HTMLButtonElement>>([])
     const [selected, setSelected] = useState(initial ?? [])
@@ -212,7 +213,7 @@ export function AccordionItem(props: AccordionItemProps): JSX.Element {
 
 // Types ///////////////////////////////////////////////////////////////////////
 
-export interface AccordionListProps extends Omit<React.HTMLAttributes<HTMLUListElement>, 'onChange'> {
+export interface AccordionListProps extends Omit<ElementProps<'ul'>, 'onChange'> {
     children?: undefined | null | React.ReactElement<AccordionProps> | Array<undefined | null | boolean | React.ReactElement<AccordionProps>>
     initial?: undefined | Array<number>
     maxOpen?: undefined | number
@@ -221,8 +222,8 @@ export interface AccordionListProps extends Omit<React.HTMLAttributes<HTMLUListE
 
 export interface AccordionProps extends BoxProps {
     head: React.ReactNode
-    buttonProps?: undefined | React.ButtonHTMLAttributes<HTMLButtonElement> & {ref: React.Ref<HTMLButtonElement>}
-    contentProps?: undefined | React.HTMLAttributes<HTMLDivElement>
+    buttonProps?: undefined | ElementProps<'button'>
+    contentProps?: undefined | ElementProps<'div'>
     onToggle?: undefined | ((state: boolean) => void)
 }
 
