@@ -1,5 +1,4 @@
 import {CaseRoute, exact, MatchArg, SwitchRoute} from '@eviljs/react/router'
-import type {VoidProps} from '@eviljs/react/type'
 import {Showcase} from '@eviljs/reactx/showcase-v1/showcase.js'
 import {NotFoundView} from '~/app-404/404-view'
 import {HomeView} from '~/app-home/home-view'
@@ -7,7 +6,7 @@ import {ShowcaseEntries} from '~/app-showcase/all'
 import {Header} from '~/ui-widgets/header'
 
 export function RouterStatic(props: RouterStaticProps) {
-    const {className, ...otherProps} = props
+    const {} = props
 
     return (
         <SwitchRoute fallback={<NotFoundView/>}>
@@ -32,5 +31,5 @@ export function RouterStatic(props: RouterStaticProps) {
 
 // Types ///////////////////////////////////////////////////////////////////////
 
-export interface RouterStaticProps extends VoidProps<React.HTMLAttributes<HTMLElement>> {
+export interface RouterStaticProps {
 }

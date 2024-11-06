@@ -1,9 +1,10 @@
 import './header.css'
 
 import {classes} from '@eviljs/react/classes'
+import type {ElementProps, Props} from '@eviljs/react/props'
 import {Route} from '@eviljs/react/router'
 
-export function Header(props: HeaderProps) {
+export function Header(props: Props<HeaderProps>) {
     const {className, ...otherProps} = props
 
     const menu = [
@@ -41,5 +42,5 @@ export function Header(props: HeaderProps) {
 
 // Types ///////////////////////////////////////////////////////////////////////
 
-export interface HeaderProps extends React.HTMLAttributes<HTMLElement> {
+export interface HeaderProps extends ElementProps<'div'> {
 }

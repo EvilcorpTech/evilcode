@@ -1,6 +1,7 @@
 import {classes} from '@eviljs/react/classes'
+import type {ElementProps, Props} from '@eviljs/react/props'
 
-export function NotFoundView(props: NotFoundViewProps) {
+export function NotFoundView(props: Props<NotFoundViewProps>) {
     const {className} = props
 
     return (
@@ -12,5 +13,5 @@ export function NotFoundView(props: NotFoundViewProps) {
 
 // Types ///////////////////////////////////////////////////////////////////////
 
-export interface NotFoundViewProps extends React.HTMLAttributes<HTMLDivElement> {
+export interface NotFoundViewProps extends ElementProps<'div'> {
 }
