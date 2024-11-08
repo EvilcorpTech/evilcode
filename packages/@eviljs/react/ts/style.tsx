@@ -1,3 +1,4 @@
+import {getMapValue} from '@eviljs/std/map'
 import {useContext, useInsertionEffect, useMemo} from 'react'
 import {defineContext} from './ctx.js'
 
@@ -28,7 +29,7 @@ export function StyleProvider(props: StyleProviderProps): JSX.Element {
                 const styleInfo = stylesMap.get(style)
 
                 if (! styleInfo) {
-                    console.warn('Trying to clean a not used style.')
+                    // Empty style. It is not injected.
                     return
                 }
 
@@ -44,15 +45,15 @@ export function StyleProvider(props: StyleProviderProps): JSX.Element {
                 clean(style, styleInfo.hash)
             },
             useStyle(style) {
-                const styleInfo = stylesMap.get(style) ?? (() => {
-                    const styleInfo: StylesMapValue = {
-                        hash: computeSimpleFastHash(style),
-                        references: 0,
-                    }
-                    stylesMap.set(style, styleInfo)
+                if (! style || ! style.trim()) {
+                    // We skip empty styles.
+                    return
+                }
 
-                    return styleInfo
-                })()
+                const styleInfo = getMapValue(stylesMap, style, (): StylesMapValue => ({
+                    hash: computeSimpleFastHash(style),
+                    references: 0,
+                }))
 
                 if (styleInfo.references === 0) {
                     attach(style, styleInfo.hash)
@@ -124,9 +125,9 @@ export interface StyleProviderProps {
 }
 
 export interface StyleContextValue {
-    cleanStyle: (style: string) => void
     stylesMap: StylesMap
-    useStyle: (style: string) => void
+    cleanStyle(style: string): void
+    useStyle(style: string): void
 }
 
 export type StyleDelegate = (style: string, hash: string) => void
