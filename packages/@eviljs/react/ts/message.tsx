@@ -9,11 +9,12 @@ import {
     type MsgMessageKey,
     type MsgMessages,
 } from '@eviljs/std/msg'
-import {createElement, memo, useContext, useMemo, useState} from 'react'
-import type {BoxProps} from './box.js'
+import {forwardRef, memo, useContext, useMemo, useState} from 'react'
+import {Box, type BoxProps} from './box.js'
 import {classes} from './classes.js'
 import {defineContext} from './ctx.js'
-import type {VoidProps} from './props.js'
+import {displayName} from './display-name.js'
+import type {Props, RefElementOf, VoidProps} from './props.js'
 import type {StateSetter} from './state.js'
 
 export type * from '@eviljs/std/msg'
@@ -38,20 +39,27 @@ export function MessageProvider(props: MessageProviderProps): JSX.Element {
     return <MessageContext.Provider value={contextValue} children={children}/>
 }
 
-export const Message: React.ComponentType<MessageProps> = memo(function Message(props: MessageProps) {
-    const {children, className, args, tag, ...otherProps} = props
+export const Message = displayName('Message', memo(forwardRef(function Message(
+    props: Props<MessageProps>,
+    ref: React.ForwardedRef<RefElementOf<MessageProps>>,
+) {
+    const {args, children, className, tag: tagOptional, ...otherProps} = props
     const message = useMessage(children, args)
 
     return (
-        createElement(tag ?? 'span', {
-            ...otherProps,
-            className: classes('Message-cea2', className),
-            'data-key': message !== children ? children : undefined,
-        }, message)
+        <Box
+            {...otherProps}
+            tag={tagOptional ?? 'span'}
+            ref={ref}
+            className={classes('Message-cea2', className)}
+            data-key={message !== children ? children : undefined}
+        >
+            {message}
+        </Box>
     )
-})
+}))) as React.FunctionComponent<MessageProps>
 
-export function Translate(props: TranslateProps): React.ReactNode {
+export function Translate(props: Props<TranslateProps>): React.ReactNode {
     const {children, args} = props
     const message = useMessage(children, args)
 

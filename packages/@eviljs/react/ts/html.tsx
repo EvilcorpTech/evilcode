@@ -2,9 +2,10 @@ import {forwardRef} from 'react'
 import {Box, type BoxProps} from './box.js'
 import {classes} from './classes.js'
 import {displayName} from './display-name.js'
+import type {Props} from './props.js'
 
 export const Html = displayName('Html', forwardRef(function Html<T extends Element = HTMLElement>(
-    props: HtmlProps,
+    props: Props<HtmlProps>,
     ref: React.ForwardedRef<T>
 ) {
     const {children, className, ...otherProps} = props
