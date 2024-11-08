@@ -8,6 +8,14 @@ export function round(value: number, round: number): number {
     return Math.trunc(value / round) * round
 }
 
+export function roundUp(value: number, round: number): number {
+    return Math.ceil(value / round) * round
+}
+
+export function roundDown(value: number, round: number): number {
+    return Math.floor(value / round) * round
+}
+
 export function sum(items: Array<number>, getter?: undefined): number;
 export function sum<I>(items: Array<I>, getter: NumberGetter<I>): number;
 export function sum<I>(items: Array<number> | Array<I>, getter?: undefined | NumberGetter<I>): number {
