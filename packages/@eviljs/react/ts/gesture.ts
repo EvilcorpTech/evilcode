@@ -2,8 +2,8 @@ import type {Task} from '@eviljs/std/fn-type'
 import {asArray} from '@eviljs/std/type-as'
 import {useEffect} from 'react'
 
-export function useOnClickOutside(
-    selectorList: string | Array<string>,
+export function useClickOutside(
+    refOrRefs: ClickOutsideRefMixed,
     onClickOutside: Task,
     options?: undefined | OnClickOutsideOptions,
 ): void {
@@ -15,16 +15,23 @@ export function useOnClickOutside(
         }
 
         function onClick(event: MouseEvent) {
-            const eventTarget = event.target as null | Partial<Element>
-            const selectors = asArray(selectorList)
+            const eventTarget = event.target as null | Node
+            const refs = asArray(refOrRefs)
 
-            for (const selector of selectors) {
-                const selectedElement = eventTarget?.closest?.(selector)
-                const clickIsOutsideSelector = ! selectedElement
-                const clickIsInsideSelector = ! clickIsOutsideSelector
+            if (! eventTarget) {
+                onClickOutside()
+                return
+            }
 
-                if (clickIsInsideSelector) {
-                    // Every selector must match otherwise a click is considered outside.
+            for (const ref of refs) {
+                if (! ref.current) {
+                    continue
+                }
+
+                const clickIsInside = ref.current.contains(eventTarget)
+
+                if (clickIsInside) {
+                    // Click must be inside every ref, otherwise it is considered outside.
                     continue
                 }
 
@@ -40,7 +47,7 @@ export function useOnClickOutside(
         }
 
         return onClean
-    }, [selectorList, onClickOutside, active])
+    }, [refOrRefs, onClickOutside, active])
 }
 
 // Types ///////////////////////////////////////////////////////////////////////
@@ -48,3 +55,11 @@ export function useOnClickOutside(
 export interface OnClickOutsideOptions {
     active?: undefined | boolean
 }
+
+export type ClickOutsideRefMixed =
+    | React.RefObject<Node>
+    | React.MutableRefObject<Node>
+    | Array<
+        | React.RefObject<Node>
+        | React.MutableRefObject<Node>
+    >
