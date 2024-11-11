@@ -1,10 +1,9 @@
-import type {Task} from '@eviljs/std/fn-type'
 import {asArray} from '@eviljs/std/type-as'
 import {useEffect} from 'react'
 
 export function useClickOutside(
     refOrRefs: ClickOutsideRefMixed,
-    onClickOutside: Task,
+    onClickOutside: (event: MouseEvent) => void,
     options?: undefined | OnClickOutsideOptions,
 ): void {
     const active = options?.active ?? true
@@ -19,7 +18,7 @@ export function useClickOutside(
             const refs = asArray(refOrRefs)
 
             if (! eventTarget) {
-                onClickOutside()
+                onClickOutside(event)
                 return
             }
 
@@ -35,7 +34,7 @@ export function useClickOutside(
                     continue
                 }
 
-                onClickOutside()
+                onClickOutside(event)
                 return
             }
         }
