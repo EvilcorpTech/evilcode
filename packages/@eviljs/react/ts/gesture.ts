@@ -1,19 +1,20 @@
 import {asArray} from '@eviljs/std/type-as'
-import {useEffect} from 'react'
+import {useCallback, useRef} from 'react'
+import {useEvent, type EventElement, type EventElementRefMixed, type EventHandler, type EventOptions} from './event.js'
 
 export function useClickOutside(
-    refOrRefs: ClickOutsideRefMixed,
-    onClickOutside: (event: MouseEvent) => void,
-    options?: undefined | OnClickOutsideOptions,
+    refOrRefs: EventElementRefMixed<Element> | Array<EventElementRefMixed<Element>>,
+    onClickOutside: EventHandler<MouseEvent>,
+    options?: undefined | ClickOutsideOptions,
 ): void {
-    const active = options?.active ?? true
+    const documentRef = useRef<EventElement>(document.documentElement)
+    const rootRef = options?.rootRef ?? documentRef
+    const eventName = options?.event ?? 'click'
 
-    useEffect(() => {
-        if (! active) {
-            return
-        }
-
-        function onClick(event: MouseEvent) {
+    useEvent(
+        rootRef,
+        eventName,
+        useCallback((event: MouseEvent) => {
             const eventTarget = event.target as null | Node
             const refs = asArray(refOrRefs)
 
@@ -37,28 +38,14 @@ export function useClickOutside(
                 onClickOutside(event)
                 return
             }
-        }
-
-        document.documentElement.addEventListener('click', onClick, {capture: true, passive: true})
-
-        function onClean() {
-            document.documentElement.removeEventListener('click', onClick, true)
-        }
-
-        return onClean
-    }, [refOrRefs, onClickOutside, active])
+        }, [onClickOutside]),
+        options,
+    )
 }
 
 // Types ///////////////////////////////////////////////////////////////////////
 
-export interface OnClickOutsideOptions {
-    active?: undefined | boolean
+export interface ClickOutsideOptions extends EventOptions {
+    event?: undefined | 'click' | 'mousedown' | 'mouseup'
+    rootRef?: undefined | EventElementRefMixed
 }
-
-export type ClickOutsideRefMixed =
-    | React.RefObject<Node>
-    | React.MutableRefObject<Node>
-    | Array<
-        | React.RefObject<Node>
-        | React.MutableRefObject<Node>
-    >

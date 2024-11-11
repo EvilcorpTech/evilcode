@@ -1,55 +1,38 @@
 import {asArray} from '@eviljs/std/type-as'
-import {useEffect} from 'react'
+import {useCallback, useRef} from 'react'
+import {useEvent, type EventElementRefMixed, type EventHandler, type EventOptions} from './event.js'
 
-export function useKey(key: Key, handler: KeyHandler, options?: undefined | UseKeyOptions): void {
-    useEffect(() => {
-        const keys = asArray(key)
-        const el: GlobalEventHandlers = options?.ref?.current ?? document
-        const event = options?.event ?? 'keydown'
-        const active = options?.active ?? true
+export function useKey(
+    key: KeybindingKey,
+    onKey: EventHandler<KeyboardEvent>,
+    options?: undefined | KeybindingOptions,
+): void {
+    const documentRef = useRef(document)
+    const event = options?.event ?? 'keydown'
+    const ref = options?.ref ?? documentRef
 
-        if (! active) {
-            return
-        }
-
-        const eventOptions: AddEventListenerOptions = {
-            capture: options?.phase === 'capturing'
-                ? true
-                : false // Bubbling by default.
-            ,
-        }
-
-        function onKey(event: KeyboardEvent) {
+    useEvent(
+        ref,
+        event,
+        useCallback((event: KeyboardEvent) => {
+            const keys = asArray(key)
             const isTheKey = keys.includes(event.key)
 
             if (! isTheKey) {
                 return
             }
 
-            handler(event)
-        }
-
-        el.addEventListener(event, onKey, eventOptions)
-
-        function onClean() {
-            el.removeEventListener(event, onKey, eventOptions.capture)
-        }
-
-        return onClean
-    }, [key, handler, options?.event, options?.phase, options?.active])
+            onKey(event)
+        }, [key, onKey]),
+        options,
+    )
 }
 
 // Types ///////////////////////////////////////////////////////////////////////
 
-export type Key = string | Array<string> // https://developer.mozilla.org/it/docs/Web/API/KeyboardEvent/key/Key_Values
+export type KeybindingKey = string | Array<string> // https://developer.mozilla.org/it/docs/Web/API/KeyboardEvent/key/Key_Values
 
-export interface KeyHandler {
-    (event: KeyboardEvent): void
-}
-
-export interface UseKeyOptions {
-    ref?: undefined | React.RefObject<HTMLElement> | React.MutableRefObject<HTMLElement>
-    active?: undefined | boolean
+export interface KeybindingOptions extends EventOptions {
     event?: undefined | 'keyup' | 'keydown'
-    phase?: undefined | 'capturing' | 'bubbling'
+    ref?: undefined | EventElementRefMixed | Array<EventElementRefMixed>
 }

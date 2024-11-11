@@ -1,7 +1,40 @@
 import {debounced, throttled, type EventTask} from '@eviljs/std/fn-event'
 import type {Fn, FnArgs} from '@eviljs/std/fn-type'
+import {asArray} from '@eviljs/std/type-as'
 import {useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState} from 'react'
 import type {StateInit, StateSetter} from './state.js'
+
+export function useEvent<E>(
+    targetRefOrRefs: EventElementRefMixed | Array<EventElementRefMixed>,
+    eventName: string,
+    onEventHandler: EventHandler<E>,
+    options?: undefined | EventOptions,
+): void {
+    const active = options?.active ?? true
+    const capture = options?.phase === 'capturing' // Bubbling by default.
+    const passive = options?.passive ?? true
+
+    useEffect(() => {
+        if (! active) {
+            return
+        }
+
+        const targetsRefs = asArray(targetRefOrRefs)
+        const eventOptions: AddEventListenerOptions = {capture: capture, passive: passive}
+
+        targetsRefs.forEach(ref => {
+            ref.current?.addEventListener(eventName, onEventHandler as EventListener, eventOptions)
+        })
+
+        function onClean() {
+            targetsRefs.forEach(ref => {
+                ref.current?.removeEventListener(eventName, onEventHandler as EventListener, eventOptions.capture)
+            })
+        }
+
+        return onClean
+    }, [active, eventName, capture, passive, onEventHandler])
+}
 
 export function useCallbackDebounced<A extends FnArgs>(callback: Fn<A>, delayMs: number): EventTask<A> {
     const callbackDebounced = useMemo(() => {
@@ -98,3 +131,16 @@ export function useValueDebounced<V>(input: V, delay: number): V {
 
     return output
 }
+
+// Types ///////////////////////////////////////////////////////////////////////
+
+export interface EventOptions {
+    active?: undefined | boolean
+    passive?: undefined | boolean
+    phase?: undefined |  'bubbling' | 'capturing'
+}
+
+export type EventElement = Element | EventTarget
+export type EventHandler<E> = (event: E) => void
+
+export type EventElementRefMixed<E extends EventElement = EventElement> = React.RefObject<E> | React.MutableRefObject<E>
