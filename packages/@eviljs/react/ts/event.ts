@@ -1,11 +1,13 @@
 import {debounced, throttled, type EventTask} from '@eviljs/std/fn-event'
 import type {Fn, FnArgs} from '@eviljs/std/fn-type'
 import {asArray} from '@eviljs/std/type-as'
+import type {None} from '@eviljs/std/type-types'
 import {useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState} from 'react'
+import type {RefObject} from './ref.js'
 import type {StateInit, StateSetter} from './state.js'
 
-export function useEvent<E>(
-    targetRefOrRefs: EventElementRefMixed | Array<EventElementRefMixed>,
+export function useEvent<E extends Event>(
+    targetRefOrRefs: RefObject<None | EventElement> | Array<RefObject<None | EventElement>>,
     eventName: string,
     onEventHandler: EventHandler<E>,
     options?: undefined | EventOptions,
@@ -142,5 +144,3 @@ export interface EventOptions {
 
 export type EventElement = Element | EventTarget
 export type EventHandler<E> = (event: E) => void
-
-export type EventElementRefMixed<E extends EventElement = EventElement> = React.RefObject<E> | React.MutableRefObject<E>
