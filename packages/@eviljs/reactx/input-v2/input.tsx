@@ -31,31 +31,37 @@ export const Input = displayName('Input', forwardRef(function Input(
     const {
         className,
         decorate,
+        disabled,
         hostClass,
         hostProps,
         hostStyle,
         inputClass,
         inputProps,
         inputStyle,
+        readOnly,
+        required,
         onChange,
         ...otherProps
     } = props
 
     const inputRef = useRef<HTMLInputElement>(null)
     const inputRefMerged = useMergeRefs(inputRef, ref)
-    const render = decorate ?? identity
+    const renderInput = decorate ?? identity
 
     return (
         <div
+            aria-disabled={disabled ?? false}
+            aria-readonly={readOnly ?? false}
+            aria-required={required ?? false}
             {...hostProps}
             className={classes('Input-cc0a', className, hostClass, hostProps?.className)}
             style={{...hostStyle, ...hostProps?.style}}
             onClick={event => {
-                inputRef.current?.focus()
                 hostProps?.onClick?.(event)
+                inputRef.current?.focus()
             }}
         >
-            {render(
+            {renderInput(
                 <input
                     {...otherProps}
                     ref={inputRefMerged}

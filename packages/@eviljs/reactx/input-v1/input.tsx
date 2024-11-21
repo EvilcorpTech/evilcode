@@ -2,7 +2,7 @@ import {classes} from '@eviljs/react/classes'
 import {displayName} from '@eviljs/react/display-name'
 import type {ElementProps, Props, RefElementOf} from '@eviljs/react/props'
 import {useMergeRefs} from '@eviljs/react/ref'
-import {forwardRef, useLayoutEffect, useMemo, useRef, useState} from 'react'
+import {forwardRef, useLayoutEffect, useRef, useState} from 'react'
 
 export const Input = displayName('Input', forwardRef(function Input(
     props: Props<InputProps>,
@@ -14,15 +14,11 @@ export const Input = displayName('Input', forwardRef(function Input(
     const fieldRef = useRef<HTMLDivElement>(null)
     const labelRef = useRef<HTMLLabelElement>(null)
     const inputRef = useRef<HTMLInputElement>(null)
+    const inputRefMerged = useMergeRefs(inputRef, ref)
 
     const labelPlaceholder = ! Boolean(value) && ! focus
 
     const labelScale = 1.4
-    const labelStyle = useMemo(() => {
-        return {
-            transform: `translateY(${translateY}px) scale(${labelScale})`,
-        }
-    }, [translateY])
 
     useLayoutEffect(() => {
         const field = fieldRef.current
@@ -41,10 +37,9 @@ export const Input = displayName('Input', forwardRef(function Input(
         <div
             {...otherProps}
             ref={fieldRef}
-            className={classes('Input-i7ee', className, {
-                focus,
-                placeholder: labelPlaceholder,
-            })}
+            className={classes('Input-i7ee', className)}
+            data-focus={focus}
+            data-placeholder={labelPlaceholder}
             onClick={() =>
                 inputRef.current?.focus()
             }
@@ -53,14 +48,19 @@ export const Input = displayName('Input', forwardRef(function Input(
                 <label
                     ref={labelRef}
                     className="label-id45 std-text-body2"
-                    style={labelPlaceholder ? labelStyle : undefined}
+                    style={{
+                        transform: labelPlaceholder
+                            ? `translateY(${translateY}px) scale(${labelScale})`
+                            : undefined
+                        ,
+                    }}
                 >
                     {label}
                 </label>
             }
 
             <input
-                ref={useMergeRefs(inputRef, ref)}
+                ref={inputRefMerged}
                 className="field-ceba std-text-body1"
                 type={type || 'text'}
                 value={value}

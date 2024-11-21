@@ -6,10 +6,10 @@
     background-color: transparent;
     transition: all var(--std-duration2);
 }
-.Input-i7ee.placeholder {
+.Input-i7ee[data-placeholder="true"] {
     background-color: var(--std-color-bg3);
 }
-.Input-i7ee.focus,
+.Input-i7ee[data-focus="true"],
 .Input-i7ee:focus-within {
     border-bottom-color: var(--std-color-primary-accent);
 }
@@ -23,7 +23,7 @@
     --text-opacity: .6;
     margin-bottom: .2em;
 }
-.Input-i7ee.placeholder .label-id45 {
+.Input-i7ee[data-placeholder="true"] .label-id45 {
     font-weight: var(--std-text-weight);
 }
 
