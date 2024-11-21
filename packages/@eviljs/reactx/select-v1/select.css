@@ -1,0 +1,9 @@
+.options-list-bfc5 {
+    display: flex;
+    flex-direction: column;
+    width: var(--Select-options-width, var(--Select-options-width--default, 100%));
+    max-height: var(--Select-options-height-max, var(--Select-options-height-max--default, 100vh));
+    background: var(--Select-options-background, var(--Select-options-background--default, var(--std-color-bg1)));
+    backdrop-filter: var(--Select-options-backdrop-filter, var(--Select-options-backdrop-filter--default, none));
+    overflow: auto;
+}

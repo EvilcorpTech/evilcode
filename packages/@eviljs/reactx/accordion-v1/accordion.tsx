@@ -193,6 +193,7 @@ export function AccordionItem(props: AccordionItemProps): JSX.Element {
             data-selected={selected}
         >
             <button
+                type="button"
                 {...buttonProps}
                 className={classes('head-ad0d', buttonProps?.className)}
                 onClick={() => onToggle(! selected)}

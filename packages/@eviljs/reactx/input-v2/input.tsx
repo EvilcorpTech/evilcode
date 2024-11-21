@@ -28,14 +28,27 @@ export const Input = displayName('Input', forwardRef(function Input(
     props: Props<InputProps>,
     ref: React.ForwardedRef<RefElementOf<InputProps>>,
 ) {
-    const {className, decorate, hostClass, hostProps, hostStyle, onChange, ...otherProps} = props
+    const {
+        className,
+        decorate,
+        hostClass,
+        hostProps,
+        hostStyle,
+        inputClass,
+        inputProps,
+        inputStyle,
+        onChange,
+        ...otherProps
+    } = props
+
     const inputRef = useRef<HTMLInputElement>(null)
+    const inputRefMerged = useMergeRefs(inputRef, ref)
     const render = decorate ?? identity
 
     return (
         <div
             {...hostProps}
-            className={classes('Input-cc0a', hostClass, hostProps?.className)}
+            className={classes('Input-cc0a', className, hostClass, hostProps?.className)}
             style={{...hostStyle, ...hostProps?.style}}
             onClick={event => {
                 inputRef.current?.focus()
@@ -45,8 +58,9 @@ export const Input = displayName('Input', forwardRef(function Input(
             {render(
                 <input
                     {...otherProps}
-                    ref={useMergeRefs(inputRef, ref)}
-                    className={classes('input-2d2b', className)}
+                    ref={inputRefMerged}
+                    className={classes('input-2d2b', inputClass, inputProps?.className)}
+                    style={{...inputStyle, ...inputProps?.style}}
                     onChange={event => onChange?.(event.currentTarget.value, event)}
                 />
             )}
@@ -87,6 +101,7 @@ export const SecretInput = displayName('SecretInput', forwardRef(function Secret
                 {decorate?.(input) ?? input}
 
                 <button
+                    type="button"
                     tabIndex={-1}
                     {...buttonProps}
                     className={classes('button-2bdf', buttonClass, buttonProps?.className)}
@@ -121,6 +136,9 @@ export interface InputProps extends Omit<VoidProps<ElementProps<'input'>>, 'onCh
     hostClass?: undefined | string
     hostProps?: undefined | ElementProps<'div'>
     hostStyle?: undefined | React.CSSProperties
+    inputClass?: undefined | string
+    inputProps?: undefined | ElementProps<'input'>
+    inputStyle?: undefined | React.CSSProperties
     onChange?: undefined | ((value: string, event: React.ChangeEvent<HTMLInputElement>) => void)
 }
 

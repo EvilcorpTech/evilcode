@@ -21,7 +21,7 @@ export const SliderVirtual = displayName('SliderVirtual', forwardRef(function Sl
         style,
         ...otherProps
     } = props
-    const containerRef = useRef<null | HTMLElement>(null)
+    const containerRef = useRef<HTMLDivElement>(null)
     const [sizes, setSizes] = useState<undefined | VirtualSizes>()
 
     const updateSize = useCallback(() => {
