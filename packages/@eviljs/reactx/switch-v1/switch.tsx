@@ -9,15 +9,20 @@ export function Switch(props: Props<SwitchProps>): JSX.Element {
         <button
             {...otherProps}
             className={classes('Switch-5a04 std-button std-button-flex std-switch', className, {
-                'std-knob': ! otherProps.children,
+                'std-knob': ! props.children,
             })}
             type="button"
             role="switch"
             aria-checked={asBooleanString(checked ?? false)}
-            onClick={! otherProps.disabled
-                ? () => onChange?.(! checked)
-                : undefined
-            }
+            onClick={event => {
+                props?.onClick?.(event)
+
+                if (props.disabled) {
+                    return
+                }
+
+                onChange?.(! checked)
+            }}
         />
     )
 }

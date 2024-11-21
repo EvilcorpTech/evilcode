@@ -6,6 +6,7 @@ export function ButtonBusy(props: Props<ButtonBusyProps>): JSX.Element {
 
     return (
         <button
+            type="button"
             {...otherProps}
             className={classes('BusyButton-f1d2', className)}
             data-busy={String(busy)}

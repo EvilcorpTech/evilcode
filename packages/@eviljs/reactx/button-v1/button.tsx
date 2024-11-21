@@ -11,6 +11,7 @@ export const Button = displayName('Button', forwardRef(function Button(
 
     return (
         <button
+            type="button"
             {...otherProps}
             ref={ref}
             className={classes('Button-db00 std-button std-text-button', className)}

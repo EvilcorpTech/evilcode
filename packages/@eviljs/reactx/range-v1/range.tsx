@@ -86,6 +86,7 @@ export function Range(props: Props<RangeProps>): JSX.Element {
                 <button
                     ref={refs.startHandle}
                     className="handle-bd2c handle-bd2c-start"
+                    type="button"
                     onKeyDown={event => {
                         switch (event.key) {
                             case KeyboardKey.ArrowLeft: {
@@ -112,6 +113,7 @@ export function Range(props: Props<RangeProps>): JSX.Element {
             <button
                 ref={refs.centerHandle}
                 className="slider-fb28"
+                type="button"
                 tabIndex={
                     distanceBetween(rangeStart, rangeEnd) > 0.1
                         ? 0
@@ -151,6 +153,7 @@ export function Range(props: Props<RangeProps>): JSX.Element {
                 <button
                     ref={refs.endHandle}
                     className="handle-bd2c handle-bd2c-end"
+                    type="button"
                     onKeyDown={event => {
                         switch (event.key) {
                             case KeyboardKey.ArrowLeft: {

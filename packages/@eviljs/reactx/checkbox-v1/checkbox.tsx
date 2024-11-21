@@ -4,11 +4,13 @@ import {asBooleanString} from '@eviljs/web/aria'
 import {cloneElement, isValidElement} from 'react'
 
 export function Checkbox(props: Props<CheckboxProps>): JSX.Element {
-    const {className, children, checked, disabled, onChange, ...otherProps} = props
-    const enabled = ! disabled
+    const {className, children, checked: checkedOptional, disabled: disabledOptional, onChange, ...otherProps} = props
+    const checked = checkedOptional ?? false
+    const disabled = disabledOptional ?? false
 
     return (
         <button
+            type="button"
             tabIndex={0}
             {...otherProps}
             className={classes('Checkbox-16ba std-button std-button-flex', className)}
@@ -16,13 +18,18 @@ export function Checkbox(props: Props<CheckboxProps>): JSX.Element {
             aria-checked={
                 checked === 'mixed'
                     ? 'mixed'
-                : asBooleanString(checked ?? false)
+                    : asBooleanString(checked)
             }
             disabled={disabled}
-            onClick={enabled
-                ? event => onChange?.(checked === 'mixed' ? true : ! checked)
-                : undefined
-            }
+            onClick={event => {
+                props?.onClick?.(event)
+
+                if (disabled) {
+                    return
+                }
+
+                onChange?.(checked === 'mixed' ? true : ! checked)
+            }}
         >
             {isValidElement<any>(children) &&
                 cloneElement(children, {checked})
