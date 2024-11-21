@@ -31,28 +31,33 @@ export const Input = displayName('Input', forwardRef(function Input(
     const {
         className,
         decorate,
-        disabled,
+        disabled: disabledOptional,
         hostClass,
         hostProps,
         hostStyle,
         inputClass,
         inputProps,
         inputStyle,
-        readOnly,
-        required,
+        readOnly: readonlyOptional,
+        required: requiredOptional,
         onChange,
         ...otherProps
     } = props
 
     const inputRef = useRef<HTMLInputElement>(null)
     const inputRefMerged = useMergeRefs(inputRef, ref)
+
+    const disabled = disabledOptional ?? false
+    const readonly = readonlyOptional ?? false
+    const required = requiredOptional ?? false
+
     const renderInput = decorate ?? identity
 
     return (
         <div
-            aria-disabled={disabled ?? false}
-            aria-readonly={readOnly ?? false}
-            aria-required={required ?? false}
+            aria-disabled={disabled}
+            aria-readonly={readonly}
+            aria-required={required}
             {...hostProps}
             className={classes('Input-cc0a', className, hostClass, hostProps?.className)}
             style={{...hostStyle, ...hostProps?.style}}
@@ -66,6 +71,9 @@ export const Input = displayName('Input', forwardRef(function Input(
                     {...otherProps}
                     ref={inputRefMerged}
                     className={classes('input-2d2b', inputClass, inputProps?.className)}
+                    disabled={disabled}
+                    readOnly={readonly}
+                    required={required}
                     style={{...inputStyle, ...inputProps?.style}}
                     onChange={event => onChange?.(event.currentTarget.value, event)}
                 />
