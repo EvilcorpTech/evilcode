@@ -1,0 +1,107 @@
+.Tooltip-ccf9 {
+    display: var(--Tooltip-display, var(--Tooltip-display--default, flex));
+}
+.Tooltip-ccf9[data-position="top-start"],
+.Tooltip-ccf9[data-position="top-center"],
+.Tooltip-ccf9[data-position="top-end"] {
+    flex-direction: column-reverse;
+}
+.Tooltip-ccf9[data-position="bottom-start"],
+.Tooltip-ccf9[data-position="bottom-center"],
+.Tooltip-ccf9[data-position="bottom-end"] {
+    flex-direction: column;
+}
+.Tooltip-ccf9[data-position="left-start"],
+.Tooltip-ccf9[data-position="left-center"],
+.Tooltip-ccf9[data-position="left-end"] {
+    flex-direction: row-reverse;
+}
+.Tooltip-ccf9[data-position="right-start"],
+.Tooltip-ccf9[data-position="right-center"],
+.Tooltip-ccf9[data-position="right-end"] {
+    flex-direction: row;
+}
+.Tooltip-ccf9[data-position="top-start"],
+.Tooltip-ccf9[data-position="left-start"],
+.Tooltip-ccf9[data-position="right-start"],
+.Tooltip-ccf9[data-position="bottom-start"] {
+    align-items: flex-start;
+}
+.Tooltip-ccf9[data-position="top-center"],
+.Tooltip-ccf9[data-position="left-center"],
+.Tooltip-ccf9[data-position="right-center"],
+.Tooltip-ccf9[data-position="bottom-center"] {
+    align-items: center;
+}
+.Tooltip-ccf9[data-position="top-end"],
+.Tooltip-ccf9[data-position="left-end"],
+.Tooltip-ccf9[data-position="right-end"],
+.Tooltip-ccf9[data-position="bottom-end"] {
+    align-items: flex-end;
+}
+
+.tooltip-content-root-21d5 {
+    /*
+    * Using this technique we avoid to set position:relative on the root tooltip
+    * container, preventing that an expanded tooltip is displayed under a collapsed one.
+    */
+    position: relative;
+    z-index: 1;
+    display: flex;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity var(--Tooltip-transition-duration, var(--Tooltip-transition-duration--default, var(--std-duration3)));
+    transition-delay: opacity var(--Tooltip-transition-delay, var(--Tooltip-transition-delay--default, 0));
+}
+.Tooltip-ccf9[data-position="top-center"] .tooltip-content-root-21d5,
+.Tooltip-ccf9[data-position="left-center"] .tooltip-content-root-21d5,
+.Tooltip-ccf9[data-position="right-center"] .tooltip-content-root-21d5,
+.Tooltip-ccf9[data-position="bottom-center"] .tooltip-content-root-21d5 {
+    justify-content: center;
+    align-items: center;
+}
+.Tooltip-ccf9:hover .tooltip-content-root-21d5,
+.Tooltip-ccf9[aria-expanded="true"] .tooltip-content-root-21d5 {
+    opacity: unset;
+    pointer-events: all;
+}
+
+.tooltip-content-ac0e {
+    position: absolute;
+}
+.Tooltip-ccf9[data-position="top-start"] .tooltip-content-ac0e,
+.Tooltip-ccf9[data-position="top-center"] .tooltip-content-ac0e,
+.Tooltip-ccf9[data-position="top-end"] .tooltip-content-ac0e {
+    bottom: 0;
+}
+.Tooltip-ccf9[data-position="bottom-start"] .tooltip-content-ac0e,
+.Tooltip-ccf9[data-position="bottom-center"] .tooltip-content-ac0e,
+.Tooltip-ccf9[data-position="bottom-end"] .tooltip-content-ac0e {
+    top: 0;
+}
+.Tooltip-ccf9[data-position="left-start"] .tooltip-content-ac0e,
+.Tooltip-ccf9[data-position="left-center"] .tooltip-content-ac0e,
+.Tooltip-ccf9[data-position="left-end"] .tooltip-content-ac0e {
+    right: 0;
+}
+.Tooltip-ccf9[data-position="right-start"] .tooltip-content-ac0e,
+.Tooltip-ccf9[data-position="right-center"] .tooltip-content-ac0e,
+.Tooltip-ccf9[data-position="right-end"] .tooltip-content-ac0e {
+    left: 0;
+}
+.Tooltip-ccf9[data-position="top-start"] .tooltip-content-ac0e,
+.Tooltip-ccf9[data-position="bottom-start"] .tooltip-content-ac0e {
+    left: 0;
+}
+.Tooltip-ccf9[data-position="top-end"] .tooltip-content-ac0e,
+.Tooltip-ccf9[data-position="bottom-end"] .tooltip-content-ac0e {
+    right: 0;
+}
+.Tooltip-ccf9[data-position="left-start"] .tooltip-content-ac0e,
+.Tooltip-ccf9[data-position="right-start"] .tooltip-content-ac0e {
+    top: 0;
+}
+.Tooltip-ccf9[data-position="left-end"] .tooltip-content-ac0e,
+.Tooltip-ccf9[data-position="right-end"] .tooltip-content-ac0e {
+    bottom: 0;
+}

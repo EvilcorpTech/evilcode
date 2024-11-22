@@ -23,7 +23,6 @@
     justify-content: center;
     align-items: center;
     font-weight: var(--std-text-weight2);
-    box-shadow: var(--std-shadow1);
     user-select: none;
     cursor: col-resize;
     color: var(--std-color-primary-accent);

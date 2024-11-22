@@ -1,40 +1,45 @@
+import {Box, type BoxProps} from '@eviljs/react/box'
 import {classes} from '@eviljs/react/classes'
 import type {ElementProps, Props} from '@eviljs/react/props'
+import type {TooltipPosition} from './tooltip.api.js'
+
+export type {TooltipPosition} from './tooltip.api.js'
 
 export function Tooltip(props: Props<TooltipProps>): undefined | JSX.Element {
-    const {children, className, content, contentClass, position, ...otherProps} = props
+    const {children, className, content, contentClass, contentProps, contentStyle, position, ...otherProps} = props
 
     if (! children) {
         return
     }
 
     return (
-        <div
+        <Box
             {...otherProps}
-            className={classes('Tooltip-ccf9', className, position.split('-'))}
+            className={classes('Tooltip-ccf9', className)}
+            data-position={position}
         >
             {children}
 
-            <div className="root-21d5">
-                <div className="tooltip-ac0e" role="tooltip">
-                    <div className={classes('content-b6b3', contentClass)}>
-                        {content}
-                    </div>
+            <div className="tooltip-content-root-21d5">
+                <div
+                    {...contentProps}
+                    className={classes('tooltip-content-ac0e', contentClass, contentProps?.className)}
+                    role="tooltip"
+                    style={{...contentStyle, ...contentProps?.style}}
+                >
+                    {content}
                 </div>
             </div>
-        </div>
+        </Box>
     )
 }
 
 // Types ///////////////////////////////////////////////////////////////////////
 
-export interface TooltipProps extends Omit<ElementProps<'div'>, 'content'>, TooltipModel {
-}
-
-export interface TooltipModel {
+export interface TooltipProps extends Omit<BoxProps, 'content'> {
     content: React.ReactNode
     contentClass?: undefined | string
+    contentProps?: undefined | ElementProps<'div'>
+    contentStyle?: undefined | React.CSSProperties
     position: TooltipPosition
 }
-
-export type TooltipPosition = `${'top' | 'left' | 'right' | 'bottom'}-${'start' | 'center' | 'end'}`

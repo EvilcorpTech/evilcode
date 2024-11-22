@@ -1,0 +1,129 @@
+.Tooltip-ccf9:hover,
+.Tooltip-ccf9[aria-expanded="true"] {
+    position: relative;
+    isolation: isolate;
+    z-index: var(--Tooltip-zindex, var(--Tooltip-zindex--default, 1));
+}
+
+.tooltip-content-root-21d5 {
+    position: absolute;
+    display: flex;
+    z-index: var(--Tooltip-content-root-zindex, var(--Tooltip-content-root-zindex--default, 1));
+}
+.Tooltip-ccf9:not(:hover):not([aria-expanded="true"]) .tooltip-content-root-21d5 {
+    display: none;
+}
+.Tooltip-ccf9:hover .tooltip-content-root-21d5,
+.Tooltip-ccf9[aria-expanded="true"] .tooltip-content-root-21d5 {
+    animation-name: var(--Tooltip-content-root-animation-name, var(--Tooltip-content-root-animation-name--default, enter-fade-b0e1));
+    animation-duration: var(--Tooltip-content-root-animation-duration, var(--Tooltip-content-root-animation-duration--default, var(--std-duration3)));
+    animation-fill-mode: forwards;
+}
+
+.Tooltip-ccf9[data-position="top-start"]:hover .tooltip-content-root-21d5,
+.Tooltip-ccf9[data-position="top-start"][aria-expanded="true"] .tooltip-content-root-21d5 {
+    height: 0;
+    top: 0;
+    left: 0;
+    justify-content: flex-start;
+    align-items: flex-end;
+}
+.Tooltip-ccf9[data-position="top-center"]:hover .tooltip-content-root-21d5,
+.Tooltip-ccf9[data-position="top-center"][aria-expanded="true"] .tooltip-content-root-21d5 {
+    height: 0;
+    top: 0;
+    left: 0;
+    right: 0;
+    justify-content: center;
+    align-items: flex-end;
+}
+.Tooltip-ccf9[data-position="top-end"]:hover .tooltip-content-root-21d5,
+.Tooltip-ccf9[data-position="top-end"][aria-expanded="true"] .tooltip-content-root-21d5 {
+    height: 0;
+    top: 0;
+    right: 0;
+    justify-content: flex-end;
+    align-items: flex-end;
+}
+
+.Tooltip-ccf9[data-position="bottom-start"]:hover .tooltip-content-root-21d5,
+.Tooltip-ccf9[data-position="bottom-start"][aria-expanded="true"] .tooltip-content-root-21d5 {
+    height: 0;
+    bottom: 0;
+    left: 0;
+    justify-content: flex-start;
+    align-items: flex-start;
+}
+.Tooltip-ccf9[data-position="bottom-center"]:hover .tooltip-content-root-21d5,
+.Tooltip-ccf9[data-position="bottom-center"][aria-expanded="true"] .tooltip-content-root-21d5 {
+    height: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    justify-content: center;
+    align-items: flex-start;
+}
+.Tooltip-ccf9[data-position="bottom-end"]:hover .tooltip-content-root-21d5,
+.Tooltip-ccf9[data-position="bottom-end"][aria-expanded="true"] .tooltip-content-root-21d5 {
+    height: 0;
+    bottom: 0;
+    right: 0;
+    justify-content: flex-end;
+    align-items: flex-start;
+}
+
+.Tooltip-ccf9[data-position="left-start"]:hover .tooltip-content-root-21d5,
+.Tooltip-ccf9[data-position="left-start"][aria-expanded="true"] .tooltip-content-root-21d5 {
+    width: 0;
+    left: 0;
+    top: 0;
+    justify-content: flex-end;
+    align-items: flex-start;
+}
+.Tooltip-ccf9[data-position="left-center"]:hover .tooltip-content-root-21d5,
+.Tooltip-ccf9[data-position="left-center"][aria-expanded="true"] .tooltip-content-root-21d5 {
+    width: 0;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    justify-content: flex-end;
+    align-items: center;
+}
+.Tooltip-ccf9[data-position="left-end"]:hover .tooltip-content-root-21d5,
+.Tooltip-ccf9[data-position="left-end"][aria-expanded="true"] .tooltip-content-root-21d5 {
+    width: 0;
+    left: 0;
+    bottom: 0;
+    justify-content: flex-end;
+    align-items: flex-end;
+}
+
+.Tooltip-ccf9[data-position="right-start"]:hover .tooltip-content-root-21d5,
+.Tooltip-ccf9[data-position="right-start"][aria-expanded="true"] .tooltip-content-root-21d5 {
+    width: 0;
+    right: 0;
+    top: 0;
+    justify-content: flex-start;
+    align-items: flex-start;
+}
+.Tooltip-ccf9[data-position="right-center"]:hover .tooltip-content-root-21d5,
+.Tooltip-ccf9[data-position="right-center"][aria-expanded="true"] .tooltip-content-root-21d5 {
+    width: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    justify-content: flex-start;
+    align-items: center;
+}
+.Tooltip-ccf9[data-position="right-end"]:hover .tooltip-content-root-21d5,
+.Tooltip-ccf9[data-position="right-end"][aria-expanded="true"] .tooltip-content-root-21d5 {
+    width: 0;
+    right: 0;
+    bottom: 0;
+    justify-content: flex-start;
+    align-items: flex-end;
+}
+
+@keyframes enter-fade-b0e1 {
+    from { opacity: 0; }
+}
