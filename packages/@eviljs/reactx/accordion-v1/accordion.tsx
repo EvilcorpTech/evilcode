@@ -137,8 +137,10 @@ export function Accordion(props: AccordionProps): JSX.Element {
         buttonProps,
         children,
         className,
+        content,
+        contentClass,
         contentProps,
-        head,
+        contentStyle,
         initialOpen,
         open: openControlled,
         onOpenChange: setOpenControlled,
@@ -185,15 +187,16 @@ export function Accordion(props: AccordionProps): JSX.Element {
                     setOpen(! open)
                 }}
             >
-                {head}
+                {children}
             </button>
 
             <div
                 {...contentProps}
                 ref={contentRef}
-                className={classes('content-38aa', contentProps?.className)}
+                className={classes('content-38aa', contentClass, contentProps?.className)}
+                style={{...contentStyle, ...contentProps?.style}}
             >
-                {children}
+                {content}
             </div>
         </Box>
     )
@@ -208,10 +211,12 @@ export interface AccordionListProps extends ElementProps<'ul'> {
     onOpenChange?: undefined | ((open: Array<number>) => void)
 }
 
-export interface AccordionProps extends BoxProps {
+export interface AccordionProps extends Omit<BoxProps, 'content'> {
     buttonProps?: undefined | ElementProps<'button'>
+    content: React.ReactNode
+    contentClass?: undefined | string
     contentProps?: undefined | ElementProps<'div'>
-    head: React.ReactNode
+    contentStyle?: undefined | React.CSSProperties
     initialOpen?: undefined | boolean
     open?: undefined | boolean
     onOpenChange?: undefined | ((open: boolean) => void)

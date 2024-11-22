@@ -225,11 +225,13 @@ export function WidgetsView(props: Props<WidgetsViewProps>): JSX.Element {
                     {[{name: 'Pizza'}, {name: 'Pasta'}, {name: 'Patate'}].map((it, idx) =>
                         <Accordion
                             key={idx}
-                            head={it.name}
+                            content={
+                                <div className="std-width-max2 std-text-body2 std-text-weight-1">
+                                    {Lorem}
+                                </div>
+                            }
                         >
-                            <div className="std-width-s std-text-body2 std-text-weight-1">
-                                {Lorem}
-                            </div>
+                            {it.name}
                         </Accordion>
                     )}
                 </AccordionList>
