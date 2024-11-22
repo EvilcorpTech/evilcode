@@ -1,196 +1,179 @@
 import {Box, type BoxProps} from '@eviljs/react/box'
 import {classes} from '@eviljs/react/classes'
 import type {ElementProps, Props} from '@eviljs/react/props'
-import {flushStyles} from '@eviljs/web/animation'
-import {Children, isValidElement, useCallback, useEffect, useRef, useState} from 'react'
+import {KeyboardKey} from '@eviljs/web/keybinding'
+import {Children, cloneElement, isValidElement, useCallback, useEffect, useRef, useState} from 'react'
+import {animateAccordionClose, animateAccordionOpen} from './accordion.api.js'
 
 export function AccordionList(props: Props<AccordionListProps>): JSX.Element {
-    const {className, children, initial, maxOpen, onChange, ...otherProps} = props
-    const itemsRef = useRef<Array<null | HTMLButtonElement>>([])
-    const [selected, setSelected] = useState(initial ?? [])
-    const [focused, setFocused] = useState<null | number>(null)
-    const maxOpenSections = maxOpen ?? 1
-    const childrenList = Children.toArray(children).filter(isValidElement<AccordionProps>)
+    const {
+        className,
+        children,
+        initialOpen,
+        maxOpen: maxOpenOptional,
+        open: openControlled,
+        onOpenChange: setOpenControlled,
+        ...otherProps
+    } = props
+
+    const maxOpen = maxOpenOptional ?? 1
+
+    const accordionsButtonsRef = useRef<Array<null | HTMLButtonElement>>([])
+
+    const [openListUncontrolled, setOpenListUncontrolled] = useState<Array<number>>(initialOpen ?? [])
+    const [focused, setFocused] = useState<number>()
+
+    const openList = openControlled ?? openListUncontrolled
+
+    function setOpenList(open: Array<number>) {
+        setOpenListUncontrolled(open)
+        setOpenControlled?.(open)
+    }
+
+    const accordionsList = Children.toArray(children).filter(isValidElement<AccordionProps>)
 
     function onKeyDown(event: React.KeyboardEvent<HTMLElement>, idx: number) {
         switch (event.key) {
-            case 'ArrowDown':
-                event.preventDefault()
-                event.stopPropagation()
-                setFocused(Math.min(idx + 1, childrenList.length - 1))
-            break
-            case 'ArrowUp':
+            case KeyboardKey.ArrowUp:
                 event.preventDefault()
                 event.stopPropagation()
                 setFocused(Math.max(idx - 1, 0))
             break
-            case 'ArrowRight':
-                setSelected(
-                    selected.includes(idx)
-                        ? selected
-                        : [...selected, idx].slice(-1 * maxOpenSections)
+            case KeyboardKey.ArrowDown:
+                event.preventDefault()
+                event.stopPropagation()
+                setFocused(Math.min(idx + 1, accordionsList.length - 1))
+            break
+            case KeyboardKey.ArrowLeft:
+                event.preventDefault()
+                event.stopPropagation()
+                setOpenList(
+                    openList.includes(idx)
+                        ? openList.filter(it => it !== idx)
+                        : openList
                 )
             break
-            case 'ArrowLeft':
-                setSelected(
-                    selected.includes(idx)
-                        ? selected.filter(it => it !== idx)
-                        : selected
+            case KeyboardKey.ArrowRight:
+                event.preventDefault()
+                event.stopPropagation()
+                setOpenList(
+                    openList.includes(idx)
+                        ? openList
+                        : [idx, ...openList].slice(0, maxOpen)
                 )
             break
         }
     }
 
-    function onToggle(idx: number) {
-        setSelected(
-            selected.includes(idx)
-                ? selected.filter(it => it !== idx)
-                : [...selected, idx].slice(-1 * maxOpenSections)
+    function onAccordionOpenChange(idx: number, open: boolean) {
+        setOpenList(
+            open
+                ? [idx, ...openList].slice(0, maxOpen)
+                : openList.filter(it => it !== idx)
         )
     }
 
     function computeTabIndex(idx: number) {
-        if (idx === focused) {
-            // Only last focused position should be focusable.
+        if (idx === 0 && focused === undefined) {
             return 0
         }
-        if (focused === null && idx === 0) {
+        if (idx === focused) {
+            // Only last focused position should be focusable.
             return 0
         }
         return -1
     }
 
     useEffect(() => {
-        itemsRef.current = itemsRef.current.slice(0, childrenList.length)
-    }, [childrenList.length])
+        accordionsButtonsRef.current = accordionsButtonsRef.current.slice(0, accordionsList.length)
+    }, [accordionsList.length])
 
     useEffect(() => {
-        if (focused === null) {
+        if (focused === undefined) {
             return
         }
 
-        const el = itemsRef.current[focused]
+        const accordionButton = accordionsButtonsRef.current[focused]
 
-        el?.focus()
+        accordionButton?.focus()
     }, [focused])
-
-    useEffect(() => {
-        if (selected === initial) {
-            return
-        }
-        onChange?.(selected)
-    }, [selected])
 
     return (
         <ul
             {...otherProps}
             className={classes('AccordionList-c2ae', className)}
         >
-            {childrenList.map((child, idx) => {
-                const isSelected = selected.includes(idx)
-
-                return (
-                    <AccordionItem
-                        {...child.props}
-                        key={idx}
-                        tag="li"
-                        className={classes('item-c3bf', child.props.className)}
-                        buttonProps={{
-                            ...child.props.buttonProps,
-                            ref(ref) {
-                                itemsRef.current[idx] = ref
-                            },
-                            tabIndex: computeTabIndex(idx),
-                            onKeyDown(event) {
-                                onKeyDown(event, idx)
-                            },
-                        }}
-                        selected={isSelected}
-                        onToggle={() => onToggle(idx)}
-                    />
-                )
-            })}
+            {accordionsList.map((accordion, idx) =>
+                cloneElement(accordion, {
+                    ...accordion.props,
+                    key: idx,
+                    tag: 'li',
+                    className: classes('accordion-c3bf', accordion.props.className),
+                    buttonProps: {
+                        ...accordion.props.buttonProps,
+                        ref(ref) {
+                            accordionsButtonsRef.current[idx] = ref
+                            // FIXME: Merge props.ref in React 19.
+                        },
+                        tabIndex: computeTabIndex(idx),
+                        onKeyDown(event) {
+                            accordion.props.buttonProps?.onKeyDown?.(event)
+                            onKeyDown(event, idx)
+                        },
+                    },
+                    open: openList.includes(idx),
+                    onOpenChange(open) {
+                        accordion.props.onOpenChange?.(open)
+                        onAccordionOpenChange(idx, open)
+                    },
+                } satisfies AccordionProps)
+            )}
         </ul>
     )
 }
 
 export function Accordion(props: AccordionProps): JSX.Element {
-    const {onToggle, ...otherProps} = props
-    const [selected, setSelected] = useState(false)
-
-    useEffect(() => {
-        onToggle?.(selected)
-    }, [selected])
-
-    return (
-        <AccordionItem
-            {...otherProps}
-            selected={selected}
-            onToggle={setSelected}
-        />
-    )
-}
-
-export function AccordionItem(props: AccordionItemProps): JSX.Element {
     const {
         buttonProps,
-        contentProps,
         children,
         className,
+        contentProps,
         head,
-        selected,
-        onToggle,
+        initialOpen,
+        open: openControlled,
+        onOpenChange: setOpenControlled,
         ...otherProps
     } = props
+
     const contentRef = useRef<HTMLDivElement>(null)
 
-    const onOpen = useCallback(() => {
-        const content = contentRef.current
+    const [openUncontrolled, setOpenUncontrolled] = useState(initialOpen ?? false)
 
-        if (! content) {
-            return
-        }
+    const open = openControlled ?? openUncontrolled
 
-        content.ontransitionend = () => {
-            content.style.height = 'auto'
-            content.ontransitionend = null
-        }
-
-        content.style.height = content.scrollHeight + 'px'
-    }, [])
-
-    const onClose = useCallback(() => {
-        const content = contentRef.current
-
-        if (! content) {
-            return
-        }
-
-        content.style.height = content.scrollHeight + 'px'
-        flushStyles(content)
-
-        content.ontransitionend = () => {
-            content.style.height = ''
-            content.ontransitionend = null
-        }
-
-        content.style.height = '0px'
-    }, [])
+    const setOpen = useCallback((open: boolean) => {
+        setOpenUncontrolled(open)
+        setOpenControlled?.(open)
+    }, [setOpenControlled, setOpenUncontrolled])
 
     useEffect(() => {
-        if (selected) {
-            onOpen()
+        if (! contentRef.current) {
+            return
+        }
+
+        if (open) {
+            animateAccordionOpen(contentRef.current)
         }
         else {
-            onClose()
+            animateAccordionClose(contentRef.current)
         }
-    }, [selected, onOpen, onClose])
+    }, [open])
 
     return (
         <Box
             {...otherProps}
-            className={classes('AccordionItem-de4f std-flex std-flex-column', className)}
-            data-selected={selected}
+            className={classes('Accordion-de4f std-flex std-flex-column', className)}
+            aria-expanded={open}
         >
             <button
                 type="button"
@@ -198,7 +181,8 @@ export function AccordionItem(props: AccordionItemProps): JSX.Element {
                 className={classes('head-ad0d', buttonProps?.className)}
                 onClick={event => {
                     buttonProps?.onClick?.(event)
-                    onToggle(! selected)
+
+                    setOpen(! open)
                 }}
             >
                 {head}
@@ -217,21 +201,18 @@ export function AccordionItem(props: AccordionItemProps): JSX.Element {
 
 // Types ///////////////////////////////////////////////////////////////////////
 
-export interface AccordionListProps extends Omit<ElementProps<'ul'>, 'onChange'> {
-    children?: undefined | null | React.ReactElement<AccordionProps> | Array<undefined | null | boolean | React.ReactElement<AccordionProps>>
-    initial?: undefined | Array<number>
+export interface AccordionListProps extends ElementProps<'ul'> {
+    initialOpen?: undefined | Array<number>
+    open?: undefined | Array<number>
     maxOpen?: undefined | number
-    onChange?: undefined | ((list: Array<number>) => void)
+    onOpenChange?: undefined | ((open: Array<number>) => void)
 }
 
 export interface AccordionProps extends BoxProps {
-    head: React.ReactNode
     buttonProps?: undefined | ElementProps<'button'>
     contentProps?: undefined | ElementProps<'div'>
-    onToggle?: undefined | ((state: boolean) => void)
-}
-
-export interface AccordionItemProps extends AccordionProps {
-    selected: boolean
-    onToggle(state: boolean): void
+    head: React.ReactNode
+    initialOpen?: undefined | boolean
+    open?: undefined | boolean
+    onOpenChange?: undefined | ((open: boolean) => void)
 }

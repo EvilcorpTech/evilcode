@@ -269,7 +269,7 @@ export function useSelectGenericProvider<I extends SelectOptionGeneric<any>, S e
                 // mapSome(computedProps.controlProps?.ref, ref => setRef<null | HTMLElement>(ref, element)) // FIXME on React 19.
             }, [/* computedProps.controlProps?.ref */]),
             className: classes(computedProps.controlProps?.className),
-            role: 'listbox',
+            role: 'combobox',
             ['aria-invalid']: ! state.valid,
             ['aria-readonly']: state.readonly,
             ['aria-required']: state.required,
@@ -445,7 +445,7 @@ export function useSelectGenericProvider<I extends SelectOptionGeneric<any>, S e
                 refs.optionsListRef.current = element ?? undefined
                 // mapSome(computedProps.optionsListProps?.ref, ref => setRef<null | HTMLElement>(ref, element)) // FIXME on React 19.
             }, [/* computedProps.optionsListProps?.ref */]),
-            role: 'list',
+            role: 'listbox',
         },
 
         optionPropsFor: (option: I, optionIdx: number) => ({
@@ -455,7 +455,7 @@ export function useSelectGenericProvider<I extends SelectOptionGeneric<any>, S e
                 // mapSome(computedProps.optionProps?.ref, ref => setRef<null | HTMLElement>(ref, element)) // FIXME on React 19.
             },
             className: classes(),
-            role: 'listitem',
+            role: 'option',
             ['aria-disabled']: option.disabled ?? false,
             ['aria-selected']:
                 isArray(state.selected)

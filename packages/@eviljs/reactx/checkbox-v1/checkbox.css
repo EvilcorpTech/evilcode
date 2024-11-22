@@ -27,10 +27,6 @@
     }
 }
 
-.Checkbox-16ba.round {
-    border-radius: 100%;
-}
-
 .Checkbox-16ba,
 .Checkbox-16ba > * {
     transition: all var(--std-duration2);
