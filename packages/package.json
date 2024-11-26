@@ -9,9 +9,9 @@
         "build-watch": "(nx run-many --target build --skip-nx-cache || true) && nx watch --all run-many -- npm run build",
         "test": "nx run-many --target test"
     },
-    "packageManager": "pnpm@9.12.1",
+    "packageManager": "pnpm@9.14.2",
     "devDependencies": {
-        "nx": "19.8.3"
+        "nx": "20.1.3"
     },
     "engines": {
         "node": ">= 20"

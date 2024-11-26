@@ -1,15 +1,6 @@
 {
     "$schema": "./node_modules/nx/schemas/nx-schema.json",
     "cacheDirectory": "./node_modules/.cache/nx",
-    "tasksRunnerOptions": {
-        "default": {
-            "runner": "nx/tasks-runners/default",
-            "options": {
-                "cacheableOperations": ["build"],
-                "useDaemonProcess": false
-            }
-        }
-    },
     "targetDefaults": {
         "build": {
             "cache": true,
