@@ -24,3 +24,11 @@ export function isSettledFulfilled<T>(promise: PromiseSettledResult<T>): promise
 export function isSettledRejected<T>(promise: PromiseSettledResult<T>): promise is PromiseRejectedResult {
     return promise.status === 'rejected'
 }
+
+// Types ///////////////////////////////////////////////////////////////////////
+
+export interface PromiseView {
+    fulfilled: boolean
+    pending: boolean
+    rejected: boolean
+}

@@ -11,31 +11,44 @@ export function ResultError<const E>(error: E): ResultError<E> {
     }
 }
 
-export function isResult<R>(result: unknown): result is ResultOf<R> {
-    return ! isResultError(result)
+export function isResult<R>(resultOrError: R): resultOrError is ResultOf<R> {
+    return ! isResultError(resultOrError)
 }
 
-export function isResultError(result: unknown): result is ResultError<unknown> {
+export function isResultError(resultOrError: unknown): resultOrError is ResultError<unknown> {
     return true
-        && isObject(result)
-        && (MonadTag in result)
-        && result[MonadTag] === ResultErrorTagId
+        && isObject(resultOrError)
+        && (MonadTag in resultOrError)
+        && resultOrError[MonadTag] === ResultErrorTagId
 }
 
-export function resultOf<R>(result: R): undefined | ResultOf<R> {
-    return ! isResultError(result)
-        ? result as ResultOf<R>
+export function resultOf<R>(resultOrError: R): undefined | ResultOf<R> {
+    return ! isResultError(resultOrError)
+        ? resultOrError as ResultOf<R>
         : undefined
 }
 
-export function resultErrorOf<R>(result: R): undefined | ResultErrorOf<R>['error'] {
-    return isResultError(result)
-        ? result.error
+export function resultErrorOf<R>(resultOrError: R): undefined | ResultErrorOf<R>['error'] {
+    return isResultError(resultOrError)
+        ? resultOrError.error
         : undefined
 }
 
-export function splitResultOrError<R>(result: R): [undefined | ResultOf<R>, undefined | ResultErrorOf<R>['error']] {
-    return [resultOf(result), resultErrorOf(result)]
+export function splitResultOrError<R>(resultOrError: R): [undefined | ResultOf<R>, undefined | ResultErrorOf<R>['error']] {
+    return [resultOf(resultOrError), resultErrorOf(resultOrError)]
+}
+
+export function whenResultOrError<R, E, O1, O2>(
+    resultOrError: ResultOrError<R, E>,
+    matches: {
+        result(result: R): O1
+        error(error: ResultError<E>): O2
+    },
+): O1 | O2 {
+    if (isResultError(resultOrError)) {
+        return matches.error(resultOrError)
+    }
+    return matches.result(resultOrError)
 }
 
 export function asResultOrError<V>(promise: Promise<V>): Promise<ResultOrError<V, unknown>> {

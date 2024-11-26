@@ -101,7 +101,7 @@ export const SerialBuiltinsCodecsList: Array<SerialCodec> = Object.values(Serial
 export function serializeStruct(
     payload: unknown,
     codecsOptional?: undefined | Array<SerialCodec>,
-): undefined | string {
+): string {
     const codecs = codecsOptional ?? SerialBuiltinsCodecsList
     const stack: Array<[ObjectPath, string]> = []
 
@@ -197,7 +197,7 @@ export function deserializeStruct(
     return payload?.data
 }
 
-export function serializeAsJson(payload: unknown): undefined | string {
+export function serializeAsJson(payload: unknown): string {
     return JSON.stringify(payload)
 }
 
