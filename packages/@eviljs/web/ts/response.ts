@@ -50,17 +50,23 @@ export function decodeResponseBodyAsJson<T = unknown>(responsePromise: Response 
 /**
 * @throws Response
 **/
-export async function rejectOnResponseError(responsePromise: Response | Promise<Response>): Promise<Response> {
-    return throwOnResponseError(await responsePromise)
+export async function rejectResponseWhenError(responsePromise: Response | Promise<Response>): Promise<Response> {
+    const response = await responsePromise
+
+    try {
+        return throwResponseWhenError(response)
+    }
+    catch {
+        throw [response.status, await decodeResponseBody(response)]
+    }
 }
 
 /**
 * @throws Response
 **/
-export function throwOnResponseError(response: Response): Response {
+export function throwResponseWhenError(response: Response): Response {
     if (! response.ok) {
         throw response
     }
-
     return response
 }

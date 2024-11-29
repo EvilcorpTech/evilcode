@@ -8,7 +8,7 @@ import {RequestMethod, creatingRequest, type RequestMethodEnum} from './request-
 import {usingRequestParams} from './request-params.js'
 import {usingRequestPayload} from './request-payload.js'
 import {usingRequestRetry, type RequestRetryOptions} from './request-retry.js'
-import {decodeResponseBody, rejectOnResponseError} from './response.js'
+import {decodeResponseBody, rejectResponseWhenError} from './response.js'
 import type {UrlParams} from './url-params.js'
 
 export {asFormData} from './request-init.js'
@@ -89,7 +89,7 @@ export async function decodeResponseOrReject<O>(
     decodeContent: Io<unknown, O | Promise<O>>,
 ): Promise<O> {
     return piping(responsePromise)
-        (rejectOnResponseError) // Rejects on failed response (4xx/5xx).
+        (rejectResponseWhenError) // Rejects on failed response (4xx/5xx).
         (decodeResponseBody) // Decodes response to FormData/JSON/Text/UrlSearchParams.
         (awaiting(decodeContent)) // Decodes the mixed unsafe output.
     ()
