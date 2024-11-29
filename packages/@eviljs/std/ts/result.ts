@@ -42,11 +42,11 @@ export function whenResultOrError<R, E, O1, O2>(
     resultOrError: ResultOrError<R, E>,
     matches: {
         result(result: R): O1
-        error(error: ResultError<E>): O2
+        error(error: E): O2
     },
 ): O1 | O2 {
     if (isResultError(resultOrError)) {
-        return matches.error(resultOrError)
+        return matches.error(resultOrError.error)
     }
     return matches.result(resultOrError)
 }
