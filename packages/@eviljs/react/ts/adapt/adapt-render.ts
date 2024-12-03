@@ -51,7 +51,7 @@ export async function mountAppRoot(args: AdaptHydratedRootOptions): Promise<Reac
 }
 
 export async function createAppHydratedRoot(args: AdaptHydratedRootOptions): Promise<ReactRoot> {
-    const {context, fallback, entries, RootComponent, rootNode, routePath} = args
+    const {context, fallback, entries, Root, rootNode, routePath} = args
     const [routePathArgs, appEntryDefinition] = selectAppEntryMatch(routePath, entries) ?? []
     const appContext: AppContext = {...context, routePath, routePathArgs}
 
@@ -69,7 +69,7 @@ export async function createAppHydratedRoot(args: AdaptHydratedRootOptions): Pro
     // return hydrateRoot(rootNode, createAppRootElement({Root: Root, children: appChildren}))
 
     startTransition(() => {
-        reactRoot.render(createAppRootElement({RootComponent, children: appChildren}))
+        reactRoot.render(createAppRootElement({Root, children: appChildren}))
     })
 
     return reactRoot
@@ -89,7 +89,7 @@ export function runAppRenderTask(args: AdaptRenderTaskOptions): {
     cancel(): void
     promise: Promise<void>
 } {
-    const {context, fallback, entries, reactRoot, RootComponent, routePath} = args
+    const {context, fallback, entries, reactRoot, Root, routePath} = args
 
     let canceled = false
 
@@ -99,7 +99,7 @@ export function runAppRenderTask(args: AdaptRenderTaskOptions): {
         if (! routePathArgs || ! appEntryDefinition) {
             const appContext: AppContext = {...context, routePath, routePathArgs: undefined}
             const appChildren = await fallback(appContext)
-            renderReactRoot(createAppRootElement({RootComponent, children: appChildren}))
+            renderReactRoot(appChildren)
             return
         }
 
@@ -131,13 +131,13 @@ export function runAppRenderTask(args: AdaptRenderTaskOptions): {
         }
     }
 
-    function renderReactRoot(children: JSX.Element | React.ReactNode): void {
+    function renderReactRoot(children: React.JSX.Element | React.ReactNode): void {
         if (canceled) {
             return
         }
 
         startTransition(() => {
-            reactRoot.render(createAppRootElement({RootComponent, children: children}))
+            reactRoot.render(createAppRootElement({Root, children: children}))
         })
     }
 
@@ -150,11 +150,11 @@ export function runAppRenderTask(args: AdaptRenderTaskOptions): {
     return {cancel: onCancel, promise}
 }
 
-export function createAppRootElement(args: AdaptAppRootOptions): JSX.Element | React.ReactNode {
-    const {RootComponent, children} = args
+export function createAppRootElement(args: AdaptAppRootOptions): React.JSX.Element | React.ReactNode {
+    const {Root, children} = args
 
-    return RootComponent
-        ? createElement(RootComponent, {children: children})
+    return Root
+        ? createElement(Root, {children: children})
         : children
 }
 
@@ -163,10 +163,10 @@ export function createAppRootElement(args: AdaptAppRootOptions): JSX.Element | R
 export interface AdaptAppOptions<C extends object = object> {
     context?: undefined | C
     entries: AppEntriesList<object, C>
-    fallback: (context: AppContext<C>) => JSX.Element | React.ReactNode | Promise<JSX.Element | React.ReactNode>
+    fallback: (context: AppContext<C>) => React.JSX.Element | React.ReactNode | Promise<React.JSX.Element | React.ReactNode>
     rootElementId?: undefined | string
     rootElementClasses?: undefined | Array<string>
-    RootComponent?: undefined | React.ComponentType<React.PropsWithChildren>
+    Root?: undefined | React.ComponentType<React.PropsWithChildren>
     router: Router
 }
 
@@ -182,6 +182,6 @@ export interface AdaptRenderTaskOptions extends AdaptMountedRootOptions {
     reactRoot: ReactRoot
 }
 
-export interface AdaptAppRootOptions extends Pick<AdaptAppOptions, 'RootComponent'> {
-    children: JSX.Element | React.ReactNode
+export interface AdaptAppRootOptions extends Pick<AdaptAppOptions, 'Root'> {
+    children: React.JSX.Element | React.ReactNode
 }
