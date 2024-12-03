@@ -2,8 +2,8 @@ import {BooleanLikeFalse, BooleanLikeTrue, isArray, isBoolean, isDate, isNone, i
 
 // export function asArray<V, I>(value: V | readonly I[]): [V] | readonly I[]
 // export function asArray<V, I>(value: V | I[]): V[] | I[]
-export function asArray<V, T extends unknown[]>(value: V | [...T]): [V] | [...T]
-export function asArray<V, T extends unknown[]>(value: V | readonly [...T]): [V] | readonly [...T]
+export function asArray<V, A extends unknown[]>(value: V | [...A]): [V] | [...A]
+export function asArray<V, A extends unknown[]>(value: V | readonly [...A]): [V] | readonly [...A]
 export function asArray<V, I>(value: V | Array<I>): [V] | Array<I>
 export function asArray<V>(value: V | Array<V>): Array<V>
 export function asArray<V>(value: V | Array<V>): Array<V> {
@@ -22,7 +22,7 @@ export function asArrayStrict(value: unknown): undefined | Array<unknown> {
     return value
 }
 
-export function asObject<T extends Record<PropertyKey, unknown>>(value: T): T
+export function asObject<V extends Record<PropertyKey, unknown>>(value: V): V
 export function asObject(value: unknown): undefined | Record<PropertyKey, unknown>
 export function asObject(value: unknown): undefined | Record<PropertyKey, unknown> {
     if (! isObject(value)) {
@@ -66,6 +66,14 @@ export function asDate(value: unknown): undefined | Date {
         return asDate(Date.parse(value))
     }
     return // Makes TypeScript happy.
+}
+
+export function asEnum<E extends boolean | number | string, V extends E>(value: V, enumValues: Array<E>): V
+export function asEnum<E extends boolean | number | string>(value: unknown, enumValues: Array<E>): undefined | E
+export function asEnum<E extends boolean | number | string>(value: unknown, enumValues: Array<E>) {
+    return enumValues.includes(value as E)
+        ? value
+        : undefined
 }
 
 export function asNumber(value: number): number
@@ -126,12 +134,4 @@ export function asStringLike(value: unknown): undefined | string {
         return String(value)
     }
     return
-}
-
-export function asEnum<E extends boolean | number | string, V extends E>(value: V, enumValues: Array<E>): V
-export function asEnum<E extends boolean | number | string>(value: unknown, enumValues: Array<E>): undefined | E
-export function asEnum<E extends boolean | number | string>(value: unknown, enumValues: Array<E>) {
-    return enumValues.includes(value as E)
-        ? value
-        : undefined
 }

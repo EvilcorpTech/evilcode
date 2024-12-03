@@ -110,10 +110,11 @@ export function ensureDefined<T>(value: undefined | T, ctx?: any): T {
 /**
 * @throws InvalidInput
 */
-export function ensureEnum<E, T extends E>(value: T, enumValues: Array<E>, ctx?: any): T
-export function ensureEnum<E>(value: unknown, enumValues: Array<E>, ctx?: any): E
-export function ensureEnum<E>(value: unknown, enumValues: Array<E>, ctx?: any) {
-    if (ensureArray(enumValues, `${ctx} enum`).includes(value as E)) {
+
+export function ensureEnum<E extends Array<unknown>, T extends E[number]>(value: T, enumValues: E | [...E] | readonly [...E], ctx?: any): T
+export function ensureEnum<E extends Array<unknown>>(value: unknown, enumValues: E | [...E] | readonly [...E], ctx?: any): E[number]
+export function ensureEnum(value: unknown, enumValues: Array<unknown>, ctx?: any) {
+    if (ensureArray(enumValues, `${ctx} enum`).includes(value)) {
         return value
     }
     return throwAssertTypeError(`one of ${enumValues.join(' | ')}`, value, ctx)
