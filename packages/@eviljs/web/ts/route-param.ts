@@ -3,12 +3,12 @@ import {mapObjectValue, omitObjectProp, pickObjectProp} from '@eviljs/std/object
 import type {RouterRouteParams} from './router.js'
 import type {UrlParamsDictValue} from './url-params.js'
 
-export function defineRouteParam<const N extends string, EI, DO extends undefined | EI>(
+export function defineRouteParam<const N extends string, EI, EO extends UrlParamsDictValue, DO extends undefined | EI>(
     name: N,
-    encode: (value: EI) => UrlParamsDictValue,
+    encode: (value: EI) => EO,
     decode: (valueEncoded: undefined | string) => DO,
-): RouteParamDefinition<N, EI, DO> {
-    const self: RouteParamDefinition<N, EI, DO> = {
+): RouteParamDefinition<N, EI, EO, DO> {
+    const self: RouteParamDefinition<N, EI, EO, DO> = {
         name: name,
         encode(value) {
             return encode(value)
@@ -25,7 +25,7 @@ export function defineRouteParam<const N extends string, EI, DO extends undefine
         pack(value) {
             return {
                 [name]: mapSome(value, self.encode),
-            } as {[key in N]: UrlParamsDictValue}
+            } as {[key in N]: EO}
         },
         pick(params) {
             if (! params) {
@@ -44,7 +44,7 @@ export function defineRouteParam<const N extends string, EI, DO extends undefine
     return self
 }
 
-export function defineRouteParams<P extends Record<string, RouteParamOptions<string, any, any>>>(specs: P): RouteParamsDefinition<P> {
+export function defineRouteParams<P extends Record<string, RouteParamOptions>>(specs: P): RouteParamsDefinition<P> {
     return mapObjectValue(specs, spec =>
         defineRouteParam(spec.name, spec.encode, spec.decode)
     ) as RouteParamsDefinition<P>
@@ -52,23 +52,28 @@ export function defineRouteParams<P extends Record<string, RouteParamOptions<str
 
 // Types ///////////////////////////////////////////////////////////////////////
 
-export interface RouteParamDefinition<N extends string, EI, DO extends undefined | EI> {
+export interface RouteParamDefinition<N extends string, EI, EO extends UrlParamsDictValue, DO extends undefined | EI> {
     name: N
-    encode(value: EI): UrlParamsDictValue
+    encode(value: EI): EO
     decode(valueEncoded: undefined | string): DO
     select(params: undefined | RouterRouteParams): undefined | string
     selectDecode(params: undefined | RouterRouteParams): undefined | DO
-    pack(value: undefined | null | EI): {[key in N]: UrlParamsDictValue}
+    pack(value: undefined | null | EI): {[key in N]: EO}
     pick(params: undefined | RouterRouteParams): undefined | RouterRouteParams
     omit(params: undefined | RouterRouteParams): undefined | RouterRouteParams
 }
 
-export type RouteParamsDefinition<P extends Record<string, RouteParamOptions<string, any, any>>> = {
-    [key in keyof P]: RouteParamDefinition<P[key]['name'], Parameters<P[key]['encode']>[0], ReturnType<P[key]['decode']>>
+export type RouteParamsDefinition<P extends Record<string, RouteParamOptions>> = {
+    [key in keyof P]: RouteParamDefinition<P[key]['name'], Parameters<P[key]['encode']>[0], ReturnType<P[key]['encode']>, ReturnType<P[key]['decode']>>
 }
 
-export interface RouteParamOptions<N extends string, EI, DO extends undefined | EI> {
+export interface RouteParamOptions<
+    N extends string = string,
+    EI = any,
+    EO extends UrlParamsDictValue = UrlParamsDictValue,
+    DO extends undefined | EI = undefined | EI
+> {
     name: N
-    encode(value: EI): UrlParamsDictValue
+    encode(value: EI): EO
     decode(valueEncoded: undefined | string): DO
 }
