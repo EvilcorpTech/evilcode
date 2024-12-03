@@ -7,19 +7,19 @@ export function suspended<P extends object>(
     load: LazyLoader<P>,
     Fallback?: undefined | LazyFallback<P>,
 ): React.ComponentType<P> {
-    const ComponentLazy = lazy(() => load().then(asDefault)) as unknown as React.ComponentType<P>
+    const LazyComponent = lazy(() => load().then(asDefault)) as unknown as React.ComponentType<P>
 
-    function SuspendedLazy(props: P) {
+    function LazySuspended(props: P) {
         return (
             <Suspense
                 fallback={Fallback ? createElement(Fallback, props) : undefined}
-                children={<ComponentLazy {...props}/>}
+                children={<LazyComponent {...props}/>}
             />
         )
     }
-    SuspendedLazy.displayName = 'SuspendedLazy'
+    LazySuspended.displayName = 'LazySuspended'
 
-    return SuspendedLazy
+    return LazySuspended
 }
 
 export function suspendedIcon<P extends SvgProps>(
@@ -27,19 +27,19 @@ export function suspendedIcon<P extends SvgProps>(
     FallbackOptional?: undefined | LazyFallback<P>,
 ): React.ComponentType<P> {
     const FallbackIconComponent = FallbackOptional ?? FallbackIcon
-    const SuspendedLazyIcon = suspended(load, FallbackIconComponent)
+    const LazySuspendedIcon = suspended(load, FallbackIconComponent)
 
-    function ErrorBoundedSuspendedLazyIcon(props: P) {
+    function ErrorBoundedLazySuspendedIcon(props: P) {
         // An error loading an icon should not take down an entire app.
         return (
             <ErrorBoundary fallback={() => createElement(FallbackIconComponent, props)}>
-                <SuspendedLazyIcon {...props}/>
+                <LazySuspendedIcon {...props}/>
             </ErrorBoundary>
         )
     }
-    ErrorBoundedSuspendedLazyIcon.displayName = 'ErrorBoundedSuspendedLazyIcon'
+    ErrorBoundedLazySuspendedIcon.displayName = 'ErrorBoundedLazySuspendedIcon'
 
-    return ErrorBoundedSuspendedLazyIcon
+    return ErrorBoundedLazySuspendedIcon
 }
 
 export function asDefault<V>(value: V): {default: V} {
