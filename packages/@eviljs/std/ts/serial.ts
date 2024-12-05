@@ -7,6 +7,7 @@ import type {None} from './type-types.js'
 
 export const SerialBuiltinCodec: {
     Date: SerialCodec<Date, number>
+    Url: SerialCodec<URL, string>
     RegExp: SerialCodec<RegExp, string>
     Infinity: SerialCodec<typeof Infinity, number>
     Map: SerialCodec<Map<unknown, unknown>, Array<[unknown, unknown]>>
@@ -22,6 +23,18 @@ export const SerialBuiltinCodec: {
         },
         decode(dateEncoded) {
             return asDate(dateEncoded)
+        },
+    },
+    Url: {
+        id: 'Url',
+        is(value) {
+            return value instanceof URL
+        },
+        encode(url) {
+            return url.toString()
+        },
+        decode(urlEncoded) {
+            return new URL(urlEncoded)
         },
     },
     RegExp: {
