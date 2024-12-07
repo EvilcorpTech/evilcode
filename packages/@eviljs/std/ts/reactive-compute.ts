@@ -1,4 +1,6 @@
+import {scheduleMicroTask} from './eventloop.js'
 import {call} from './fn-call.js'
+import type {Task} from './fn-type.js'
 import {
     createReactive,
     readReactive,
@@ -14,32 +16,44 @@ export function createReactiveComputed<A extends Array<ReactiveProtocol<any>>, V
     computer: (...args: ReactiveValuesOf<A>) => V,
     options?: undefined | ReactiveOptions<V>,
 ): ReactiveComputed<V> {
-    function computeValue() {
-        const computerArgs = reactives.map(readReactive) as ReactiveValuesOf<A>
-        const computedValue = computer(...computerArgs)
-        return computedValue
+    const reactive = createReactive(compute(), options)
+
+    let cancelScheduledUpdate: undefined | Task
+
+    function compute(): V {
+        const args = reactives.map(readReactive) as ReactiveValuesOf<A>
+        return computer(...args)
     }
 
-    const reactiveComputed = createReactive(computeValue(), options)
+    function update(): void {
+        writeReactive(reactive, compute())
+    }
+
+    function scheduleUpdate(): void {
+        cancelScheduledUpdate ??= scheduleMicroTask(() => {
+            cancelScheduledUpdate = undefined
+            update()
+        })
+    }
 
     const cleanUpList = reactives.map(reactive =>
-        // We watch every reactive...
-        watchReactive(reactive, () => {
-            // ...and every time an reactive changes, we update the computed value.
-            writeReactive(reactiveComputed, computeValue())
-        })
+        // We watch every reactive, scheduling an update on every change.
+        // We recompute using a scheduled update to batch multiple
+        // simultaneous updates of the watched reactives.
+        watchReactive(reactive, scheduleUpdate)
     )
 
-    function read() {
-        return readReactive(reactiveComputed)
+    function read(): V {
+        return readReactive(reactive)
     }
 
-    function clean() {
+    function clean(): void {
+        cancelScheduledUpdate?.()
         cleanUpList.forEach(call)
     }
 
     return {
-        ...reactiveComputed,
+        ...reactive,
         get value() {
             return read()
         },

@@ -1,4 +1,4 @@
-import {scheduleMicroTaskUsingPromise} from './eventloop.js'
+import {scheduleMicroTask} from './eventloop.js'
 import type {Task} from './fn-type.js'
 import {areEqualIdentity} from './struct.js'
 
@@ -50,7 +50,7 @@ export function writeReactive<V>(reactive: ReactiveProtocol<V>, value: V): V {
     // We notify once multiple mutations in the same micro task.
     // We schedule a micro task so that if an observer triggers a value mutation,
     // the reentrant mutation is notified after current one is notified.
-    state.notification ??= scheduleMicroTaskUsingPromise(() => {
+    state.notification ??= scheduleMicroTask(() => {
         state.notification = undefined
 
         if (areEqual(state.value, previousNotifiedValue)) {
