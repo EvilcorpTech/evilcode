@@ -97,7 +97,7 @@ export interface BusBoundCase2Options {
 export interface BusBoundCase2Exports extends BusBoundCase1Exports {
     BusContext: React.Context<undefined | Bus>
     BusProvider: {
-        (props: {children: React.ReactNode}): JSX.Element
+        (props: {children: React.ReactNode}): React.JSX.Element
     },
     useBusContext: {
         (): undefined | Bus

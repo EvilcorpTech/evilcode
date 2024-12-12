@@ -13,7 +13,7 @@ export const StyleContext: React.Context<undefined | StyleContextValue> = define
 *     </StyleProvider>
 * )
 */
-export function StyleProvider(props: StyleProviderProps): JSX.Element {
+export function StyleProvider(props: StyleProviderProps): React.JSX.Element {
     const {attach: attachOptional, children, clean: cleanOptional} = props
     const attach: StyleDelegate = attachOptional ?? attachStyleInsideHead
     const clean: undefined | StyleDelegate = cleanOptional !== false

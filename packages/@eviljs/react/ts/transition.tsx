@@ -27,7 +27,7 @@ export function useTransitionContext(): undefined | TransitionContext {
     return useContext(TransitionContext)
 }
 
-export function Transition(props: TransitionProps): JSX.Element {
+export function Transition(props: TransitionProps): React.JSX.Element {
     const {
         children,
         className, classPrefix,
@@ -75,7 +75,7 @@ export function Transition(props: TransitionProps): JSX.Element {
 
 const AnimatorMemo = memo(Animator)
 
-export function Animator(props: AnimatorProps): JSX.Element {
+export function Animator(props: AnimatorProps): React.JSX.Element {
     const {
         className,
         classPrefix,
@@ -899,7 +899,7 @@ export interface TransitionConfig {
 }
 
 export type TransitionChildren = undefined | null | boolean | number | string | TransitionElement
-export type TransitionElement = JSX.Element | React.ReactElement<AnimatorAnimatable, React.JSXElementConstructor<AnimatorAnimatable>>
+export type TransitionElement = React.JSX.Element | React.ReactElement<AnimatorAnimatable, React.JSXElementConstructor<AnimatorAnimatable>>
 export type TransitionEventTarget = string | Element | Array<string | Element>
 export type TransitionMode = 'cross' | 'out-in' | 'in-out'
 

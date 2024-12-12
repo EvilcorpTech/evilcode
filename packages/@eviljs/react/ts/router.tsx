@@ -7,11 +7,10 @@ import {exact, matchRoutePattern, testRoutePattern, type RoutePattern, type Rout
 import type {Router, RouterRoute, RouterRouteChange, RouterRouteChangeParams, RouterRouteChangeParamsDict, RouterRouteParams} from '@eviljs/web/router'
 import {encodeLink} from '@eviljs/web/router'
 import {isUrlAbsolute} from '@eviljs/web/url'
-import {Children, forwardRef, isValidElement, useCallback, useContext, useEffect, useMemo, useRef} from 'react'
+import {Children, isValidElement, useCallback, useContext, useEffect, useMemo, useRef} from 'react'
 import {classes} from './classes.js'
 import {defineContext} from './ctx.js'
-import {displayName} from './display-name.js'
-import type {ElementProps, Props, RefElementOf} from './props.js'
+import type {ElementProps, Props} from './props.js'
 import {useReactiveSelect} from './reactive.js'
 
 export * from '@eviljs/web/route'
@@ -31,7 +30,7 @@ export const RouteMatchContext: React.Context<undefined | RouteArgs> = defineCon
 *     <MyApp/>
 * </RouterProvider>
 */
-export function RouterProvider(props: Props<RouterProviderProps>): JSX.Element {
+export function RouterProvider(props: Props<RouterProviderProps>): React.JSX.Element {
     const {children, router} = props
 
     useEffect(() => {
@@ -65,7 +64,7 @@ export function RouterProvider(props: Props<RouterProviderProps>): JSX.Element {
 *     }
 * </WhenRoute>
 */
-export function WhenRoute(props: Props<WhenRouteProps>): undefined | JSX.Element {
+export function WhenRoute(props: Props<WhenRouteProps>): undefined | React.JSX.Element {
     const {children, is} = props
     const {matchRoutePath} = useRoutePathTest()
 
@@ -120,7 +119,7 @@ export function WhenRoute(props: Props<WhenRouteProps>): undefined | JSX.Element
 *     </CaseRoute>
 * </SwitchRoute>
 */
-export function SwitchRoute(props: Props<SwitchRouteProps>): JSX.Element {
+export function SwitchRoute(props: Props<SwitchRouteProps>): React.JSX.Element {
     const {children, fallback} = props
     const {routePath, matchRoutePath} = useRoutePathTest()
 
@@ -183,10 +182,7 @@ export function CaseRoute(props: Props<CaseRouteProps>): undefined {
 *     <button>Click</button>
 * </Route>`
 */
-export const Route = displayName('Route', forwardRef(function Route(
-    props: Props<RouteProps>,
-    ref: React.ForwardedRef<RefElementOf<RouteProps>>,
-) {
+export function Route(props: Props<RouteProps>): React.JSX.Element {
     const {
         activeExact,
         className,
@@ -250,21 +246,17 @@ export const Route = displayName('Route', forwardRef(function Route(
 
     return (
         <a
-            // Overwritable properties.
+            // Overridable properties.
             data-active={active}
             onClick={onClick}
             {...otherProps}
-            ref={ref}
             className={classes('Route-84a4', className)}
             href={href}
         />
     )
-})) as React.FunctionComponent<RouteProps>
+}
 
-export const Link = displayName('Link', forwardRef(function Link(
-    props: Props<LinkProps>,
-    ref: React.ForwardedRef<RefElementOf<LinkProps>>,
-) {
+export function Link(props: Props<LinkProps>): React.JSX.Element {
     const {className, params, replace, state, to, ...otherProps} = props
     const isLink = isString(to) && isUrlAbsolute(to)
 
@@ -273,7 +265,6 @@ export const Link = displayName('Link', forwardRef(function Link(
             <a
                 target="_blank"
                 {...otherProps}
-                ref={ref}
                 className={classes('Link-b705 link', className)}
                 href={encodeLink(to, params)}
             />
@@ -283,7 +274,6 @@ export const Link = displayName('Link', forwardRef(function Link(
     return (
         <Route
             {...otherProps}
-            ref={ref}
             className={classes('Link-b705 route', className)}
             to={to}
             params={params}
@@ -291,7 +281,7 @@ export const Link = displayName('Link', forwardRef(function Link(
             replace={replace}
         />
     )
-})) as React.FunctionComponent<LinkProps>
+}
 
 export function Redirect(props: Props<RedirectProps>): React.ReactNode {
     const {children, params, replace: replaceOptional, state, to: path} = props

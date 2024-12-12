@@ -2,7 +2,6 @@ import {asArray} from '@eviljs/std/type-as'
 import type {None} from '@eviljs/std/type-types'
 import {useCallback, useRef} from 'react'
 import {useEvent, type EventElement, type EventHandler, type EventOptions} from './event.js'
-import type {RefObject} from './ref.js'
 
 export function useKey(
     key: KeybindingKey,
@@ -36,5 +35,5 @@ export type KeybindingKey = string | Array<string> // https://developer.mozilla.
 
 export interface KeybindingOptions extends EventOptions {
     event?: undefined | 'keyup' | 'keydown'
-    ref?: undefined | RefObject<None | EventElement> | Array<RefObject<None | EventElement>>
+    ref?: undefined | React.RefObject<None | EventElement> | Array<React.RefObject<None | EventElement>>
 }

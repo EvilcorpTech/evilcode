@@ -19,7 +19,7 @@ export const PortalsContext: React.Context<undefined | StateManager<Portals>> = 
 *     </PortalsProvider>
 * )
 */
-export function PortalsProvider(props: PortalsProviderProps): JSX.Element {
+export function PortalsProvider(props: PortalsProviderProps): React.JSX.Element {
     const {children} = props
     const contextValue = usePortalsProvider()
 
@@ -39,7 +39,7 @@ export function PortalsProvider(props: PortalsProviderProps): JSX.Element {
 *     </PortalsProvider>
 * )
 */
-export function Portal(props: PortalProps): JSX.Element {
+export function Portal(props: PortalProps): React.JSX.Element {
     const {name, ...otherProps} = props
     const [, setPortals] = useContext(PortalsContext)!
 

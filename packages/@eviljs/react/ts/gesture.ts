@@ -4,10 +4,9 @@ import {isSome} from '@eviljs/std/type-is'
 import type {None} from '@eviljs/std/type-types'
 import {useCallback, useRef} from 'react'
 import {useEvent, type EventElement, type EventHandler, type EventOptions} from './event.js'
-import type {RefObject} from './ref.js'
 
 export function useEventOutside<E extends Event>(
-    refOrRefs: RefObject<None | Element> | Array<RefObject<None | Element>>,
+    refOrRefs: React.RefObject<None | Element> | Array<React.RefObject<None | Element>>,
     eventName: string,
     onEventOutside: EventHandler<E>,
     options?: undefined | ClickOutsideOptions,
@@ -50,7 +49,7 @@ export function useEventOutside<E extends Event>(
 }
 
 export function useClickOutside(
-    refOrRefs: RefObject<None | Element> | Array<RefObject<None | Element>>,
+    refOrRefs: React.RefObject<None | Element> | Array<React.RefObject<None | Element>>,
     onClickOutside: EventHandler<MouseEvent>,
     options?: undefined | ClickOutsideOptions,
 ): void {
@@ -63,7 +62,7 @@ export function useClickOutside(
 
 export interface EventOutsideOptions extends EventOptions {
     behavior?: undefined | 'any' | 'every'
-    rootRef?: undefined | RefObject<EventElement>
+    rootRef?: undefined | React.RefObject<None | EventElement>
 }
 
 export interface ClickOutsideOptions extends EventOutsideOptions {

@@ -1,3 +1,4 @@
+import type {None} from '@eviljs/std/type-types'
 import {
     asDragPointerEvent,
     attachDragDraggingListeners,
@@ -30,7 +31,7 @@ export type {DragMoveChange, DragOptions, DragPointerEvent} from '@eviljs/web/dr
 // even when the event listener is detached, due to the Synthetic Event global
 // listener always monitoring the mouse movement.
 
-export function useDrag<S, P>(targetRef: DragElementRef<DragMoveElement>, options?: undefined | UseDragOptions<S, P>): {
+export function useDrag<S, P>(targetRef: React.RefObject<None | DragMoveElement>, options?: undefined | UseDragOptions<S, P>): {
     dragging: boolean
 } {
     const [dragging, setDragging] = useState<boolean>(false)
@@ -139,7 +140,7 @@ export function useDrag<S, P>(targetRef: DragElementRef<DragMoveElement>, option
     return {dragging}
 }
 
-export function useMove(targetRef: DragElementRef<DragMoveElement>, options?: undefined | UseMoveOptions): {
+export function useMove(targetRef: React.RefObject<None | DragMoveElement>, options?: undefined | UseMoveOptions): {
     moving: boolean
 } {
     const onStart = useCallback((event: DragPointerEvent) => {
@@ -178,7 +179,7 @@ export function useMove(targetRef: DragElementRef<DragMoveElement>, options?: un
     return {moving: dragging}
 }
 
-export function useResize(targetRef: DragElementRef<DragResizeElement>, options?: undefined | UseResizeOptions): {
+export function useResize(targetRef: React.RefObject<None | DragResizeElement>, options?: undefined | UseResizeOptions): {
     resizing: boolean
 } {
     const onStart = useCallback((event: DragPointerEvent) => {
@@ -215,7 +216,7 @@ export function useResize(targetRef: DragElementRef<DragResizeElement>, options?
     return {resizing: dragging}
 }
 
-export function useScrollHorizontal<E extends HTMLElement>(targetRef: React.RefObject<E>, options?: undefined | UseScrollOptions<E>): {
+export function useScrollHorizontal<E extends HTMLElement>(targetRef: React.RefObject<None | E>, options?: undefined | UseScrollOptions<E>): {
     scrolling: boolean
 } {
     const onStart = useCallback((event: DragPointerEvent) => {
@@ -252,8 +253,6 @@ export function useScrollHorizontal<E extends HTMLElement>(targetRef: React.RefO
 
 // Types ///////////////////////////////////////////////////////////////////////
 
-export type DragElementRef<T extends Element> = React.RefObject<T>
-
 export interface UseDragState<S, P> {
     startState?: undefined | S
     progressState?: undefined | P
@@ -267,7 +266,7 @@ export interface UseDragOptions<S, P> extends DragOptions {
 }
 
 export interface UseMoveOptions extends DragMoveOptions<DragMoveElement> {
-    boundRef?: undefined | React.RefObject<DragMoveElement>
+    boundRef?: undefined | React.RefObject<None | DragMoveElement>
     initOptions?: undefined | (() => undefined | DragMoveOptions<DragMoveElement>)
     onStart?: undefined | ((event: DragPointerEvent, startState: DragMoveState<DragMoveElement, DragMoveElement>) => void)
     onProgress?: undefined | ((event: DragPointerEvent, progressState: DragMoveChange, startState: DragMoveState<DragMoveElement, DragMoveElement>) => void)

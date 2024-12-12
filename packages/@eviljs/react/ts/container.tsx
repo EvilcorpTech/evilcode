@@ -83,7 +83,7 @@ export interface ContainerBoundCase2Options<M extends ContainerServicesMap, S = 
 export interface ContainerBoundCase2Exports<M extends ContainerServicesMap, S = undefined> extends ContainerBoundCase1Exports<M, S> {
     ContainerContext: React.Context<undefined | Container<M, S>>
     ContainerProvider: {
-        (props: {children: React.ReactNode} & ContainerDefinition<M, S>): JSX.Element
+        (props: {children: React.ReactNode} & ContainerDefinition<M, S>): React.JSX.Element
     },
     useContainerContext: {
         (): undefined | Container<M, S>

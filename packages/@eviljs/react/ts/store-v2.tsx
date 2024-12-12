@@ -15,7 +15,7 @@ export const StoreContextV2: React.Context<undefined | StoreV2> = defineContext<
 *     )
 * }
 */
-export function StoreProviderV2(props: StoreProviderV2Props<ReduxReducerState, ReduxEvent>): JSX.Element {
+export function StoreProviderV2(props: StoreProviderV2Props<ReduxReducerState, ReduxEvent>): React.JSX.Element {
     const {children, ...spec} = props
     const contextValue = useStoreV2Provider(spec)
 

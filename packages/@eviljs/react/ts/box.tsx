@@ -11,17 +11,11 @@ import type {Props} from './props.js'
 *     {children}
 * </Box>
 */
-export const Box = displayName('Box', forwardRef(function Box<T extends Element = HTMLElement>(
-    props: Props<BoxProps<T>>,
-    ref: React.ForwardedRef<T>
-) {
+export function Box<T extends Element = HTMLElement>(props: Props<BoxProps<T>>): React.JSX.Element {
     const {tag, ...otherProps} = props
 
-    return createElement(tag ?? 'div', {...otherProps as {}, ref})
-})) as (
-    & (<T extends Element = HTMLElement>(props: BoxProps<T>) => JSX.Element)
-    & Pick<React.FunctionComponent, 'displayName'>
-)
+    return createElement(tag ?? 'div', otherProps)
+}
 
 /*
 * Optionally renders an element with a dynamic tag.
@@ -40,21 +34,15 @@ export const Box = displayName('Box', forwardRef(function Box<T extends Element 
 *     </OptionalBox>
 * }
 */
-export const BoxOptional = displayName('BoxOptional', forwardRef(function BoxOptional<T extends Element = HTMLElement>(
-    props: Props<BoxOptionalProps<T>>,
-    ref: React.ForwardedRef<T>
-) {
+export function BoxOptional<T extends Element = HTMLElement>(props: Props<BoxOptionalProps<T>>): undefined | React.JSX.Element {
     const {if: guard, ...otherProps} = props
 
     if (! guard) {
         return
     }
 
-    return <Box {...otherProps} ref={ref}/>
-})) as (
-    & (<T extends Element = HTMLElement>(props: BoxOptionalProps<T>) => JSX.Element)
-    & Pick<React.FunctionComponent, 'displayName'>
-)
+    return <Box {...otherProps}/>
+}
 
 // Types ///////////////////////////////////////////////////////////////////////
 
@@ -66,4 +54,4 @@ export interface BoxOptionalProps<T extends Element = HTMLElement> extends BoxPr
     if?: undefined | any
 }
 
-export type Tag = keyof JSX.IntrinsicElements
+export type Tag = keyof React.JSX.IntrinsicElements

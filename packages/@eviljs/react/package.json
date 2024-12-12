@@ -20,13 +20,13 @@
     "dependencies": {
         "@eviljs/std": "1",
         "@eviljs/web": "1",
-        "@types/react": "17 || 18",
-        "@types/react-dom": "17 || 18",
+        "@types/react": "19",
+        "@types/react-dom": "19",
         "tslib": "2"
     },
     "peerDependencies": {
-        "react": "17 || 18",
-        "react-dom": "17 || 18"
+        "react": "19",
+        "react-dom": "19"
     },
     "devDependencies": {
         "typescript": "5.7"

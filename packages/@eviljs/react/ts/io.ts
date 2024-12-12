@@ -6,7 +6,7 @@ import {asResultOrError, isResult, isResultError, whenResultOrError} from '@evil
 import {isDefined} from '@eviljs/std/type-is'
 import {useCallback, useRef, useState} from 'react'
 
-export function useAsyncIo<A extends FnArgs, R>(asyncTask: FnAsync<A, R>): AsyncIoManager<A, R> {
+export function useAsyncIo<A extends FnArgs, R>(asyncTask: FnAsync<A, R>, deps?: Array<unknown>): AsyncIoManager<A, R> {
     const [state, setState] = useState<AsyncIoState<R>>({
         output: undefined,
         error: undefined,
@@ -15,7 +15,7 @@ export function useAsyncIo<A extends FnArgs, R>(asyncTask: FnAsync<A, R>): Async
         rejected: false,
         pending: false,
     })
-    const taskHandleRef = useRef<undefined | TaskHandle>(undefined)
+    const taskHandleRef = useRef<TaskHandle>(undefined)
 
     interface TaskHandle {
         cancel(): void
@@ -87,7 +87,7 @@ export function useAsyncIo<A extends FnArgs, R>(asyncTask: FnAsync<A, R>): Async
         )
 
         return resultOrError
-    }, [asyncTask])
+    }, deps ?? [])
 
     const cancel = useCallback(() => {
         taskHandleRef.current?.cancel()

@@ -23,7 +23,7 @@ export function useMountEffect(effect: Task): void {
 *     }, [])
 * }
 */
-export function useMountedRef(): React.MutableRefObject<boolean> {
+export function useMountedRef(): React.RefObject<boolean> {
     const mountedRef = useRef(true)
 
     // We use useLayoutEffect() instead of useEffect() because in React 17

@@ -55,7 +55,7 @@ export function exportingDefault<E, V>(getDefaultExport: (exports: E) => V): (ex
     return exportDefault
 }
 
-export function FallbackIcon(props: SvgProps): JSX.Element {
+export function FallbackIcon(props: SvgProps): React.JSX.Element {
     const {className, ...otherProps} = props
 
     return (

@@ -161,7 +161,7 @@ export interface StoreBoundCase2Options<S extends ReduxReducerState, A extends R
 export interface StoreBoundCase2Exports<S extends ReduxReducerState, A extends ReduxEvent = ReduxEvent> extends StoreBoundCase1Exports<S, A> {
     StoreContext: React.Context<undefined | StoreManager<S, A>>
     StoreProvider: {
-        (props: {children: React.ReactNode} & StoreDefinition<S, A>): JSX.Element,
+        (props: {children: React.ReactNode} & StoreDefinition<S, A>): React.JSX.Element,
     },
     useStoreContext: {
         (): undefined | StoreManager<S, A>

@@ -9,12 +9,11 @@ import {
     type MsgMessageKey,
     type MsgMessages,
 } from '@eviljs/std/msg'
-import {forwardRef, memo, useContext, useMemo, useState} from 'react'
+import {memo, useContext, useMemo, useState} from 'react'
 import {Box, type BoxProps} from './box.js'
 import {classes} from './classes.js'
 import {defineContext} from './ctx.js'
-import {displayName} from './display-name.js'
-import type {Props, RefElementOf, VoidProps} from './props.js'
+import type {Props, VoidProps} from './props.js'
 import type {StateSetter} from './state.js'
 
 export type * from '@eviljs/std/msg'
@@ -32,17 +31,14 @@ export const MessageContext: React.Context<undefined | MessageStore<string, MsgM
 *     )
 * }
 */
-export function MessageProvider(props: MessageProviderProps): JSX.Element {
+export function MessageProvider(props: MessageProviderProps): React.JSX.Element {
     const {children, ...spec} = props
     const contextValue = useMessageProvider(spec)
 
     return <MessageContext.Provider value={contextValue} children={children}/>
 }
 
-export const Message = displayName('Message', memo(forwardRef(function Message(
-    props: Props<MessageProps>,
-    ref: React.ForwardedRef<RefElementOf<MessageProps>>,
-) {
+export const Message: React.FC<MessageProps> = memo(function Message(props: Props<MessageProps>) {
     const {args, children, className, tag: tagOptional, ...otherProps} = props
     const message = useMessage(children, args)
 
@@ -50,14 +46,13 @@ export const Message = displayName('Message', memo(forwardRef(function Message(
         <Box
             {...otherProps}
             tag={tagOptional ?? 'span'}
-            ref={ref}
             className={classes('Message-cea2', className)}
             data-key={message !== children ? children : undefined}
         >
             {message}
         </Box>
     )
-}))) as React.FunctionComponent<MessageProps>
+})
 
 export function Translate(props: Props<TranslateProps>): React.ReactNode {
     const {children, args} = props

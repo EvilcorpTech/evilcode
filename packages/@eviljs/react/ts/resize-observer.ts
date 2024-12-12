@@ -1,7 +1,8 @@
+import type {None} from '@eviljs/std/type-types'
 import {useEffect} from 'react'
 
 export function useResizeObserver(
-    containerRef: React.RefObject<HTMLElement>,
+    containerRef: React.RefObject<None | HTMLElement>,
     onResize: ResizeObserverCallback,
 ): void {
     useEffect(() => {

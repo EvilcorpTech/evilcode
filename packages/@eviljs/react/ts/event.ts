@@ -3,11 +3,10 @@ import type {Fn, FnArgs} from '@eviljs/std/fn-type'
 import {asArray} from '@eviljs/std/type-as'
 import type {None} from '@eviljs/std/type-types'
 import {useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState} from 'react'
-import type {RefObject} from './ref.js'
 import type {StateInit, StateSetter} from './state.js'
 
 export function useEvent<E extends Event>(
-    targetRefOrRefs: RefObject<None | EventElement> | Array<RefObject<None | EventElement>>,
+    targetRefOrRefs: React.RefObject<None | EventElement> | Array<React.RefObject<None | EventElement>>,
     eventName: string,
     onEventHandler: EventHandler<E>,
     options?: undefined | EventOptions,
@@ -74,7 +73,7 @@ export function useCallbackDelayed(callback: Function, delayMs: number): {
     start(): void
     cancel(): void
 } {
-    const taskRef = useRef<undefined | ReturnType<typeof setTimeout>>(undefined)
+    const taskRef = useRef<ReturnType<typeof setTimeout>>(undefined)
 
     const cancel = useCallback(() => {
         if (! taskRef.current) {

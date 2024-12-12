@@ -1,7 +1,8 @@
-import {useCallback, useEffect} from 'react'
+import type {None} from '@eviljs/std/type-types'
+import {useCallback, useEffect, type RefObject} from 'react'
 
 export function usePictureInPicture(
-    videoRef: React.RefObject<HTMLVideoElement>,
+    videoRef: RefObject<None | HTMLVideoElement>,
     options?: undefined | {
         onEnter?: undefined | (() => void)
         onExit?: undefined | (() => void)
