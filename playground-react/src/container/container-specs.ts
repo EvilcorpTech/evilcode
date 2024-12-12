@@ -2,7 +2,7 @@ import {createConsoleLog, createLogger, type Logger, type LoggerProps} from '@ev
 import type {Router} from '@eviljs/web/router'
 import {createHashRouter} from '@eviljs/web/router-hash'
 import {createPathRouter} from '@eviljs/web/router-path'
-import {Env} from '~/env/env-specs'
+import {Env} from '/env/env-specs'
 
 export const DemoContainerSpec = {
     Logger({}: DemoContainerServices) {

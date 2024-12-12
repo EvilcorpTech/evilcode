@@ -11,8 +11,8 @@ import {
     type ReduxStatePatch,
     type StoreDefinition,
 } from '@eviljs/react/store'
-import {Env} from '~/env/env-specs'
-import {createState, type StoreState} from '~/store/store-state'
+import {Env} from '/env/env-specs'
+import {createState, type StoreState} from '/store/store-state'
 
 export const DemoStoreActionsSpec = {
     setState: defineReduxAction(withId('setState'), patchState<StoreState>),

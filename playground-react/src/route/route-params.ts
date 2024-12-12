@@ -1,6 +1,6 @@
 import {asNumber} from '@eviljs/std/type'
 import {defineRouteParam} from '@eviljs/web/route-param'
-import {createPageAnchorId} from '~/page/page-anchor-apis'
+import {createPageAnchorId} from '/page/page-anchor-apis'
 
 export const RouteParam = {
     Auth_redirect: defineRouteParam(

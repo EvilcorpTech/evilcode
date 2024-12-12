@@ -25,12 +25,6 @@ export default defineConfig(async (ctx): Promise<UserConfig> => {
         root: srcDir,
         publicDir: Path.resolve(srcDir, 'public'),
 
-        resolve: {
-            alias: {
-                '~': srcDir,
-            },
-        },
-
         plugins: [
             VitePluginReact({
                 // babel: {

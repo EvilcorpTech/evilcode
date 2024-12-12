@@ -1,7 +1,7 @@
 import type {MsgDefinition} from '@eviljs/std/msg'
-import {DemoLocaleDefault, DemoLocaleFallback, type DemoLocale} from '~/l10n/locale-services'
-import en from '~/messages/en'
-import it from '~/messages/it'
+import {DemoLocaleDefault, DemoLocaleFallback, type DemoLocale} from '/l10n/locale-services'
+import en from '/messages/en'
+import it from '/messages/it'
 
 export const MsgDefaultMessages = {it, en}
 

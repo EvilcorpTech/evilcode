@@ -1,5 +1,5 @@
 import {asBaseUrl} from '@eviljs/web/url'
-import Release from '~/release.json'
+import Release from '/release.json'
 
 export const Env = {
     ApiUrl: import.meta.env.APP_API_URL || '/api',

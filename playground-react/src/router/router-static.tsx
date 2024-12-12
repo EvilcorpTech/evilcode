@@ -1,9 +1,9 @@
 import {CaseRoute, exact, MatchArg, SwitchRoute} from '@eviljs/react/router'
 import {Showcase} from '@eviljs/reactx/showcase-v1/showcase.js'
-import {NotFoundView} from '~/app-404/404-view'
-import {HomeView} from '~/app-home/home-view'
-import {ShowcaseEntries} from '~/app-showcase/all'
-import {Header} from '~/ui-widgets/header'
+import {NotFoundView} from '/app-404/404-view'
+import {HomeView} from '/app-home/home-view'
+import {ShowcaseEntries} from '/app-showcase/all'
+import {Header} from '/ui-widgets/header'
 
 export function RouterStatic(props: RouterStaticProps) {
     const {} = props

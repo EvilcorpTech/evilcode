@@ -1,10 +1,10 @@
 import '~/style/index.css'
 
 import {createRoot} from 'react-dom/client'
-import {createDemoContainer} from '~/container/container-apis'
-import {Env} from '~/env/env-specs'
-import {Root, RootContext, RootIsolate} from '~/root/root'
-import {setupRootElement} from '~/root/root-apis'
+import {createDemoContainer} from '/container/container-apis'
+import {Env} from '/env/env-specs'
+import {Root, RootContext, RootIsolate} from '/root/root'
+import {setupRootElement} from '/root/root-apis'
 
 console.table(Env)
 

@@ -2,7 +2,7 @@ import {setupBus, type Bus} from '@eviljs/react/bus'
 import {noop} from '@eviljs/std/fn-return'
 import type {Task} from '@eviljs/std/fn-type'
 import {useEffect} from 'react'
-import {Env} from '~/env/env-specs'
+import {Env} from '/env/env-specs'
 
 export * from './bus-events'
 

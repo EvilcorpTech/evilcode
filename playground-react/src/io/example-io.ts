@@ -3,8 +3,8 @@ import {asDate, type Unsafe} from '@eviljs/std/type'
 import {usingRequestAuthorization} from '@eviljs/web/request-auth'
 import {creatingRequestGet} from '@eviljs/web/request-method'
 import {decodeResponseBodyAsJson} from '@eviljs/web/response'
-import {Env} from '~/env/env-specs'
-import type {DateString, IdString, UrlString} from '~/type/type-apis'
+import {Env} from '/env/env-specs'
+import type {DateString, IdString, UrlString} from '/type/type-apis'
 
 export async function readAccount(token: string): Promise<ReadAccountIoOutput> {
     return creatingRequestGet('/account', {baseUrl: Env.ApiUrl})
