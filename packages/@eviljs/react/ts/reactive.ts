@@ -6,7 +6,6 @@ import type {ReactiveObserver, ReactiveWatchOptions} from '@eviljs/std/reactive'
 import {readReactive, watchReactive, writeReactive, type ReactiveProtocol, type ReactiveValuesOf} from '@eviljs/std/reactive'
 import type {RwSync} from '@eviljs/std/rw'
 import {useCallback, useEffect, useLayoutEffect, useMemo, useState} from 'react'
-import {useClosure} from './memo.js'
 import {useRenderSignal, type RenderSignal} from './render.js'
 import type {StateManager, StateSetterArg} from './state.js'
 
@@ -72,12 +71,11 @@ export function useReactiveMemo<A extends Array<ReactiveProtocol<any>>, V>(
     return computedValue
 }
 
-export function useReactiveSelect<V, R>(reactive: ReactiveProtocol<V>, selector: Io<V, R>): R
-export function useReactiveSelect<V, R>(reactive: undefined | ReactiveProtocol<V>, selector: Io<undefined | V, R>): undefined | R
-export function useReactiveSelect<V, R>(reactive: undefined | ReactiveProtocol<V>, selector: Io<undefined | V, R>): undefined | R {
+export function useReactiveSelect<V, R>(reactive: ReactiveProtocol<V>, selector: Io<V, R>, deps?: undefined | Array<unknown>): R
+export function useReactiveSelect<V, R>(reactive: undefined | ReactiveProtocol<V>, selector: Io<undefined | V, R>, deps?: undefined | Array<unknown>): undefined | R
+export function useReactiveSelect<V, R>(reactive: undefined | ReactiveProtocol<V>, selector: Io<undefined | V, R>, deps?: undefined | Array<unknown>): undefined | R {
     const selectedValue = selector(mapSome(reactive, readReactive))
     const [signal, setSignal] = useState(selectedValue)
-    const selectorClosure = useClosure(selector)
 
     useEffect(() => {
         if (! reactive) {
@@ -86,12 +84,12 @@ export function useReactiveSelect<V, R>(reactive: undefined | ReactiveProtocol<V
 
         const onClean = watchReactive(
             reactive,
-            newValue => setSignal(selectorClosure(newValue)),
+            newValue => setSignal(selector(newValue)),
             {immediate: true},
         )
 
         return onClean
-    }, [reactive])
+    }, [reactive, ...(deps ?? [])])
 
     return selectedValue
 }
