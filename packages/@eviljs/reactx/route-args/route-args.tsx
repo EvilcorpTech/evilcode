@@ -3,7 +3,7 @@ import {isArray, isFunction} from '@eviljs/std/type-is'
 import {compileRoutePatternRegexp} from '@eviljs/web/route'
 import {Children, cloneElement, useMemo} from 'react'
 
-export function RouteArgs(props: RouteArgsProps): undefined | JSX.Element | React.ReactNode {
+export function RouteArgs(props: RouteArgsProps): undefined | React.JSX.Element | React.ReactNode {
     const {route, fromProp, guard, children, ...otherProps} = props
     const {testRoutePath} = useRoutePathTest()
     const routeArgs = useRouteArgs()

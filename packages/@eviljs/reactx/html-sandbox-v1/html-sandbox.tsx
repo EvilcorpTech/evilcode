@@ -5,7 +5,7 @@ import {createElement} from 'react'
 
 export const HtmlSandboxTag = 'html-sandbox'
 
-export function HtmlSandbox(props: Props<HtmlSandboxProps>): JSX.Element {
+export function HtmlSandbox(props: Props<HtmlSandboxProps>): React.JSX.Element {
     const {children, className, tag, ...otherProps} = props
 
     return (

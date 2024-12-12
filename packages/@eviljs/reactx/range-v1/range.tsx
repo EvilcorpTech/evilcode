@@ -5,10 +5,11 @@ import type {ElementProps, Props} from '@eviljs/react/props'
 import {clamp} from '@eviljs/std/math'
 import {distanceBetween} from '@eviljs/std/scale'
 import {isNone} from '@eviljs/std/type-is'
+import type {None} from '@eviljs/std/type-types'
 import {KeyboardKey} from '@eviljs/web/keybinding'
 import {useCallback, useEffect, useMemo, useRef, useState} from 'react'
 
-export function Range(props: Props<RangeProps>): JSX.Element {
+export function Range(props: Props<RangeProps>): React.JSX.Element {
     const {
         className,
         start,
@@ -183,7 +184,7 @@ export function Range(props: Props<RangeProps>): JSX.Element {
     )
 }
 
-export function RangeNumeric(props: Props<RangeNumericProps>): undefined | JSX.Element {
+export function RangeNumeric(props: Props<RangeNumericProps>): undefined | React.JSX.Element {
     const {start, end, min, max, onChange, onChanged, ...otherProps} = props
 
     const onRangeChange = useCallback((range: Range) => {
@@ -348,14 +349,14 @@ export type RangeStartState = [RangeRects, DragPointerEvent]
 export type RangeProgressState = [...RangeStartState, DragPointerEvent]
 
 export interface RangeRefs {
-    region: React.RefObject<HTMLDivElement>
-    start: React.RefObject<HTMLDivElement>
-    startHandle: React.RefObject<HTMLButtonElement>
-    centerHandle: React.RefObject<HTMLButtonElement>
-    end: React.RefObject<HTMLDivElement>
-    endHandle: React.RefObject<HTMLButtonElement>
-    onChange: React.RefObject<undefined | RangeObserver>
-    onChanged: React.RefObject<undefined | RangeObserver>
+    region: React.RefObject<None | HTMLDivElement>
+    start: React.RefObject<None | HTMLDivElement>
+    startHandle: React.RefObject<None | HTMLButtonElement>
+    centerHandle: React.RefObject<None | HTMLButtonElement>
+    end: React.RefObject<None | HTMLDivElement>
+    endHandle: React.RefObject<None | HTMLButtonElement>
+    onChange: React.RefObject<None | RangeObserver>
+    onChanged: React.RefObject<None | RangeObserver>
 }
 
 export interface RangeRects {

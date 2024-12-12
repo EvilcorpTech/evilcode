@@ -2,7 +2,7 @@ import {Box, type BoxProps} from '@eviljs/react/box'
 import type {VoidProps} from '@eviljs/react/props'
 import {classes} from '@eviljs/web/classes'
 
-export function PlaceholderBlock(props: PlaceholderBlockProps): JSX.Element {
+export function PlaceholderBlock(props: PlaceholderBlockProps): React.JSX.Element {
     const {className, height, style, width, ...otherProps} = props
 
     return (

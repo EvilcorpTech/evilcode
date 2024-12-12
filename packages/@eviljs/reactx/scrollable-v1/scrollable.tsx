@@ -1,19 +1,16 @@
 import {Box, type BoxProps} from '@eviljs/react/box'
 import {useBrowserFeatures} from '@eviljs/react/browser'
 import {classes} from '@eviljs/react/classes'
-import {displayName} from '@eviljs/react/display-name'
 import {useScrollHorizontal} from '@eviljs/react/drag'
-import {mergingRefs} from '@eviljs/react/ref'
+import {useMergeRefs} from '@eviljs/react/ref'
 import {isUndefined} from '@eviljs/std/type-is'
-import {forwardRef, useMemo, useRef} from 'react'
+import {useMemo, useRef} from 'react'
 
-export const Scrollable: React.ComponentType<ScrollableProps> = displayName('Scrollable', forwardRef(function Scrollable(
-    props: ScrollableProps,
-    ref: React.ForwardedRef<HTMLElement>
-) {
+export function Scrollable(props: ScrollableProps): React.JSX.Element {
     const {
         className,
         horizontal: horizontalOptional,
+        ref: refOptional,
         vertical: verticalOptional,
         scrollingStyle,
         style,
@@ -32,11 +29,12 @@ export const Scrollable: React.ComponentType<ScrollableProps> = displayName('Scr
     }, [hasTouch])
 
     const {scrolling} = useScrollHorizontal(elementRef, {horizontal, vertical, initOptions})
+    const refMerged = useMergeRefs(elementRef, refOptional)
 
     return (
         <Box
             {...otherProps}
-            ref={mergingRefs(ref, elementRef)}
+            ref={refMerged}
             {...hasTouch ? {ref: undefined} : undefined}
             className={classes('Scrollable-ab5c', className, {scrolling})}
             style={{
@@ -48,7 +46,7 @@ export const Scrollable: React.ComponentType<ScrollableProps> = displayName('Scr
             }}
         />
     )
-}))
+}
 
 // Types ///////////////////////////////////////////////////////////////////////
 

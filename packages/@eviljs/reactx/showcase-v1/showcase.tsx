@@ -3,7 +3,7 @@ import {classes} from '@eviljs/react/classes'
 import {Route, useRoute, useRouter} from '@eviljs/react/router'
 import {createElement, useEffect, useMemo, useState} from 'react'
 
-export function Showcase(props: ShowcaseProps): JSX.Element {
+export function Showcase(props: ShowcaseProps): React.JSX.Element {
     const {children, className, ...otherProps} = props
     const [selected, setSelected] = useState('')
     const [search, setSearch] = useState('')

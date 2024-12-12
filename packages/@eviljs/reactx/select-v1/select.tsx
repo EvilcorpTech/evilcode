@@ -1,9 +1,9 @@
 import {classes} from '@eviljs/react/classes'
-import {displayName} from '@eviljs/react/display-name'
 import type {Props, VoidProps} from '@eviljs/react/props'
 import type {Io} from '@eviljs/std/fn-type'
 import {isArray} from '@eviljs/std/type-is'
-import {forwardRef, memo, useImperativeHandle} from 'react'
+import type {Prettify} from '@eviljs/std/type-types'
+import {useImperativeHandle} from 'react'
 import {createPortal} from 'react-dom'
 import type {SelectOptionGeneric, SelectPlacement} from './select.api.js'
 import {
@@ -17,13 +17,14 @@ import {
 
 export * from './select.api.js'
 
-export const Select = displayName('Select', forwardRef(function Select<I extends SelectOptionGeneric<any>, S extends undefined | I | Array<I>>(
-    props: Props<SelectProps<I, S>>,
-    ref: React.ForwardedRef<SelectContextValue<I, S>>,
-) {
+export function Select<
+    I extends SelectOptionGeneric<any>,
+    S extends undefined | I | Array<I>,
+>(props: Props<SelectProps<I, S>>): React.JSX.Element {
     const {
         className,
         context,
+        ref,
         options,
         control: renderControlOptional,
         option: renderOptionOptional,
@@ -140,13 +141,13 @@ export const Select = displayName('Select', forwardRef(function Select<I extends
             </div>
         </SelectContext.Provider>
     )
-})) as <I extends SelectOptionGeneric<any>, S extends undefined | I | Array<I>>(props: SelectProps<I, S>) => React.JSX.Element
+}
 
-export const SelectOne = displayName('SelectOne', memo(forwardRef(function SelectOne<I extends SelectOptionGeneric<any>>(
-    props: Props<SelectOneProps<I>>,
-    ref: React.ForwardedRef<SelectContextValue<I, undefined | I>>,
-) {
+export function SelectOne<I extends SelectOptionGeneric<any>>(props: Props<SelectOneProps<I>>): React.JSX.Element {
     const {
+        className,
+        ref,
+
         disabled,
         mounted,
         placement,
@@ -200,7 +201,7 @@ export const SelectOne = displayName('SelectOne', memo(forwardRef(function Selec
     return (
         <Select
             ref={ref}
-            className="SelectOne-b79c"
+            className={classes('SelectOne-b79c', className)}
             context={context}
             options={options}
             control={renderControl}
@@ -209,13 +210,13 @@ export const SelectOne = displayName('SelectOne', memo(forwardRef(function Selec
             components={components}
         />
     )
-}))) as <I extends SelectOptionGeneric<any>>(props: SelectOneProps<I>) => React.JSX.Element
+}
 
-export const SelectMany = displayName('SelectMany', memo(forwardRef(function SelectMany<I extends SelectOptionGeneric<any>>(
-    props: Props<SelectManyProps<I>>,
-    ref: React.ForwardedRef<SelectContextValue<I, Array<I>>>,
-) {
+export function SelectMany<I extends SelectOptionGeneric<any>>(props: Props<SelectManyProps<I>>): React.JSX.Element {
     const {
+        className,
+        ref,
+
         disabled,
         mounted,
         placement,
@@ -269,7 +270,7 @@ export const SelectMany = displayName('SelectMany', memo(forwardRef(function Sel
     return (
         <Select
             ref={ref}
-            className="SelectMany-4d4c"
+            className={classes('SelectMany-4d4c', className)}
             context={context}
             options={options}
             control={renderControl}
@@ -278,14 +279,14 @@ export const SelectMany = displayName('SelectMany', memo(forwardRef(function Sel
             components={components}
         />
     )
-}))) as <I extends SelectOptionGeneric<any>>(props: SelectManyProps<I>) => React.JSX.Element
+}
 
 // Types ///////////////////////////////////////////////////////////////////////
 
 export interface SelectGenericProps<I extends SelectOptionGeneric<any>, S extends undefined | I | Array<I>> extends
-    Omit<
-        VoidProps<React.JSX.IntrinsicElements['div']> & React.RefAttributes<SelectContextValue<I, S>>,
-        'onSelectedChange'
+    Prettify<
+        & Omit<VoidProps<React.JSX.IntrinsicElements['div']>, 'ref' | 'onSelectedChange'>
+        & React.RefAttributes<SelectContextValue<I, S>>
     >
 {
     disabled?: undefined | boolean

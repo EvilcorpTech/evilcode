@@ -3,7 +3,7 @@ import type {ElementProps, Props} from '@eviljs/react/props'
 import {asBooleanString} from '@eviljs/web/aria'
 import {cloneElement, isValidElement} from 'react'
 
-export function Checkbox(props: Props<CheckboxProps>): JSX.Element {
+export function Checkbox(props: Props<CheckboxProps>): React.JSX.Element {
     const {className, children, checked: checkedOptional, disabled: disabledOptional, onChange, ...otherProps} = props
     const checked = checkedOptional ?? false
     const disabled = disabledOptional ?? false
@@ -31,7 +31,7 @@ export function Checkbox(props: Props<CheckboxProps>): JSX.Element {
                 onChange?.(checked === 'mixed' ? true : ! checked)
             }}
         >
-            {isValidElement<any>(children) &&
+            {isValidElement<CheckboxModel>(children) &&
                 cloneElement(children, {checked})
             }
         </button>
@@ -40,7 +40,8 @@ export function Checkbox(props: Props<CheckboxProps>): JSX.Element {
 
 // Types ///////////////////////////////////////////////////////////////////////
 
-export interface CheckboxProps extends Omit<ElementProps<'button'>, 'onChange'>, CheckboxModel {
+export interface CheckboxProps extends Omit<ElementProps<'button'>, 'children' | 'onChange'>, CheckboxModel {
+    children?: undefined | React.ReactElement<CheckboxModel>
     onChange?: undefined | ((value: boolean) => void)
 }
 

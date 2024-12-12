@@ -1,13 +1,12 @@
 import {classes} from '@eviljs/react/classes'
-import {displayName} from '@eviljs/react/display-name'
-import type {ElementProps, Props, RefElementOf, VoidProps} from '@eviljs/react/props'
+import type {ElementProps, Props, VoidProps} from '@eviljs/react/props'
 import {useMergeRefs} from '@eviljs/react/ref'
 import {identity} from '@eviljs/std/fn-return'
-import {forwardRef, useRef, useState} from 'react'
+import {useRef, useState} from 'react'
 
 export {decoratingElement, decoratingElementAfter, decoratingElementBefore} from '@eviljs/react/children'
 
-export function InputLabel(props: Props<InputLabelProps>): JSX.Element {
+export function InputLabel(props: Props<InputLabelProps>): React.JSX.Element {
     const {children, className, labelClass, title, ...otherProps} = props
 
     return (
@@ -24,10 +23,7 @@ export function InputLabel(props: Props<InputLabelProps>): JSX.Element {
     )
 }
 
-export const Input = displayName('Input', forwardRef(function Input(
-    props: Props<InputProps>,
-    ref: React.ForwardedRef<RefElementOf<InputProps>>,
-) {
+export function Input(props: Props<InputProps>): React.JSX.Element {
     const {
         className,
         decorate,
@@ -39,13 +35,14 @@ export const Input = displayName('Input', forwardRef(function Input(
         inputProps,
         inputStyle,
         readOnly: readonlyOptional,
+        ref: refOptional,
         required: requiredOptional,
         onChange,
         ...otherProps
     } = props
 
     const inputRef = useRef<HTMLInputElement>(null)
-    const inputRefMerged = useMergeRefs(inputRef, ref)
+    const inputRefMerged = useMergeRefs(inputRef, refOptional)
 
     const disabled = disabledOptional ?? false
     const readonly = readonlyOptional ?? false
@@ -80,35 +77,27 @@ export const Input = displayName('Input', forwardRef(function Input(
             )}
         </div>
     )
-})) as React.FunctionComponent<InputProps>
+}
 
-export const TextInput = displayName('TextInput', forwardRef(function TextInput(
-    props: Props<TextInputProps>,
-    ref: React.ForwardedRef<RefElementOf<TextInputProps>>,
-) {
+export function TextInput(props: Props<TextInputProps>): React.JSX.Element {
     const {className, ...otherProps} = props
 
     return (
         <Input
             type="text"
             {...otherProps}
-            ref={ref}
             className={classes('TextInput-1330', className)}
         />
     )
-})) as React.FunctionComponent<TextInputProps>
+}
 
-export const SecretInput = displayName('SecretInput', forwardRef(function SecretInput(
-    props: Props<SecretInputProps>,
-    ref: React.ForwardedRef<RefElementOf<SecretInputProps>>,
-) {
+export function SecretInput(props: Props<SecretInputProps>): React.JSX.Element {
     const {buttonClass, buttonProps, buttonStyle, className, decorate, hideIcon, showIcon, ...otherProps} = props
     const [visible, setVisible] = useState(false)
 
     return (
         <Input
             {...otherProps}
-            ref={ref}
             type={visible ? 'text' : 'password'}
             className={classes('SecretInput-b91c', className)}
             decorate={input => <>
@@ -136,13 +125,13 @@ export const SecretInput = displayName('SecretInput', forwardRef(function Secret
             </>}
         />
     )
-})) as React.FunctionComponent<SecretInputProps>
+}
 
 // Types ///////////////////////////////////////////////////////////////////////
 
-export interface InputLabelProps extends Omit<ElementProps<'div'>, 'title' | 'labelClass'> {
-    title: React.ReactNode
+export interface InputLabelProps extends Omit<ElementProps<'div'>, 'labelClass' | 'title'> {
     labelClass?: string
+    title: React.ReactNode
 }
 
 export interface InputProps extends Omit<VoidProps<ElementProps<'input'>>, 'onChange'> {
@@ -161,8 +150,8 @@ export interface TextInputProps extends InputProps {
 
 export interface SecretInputProps extends InputProps {
     buttonClass?: undefined | string
-    buttonStyle?: undefined | React.CSSProperties
     buttonProps?: undefined | VoidProps<ElementProps<'button'>>
-    showIcon: React.ReactNode
+    buttonStyle?: undefined | React.CSSProperties
     hideIcon: React.ReactNode
+    showIcon: React.ReactNode
 }

@@ -23,7 +23,7 @@ import {Spinner as SpinnerV4} from '../spinner-v4/spinner.js'
 import {Switch} from '../switch-v1/switch.js'
 import {Tooltip} from '../tooltip-v1/tooltip.js'
 
-export function WidgetsView(props: Props<WidgetsViewProps>): JSX.Element {
+export function WidgetsView(props: Props<WidgetsViewProps>): React.JSX.Element {
     const {className} = props
     const [busy, setBusy] = useState(false)
     const [checkbox, setCheckbox] = useState(false)

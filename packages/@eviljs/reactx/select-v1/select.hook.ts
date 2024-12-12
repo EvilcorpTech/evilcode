@@ -9,6 +9,8 @@ import {classes} from '@eviljs/web/classes'
 import {KeyboardKey} from '@eviljs/web/keybinding'
 import {useCallback, useContext, useEffect, useId, useLayoutEffect, useRef, useState, type AriaRole} from 'react'
 import type {SelectOptionGeneric, SelectPlacement} from './select.api.js'
+import {mapSome} from '@eviljs/std/fn-monad'
+import {setRef} from '@eviljs/react/ref'
 
 const NoItems: [] = []
 
@@ -130,10 +132,10 @@ export function useSelectGenericProvider<I extends SelectOptionGeneric<any>, S e
     const [PRIVATE_optionTabbed, PRIVATE_setOptionTabbed] = useState<number>()
 
     const refs = {
-        rootRef: useRef<HTMLElement>(),
-        controlRef: useRef<HTMLElement>(),
-        optionsRootRef: useRef<HTMLElement>(),
-        optionsListRef: useRef<HTMLElement>(),
+        rootRef: useRef<HTMLElement>(undefined),
+        controlRef: useRef<HTMLElement>(undefined),
+        optionsRootRef: useRef<HTMLElement>(undefined),
+        optionsListRef: useRef<HTMLElement>(undefined),
         optionsRef: useRef<Array<undefined | HTMLElement>>(NoItems),
     }
 
@@ -213,8 +215,8 @@ export function useSelectGenericProvider<I extends SelectOptionGeneric<any>, S e
             ...computedProps.rootProps,
             ref: useCallback((element: null | HTMLElement) => {
                 refs.rootRef.current = element ?? undefined
-                // mapSome(computedProps.rootProps?.ref, ref => setRef<null | HTMLElement>(ref, element)) // FIXME on React 19.
-            }, [/*computedProps.rootProps?.ref*/]),
+                mapSome(computedProps.rootProps?.ref, ref => setRef<null | HTMLElement>(ref, element))
+            }, [computedProps.rootProps?.ref]),
             className: classes(computedProps.rootProps?.className),
             ['aria-controls']: optionsRootId,
             ['aria-disabled']: state.disabled,
@@ -266,8 +268,8 @@ export function useSelectGenericProvider<I extends SelectOptionGeneric<any>, S e
             ...computedProps.controlProps,
             ref: useCallback((element: null | HTMLElement) => {
                 refs.controlRef.current = element ?? undefined
-                // mapSome(computedProps.controlProps?.ref, ref => setRef<null | HTMLElement>(ref, element)) // FIXME on React 19.
-            }, [/* computedProps.controlProps?.ref */]),
+                mapSome(computedProps.controlProps?.ref, ref => setRef<null | HTMLElement>(ref, element))
+            }, [computedProps.controlProps?.ref]),
             className: classes(computedProps.controlProps?.className),
             role: 'combobox',
             ['aria-invalid']: ! state.valid,
@@ -370,8 +372,8 @@ export function useSelectGenericProvider<I extends SelectOptionGeneric<any>, S e
             className: classes(computedProps.optionsRootProps?.className),
             ref: useCallback((element: null | HTMLElement) => {
                 refs.optionsRootRef.current = element ?? undefined
-                // mapSome(computedProps.optionsRootProps?.ref, ref => setRef<null | HTMLElement>(ref, element)) // FIXME on React 19.
-            }, [/* computedProps.optionsRootProps?.ref */]),
+                mapSome(computedProps.optionsRootProps?.ref, ref => setRef<null | HTMLElement>(ref, element))
+            }, [computedProps.optionsRootProps?.ref]),
             ['aria-hidden']: ! state.open,
             style: {
                 ...call((): undefined | React.CSSProperties => {
@@ -443,8 +445,8 @@ export function useSelectGenericProvider<I extends SelectOptionGeneric<any>, S e
             className: classes(computedProps.optionsListProps?.className),
             ref: useCallback((element: null | HTMLElement) => {
                 refs.optionsListRef.current = element ?? undefined
-                // mapSome(computedProps.optionsListProps?.ref, ref => setRef<null | HTMLElement>(ref, element)) // FIXME on React 19.
-            }, [/* computedProps.optionsListProps?.ref */]),
+                mapSome(computedProps.optionsListProps?.ref, ref => setRef<null | HTMLElement>(ref, element))
+            }, [computedProps.optionsListProps?.ref]),
             role: 'listbox',
         },
 
@@ -452,7 +454,7 @@ export function useSelectGenericProvider<I extends SelectOptionGeneric<any>, S e
             ...computedProps.optionProps,
             ref(element: null | HTMLElement) {
                 refs.optionsRef.current[optionIdx] = element ?? undefined
-                // mapSome(computedProps.optionProps?.ref, ref => setRef<null | HTMLElement>(ref, element)) // FIXME on React 19.
+                mapSome(computedProps.optionProps?.ref, ref => setRef<null | HTMLElement>(ref, element))
             },
             className: classes(),
             role: 'option',
@@ -550,7 +552,7 @@ export function useSelectGenericProvider<I extends SelectOptionGeneric<any>, S e
     }
 
     useClickOutside(
-        refs.rootRef as React.MutableRefObject<HTMLElement>, // FIXME
+        refs.rootRef,
         useCallback(event => {
             if (event.target && ! document.documentElement.contains(event.target as Node)) {
                 // A DOM Node has been removed from the DOM tree by React.
@@ -746,9 +748,9 @@ export interface SelectContextValue<I extends SelectOptionGeneric<any>, S extend
         }
     }
     refs: {
-        rootRef: React.MutableRefObject<undefined | HTMLElement>
-        controlRef: React.MutableRefObject<undefined | HTMLElement>
-        optionsRef: React.MutableRefObject<Array<undefined | HTMLElement>>
+        rootRef: React.RefObject<undefined | HTMLElement>
+        controlRef: React.RefObject<undefined | HTMLElement>
+        optionsRef: React.RefObject<Array<undefined | HTMLElement>>
     }
     state: {
         disabled: boolean

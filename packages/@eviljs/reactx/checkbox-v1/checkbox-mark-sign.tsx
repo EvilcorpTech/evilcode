@@ -2,7 +2,7 @@ import {classes} from '@eviljs/react/classes'
 import type {ElementProps, Props} from '@eviljs/react/props'
 import type {CheckboxModel} from './checkbox.js'
 
-export function CheckboxMark(props: Props<CheckboxMarkProps>): JSX.Element {
+export function CheckboxMark(props: Props<CheckboxMarkProps>): React.JSX.Element {
     const {checked, className, checkedIcon, mixedIcon, ...otherProps} = props
 
     return (

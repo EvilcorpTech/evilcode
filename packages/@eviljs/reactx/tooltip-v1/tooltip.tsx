@@ -5,7 +5,7 @@ import type {TooltipPosition} from './tooltip.api.js'
 
 export type {TooltipPosition} from './tooltip.api.js'
 
-export function Tooltip(props: Props<TooltipProps>): undefined | JSX.Element {
+export function Tooltip(props: Props<TooltipProps>): undefined | React.JSX.Element {
     const {children, className, content, contentClass, contentProps, contentStyle, position, ...otherProps} = props
 
     if (! children) {

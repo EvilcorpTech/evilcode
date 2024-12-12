@@ -1,9 +1,7 @@
 import {classes} from '@eviljs/react/classes'
-import {displayName} from '@eviljs/react/display-name'
-import type {ElementProps, Props, RefElementOf} from '@eviljs/react/props'
+import type {ElementProps, Props} from '@eviljs/react/props'
+import {isElementType} from '@eviljs/react/type'
 import {asArray} from '@eviljs/std/type-as'
-import type {ComponentProps} from 'react'
-import {forwardRef, isValidElement} from 'react'
 
 /*
 * EXAMPLE
@@ -31,10 +29,7 @@ import {forwardRef, isValidElement} from 'react'
 *     </TableBody>
 * </Table>
 */
-export const Table = displayName('Table', forwardRef(function Table(
-    props: Props<TableProps>,
-    ref: React.ForwardedRef<RefElementOf<TableProps>>,
-) {
+export function Table(props: Props<TableProps>): React.JSX.Element {
     const {
         children,
         className,
@@ -47,14 +42,13 @@ export const Table = displayName('Table', forwardRef(function Table(
         ...otherProps
     } = props
     const childrenList = asArray(children) as Array<React.ReactNode>
-    const tableHead = childrenList.find(elementTypeTestFor(TableHead))
-    const tableBody = childrenList.find(elementTypeTestFor(TableBody))
-    const tableFoot = childrenList.find(elementTypeTestFor(TableFoot))
+    const tableHead = childrenList.find(it => isElementType(it, TableHead))
+    const tableBody = childrenList.find(it => isElementType(it, TableBody))
+    const tableFoot = childrenList.find(it => isElementType(it, TableFoot))
 
     return (
         <div
             {...otherProps}
-            ref={ref}
             className={classes('Table-87f7', className)}
         >
             {header}
@@ -80,20 +74,16 @@ export const Table = displayName('Table', forwardRef(function Table(
             {footer}
         </div>
     )
-})) as React.FunctionComponent<TableProps>
+}
 
-export const TableHead = displayName('TableHead', forwardRef(function TableHead(
-    props: Props<TableHeadProps>,
-    ref: React.ForwardedRef<RefElementOf<TableHeadProps>>,
-) {
+export function TableHead(props: Props<TableHeadProps>): React.JSX.Element {
     const {children, className, rowProps, ...otherProps} = props
     const childrenList = asArray(children ?? []) as Array<React.ReactNode>
-    const columns = childrenList.filter(elementTypeTestFor(TableColumn))
+    const columns = childrenList.filter(it => isElementType(it, TableColumn))
 
     return (
         <thead
             {...otherProps}
-            ref={ref}
             className={classes('TableHead-00d9', className)}
         >
             <tr
@@ -104,20 +94,16 @@ export const TableHead = displayName('TableHead', forwardRef(function TableHead(
             </tr>
         </thead>
     )
-})) as React.FunctionComponent<TableHeadProps>
+}
 
-export const TableFoot = displayName('TableFoot', forwardRef(function TableFoot(
-    props: Props<TableFootProps>,
-    ref: React.ForwardedRef<RefElementOf<TableFootProps>>,
-) {
+export function TableFoot(props: Props<TableFootProps>): React.JSX.Element {
     const {children, className, rowProps, ...otherProps} = props
     const childrenList = asArray(children ?? []) as Array<React.ReactNode>
-    const columns = childrenList.filter(elementTypeTestFor(TableColumn))
+    const columns = childrenList.filter(it => isElementType(it, TableColumn))
 
     return (
         <tfoot
             {...otherProps}
-            ref={ref}
             className={classes('TableFoot-92cd', className)}
         >
             <tr
@@ -128,18 +114,14 @@ export const TableFoot = displayName('TableFoot', forwardRef(function TableFoot(
             </tr>
         </tfoot>
     )
-})) as React.FunctionComponent<TableFootProps>
+}
 
-export const TableColumn = displayName('TableColumn', forwardRef(function TableColumn(
-    props: Props<TableColumnProps>,
-    ref: React.ForwardedRef<RefElementOf<TableColumnProps>>,
-) {
+export function TableColumn(props: Props<TableColumnProps>): React.JSX.Element {
     const {children, className, innerProps, ...otherProps} = props
 
     return (
         <th
             {...otherProps}
-            ref={ref}
             className={classes('TableColumn-ebec', className)}
         >
             <div
@@ -150,56 +132,44 @@ export const TableColumn = displayName('TableColumn', forwardRef(function TableC
             </div>
         </th>
     )
-})) as React.FunctionComponent<TableColumnProps>
+}
 
-export const TableBody = displayName('TableBody', forwardRef(function TableBody(
-    props: Props<TableBodyProps>,
-    ref: React.ForwardedRef<RefElementOf<TableBodyProps>>,
-) {
+export function TableBody(props: Props<TableBodyProps>): React.JSX.Element {
     const {children, className, ...otherProps} = props
     const childrenList = asArray(children ?? []) as Array<React.ReactNode>
-    const rows = childrenList.filter(elementTypeTestFor(TableRow))
+    const childrenRows = childrenList.filter(it => isElementType(it, TableRow))
 
     return (
         <tbody
             {...otherProps}
-            ref={ref}
             className={classes('TableBody-59b0', className)}
         >
-            {rows}
+            {childrenRows}
         </tbody>
     )
-})) as React.FunctionComponent<TableBodyProps>
+}
 
-export const TableRow = displayName('TableRow', forwardRef(function TableRow(
-    props: Props<TableRowProps>,
-    ref: React.ForwardedRef<RefElementOf<TableRowProps>>,
-) {
+export function TableRow(props: Props<TableRowProps>): React.JSX.Element {
     const {children, className, ...otherProps} = props
     const childrenList = asArray(children ?? []) as Array<React.ReactNode>
-    const cells = childrenList.filter(elementTypeTestFor(TableCell))
+    const cells = childrenList.filter(it => isElementType(it, TableCell))
 
     return (
         <tr
             {...otherProps}
-            ref={ref}
             className={classes('TableRow-67ba', className)}
         >
             {cells}
         </tr>
     )
-})) as React.FunctionComponent<TableRowProps>
+}
 
-export const TableCell = displayName('TableCell', forwardRef(function TableCell(
-    props: Props<TableCellProps>,
-    ref: React.ForwardedRef<RefElementOf<TableCellProps>>,
-) {
+export function TableCell(props: Props<TableCellProps>): React.JSX.Element {
     const {children, className, innerProps, ...otherProps} = props
 
     return (
         <td
             {...otherProps}
-            ref={ref}
             className={classes('TableCell-8df5', className)}
         >
             <div
@@ -210,21 +180,6 @@ export const TableCell = displayName('TableCell', forwardRef(function TableCell(
             </div>
         </td>
     )
-})) as React.FunctionComponent<TableCellProps>
-
-export function elementTypeTestFor<T extends React.JSXElementConstructor<any>>(type: T): (element: React.ReactNode) => void {
-    function test(element: React.ReactNode) {
-        return isElementOfType(element, type)
-    }
-
-    return test
-}
-
-export function isElementOfType<T extends React.JSXElementConstructor<any>>(
-    element: React.ReactNode,
-    type: T,
-): element is React.ReactElement<ComponentProps<T>, T> {
-    return isValidElement(element) && element.type === type
 }
 
 // Types ///////////////////////////////////////////////////////////////////////

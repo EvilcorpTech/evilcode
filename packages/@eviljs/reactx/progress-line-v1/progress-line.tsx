@@ -1,7 +1,7 @@
 import {Box, type BoxProps} from '@eviljs/react/box'
 import {classes} from '@eviljs/react/classes'
 
-export function ProgressLine(props: ProgressLineProps): JSX.Element {
+export function ProgressLine(props: ProgressLineProps): React.JSX.Element {
     const {active, className, ...otherProps} = props
 
     return (

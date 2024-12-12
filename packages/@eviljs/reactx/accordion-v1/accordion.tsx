@@ -5,7 +5,7 @@ import {KeyboardKey} from '@eviljs/web/keybinding'
 import {Children, cloneElement, isValidElement, useCallback, useEffect, useRef, useState} from 'react'
 import {animateAccordionClose, animateAccordionOpen} from './accordion.api.js'
 
-export function AccordionList(props: Props<AccordionListProps>): JSX.Element {
+export function AccordionList(props: Props<AccordionListProps>): React.JSX.Element {
     const {
         className,
         children,
@@ -132,7 +132,7 @@ export function AccordionList(props: Props<AccordionListProps>): JSX.Element {
     )
 }
 
-export function Accordion(props: AccordionProps): JSX.Element {
+export function Accordion(props: AccordionProps): React.JSX.Element {
     const {
         buttonProps,
         children,

@@ -1,14 +1,10 @@
 import {classes} from '@eviljs/react/classes'
-import {displayName} from '@eviljs/react/display-name'
-import type {ElementProps, Props, RefElementOf} from '@eviljs/react/props'
+import type {ElementProps, Props} from '@eviljs/react/props'
 import {useMergeRefs} from '@eviljs/react/ref'
-import {forwardRef, useLayoutEffect, useRef, useState} from 'react'
+import {useLayoutEffect, useRef, useState} from 'react'
 
-export const Input = displayName('Input', forwardRef(function Input(
-    props: Props<InputProps>,
-    ref: React.ForwardedRef<RefElementOf<InputProps>>,
-) {
-    const {className, type, label, placeholder, value, autoComplete, autoFocus, tabIndex, onChange, ...otherProps} = props
+export function Input(props: Props<InputProps>): React.JSX.Element {
+    const {className, label, placeholder, ref, type, value, autoComplete, autoFocus, tabIndex, onChange, ...otherProps} = props
     const [focus, setFocus] = useState(false)
     const [translateY, setTranslateY] = useState(0)
     const fieldRef = useRef<HTMLDivElement>(null)
@@ -74,16 +70,16 @@ export const Input = displayName('Input', forwardRef(function Input(
             />
         </div>
     )
-})) as React.FunctionComponent<InputProps>
+}
 
 // Types ///////////////////////////////////////////////////////////////////////
 
 export interface InputProps extends Omit<ElementProps<'input'>, 'onChange'> {
-    type?: undefined | React.HTMLInputTypeAttribute
-    label?: undefined | string
-    value?: undefined | string
     autoComplete?: undefined | string
     autoFocus?: undefined | boolean
+    label?: undefined | string
     tabIndex?: undefined | number
+    type?: undefined | React.HTMLInputTypeAttribute
+    value?: undefined | string
     onChange?: undefined | ((value: string, event: React.ChangeEvent<HTMLInputElement>) => void)
 }

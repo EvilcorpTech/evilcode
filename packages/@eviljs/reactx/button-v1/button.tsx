@@ -1,23 +1,17 @@
 import {classes} from '@eviljs/react/classes'
-import {displayName} from '@eviljs/react/display-name'
-import type {ElementProps, Props, RefElementOf} from '@eviljs/react/props'
-import {forwardRef} from 'react'
+import type {ElementProps, Props} from '@eviljs/react/props'
 
-export const Button = displayName('Button', forwardRef(function Button(
-    props: Props<ButtonProps>,
-    ref: React.ForwardedRef<RefElementOf<ButtonProps>>,
-) {
+export function Button(props: Props<ButtonProps>): React.JSX.Element {
     const {className, ...otherProps} = props
 
     return (
         <button
             type="button"
             {...otherProps}
-            ref={ref}
             className={classes('Button-db00 std-button std-text-button', className)}
         />
     )
-})) as React.FunctionComponent<ButtonProps>
+}
 
 // Types ///////////////////////////////////////////////////////////////////////
 

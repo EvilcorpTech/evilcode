@@ -5,7 +5,7 @@ import {times} from '@eviljs/std/iter'
 import {Fragment, useEffect, useRef, useState} from 'react'
 import {ExampleIcon as Icon} from '../icon-example/icon-example-v2.js'
 
-export function ThemeView(props: Props<ThemeViewProps>): JSX.Element {
+export function ThemeView(props: Props<ThemeViewProps>): React.JSX.Element {
     const {className, head, children, ...otherProps} = props
     const [primaryAccent, setPrimaryAccent] = useState<ColorHslDict>({h: 0, s: 0, l: 0})
     const [secondaryAccent, setSecondaryAccent] = useState<ColorHslDict>({h: 0, s: 0, l: 0})
@@ -54,7 +54,7 @@ export function ThemeView(props: Props<ThemeViewProps>): JSX.Element {
     )
 }
 
-export function Picker(props: Props<PickerProps>): JSX.Element {
+export function Picker(props: Props<PickerProps>): React.JSX.Element {
     const {onPrimaryChange, onSecondaryChange, onThemeChange} = props
     const primaryRef = useRef<HTMLInputElement | null>(null)
     const secondaryRef = useRef<HTMLInputElement | null>(null)
@@ -105,7 +105,7 @@ export function Picker(props: Props<PickerProps>): JSX.Element {
     )
 }
 
-export function Colors(): JSX.Element {
+export function Colors(): React.JSX.Element {
     return (
         <div className="std-flex std-flex-column std-flex-justify-center">
             <div className="std-flex">
@@ -283,7 +283,7 @@ export function Colors(): JSX.Element {
     )
 }
 
-export function Typography(): JSX.Element {
+export function Typography(): React.JSX.Element {
     return (
         <div className="std-flex std-flex-column std-flex-align-start">
             {times(13).reverse().map(idx =>
@@ -299,7 +299,7 @@ export function Typography(): JSX.Element {
     )
 }
 
-export function TextHeight(): JSX.Element {
+export function TextHeight(): React.JSX.Element {
     return (
         <div className="std-flex std-flex-justify-center std-flex-wrap std-gap3">
             {times(7).map(it =>
@@ -318,7 +318,7 @@ export function TextHeight(): JSX.Element {
     )
 }
 
-export function TextSpace(): JSX.Element {
+export function TextSpace(): React.JSX.Element {
     return (
         <div className="std-flex std-flex-column std-flex-justify-center std-gap3">
             {['-2', '-1', '', '1', '2'].map((it, idx) =>
@@ -332,7 +332,7 @@ export function TextSpace(): JSX.Element {
     )
 }
 
-export function Gutters(): JSX.Element {
+export function Gutters(): React.JSX.Element {
     return (
         <div className="std-flex std-flex-column std-flex-justify-center">
             {times(10).map(it =>
@@ -348,7 +348,7 @@ export function Gutters(): JSX.Element {
     )
 }
 
-export function Contrast(props: {theme: 'dark' | 'light'}): JSX.Element {
+export function Contrast(props: {theme: 'dark' | 'light'}): React.JSX.Element {
     return (
         <div
             className="layout-1e33 std-flex std-gap6"
@@ -464,7 +464,7 @@ export function Contrast(props: {theme: 'dark' | 'light'}): JSX.Element {
     )
 }
 
-export function Buttons(): JSX.Element {
+export function Buttons(): React.JSX.Element {
     return (
         <div className="buttons-45cb std-flex std-flex-column std-flex-justify-center std-flex-align-center std-flex-wrap">
             <div>
@@ -486,7 +486,7 @@ export function Buttons(): JSX.Element {
     )
 }
 
-export function Transitions(): JSX.Element {
+export function Transitions(): React.JSX.Element {
     return (
         <div className="std-flex std-flex-justify-center std-flex-align-center std-flex-wrap">
             {times(5).map(it =>
@@ -502,7 +502,7 @@ export function Transitions(): JSX.Element {
     )
 }
 
-export function Icons(): JSX.Element {
+export function Icons(): React.JSX.Element {
     return (
         <div className="std-flex std-flex-row std-flex-justify-center std-flex-align-end std-flex-aligned-center std-flex-wrap">
             {times(10).map(it =>
@@ -516,7 +516,7 @@ export function Icons(): JSX.Element {
     )
 }
 
-export function Radiuses(): JSX.Element {
+export function Radiuses(): React.JSX.Element {
     return (
         <div className="std-flex std-flex-justify-center std-flex-align-center std-flex-wrap">
             {times(4).map(it =>
@@ -531,7 +531,7 @@ export function Radiuses(): JSX.Element {
     )
 }
 
-export function Shadows(): JSX.Element {
+export function Shadows(): React.JSX.Element {
     return (
         <div className="std-flex std-flex-center std-flex-align-center std-flex-wrap std-width-m">
             <label className="shadow-t9a2 std-shadow-soft">Soft</label>

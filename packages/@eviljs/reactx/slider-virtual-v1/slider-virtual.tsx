@@ -1,19 +1,16 @@
 import {classes} from '@eviljs/react/classes'
-import {displayName} from '@eviljs/react/display-name'
 import {useCallbackThrottled} from '@eviljs/react/event'
-import type {ElementProps, Props, RefElementOf} from '@eviljs/react/props'
-import {mergingRefs} from '@eviljs/react/ref'
+import type {ElementProps, Props, VoidProps} from '@eviljs/react/props'
+import {useMergeRefs} from '@eviljs/react/ref'
 import {useResizeObserver} from '@eviljs/react/resize-observer'
 import {isFunction} from '@eviljs/std/type-is'
-import {forwardRef, useCallback, useLayoutEffect, useMemo, useRef, useState} from 'react'
+import {useCallback, useLayoutEffect, useMemo, useRef, useState} from 'react'
 
-export const SliderVirtual = displayName('SliderVirtual', forwardRef(function SliderVirtual<I>(
-    props: Props<SliderVirtualProps<I>>,
-    ref: React.ForwardedRef<RefElementOf<SliderVirtualProps<I>>>,
-) {
+export function SliderVirtual<I>(props: Props<SliderVirtualProps<I>>): React.JSX.Element {
     const {
         children,
         className,
+        ref: refOptional,
         items,
         keyOf,
         selected: selectedItem,
@@ -21,7 +18,9 @@ export const SliderVirtual = displayName('SliderVirtual', forwardRef(function Sl
         style,
         ...otherProps
     } = props
+
     const containerRef = useRef<HTMLDivElement>(null)
+    const refMerged = useMergeRefs(containerRef, refOptional)
     const [sizes, setSizes] = useState<undefined | VirtualSizes>()
 
     const updateSize = useCallback(() => {
@@ -45,7 +44,7 @@ export const SliderVirtual = displayName('SliderVirtual', forwardRef(function Sl
     return (
         <div
             {...otherProps}
-            ref={mergingRefs(containerRef, ref)}
+            ref={refMerged}
             className={classes('SliderVirtual-2f13 std-grid', className)}
             style={{...style, ...styleOfContainer()}}
         >
@@ -63,7 +62,7 @@ export const SliderVirtual = displayName('SliderVirtual', forwardRef(function Sl
             )}
         </div>
     )
-})) as (<I>(props: SliderVirtualProps<I>) => JSX.Element)
+}
 
 export function computeVirtualState<I>(spec: VirtualSpec<I>): Array<VirtualChild<I>> {
     const {
@@ -218,7 +217,7 @@ export function styleOfChild<I>(child: VirtualChild<I>): React.CSSProperties {
 
 // Types ///////////////////////////////////////////////////////////////////////
 
-export interface SliderVirtualProps<I> extends Omit<ElementProps<'div'>, 'children' | 'onSelect'> {
+export interface SliderVirtualProps<I> extends Omit<VoidProps<ElementProps<'div'>>, 'onSelect'> {
     // align: undefined | 'start' | 'center' | 'end'
     children: (item: I, idx: number) => React.ReactElement
     // direction: undefined | 'horizontal' | 'vertical'

@@ -10,7 +10,7 @@ export const TransitionEffect = {
     Zoom: 'std-transition-zoom' as const,
 }
 
-export function TransitionAnimator(props: TransitionAnimatorProps): JSX.Element {
+export function TransitionAnimator(props: TransitionAnimatorProps): React.JSX.Element {
     const {className, effect, ...otherProps} = props
 
     return (
