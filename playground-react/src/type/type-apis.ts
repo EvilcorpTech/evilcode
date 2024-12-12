@@ -1,4 +1,4 @@
-export type Tag = keyof JSX.IntrinsicElements
+export type Tag = keyof React.JSX.IntrinsicElements
 export type IdString = string
 export type DateString = string
 export type NumberString = string

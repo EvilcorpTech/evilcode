@@ -9,7 +9,7 @@
         "preview": "npm --prefix dev run preview",
         "serve": "npm --prefix dev run serve"
     },
-    "packageManager": "pnpm@9.12.1",
+    "packageManager": "pnpm@9.15.0",
     "dependencies": {
         "@evilcss/std": "link:../packages/@evilcss/std",
         "@evilcss/ui": "link:../packages/@evilcss/ui",
@@ -19,10 +19,10 @@
         "@eviljs/ts-reset": "link:../packages/@eviljs/ts-reset",
         "@eviljs/web": "link:../packages/@eviljs/web",
         "@eviljs/webx": "link:../packages/@eviljs/webx",
-        "@types/react": "18",
-        "@types/react-dom": "18",
-        "react": "18",
-        "react-dom": "18"
+        "@types/react": "19",
+        "@types/react-dom": "19",
+        "react": "19",
+        "react-dom": "19"
     },
     "devDependencies": {
         "@eviljs/tsconfig": "link:../packages/@eviljs/tsconfig"
