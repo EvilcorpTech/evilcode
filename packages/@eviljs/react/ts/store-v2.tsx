@@ -19,7 +19,7 @@ export function StoreProviderV2(props: StoreProviderV2Props<ReduxReducerState, R
     const {children, ...spec} = props
     const contextValue = useStoreV2Provider(spec)
 
-    return <StoreContextV2.Provider value={contextValue} children={children}/>
+    return <StoreContextV2 value={contextValue} children={children}/>
 }
 
 export function useStoreV2Provider<

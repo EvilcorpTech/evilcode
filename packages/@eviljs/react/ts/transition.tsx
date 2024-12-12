@@ -260,13 +260,13 @@ export function Animator(props: AnimatorProps): React.JSX.Element {
     // DEBUG LOG POINT: taskId, taskAction, taskLifecycle, childClass, childStyle, contextValue
 
     return (
-        <TransitionContext.Provider value={contextValue}>
+        <TransitionContext value={contextValue}>
             {cloneElement(taskChild, {className: childClass, style: childStyle, ...childListeners})}
 
             {needsHandle &&
                 <template ref={handleRef} style={DisplayNoneStyle}/>
             }
-        </TransitionContext.Provider>
+        </TransitionContext>
     )
 }
 

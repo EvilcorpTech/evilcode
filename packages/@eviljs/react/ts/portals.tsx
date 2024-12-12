@@ -23,7 +23,7 @@ export function PortalsProvider(props: PortalsProviderProps): React.JSX.Element 
     const {children} = props
     const contextValue = usePortalsProvider()
 
-    return <PortalsContext.Provider value={contextValue} children={children}/>
+    return <PortalsContext value={contextValue} children={children}/>
 }
 
 /*

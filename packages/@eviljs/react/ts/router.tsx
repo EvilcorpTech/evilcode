@@ -37,7 +37,7 @@ export function RouterProvider(props: Props<RouterProviderProps>): React.JSX.Ele
         router.start() // Router must not be stopped on unmount.
     }, [router])
 
-    return <RouterContext.Provider value={router} children={children}/>
+    return <RouterContext value={router} children={children}/>
 }
 
 /*
@@ -87,9 +87,9 @@ export function WhenRoute(props: Props<WhenRouteProps>): undefined | React.JSX.E
     }
 
     return (
-        <RouteMatchContext.Provider value={routeArgs}>
+        <RouteMatchContext value={routeArgs}>
             {compute(children, ...routeArgs)}
-        </RouteMatchContext.Provider>
+        </RouteMatchContext>
     )
 }
 
@@ -160,7 +160,7 @@ export function SwitchRoute(props: Props<SwitchRouteProps>): React.JSX.Element {
     const {key, args} = match
     const child = compute(match.child, ...args)
 
-    return <RouteMatchContext.Provider key={key} value={args} children={child}/>
+    return <RouteMatchContext key={key} value={args} children={child}/>
 }
 
 export function CaseRoute(props: Props<CaseRouteProps>): undefined {

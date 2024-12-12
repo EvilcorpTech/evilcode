@@ -40,9 +40,9 @@ export function setupContainerUsingContext<M extends ContainerServicesMap, S = u
         ContainerContext: Context,
         ContainerProvider(props) {
             return (
-                <Context.Provider value={useContainerProvider(props)}>
+                <Context value={useContainerProvider(props)}>
                     {props.children}
-                </Context.Provider>
+                </Context>
             )
         },
         useContainerContext() {

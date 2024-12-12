@@ -64,7 +64,7 @@ export function StyleProvider(props: StyleProviderProps): React.JSX.Element {
         }
     }, [])
 
-    return <StyleContext.Provider value={contextValue} children={children}/>
+    return <StyleContext value={contextValue} children={children}/>
 }
 
 export function useStyleContext(): undefined | StyleContextValue {

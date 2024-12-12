@@ -20,7 +20,7 @@ export function StoreProviderV1(props: StoreProviderV1Props<ReduxReducerState>):
     const {children, ...spec} = props
     const contextValue = useStoreCreatorV1(spec)
 
-    return <StoreContextV1.Provider value={contextValue} children={children}/>
+    return <StoreContextV1 value={contextValue} children={children}/>
 }
 
 export function useStoreCreatorV1<S extends ReduxReducerState>(spec: StoreDefinitionV1<S>): StoreV1<S> {

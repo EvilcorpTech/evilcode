@@ -10,7 +10,7 @@ export function PortalProvider(props: PortalProviderProps): React.JSX.Element {
     const {children} = props
     const contextValue = usePortalProvider()
 
-    return <PortalContext.Provider value={contextValue} children={children}/>
+    return <PortalContext value={contextValue} children={children}/>
 }
 
 /*

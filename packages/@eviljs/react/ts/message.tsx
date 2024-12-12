@@ -35,7 +35,7 @@ export function MessageProvider(props: MessageProviderProps): React.JSX.Element 
     const {children, ...spec} = props
     const contextValue = useMessageProvider(spec)
 
-    return <MessageContext.Provider value={contextValue} children={children}/>
+    return <MessageContext value={contextValue} children={children}/>
 }
 
 export const Message: React.FC<MessageProps> = memo(function Message(props: Props<MessageProps>) {

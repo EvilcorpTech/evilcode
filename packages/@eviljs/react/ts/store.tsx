@@ -50,9 +50,9 @@ export function setupStoreUsingContext<S extends ReduxReducerState, A extends Re
             const {children, ...otherProps} = props
 
             return (
-                <Context.Provider value={useStoreProvider(otherProps)}>
+                <Context value={useStoreProvider(otherProps)}>
                     {children}
-                </Context.Provider>
+                </Context>
             )
         },
         useStoreContext() {

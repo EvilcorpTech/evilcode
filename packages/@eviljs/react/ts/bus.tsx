@@ -33,9 +33,9 @@ export function setupBusUsingContext(options?: undefined | BusBoundCase2Options)
         BusContext: Context,
         BusProvider(props) {
             return (
-                <Context.Provider value={useBusProvider()}>
+                <Context value={useBusProvider()}>
                     {props.children}
-                </Context.Provider>
+                </Context>
             )
         },
         useBusContext() {
