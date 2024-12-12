@@ -74,7 +74,7 @@ export function Select<
     }
 
     return (
-        <SelectContext.Provider value={context}>
+        <SelectContext value={context}>
             <div
                 {...context.props.rootProps}
                 className={classes('Select-b791', className, context.props.rootProps.className)}
@@ -139,7 +139,7 @@ export function Select<
                     })
                 }
             </div>
-        </SelectContext.Provider>
+        </SelectContext>
     )
 }
 
