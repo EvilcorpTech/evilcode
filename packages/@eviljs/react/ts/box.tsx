@@ -1,5 +1,4 @@
-import {createElement, forwardRef} from 'react'
-import {displayName} from './display-name.js'
+import {createElement} from 'react'
 import type {Props} from './props.js'
 
 /*

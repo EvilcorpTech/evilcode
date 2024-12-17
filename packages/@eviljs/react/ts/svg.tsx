@@ -18,6 +18,7 @@ export function defineSvg(definitionProps: SvgDefinitionProps): React.ComponentT
                 xmlns="http://www.w3.org/2000/svg"
                 version="1.1"
                 viewBox={viewBox}
+                data-name={name}
                 {...otherDefinitionProps}
                 {...otherProps}
                 className={classes(definitionClassName, className)}
