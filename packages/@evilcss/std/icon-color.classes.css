@@ -7,3 +7,6 @@
 .std-icon-color[fill="none"] *:not([fill]) {
     fill: none;
 }
+.std-icon-color[stroke="none"] *:not([stroke]) {
+    stroke: none;
+}
