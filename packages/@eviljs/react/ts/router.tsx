@@ -264,8 +264,9 @@ export function Link(props: Props<LinkProps>): React.JSX.Element {
         return (
             <a
                 target="_blank"
+                data-link-type="link"
                 {...otherProps}
-                className={classes('Link-b705 link', className)}
+                className={classes('Link-b705', className)}
                 href={encodeLink(to, params)}
             />
         )
@@ -273,8 +274,9 @@ export function Link(props: Props<LinkProps>): React.JSX.Element {
 
     return (
         <Route
+            data-link-type="route"
             {...otherProps}
-            className={classes('Link-b705 route', className)}
+            className={classes('Link-b705', className)}
             to={to}
             params={params}
             state={state}
