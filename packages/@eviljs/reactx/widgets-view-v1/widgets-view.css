@@ -26,7 +26,7 @@
 @import '../spinner-v4/spinner.css';
 @import '../switch-v1/switch.css';
 @import '../table-v1/table.css';
-@import '../tooltip-v1/tooltip.css';
+@import '../tooltip-v1/tooltip-b.css';
 
 .WidgetsView-a252 {
     gap: var(--std-gutter8);

@@ -3,15 +3,15 @@ import type {ElementProps, Props} from '@eviljs/react/props'
 import {asBooleanString} from '@eviljs/web/aria'
 
 export function Switch(props: Props<SwitchProps>): React.JSX.Element {
-    const {className, checked, onChange, ...otherProps} = props
+    const {className, checked, children, onChange, ...otherProps} = props
 
     return (
         <button
-            {...otherProps}
-            className={classes('Switch-5a04 std-button std-button-flex std-switch', className, {
-                'std-knob': ! props.children,
-            })}
             type="button"
+            {...otherProps}
+            className={classes('Switch-5a04 std-switch', className, {
+                'std-knob': ! children,
+            })}
             role="switch"
             aria-checked={asBooleanString(checked ?? false)}
             onClick={event => {
@@ -23,7 +23,9 @@ export function Switch(props: Props<SwitchProps>): React.JSX.Element {
 
                 onChange?.(! checked)
             }}
-        />
+        >
+            {children}
+        </button>
     )
 }
 
