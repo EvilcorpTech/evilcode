@@ -1,4 +1,4 @@
-import {createConsoleLog, createLogger, type Logger, type LoggerProps} from '@eviljs/std/log'
+import {createConsoleLogger, createLoggerClient, type LoggerClient, type LogType} from '@eviljs/std/log'
 import type {Router} from '@eviljs/web/router'
 import {createHashRouter} from '@eviljs/web/router-hash'
 import {createPathRouter} from '@eviljs/web/router-path'
@@ -6,7 +6,7 @@ import {Env} from '/env/env-specs'
 
 export const DemoContainerSpec = {
     Logger({}: DemoContainerServices) {
-        return createLogger(createConsoleLog())
+        return createLoggerClient(createConsoleLogger())
     },
     Router({}: DemoContainerServices) {
         return Env.RouterType === 'path'
@@ -18,7 +18,7 @@ export const DemoContainerSpec = {
 // Types ///////////////////////////////////////////////////////////////////////
 
 export interface DemoContainerServices {
-    Logger: Logger & LoggerProps
+    Logger: LoggerClient<LogType, void>
     Router: Router
 }
 

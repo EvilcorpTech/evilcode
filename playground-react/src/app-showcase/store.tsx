@@ -1,9 +1,9 @@
 import {defineShowcase} from '@eviljs/reactx/showcase-v1/showcase.js'
-import {DemoStore, useDemoStore, useDemoStoreDispatch, useDemoStoreState} from '/store/store'
+import {DemoStore, useDemoStore} from '/store/store'
 import {Theme} from '/theme/theme-apis'
 
 export default defineShowcase('Store', (props) => {
-    const [theme, dispatch] = useDemoStore(state => state.theme)
+    const theme = useDemoStore(state => state.theme)
 
     return (
         <div className="std-flex std-gap6">
@@ -16,7 +16,7 @@ export default defineShowcase('Store', (props) => {
 })
 
 function Comp1() {
-    const dispatch = useDemoStoreDispatch()
+    const {dispatch} = useDemoStore()
 
     return (
         <div>
@@ -32,8 +32,8 @@ function Comp1() {
 }
 
 function Comp2() {
-    const theme = useDemoStoreState(state => state.theme)
-    const dispatch = useDemoStoreDispatch()
+    const {dispatch} = useDemoStore()
+    const theme = useDemoStore(state => state.theme)
 
     return (
         <div>

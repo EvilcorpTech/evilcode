@@ -1,9 +1,9 @@
-import '~/style/index.css'
+import '/style/index.css'
 
 import {createRoot} from 'react-dom/client'
 import {createDemoContainer} from '/container/container-apis'
 import {Env} from '/env/env-specs'
-import {Root, RootContext, RootIsolate} from '/root/root'
+import {Root, RootContext} from '/root/root'
 import {setupRootElement} from '/root/root-apis'
 
 console.table(Env)
@@ -14,7 +14,6 @@ const root = createRoot(rootElement)
 
 root.render(
     <RootContext container={container}>
-        <RootIsolate/>
         <Root/>
     </RootContext>
 )

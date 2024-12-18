@@ -72,10 +72,7 @@ export const {
     StoreProvider: DemoStoreProvider,
     useStore: useDemoStore,
     useStoreContext: useDemoStoreContext,
-    useStoreDispatch: useDemoStoreDispatch,
     useStoreProvider: useDemoStoreProvider,
-    useStoreRead: useDemoStoreRead,
-    useStoreState: useDemoStoreState,
 } = setupStore<StoreState>({
     contextName: 'DemoStoreContext',
 })
