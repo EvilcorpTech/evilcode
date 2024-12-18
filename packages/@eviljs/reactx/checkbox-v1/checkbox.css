@@ -1,14 +1,21 @@
 .Checkbox-16ba {
-    --button-padding: 2px;
-    border: 2px solid currentColor;
+    display: inline-flex;
+    border-width: var(--Checkbox-border-size, var(--Checkbox-border-size--default, 2px));
+    border-style: var(--Checkbox-border-style, var(--Checkbox-border-style--default, solid));
+    border-color: var(--Checkbox-border-color, var(--Checkbox-border-color--default, currentColor));
 }
 
-.Checkbox-16ba:not([disabled]):hover,
-.Checkbox-16ba:not([disabled]):focus,
-.Checkbox-16ba:not([disabled]):active,
-.Checkbox-16ba:not([disabled]):hover,
-.Checkbox-16ba:not([disabled])[aria-checked="true"] {
-    color: var(--std-color-primary-accent, currentColor);
+.Checkbox-16ba:hover,
+.Checkbox-16ba:focus,
+.Checkbox-16ba:active,
+.Checkbox-16ba:hover,
+.Checkbox-16ba[aria-checked="true"] {
+    color: var(--Checkbox-color--checked, var(--Checkbox-color--checked--default, AccentColor));
+}
+.Checkbox-16ba:disabled,
+.Checkbox-16ba[disabled=""],
+.Checkbox-16ba[disabled="true"] {
+    color: var(--Checkbox-color--disabled, var(--Checkbox-color--disabled--default, inherit));
 }
 
 .Checkbox-16ba:not([disabled]):focus-visible {

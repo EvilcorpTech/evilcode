@@ -5,19 +5,19 @@ export function NotificationBadge(props: Props<NotificationBadgeProps>): React.J
     const {children, className, value, ...otherProps} = props
 
     return (
-        <div
+        <span
             {...otherProps}
             className={classes('NotificationBadge-3046', className)}
         >
             <span className="value-3db7">
                 {value}
             </span>
-        </div>
+        </span>
     )
 }
 
 // Types ///////////////////////////////////////////////////////////////////////
 
-export interface NotificationBadgeProps extends ElementProps<'div'> {
+export interface NotificationBadgeProps extends ElementProps<'span'> {
     value: number | string
 }

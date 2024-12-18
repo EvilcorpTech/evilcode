@@ -1,3 +1,7 @@
+.RadioGroup-e37b {
+    --radio-size--default: 1em;
+}
+
 .item-bf74,
 .radio-1370,
 .label-b0ad {
@@ -5,7 +9,7 @@
 }
 
 .radio-1370 {
-    font-size: inherit;
-    width: var(--radio-size, 1em);
-    height: var(--radio-size, 1em);
+    width: var(--radio-size, var(--radio-size--default, 1em));
+    height: var(--radio-size, var(--radio-size--default, 1em));
+    flex-shrink: 0;
 }

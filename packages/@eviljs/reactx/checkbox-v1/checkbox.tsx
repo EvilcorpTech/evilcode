@@ -13,7 +13,7 @@ export function Checkbox(props: Props<CheckboxProps>): React.JSX.Element {
             type="button"
             tabIndex={0}
             {...otherProps}
-            className={classes('Checkbox-16ba std-button std-button-flex', className)}
+            className={classes('Checkbox-16ba', className)}
             role="checkbox"
             aria-checked={
                 checked === 'mixed'

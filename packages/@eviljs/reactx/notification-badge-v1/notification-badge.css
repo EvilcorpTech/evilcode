@@ -1,16 +1,12 @@
 .NotificationBadge-3046 {
-    --NotificationBadge-counter-size--default: var(--std-text-descender0);
-    padding: .5em;
-    border-radius: 1em;
     display: flex;
     align-items: center;
     justify-content: center;
     text-align: center;
+    vertical-align: middle;
 }
 
 .value-3db7 {
-    min-width: var(--NotificationBadge-counter-size, var(--NotificationBadge-counter-size--default));
-    height: var(--NotificationBadge-counter-size, var(--NotificationBadge-counter-size--default));
-    line-height: var(--std-text-descender-line, 1);
-    font-weight: var(--std-text-weight2);
+    line-height: 1;
+    translate: 0% var(--NotificationBadge-correction, var(--NotificationBadge-correction--default, 0%));
 }
