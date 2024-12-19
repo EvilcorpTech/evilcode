@@ -108,7 +108,7 @@ export function WidgetsView(props: Props<WidgetsViewProps>): React.JSX.Element {
                     style={{fontSize: 'var(--std-icon-size4'}}
                 >
                     <CheckboxMarkV1
-                        className="std-knob round std-icon"
+                        className="std-knob std-icon"
                         style={{color: 'var(--std-color-bg1)'}}
                     />
                 </Switch>

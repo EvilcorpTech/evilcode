@@ -1,13 +1,15 @@
 .CheckboxMark-3ae4 {
-    min-width: var(--checkbox-mark-size, 1em);
-    width: var(--checkbox-mark-size, 1em);
-    max-width: var(--checkbox-mark-size, 1em);
-    min-height: var(--checkbox-mark-size, 1em);
-    height: var(--checkbox-mark-size, 1em);
-    max-height: var(--checkbox-mark-size, 1em);
+    --CheckboxMark-size--default: 1em;
+    min-width: var(--CheckboxMark-size, var(--CheckboxMark-size--default));
+    width: var(--CheckboxMark-size, var(--CheckboxMark-size--default));
+    max-width: var(--CheckboxMark-size, var(--CheckboxMark-size--default));
+    min-height: var(--CheckboxMark-size, var(--CheckboxMark-size--default));
+    height: var(--CheckboxMark-size, var(--CheckboxMark-size--default));
+    max-height: var(--CheckboxMark-size, var(--CheckboxMark-size--default));
+    flex-shrink: 0;
 }
 
 .Checkbox-16ba[aria-checked="false"] .CheckboxMark-3ae4 {
     opacity: 0;
-    transform: scale(.6);
+    transform: scale(0);
 }

@@ -7,7 +7,7 @@
         var(--input-border-style, solid)
         var(--input-border-color, hsl(0deg 0% var(--std-fg-l) / var(--input-border-opacity, .07)))
     ;
-    border-radius: var(--input-border-radius, var(--std-radius1));
+    border-radius: var(--input-radius, var(--std-radius1));
     padding: var(--input-padding, var(--std-gutter2));
     transition: all var(--std-duration3);
 }
