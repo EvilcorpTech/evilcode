@@ -48,10 +48,10 @@
     --knob-size--default: 1em;
     --knob-border-size--default: 0px;
     --knob-border-color--default: transparent;
-    --knob-border-radius--default: var(--switch-height, var(--switch-height--default));
-    --knob-bg--default: ButtonText;
-    --knob-bg--active--default: ButtonText;
-    --knob-bg--hover--default: ButtonText;
+    --knob-radius--default: var(--switch-height, var(--switch-height--default));
+    --knob-background--default: ButtonText;
+    --knob-background--active--default: ButtonText;
+    --knob-background--hover--default: ButtonText;
     --knob-shadow--default: 0 0 3px 0 hsl(0deg 0% 0% / .2);
 }
 .std-switch.std-knob::after {
@@ -63,13 +63,13 @@
     border-width: var(--knob-border-size, var(--knob-border-size--default));
     border-style: solid;
     border-color: var(--knob-border-color, var(--knob-border-color--default));
-    border-radius: var(--knob-border-radius, var(--knob-border-radius--default));
-    background-color: var(--knob-bg, var(--knob-bg--default));
+    border-radius: var(--knob-radius, var(--knob-radius--default));
+    background: var(--knob-background, var(--knob-background--default));
     box-shadow: var(--knob-shadow, var(--knob-shadow--default));
 }
 .std-switch.std-knob:hover::after {
-    background-color: var(--knob-bg--hover, var(--knob-bg--hover--default));
+    background: var(--knob-background--hover, var(--knob-background--hover--default));
 }
 .std-switch.std-knob:active::after {
-    background-color: var(--knob-bg--active, var(--knob-bg--active--default));
+    background: var(--knob-background--active, var(--knob-background--active--default));
 }
