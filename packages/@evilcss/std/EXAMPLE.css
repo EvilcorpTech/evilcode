@@ -60,6 +60,7 @@
 @import '@evilcss/std/color-palette1/teal.props.css' layer(std);
 @import '@evilcss/std/color-palette1/ultramarine.props.css' layer(std);
 @import '@evilcss/std/color-palette1/violet.props.css' layer(std);
+@import '@evilcss/std/color-scheme.classes.css' layer(std);
 @import '@evilcss/std/color-state.classes.css' layer(std);
 @import '@evilcss/std/color-state.props.css' layer(std);
 @import '@evilcss/std/color-theme.classes.css' layer(std);
