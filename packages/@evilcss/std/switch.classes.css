@@ -8,13 +8,21 @@
     --switch-background--checked--default: AccentColor;
     --switch-shadow-inset--default: 0 0 2px 0 hsl(0deg 0% 0% / .2);
     --switch-duration--default: var(--std-duration2);
-    --knob-shift: calc((var(--switch-width, var(--switch-width--default)) / 2) - 50%);
+
+    --knob-container-size: var(--switch-width, var(--switch-width--default));
+    --knob-shift: calc((var(--knob-container-size) / 2) - 50%);
 
     box-sizing: content-box;
     display: var(--switch-display, var(--switch-display--default));
     justify-content: center;
     align-items: center;
+    min-width: var(--switch-width, var(--switch-width--default));
     width: var(--switch-width, var(--switch-width--default));
+    max-width: var(--switch-width, var(--switch-width--default));
+    min-height: var(--switch-height, var(--switch-height--default));
+    height: var(--switch-height, var(--switch-height--default));
+    max-height: var(--switch-height, var(--switch-height--default));
+    flex-shrink: 0;
     border-radius: var(--switch-radius, var(--switch-radius--default));
     padding: var(--switch-gap, var(--switch-gap--default));
     background: var(--switch-background, var(--switch-background--default));
