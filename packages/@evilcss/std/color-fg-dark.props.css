@@ -1,4 +1,4 @@
-.std-root {
+.std-root, .std-define-color-fg {
     --std-dark-color-fg1-h: var(--std-dark-color-fg-h, 0deg);
     --std-dark-color-fg1-s: var(--std-dark-color-fg-s, 0%);
     --std-dark-color-fg1-l: 95%;

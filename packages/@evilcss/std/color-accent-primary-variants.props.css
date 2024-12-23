@@ -1,4 +1,4 @@
-.std-root {
+.std-root, .std-define-color-primary {
     --std-color-primary-tint1: hsl(var(--std-color-primary-h) calc(var(--std-color-primary-s) * .8) calc(var(--std-color-primary-l) + (100% - var(--std-color-primary-l)) * .2));
     --std-color-primary-tint2: hsl(var(--std-color-primary-h) calc(var(--std-color-primary-s) * .8) calc(var(--std-color-primary-l) + (100% - var(--std-color-primary-l)) * .4));
     --std-color-primary-tint3: hsl(var(--std-color-primary-h) calc(var(--std-color-primary-s) * .8) calc(var(--std-color-primary-l) + (100% - var(--std-color-primary-l)) * .6));

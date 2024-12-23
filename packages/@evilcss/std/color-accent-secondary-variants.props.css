@@ -1,4 +1,4 @@
-.std-root {
+.std-root, .std-define-color-secondary {
     --std-color-secondary-tint1: hsl(var(--std-color-secondary-h) calc(var(--std-color-secondary-s) * .8) calc(var(--std-color-secondary-l) + (100% - var(--std-color-secondary-l)) * .2));
     --std-color-secondary-tint2: hsl(var(--std-color-secondary-h) calc(var(--std-color-secondary-s) * .8) calc(var(--std-color-secondary-l) + (100% - var(--std-color-secondary-l)) * .4));
     --std-color-secondary-tint3: hsl(var(--std-color-secondary-h) calc(var(--std-color-secondary-s) * .8) calc(var(--std-color-secondary-l) + (100% - var(--std-color-secondary-l)) * .6));

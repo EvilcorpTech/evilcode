@@ -1,4 +1,4 @@
-.std-root {
+.std-root, .std-define-text-space {
     --std-text-space-base: 0em;
     --std-text-space-factor: .015em;
     --std-text-space-2: calc(var(--std-text-space-1) - 2 * var(--std-text-space-factor));

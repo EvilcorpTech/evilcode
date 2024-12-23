@@ -1,4 +1,4 @@
-.std-root {
+.std-root, .std-define-icon-size {
     /* Values must be integer, for a pixel perfect result. */
     --std-icon-size-base: 12px;
     --std-icon-size-factor: 2px;

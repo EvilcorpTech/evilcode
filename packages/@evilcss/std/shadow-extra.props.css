@@ -1,4 +1,3 @@
-.std-root,
-.std-shadow-primary {
+.std-root, .std-define-shadow {
     --std-shadow-soft: var(--std-shadow-umbra) 0 1px 3px 0, var(--std-shadow-penumbra) 0 0 0, var(--std-shadow-ambient) 0 0 0;
 }

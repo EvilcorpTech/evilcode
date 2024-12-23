@@ -1,4 +1,4 @@
-.std-root {
+.std-root, .std-define-radius {
     /* Values must be integer, for a pixel perfect result. */
     --std-radius-base: 4px;
     --std-radius-factor: 4px;

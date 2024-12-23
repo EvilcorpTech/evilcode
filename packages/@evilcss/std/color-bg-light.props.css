@@ -1,4 +1,4 @@
-.std-root {
+.std-root, .std-define-color-bg {
     --std-light-color-bg-l-base: 100%;
     --std-light-color-bg-l-factor: 2%;
     --std-light-color-bg-z-factor: 1%;

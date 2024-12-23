@@ -1,4 +1,4 @@
-.std-root {
+.std-root, .std-define-color-palette {
     --std-color-p1-indigo1: #f3faff;
     --std-color-p1-indigo2: #def1ff;
     --std-color-p1-indigo3: #bee4ff;

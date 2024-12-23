@@ -1,13 +1,4 @@
-.std-root,
-.std-shadow-primary {
-    --std-shadow-umbra-opacity: .1;
-    --std-shadow-penumbra-opacity: .08;
-    --std-shadow-ambient-opacity: .06;
-
-    --std-shadow-umbra: hsl(0deg 0% 0% / var(--std-shadow-umbra-opacity));
-    --std-shadow-penumbra: hsl(0deg 0% 0% / var(--std-shadow-penumbra-opacity));
-    --std-shadow-ambient: hsl(0deg 0% 0% / var(--std-shadow-ambient-opacity));
-
+.std-root, .std-define-shadow {
     --std-shadow0: var(--std-shadow-umbra) 0 0 0, var(--std-shadow-penumbra) 0 0 0, var(--std-shadow-ambient) 0 0 0;
     --std-shadow1: var(--std-shadow-umbra) 0 1px 3px, var(--std-shadow-penumbra) 0 1px 1px, var(--std-shadow-ambient) 0 2px 1px -1px;
     --std-shadow2: var(--std-shadow-umbra) 0 1px 5px, var(--std-shadow-penumbra) 0 2px 2px, var(--std-shadow-ambient) 0 3px 1px -2px;
@@ -33,10 +24,4 @@
     --std-shadow22: var(--std-shadow-umbra) 0 10px 14px -6px, var(--std-shadow-penumbra) 0 22px 35px 3px, var(--std-shadow-ambient) 0 8px 42px 7px;
     --std-shadow23: var(--std-shadow-umbra) 0 11px 14px -7px, var(--std-shadow-penumbra) 0 23px 36px 3px, var(--std-shadow-ambient) 0 9px 44px 8px;
     --std-shadow24: var(--std-shadow-umbra) 0 11px 15px -7px, var(--std-shadow-penumbra) 0 24px 38px 3px, var(--std-shadow-ambient) 0 9px 46px 8px;
-}
-.std-shadow-primary {
-    --std-shadow-primary-l: calc(.8 * var(--std-color-primary-l));
-    --std-shadow-umbra: hsl(var(--std-color-primary-h) var(--std-color-primary-s) var(--std-shadow-primary-l) / var(--std-shadow-umbra-opacity));
-    --std-shadow-penumbra: hsl(var(--std-color-primary-h) var(--std-color-primary-s) var(--std-shadow-primary-l) / var(--std-shadow-penumbra-opacity));
-    --std-shadow-ambient: hsl(var(--std-color-primary-h) var(--std-color-primary-s) var(--std-shadow-primary-l) / var(--std-shadow-ambient-opacity));
 }

@@ -63,7 +63,6 @@
 @import '@evilcss/std/color-scheme.classes.css' layer(std);
 @import '@evilcss/std/color-state.classes.css' layer(std);
 @import '@evilcss/std/color-state.props.css' layer(std);
-@import '@evilcss/std/color-theme.classes.css' layer(std);
 @import '@evilcss/std/duration.props.css' layer(std);
 @import '@evilcss/std/icon-color.classes.css' layer(std);
 @import '@evilcss/std/icon-size.classes.css' layer(std);
@@ -129,6 +128,8 @@
 @import '@evilcss/std/shadow-extra.props.css' layer(std);
 @import '@evilcss/std/shadow-material.classes.css' layer(std);
 @import '@evilcss/std/shadow-material.props.css' layer(std);
+@import '@evilcss/std/shadow-primary.props.css' layer(std);
+@import '@evilcss/std/shadow.props.css' layer(std);
 @import '@evilcss/std/switch.classes.css' layer(std);
 @import '@evilcss/std/text-align.classes.css' layer(std);
 @import '@evilcss/std/text-descender.classes.css' layer(std);

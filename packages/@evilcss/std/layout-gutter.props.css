@@ -1,4 +1,4 @@
-.std-root {
+.std-root, .std-define-gutter {
     /* Values must be integer, for a pixel perfect result. */
     --std-gutter-base: 4px;
     --std-gutter-factor: 2px;

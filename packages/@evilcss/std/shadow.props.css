@@ -1,0 +1,9 @@
+.std-root, .std-define-shadow {
+    --std-shadow-umbra-opacity: .1;
+    --std-shadow-penumbra-opacity: .08;
+    --std-shadow-ambient-opacity: .06;
+
+    --std-shadow-umbra: hsl(var(--std-shadow-umbra-h, 0deg) var(--std-shadow-umbra-s, 0%) var(--std-shadow-umbra-l, 0%) / var(--std-shadow-umbra-opacity));
+    --std-shadow-penumbra: hsl(var(--std-shadow-penumbra-h, 0deg) var(--std-shadow-penumbra-s, 0%) var(--std-shadow-penumbra-l, 0%) / var(--std-shadow-penumbra-opacity));
+    --std-shadow-ambient: hsl(var(--std-shadow-ambient-h, 0deg) var(--std-shadow-ambient-s, 0%) var(--std-shadow-ambient-l, 0%) / var(--std-shadow-ambient-opacity));
+}

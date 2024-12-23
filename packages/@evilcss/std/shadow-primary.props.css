@@ -1,0 +1,11 @@
+.std-root, .std-define-shadow-primary {
+    --std-shadow-umbra-h: var(--std-color-primary-h);
+    --std-shadow-umbra-s: var(--std-color-primary-s);
+    --std-shadow-umbra-l: var(--std-shadow-primary-l);
+    --std-shadow-penumbra-h: var(--std-color-primary-h);
+    --std-shadow-penumbra-s: var(--std-color-primary-s);
+    --std-shadow-penumbra-l: var(--std-shadow-primary-l);
+    --std-shadow-ambient-h: var(--std-color-primary-h);
+    --std-shadow-ambient-s: var(--std-color-primary-s);
+    --std-shadow-ambient-l: var(--std-shadow-primary-l);
+}

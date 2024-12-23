@@ -1,4 +1,4 @@
-.std-root {
+.std-root, .std-define-text-size {
     /* We respect user's rem choice. */
     --std-text-size1: .8rem;
     --std-text-size2: .9rem;

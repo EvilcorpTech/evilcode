@@ -1,4 +1,4 @@
-.std-root {
+.std-root, .std-define-text-height {
     --std-text-height-base: 1;
     --std-text-height-factor: .1;
     --std-text-height0: var(--std-text-height-base);

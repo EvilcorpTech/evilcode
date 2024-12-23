@@ -1,4 +1,4 @@
-.std-root {
+.std-root, .std-define-width {
     --std-width-base: 20rem;
     --std-width-factor: 10rem;
     --std-width1: var(--std-width-base);

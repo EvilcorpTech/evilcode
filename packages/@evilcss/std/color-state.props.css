@@ -1,4 +1,4 @@
-.std-root {
+.std-root, .std-define-color-state {
     /* --std-color-m1-green8 */
     --std-color-safety-h: 123deg;
     --std-color-safety-s: 43%;

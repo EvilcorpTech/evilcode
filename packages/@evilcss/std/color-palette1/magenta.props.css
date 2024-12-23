@@ -1,4 +1,4 @@
-.std-root {
+.std-root, .std-define-color-palette {
     --std-color-p1-magenta1: #f9e9f3;
     --std-color-p1-magenta2: #f5dded;
     --std-color-p1-magenta3: #ebbbdb;
