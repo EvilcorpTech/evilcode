@@ -73,8 +73,7 @@
 }
 
 .contrast-td08 {
-    width: 16rem;
-    min-height: 100px;
+    flex: 1 1 0;
     border: var(--std-gutter1) solid transparent;
     padding: var(--std-gutter3);
     border-radius: var(--std-radius3);
@@ -100,7 +99,7 @@
     border-bottom: 1rem solid var(--std-color-bg4)
 }
 .gutter-t1d3:hover > i {
-    border-color: var(--std-color-secondary-bg2);
+    border-color: var(--std-color-primary-bg2);
 }
 
 .radius-75ca {

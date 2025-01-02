@@ -177,10 +177,10 @@ export function WidgetsView(props: Props<WidgetsViewProps>): React.JSX.Element {
                     {spinner ? 'Stop' : 'Start'}
                 </Button>
 
-                <SpinnerV1 className="std-color-secondary-accent" active={spinner}/>
-                <SpinnerV2 className="std-color-secondary-accent" active={spinner}/>
-                <SpinnerV3 className="std-color-secondary-accent" active={spinner}/>
-                <SpinnerV4 className="std-color-secondary-accent" active={spinner}/>
+                <SpinnerV1 className="std-color-primary-accent" active={spinner}/>
+                <SpinnerV2 className="std-color-primary-accent" active={spinner}/>
+                <SpinnerV3 className="std-color-primary-accent" active={spinner}/>
+                <SpinnerV4 className="std-color-primary-accent" active={spinner}/>
 
                 <ProgressLine active={spinner}/>
             </div>

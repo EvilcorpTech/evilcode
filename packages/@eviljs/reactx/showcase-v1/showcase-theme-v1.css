@@ -38,7 +38,7 @@
     margin-right: var(--std-gutter3);
     margin-bottom: var(--std-gutter3);
     padding: var(--std-gutter2);
-    border-bottom: var(--std-border1);
+    border-bottom: gray;
     transition: all var(--std-duration2);
     transform-origin: 0 0;
 }
