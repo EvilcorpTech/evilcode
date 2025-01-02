@@ -1,4 +1,7 @@
 .std-root, .std-define-color-bg {
+    --std-dark-color-bg-l: 0%; /* Can be used with clamp() to obtain the desired lightness. */
+    --std-dark-color-bg-ll: 1; /* Can be used with calc() to obtain the desired lightness. */
+
     --std-dark-color-bg-l-base: 9%;
     --std-dark-color-bg-l-factor: 3%;
     --std-dark-color-bg-z-factor: 4%;
@@ -22,11 +25,11 @@
     --std-dark-color-bg4-s: var(--std-dark-color-bg-s, 0%);
     --std-dark-color-bg4-l: calc(var(--std-dark-color-bg3-l) + var(--std-dark-color-bg-l-factor));
     --std-dark-color-bg4: hsl(var(--std-dark-color-bg4-h) var(--std-dark-color-bg4-s) var(--std-dark-color-bg4-l) / var(--std-dark-color-bg4-opacity, 1));
-
-    --std-dark-color-bg-l: 0%; /* Can be used with clamp() to obtain the desired lightness. */
-    --std-dark-color-bg-ll: 1; /* Can be used with calc() to obtain the desired lightness. */
 }
 .std-theme-dark {
+    --std-bg-l: var(--std-dark-color-bg-l);
+    --std-bg-ll: var(--std-dark-color-bg-ll);
+
     --std-color-bg1-h: var(--std-dark-color-bg1-h);
     --std-color-bg1-s: var(--std-dark-color-bg1-s);
     --std-color-bg1-l: var(--std-dark-color-bg1-l);
@@ -46,7 +49,4 @@
     --std-color-bg4-s: var(--std-dark-color-bg4-s);
     --std-color-bg4-l: var(--std-dark-color-bg4-l);
     --std-color-bg4: var(--std-dark-color-bg4);
-
-    --std-bg-l: var(--std-dark-color-bg-l);
-    --std-bg-ll: var(--std-dark-color-bg-ll);
 }

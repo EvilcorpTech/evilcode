@@ -1,0 +1,19 @@
+.std-root, .std-define-color-fg-primary {
+    --std-dark-color-primary-fg1-h: var(--std-color-primary-h);
+    --std-dark-color-primary-fg1-s: var(--std-color-primary-s);
+    --std-dark-color-primary-fg1-l: 62%;
+    --std-dark-color-primary-fg1: hsl(var(--std-dark-color-primary-fg1-h) var(--std-dark-color-primary-fg1-s) var(--std-dark-color-primary-fg1-l));
+    --std-dark-color-primary-fg2-h: var(--std-color-primary-h);
+    --std-dark-color-primary-fg2-s: var(--std-color-primary-s);
+    --std-dark-color-primary-fg2-l: 72%;
+    --std-dark-color-primary-fg2: hsl(var(--std-dark-color-primary-fg2-h) var(--std-dark-color-primary-fg2-s) var(--std-dark-color-primary-fg2-l));
+    --std-dark-color-primary-fg3-h: var(--std-color-primary-h);
+    --std-dark-color-primary-fg3-s: var(--std-color-primary-s);
+    --std-dark-color-primary-fg3-l: 82%;
+    --std-dark-color-primary-fg3: hsl(var(--std-dark-color-primary-fg3-h) var(--std-dark-color-primary-fg3-s) var(--std-dark-color-primary-fg3-l));
+}
+.std-theme-dark {
+    --std-color-primary-fg1: var(--std-dark-color-primary-fg1);
+    --std-color-primary-fg2: var(--std-dark-color-primary-fg2);
+    --std-color-primary-fg3: var(--std-dark-color-primary-fg3);
+}

@@ -1,0 +1,19 @@
+.std-root, .std-define-color-fg-primary {
+    --std-light-color-primary-fg1-h: var(--std-color-primary-h);
+    --std-light-color-primary-fg1-s: var(--std-color-primary-s);
+    --std-light-color-primary-fg1-l: 48%;
+    --std-light-color-primary-fg1: hsl(var(--std-light-color-primary-fg1-h) var(--std-light-color-primary-fg1-s) var(--std-light-color-primary-fg1-l));
+    --std-light-color-primary-fg2-h: var(--std-color-primary-h);
+    --std-light-color-primary-fg2-s: var(--std-color-primary-s);
+    --std-light-color-primary-fg2-l: 40%;
+    --std-light-color-primary-fg2: hsl(var(--std-light-color-primary-fg2-h) var(--std-light-color-primary-fg2-s) var(--std-light-color-primary-fg2-l));
+    --std-light-color-primary-fg3-h: var(--std-color-primary-h);
+    --std-light-color-primary-fg3-s: var(--std-color-primary-s);
+    --std-light-color-primary-fg3-l: 32%;
+    --std-light-color-primary-fg3: hsl(var(--std-light-color-primary-fg3-h) var(--std-light-color-primary-fg3-s) var(--std-light-color-primary-fg3-l));
+}
+.std-theme-light {
+    --std-color-primary-fg1: var(--std-light-color-primary-fg1);
+    --std-color-primary-fg2: var(--std-light-color-primary-fg2);
+    --std-color-primary-fg3: var(--std-light-color-primary-fg3);
+}

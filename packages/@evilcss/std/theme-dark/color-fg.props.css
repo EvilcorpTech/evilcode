@@ -1,4 +1,7 @@
 .std-root, .std-define-color-fg {
+    --std-dark-color-fg-l: 100%; /* Can be used with clamp() to obtain the desired lightness. */
+    --std-dark-color-fg-ll: -1; /* Can be used with calc() to obtain the desired lightness. */
+
     --std-dark-color-fg1-h: var(--std-dark-color-fg-h, 0deg);
     --std-dark-color-fg1-s: var(--std-dark-color-fg-s, 0%);
     --std-dark-color-fg1-l: 95%;
@@ -13,11 +16,11 @@
     --std-dark-color-fg3-s: var(--std-dark-color-fg-s, 0%);
     --std-dark-color-fg3-l: 53%;
     --std-dark-color-fg3: hsl(var(--std-dark-color-fg3-h) var(--std-dark-color-fg3-s) var(--std-dark-color-fg3-l) / var(--std-dark-color-fg3-opacity, 1));
-
-    --std-dark-color-fg-l: 100%; /* Can be used with clamp() to obtain the desired lightness. */
-    --std-dark-color-fg-ll: -1; /* Can be used with calc() to obtain the desired lightness. */
 }
 .std-theme-dark {
+    --std-fg-l: var(--std-dark-color-fg-l);
+    --std-fg-ll: var(--std-dark-color-fg-ll);
+
     --std-color-fg1-h: var(--std-dark-color-fg1-h);
     --std-color-fg1-s: var(--std-dark-color-fg1-s);
     --std-color-fg1-l: var(--std-dark-color-fg1-l);
@@ -32,7 +35,4 @@
     --std-color-fg3-s: var(--std-dark-color-fg3-s);
     --std-color-fg3-l: var(--std-dark-color-fg3-l);
     --std-color-fg3: var(--std-dark-color-fg3);
-
-    --std-fg-l: var(--std-dark-color-fg-l);
-    --std-fg-ll: var(--std-dark-color-fg-ll);
 }

@@ -1,9 +1,0 @@
-.std-root, .std-define-color-secondary {
-    /*
-    * EXAMPLE
-    * --std-color-secondary-h: <n>deg;
-    * --std-color-secondary-s: <n>%;
-    * --std-color-secondary-l: <n>%;
-    */
-    --std-color-secondary-accent: hsl(var(--std-color-secondary-h) var(--std-color-secondary-s) var(--std-color-secondary-l));
-}
