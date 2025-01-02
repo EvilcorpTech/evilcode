@@ -1,9 +1,3 @@
-.std-root, .std-define-color-primary {
-    /*
-    * EXAMPLE
-    * --std-color-primary-h: <n>deg;
-    * --std-color-primary-s: <n>%;
-    * --std-color-primary-l: <n>%;
-    */
-    --std-color-primary-accent: hsl(var(--std-color-primary-h) var(--std-color-primary-s) var(--std-color-primary-l));
+.std-root {
+    accent-color: var(--std-color-primary-accent);
 }
