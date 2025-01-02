@@ -13,7 +13,7 @@ export function attachRootElement(element: HTMLElement) {
 export function createRootElement(): HTMLElement {
     const element = document.createElement('div')
     element.id = RootId
-    element.classList.add('std-root', 'std-text')
+    element.classList.add('std-root', 'std-text', 'std-color-fg1', 'std-background-bg1')
     return element
 }
 

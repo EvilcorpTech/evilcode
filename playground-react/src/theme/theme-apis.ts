@@ -4,7 +4,7 @@ export enum Theme {
 }
 
 export function themeClassesOf(theme: Theme): Array<string> {
-    return ['std-root', `std-theme-${theme}`, 'std-text', 'std-color-theme']
+    return ['std-root', `std-theme-${theme}`, 'std-text', 'std-color-fg1', 'std-background-bg1']
 }
 
 export function whenTheme<D, L>(theme: Theme, matches: {dark: D, light: L}): D | L {

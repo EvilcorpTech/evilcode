@@ -1,7 +1,6 @@
-@layer std, std-reactx;
+@layer std;
 
-@import '@evilcss/std/accelerate.classes.css' layer(std);
-@import '@evilcss/std/border.props.css' layer(std);
+@import '@evilcss/std/animated.classes.css' layer(std);
 @import '@evilcss/std/button-with-outline.classes.css' layer(std);
 @import '@evilcss/std/button.classes.css' layer(std);
 @import '@evilcss/std/button/dye.css' layer(std);
@@ -9,67 +8,60 @@
 @import '@evilcss/std/button/halo.css' layer(std);
 @import '@evilcss/std/button/plain.css' layer(std);
 @import '@evilcss/std/color-accent-primary-variants.classes.css' layer(std);
-@import '@evilcss/std/color-accent-primary-variants.props.css' layer(std);
+@import '@evilcss/std/color-accent-primary-variants.vars.css' layer(std);
 @import '@evilcss/std/color-accent-primary.classes.css' layer(std);
 @import '@evilcss/std/color-accent-primary.props.css' layer(std);
-@import '@evilcss/std/color-accent-secondary-variants.classes.css' layer(std);
-@import '@evilcss/std/color-accent-secondary-variants.props.css' layer(std);
-@import '@evilcss/std/color-accent-secondary.classes.css' layer(std);
-@import '@evilcss/std/color-accent-secondary.props.css' layer(std);
-@import '@evilcss/std/color-bg-dark.props.css' layer(std);
-@import '@evilcss/std/color-bg-light.props.css' layer(std);
+@import '@evilcss/std/color-accent-primary.vars.css' layer(std);
+@import '@evilcss/std/color-bg-z.classes.css' layer(std);
 @import '@evilcss/std/color-bg.classes.css' layer(std);
-@import '@evilcss/std/color-fg-dark.props.css' layer(std);
-@import '@evilcss/std/color-fg-light.props.css' layer(std);
 @import '@evilcss/std/color-fg.classes.css' layer(std);
-@import '@evilcss/std/color-icon.props.css' layer(std);
-@import '@evilcss/std/color-material1/amber.props.css' layer(std);
-@import '@evilcss/std/color-material1/blue-light.props.css' layer(std);
-@import '@evilcss/std/color-material1/blue.props.css' layer(std);
-@import '@evilcss/std/color-material1/brown.props.css' layer(std);
-@import '@evilcss/std/color-material1/cyan.props.css' layer(std);
-@import '@evilcss/std/color-material1/gray-blue.props.css' layer(std);
-@import '@evilcss/std/color-material1/gray.props.css' layer(std);
-@import '@evilcss/std/color-material1/green-light.props.css' layer(std);
-@import '@evilcss/std/color-material1/green.props.css' layer(std);
-@import '@evilcss/std/color-material1/indigo.props.css' layer(std);
-@import '@evilcss/std/color-material1/lime.props.css' layer(std);
-@import '@evilcss/std/color-material1/orange-deep.props.css' layer(std);
-@import '@evilcss/std/color-material1/orange.props.css' layer(std);
-@import '@evilcss/std/color-material1/pink.props.css' layer(std);
-@import '@evilcss/std/color-material1/purple-deep.props.css' layer(std);
-@import '@evilcss/std/color-material1/purple.props.css' layer(std);
-@import '@evilcss/std/color-material1/red.props.css' layer(std);
-@import '@evilcss/std/color-material1/teal.props.css' layer(std);
-@import '@evilcss/std/color-material1/yellow.props.css' layer(std);
-@import '@evilcss/std/color-palette1/blue.props.css' layer(std);
-@import '@evilcss/std/color-palette1/forest.props.css' layer(std);
-@import '@evilcss/std/color-palette1/gray-bright.props.css' layer(std);
-@import '@evilcss/std/color-palette1/gray-cool.props.css' layer(std);
-@import '@evilcss/std/color-palette1/gray-flat.props.css' layer(std);
-@import '@evilcss/std/color-palette1/gray-neutral.props.css' layer(std);
-@import '@evilcss/std/color-palette1/green.props.css' layer(std);
-@import '@evilcss/std/color-palette1/indigo.props.css' layer(std);
-@import '@evilcss/std/color-palette1/magenta.props.css' layer(std);
-@import '@evilcss/std/color-palette1/maroon.props.css' layer(std);
-@import '@evilcss/std/color-palette1/orange.props.css' layer(std);
-@import '@evilcss/std/color-palette1/pool-blue.props.css' layer(std);
-@import '@evilcss/std/color-palette1/purple.props.css' layer(std);
-@import '@evilcss/std/color-palette1/red.props.css' layer(std);
-@import '@evilcss/std/color-palette1/squash.props.css' layer(std);
-@import '@evilcss/std/color-palette1/teal.props.css' layer(std);
-@import '@evilcss/std/color-palette1/ultramarine.props.css' layer(std);
-@import '@evilcss/std/color-palette1/violet.props.css' layer(std);
-@import '@evilcss/std/color-scheme.classes.css' layer(std);
+@import '@evilcss/std/color-icon.vars.css' layer(std);
+@import '@evilcss/std/color-material1/amber.vars.css' layer(std);
+@import '@evilcss/std/color-material1/blue-light.vars.css' layer(std);
+@import '@evilcss/std/color-material1/blue.vars.css' layer(std);
+@import '@evilcss/std/color-material1/brown.vars.css' layer(std);
+@import '@evilcss/std/color-material1/cyan.vars.css' layer(std);
+@import '@evilcss/std/color-material1/gray-blue.vars.css' layer(std);
+@import '@evilcss/std/color-material1/gray.vars.css' layer(std);
+@import '@evilcss/std/color-material1/green-light.vars.css' layer(std);
+@import '@evilcss/std/color-material1/green.vars.css' layer(std);
+@import '@evilcss/std/color-material1/indigo.vars.css' layer(std);
+@import '@evilcss/std/color-material1/lime.vars.css' layer(std);
+@import '@evilcss/std/color-material1/orange-deep.vars.css' layer(std);
+@import '@evilcss/std/color-material1/orange.vars.css' layer(std);
+@import '@evilcss/std/color-material1/pink.vars.css' layer(std);
+@import '@evilcss/std/color-material1/purple-deep.vars.css' layer(std);
+@import '@evilcss/std/color-material1/purple.vars.css' layer(std);
+@import '@evilcss/std/color-material1/red.vars.css' layer(std);
+@import '@evilcss/std/color-material1/teal.vars.css' layer(std);
+@import '@evilcss/std/color-material1/yellow.vars.css' layer(std);
+@import '@evilcss/std/color-palette1/blue.vars.css' layer(std);
+@import '@evilcss/std/color-palette1/forest.vars.css' layer(std);
+@import '@evilcss/std/color-palette1/gray-bright.vars.css' layer(std);
+@import '@evilcss/std/color-palette1/gray-cool.vars.css' layer(std);
+@import '@evilcss/std/color-palette1/gray-flat.vars.css' layer(std);
+@import '@evilcss/std/color-palette1/gray-neutral.vars.css' layer(std);
+@import '@evilcss/std/color-palette1/green.vars.css' layer(std);
+@import '@evilcss/std/color-palette1/indigo.vars.css' layer(std);
+@import '@evilcss/std/color-palette1/magenta.vars.css' layer(std);
+@import '@evilcss/std/color-palette1/maroon.vars.css' layer(std);
+@import '@evilcss/std/color-palette1/orange.vars.css' layer(std);
+@import '@evilcss/std/color-palette1/pool-blue.vars.css' layer(std);
+@import '@evilcss/std/color-palette1/purple.vars.css' layer(std);
+@import '@evilcss/std/color-palette1/red.vars.css' layer(std);
+@import '@evilcss/std/color-palette1/squash.vars.css' layer(std);
+@import '@evilcss/std/color-palette1/teal.vars.css' layer(std);
+@import '@evilcss/std/color-palette1/ultramarine.vars.css' layer(std);
+@import '@evilcss/std/color-palette1/violet.vars.css' layer(std);
 @import '@evilcss/std/color-state.classes.css' layer(std);
-@import '@evilcss/std/color-state.props.css' layer(std);
-@import '@evilcss/std/color-theme.classes.css' layer(std);
-@import '@evilcss/std/duration.props.css' layer(std);
+@import '@evilcss/std/color-state.vars.css' layer(std);
+@import '@evilcss/std/duration.vars.css' layer(std);
 @import '@evilcss/std/icon-color.classes.css' layer(std);
 @import '@evilcss/std/icon-size.classes.css' layer(std);
-@import '@evilcss/std/icon-size.props.css' layer(std);
+@import '@evilcss/std/icon-size.vars.css' layer(std);
 @import '@evilcss/std/icon.classes.css' layer(std);
 @import '@evilcss/std/layout-block.classes.css' layer(std);
+@import '@evilcss/std/layout-box.classes.css' layer(std);
 @import '@evilcss/std/layout-debug.classes.css' layer(std);
 @import '@evilcss/std/layout-flex-break.classes.css' layer(std);
 @import '@evilcss/std/layout-flex-child.classes.css' layer(std);
@@ -81,7 +73,7 @@
 @import '@evilcss/std/layout-gutter-gap.classes.css' layer(std);
 @import '@evilcss/std/layout-gutter-space.classes.css' layer(std);
 @import '@evilcss/std/layout-gutter-spacing.classes.css' layer(std);
-@import '@evilcss/std/layout-gutter.props.css' layer(std);
+@import '@evilcss/std/layout-gutter.vars.css' layer(std);
 @import '@evilcss/std/layout-inline.classes.css' layer(std);
 @import '@evilcss/std/layout-layer.classes.css' layer(std);
 @import '@evilcss/std/layout-margin-auto.classes.css' layer(std);
@@ -90,67 +82,75 @@
 @import '@evilcss/std/layout-self.classes.css' layer(std);
 @import '@evilcss/std/layout-size.classes.css' layer(std);
 @import '@evilcss/std/layout-width.classes.css' layer(std);
-@import '@evilcss/std/layout-width.props.css' layer(std);
+@import '@evilcss/std/layout-width.vars.css' layer(std);
 @import '@evilcss/std/media.classes.css' layer(std);
 @import '@evilcss/std/modal.classes.css' layer(std);
 @import '@evilcss/std/pointer.classes.css' layer(std);
 @import '@evilcss/std/radius.classes.css' layer(std);
-@import '@evilcss/std/radius.props.css' layer(std);
-@import '@evilcss/std/reset/all-box.css' layer(std);
-@import '@evilcss/std/reset/all-color.css' layer(std);
-@import '@evilcss/std/reset/all-font.css' layer(std);
-@import '@evilcss/std/reset/attr-hidden.css' layer(std);
-@import '@evilcss/std/reset/attr-invisible.css' layer(std);
-@import '@evilcss/std/reset/root-accent-color.css' layer(std);
-@import '@evilcss/std/reset/root-color-scheme-dark.css' layer(std);
-@import '@evilcss/std/reset/root-color-scheme-light.css' layer(std);
-@import '@evilcss/std/reset/root-color-scheme.css' layer(std);
-@import '@evilcss/std/reset/root-font-rendering.css' layer(std);
-@import '@evilcss/std/reset/root-font-size.css' layer(std);
-@import '@evilcss/std/reset/root-overflow-touch.css' layer(std);
-@import '@evilcss/std/reset/tag-a.css' layer(std);
-@import '@evilcss/std/reset/tag-b-strong.css' layer(std);
-@import '@evilcss/std/reset/tag-button.css' layer(std);
-@import '@evilcss/std/reset/tag-html5-display-block.css' layer(std);
-@import '@evilcss/std/reset/tag-i-em.css' layer(std);
-@import '@evilcss/std/reset/tag-img-picture-svg-video.css' layer(std);
-@import '@evilcss/std/reset/tag-input.css' layer(std);
-@import '@evilcss/std/reset/tag-label.css' layer(std);
-@import '@evilcss/std/reset/tag-ol-ul.css' layer(std);
-@import '@evilcss/std/reset/tag-q-blockquote.css' layer(std);
-@import '@evilcss/std/reset/tag-select.css' layer(std);
-@import '@evilcss/std/reset/tag-span.css' layer(std);
-@import '@evilcss/std/reset/tag-textarea.css' layer(std);
+@import '@evilcss/std/radius.vars.css' layer(std);
+@import '@evilcss/std/reset/all-box.props.css' layer(std);
+@import '@evilcss/std/reset/all-color.props.css' layer(std);
+@import '@evilcss/std/reset/all-font.props.css' layer(std);
+@import '@evilcss/std/reset/attr-hidden.props.css' layer(std);
+@import '@evilcss/std/reset/attr-invisible.props.css' layer(std);
+@import '@evilcss/std/reset/root-color-scheme-dark-light.props.css' layer(std);
+@import '@evilcss/std/reset/root-font-rendering.props.css' layer(std);
+@import '@evilcss/std/reset/root-font-size.props.css' layer(std);
+@import '@evilcss/std/reset/root-overflow-touch.props.css' layer(std);
+@import '@evilcss/std/reset/tag-a.props.css' layer(std);
+@import '@evilcss/std/reset/tag-b-strong.props.css' layer(std);
+@import '@evilcss/std/reset/tag-button.props.css' layer(std);
+@import '@evilcss/std/reset/tag-h.props.css' layer(std);
+@import '@evilcss/std/reset/tag-html5-display-block.props.css' layer(std);
+@import '@evilcss/std/reset/tag-i-em.props.css' layer(std);
+@import '@evilcss/std/reset/tag-img-picture-svg-video.props.css' layer(std);
+@import '@evilcss/std/reset/tag-input.props.css' layer(std);
+@import '@evilcss/std/reset/tag-label.props.css' layer(std);
+@import '@evilcss/std/reset/tag-ol-ul.props.css' layer(std);
+@import '@evilcss/std/reset/tag-q-blockquote.props.css' layer(std);
+@import '@evilcss/std/reset/tag-select.props.css' layer(std);
+@import '@evilcss/std/reset/tag-span.props.css' layer(std);
+@import '@evilcss/std/reset/tag-textarea.props.css' layer(std);
 @import '@evilcss/std/scroll.classes.css' layer(std);
 @import '@evilcss/std/scrollbar.classes.css' layer(std);
 @import '@evilcss/std/shadow-extra.classes.css' layer(std);
-@import '@evilcss/std/shadow-extra.props.css' layer(std);
+@import '@evilcss/std/shadow-extra.vars.css' layer(std);
 @import '@evilcss/std/shadow-material.classes.css' layer(std);
-@import '@evilcss/std/shadow-material.classes.css' layer(std);
-@import '@evilcss/std/shadow-material.props.css' layer(std);
+@import '@evilcss/std/shadow-material.vars.css' layer(std);
+@import '@evilcss/std/shadow-primary.vars.css' layer(std);
+@import '@evilcss/std/shadow.vars.css' layer(std);
 @import '@evilcss/std/switch.classes.css' layer(std);
 @import '@evilcss/std/text-align.classes.css' layer(std);
 @import '@evilcss/std/text-descender.classes.css' layer(std);
-@import '@evilcss/std/text-descender.props.css' layer(std);
+@import '@evilcss/std/text-descender.vars.css' layer(std);
 @import '@evilcss/std/text-font.classes.css' layer(std);
 @import '@evilcss/std/text-font/roboto.css' layer(std);
 @import '@evilcss/std/text-height.classes.css' layer(std);
-@import '@evilcss/std/text-height.props.css' layer(std);
+@import '@evilcss/std/text-height.vars.css' layer(std);
 @import '@evilcss/std/text-overflow.classes.css' layer(std);
 @import '@evilcss/std/text-size-material-extended.classes.css' layer(std);
 @import '@evilcss/std/text-size-material.classes.css' layer(std);
-@import '@evilcss/std/text-size-material.props.css' layer(std);
 @import '@evilcss/std/text-size-material.tags.css' layer(std);
+@import '@evilcss/std/text-size-material.vars.css' layer(std);
 @import '@evilcss/std/text-size.classes.css' layer(std);
-@import '@evilcss/std/text-size.props.css' layer(std);
-@import '@evilcss/std/text-size(with-accessible).props.css' layer(std);
+@import '@evilcss/std/text-size.tags.css' layer(std);
+@import '@evilcss/std/text-size.vars.css' layer(std);
+@import '@evilcss/std/text-size(with-accessible).vars.css' layer(std);
 @import '@evilcss/std/text-space.classes.css' layer(std);
-@import '@evilcss/std/text-space.props.css' layer(std);
+@import '@evilcss/std/text-space.vars.css' layer(std);
 @import '@evilcss/std/text-transform.classes.css' layer(std);
 @import '@evilcss/std/text-weight.classes.css' layer(std);
-@import '@evilcss/std/text-weight.props.css' layer(std);
+@import '@evilcss/std/text-weight.vars.css' layer(std);
 @import '@evilcss/std/text-wrap.classes.css' layer(std);
 @import '@evilcss/std/text.classes.css' layer(std);
+@import '@evilcss/std/theme-dark/color-bg.vars.css' layer(std);
+@import '@evilcss/std/theme-dark/color-fg-accent-primary.vars.css' layer(std);
+@import '@evilcss/std/theme-dark/color-fg.vars.css' layer(std);
+@import '@evilcss/std/theme-dark/color-scheme.props.css' layer(std);
+@import '@evilcss/std/theme-light/color-bg.vars.css' layer(std);
+@import '@evilcss/std/theme-light/color-fg-accent-primary.vars.css' layer(std);
+@import '@evilcss/std/theme-light/color-fg.vars.css' layer(std);
+@import '@evilcss/std/theme-light/color-scheme.props.css' layer(std);
 @import '@evilcss/std/transition/fade.classes.css' layer(std);
 @import '@evilcss/std/transition/leak.classes.css' layer(std);
 @import '@evilcss/std/transition/none.classes.css' layer(std);
@@ -158,32 +158,13 @@
 @import '@evilcss/std/transition/zoom.classes.css' layer(std);
 
 .std-root {
-    --std-font-primary:
-        Roboto,
-        ui-sans-serif,
-        system-ui,
-        -apple-system,
-        BlinkMacSystemFont,
-        'Segoe UI',
-        Roboto,
-        Oxygen-Sans,
-        Ubuntu,
-        Cantarell,
-        Futura,
-        'Helvetica Neue',
-        Helvetica,
-        Arial,
-        sans-serif
-    ;
+    --std-font-primary: Roboto, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen-Sans, Ubuntu, Cantarell, Futura, 'Helvetica Neue', Helvetica, Arial, sans-serif;
     --std-color-primary-h: 250deg;
     --std-color-primary-s: 70%;
     --std-color-primary-l: 60%;
-    --std-color-secondary-h: 0deg;
-    --std-color-secondary-s: 55%;
-    --std-color-secondary-l: 50%;
 
-    --std-text-descender-size: .25;
-    --std-text-descender-line: .8;
+    /* --std-text-descender-size: .25; */
+    /* --std-text-descender-line: .8; */
 }
 
 .page-title {
