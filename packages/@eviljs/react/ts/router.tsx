@@ -319,11 +319,7 @@ export function useRouter<S = unknown>(): RouterManager<S> {
 
     const link = useRouterLink()
 
-    return {
-        changeRoute,
-        link,
-        readRoute,
-    }
+    return {changeRoute, link, readRoute}
 }
 
 export function useRouteParamsPatch(): (paramsPatch: undefined | RouterRouteChangeParamsDict, replace?: undefined | boolean) => void {
@@ -373,7 +369,7 @@ export function useRouteRead<S = unknown>(): Task<RouterRoute<S>> {
 
 export function useRoutePath(): RouterRoute['path'] {
     const routerContext = useRouterContext()!
-    const routePath = useReactiveSelect(routerContext.route, RouteSelectors.selectRoutePath)
+    const routePath = useReactiveSelect(routerContext.route, RouterSelectors.selectRoutePath)
 
     return routePath
 }
@@ -392,14 +388,14 @@ export function useRouteParam<R>(selectRouteParam: Io<undefined | RouterRoutePar
 
 export function useRouteParams(): RouterRoute['params'] {
     const routerContext = useRouterContext()!
-    const routeParams = useReactiveSelect(routerContext.route, RouteSelectors.selectRouteParams)
+    const routeParams = useReactiveSelect(routerContext.route, RouterSelectors.selectRouteParams)
 
     return routeParams
 }
 
 export function useRouteState<S = unknown>(): RouterRoute<S>['state'] {
     const routerContext = useRouterContext<S>()!
-    const routeState = useReactiveSelect(routerContext.route, RouteSelectors.selectRouteState<S>)
+    const routeState = useReactiveSelect(routerContext.route, RouterSelectors.selectRouteState<S>)
 
     return routeState
 }
@@ -456,7 +452,7 @@ function isCaseRouteElement(element: unknown): element is React.ReactElement<Cas
     return true
 }
 
-export const RouteSelectors = {
+export const RouterSelectors = {
     selectRoutePath(route: RouterRoute): string {
         return route.path
     },

@@ -1,5 +1,6 @@
 import {hasBrowserTouch} from '@eviljs/web/browser'
-import {useEffect, useState} from 'react'
+import {useEffect} from 'react'
+import {useStateTransition} from './state.js'
 
 export function useBrowserFeaturesClassesProvider(activeOptional?: undefined | boolean): void {
     const features = useBrowserFeatures()
@@ -24,7 +25,7 @@ export function useBrowserFeaturesClassesProvider(activeOptional?: undefined | b
 }
 
 export function useBrowserFeatures(): BrowserFeatures {
-    const [features, setFeatures] = useState(listBrowserFeatures)
+    const [features, setFeatures] = useStateTransition(listBrowserFeatures)
 
     useEffect(() => {
         // Compatibility with DevTools:

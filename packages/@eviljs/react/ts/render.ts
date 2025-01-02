@@ -1,5 +1,5 @@
 import type {Task} from '@eviljs/std/fn-type'
-import {useState, useCallback} from 'react'
+import {useCallback, useState} from 'react'
 
 /*
 * Used to force the rendering of a component.

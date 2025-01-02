@@ -1,24 +1,49 @@
 import {compute} from '@eviljs/std/fn-compute'
 import type {Io} from '@eviljs/std/fn-type'
-import {useCallback, useRef, useState} from 'react'
+import {startTransition, useCallback, useRef, useState} from 'react'
 
-export function useStateStore<S>(initialState: StateInit<S>): StateStoreManager<S> {
-    const [state, setState] = useState(initialState)
+export function useStateAccessor<S>(initialState: StateInit<S>): StateAccessorManager<S> {
+    const [state, PRIVATE_setState] = useState(initialState)
     const stateRef = useRef(state)
 
     const getState = useCallback((): S => {
         return stateRef.current
     }, [])
 
-    const setStateStore = useCallback((stateComputed: StateSetterArg<S>): S => {
+    const setState = useCallback((stateComputed: StateSetterArg<S>): S => {
         const state = compute(stateComputed, stateRef.current)
+
         stateRef.current = state
-        setState(state)
+
+        PRIVATE_setState(state)
+
         return state
     }, [])
 
+    return [state, setState, getState]
+}
 
-    return [state, setStateStore, getState]
+export function useStateTransition<S>(initialState: StateInit<S>): StateAccessorManager<S> {
+    const [state, PRIVATE_setState] = useState(initialState)
+    const stateRef = useRef(state)
+
+    const getState = useCallback((): S => {
+        return stateRef.current
+    }, [])
+
+    const setState = useCallback((stateComputed: StateSetterArg<S>): S => {
+        const state = compute(stateComputed, stateRef.current)
+
+        stateRef.current = state
+
+        startTransition(() => {
+            PRIVATE_setState(state)
+        })
+
+        return state
+    }, [])
+
+    return [state, setState, getState]
 }
 
 /*
@@ -72,5 +97,5 @@ export type StateSetterArg<S> = React.SetStateAction<S>
 export type StatePatcher<S extends object> = (statePatch: Partial<S>) => void
 export type StateManager<S> = [S, StateSetter<S>]
 
-export type StateStoreSetter<S> = (state: StateSetterArg<S>) => S
-export type StateStoreManager<S> = [S, StateStoreSetter<S>, () => S]
+export type StateAccessorWriter<S> = (state: StateSetterArg<S>) => S
+export type StateAccessorManager<S> = [S, StateAccessorWriter<S>, () => S]

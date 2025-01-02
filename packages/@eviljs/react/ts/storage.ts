@@ -32,6 +32,7 @@ export function useBrowserStorageAccessor<V = string, S = string>(
 
     const write = useCallback(<I extends BrowserStorageValue<S | V>>(newValue: I): I => {
         valueRef.current = newValue
+
         render(newValue)
 
         cancelWriteTaskRef.current?.()

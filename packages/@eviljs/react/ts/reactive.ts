@@ -10,22 +10,22 @@ import {useRenderSignal, type RenderSignal} from './render.js'
 import type {StateManager, StateSetterArg} from './state.js'
 
 export function useReactiveState<V>(reactive: ReactiveProtocol<V>): StateManager<V> {
-    const [value, setValue] = useState(() => readReactive(reactive))
+    const [value, PRIVATE_setValue] = useState(() => readReactive(reactive))
 
-    const setReactiveValue = useCallback((value: StateSetterArg<V>) => {
+    const setValue = useCallback((value: StateSetterArg<V>) => {
         const newValue = compute(value, readReactive(reactive))
 
-        setValue(newValue)
+        PRIVATE_setValue(newValue)
         writeReactive(reactive, newValue)
     }, [reactive])
 
     useEffect(() => {
-        const onClean = watchReactive(reactive, setValue, {immediate: true})
+        const onClean = watchReactive(reactive, PRIVATE_setValue, {immediate: true})
 
         return onClean
     }, [reactive])
 
-    return [value, setReactiveValue]
+    return [value, setValue]
 }
 
 export function useReactiveValue<V>(reactive: ReactiveProtocol<V>): V {
@@ -84,7 +84,9 @@ export function useReactiveSelect<V, R>(reactive: undefined | ReactiveProtocol<V
 
         const onClean = watchReactive(
             reactive,
-            newValue => setSignal(selector(newValue)),
+            newValue => {
+                setSignal(selector(newValue))
+            },
             {immediate: true},
         )
 
@@ -99,22 +101,22 @@ export function useReactiveStore<V>(
     write: RwSync<V>['write'],
     watch: (observer: ReactiveObserver<V>, options?: undefined | ReactiveWatchOptions) => Task,
 ): StateManager<V> {
-    const [value, setValue] = useState(read())
+    const [value, PRIVATE_setValue] = useState(read())
 
-    const setReactiveValue = useCallback((value: StateSetterArg<V>) => {
+    const setValue = useCallback((value: StateSetterArg<V>) => {
         const newValue = compute(value, read())
 
-        setValue(newValue)
+        PRIVATE_setValue(newValue)
         write(newValue)
     }, [read, write])
 
     useEffect(() => {
-        const onClean = watch(setValue, {immediate: true})
+        const onClean = watch(PRIVATE_setValue, {immediate: true})
 
         return onClean
     }, [watch])
 
-    return [value, setReactiveValue]
+    return [value, setValue]
 }
 
 export function useReactiveSignal(reactive: undefined | ReactiveProtocol<any>): RenderSignal {
@@ -130,7 +132,7 @@ export function useReactiveSignal(reactive: undefined | ReactiveProtocol<any>): 
         const onClean = watchReactive(reactive, notifySignal)
 
         return onClean
-    }, [reactive])
+    }, [reactive, notifySignal])
 
     return signal
 }
@@ -150,7 +152,7 @@ export function useReactiveSignals(
         }
 
         return onClean
-    }, [reactives])
+    }, [reactives, notifySignal])
 
     return signal
 }
@@ -171,7 +173,6 @@ export function ReactiveValues<A extends Array<ReactiveProtocol<any>>>(props: Re
     const {children, of} = props
 
     return children(useReactiveValues(of))
-
 }
 
 // Types ///////////////////////////////////////////////////////////////////////

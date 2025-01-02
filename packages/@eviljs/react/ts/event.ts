@@ -1,9 +1,9 @@
 import {debounced, throttled, type EventTask} from '@eviljs/std/fn-event'
-import type {Fn, FnArgs} from '@eviljs/std/fn-type'
+import type {Fn, FnArgs, Task} from '@eviljs/std/fn-type'
 import {asArray} from '@eviljs/std/type-as'
 import type {None} from '@eviljs/std/type-types'
-import {useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState} from 'react'
-import type {StateInit, StateSetter} from './state.js'
+import {useCallback, useEffect, useLayoutEffect, useMemo, useRef} from 'react'
+import {useStateTransition, type StateInit, type StateSetter} from './state.js'
 
 export function useEvent<E extends Event>(
     targetRefOrRefs: React.RefObject<None | EventElement> | Array<React.RefObject<None | EventElement>>,
@@ -69,10 +69,7 @@ export function useCallbackThrottled<A extends FnArgs>(callback: Fn<A>, delayMs:
     return callbackThrottled
 }
 
-export function useCallbackDelayed(callback: Function, delayMs: number): {
-    start(): void
-    cancel(): void
-} {
+export function useCallbackDelayed(callback: Function, delayMs: number): {run: Task, cancel: Task} {
     const taskRef = useRef<ReturnType<typeof setTimeout>>(undefined)
 
     const cancel = useCallback(() => {
@@ -83,24 +80,24 @@ export function useCallbackDelayed(callback: Function, delayMs: number): {
         taskRef.current = void clearTimeout(taskRef.current)
     }, [])
 
-    const start = useCallback(() => {
+    const run = useCallback(() => {
         cancel()
 
         taskRef.current = setTimeout(callback, delayMs)
-    }, [cancel, callback])
+    }, [callback, cancel])
 
     useLayoutEffect(() => {
         // We use useLayoutEffect() to conform with React 17 hooks lifecycle.
         return cancel
     }, [cancel])
 
-    return {start, cancel}
+    return {run, cancel}
 }
 
 export function useStateDebounced<T>(initialValue: undefined, delay: number): [undefined | T, StateSetter<undefined | T>]
 export function useStateDebounced<T>(initialValue: StateInit<T>, delay: number): [T, StateSetter<T>]
 export function useStateDebounced<T>(initialValue: undefined | T, delay: number): [undefined | T, StateSetter<undefined | T>] {
-    const [value, setValue] = useState(initialValue)
+    const [value, setValue] = useStateTransition(initialValue)
     const setValueDebounced = useCallbackDebounced(setValue, delay)
 
     return [value, setValueDebounced]
@@ -109,14 +106,14 @@ export function useStateDebounced<T>(initialValue: undefined | T, delay: number)
 export function useStateThrottled<T>(initialValue: undefined, delay: number): [undefined | T, StateSetter<undefined | T>]
 export function useStateThrottled<T>(initialValue: StateInit<T>, delay: number): [T, StateSetter<T>]
 export function useStateThrottled<T>(initialValue: undefined | StateInit<T>, delay: number): [undefined | T, StateSetter<undefined | T>] {
-    const [value, setValue] = useState(initialValue)
+    const [value, setValue] = useStateTransition(initialValue)
     const setValueThrottled = useCallbackThrottled(setValue, delay)
 
     return [value, setValueThrottled]
 }
 
 export function useValueDebounced<V>(input: V, delay: number): V {
-    const [output, setOutput] = useState(input)
+    const [output, setOutput] = useStateTransition(input)
 
     useEffect(() => {
         const timeoutId = setTimeout(() => {
