@@ -82,10 +82,13 @@ export function asNumber(value: unknown): undefined | number {
     if (isNumber(value)) {
         return value
     }
-    if (isString(value)) {
+    if (isString(value) && value.trim()) {
+        // We trim to avoid the cast to 0 of:
+        // - empty string ('');
+        // - string of blank characters ('  ').
         // Only strings should be parsed:
-        // - null and Arrays would be parsed as 0
-        // - Symbols would throws an error
+        // - null and Arrays would be parsed as 0;
+        // - Symbols would throws an error.
         return asNumber(Number(value))
     }
     return

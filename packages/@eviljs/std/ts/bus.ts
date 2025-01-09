@@ -1,4 +1,4 @@
-import {scheduleMicroTaskUsingPromise} from './eventloop.js'
+import {scheduleMicroTask} from './eventloop.js'
 import {call} from './fn-call.js'
 import type {FnArgs, Task} from './fn-type.js'
 import {createReactive, readReactive, writeReactive, type ReactiveProtocol} from './reactive.js'
@@ -64,7 +64,7 @@ export function emitBusEvent(reactiveObservers: BusEventObservers, ...polymorphi
         return
     }
 
-    scheduleMicroTaskUsingPromise(() => {
+    scheduleMicroTask(() => {
         for (const entry of observersToNotify) {
             const [observersGroup, matches] = entry
 

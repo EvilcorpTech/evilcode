@@ -1,6 +1,7 @@
 import {fromObjectPathToParts, getObjectPath} from './object.js'
+import {throwInvalidType} from './throw.js'
 import {assertFunctionOptional, assertObject} from './type-assert.js'
-import {ensureArray, ensureBoolean, ensureFunction, ensureInteger, ensureNumber, ensureString, ensureStringOptional, throwAssertTypeError} from './type-ensure.js'
+import {ensureArray, ensureBoolean, ensureFunction, ensureInteger, ensureNumber, ensureString, ensureStringOptional, InvalidTypeMessage} from './type-ensure.js'
 import {isArray, isFunction, isNone, type None} from './type.js'
 
 export function evaluateExp<C extends Ctx, R>(ctx: C, exp: Exp<C, R>): R {
@@ -32,7 +33,7 @@ export function bool(ctx: Ctx, oneExp: Exp<Ctx, any>): boolean {
 */
 export function and(ctx: Ctx, ...exps: Array<Exp<Ctx, boolean>>): boolean {
     if (exps.length === 0) {
-        return throwAssertTypeError('a Non Empty Array', exps)
+        return throwInvalidType(InvalidTypeMessage('a Non Empty Array', exps))
     }
     return exps.every(itExp => ensureBoolean(evaluateExp(ctx, itExp)))
 }
@@ -42,7 +43,7 @@ export function and(ctx: Ctx, ...exps: Array<Exp<Ctx, boolean>>): boolean {
 */
 export function or(ctx: Ctx, ...exps: Array<Exp<Ctx, boolean>>): boolean {
     if (exps.length === 0) {
-        return throwAssertTypeError('a Non Empty Array', exps)
+        return throwInvalidType(InvalidTypeMessage('a Non Empty Array', exps))
     }
     return exps.some(itExp => ensureBoolean(evaluateExp(ctx, itExp)))
 }

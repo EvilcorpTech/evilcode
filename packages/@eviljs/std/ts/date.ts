@@ -1,6 +1,7 @@
 import {isBetween} from './math.js'
+import {throwInvalidType} from './throw.js'
 import {assertStringNotEmpty} from './type-assert.js'
-import {ensureOptionalWith, throwAssertTypeError} from './type-ensure.js'
+import {ensureOptionalWith, InvalidTypeMessage} from './type-ensure.js'
 import {isDefined, isString} from './type-is.js'
 
 export const OneSecondInMs: number = 1_000
@@ -111,7 +112,7 @@ export function ensureDateString(value: unknown, ctx?: any) {
     assertStringNotEmpty(value, ctx)
 
     if (! isDateString(value)) {
-        return throwAssertTypeError('a Date string', value, ctx)
+        return throwInvalidType(InvalidTypeMessage('a Date string', value, ctx))
     }
 
     return value
@@ -135,7 +136,7 @@ export function ensureDateAsIsoUtcString(value: unknown, ctx?: any) {
     assertDateString(value, ctx)
 
     if (! isDateIsoUtcString(value)) {
-        return throwAssertTypeError('a Date as ISO string with UTC timezone', value, ctx)
+        return throwInvalidType(InvalidTypeMessage('a Date as ISO string with UTC timezone', value, ctx))
     }
 
     return value

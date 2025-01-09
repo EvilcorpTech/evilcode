@@ -1,5 +1,7 @@
 import {identity} from './fn-return.js'
 import {MonadTag, type Monad} from './monad.js'
+import {throwInvalidType} from './throw.js'
+import {InvalidTypeMessage} from './type-ensure.js'
 import {isObject} from './type-is.js'
 
 export const ResultErrorTagId = 'error'
@@ -9,6 +11,10 @@ export function ResultError<const E>(error: E): ResultError<E> {
         [MonadTag]: ResultErrorTagId,
         error,
     }
+}
+
+export function asResultOrError<V>(promise: Promise<V>): Promise<ResultOrError<V, unknown>> {
+    return promise.then(identity, ResultError)
 }
 
 export function isResult<R>(resultOrError: R): resultOrError is ResultOf<R> {
@@ -51,8 +57,21 @@ export function whenResultOrError<R, E, O1, O2>(
     return matches.result(resultOrError)
 }
 
-export function asResultOrError<V>(promise: Promise<V>): Promise<ResultOrError<V, unknown>> {
-    return promise.then(identity, ResultError)
+/**
+* @throws InvalidInput
+*/
+export function ensureResult<V, E>(value: ResultOrError<V, E>, ctx?: any): V {
+    if (! isResult(value)) {
+        return throwInvalidType(InvalidTypeMessage('a Result', value, ctx))
+    }
+    return value
+}
+
+/**
+* @throws InvalidInput
+*/
+export function assertResult<V, E>(value: ResultOrError<V, E>, ctx?: any): asserts value is V {
+    ensureResult(value, ctx)
 }
 
 // Types ///////////////////////////////////////////////////////////////////////

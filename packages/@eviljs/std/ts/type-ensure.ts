@@ -1,33 +1,15 @@
-import {StdError, throwError} from './throw.js'
-import {isArray, isBoolean, isDate, isDefined, isFunction, isInteger, isNone, isNumber, isObject, isSome, isString, isUndefined} from './type-is.js'
+import {throwInvalidType} from './throw.js'
+import {isArray, isBoolean, isDate, isDefined, isFunction, isInteger, isNumber, isObject, isSome, isString, isUndefined} from './type-is.js'
 import type {None} from './type-types.js'
 
-export class InvalidCondition extends StdError {}
-export class InvalidType extends StdError {}
-
-/**
-* @throws InvalidCondition
-*/
-export function throwAssertConditionError(message: string): never {
-    return throwError(new InvalidCondition(message))
-}
-
-/**
-* @throws InvalidType
-*/
-export function throwAssertTypeError(type: string, value: unknown, ctx?: any): never {
-    const message = errorMessage(type, value, ctx)
-    return throwError(new InvalidType(message))
-}
-
-export function errorMessage(expected: string, actual: unknown, ctx?: any): string {
-    return (
-        isNone(ctx)
-            ? `value must be ${expected}, given "${actual}".`
-        : isString(ctx)
-            ? `${ctx} must be ${expected}, given "${actual}".`
-        : `value must be ${expected}, given "${actual}":\n${JSON.stringify(ctx)}`
-    )
+export function InvalidTypeMessage(expected: string, actual: unknown, ctx?: any): string {
+    if (isString(ctx)) {
+        return `${ctx} must be ${expected}, given "${actual}".`
+    }
+    if (isSome(ctx)) {
+        return `value must be ${expected}, given "${actual}":\n${JSON.stringify(ctx)}`
+    }
+    return `value must be ${expected}, given "${actual}".`
 }
 
 // Assurances //////////////////////////////////////////////////////////////////
@@ -39,7 +21,7 @@ export function ensureArray<T extends Array<unknown>>(value: T, ctx?: any): T
 export function ensureArray(value: unknown, ctx?: any): Array<unknown>
 export function ensureArray(value: unknown, ctx?: any) {
     if (! isArray(value)) {
-        return throwAssertTypeError('an Array', value, ctx)
+        return throwInvalidType(InvalidTypeMessage('an Array', value, ctx))
     }
     return value
 }
@@ -60,7 +42,7 @@ export function ensureBoolean<T extends boolean>(value: T, ctx?: any): T
 export function ensureBoolean(value: unknown, ctx?: any): boolean
 export function ensureBoolean(value: unknown, ctx?: any) {
     if (! isBoolean(value)) {
-        return throwAssertTypeError('a Boolean', value, ctx)
+        return throwInvalidType(InvalidTypeMessage('a Boolean', value, ctx))
     }
     return value
 }
@@ -81,7 +63,7 @@ export function ensureDate<T extends Date>(value: T, ctx?: any): T
 export function ensureDate(value: unknown, ctx?: any): Date
 export function ensureDate(value: unknown, ctx?: any) {
     if (! isDate(value)) {
-        return throwAssertTypeError('a Date', value, ctx)
+        return throwInvalidType(InvalidTypeMessage('a Date', value, ctx))
     }
     return value
 }
@@ -102,7 +84,7 @@ export function ensureDefined(value: undefined, ctx?: any): never
 export function ensureDefined<T>(value: undefined | T, ctx?: any): T
 export function ensureDefined<T>(value: undefined | T, ctx?: any): T {
     if (! isDefined(value)) {
-        return throwAssertTypeError('defined', value, ctx)
+        return throwInvalidType(InvalidTypeMessage('defined', value, ctx))
     }
     return value
 }
@@ -117,7 +99,7 @@ export function ensureEnum(value: unknown, enumValues: Array<unknown>, ctx?: any
     if (ensureArray(enumValues, `${ctx} enum`).includes(value)) {
         return value
     }
-    return throwAssertTypeError(`one of ${enumValues.join(' | ')}`, value, ctx)
+    return throwInvalidType(InvalidTypeMessage(`one of ${enumValues.join(' | ')}`, value, ctx))
 }
 
 /**
@@ -136,7 +118,7 @@ export function ensureFunction<T extends Function>(value: T, ctx?: any): T
 export function ensureFunction(value: unknown, ctx?: any): Function
 export function ensureFunction(value: unknown, ctx?: any) {
     if (! isFunction(value)) {
-        return throwAssertTypeError('a Function', value, ctx)
+        return throwInvalidType(InvalidTypeMessage('a Function', value, ctx))
     }
     return value
 }
@@ -157,7 +139,7 @@ export function ensureNumber<T extends number>(value: T, ctx?: any): T
 export function ensureNumber(value: unknown, ctx?: any): number
 export function ensureNumber(value: unknown, ctx?: any) {
     if (! isNumber(value)) {
-        return throwAssertTypeError('a Number', value, ctx)
+        return throwInvalidType(InvalidTypeMessage('a Number', value, ctx))
     }
     return value
 }
@@ -178,7 +160,7 @@ export function ensureInteger<T extends number>(value: T, ctx?: any): T
 export function ensureInteger(value: unknown, ctx?: any): number
 export function ensureInteger(value: unknown, ctx?: any) {
     if (! isInteger(ensureNumber(value, ctx))) {
-        return throwAssertTypeError('an Integer', value, ctx)
+        return throwInvalidType(InvalidTypeMessage('an Integer', value, ctx))
     }
     return value
 }
@@ -199,7 +181,7 @@ export function ensureObject<T extends object | Record<PropertyKey, unknown>>(va
 export function ensureObject(value: unknown, ctx?: any): Record<PropertyKey, unknown>
 export function ensureObject(value: unknown, ctx?: any) {
     if (! isObject(value)) {
-        return throwAssertTypeError('an Object', value, ctx)
+        return throwInvalidType(InvalidTypeMessage('an Object', value, ctx))
     }
     return value
 }
@@ -220,7 +202,7 @@ export function ensureSome(value: None, ctx?: any): never
 export function ensureSome<T>(value: None | T, ctx?: any): T
 export function ensureSome<T>(value: None | T, ctx?: any): T {
     if (! isSome(value)) {
-        return throwAssertTypeError('not undefined and not null', value, ctx)
+        return throwInvalidType(InvalidTypeMessage('not undefined and not null', value, ctx))
     }
     return value
 }
@@ -232,7 +214,7 @@ export function ensureString<T extends string>(value: T, ctx?: any): T
 export function ensureString(value: unknown, ctx?: any): string
 export function ensureString(value: unknown, ctx?: any) {
     if (! isString(value)) {
-        return throwAssertTypeError('a String', value, ctx)
+        return throwInvalidType(InvalidTypeMessage('a String', value, ctx))
     }
     return value
 }
@@ -253,7 +235,7 @@ export function ensureStringNotEmpty<T extends string>(value: T, ctx?: any): T
 export function ensureStringNotEmpty(value: unknown, ctx?: any): string
 export function ensureStringNotEmpty(value: unknown, ctx?: any) {
     if (ensureString(value, ctx).trim() === '') {
-        return throwAssertTypeError('a not empty String', value, ctx)
+        return throwInvalidType(InvalidTypeMessage('a not empty String', value, ctx))
     }
     return value
 }
@@ -272,7 +254,7 @@ export function ensureStringNotEmptyOptional(value: unknown, ctx?: any) {
 */
 export function ensureUndefined(value: unknown, ctx?: any): undefined {
     if (! isUndefined(value)) {
-        return throwAssertTypeError('undefined', value, ctx)
+        return throwInvalidType(InvalidTypeMessage('undefined', value, ctx))
     }
     return
 }
